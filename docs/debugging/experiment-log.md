@@ -2994,3 +2994,10 @@ videos/gravity_test_v2.mp4 (100/300/1000 bodies, 60 steps): unbiased read shows 
 gap at step 60 6.9 / 9.9 / 15.5, larger with more bodies; no collapse or global drift. Small-budget
 setup, so this does not show the architecture cannot handle 100-1000 bodies; v1 (3-8 bodies, batch 16,
 6000 iters) reached err@20 0.0103.
+
+N-body v2 model, 1000 bodies x 10,000 steps free rollout (job 2932, all on GPU: fp64 torch truth + model;
+scripts/gravity_long.py, results/gravity_long.npz not committed): truth energy conserved (-10437), model
+energy +2.59e6 at step 10000 (unstable). Unbiased read: model panel collapses to a spaced lattice by step
+~1000 and its points leave the truth-fitted window by ~3000 (mean gap 498 at 1000 -> 32182 at 10000);
+truth stays a dense central clump plus an expanding halo. The render window follows the truth cloud, so
+the model's flight is only visible as points leaving the frame.
