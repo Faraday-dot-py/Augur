@@ -2965,3 +2965,18 @@ The contact-weighted lineage soup is worse than soup B on all three seed sets
 soup E is marginally worse than soup B. Contact weighting beat its own
 control (v38 vs v39) but does not improve on the plain lineage soup, so soup B
 remains the headline model.
+
+## N-body gravity generality test (job 2919) and 10M tiled video (job 2922), 2026-09-24
+
+Gravity (unmodified TokenFreeDynamics, pair_impulse, seed 4738, 6000 iters, k 4->20): position error at
+step 5/10/20 = 0.0016/0.0039/0.0103 (seed 9000), 0.0015/0.0036/0.0103 (seed 12000); constant-velocity
+baseline 0.58 / 0.49 at step 20. Energy @20 model -2.596 vs true -2.579 (seed 9000). Video
+videos/gravity_test.mp4 (60 steps, 3/5/8 bodies): gap grows gradually, 3-body 0.042, 5-body 0.122, 8-body 0.200
+at step 60; errors grow with body count and close encounters (unbiased subagent read).
+
+10M tiled run (grid 31623, density 0.01, collision-front start, 300 ticks, 41 s): unbiased read shows
+speeds jump to the 30 cap by tick ~50, left/bottom edge bands empty out (col 0 empty by tick 30), max
+balls/bin 72 -> 1124, faint line at the velocity-flip x. KE/ball rises 2 -> ~85 in 10 ticks at N=100
+(grid 100), 10k and 10M alike, global or local softmax (scripts/probe_ke_scale.py), so it is not a
+tiling artifact. Benchmark timings are unaffected; dynamics fidelity of the zero-hidden uniform-velocity
+start at these settings is UNVERIFIED against the true sim (needs a same-start Bounce comparison).

@@ -1,0 +1,17 @@
+#!/bin/bash
+#SBATCH --job-name=bounce-tiled-video
+#SBATCH --partition=gpu
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --gres=gpu:1
+#SBATCH --time=01:00:00
+#SBATCH --output=bounce-tiled-video-%j.log
+
+set -euo pipefail
+export PYTHONUNBUFFERED=1
+cd "$HOME/bounce"
+export PYTHONPATH=.
+pip install -q -r requirements.txt
+
+mkdir -p results
+python scripts/tiled_video.py --out results/tiled_video_10m.npz
