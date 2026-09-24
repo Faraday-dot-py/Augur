@@ -47,6 +47,9 @@ def main():
     ap.add_argument("--ticks", type=int, default=300)
     ap.add_argument("--bins", type=int, default=512)
     ap.add_argument("--crop", type=int, default=300)
+    ap.add_argument("--record-every", type=int, default=1)
+    ap.add_argument("--front", action="store_true", help="collision-front start instead of uniform velocities")
+    ap.add_argument("--density-only", action="store_true")
     ap.add_argument("--seed", type=int, default=4738)
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--out", required=True)
@@ -57,7 +60,7 @@ def main():
     model = load_model(args.checkpoint, "free", grid, 32, 4.0, False, True, True, True, True, True, True).to(device)
     sim = TiledSim(model, math.ceil(args.balls / args.tile_balls), device)
     sim.init_random(args.balls, args.seed)
-    for s in range(sim.strips):
+    for s in range(sim.strips if args.front else 0):
         c = sim.cores[s][:sim.counts[s]]
         c[:, 2] = torch.where(c[:, 0] < grid / 2, 2.3, -2.3) + c[:, 2] * 0.2
     crop_lo = (sim.lo(1) - args.crop / 2, grid / 2 - args.crop / 2)
@@ -65,15 +68,19 @@ def main():
     dens, spd, crop, ke, alive = [], [], [], [], []
     start = time.perf_counter()
     for t in range(args.ticks + 1):
-        d, v, c = grid_frames(sim, args.bins, crop_lo, args.crop, device)
-        dens.append(d), spd.append(v), crop.append(c)
-        alive.append(sim.alive())
-        ke.append(sum(float((sim.cores[s][:sim.counts[s], 2:4] ** 2).sum()) for s in range(sim.strips)) / 2)
-        if t % 10 == 0:
+        if t % args.record_every == 0:
+            d, v, c = grid_frames(sim, args.bins, crop_lo, args.crop, device)
+            dens.append(d)
+            if not args.density_only:
+                spd.append(v), crop.append(c)
+            alive.append(sim.alive())
+            ke.append(sum(float((sim.cores[s][:sim.counts[s], 2:4] ** 2).sum()) for s in range(sim.strips)) / 2)
+        if t % 100 == 0:
             print(f"tick {t} alive {alive[-1]} ke {ke[-1]:.4g} max/bin {d.max()} elapsed {time.perf_counter() - start:.0f} s", flush=True)
         if t < args.ticks:
             sim.step()
-    np.savez_compressed(args.out, density=np.stack(dens), speed=np.stack(spd), crop=np.stack(crop),
+    extra = {} if args.density_only else dict(speed=np.stack(spd), crop=np.stack(crop))
+    np.savez_compressed(args.out, density=np.stack(dens), **extra,
                         ke=np.array(ke), alive=np.array(alive), grid=grid, strips=sim.strips,
                         boundary=sim.lo(1), crop_lo=np.array(crop_lo), balls=args.balls)
 

@@ -57,6 +57,8 @@ def main():
     ap.add_argument("--dt", type=float, default=0.1)
     ap.add_argument("--eps", type=float, default=0.5)
     ap.add_argument("--neighbor-radius", type=float, default=100.0)
+    ap.add_argument("--scale-init", action="store_true", help="constant density, virial speed for n bodies (relative to 8)")
+    ap.add_argument("--eval-scenes", type=int, default=48)
     ap.add_argument("--no-pair-impulse", action="store_true")
     ap.add_argument("--seed", type=int, default=4738)
     ap.add_argument("--out", type=str, default="results/gravity_test.json")
@@ -67,12 +69,13 @@ def main():
     rng = np.random.default_rng(args.seed)
     kw = dict(dt=args.dt, eps=args.eps)
     rng_n = (args.min_bodies, args.max_bodies)
-    train = gs.make_dataset(args.train, rng_n, args.steps, args.seed, **kw)
+    train = gs.make_dataset(args.train, rng_n, args.steps, args.seed, scale=args.scale_init, **kw)
     dyn = TokenFreeDynamics(n=1000, neighbor_radius=args.neighbor_radius, pair_impulse=not args.no_pair_impulse)
     opt = torch.optim.Adam(dyn.parameters(), lr=args.lr)
     for it in range(args.iters):
         k = int(round(args.k_start + (args.k_end - args.k_start) * it / max(1, args.iters - 1)))
-        loss = 0.0
+        opt.zero_grad()
+        total = 0.0
         for _ in range(args.batch):
             P, V = train[rng.integers(len(train))]
             t0 = int(rng.integers(0, args.steps - k + 1))
@@ -81,18 +84,18 @@ def main():
             ps, vs = unroll(dyn, p0, v0, k, args.dt)
             tp = torch.tensor(P[t0 + 1:t0 + k + 1], dtype=torch.float32)
             tv = torch.tensor(V[t0 + 1:t0 + k + 1], dtype=torch.float32)
-            loss = loss + ((ps - tp) ** 2).mean() + 0.1 * ((vs - tv) ** 2).mean()
-        loss = loss / args.batch
-        opt.zero_grad()
-        loss.backward()
+            loss = (((ps - tp) ** 2).mean() + 0.1 * ((vs - tv) ** 2).mean()) / args.batch
+            loss.backward()
+            total += loss.item()
         torch.nn.utils.clip_grad_norm_(dyn.parameters(), 1.0)
         opt.step()
         if it % 200 == 0:
-            print(f"it {it} k {k} loss {loss.item():.6f}", flush=True)
+            print(f"it {it} k {k} loss {total:.6f}", flush=True)
+            torch.save(dyn.state_dict(), args.checkpoint)
     torch.save(dyn.state_dict(), args.checkpoint)
     res = {}
     for seed in (9000, 12000):
-        data = gs.make_dataset(48, rng_n, args.steps, seed, **kw)
+        data = gs.make_dataset(args.eval_scenes, rng_n, args.steps, seed, scale=args.scale_init, **kw)
         res[str(seed)] = evaluate(dyn, data, 20, args.dt, args.eps)
         r = res[str(seed)]
         print(seed, "err@5/10/20", [round(r["err"][i], 4) for i in (4, 9, 19)],

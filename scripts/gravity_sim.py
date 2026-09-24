@@ -18,7 +18,10 @@ def energy(pos, vel, eps, g=1.0):
     return 0.5 * (vel ** 2).sum() - g * (1.0 / r[iu]).sum()
 
 
-def init_bodies(n_bodies, rng, spread=5.0, speed=0.5):
+def init_bodies(n_bodies, rng, spread=5.0, speed=0.5, scale=False):
+    if scale:
+        f = n_bodies / 8
+        spread, speed = spread * f ** 0.5, speed * f ** 0.25
     pos = CENTER + rng.uniform(-spread, spread, (n_bodies, 2))
     vel = rng.normal(0.0, speed, (n_bodies, 2))
     vel -= vel.mean(0)
@@ -41,11 +44,11 @@ def rollout(pos, vel, steps, dt=0.1, substeps=4, eps=0.5, g=1.0):
     return np.stack(ps), np.stack(vs)
 
 
-def make_dataset(num, ball_range, steps, seed, **kw):
+def make_dataset(num, ball_range, steps, seed, scale=False, **kw):
     rng = np.random.default_rng(seed)
     out = []
     for _ in range(num):
         n = int(rng.integers(ball_range[0], ball_range[1] + 1))
-        p, v = init_bodies(n, rng)
+        p, v = init_bodies(n, rng, scale=scale)
         out.append(rollout(p, v, steps, **kw))
     return out
