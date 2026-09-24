@@ -2974,9 +2974,10 @@ baseline 0.58 / 0.49 at step 20. Energy @20 model -2.596 vs true -2.579 (seed 90
 videos/gravity_test.mp4 (60 steps, 3/5/8 bodies): gap grows gradually, 3-body 0.042, 5-body 0.122, 8-body 0.200
 at step 60; errors grow with body count and close encounters (unbiased subagent read).
 
-10M tiled run (grid 31623, density 0.01, collision-front start, 300 ticks, 41 s): unbiased read shows
-speeds jump to the 30 cap by tick ~50, left/bottom edge bands empty out (col 0 empty by tick 30), max
-balls/bin 72 -> 1124, faint line at the velocity-flip x. KE/ball rises 2 -> ~85 in 10 ticks at N=100
-(grid 100), 10k and 10M alike, global or local softmax (scripts/probe_ke_scale.py), so it is not a
-tiling artifact. Benchmark timings are unaffected; dynamics fidelity of the zero-hidden uniform-velocity
-start at these settings is UNVERIFIED against the true sim (needs a same-start Bounce comparison).
+10M tiled run (grid 31623, density 0.01, collision-front start, 300 ticks, 41 s): this is the normal sim
+with gravity on, so the run is free fall, not a fault. Verified from the density frames: the +x side is
+"down" (x is the row axis), the last x-bin fills 19.5k -> 217k over 300 ticks, x-rows near 0 empty out
+(20 bins ~ 4% of grid ~ 1350 units = speed cap 30 * dt 0.15 * 300 ticks), max bin 72 -> 1124 is the floor
+pile. KE/ball 2 -> ~85 in 10 ticks is g=9 acceleration (same at N=100, 10k, 10M, either softmax:
+scripts/probe_ke_scale.py). Speeds saturate at the 30 cap. No strip-boundary artifact. An earlier version of
+this entry called the KE rise unverified/anomalous; that was wrong.
