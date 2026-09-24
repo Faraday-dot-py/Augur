@@ -59,6 +59,7 @@ def main():
     ap.add_argument("--neighbor-radius", type=float, default=100.0)
     ap.add_argument("--scale-init", action="store_true", help="constant density, virial speed for n bodies (relative to 8)")
     ap.add_argument("--eval-scenes", type=int, default=48)
+    ap.add_argument("--log-every", type=int, default=200)
     ap.add_argument("--no-pair-impulse", action="store_true")
     ap.add_argument("--seed", type=int, default=4738)
     ap.add_argument("--out", type=str, default="results/gravity_test.json")
@@ -89,7 +90,7 @@ def main():
             total += loss.item()
         torch.nn.utils.clip_grad_norm_(dyn.parameters(), 1.0)
         opt.step()
-        if it % 200 == 0:
+        if it % args.log_every == 0:
             print(f"it {it} k {k} loss {total:.6f}", flush=True)
             torch.save(dyn.state_dict(), args.checkpoint)
     torch.save(dyn.state_dict(), args.checkpoint)

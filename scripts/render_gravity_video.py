@@ -3,6 +3,8 @@ free-running from t=0 against the ground-truth N-body sim, 3 scenes side by side
 Model rollouts beyond step 20 are outside the training horizon.
 
 Usage: PYTHONPATH=. python3 scripts/render_gravity_video.py videos/gravity_test.mp4
+       PYTHONPATH=. python3 scripts/render_gravity_video.py videos/gravity_test_v2.mp4 checkpoints/gravity_dynamics_v2.pt 100,300,1000
+(a third arg switches to scale-init scenes; body counts in the fourth)
 """
 import sys
 
@@ -18,14 +20,17 @@ from scripts import gravity_sim as gs
 from scripts.train_gravity_dynamics import unroll
 
 STEPS, TRAIN_H, DT, EPS = 60, 20, 0.1, 0.5
+CKPT = sys.argv[2] if len(sys.argv) > 2 else "checkpoints/gravity_dynamics_v1.pt"
+COUNTS = [int(c) for c in sys.argv[3].split(",")] if len(sys.argv) > 3 else [3, 5, 8]
+SCALE = len(sys.argv) > 3
 rng = np.random.default_rng(9000)
 scenes = []
-for n in (3, 5, 8):
-    p, v = gs.init_bodies(n, rng)
+for n in COUNTS:
+    p, v = gs.init_bodies(n, rng, scale=SCALE)
     scenes.append(gs.rollout(p, v, STEPS, dt=DT, eps=EPS))
 
 dyn = TokenFreeDynamics(n=1000, neighbor_radius=100.0, pair_impulse=True)
-dyn.load_state_dict(torch.load("checkpoints/gravity_dynamics_v1.pt"))
+dyn.load_state_dict(torch.load(CKPT))
 model = []
 with torch.no_grad():
     for P, V in scenes:
@@ -40,14 +45,14 @@ for ax, (P, V), M in zip(axes, scenes, model):
     c, half = (lo + hi) / 2, (hi - lo).max() / 2 * 1.1 + 0.5
     ax.set_xlim(c[0] - half, c[0] + half); ax.set_ylim(c[1] - half, c[1] + half)
     ax.set_aspect("equal"); ax.set_xticks([]); ax.set_yticks([])
-    colors = plt.cm.tab10(np.arange(P.shape[1]))
-    truth = ax.scatter(P[0, :, 0], P[0, :, 1], s=140, facecolors="none", edgecolors=colors, linewidths=1.5, label="truth")
-    mod = ax.scatter(M[0, :, 0], M[0, :, 1], s=30, c=colors, label="model")
+    colors = plt.cm.tab10(np.arange(P.shape[1]) % 10)
+    truth = ax.scatter(P[0, :, 0], P[0, :, 1], s=max(6, 140 // max(1, len(P[0]) // 8)), facecolors="none", edgecolors=colors, linewidths=0.8, label="truth")
+    mod = ax.scatter(M[0, :, 0], M[0, :, 1], s=max(2, 30 // max(1, len(P[0]) // 8)), c=colors, label="model")
     ax.legend(loc="upper right")
     arts.append((truth, mod, ax, P, M))
     ax.set_title(f"{P.shape[1]} bodies")
 title = fig.suptitle("")
-fig.tight_layout()
+fig.tight_layout(rect=(0, 0, 1, 0.94))
 
 
 def update(i):

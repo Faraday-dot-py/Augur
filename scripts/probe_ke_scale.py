@@ -24,7 +24,7 @@ def run(model, count, grid, ticks, front, seed):
     with torch.no_grad():
         for t in range(ticks + 1):
             if t % 10 == 0:
-                out.append(round(float((vel ** 2).sum(1).mean() / 2), 2))
+                out.append((round(float((vel ** 2).sum(1).mean() / 2), 1), round(float(vel[:, 0].mean()), 1), round(float(vel[:, 1].mean()), 2)))
             pos, vel, hid, _ = model.step_free(pos, vel, hid, render=False)
             pos = pos.clamp(0.0, grid - 1.0)
             vel = vel.clamp(-30, 30)
@@ -46,7 +46,7 @@ def main():
                 model.dynamics.cell_graph = True
                 model.dynamics.local_softmax = local
                 ke = run(model, count, grid, args.ticks, front, args.seed)
-                print(f"N={count} grid={grid} local_softmax={local} front={front} KE/ball@0,10,..: {ke}", flush=True)
+                print(f"N={count} grid={grid} local_softmax={local} front={front} (KE/ball, mean vx, mean vy)@0,10,..: {ke}", flush=True)
 
 
 if __name__ == "__main__":

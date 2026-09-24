@@ -2981,3 +2981,16 @@ with gravity on, so the run is free fall, not a fault. Verified from the density
 pile. KE/ball 2 -> ~85 in 10 ticks is g=9 acceleration (same at N=100, 10k, 10M, either softmax:
 scripts/probe_ke_scale.py). Speeds saturate at the 30 cap. No strip-boundary artifact. An earlier version of
 this entry called the KE rise unverified/anomalous; that was wrong.
+
+### N-body test v2: 100-1000 bodies, no downward gravity (job 2928, 2026-09-24)
+
+Same unmodified TokenFreeDynamics + pair_impulse; constant-density scaled init (`--scale-init`: spread
+5*sqrt(N/8), speed 0.5*(N/8)^0.25), N uniform in 100-1000, 200 train scenes, batch 2, 800 iters,
+k 4->20, seed 4738. (Job 2927 at batch 4 / 3000 iters was cancelled: >3 s/iter at k=4, projected ~8 h
+vs a 4 h limit.) Result: FAILS. err@5/10/20 = 0.50/0.52/2.14 (seed 9000), 0.56/0.61/2.43 (seed 12000);
+constant-velocity baseline 0.073/0.27/0.95 and 0.073/0.27/0.94. Energy @20 model -4882 vs true -3867
+(seed 9000). Loss noisy throughout (spikes 1.35 at it 720, 3.5 at it 780). Video
+videos/gravity_test_v2.mp4 (100/300/1000 bodies, 60 steps): unbiased read shows smooth monotone divergence,
+gap at step 60 6.9 / 9.9 / 15.5, larger with more bodies; no collapse or global drift. Small-budget
+setup, so this does not show the architecture cannot handle 100-1000 bodies; v1 (3-8 bodies, batch 16,
+6000 iters) reached err@20 0.0103.
