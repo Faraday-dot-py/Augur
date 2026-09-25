@@ -1,0 +1,10 @@
+# H7 interpretability of the node-pair estimator (test id: interp), 2026-09-25
+
+Status: scripts written and smoke-tested (fake estimator, CPU, subsampled); the real run is Polaris job 3016 (scripts/polaris_interp_all.sh: train 6 estimators, stage1, maps, decode). No results yet.
+
+## Predictions (written before any real result)
+1. Label vs rho = size/dist: exact label and the second-order Taylor theory both scale as rho^2 (smoke check on a fake estimator: truth 2.05, Taylor 2.00). Estimator slope: expected 1.7-2.1 for analytic/inv_distance/yukawa30 on the physical sweep (pass: within 0.3 of 2); less sure for plw0.5 and plw3.
+2. Isotropic-node suppression, inv_distance: in the small-A scenario (tiny A, B a ring-pattern disk vs elongated ellipse, same trace) the exact label of the round node should be >10x below the elongated one (Gauss law in 2D, limited by softening eps 0.5 and the ring discretisation); not for p=2. Estimator: I expect it to show much less than 10x (features only see qrr/qtt log ratio, real training pairs are rarely that isotropic, tiny A is out of support). The "both nodes extended" scenario is the in-support one; A's rms spread of the quadratic term does not vanish for round A, so no collapse expected there.
+3. Decoders: pair-force and coarse/fine-discrepancy (vector) decoders recover p within 10% for 5/5 power laws without noise (they are exact model fits). Estimator route (fit p to predicted labels): expected 3-4 of 5 within 10%, worse than direct; it adds nothing that pair samples do not already give, since labels are computed from pair forces.
+4. Exchange symmetry: exactly 0 (features symmetric). Rotation invariance: exactly 0 by construction (features are projected on the line of centres); pass criterion (<0.1 log-units) met trivially, not a learned property. Scale covariance: not learned, log(dist/EPS) uses a fixed EPS; expect a violation of order 0.05-0.3 log-units at rescale 2-4, removable by feeding dist/eps_kernel.
+5. Granularity map: expect accepted node size and pair count to track log density, mostly as the geometric rule does; the estimator-minus-geometric difference is the learned part.
