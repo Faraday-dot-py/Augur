@@ -4,3 +4,5 @@ checkpoints/
 .worktrees/
 web/tests/vectors.json
 web/tests/physics_ref.json
+results/tiled_video_10m*.npz
+results/ball_rect_5000x1000.npz

@@ -29,6 +29,24 @@ def init_state(n, device, seed):
     return pos, vel, spread
 
 
+def init_clusters(clusters, per_cluster, spacing, device, seed):
+    """`clusters` independent constant-density scaled-init clusters of
+    `per_cluster` bodies each (zero net momentum per cluster) on a square
+    lattice of pitch `spacing`, cluster-major body order. Returns the lattice
+    half-width as the view half-width."""
+    scale = per_cluster / 8
+    spread, speed = 5.0 * scale ** 0.5, 0.5 * scale ** 0.25
+    side = int(np.ceil(clusters ** 0.5))
+    gen = torch.Generator(device=device)
+    gen.manual_seed(seed)
+    k = torch.arange(clusters, device=device)
+    centres = torch.stack([k // side, k % side], dim=1).float() * spacing + (500.0 - (side - 1) * spacing / 2)
+    pos = (torch.rand(clusters, per_cluster, 2, generator=gen, device=device) * (2 * spread) - spread) + centres[:, None, :]
+    vel = torch.randn(clusters, per_cluster, 2, generator=gen, device=device) * speed
+    vel -= vel.mean(1, keepdim=True)
+    return pos.reshape(-1, 2), vel.reshape(-1, 2), side * spacing / 2 * 1.05 / 1.25
+
+
 def model_force(dyn):
     return lambda d: dyn.force(torch.log(d)) / (d ** 2 + 1.0)
 
@@ -90,6 +108,8 @@ def main():
     ap.add_argument("--steps", type=int, default=300)
     ap.add_argument("--record-every", type=int, default=5)
     ap.add_argument("--radius", type=float, default=4.0)
+    ap.add_argument("--clusters", type=int, default=0, help="split --bodies into this many independent clusters on a lattice")
+    ap.add_argument("--spacing", type=float, default=300.0)
     ap.add_argument("--strips", type=int, default=100)
     ap.add_argument("--grid", type=int, default=512)
     ap.add_argument("--dt", type=float, default=0.1)
@@ -105,7 +125,17 @@ def main():
     dyn = CentralForceDynamics(dt=args.dt, neighbor_radius=args.radius).to(dev)
     dyn.load_state_dict(torch.load(args.checkpoint, map_location=dev))
     force = model_force(dyn)
-    pos, vel, spread = init_state(args.bodies, dev, args.seed)
+    side = 0
+    if args.clusters:
+        pos, vel, spread = init_clusters(args.clusters, args.bodies // args.clusters, args.spacing, dev, args.seed)
+        side = int(np.ceil(args.clusters ** 0.5))
+        sub_ids = [0, 1, side, side + 1]
+        per = args.bodies // args.clusters
+        sub = torch.cat([torch.arange(c * per, (c + 1) * per, device=dev) for c in sub_ids])
+    else:
+        pos, vel, spread = init_state(args.bodies, dev, args.seed)
+        sub = torch.arange(0, device=dev)
+    sub_frames, sub_ref = [], []
     ref = None
     if args.compare_analytic:
         ref = (pos.clone(), vel.clone())
@@ -121,8 +151,12 @@ def main():
         mom.append(float(vel.double().sum(0).norm()))
         if ref is not None:
             gap.append(float((pos - ref[0]).norm(dim=1).mean()))
+            sub_ref.append(ref[0][sub].cpu().numpy())
+        sub_frames.append(pos[sub].cpu().numpy())
         np.savez_compressed(args.out, density=np.stack(dens), speed=np.stack(spd), steps=steps, ke=ke, momentum=mom,
-                            gap=gap, spread=spread, bodies=args.bodies, radius=args.radius, dt=args.dt)
+                            gap=gap, spread=spread, bodies=args.bodies, radius=args.radius, dt=args.dt,
+                            sub=np.stack(sub_frames), sub_ref=np.stack(sub_ref) if sub_ref else np.zeros(0),
+                            sub_bodies_per_cluster=args.bodies // max(args.clusters, 1), clusters=args.clusters)
 
     record(0)
     for k in range(1, args.steps + 1):
