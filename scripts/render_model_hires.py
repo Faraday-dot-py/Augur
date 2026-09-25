@@ -1,7 +1,9 @@
 """High-resolution single-panel video of the model rollout from gravity_collision.py: additive glow on black, brightness ~ log(1 + bodies per pixel).
 Frames are computed one at a time (peak memory ~ one res x res image plus the position array).
 
-Usage: PYTHONPATH=. python3 scripts/render_model_hires.py results/flyby_10k.npz videos/flyby_10k_model_hires.mp4 [res] [blur]
+Usage: PYTHONPATH=. python3 scripts/render_model_hires.py results/flyby_10k.npz videos/flyby_10k_model_hires.mp4 [res] [blur] [track]
+
+track: if given, window follows the smoothed median centre with half-width = track * smoothed 70th-percentile radius (clipped 250..1000)
 """
 import sys
 
@@ -23,7 +25,22 @@ pad = 0.15 * (hi - lo)
 lo, hi = lo - pad, hi + pad
 side = float((hi - lo).max())
 mid = (lo + hi) / 2
-edges = [np.linspace(mid[k] - side / 2, mid[k] + side / 2, res + 1) for k in range(2)]
+track = float(sys.argv[5]) if len(sys.argv) > 5 else 0
+if track:
+    from scipy.ndimage import uniform_filter1d
+    cen = uniform_filter1d(np.median(model, axis=1), 31, axis=0, mode="nearest")
+    rad = np.array([np.percentile(np.linalg.norm(p - c, axis=1), 70) for p, c in zip(model, cen)])
+    half = np.clip(uniform_filter1d(track * rad, 31, mode="nearest"), 250, 1000)
+
+
+def set_edges(i):
+    global edges
+    if track:
+        edges = [np.linspace(cen[i, k] - half[i], cen[i, k] + half[i], res + 1) for k in range(2)]
+
+
+set_edges(0)
+edges = [np.linspace(mid[k] - side / 2, mid[k] + side / 2, res + 1) for k in range(2)] if not track else edges
 
 
 def image(p):
@@ -31,7 +48,10 @@ def image(p):
     return gaussian_filter(h, blur).T
 
 
-peaks = [np.percentile(image(model[i]), 99.9) for i in range(0, len(model), 10)]
+peaks = []
+for i in range(0, len(model), 10):
+    set_edges(i)
+    peaks.append(np.percentile(image(model[i]), 99.9))
 vmax = np.log1p(max(max(peaks), 1e-3))
 fig = plt.figure(figsize=(res / 100, res / 100), dpi=100, facecolor="black")
 ax = fig.add_axes([0, 0, 1, 1])
@@ -41,8 +61,9 @@ label = ax.text(0.02, 0.98, "", color="white", transform=ax.transAxes, va="top",
 
 
 def update(i):
+    set_edges(i)
     im.set_data(np.log1p(image(model[i])))
-    label.set_text(f"{n:,} bodies (model), t = {i * record * dt:.0f}")
+    label.set_text(f"{n:,} bodies (model), t = {i * record * dt:.0f}" + (f", view {2 * half[i]:.0f} wide" if track else ""))
 
 
 ani = animation.FuncAnimation(fig, update, frames=len(model))
