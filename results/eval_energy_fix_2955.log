@@ -1,0 +1,101 @@
+== soupb
+n20_b4 {"err_mean": {"1": 0.06492231398199995, "5": 0.28066111185277504, "10": 0.6666030613705516, "20": 3.19293146332105, "50": 7.240467260281245, "100": 8.115541477998098}, "err_median": {"1": 0.011584421619772911, "5": 0.06329724192619324, "10": 0.3108949661254883, "20": 2.824175000190735, "50": 7.349897146224976, "100": 7.339222431182861}, "E_model": {"0": -78.52236938476562, "20": -86.86737060546875, "50": -97.17236328125, "100": -113.54325866699219}, "E_truth": {"0": -78.52237319946289, "20": -76.63195037841797, "50": -79.76851272583008, "100": -77.65963745117188}, "mom_err": {"5": 0.3829515725374222, "20": 5.1272430419921875, "50": 18.0830078125, "100": 24.007165908813477}, "finite_frac": 1.0, "n_scenes": 24}
+n100_b100 {"err_mean": {"1": 0.04705119567612807, "5": 0.23570984105269113, "10": 0.4943996046980222, "20": 3.2741280794143677, "50": 44.75408935546875, "100": 48.57526969909668}, "err_median": {"1": 0.04273168556392193, "5": 0.23127849400043488, "10": 0.49058233201503754, "20": 3.331797242164612, "50": 44.59708023071289, "100": 48.82156944274902}, "E_model": {"0": -444.3581237792969, "20": -478.9041442871094, "50": -582.2457885742188, "100": -778.0759887695312}, "E_truth": {"0": -444.3581237792969, "20": -450.5565490722656, "50": -406.0325012207031, "100": -363.71144104003906}, "mom_err": {"5": 8.214186668395996, "20": 52.881784439086914, "50": 180.05946350097656, "100": 360.95774841308594}, "finite_frac": 1.0, "n_scenes": 6}
+wall {'wall': 'y_wall', 'speed_in': 3, 'truth_vy_after': 3.0, 'truth_ratio': np.float32(1.0001458), 'truth_ke_ratio': 325.0, 'model_vy_after': 4.944, 'model_ratio': np.float32(1.6481174), 'model_ke_ratio': 295.299}
+wall {'wall': 'y_wall', 'speed_in': 6, 'truth_vy_after': 5.998, 'truth_ratio': np.float32(0.9996782), 'truth_ke_ratio': 81.999, 'model_vy_after': 5.719, 'model_ratio': np.float32(0.9532133), 'model_ke_ratio': 87.307}
+wall {'wall': 'y_wall', 'speed_in': 10, 'truth_vy_after': 10.001, 'truth_ratio': np.float32(1.0001036), 'truth_ke_ratio': 30.16, 'model_vy_after': 8.091, 'model_ratio': np.float32(0.80908), 'model_ke_ratio': 35.336}
+wall {'wall': 'y_wall', 'speed_in': 15, 'truth_vy_after': 15.001, 'truth_ratio': np.float32(1.0000784), 'truth_ke_ratio': 13.96, 'model_vy_after': 9.582, 'model_ratio': np.float32(0.63878155), 'model_ke_ratio': 16.643}
+wall {'wall': 'y_wall', 'speed_in': 20, 'truth_vy_after': 20.004, 'truth_ratio': np.float32(1.0001823), 'truth_ke_ratio': 8.29, 'model_vy_after': 8.575, 'model_ratio': np.float32(0.4287518), 'model_ke_ratio': 9.715}
+wall {'wall': 'y_wall', 'speed_in': 30, 'truth_vy_after': 29.995, 'truth_ratio': np.float32(0.99983114), 'truth_ke_ratio': 4.24, 'model_vy_after': 12.312, 'model_ratio': np.float32(0.4104164), 'model_ke_ratio': 4.5}
+wall {'wall': 'y_wall', 'speed_in': 40, 'truth_vy_after': 40.008, 'truth_ratio': np.float32(1.0002105), 'truth_ke_ratio': 2.823, 'model_vy_after': 21.472, 'model_ratio': np.float32(0.53679127), 'model_ke_ratio': 2.013}
+wall {'wall': 'y_wall', 'speed_in': 60, 'truth_vy_after': 59.819, 'truth_ratio': np.float32(0.9969806), 'truth_ke_ratio': 1.804, 'model_vy_after': 35.911, 'model_ratio': np.float32(0.5985182), 'model_ke_ratio': 0.923}
+wall {'wall': 'y_wall', 'speed_in': 80, 'truth_vy_after': 80.061, 'truth_ratio': np.float32(1.0007654), 'truth_ke_ratio': 1.457, 'model_vy_after': 46.803, 'model_ratio': np.float32(0.5850425), 'model_ke_ratio': 0.62}
+wall {'wall': 'x_floor', 'speed_in': 3, 'truth_vx_after': 6.211, 'truth_dE': -0.273, 'truth_E0': -7114.5, 'model_vx_after': 5.814, 'model_dE': 0.002, 'model_E0': -7114.5}
+wall {'wall': 'x_floor', 'speed_in': 6, 'truth_vx_after': 4.86, 'truth_dE': 0.183, 'truth_E0': -7101.0, 'model_vx_after': 4.385, 'model_dE': 0.604, 'model_E0': -7101.0}
+wall {'wall': 'x_floor', 'speed_in': 10, 'truth_vx_after': -0.149, 'truth_dE': 1.106, 'truth_E0': -7069.0, 'model_vx_after': 0.057, 'model_dE': -4.688, 'model_E0': -7069.0}
+wall {'wall': 'x_floor', 'speed_in': 15, 'truth_vx_after': -9.663, 'truth_dE': 2.528, 'truth_E0': -7006.5, 'model_vx_after': -9.068, 'model_dE': -14.419, 'model_E0': -7006.5}
+wall {'wall': 'x_floor', 'speed_in': 20, 'truth_vx_after': -21.177, 'truth_dE': 3.246, 'truth_E0': -6919.0, 'model_vx_after': -16.055, 'model_dE': -67.013, 'model_E0': -6919.0}
+wall {'wall': 'x_floor', 'speed_in': 30, 'truth_vx_after': 18.402, 'truth_dE': 1.476, 'truth_E0': -6669.0, 'model_vx_after': 18.931, 'model_dE': -96.578, 'model_E0': -6669.0}
+wall {'wall': 'x_floor', 'speed_in': 40, 'truth_vx_after': 9.582, 'truth_dE': 0.077, 'truth_E0': -6319.0, 'model_vx_after': 19.335, 'model_dE': -472.155, 'model_E0': -6319.0}
+wall {'wall': 'x_floor', 'speed_in': 60, 'truth_vx_after': -9.058, 'truth_dE': -8.973, 'truth_E0': -5319.0, 'model_vx_after': -33.932, 'model_dE': 1295.677, 'model_E0': -5319.0}
+wall {'wall': 'x_floor', 'speed_in': 80, 'truth_vx_after': -28.828, 'truth_dE': 21.489, 'truth_E0': -3919.0, 'model_vx_after': -2.822, 'model_dE': -1523.92, 'model_E0': -3919.0}
+pair {'offset': 0.0, 'speed_in': 3, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.426, 'model_pmom_err': 4.586, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 6, 'truth_relKE_ratio': 1.003, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.187, 'model_pmom_err': 4.346, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 10, 'truth_relKE_ratio': 0.996, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.103, 'model_pmom_err': 4.121, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 15, 'truth_relKE_ratio': 0.999, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.08, 'model_pmom_err': 4.573, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 20, 'truth_relKE_ratio': 1.009, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.01, 'model_pmom_err': 4.777, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 30, 'truth_relKE_ratio': 0.651, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.467, 'model_pmom_err': 4.408, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 40, 'truth_relKE_ratio': 0.859, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.673, 'model_pmom_err': 3.331, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 60, 'truth_relKE_ratio': 1.052, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.808, 'model_pmom_err': 13.177, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 80, 'truth_relKE_ratio': 1.047, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.838, 'model_pmom_err': 26.652, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 3, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 10.03, 'model_pmom_err': 8.537, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 6, 'truth_relKE_ratio': 0.998, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 3.045, 'model_pmom_err': 9.052, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 10, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.176, 'model_pmom_err': 10.171, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 15, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.668, 'model_pmom_err': 11.01, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 20, 'truth_relKE_ratio': 1.006, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.681, 'model_pmom_err': 9.137, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 30, 'truth_relKE_ratio': 0.978, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.557, 'model_pmom_err': 6.56, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 40, 'truth_relKE_ratio': 0.921, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.673, 'model_pmom_err': 3.331, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 60, 'truth_relKE_ratio': 1.021, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.808, 'model_pmom_err': 13.177, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 80, 'truth_relKE_ratio': 1.018, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.838, 'model_pmom_err': 26.652, 'model_finite': True}
+== cons_pure
+n20_b4 {"err_mean": {"1": 0.026031954524417717, "5": 0.12309769013275702, "10": 0.31452879930535954, "20": 2.389590280751387, "50": 7.323799222707748, "100": 7.9094056983788805}, "err_median": {"1": 0.013781214598566294, "5": 0.0929809994995594, "10": 0.24799007177352905, "20": 1.157178521156311, "50": 7.806710720062256, "100": 8.408788204193115}, "E_model": {"0": -78.52236938476562, "20": -77.55890274047852, "50": -78.3187370300293, "100": -81.80586242675781}, "E_truth": {"0": -78.52237319946289, "20": -76.63195037841797, "50": -79.76851272583008, "100": -77.65963745117188}, "mom_err": {"5": 0.3631506860256195, "20": 2.1718374490737915, "50": 20.685294151306152, "100": 21.007081031799316}, "finite_frac": 1.0, "n_scenes": 24}
+n100_b100 {"err_mean": {"1": 0.0205042560895284, "5": 0.11309874802827835, "10": 0.29804964860280353, "20": 1.903282364209493, "50": 44.19619115193685, "100": 47.847496032714844}, "err_median": {"1": 0.019868891686201096, "5": 0.11033940687775612, "10": 0.29494836926460266, "20": 1.751283049583435, "50": 43.121965408325195, "100": 47.4936637878418}, "E_model": {"0": -444.3581237792969, "20": -451.83506774902344, "50": -422.5684051513672, "100": -387.6795196533203}, "E_truth": {"0": -444.3581237792969, "20": -450.5565490722656, "50": -406.0325012207031, "100": -363.71144104003906}, "mom_err": {"5": 8.777927875518799, "20": 40.89561462402344, "50": 201.45945739746094, "100": 271.59703826904297}, "finite_frac": 1.0, "n_scenes": 6}
+wall {'wall': 'y_wall', 'speed_in': 3, 'truth_vy_after': 3.0, 'truth_ratio': np.float32(1.0001458), 'truth_ke_ratio': 325.0, 'model_vy_after': 3.052, 'model_ratio': np.float32(1.017201), 'model_ke_ratio': 318.03}
+wall {'wall': 'y_wall', 'speed_in': 6, 'truth_vy_after': 5.998, 'truth_ratio': np.float32(0.9996782), 'truth_ke_ratio': 81.999, 'model_vy_after': 6.239, 'model_ratio': np.float32(1.0397838), 'model_ke_ratio': 80.33}
+wall {'wall': 'y_wall', 'speed_in': 10, 'truth_vy_after': 10.001, 'truth_ratio': np.float32(1.0001036), 'truth_ke_ratio': 30.16, 'model_vy_after': 10.307, 'model_ratio': np.float32(1.0306671), 'model_ke_ratio': 29.592}
+wall {'wall': 'y_wall', 'speed_in': 15, 'truth_vy_after': 15.001, 'truth_ratio': np.float32(1.0000784), 'truth_ke_ratio': 13.96, 'model_vy_after': 15.362, 'model_ratio': np.float32(1.0241315), 'model_ke_ratio': 13.729}
+wall {'wall': 'y_wall', 'speed_in': 20, 'truth_vy_after': 20.004, 'truth_ratio': np.float32(1.0001823), 'truth_ke_ratio': 8.29, 'model_vy_after': 20.339, 'model_ratio': np.float32(1.016931), 'model_ke_ratio': 8.167}
+wall {'wall': 'y_wall', 'speed_in': 30, 'truth_vy_after': 29.995, 'truth_ratio': np.float32(0.99983114), 'truth_ke_ratio': 4.24, 'model_vy_after': 30.448, 'model_ratio': np.float32(1.0149318), 'model_ke_ratio': 4.2}
+wall {'wall': 'y_wall', 'speed_in': 40, 'truth_vy_after': 40.008, 'truth_ratio': np.float32(1.0002105), 'truth_ke_ratio': 2.823, 'model_vy_after': 40.424, 'model_ratio': np.float32(1.0106051), 'model_ke_ratio': 2.804}
+wall {'wall': 'y_wall', 'speed_in': 60, 'truth_vy_after': 59.819, 'truth_ratio': np.float32(0.9969806), 'truth_ke_ratio': 1.804, 'model_vy_after': 60.735, 'model_ratio': np.float32(1.0122566), 'model_ke_ratio': 1.817}
+wall {'wall': 'y_wall', 'speed_in': 80, 'truth_vy_after': 80.061, 'truth_ratio': np.float32(1.0007654), 'truth_ke_ratio': 1.457, 'model_vy_after': 80.392, 'model_ratio': np.float32(1.0049013), 'model_ke_ratio': 1.456}
+wall {'wall': 'x_floor', 'speed_in': 3, 'truth_vx_after': 6.211, 'truth_dE': -0.273, 'truth_E0': -7114.5, 'model_vx_after': 5.842, 'model_dE': -0.052, 'model_E0': -7114.5}
+wall {'wall': 'x_floor', 'speed_in': 6, 'truth_vx_after': 4.86, 'truth_dE': 0.183, 'truth_E0': -7101.0, 'model_vx_after': 4.527, 'model_dE': 0.218, 'model_E0': -7101.0}
+wall {'wall': 'x_floor', 'speed_in': 10, 'truth_vx_after': -0.149, 'truth_dE': 1.106, 'truth_E0': -7069.0, 'model_vx_after': -0.447, 'model_dE': 0.748, 'model_E0': -7069.0}
+wall {'wall': 'x_floor', 'speed_in': 15, 'truth_vx_after': -9.663, 'truth_dE': 2.528, 'truth_E0': -7006.5, 'model_vx_after': -9.922, 'model_dE': 0.981, 'model_E0': -7006.5}
+wall {'wall': 'x_floor', 'speed_in': 20, 'truth_vx_after': -21.177, 'truth_dE': 3.246, 'truth_E0': -6919.0, 'model_vx_after': -21.509, 'model_dE': -0.211, 'model_E0': -6919.0}
+wall {'wall': 'x_floor', 'speed_in': 30, 'truth_vx_after': 18.402, 'truth_dE': 1.476, 'truth_E0': -6669.0, 'model_vx_after': 18.024, 'model_dE': 1.32, 'model_E0': -6669.0}
+wall {'wall': 'x_floor', 'speed_in': 40, 'truth_vx_after': 9.582, 'truth_dE': 0.077, 'truth_E0': -6319.0, 'model_vx_after': 9.049, 'model_dE': 8.76, 'model_E0': -6319.0}
+wall {'wall': 'x_floor', 'speed_in': 60, 'truth_vx_after': -9.058, 'truth_dE': -8.973, 'truth_E0': -5319.0, 'model_vx_after': -10.122, 'model_dE': 38.755, 'model_E0': -5319.0}
+wall {'wall': 'x_floor', 'speed_in': 80, 'truth_vx_after': -28.828, 'truth_dE': 21.489, 'truth_E0': -3919.0, 'model_vx_after': -29.192, 'model_dE': 26.167, 'model_E0': -3919.0}
+pair {'offset': 0.0, 'speed_in': 3, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.001, 'model_pmom_err': 0.88, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 6, 'truth_relKE_ratio': 1.003, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.003, 'model_pmom_err': 0.88, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 10, 'truth_relKE_ratio': 0.996, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.995, 'model_pmom_err': 0.88, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 15, 'truth_relKE_ratio': 0.999, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.0, 'model_pmom_err': 0.88, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 20, 'truth_relKE_ratio': 1.009, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.0, 'model_pmom_err': 0.88, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 30, 'truth_relKE_ratio': 0.651, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.664, 'model_pmom_err': 0.88, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 40, 'truth_relKE_ratio': 0.859, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.859, 'model_pmom_err': 0.88, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 60, 'truth_relKE_ratio': 1.052, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.051, 'model_pmom_err': 0.88, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 80, 'truth_relKE_ratio': 1.047, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.047, 'model_pmom_err': 0.88, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 3, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.0, 'model_pmom_err': 0.88, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 6, 'truth_relKE_ratio': 0.998, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.998, 'model_pmom_err': 0.88, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 10, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.002, 'model_pmom_err': 0.88, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 15, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.0, 'model_pmom_err': 0.88, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 20, 'truth_relKE_ratio': 1.006, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.006, 'model_pmom_err': 0.88, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 30, 'truth_relKE_ratio': 0.978, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.978, 'model_pmom_err': 0.88, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 40, 'truth_relKE_ratio': 0.921, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.922, 'model_pmom_err': 0.88, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 60, 'truth_relKE_ratio': 1.021, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.021, 'model_pmom_err': 0.88, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 80, 'truth_relKE_ratio': 1.018, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.018, 'model_pmom_err': 0.88, 'model_finite': True}
+done
+truth done n=317
+soupb: non-finite or > 1e4 at step 75; stopping
+== soupb
+step  err  KE/ball_true  KE/ball_model  floor_frac_true  floor_frac_model  outside  maxspeed_model
+   1    0.038        4.2        3.0    0.010    0.010     0      6.8
+   5    0.190       26.3       24.7    0.016    0.016     0     12.1
+  10    0.388       93.4       90.4    0.032    0.030     1     18.6
+  20    2.141      336.7      327.4    0.048    0.058    17     32.2
+  50   56.436     1170.8      658.9    0.068    0.160    43    173.0
+== cons_pure
+step  err  KE/ball_true  KE/ball_model  floor_frac_true  floor_frac_model  outside  maxspeed_model
+   1    0.018        4.2        4.1    0.010    0.010     0     19.9
+   5    0.106       26.3       25.6    0.016    0.016     0     22.3
+  10    0.281       93.4       91.2    0.032    0.031     3     27.3
+  20    1.383      336.7      329.4    0.048    0.049    12     40.3
+  50   32.873     1170.8     1148.4    0.068    0.060    26     88.0
+ 100  136.477      512.9      522.7    0.037    0.035    10    111.5
+ 200  150.362     1031.3     1020.2    0.027    0.025    18    175.2
+ 300  158.444     1498.6     1430.0    0.022    0.025    13    172.2
+ 400  158.543     1934.4     1854.7    0.033    0.026    21    200.0
+ 500  165.056     2344.4     2237.4    0.035    0.030    28    223.0
+done
