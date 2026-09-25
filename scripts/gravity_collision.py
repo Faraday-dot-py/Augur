@@ -50,6 +50,7 @@ def main():
     ap.add_argument("--separation", type=float, default=250.0)
     ap.add_argument("--impact", type=float, default=60.0)
     ap.add_argument("--approach", type=float, default=3.0, help="each cluster's bulk speed toward the other")
+    ap.add_argument("--spin", type=float, default=0.0, help="counter-clockwise rotation speed at r = sigma, added after virial scaling")
     ap.add_argument("--dt", type=float, default=0.1)
     ap.add_argument("--eps", type=float, default=0.5)
     ap.add_argument("--seed", type=int, default=4738)
@@ -63,6 +64,9 @@ def main():
     cb = torch.tensor([500.0 + args.separation / 2, 500.0 + args.impact / 2], device=dev)
     pa, va = init_cluster(half, ca, args.sigma, args.eps, gen, dev)
     pb, vb = init_cluster(half, cb, args.sigma, args.eps, gen, dev)
+    for p, v, c in ((pa, va, ca), (pb, vb, cb)):
+        rel = p - c
+        v += args.spin / args.sigma * torch.stack([-rel[:, 1], rel[:, 0]], dim=1)
     va[:, 0] += args.approach
     vb[:, 0] -= args.approach
     pos, vel = torch.cat([pa, pb]), torch.cat([va, vb])

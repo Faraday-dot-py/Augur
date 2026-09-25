@@ -8,3 +8,4 @@ results/tiled_video_10m*.npz
 results/ball_rect_5000x1000.npz
 results/gravity_1m_*.npz
 results/collision_*.npz
+results/flyby_*.npz
