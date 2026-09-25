@@ -1,0 +1,301 @@
+=== finetune energy_ft_wall_k1 ===
+generated 600 scenes in 35s
+/home/adamwebb/bounce/scripts/energy_finetune.py:111: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  tot += float(loss)
+it 100 loss 0.1893 ema 4.4786 t=41s
+it 200 loss 0.2660 ema 2.6500 t=46s
+it 300 loss 0.2244 ema 3.1519 t=51s
+it 400 loss 0.0856 ema 2.5916 t=55s
+it 500 loss 7.5953 ema 2.1150 t=60s
+it 600 loss 5.0270 ema 2.7533 t=65s
+it 700 loss 5.1396 ema 2.3093 t=69s
+it 800 loss 0.3941 ema 1.8112 t=74s
+it 900 loss 5.6118 ema 1.9910 t=79s
+it 1000 loss 2.3215 ema 2.0960 t=83s
+it 1100 loss 0.9871 ema 1.5833 t=88s
+it 1200 loss 1.0108 ema 2.0786 t=93s
+it 1300 loss 0.3497 ema 1.5566 t=97s
+it 1400 loss 0.0278 ema 1.7861 t=102s
+it 1500 loss 0.0991 ema 1.7833 t=107s
+it 1600 loss 0.0037 ema 1.2557 t=111s
+it 1700 loss 0.0049 ema 1.4087 t=116s
+it 1800 loss 1.5235 ema 0.9439 t=121s
+it 1900 loss 2.0901 ema 1.3498 t=125s
+it 2000 loss 0.1842 ema 1.7513 t=130s
+it 2100 loss 1.3037 ema 1.6185 t=134s
+it 2200 loss 0.6552 ema 1.2225 t=139s
+it 2300 loss 0.7048 ema 1.7535 t=144s
+it 2400 loss 3.6993 ema 1.2154 t=149s
+it 2500 loss 0.1560 ema 2.1706 t=153s
+it 2600 loss 2.8665 ema 1.5718 t=158s
+it 2700 loss 1.5342 ema 1.6493 t=162s
+it 2800 loss 0.0172 ema 1.5142 t=167s
+it 2900 loss 0.0225 ema 0.8507 t=172s
+it 3000 loss 0.0810 ema 0.8729 t=176s
+saved checkpoints/energy_ft_wall_k1.pt
+=== probe2 energy_ft_wall_k1 ===
+wall {'wall': 'y_wall', 'speed_in': 3, 'truth_vy_after': 3.0, 'truth_ratio': np.float32(1.0001458), 'truth_ke_ratio': 325.0, 'model_vy_after': 3.248, 'model_ratio': np.float32(1.0825006), 'model_ke_ratio': 263.636}
+wall {'wall': 'y_wall', 'speed_in': 6, 'truth_vy_after': 5.998, 'truth_ratio': np.float32(0.9996782), 'truth_ke_ratio': 81.999, 'model_vy_after': 5.234, 'model_ratio': np.float32(0.8722735), 'model_ke_ratio': 65.729}
+wall {'wall': 'y_wall', 'speed_in': 10, 'truth_vy_after': 10.001, 'truth_ratio': np.float32(1.0001036), 'truth_ke_ratio': 30.16, 'model_vy_after': 11.158, 'model_ratio': np.float32(1.1157564), 'model_ke_ratio': 22.7}
+wall {'wall': 'y_wall', 'speed_in': 15, 'truth_vy_after': 15.001, 'truth_ratio': np.float32(1.0000784), 'truth_ke_ratio': 13.96, 'model_vy_after': 8.791, 'model_ratio': np.float32(0.5860695), 'model_ke_ratio': 9.906}
+wall {'wall': 'y_wall', 'speed_in': 20, 'truth_vy_after': 20.004, 'truth_ratio': np.float32(1.0001823), 'truth_ke_ratio': 8.29, 'model_vy_after': 12.116, 'model_ratio': np.float32(0.6057752), 'model_ke_ratio': 5.462}
+wall {'wall': 'y_wall', 'speed_in': 30, 'truth_vy_after': 29.995, 'truth_ratio': np.float32(0.99983114), 'truth_ke_ratio': 4.24, 'model_vy_after': 20.463, 'model_ratio': np.float32(0.68209463), 'model_ke_ratio': 2.437}
+wall {'wall': 'y_wall', 'speed_in': 40, 'truth_vy_after': 40.008, 'truth_ratio': np.float32(1.0002105), 'truth_ke_ratio': 2.823, 'model_vy_after': 30.873, 'model_ratio': np.float32(0.7718333), 'model_ke_ratio': 1.651}
+wall {'wall': 'y_wall', 'speed_in': 60, 'truth_vy_after': 59.819, 'truth_ratio': np.float32(0.9969806), 'truth_ke_ratio': 1.804, 'model_vy_after': 86.892, 'model_ratio': np.float32(1.4482024), 'model_ke_ratio': 2.372}
+wall {'wall': 'y_wall', 'speed_in': 80, 'truth_vy_after': 80.061, 'truth_ratio': np.float32(1.0007654), 'truth_ke_ratio': 1.457, 'model_vy_after': 65.129, 'model_ratio': np.float32(0.8141165), 'model_ke_ratio': 0.717}
+wall {'wall': 'x_floor', 'speed_in': 3, 'truth_vx_after': 6.211, 'truth_dE': -0.273, 'truth_E0': -7114.5, 'model_vx_after': -1.72, 'model_dE': -58.86, 'model_E0': -7114.5}
+wall {'wall': 'x_floor', 'speed_in': 6, 'truth_vx_after': 4.86, 'truth_dE': 0.183, 'truth_E0': -7101.0, 'model_vx_after': 2.304, 'model_dE': -64.902, 'model_E0': -7101.0}
+wall {'wall': 'x_floor', 'speed_in': 10, 'truth_vx_after': -0.149, 'truth_dE': 1.106, 'truth_E0': -7069.0, 'model_vx_after': 5.04, 'model_dE': -106.129, 'model_E0': -7069.0}
+wall {'wall': 'x_floor', 'speed_in': 15, 'truth_vx_after': -9.663, 'truth_dE': 2.528, 'truth_E0': -7006.5, 'model_vx_after': 1.441, 'model_dE': -93.568, 'model_E0': -7006.5}
+wall {'wall': 'x_floor', 'speed_in': 20, 'truth_vx_after': -21.177, 'truth_dE': 3.246, 'truth_E0': -6919.0, 'model_vx_after': -10.031, 'model_dE': -160.405, 'model_E0': -6919.0}
+wall {'wall': 'x_floor', 'speed_in': 30, 'truth_vx_after': 18.402, 'truth_dE': 1.476, 'truth_E0': -6669.0, 'model_vx_after': -9.437, 'model_dE': -280.157, 'model_E0': -6669.0}
+wall {'wall': 'x_floor', 'speed_in': 40, 'truth_vx_after': 9.582, 'truth_dE': 0.077, 'truth_E0': -6319.0, 'model_vx_after': 13.286, 'model_dE': -345.904, 'model_E0': -6319.0}
+wall {'wall': 'x_floor', 'speed_in': 60, 'truth_vx_after': -9.058, 'truth_dE': -8.973, 'truth_E0': -5319.0, 'model_vx_after': -8.968, 'model_dE': -228.514, 'model_E0': -5319.0}
+wall {'wall': 'x_floor', 'speed_in': 80, 'truth_vx_after': -28.828, 'truth_dE': 21.489, 'truth_E0': -3919.0, 'model_vx_after': 9.971, 'model_dE': -2680.664, 'model_E0': -3919.0}
+pair {'offset': 0.0, 'speed_in': 3, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.558, 'model_pmom_err': 5.725, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 6, 'truth_relKE_ratio': 1.003, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.313, 'model_pmom_err': 5.999, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 10, 'truth_relKE_ratio': 0.996, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.091, 'model_pmom_err': 6.121, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 15, 'truth_relKE_ratio': 0.999, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.115, 'model_pmom_err': 6.422, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 20, 'truth_relKE_ratio': 1.009, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.029, 'model_pmom_err': 5.953, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 30, 'truth_relKE_ratio': 0.651, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.715, 'model_pmom_err': 7.513, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 40, 'truth_relKE_ratio': 0.859, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.019, 'model_pmom_err': 26.448, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 60, 'truth_relKE_ratio': 1.052, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.371, 'model_pmom_err': 136.894, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 80, 'truth_relKE_ratio': 1.047, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 2.753, 'model_pmom_err': 182.384, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 3, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.109, 'model_pmom_err': 4.804, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 6, 'truth_relKE_ratio': 0.998, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.409, 'model_pmom_err': 4.892, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 10, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.575, 'model_pmom_err': 5.863, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 15, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.595, 'model_pmom_err': 6.381, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 20, 'truth_relKE_ratio': 1.006, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.404, 'model_pmom_err': 17.645, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 30, 'truth_relKE_ratio': 0.978, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.807, 'model_pmom_err': 26.351, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 40, 'truth_relKE_ratio': 0.921, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.019, 'model_pmom_err': 26.448, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 60, 'truth_relKE_ratio': 1.021, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.371, 'model_pmom_err': 136.894, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 80, 'truth_relKE_ratio': 1.018, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 2.753, 'model_pmom_err': 182.384, 'model_finite': True}
+hidden_reset {"carried": {"0": -95.21870040893555, "5": -94.39652919769287, "10": -116.455810546875, "20": -130.58975791931152, "30": -139.9733428955078, "50": -149.12593269348145, "75": -155.6116485595703, "100": -161.07861137390137}, "zeroed": {"0": -95.21870040893555, "5": -93.97224807739258, "10": -111.43707370758057, "20": -117.34068870544434, "30": -123.34628200531006, "50": -139.56176662445068, "75": -144.6087999343872, "100": -152.188570022583}, "truth": {"0": -95.21869945526123, "5": -95.03119373321533, "10": -102.72248554229736, "20": -96.92350482940674, "30": -96.79312801361084, "50": -96.41215419769287, "75": -96.85719108581543, "100": -96.27295970916748}, "carried_err": {"1": 0.030305901949759573, "5": 0.13843050878494978, "10": 0.8194009885191917, "20": 4.744747221469879, "30": 5.8729700446128845, "50": 7.956636965274811, "100": 8.403468251228333}, "zeroed_err": {"1": 0.030305901949759573, "5": 0.18042594380676746, "10": 0.7898518592119217, "20": 4.769653379917145, "30": 6.009757578372955, "50": 7.568684637546539, "100": 7.572630286216736}}
+done
+=== finetune energy_ft_wall_k8 ===
+generated 600 scenes in 35s
+/home/adamwebb/bounce/scripts/energy_finetune.py:111: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  tot += float(loss)
+it 100 loss 15.9780 ema 8.7030 t=50s
+it 200 loss 1.1613 ema 6.9267 t=63s
+it 300 loss 6.9961 ema 5.3335 t=76s
+it 400 loss 2.3270 ema 4.5600 t=89s
+it 500 loss 0.2487 ema 4.6194 t=102s
+it 600 loss 3.1595 ema 4.9273 t=116s
+it 700 loss 0.3428 ema 5.3201 t=129s
+it 800 loss 2.2482 ema 4.2119 t=142s
+it 900 loss 1.2494 ema 3.7210 t=155s
+it 1000 loss 5.4193 ema 3.7301 t=169s
+it 1100 loss 7.4831 ema 3.9005 t=182s
+it 1200 loss 3.2703 ema 3.8954 t=196s
+it 1300 loss 2.3080 ema 3.6672 t=209s
+it 1400 loss 2.1218 ema 3.4838 t=223s
+it 1500 loss 0.4579 ema 3.2161 t=236s
+it 1600 loss 2.0992 ema 4.8960 t=250s
+it 1700 loss 1.0806 ema 3.6605 t=263s
+it 1800 loss 1.3287 ema 3.7355 t=276s
+it 1900 loss 4.1323 ema 3.9809 t=289s
+it 2000 loss 0.7089 ema 3.2600 t=302s
+it 2100 loss 3.8301 ema 3.3595 t=315s
+it 2200 loss 0.2654 ema 2.8479 t=328s
+it 2300 loss 1.5269 ema 3.0671 t=341s
+it 2400 loss 0.6926 ema 3.1863 t=354s
+it 2500 loss 12.8146 ema 3.0394 t=367s
+it 2600 loss 5.8624 ema 2.7182 t=380s
+it 2700 loss 2.2050 ema 3.0526 t=393s
+it 2800 loss 2.3484 ema 2.8232 t=406s
+it 2900 loss 6.5829 ema 3.3216 t=419s
+it 3000 loss 2.8860 ema 2.6041 t=432s
+saved checkpoints/energy_ft_wall_k8.pt
+=== probe2 energy_ft_wall_k8 ===
+wall {'wall': 'y_wall', 'speed_in': 3, 'truth_vy_after': 3.0, 'truth_ratio': np.float32(1.0001458), 'truth_ke_ratio': 325.0, 'model_vy_after': 5.547, 'model_ratio': np.float32(1.8488727), 'model_ke_ratio': 302.172}
+wall {'wall': 'y_wall', 'speed_in': 6, 'truth_vy_after': 5.998, 'truth_ratio': np.float32(0.9996782), 'truth_ke_ratio': 81.999, 'model_vy_after': 8.296, 'model_ratio': np.float32(1.3826886), 'model_ke_ratio': 78.028}
+wall {'wall': 'y_wall', 'speed_in': 10, 'truth_vy_after': 10.001, 'truth_ratio': np.float32(1.0001036), 'truth_ke_ratio': 30.16, 'model_vy_after': 12.223, 'model_ratio': np.float32(1.2222921), 'model_ke_ratio': 29.171}
+wall {'wall': 'y_wall', 'speed_in': 15, 'truth_vy_after': 15.001, 'truth_ratio': np.float32(1.0000784), 'truth_ke_ratio': 13.96, 'model_vy_after': 17.628, 'model_ratio': np.float32(1.175216), 'model_ke_ratio': 14.221}
+wall {'wall': 'y_wall', 'speed_in': 20, 'truth_vy_after': 20.004, 'truth_ratio': np.float32(1.0001823), 'truth_ke_ratio': 8.29, 'model_vy_after': 21.998, 'model_ratio': np.float32(1.0998839), 'model_ke_ratio': 8.77}
+wall {'wall': 'y_wall', 'speed_in': 30, 'truth_vy_after': 29.995, 'truth_ratio': np.float32(0.99983114), 'truth_ke_ratio': 4.24, 'model_vy_after': 29.25, 'model_ratio': np.float32(0.975004), 'model_ke_ratio': 3.983}
+wall {'wall': 'y_wall', 'speed_in': 40, 'truth_vy_after': 40.008, 'truth_ratio': np.float32(1.0002105), 'truth_ke_ratio': 2.823, 'model_vy_after': 49.316, 'model_ratio': np.float32(1.2328978), 'model_ke_ratio': 3.288}
+wall {'wall': 'y_wall', 'speed_in': 60, 'truth_vy_after': 59.819, 'truth_ratio': np.float32(0.9969806), 'truth_ke_ratio': 1.804, 'model_vy_after': 70.872, 'model_ratio': np.float32(1.1812046), 'model_ke_ratio': 2.083}
+wall {'wall': 'y_wall', 'speed_in': 80, 'truth_vy_after': 80.061, 'truth_ratio': np.float32(1.0007654), 'truth_ke_ratio': 1.457, 'model_vy_after': 109.149, 'model_ratio': np.float32(1.3643663), 'model_ke_ratio': 2.372}
+wall {'wall': 'x_floor', 'speed_in': 3, 'truth_vx_after': 6.211, 'truth_dE': -0.273, 'truth_E0': -7114.5, 'model_vx_after': 4.263, 'model_dE': 12.825, 'model_E0': -7114.5}
+wall {'wall': 'x_floor', 'speed_in': 6, 'truth_vx_after': 4.86, 'truth_dE': 0.183, 'truth_E0': -7101.0, 'model_vx_after': 3.051, 'model_dE': 11.001, 'model_E0': -7101.0}
+wall {'wall': 'x_floor', 'speed_in': 10, 'truth_vx_after': -0.149, 'truth_dE': 1.106, 'truth_E0': -7069.0, 'model_vx_after': -0.142, 'model_dE': 4.599, 'model_E0': -7069.0}
+wall {'wall': 'x_floor', 'speed_in': 15, 'truth_vx_after': -9.663, 'truth_dE': 2.528, 'truth_E0': -7006.5, 'model_vx_after': -14.276, 'model_dE': 61.801, 'model_E0': -7006.5}
+wall {'wall': 'x_floor', 'speed_in': 20, 'truth_vx_after': -21.177, 'truth_dE': 3.246, 'truth_E0': -6919.0, 'model_vx_after': -23.65, 'model_dE': 17.872, 'model_E0': -6919.0}
+wall {'wall': 'x_floor', 'speed_in': 30, 'truth_vx_after': 18.402, 'truth_dE': 1.476, 'truth_E0': -6669.0, 'model_vx_after': 16.65, 'model_dE': 70.564, 'model_E0': -6669.0}
+wall {'wall': 'x_floor', 'speed_in': 40, 'truth_vx_after': 9.582, 'truth_dE': 0.077, 'truth_E0': -6319.0, 'model_vx_after': 10.139, 'model_dE': -186.436, 'model_E0': -6319.0}
+wall {'wall': 'x_floor', 'speed_in': 60, 'truth_vx_after': -9.058, 'truth_dE': -8.973, 'truth_E0': -5319.0, 'model_vx_after': 1.24, 'model_dE': -457.538, 'model_E0': -5319.0}
+wall {'wall': 'x_floor', 'speed_in': 80, 'truth_vx_after': -28.828, 'truth_dE': 21.489, 'truth_E0': -3919.0, 'model_vx_after': 0.336, 'model_dE': -1641.702, 'model_E0': -3919.0}
+pair {'offset': 0.0, 'speed_in': 3, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.604, 'model_pmom_err': 1.298, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 6, 'truth_relKE_ratio': 1.003, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.378, 'model_pmom_err': 1.255, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 10, 'truth_relKE_ratio': 0.996, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.11, 'model_pmom_err': 1.336, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 15, 'truth_relKE_ratio': 0.999, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.131, 'model_pmom_err': 1.293, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 20, 'truth_relKE_ratio': 1.009, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.028, 'model_pmom_err': 1.208, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 30, 'truth_relKE_ratio': 0.651, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.901, 'model_pmom_err': 15.751, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 40, 'truth_relKE_ratio': 0.859, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.937, 'model_pmom_err': 14.142, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 60, 'truth_relKE_ratio': 1.052, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.954, 'model_pmom_err': 16.346, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 80, 'truth_relKE_ratio': 1.047, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.023, 'model_pmom_err': 138.831, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 3, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.333, 'model_pmom_err': 0.935, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 6, 'truth_relKE_ratio': 0.998, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.507, 'model_pmom_err': 7.979, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 10, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.66, 'model_pmom_err': 1.32, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 15, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.66, 'model_pmom_err': 1.114, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 20, 'truth_relKE_ratio': 1.006, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.318, 'model_pmom_err': 9.84, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 30, 'truth_relKE_ratio': 0.978, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.009, 'model_pmom_err': 16.421, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 40, 'truth_relKE_ratio': 0.921, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.937, 'model_pmom_err': 14.142, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 60, 'truth_relKE_ratio': 1.021, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.954, 'model_pmom_err': 16.346, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 80, 'truth_relKE_ratio': 1.018, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.023, 'model_pmom_err': 138.831, 'model_finite': True}
+hidden_reset {"carried": {"0": -95.21870040893555, "5": -93.30702209472656, "10": -105.61148929595947, "20": -102.19118118286133, "30": -103.53138160705566, "50": -109.28362941741943, "75": -103.20413112640381, "100": -106.38079786300659}, "zeroed": {"0": -95.21870040893555, "5": -88.70214557647705, "10": -96.21858596801758, "20": -94.8105058670044, "30": -91.87889862060547, "50": -85.3850998878479, "75": -81.03841781616211, "100": -72.34270977973938}, "truth": {"0": -95.21869945526123, "5": -95.03119373321533, "10": -102.72248554229736, "20": -96.92350482940674, "30": -96.79312801361084, "50": -96.41215419769287, "75": -96.85719108581543, "100": -96.27295970916748}, "carried_err": {"1": 0.05642988299950957, "5": 0.1457694862037897, "10": 0.5143796689808369, "20": 3.171043610200286, "30": 3.626618020236492, "50": 8.02949446439743, "100": 8.49689769744873}, "zeroed_err": {"1": 0.05642988299950957, "5": 0.30443108081817627, "10": 1.1590258106589317, "20": 4.1474339962005615, "30": 6.193685412406921, "50": 7.151851773262024, "100": 8.99986070394516}}
+done
+=== finetune energy_ft_pair_k1 ===
+generated 600 scenes in 35s
+/home/adamwebb/bounce/scripts/energy_finetune.py:111: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  tot += float(loss)
+it 100 loss 6.7650 ema 0.9323 t=43s
+it 200 loss 0.6166 ema 0.7479 t=49s
+it 300 loss 1.5435 ema 0.4981 t=55s
+it 400 loss 0.0014 ema 0.4327 t=62s
+it 500 loss 0.2764 ema 0.3260 t=68s
+it 600 loss 0.0615 ema 0.4047 t=74s
+it 700 loss 0.0118 ema 0.2140 t=80s
+it 800 loss 0.4899 ema 0.2159 t=86s
+it 900 loss 0.3616 ema 0.1736 t=93s
+it 1000 loss 0.0146 ema 0.2158 t=99s
+it 1100 loss 0.8652 ema 0.2527 t=105s
+it 1200 loss 0.0067 ema 0.0969 t=111s
+it 1300 loss 0.7337 ema 0.4216 t=117s
+it 1400 loss 0.0212 ema 0.1723 t=124s
+it 1500 loss 0.0456 ema 0.2348 t=130s
+it 1600 loss 0.0091 ema 0.2169 t=136s
+it 1700 loss 0.4173 ema 0.2412 t=142s
+it 1800 loss 0.0121 ema 0.1362 t=148s
+it 1900 loss 0.0097 ema 0.1494 t=154s
+it 2000 loss 0.0099 ema 0.0989 t=160s
+it 2100 loss 0.0118 ema 0.3613 t=167s
+it 2200 loss 0.0021 ema 0.0978 t=173s
+it 2300 loss 0.0030 ema 0.1704 t=179s
+it 2400 loss 0.0247 ema 0.2187 t=185s
+it 2500 loss 0.0351 ema 0.1674 t=191s
+it 2600 loss 0.0193 ema 0.1273 t=197s
+it 2700 loss 0.0059 ema 0.1004 t=204s
+it 2800 loss 0.0126 ema 0.0382 t=210s
+it 2900 loss 0.0060 ema 0.1913 t=216s
+it 3000 loss 0.0029 ema 0.2406 t=222s
+saved checkpoints/energy_ft_pair_k1.pt
+=== probe2 energy_ft_pair_k1 ===
+wall {'wall': 'y_wall', 'speed_in': 3, 'truth_vy_after': 3.0, 'truth_ratio': np.float32(1.0001458), 'truth_ke_ratio': 325.0, 'model_vy_after': -0.823, 'model_ratio': np.float32(-0.2743834), 'model_ke_ratio': 461.734}
+wall {'wall': 'y_wall', 'speed_in': 6, 'truth_vy_after': 5.998, 'truth_ratio': np.float32(0.9996782), 'truth_ke_ratio': 81.999, 'model_vy_after': 1.133, 'model_ratio': np.float32(0.18889116), 'model_ke_ratio': 118.012}
+wall {'wall': 'y_wall', 'speed_in': 10, 'truth_vy_after': 10.001, 'truth_ratio': np.float32(1.0001036), 'truth_ke_ratio': 30.16, 'model_vy_after': 5.207, 'model_ratio': np.float32(0.5206736), 'model_ke_ratio': 40.563}
+wall {'wall': 'y_wall', 'speed_in': 15, 'truth_vy_after': 15.001, 'truth_ratio': np.float32(1.0000784), 'truth_ke_ratio': 13.96, 'model_vy_after': 9.395, 'model_ratio': np.float32(0.6263341), 'model_ke_ratio': 16.443}
+wall {'wall': 'y_wall', 'speed_in': 20, 'truth_vy_after': 20.004, 'truth_ratio': np.float32(1.0001823), 'truth_ke_ratio': 8.29, 'model_vy_after': 9.575, 'model_ratio': np.float32(0.4787584), 'model_ke_ratio': 11.732}
+wall {'wall': 'y_wall', 'speed_in': 30, 'truth_vy_after': 29.995, 'truth_ratio': np.float32(0.99983114), 'truth_ke_ratio': 4.24, 'model_vy_after': 15.539, 'model_ratio': np.float32(0.51795036), 'model_ke_ratio': 5.531}
+wall {'wall': 'y_wall', 'speed_in': 40, 'truth_vy_after': 40.008, 'truth_ratio': np.float32(1.0002105), 'truth_ke_ratio': 2.823, 'model_vy_after': 21.406, 'model_ratio': np.float32(0.535143), 'model_ke_ratio': 3.524}
+wall {'wall': 'y_wall', 'speed_in': 60, 'truth_vy_after': 59.819, 'truth_ratio': np.float32(0.9969806), 'truth_ke_ratio': 1.804, 'model_vy_after': 59.239, 'model_ratio': np.float32(0.98732305), 'model_ke_ratio': 1.666}
+wall {'wall': 'y_wall', 'speed_in': 80, 'truth_vy_after': 80.061, 'truth_ratio': np.float32(1.0007654), 'truth_ke_ratio': 1.457, 'model_vy_after': 88.854, 'model_ratio': np.float32(1.1106794), 'model_ke_ratio': 1.249}
+wall {'wall': 'x_floor', 'speed_in': 3, 'truth_vx_after': 6.211, 'truth_dE': -0.273, 'truth_E0': -7114.5, 'model_vx_after': 2.566, 'model_dE': 52.12, 'model_E0': -7114.5}
+wall {'wall': 'x_floor', 'speed_in': 6, 'truth_vx_after': 4.86, 'truth_dE': 0.183, 'truth_E0': -7101.0, 'model_vx_after': -0.855, 'model_dE': 41.031, 'model_E0': -7101.0}
+wall {'wall': 'x_floor', 'speed_in': 10, 'truth_vx_after': -0.149, 'truth_dE': 1.106, 'truth_E0': -7069.0, 'model_vx_after': -0.902, 'model_dE': 99.131, 'model_E0': -7069.0}
+wall {'wall': 'x_floor', 'speed_in': 15, 'truth_vx_after': -9.663, 'truth_dE': 2.528, 'truth_E0': -7006.5, 'model_vx_after': -5.831, 'model_dE': 103.509, 'model_E0': -7006.5}
+wall {'wall': 'x_floor', 'speed_in': 20, 'truth_vx_after': -21.177, 'truth_dE': 3.246, 'truth_E0': -6919.0, 'model_vx_after': 15.95, 'model_dE': -85.476, 'model_E0': -6919.0}
+wall {'wall': 'x_floor', 'speed_in': 30, 'truth_vx_after': 18.402, 'truth_dE': 1.476, 'truth_E0': -6669.0, 'model_vx_after': 15.667, 'model_dE': -240.921, 'model_E0': -6669.0}
+wall {'wall': 'x_floor', 'speed_in': 40, 'truth_vx_after': 9.582, 'truth_dE': 0.077, 'truth_E0': -6319.0, 'model_vx_after': 4.096, 'model_dE': -134.148, 'model_E0': -6319.0}
+wall {'wall': 'x_floor', 'speed_in': 60, 'truth_vx_after': -9.058, 'truth_dE': -8.973, 'truth_E0': -5319.0, 'model_vx_after': -187.161, 'model_dE': 20156.269, 'model_E0': -5319.0}
+wall {'wall': 'x_floor', 'speed_in': 80, 'truth_vx_after': -28.828, 'truth_dE': 21.489, 'truth_E0': -3919.0, 'model_vx_after': 2.847, 'model_dE': -2112.245, 'model_E0': -3919.0}
+pair {'offset': 0.0, 'speed_in': 3, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.163, 'model_pmom_err': 2.214, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 6, 'truth_relKE_ratio': 1.003, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.008, 'model_pmom_err': 2.299, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 10, 'truth_relKE_ratio': 0.996, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.417, 'model_pmom_err': 2.315, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 15, 'truth_relKE_ratio': 0.999, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.202, 'model_pmom_err': 2.256, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 20, 'truth_relKE_ratio': 1.009, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.021, 'model_pmom_err': 1.995, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 30, 'truth_relKE_ratio': 0.651, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.296, 'model_pmom_err': 25.672, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 40, 'truth_relKE_ratio': 0.859, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.539, 'model_pmom_err': 8.163, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 60, 'truth_relKE_ratio': 1.052, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 2.037, 'model_pmom_err': 21.728, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 80, 'truth_relKE_ratio': 1.047, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.364, 'model_pmom_err': 134.938, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 3, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 2.632, 'model_pmom_err': 3.176, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 6, 'truth_relKE_ratio': 0.998, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 2.911, 'model_pmom_err': 3.627, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 10, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.15, 'model_pmom_err': 4.67, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 15, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.852, 'model_pmom_err': 5.071, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 20, 'truth_relKE_ratio': 1.006, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 2.686, 'model_pmom_err': 16.807, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 30, 'truth_relKE_ratio': 0.978, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.329, 'model_pmom_err': 26.077, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 40, 'truth_relKE_ratio': 0.921, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.539, 'model_pmom_err': 8.163, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 60, 'truth_relKE_ratio': 1.021, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 2.037, 'model_pmom_err': 21.728, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 80, 'truth_relKE_ratio': 1.018, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.364, 'model_pmom_err': 134.938, 'model_finite': True}
+hidden_reset {"carried": {"0": -95.21870040893555, "5": -95.14705562591553, "10": -100.46255683898926, "20": -87.12487506866455, "30": -62.845778942108154, "50": -53.97752904891968, "75": 35.51427149772644, "100": 29.622829914093018}, "zeroed": {"0": -95.21870040893555, "5": -94.44114208221436, "10": -96.52414321899414, "20": -36.15452527999878, "30": -5.652153491973877, "50": 88.95259213447571, "75": 92.76957511901855, "100": 285.68874168395996}, "truth": {"0": -95.21869945526123, "5": -95.03119373321533, "10": -102.72248554229736, "20": -96.92350482940674, "30": -96.79312801361084, "50": -96.41215419769287, "75": -96.85719108581543, "100": -96.27295970916748}, "carried_err": {"1": 0.047074467001948506, "5": 0.20350672397762537, "10": 0.7165217436850071, "20": 4.273568227887154, "30": 5.909593313932419, "50": 10.328039467334747, "100": 9.701783776283264}, "zeroed_err": {"1": 0.047074467001948506, "5": 0.19235158013179898, "10": 0.8546063341200352, "20": 5.938523143529892, "30": 7.938784271478653, "50": 9.56868988275528, "100": 10.982132315635681}}
+done
+=== finetune energy_ft_pair_k8 ===
+generated 600 scenes in 36s
+/home/adamwebb/bounce/scripts/energy_finetune.py:111: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  tot += float(loss)
+it 100 loss 0.3596 ema 1.4242 t=54s
+it 200 loss 0.5698 ema 0.8159 t=71s
+it 300 loss 0.4381 ema 0.6157 t=89s
+it 400 loss 0.1720 ema 0.5931 t=106s
+it 500 loss 0.1701 ema 0.3919 t=124s
+it 600 loss 0.1122 ema 0.3565 t=141s
+it 700 loss 0.1901 ema 0.4730 t=159s
+it 800 loss 0.0601 ema 0.3379 t=176s
+it 900 loss 0.0917 ema 0.2978 t=193s
+it 1000 loss 0.1600 ema 0.2917 t=210s
+it 1100 loss 0.2512 ema 0.5281 t=228s
+it 1200 loss 0.2508 ema 0.3388 t=245s
+it 1300 loss 0.1509 ema 0.3715 t=262s
+it 1400 loss 0.1147 ema 0.2944 t=280s
+it 1500 loss 0.3152 ema 0.2530 t=297s
+it 1600 loss 0.1203 ema 0.3555 t=314s
+it 1700 loss 0.2157 ema 0.1770 t=332s
+it 1800 loss 0.0837 ema 0.1812 t=349s
+it 1900 loss 0.0820 ema 0.2961 t=366s
+it 2000 loss 0.0710 ema 0.1764 t=383s
+it 2100 loss 0.0809 ema 0.3631 t=400s
+it 2200 loss 0.1744 ema 0.3208 t=418s
+it 2300 loss 0.0930 ema 0.2456 t=435s
+it 2400 loss 0.0586 ema 0.2754 t=452s
+it 2500 loss 0.0757 ema 0.1357 t=469s
+it 2600 loss 0.0934 ema 0.3096 t=487s
+it 2700 loss 0.1307 ema 0.2006 t=504s
+it 2800 loss 0.1365 ema 0.1559 t=521s
+it 2900 loss 0.0213 ema 0.2378 t=539s
+it 3000 loss 0.0097 ema 0.1726 t=556s
+saved checkpoints/energy_ft_pair_k8.pt
+=== probe2 energy_ft_pair_k8 ===
+wall {'wall': 'y_wall', 'speed_in': 3, 'truth_vy_after': 3.0, 'truth_ratio': np.float32(1.0001458), 'truth_ke_ratio': 325.0, 'model_vy_after': 0.547, 'model_ratio': np.float32(0.18217008), 'model_ke_ratio': 415.963}
+wall {'wall': 'y_wall', 'speed_in': 6, 'truth_vy_after': 5.998, 'truth_ratio': np.float32(0.9996782), 'truth_ke_ratio': 81.999, 'model_vy_after': 3.41, 'model_ratio': np.float32(0.56837213), 'model_ke_ratio': 100.475}
+wall {'wall': 'y_wall', 'speed_in': 10, 'truth_vy_after': 10.001, 'truth_ratio': np.float32(1.0001036), 'truth_ke_ratio': 30.16, 'model_vy_after': 6.898, 'model_ratio': np.float32(0.68981326), 'model_ke_ratio': 36.12}
+wall {'wall': 'y_wall', 'speed_in': 15, 'truth_vy_after': 15.001, 'truth_ratio': np.float32(1.0000784), 'truth_ke_ratio': 13.96, 'model_vy_after': 10.563, 'model_ratio': np.float32(0.7042002), 'model_ke_ratio': 15.837}
+wall {'wall': 'y_wall', 'speed_in': 20, 'truth_vy_after': 20.004, 'truth_ratio': np.float32(1.0001823), 'truth_ke_ratio': 8.29, 'model_vy_after': 10.967, 'model_ratio': np.float32(0.5483522), 'model_ke_ratio': 7.928}
+wall {'wall': 'y_wall', 'speed_in': 30, 'truth_vy_after': 29.995, 'truth_ratio': np.float32(0.99983114), 'truth_ke_ratio': 4.24, 'model_vy_after': 18.364, 'model_ratio': np.float32(0.6121275), 'model_ke_ratio': 3.864}
+wall {'wall': 'y_wall', 'speed_in': 40, 'truth_vy_after': 40.008, 'truth_ratio': np.float32(1.0002105), 'truth_ke_ratio': 2.823, 'model_vy_after': 27.191, 'model_ratio': np.float32(0.6797742), 'model_ke_ratio': 1.583}
+wall {'wall': 'y_wall', 'speed_in': 60, 'truth_vy_after': 59.819, 'truth_ratio': np.float32(0.9969806), 'truth_ke_ratio': 1.804, 'model_vy_after': 28.009, 'model_ratio': np.float32(0.46681884), 'model_ke_ratio': 0.943}
+wall {'wall': 'y_wall', 'speed_in': 80, 'truth_vy_after': 80.061, 'truth_ratio': np.float32(1.0007654), 'truth_ke_ratio': 1.457, 'model_vy_after': 33.174, 'model_ratio': np.float32(0.41467732), 'model_ke_ratio': 0.584}
+wall {'wall': 'x_floor', 'speed_in': 3, 'truth_vx_after': 6.211, 'truth_dE': -0.273, 'truth_E0': -7114.5, 'model_vx_after': 7.538, 'model_dE': -14.87, 'model_E0': -7114.5}
+wall {'wall': 'x_floor', 'speed_in': 6, 'truth_vx_after': 4.86, 'truth_dE': 0.183, 'truth_E0': -7101.0, 'model_vx_after': -19.9, 'model_dE': 125.794, 'model_E0': -7101.0}
+wall {'wall': 'x_floor', 'speed_in': 10, 'truth_vx_after': -0.149, 'truth_dE': 1.106, 'truth_E0': -7069.0, 'model_vx_after': 11.163, 'model_dE': 24.999, 'model_E0': -7069.0}
+wall {'wall': 'x_floor', 'speed_in': 15, 'truth_vx_after': -9.663, 'truth_dE': 2.528, 'truth_E0': -7006.5, 'model_vx_after': 6.471, 'model_dE': 102.735, 'model_E0': -7006.5}
+wall {'wall': 'x_floor', 'speed_in': 20, 'truth_vx_after': -21.177, 'truth_dE': 3.246, 'truth_E0': -6919.0, 'model_vx_after': 0.226, 'model_dE': 235.806, 'model_E0': -6919.0}
+wall {'wall': 'x_floor', 'speed_in': 30, 'truth_vx_after': 18.402, 'truth_dE': 1.476, 'truth_E0': -6669.0, 'model_vx_after': 0.785, 'model_dE': 80.722, 'model_E0': -6669.0}
+wall {'wall': 'x_floor', 'speed_in': 40, 'truth_vx_after': 9.582, 'truth_dE': 0.077, 'truth_E0': -6319.0, 'model_vx_after': -4.848, 'model_dE': -42.256, 'model_E0': -6319.0}
+wall {'wall': 'x_floor', 'speed_in': 60, 'truth_vx_after': -9.058, 'truth_dE': -8.973, 'truth_E0': -5319.0, 'model_vx_after': -23.102, 'model_dE': 802.446, 'model_E0': -5319.0}
+wall {'wall': 'x_floor', 'speed_in': 80, 'truth_vx_after': -28.828, 'truth_dE': 21.489, 'truth_E0': -3919.0, 'model_vx_after': -0.988, 'model_dE': -2170.35, 'model_E0': -3919.0}
+pair {'offset': 0.0, 'speed_in': 3, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.617, 'model_pmom_err': 2.245, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 6, 'truth_relKE_ratio': 1.003, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.711, 'model_pmom_err': 2.271, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 10, 'truth_relKE_ratio': 0.996, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.826, 'model_pmom_err': 2.327, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 15, 'truth_relKE_ratio': 0.999, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.08, 'model_pmom_err': 2.421, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 20, 'truth_relKE_ratio': 1.009, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.456, 'model_pmom_err': 5.079, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 30, 'truth_relKE_ratio': 0.651, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.481, 'model_pmom_err': 10.621, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 40, 'truth_relKE_ratio': 0.859, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.375, 'model_pmom_err': 17.446, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 60, 'truth_relKE_ratio': 1.052, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.26, 'model_pmom_err': 31.777, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 80, 'truth_relKE_ratio': 1.047, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.205, 'model_pmom_err': 43.695, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 3, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.563, 'model_pmom_err': 2.512, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 6, 'truth_relKE_ratio': 0.998, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.666, 'model_pmom_err': 3.157, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 10, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.207, 'model_pmom_err': 3.617, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 15, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.894, 'model_pmom_err': 4.466, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 20, 'truth_relKE_ratio': 1.006, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.258, 'model_pmom_err': 15.523, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 30, 'truth_relKE_ratio': 0.978, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.476, 'model_pmom_err': 10.771, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 40, 'truth_relKE_ratio': 0.921, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.375, 'model_pmom_err': 17.51, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 60, 'truth_relKE_ratio': 1.021, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.26, 'model_pmom_err': 31.777, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 80, 'truth_relKE_ratio': 1.018, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.205, 'model_pmom_err': 43.695, 'model_finite': True}
+hidden_reset {"carried": {"0": -95.21870040893555, "5": -95.2417984008789, "10": -100.13137435913086, "20": -71.82216989994049, "30": -80.80820775032043, "50": -36.50039839744568, "75": 40.84134182333946, "100": 117.20374631881714}, "zeroed": {"0": -95.21870040893555, "5": -92.49618911743164, "10": -89.55356073379517, "20": -58.826223611831665, "30": -26.705453634262085, "50": 2.275727868080139, "75": 10.339857578277588, "100": -4.118678689002991}, "truth": {"0": -95.21869945526123, "5": -95.03119373321533, "10": -102.72248554229736, "20": -96.92350482940674, "30": -96.79312801361084, "50": -96.41215419769287, "75": -96.85719108581543, "100": -96.27295970916748}, "carried_err": {"1": 0.06404110859148204, "5": 0.1566060339100659, "10": 0.6629653945565224, "20": 5.214662037789822, "30": 6.193248748779297, "50": 8.514198064804077, "100": 11.624939978122711}, "zeroed_err": {"1": 0.06404110859148204, "5": 0.1879539005458355, "10": 0.9292107596993446, "20": 5.303386837244034, "30": 7.154230833053589, "50": 9.945811212062836, "100": 7.8881420493125916}}
+done
+ALLDONE

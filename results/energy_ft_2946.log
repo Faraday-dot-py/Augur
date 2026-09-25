@@ -1,0 +1,352 @@
+=== baseline soup B probe2 ===
+dataset speeds {'n': 1087155, 'mean': 8.04435145722471, 'p50': 7.606260750544095, 'p90': 14.129347004599895, 'p99': 19.710087038608336, 'p999': 24.99955483615872, 'max': 35.70802404941797, 'frac_gt10': 0.3171700447498287, 'frac_gt15': 0.07233099236079492, 'frac_gt20': 0.008775197648909308}
+wall {'wall': 'y_wall', 'speed_in': 3, 'truth_vy_after': 3.0, 'truth_ratio': np.float32(1.0001458), 'truth_ke_ratio': 325.0, 'model_vy_after': 4.944, 'model_ratio': np.float32(1.6481174), 'model_ke_ratio': 295.299}
+wall {'wall': 'y_wall', 'speed_in': 6, 'truth_vy_after': 5.998, 'truth_ratio': np.float32(0.9996782), 'truth_ke_ratio': 81.999, 'model_vy_after': 5.719, 'model_ratio': np.float32(0.9532133), 'model_ke_ratio': 87.307}
+wall {'wall': 'y_wall', 'speed_in': 10, 'truth_vy_after': 10.001, 'truth_ratio': np.float32(1.0001036), 'truth_ke_ratio': 30.16, 'model_vy_after': 8.091, 'model_ratio': np.float32(0.80908), 'model_ke_ratio': 35.336}
+wall {'wall': 'y_wall', 'speed_in': 15, 'truth_vy_after': 15.001, 'truth_ratio': np.float32(1.0000784), 'truth_ke_ratio': 13.96, 'model_vy_after': 9.582, 'model_ratio': np.float32(0.63878155), 'model_ke_ratio': 16.643}
+wall {'wall': 'y_wall', 'speed_in': 20, 'truth_vy_after': 20.004, 'truth_ratio': np.float32(1.0001823), 'truth_ke_ratio': 8.29, 'model_vy_after': 8.575, 'model_ratio': np.float32(0.4287518), 'model_ke_ratio': 9.715}
+wall {'wall': 'y_wall', 'speed_in': 30, 'truth_vy_after': 29.995, 'truth_ratio': np.float32(0.99983114), 'truth_ke_ratio': 4.24, 'model_vy_after': 12.312, 'model_ratio': np.float32(0.4104164), 'model_ke_ratio': 4.5}
+wall {'wall': 'y_wall', 'speed_in': 40, 'truth_vy_after': 40.008, 'truth_ratio': np.float32(1.0002105), 'truth_ke_ratio': 2.823, 'model_vy_after': 21.472, 'model_ratio': np.float32(0.53679127), 'model_ke_ratio': 2.013}
+wall {'wall': 'y_wall', 'speed_in': 60, 'truth_vy_after': 59.819, 'truth_ratio': np.float32(0.9969806), 'truth_ke_ratio': 1.804, 'model_vy_after': 35.911, 'model_ratio': np.float32(0.5985182), 'model_ke_ratio': 0.923}
+wall {'wall': 'y_wall', 'speed_in': 80, 'truth_vy_after': 80.061, 'truth_ratio': np.float32(1.0007654), 'truth_ke_ratio': 1.457, 'model_vy_after': 46.803, 'model_ratio': np.float32(0.5850425), 'model_ke_ratio': 0.62}
+wall {'wall': 'x_floor', 'speed_in': 3, 'truth_vx_after': 6.211, 'truth_dE': -0.273, 'truth_E0': -7114.5, 'model_vx_after': 5.814, 'model_dE': 0.002, 'model_E0': -7114.5}
+wall {'wall': 'x_floor', 'speed_in': 6, 'truth_vx_after': 4.86, 'truth_dE': 0.183, 'truth_E0': -7101.0, 'model_vx_after': 4.385, 'model_dE': 0.604, 'model_E0': -7101.0}
+wall {'wall': 'x_floor', 'speed_in': 10, 'truth_vx_after': -0.149, 'truth_dE': 1.106, 'truth_E0': -7069.0, 'model_vx_after': 0.057, 'model_dE': -4.688, 'model_E0': -7069.0}
+wall {'wall': 'x_floor', 'speed_in': 15, 'truth_vx_after': -9.663, 'truth_dE': 2.528, 'truth_E0': -7006.5, 'model_vx_after': -9.068, 'model_dE': -14.419, 'model_E0': -7006.5}
+wall {'wall': 'x_floor', 'speed_in': 20, 'truth_vx_after': -21.177, 'truth_dE': 3.246, 'truth_E0': -6919.0, 'model_vx_after': -16.055, 'model_dE': -67.013, 'model_E0': -6919.0}
+wall {'wall': 'x_floor', 'speed_in': 30, 'truth_vx_after': 18.402, 'truth_dE': 1.476, 'truth_E0': -6669.0, 'model_vx_after': 18.931, 'model_dE': -96.578, 'model_E0': -6669.0}
+wall {'wall': 'x_floor', 'speed_in': 40, 'truth_vx_after': 9.582, 'truth_dE': 0.077, 'truth_E0': -6319.0, 'model_vx_after': 19.335, 'model_dE': -472.155, 'model_E0': -6319.0}
+wall {'wall': 'x_floor', 'speed_in': 60, 'truth_vx_after': -9.058, 'truth_dE': -8.973, 'truth_E0': -5319.0, 'model_vx_after': -33.932, 'model_dE': 1295.677, 'model_E0': -5319.0}
+wall {'wall': 'x_floor', 'speed_in': 80, 'truth_vx_after': -28.828, 'truth_dE': 21.489, 'truth_E0': -3919.0, 'model_vx_after': -2.822, 'model_dE': -1523.92, 'model_E0': -3919.0}
+pair {'offset': 0.0, 'speed_in': 3, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.426, 'model_pmom_err': 4.586, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 6, 'truth_relKE_ratio': 1.003, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.187, 'model_pmom_err': 4.346, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 10, 'truth_relKE_ratio': 0.996, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.103, 'model_pmom_err': 4.121, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 15, 'truth_relKE_ratio': 0.999, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.08, 'model_pmom_err': 4.573, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 20, 'truth_relKE_ratio': 1.009, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.01, 'model_pmom_err': 4.777, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 30, 'truth_relKE_ratio': 0.651, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.467, 'model_pmom_err': 4.408, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 40, 'truth_relKE_ratio': 0.859, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.673, 'model_pmom_err': 3.331, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 60, 'truth_relKE_ratio': 1.052, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.808, 'model_pmom_err': 13.177, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 80, 'truth_relKE_ratio': 1.047, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.838, 'model_pmom_err': 26.652, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 3, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 10.03, 'model_pmom_err': 8.537, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 6, 'truth_relKE_ratio': 0.998, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 3.045, 'model_pmom_err': 9.052, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 10, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.176, 'model_pmom_err': 10.171, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 15, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.668, 'model_pmom_err': 11.01, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 20, 'truth_relKE_ratio': 1.006, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.681, 'model_pmom_err': 9.137, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 30, 'truth_relKE_ratio': 0.978, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.557, 'model_pmom_err': 6.56, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 40, 'truth_relKE_ratio': 0.921, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.673, 'model_pmom_err': 3.331, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 60, 'truth_relKE_ratio': 1.021, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.808, 'model_pmom_err': 13.177, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 80, 'truth_relKE_ratio': 1.018, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.838, 'model_pmom_err': 26.652, 'model_finite': True}
+hidden_reset {"carried": {"0": -95.21870040893555, "5": -95.81807231903076, "10": -102.60594654083252, "20": -98.86569309234619, "30": -101.6702470779419, "50": -105.84007835388184, "75": -109.16789245605469, "100": -119.32527351379395}, "zeroed": {"0": -95.21870040893555, "5": -94.25911808013916, "10": -105.53701686859131, "20": -119.04448413848877, "30": -120.47973537445068, "50": -140.6373996734619, "75": -147.0772190093994, "100": -153.83863639831543}, "truth": {"0": -95.21869945526123, "5": -95.03119373321533, "10": -102.72248554229736, "20": -96.92350482940674, "30": -96.79312801361084, "50": -96.41215419769287, "75": -96.85719108581543, "100": -96.27295970916748}, "carried_err": {"1": 0.02816071402048692, "5": 0.11471002316102386, "10": 0.2935467753559351, "20": 2.709911648184061, "30": 3.5968093648552895, "50": 8.116707682609558, "100": 7.5351682305336}, "zeroed_err": {"1": 0.02816071402048692, "5": 0.11727736098691821, "10": 0.500160364434123, "20": 4.065776765346527, "30": 5.111276030540466, "50": 6.510828852653503, "100": 7.344870746135712}}
+done
+=== finetune energy_ft_wide_k1 ===
+generated 400 scenes in 24s
+/home/adamwebb/bounce/scripts/energy_finetune.py:97: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  tot += float(loss)
+it 100 loss 1.5703 ema 2.8933 t=32s
+it 200 loss 2.8004 ema 2.2348 t=40s
+it 300 loss 3.3058 ema 1.8319 t=47s
+it 400 loss 1.9214 ema 1.8258 t=54s
+it 500 loss 0.3475 ema 1.7877 t=62s
+it 600 loss 1.0151 ema 2.3521 t=69s
+it 700 loss 0.3466 ema 1.8076 t=77s
+it 800 loss 2.0182 ema 1.7899 t=84s
+it 900 loss 2.4655 ema 1.5992 t=91s
+it 1000 loss 0.2313 ema 1.5822 t=99s
+it 1100 loss 1.1747 ema 1.4844 t=106s
+it 1200 loss 0.2724 ema 1.4817 t=113s
+it 1300 loss 5.9760 ema 1.4337 t=120s
+it 1400 loss 3.4495 ema 1.4351 t=128s
+it 1500 loss 0.9037 ema 1.4580 t=135s
+saved checkpoints/energy_ft_wide_k1.pt
+=== probe2 energy_ft_wide_k1 ===
+wall {'wall': 'y_wall', 'speed_in': 3, 'truth_vy_after': 3.0, 'truth_ratio': np.float32(1.0001458), 'truth_ke_ratio': 325.0, 'model_vy_after': 0.451, 'model_ratio': np.float32(0.15044379), 'model_ke_ratio': 585.735}
+wall {'wall': 'y_wall', 'speed_in': 6, 'truth_vy_after': 5.998, 'truth_ratio': np.float32(0.9996782), 'truth_ke_ratio': 81.999, 'model_vy_after': 0.398, 'model_ratio': np.float32(0.06634153), 'model_ke_ratio': 106.461}
+wall {'wall': 'y_wall', 'speed_in': 10, 'truth_vy_after': 10.001, 'truth_ratio': np.float32(1.0001036), 'truth_ke_ratio': 30.16, 'model_vy_after': 8.314, 'model_ratio': np.float32(0.83143634), 'model_ke_ratio': 34.312}
+wall {'wall': 'y_wall', 'speed_in': 15, 'truth_vy_after': 15.001, 'truth_ratio': np.float32(1.0000784), 'truth_ke_ratio': 13.96, 'model_vy_after': 5.835, 'model_ratio': np.float32(0.38901892), 'model_ke_ratio': 14.508}
+wall {'wall': 'y_wall', 'speed_in': 20, 'truth_vy_after': 20.004, 'truth_ratio': np.float32(1.0001823), 'truth_ke_ratio': 8.29, 'model_vy_after': 9.562, 'model_ratio': np.float32(0.4781062), 'model_ke_ratio': 7.861}
+wall {'wall': 'y_wall', 'speed_in': 30, 'truth_vy_after': 29.995, 'truth_ratio': np.float32(0.99983114), 'truth_ke_ratio': 4.24, 'model_vy_after': 15.725, 'model_ratio': np.float32(0.5241628), 'model_ke_ratio': 3.958}
+wall {'wall': 'y_wall', 'speed_in': 40, 'truth_vy_after': 40.008, 'truth_ratio': np.float32(1.0002105), 'truth_ke_ratio': 2.823, 'model_vy_after': 58.163, 'model_ratio': np.float32(1.4540819), 'model_ke_ratio': 4.99}
+wall {'wall': 'y_wall', 'speed_in': 60, 'truth_vy_after': 59.819, 'truth_ratio': np.float32(0.9969806), 'truth_ke_ratio': 1.804, 'model_vy_after': 141.585, 'model_ratio': np.float32(2.3597558), 'model_ke_ratio': 5.901}
+wall {'wall': 'y_wall', 'speed_in': 80, 'truth_vy_after': 80.061, 'truth_ratio': np.float32(1.0007654), 'truth_ke_ratio': 1.457, 'model_vy_after': 77.418, 'model_ratio': np.float32(0.9677275), 'model_ke_ratio': 0.994}
+wall {'wall': 'x_floor', 'speed_in': 3, 'truth_vx_after': 6.211, 'truth_dE': -0.273, 'truth_E0': -7114.5, 'model_vx_after': -1.774, 'model_dE': -59.047, 'model_E0': -7114.5}
+wall {'wall': 'x_floor', 'speed_in': 6, 'truth_vx_after': 4.86, 'truth_dE': 0.183, 'truth_E0': -7101.0, 'model_vx_after': -6.04, 'model_dE': -64.329, 'model_E0': -7101.0}
+wall {'wall': 'x_floor', 'speed_in': 10, 'truth_vx_after': -0.149, 'truth_dE': 1.106, 'truth_E0': -7069.0, 'model_vx_after': -4.916, 'model_dE': 22.643, 'model_E0': -7069.0}
+wall {'wall': 'x_floor', 'speed_in': 15, 'truth_vx_after': -9.663, 'truth_dE': 2.528, 'truth_E0': -7006.5, 'model_vx_after': -3.914, 'model_dE': -91.258, 'model_E0': -7006.5}
+wall {'wall': 'x_floor', 'speed_in': 20, 'truth_vx_after': -21.177, 'truth_dE': 3.246, 'truth_E0': -6919.0, 'model_vx_after': -10.08, 'model_dE': -142.11, 'model_E0': -6919.0}
+wall {'wall': 'x_floor', 'speed_in': 30, 'truth_vx_after': 18.402, 'truth_dE': 1.476, 'truth_E0': -6669.0, 'model_vx_after': 0.312, 'model_dE': 151.367, 'model_E0': -6669.0}
+wall {'wall': 'x_floor', 'speed_in': 40, 'truth_vx_after': 9.582, 'truth_dE': 0.077, 'truth_E0': -6319.0, 'model_vx_after': 13.504, 'model_dE': -289.811, 'model_E0': -6319.0}
+wall {'wall': 'x_floor', 'speed_in': 60, 'truth_vx_after': -9.058, 'truth_dE': -8.973, 'truth_E0': -5319.0, 'model_vx_after': 17.055, 'model_dE': -947.894, 'model_E0': -5319.0}
+wall {'wall': 'x_floor', 'speed_in': 80, 'truth_vx_after': -28.828, 'truth_dE': 21.489, 'truth_E0': -3919.0, 'model_vx_after': 25.63, 'model_dE': -2770.744, 'model_E0': -3919.0}
+pair {'offset': 0.0, 'speed_in': 3, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.502, 'model_pmom_err': 1.652, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 6, 'truth_relKE_ratio': 1.003, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.213, 'model_pmom_err': 1.792, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 10, 'truth_relKE_ratio': 0.996, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.177, 'model_pmom_err': 1.483, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 15, 'truth_relKE_ratio': 0.999, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.182, 'model_pmom_err': 3.17, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 20, 'truth_relKE_ratio': 1.009, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.535, 'model_pmom_err': 3.37, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 30, 'truth_relKE_ratio': 0.651, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.531, 'model_pmom_err': 2.521, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 40, 'truth_relKE_ratio': 0.859, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 2.059, 'model_pmom_err': 3.431, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 60, 'truth_relKE_ratio': 1.052, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 3.978, 'model_pmom_err': 28.87, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 80, 'truth_relKE_ratio': 1.047, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.821, 'model_pmom_err': 33.307, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 3, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 2.064, 'model_pmom_err': 2.211, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 6, 'truth_relKE_ratio': 0.998, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.897, 'model_pmom_err': 2.125, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 10, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 2.022, 'model_pmom_err': 2.28, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 15, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.899, 'model_pmom_err': 0.816, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 20, 'truth_relKE_ratio': 1.006, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.742, 'model_pmom_err': 0.241, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 30, 'truth_relKE_ratio': 0.978, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.403, 'model_pmom_err': 2.771, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 40, 'truth_relKE_ratio': 0.921, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 2.059, 'model_pmom_err': 3.431, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 60, 'truth_relKE_ratio': 1.021, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 3.978, 'model_pmom_err': 28.87, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 80, 'truth_relKE_ratio': 1.018, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.821, 'model_pmom_err': 33.307, 'model_finite': True}
+hidden_reset {"carried": {"0": -95.21870040893555, "5": -94.93860244750977, "10": -110.27132034301758, "20": -120.29835605621338, "30": -124.48800659179688, "50": -127.97836494445801, "75": -118.45562934875488, "100": -127.80682849884033}, "zeroed": {"0": -95.21870040893555, "5": -92.35556221008301, "10": -105.10977363586426, "20": -104.96865177154541, "30": -108.53705883026123, "50": -106.49191474914551, "75": -119.41166496276855, "100": -110.03648853302002}, "truth": {"0": -95.21869945526123, "5": -95.03119373321533, "10": -102.72248554229736, "20": -96.92350482940674, "30": -96.79312801361084, "50": -96.41215419769287, "75": -96.85719108581543, "100": -96.27295970916748}, "carried_err": {"1": 0.03664578124880791, "5": 0.1532106613740325, "10": 1.030217505991459, "20": 4.885458379983902, "30": 6.401761949062347, "50": 8.02336099743843, "100": 7.878374814987183}, "zeroed_err": {"1": 0.03664578124880791, "5": 0.26043352857232094, "10": 1.0311374366283417, "20": 5.138059467077255, "30": 7.023971080780029, "50": 8.123534500598907, "100": 7.63005405664444}}
+done
+=== rollouts energy_ft_wide_k1 ===
+== nb=4 n=20 g=9.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE=   -99.73 tKE=     1.32 E=    -99.73 KE=     1.32 sp=   1.52 max=   2.25 err=   0.000 hid=0.000
+   1 tE=   -97.44 tKE=     5.00 E=    -97.47 KE=     5.20 sp=   2.68 max=   4.56 err=   0.065 hid=0.028
+   5 tE=   -99.53 tKE=    24.23 E=    -99.70 KE=    24.51 sp=   6.63 max=   8.59 err=   0.265 hid=0.050
+  10 tE=  -103.48 tKE=    43.40 E=   -112.78 KE=    39.16 sp=   7.26 max=  14.28 err=   0.905 hid=0.122
+  20 tE=  -100.92 tKE=    35.24 E=   -133.25 KE=     7.87 sp=   3.67 max=   5.39 err=   5.011 hid=0.179
+  30 tE=  -102.68 tKE=    28.80 E=   -137.51 KE=    14.12 sp=   4.61 max=   8.65 err=   5.259 hid=0.198
+  50 tE=  -100.60 tKE=    34.42 E=   -142.66 KE=    13.47 sp=   4.57 max=   7.42 err=   8.363 hid=0.257
+ 100 tE=  -103.16 tKE=    37.39 E=   -138.17 KE=    19.86 sp=   4.94 max=   9.40 err=   6.133 hid=0.299
+ 150 tE=  -101.57 tKE=    25.24 E=   -149.89 KE=    12.87 sp=   3.87 max=   6.70 err=   8.501 hid=0.328
+ 200 tE=   -98.38 tKE=    27.99 E=   -151.75 KE=     5.99 sp=   3.06 max=   4.88 err=  10.420 hid=0.352
+== nb=4 n=317 g=9.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE= -1679.28 tKE=     1.32 E=  -1679.28 KE=     1.32 sp=   1.52 max=   2.25 err=   0.000 hid=0.000
+   1 tE= -1679.39 tKE=     2.59 E=  -1679.42 KE=     2.73 sp=   2.06 max=   3.09 err=   0.018 hid=0.027
+   5 tE= -1679.85 tKE=    25.93 E=  -1680.21 KE=    26.11 sp=   7.11 max=   8.12 err=   0.081 hid=0.047
+  10 tE= -1680.42 tKE=    96.10 E=  -1679.73 KE=    97.56 sp=  13.91 max=  14.89 err=   0.359 hid=0.101
+  20 tE= -1680.99 tKE=   348.28 E=  -1696.95 KE=   334.20 sp=  25.37 max=  27.74 err=   2.444 hid=0.341
+  30 tE= -1680.54 tKE=   638.71 E=  -1774.60 KE=   562.83 sp=  31.21 max=  40.81 err=   5.736 hid=0.503
+  50 tE= -1742.92 tKE=   621.83 E=  -2056.62 KE=   480.68 sp=  22.90 max=  53.61 err=  25.808 hid=0.394
+ 100 tE= -1677.35 tKE=   281.83 E=  -2152.15 KE=   339.35 sp=  19.93 max=  42.62 err=  99.328 hid=0.420
+ 150 tE= -1676.97 tKE=   477.05 E=  -2285.42 KE=   282.08 sp=  19.14 max=  39.31 err= 146.442 hid=0.421
+ 200 tE= -1699.76 tKE=   216.53 E=  -2490.82 KE=   230.67 sp=  18.54 max=  32.41 err= 158.976 hid=0.351
+== nb=100 n=100 g=9.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE=  -459.77 tKE=     1.79 E=   -459.77 KE=     1.79 sp=   1.79 max=   3.11 err=   0.000 hid=0.000
+   1 tE=  -459.25 tKE=     3.38 E=   -459.40 KE=     3.38 sp=   2.33 max=   7.07 err=   0.030 hid=0.028
+   5 tE=  -459.71 tKE=    24.92 E=   -460.24 KE=    24.79 sp=   6.84 max=  11.93 err=   0.149 hid=0.048
+  10 tE=  -461.23 tKE=    87.55 E=   -462.06 KE=    87.16 sp=  12.88 max=  17.95 err=   0.533 hid=0.108
+  20 tE=  -466.25 tKE=   253.05 E=   -494.45 KE=   229.83 sp=  19.53 max=  30.50 err=   4.129 hid=0.323
+  30 tE=  -444.81 tKE=   326.58 E=   -611.04 KE=   189.24 sp=  16.32 max=  40.64 err=  15.003 hid=0.326
+  50 tE=  -432.64 tKE=   142.98 E=   -642.93 KE=    76.55 sp=  11.17 max=  27.05 err=  42.081 hid=0.284
+ 100 tE=  -395.83 tKE=   241.84 E=   -753.53 KE=    62.97 sp=   9.41 max=  34.04 err=  45.298 hid=0.289
+ 150 tE=  -363.78 tKE=   302.83 E=   -781.48 KE=    55.30 sp=   8.87 max=  31.40 err=  43.454 hid=0.287
+ 200 tE=  -318.14 tKE=   335.30 E=   -779.89 KE=    53.52 sp=   8.81 max=  32.89 err=  45.070 hid=0.290
+== nb=1000 n=317 g=9.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE= -1402.93 tKE=     1.77 E=  -1402.93 KE=     1.77 sp=   1.76 max=   3.17 err=   0.000 hid=0.000
+   1 tE= -1401.59 tKE=     4.23 E=  -1402.32 KE=     3.66 sp=   2.39 max=  10.92 err=   0.037 hid=0.027
+   5 tE= -1402.07 tKE=    26.32 E=  -1403.15 KE=    25.61 sp=   6.96 max=  16.24 err=   0.192 hid=0.047
+  10 tE= -1402.75 tKE=    93.36 E=  -1403.29 KE=    93.07 sp=  13.45 max=  22.28 err=   0.625 hid=0.103
+  20 tE= -1405.37 tKE=   336.66 E=  -1422.38 KE=   319.51 sp=  24.57 max=  33.03 err=   3.465 hid=0.316
+  30 tE= -1401.85 tKE=   674.50 E=  -1485.00 KE=   592.12 sp=  32.28 max=  47.58 err=   8.955 hid=0.373
+  50 tE= -1275.05 tKE=  1170.83 E=  -2045.24 KE=   582.49 sp=  28.53 max=  62.03 err=  45.092 hid=0.230
+ 100 tE= -1141.11 tKE=   512.90 E=  -2529.89 KE=   158.43 sp=  15.02 max= 111.00 err= 167.562 hid=0.251
+ 150 tE=  -938.16 tKE=  1125.07 E=  -2602.23 KE=   128.87 sp=  13.50 max= 104.07 err= 142.611 hid=0.251
+ 200 tE=  -770.02 tKE=  1031.32 E=  -2600.95 KE=   134.89 sp=  14.03 max= 109.76 err= 167.878 hid=0.251
+done
+=== finetune energy_ft_wide_k8 ===
+generated 400 scenes in 24s
+/home/adamwebb/bounce/scripts/energy_finetune.py:97: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  tot += float(loss)
+it 100 loss 15.4542 ema 13.8140 t=44s
+it 200 loss 10.3776 ema 12.6948 t=62s
+it 300 loss 14.1341 ema 10.9473 t=80s
+it 400 loss 14.3931 ema 10.9802 t=98s
+it 500 loss 8.1691 ema 10.6196 t=116s
+it 600 loss 21.0673 ema 9.9744 t=134s
+it 700 loss 17.3022 ema 10.7023 t=152s
+it 800 loss 14.6703 ema 9.7135 t=170s
+it 900 loss 11.3237 ema 9.7958 t=188s
+it 1000 loss 11.6144 ema 9.6614 t=206s
+it 1100 loss 11.5373 ema 8.8713 t=224s
+it 1200 loss 12.2690 ema 10.0359 t=242s
+it 1300 loss 12.2028 ema 9.8610 t=260s
+it 1400 loss 8.4839 ema 8.9476 t=279s
+it 1500 loss 8.9096 ema 9.2646 t=297s
+saved checkpoints/energy_ft_wide_k8.pt
+=== probe2 energy_ft_wide_k8 ===
+wall {'wall': 'y_wall', 'speed_in': 3, 'truth_vy_after': 3.0, 'truth_ratio': np.float32(1.0001458), 'truth_ke_ratio': 325.0, 'model_vy_after': 3.372, 'model_ratio': np.float32(1.1238805), 'model_ke_ratio': 236.699}
+wall {'wall': 'y_wall', 'speed_in': 6, 'truth_vy_after': 5.998, 'truth_ratio': np.float32(0.9996782), 'truth_ke_ratio': 81.999, 'model_vy_after': 7.211, 'model_ratio': np.float32(1.2018304), 'model_ke_ratio': 59.686}
+wall {'wall': 'y_wall', 'speed_in': 10, 'truth_vy_after': 10.001, 'truth_ratio': np.float32(1.0001036), 'truth_ke_ratio': 30.16, 'model_vy_after': 10.727, 'model_ratio': np.float32(1.0726538), 'model_ke_ratio': 21.984}
+wall {'wall': 'y_wall', 'speed_in': 15, 'truth_vy_after': 15.001, 'truth_ratio': np.float32(1.0000784), 'truth_ke_ratio': 13.96, 'model_vy_after': 15.44, 'model_ratio': np.float32(1.0293075), 'model_ke_ratio': 9.889}
+wall {'wall': 'y_wall', 'speed_in': 20, 'truth_vy_after': 20.004, 'truth_ratio': np.float32(1.0001823), 'truth_ke_ratio': 8.29, 'model_vy_after': 15.557, 'model_ratio': np.float32(0.77787226), 'model_ke_ratio': 6.118}
+wall {'wall': 'y_wall', 'speed_in': 30, 'truth_vy_after': 29.995, 'truth_ratio': np.float32(0.99983114), 'truth_ke_ratio': 4.24, 'model_vy_after': 22.554, 'model_ratio': np.float32(0.751785), 'model_ke_ratio': 2.723}
+wall {'wall': 'y_wall', 'speed_in': 40, 'truth_vy_after': 40.008, 'truth_ratio': np.float32(1.0002105), 'truth_ke_ratio': 2.823, 'model_vy_after': 44.06, 'model_ratio': np.float32(1.1015072), 'model_ke_ratio': 2.333}
+wall {'wall': 'y_wall', 'speed_in': 60, 'truth_vy_after': 59.819, 'truth_ratio': np.float32(0.9969806), 'truth_ke_ratio': 1.804, 'model_vy_after': 66.678, 'model_ratio': np.float32(1.1113011), 'model_ke_ratio': 1.545}
+wall {'wall': 'y_wall', 'speed_in': 80, 'truth_vy_after': 80.061, 'truth_ratio': np.float32(1.0007654), 'truth_ke_ratio': 1.457, 'model_vy_after': 91.43, 'model_ratio': np.float32(1.142874), 'model_ke_ratio': 1.495}
+wall {'wall': 'x_floor', 'speed_in': 3, 'truth_vx_after': 6.211, 'truth_dE': -0.273, 'truth_E0': -7114.5, 'model_vx_after': 8.483, 'model_dE': -22.162, 'model_E0': -7114.5}
+wall {'wall': 'x_floor', 'speed_in': 6, 'truth_vx_after': 4.86, 'truth_dE': 0.183, 'truth_E0': -7101.0, 'model_vx_after': 8.81, 'model_dE': -31.85, 'model_E0': -7101.0}
+wall {'wall': 'x_floor', 'speed_in': 10, 'truth_vx_after': -0.149, 'truth_dE': 1.106, 'truth_E0': -7069.0, 'model_vx_after': -0.492, 'model_dE': -18.941, 'model_E0': -7069.0}
+wall {'wall': 'x_floor', 'speed_in': 15, 'truth_vx_after': -9.663, 'truth_dE': 2.528, 'truth_E0': -7006.5, 'model_vx_after': -9.489, 'model_dE': -25.092, 'model_E0': -7006.5}
+wall {'wall': 'x_floor', 'speed_in': 20, 'truth_vx_after': -21.177, 'truth_dE': 3.246, 'truth_E0': -6919.0, 'model_vx_after': -11.803, 'model_dE': -107.463, 'model_E0': -6919.0}
+wall {'wall': 'x_floor', 'speed_in': 30, 'truth_vx_after': 18.402, 'truth_dE': 1.476, 'truth_E0': -6669.0, 'model_vx_after': 15.465, 'model_dE': -20.567, 'model_E0': -6669.0}
+wall {'wall': 'x_floor', 'speed_in': 40, 'truth_vx_after': 9.582, 'truth_dE': 0.077, 'truth_E0': -6319.0, 'model_vx_after': 16.428, 'model_dE': -320.958, 'model_E0': -6319.0}
+wall {'wall': 'x_floor', 'speed_in': 60, 'truth_vx_after': -9.058, 'truth_dE': -8.973, 'truth_E0': -5319.0, 'model_vx_after': 0.786, 'model_dE': -336.699, 'model_E0': -5319.0}
+wall {'wall': 'x_floor', 'speed_in': 80, 'truth_vx_after': -28.828, 'truth_dE': 21.489, 'truth_E0': -3919.0, 'model_vx_after': -14.258, 'model_dE': -872.733, 'model_E0': -3919.0}
+pair {'offset': 0.0, 'speed_in': 3, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.666, 'model_pmom_err': 8.559, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 6, 'truth_relKE_ratio': 1.003, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.525, 'model_pmom_err': 8.611, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 10, 'truth_relKE_ratio': 0.996, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.201, 'model_pmom_err': 8.678, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 15, 'truth_relKE_ratio': 0.999, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.397, 'model_pmom_err': 9.204, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 20, 'truth_relKE_ratio': 1.009, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.353, 'model_pmom_err': 9.578, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 30, 'truth_relKE_ratio': 0.651, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.827, 'model_pmom_err': 5.437, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 40, 'truth_relKE_ratio': 0.859, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.06, 'model_pmom_err': 4.595, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 60, 'truth_relKE_ratio': 1.052, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.409, 'model_pmom_err': 4.201, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 80, 'truth_relKE_ratio': 1.047, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.287, 'model_pmom_err': 13.898, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 3, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.52, 'model_pmom_err': 8.694, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 6, 'truth_relKE_ratio': 0.998, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.394, 'model_pmom_err': 8.604, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 10, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.701, 'model_pmom_err': 8.892, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 15, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.85, 'model_pmom_err': 9.783, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 20, 'truth_relKE_ratio': 1.006, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.954, 'model_pmom_err': 10.036, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 30, 'truth_relKE_ratio': 0.978, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.982, 'model_pmom_err': 4.248, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 40, 'truth_relKE_ratio': 0.921, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.06, 'model_pmom_err': 4.595, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 60, 'truth_relKE_ratio': 1.021, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.409, 'model_pmom_err': 4.201, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 80, 'truth_relKE_ratio': 1.018, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.287, 'model_pmom_err': 13.898, 'model_finite': True}
+hidden_reset {"carried": {"0": -95.21870040893555, "5": -94.29072093963623, "10": -99.1350908279419, "20": -105.27439880371094, "30": -109.7563123703003, "50": -115.76229190826416, "75": -124.30867385864258, "100": -132.48601150512695}, "zeroed": {"0": -95.21870040893555, "5": -91.62008380889893, "10": -98.51971626281738, "20": -97.78961086273193, "30": -91.69042587280273, "50": -87.85290479660034, "75": -83.81449747085571, "100": -70.1719331741333}, "truth": {"0": -95.21869945526123, "5": -95.03119373321533, "10": -102.72248554229736, "20": -96.92350482940674, "30": -96.79312801361084, "50": -96.41215419769287, "75": -96.85719108581543, "100": -96.27295970916748}, "carried_err": {"1": 0.050723178312182426, "5": 0.1508421003818512, "10": 0.3641745578497648, "20": 3.2308065369725227, "30": 4.8351156413555145, "50": 7.858356833457947, "100": 6.385993301868439}, "zeroed_err": {"1": 0.050723178312182426, "5": 0.09287456749007106, "10": 0.5172706712037325, "20": 4.417572632431984, "30": 5.315751016139984, "50": 7.540294528007507, "100": 8.075658798217773}}
+done
+=== rollouts energy_ft_wide_k8 ===
+== nb=4 n=20 g=9.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE=   -99.73 tKE=     1.32 E=    -99.73 KE=     1.32 sp=   1.52 max=   2.25 err=   0.000 hid=0.000
+   1 tE=   -97.44 tKE=     5.00 E=    -97.57 KE=     4.70 sp=   2.61 max=   4.29 err=   0.058 hid=0.034
+   5 tE=   -99.53 tKE=    24.23 E=    -99.20 KE=    23.63 sp=   6.52 max=   8.22 err=   0.287 hid=0.051
+  10 tE=  -103.48 tKE=    43.40 E=   -109.22 KE=    36.77 sp=   7.18 max=  13.48 err=   0.524 hid=0.161
+  20 tE=  -100.92 tKE=    35.24 E=   -110.02 KE=    10.56 sp=   4.02 max=   6.54 err=   4.870 hid=0.230
+  30 tE=  -102.68 tKE=    28.80 E=   -111.56 KE=    21.68 sp=   5.80 max=   9.86 err=   4.452 hid=0.251
+  50 tE=  -100.60 tKE=    34.42 E=   -124.28 KE=    22.27 sp=   5.66 max=   9.01 err=   6.876 hid=0.262
+ 100 tE=  -103.16 tKE=    37.39 E=   -134.10 KE=    13.67 sp=   4.39 max=   7.89 err=   7.909 hid=0.243
+ 150 tE=  -101.57 tKE=    25.24 E=   -138.84 KE=    19.41 sp=   5.59 max=   8.48 err=   8.318 hid=0.260
+ 200 tE=   -98.38 tKE=    27.99 E=   -140.01 KE=    11.36 sp=   4.21 max=   6.09 err=   6.517 hid=0.236
+== nb=4 n=317 g=9.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE= -1679.28 tKE=     1.32 E=  -1679.28 KE=     1.32 sp=   1.52 max=   2.25 err=   0.000 hid=0.000
+   1 tE= -1679.39 tKE=     2.59 E=  -1678.98 KE=     2.76 sp=   2.08 max=   3.10 err=   0.027 hid=0.034
+   5 tE= -1679.85 tKE=    25.93 E=  -1678.53 KE=    26.13 sp=   7.13 max=   8.08 err=   0.125 hid=0.043
+  10 tE= -1680.42 tKE=    96.10 E=  -1680.85 KE=    93.32 sp=  13.61 max=  14.51 err=   0.265 hid=0.074
+  20 tE= -1680.99 tKE=   348.28 E=  -1713.05 KE=   310.08 sp=  24.57 max=  26.44 err=   0.957 hid=0.271
+  30 tE= -1680.54 tKE=   638.71 E=  -1807.20 KE=   507.43 sp=  30.08 max=  36.80 err=   3.530 hid=0.360
+  50 tE= -1742.92 tKE=   621.83 E=  -1969.09 KE=   479.99 sp=  25.01 max=  50.13 err=  14.750 hid=0.385
+ 100 tE= -1677.35 tKE=   281.83 E=  -2193.79 KE=   195.92 sp=  17.27 max=  30.73 err=  52.777 hid=0.344
+ 150 tE= -1676.97 tKE=   477.05 E=  -2406.74 KE=    68.51 sp=  10.59 max=  16.06 err=  59.462 hid=0.360
+ 200 tE= -1699.76 tKE=   216.53 E=  -2536.92 KE=    90.22 sp=  12.88 max=  17.90 err= 110.818 hid=0.400
+== nb=100 n=100 g=9.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE=  -459.77 tKE=     1.79 E=   -459.77 KE=     1.79 sp=   1.79 max=   3.11 err=   0.000 hid=0.000
+   1 tE=  -459.25 tKE=     3.38 E=   -459.17 KE=     3.21 sp=   2.29 max=   6.22 err=   0.037 hid=0.034
+   5 tE=  -459.71 tKE=    24.92 E=   -458.75 KE=    24.77 sp=   6.86 max=  10.88 err=   0.187 hid=0.046
+  10 tE=  -461.23 tKE=    87.55 E=   -462.64 KE=    84.04 sp=  12.68 max=  16.78 err=   0.435 hid=0.089
+  20 tE=  -466.25 tKE=   253.05 E=   -500.91 KE=   215.02 sp=  19.06 max=  27.64 err=   2.807 hid=0.257
+  30 tE=  -444.81 tKE=   326.58 E=   -605.71 KE=   182.86 sp=  16.19 max=  36.95 err=  13.437 hid=0.275
+  50 tE=  -432.64 tKE=   142.98 E=   -608.20 KE=    64.49 sp=  10.12 max=  25.41 err=  38.596 hid=0.272
+ 100 tE=  -395.83 tKE=   241.84 E=   -763.11 KE=    48.70 sp=   8.71 max=  25.34 err=  45.104 hid=0.264
+ 150 tE=  -363.78 tKE=   302.83 E=   -833.30 KE=    25.64 sp=   6.25 max=  18.89 err=  43.914 hid=0.265
+ 200 tE=  -318.14 tKE=   335.30 E=   -841.60 KE=    19.05 sp=   5.38 max=  16.20 err=  45.129 hid=0.274
+== nb=1000 n=317 g=9.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE= -1402.93 tKE=     1.77 E=  -1402.93 KE=     1.77 sp=   1.76 max=   3.17 err=   0.000 hid=0.000
+   1 tE= -1401.59 tKE=     4.23 E=  -1402.22 KE=     3.35 sp=   2.33 max=   8.49 err=   0.048 hid=0.034
+   5 tE= -1402.07 tKE=    26.32 E=  -1401.82 KE=    25.42 sp=   6.96 max=  13.57 err=   0.253 hid=0.044
+  10 tE= -1402.75 tKE=    93.36 E=  -1404.28 KE=    89.50 sp=  13.23 max=  19.81 err=   0.576 hid=0.078
+  20 tE= -1405.37 tKE=   336.66 E=  -1438.59 KE=   297.09 sp=  23.76 max=  29.84 err=   2.153 hid=0.243
+  30 tE= -1401.85 tKE=   674.50 E=  -1505.33 KE=   556.39 sp=  31.50 max=  40.70 err=   6.941 hid=0.249
+  50 tE= -1275.05 tKE=  1170.83 E=  -1819.06 KE=   773.86 sp=  33.65 max=  89.91 err=  37.178 hid=0.227
+ 100 tE= -1141.11 tKE=   512.90 E=  -2211.42 KE=   233.34 sp=  18.27 max= 113.67 err= 149.846 hid=0.240
+ 150 tE=  -938.16 tKE=  1125.07 E=  -2569.04 KE=   149.72 sp=  11.79 max= 203.89 err= 146.515 hid=0.240
+ 200 tE=  -770.02 tKE=  1031.32 E=  -2556.30 KE=   198.91 sp=  10.00 max= 334.24 err= 168.534 hid=0.240
+done
+=== finetune energy_ft_ctrl_k8 ===
+generated 400 scenes in 24s
+/home/adamwebb/bounce/scripts/energy_finetune.py:111: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  tot += float(loss)
+it 100 loss 0.1350 ema 1.6411 t=40s
+it 200 loss 0.3056 ema 1.4653 t=54s
+it 300 loss 3.5004 ema 1.3324 t=69s
+it 400 loss 0.4943 ema 1.1849 t=83s
+it 500 loss 0.3393 ema 1.0596 t=98s
+it 600 loss 0.5661 ema 1.4650 t=112s
+it 700 loss 1.0694 ema 1.3526 t=127s
+it 800 loss 1.6447 ema 1.2371 t=141s
+it 900 loss 1.3589 ema 1.2645 t=156s
+it 1000 loss 0.5224 ema 1.0553 t=171s
+it 1100 loss 0.1719 ema 1.0487 t=185s
+it 1200 loss 0.8067 ema 1.0961 t=200s
+it 1300 loss 0.1690 ema 0.9568 t=214s
+it 1400 loss 0.2228 ema 0.9295 t=229s
+it 1500 loss 0.1078 ema 1.1963 t=243s
+saved checkpoints/energy_ft_ctrl_k8.pt
+=== probe2 energy_ft_ctrl_k8 ===
+wall {'wall': 'y_wall', 'speed_in': 3, 'truth_vy_after': 3.0, 'truth_ratio': np.float32(1.0001458), 'truth_ke_ratio': 325.0, 'model_vy_after': 4.927, 'model_ratio': np.float32(1.6424007), 'model_ke_ratio': 638.929}
+wall {'wall': 'y_wall', 'speed_in': 6, 'truth_vy_after': 5.998, 'truth_ratio': np.float32(0.9996782), 'truth_ke_ratio': 81.999, 'model_vy_after': 7.804, 'model_ratio': np.float32(1.3006364), 'model_ke_ratio': 158.524}
+wall {'wall': 'y_wall', 'speed_in': 10, 'truth_vy_after': 10.001, 'truth_ratio': np.float32(1.0001036), 'truth_ke_ratio': 30.16, 'model_vy_after': 14.442, 'model_ratio': np.float32(1.4442261), 'model_ke_ratio': 58.271}
+wall {'wall': 'y_wall', 'speed_in': 15, 'truth_vy_after': 15.001, 'truth_ratio': np.float32(1.0000784), 'truth_ke_ratio': 13.96, 'model_vy_after': 19.772, 'model_ratio': np.float32(1.3181605), 'model_ke_ratio': 26.278}
+wall {'wall': 'y_wall', 'speed_in': 20, 'truth_vy_after': 20.004, 'truth_ratio': np.float32(1.0001823), 'truth_ke_ratio': 8.29, 'model_vy_after': 16.128, 'model_ratio': np.float32(0.8063997), 'model_ke_ratio': 16.964}
+wall {'wall': 'y_wall', 'speed_in': 30, 'truth_vy_after': 29.995, 'truth_ratio': np.float32(0.99983114), 'truth_ke_ratio': 4.24, 'model_vy_after': 43.349, 'model_ratio': np.float32(1.4449706), 'model_ke_ratio': 9.405}
+wall {'wall': 'y_wall', 'speed_in': 40, 'truth_vy_after': 40.008, 'truth_ratio': np.float32(1.0002105), 'truth_ke_ratio': 2.823, 'model_vy_after': 82.576, 'model_ratio': np.float32(2.0644076), 'model_ke_ratio': 9.801}
+wall {'wall': 'y_wall', 'speed_in': 60, 'truth_vy_after': 59.819, 'truth_ratio': np.float32(0.9969806), 'truth_ke_ratio': 1.804, 'model_vy_after': 200.865, 'model_ratio': np.float32(3.3477447), 'model_ke_ratio': 14.111}
+wall {'wall': 'y_wall', 'speed_in': 80, 'truth_vy_after': 80.061, 'truth_ratio': np.float32(1.0007654), 'truth_ke_ratio': 1.457, 'model_vy_after': 160.463, 'model_ratio': np.float32(2.0057917), 'model_ke_ratio': 6.293}
+wall {'wall': 'x_floor', 'speed_in': 3, 'truth_vx_after': 6.211, 'truth_dE': -0.273, 'truth_E0': -7114.5, 'model_vx_after': 5.953, 'model_dE': 18.593, 'model_E0': -7114.5}
+wall {'wall': 'x_floor', 'speed_in': 6, 'truth_vx_after': 4.86, 'truth_dE': 0.183, 'truth_E0': -7101.0, 'model_vx_after': 2.471, 'model_dE': 22.559, 'model_E0': -7101.0}
+wall {'wall': 'x_floor', 'speed_in': 10, 'truth_vx_after': -0.149, 'truth_dE': 1.106, 'truth_E0': -7069.0, 'model_vx_after': -0.154, 'model_dE': 5.117, 'model_E0': -7069.0}
+wall {'wall': 'x_floor', 'speed_in': 15, 'truth_vx_after': -9.663, 'truth_dE': 2.528, 'truth_E0': -7006.5, 'model_vx_after': -9.895, 'model_dE': 29.803, 'model_E0': -7006.5}
+wall {'wall': 'x_floor', 'speed_in': 20, 'truth_vx_after': -21.177, 'truth_dE': 3.246, 'truth_E0': -6919.0, 'model_vx_after': -13.705, 'model_dE': -47.116, 'model_E0': -6919.0}
+wall {'wall': 'x_floor', 'speed_in': 30, 'truth_vx_after': 18.402, 'truth_dE': 1.476, 'truth_E0': -6669.0, 'model_vx_after': -22.593, 'model_dE': -267.276, 'model_E0': -6669.0}
+wall {'wall': 'x_floor', 'speed_in': 40, 'truth_vx_after': 9.582, 'truth_dE': 0.077, 'truth_E0': -6319.0, 'model_vx_after': 21.418, 'model_dE': -352.563, 'model_E0': -6319.0}
+wall {'wall': 'x_floor', 'speed_in': 60, 'truth_vx_after': -9.058, 'truth_dE': -8.973, 'truth_E0': -5319.0, 'model_vx_after': -89.685, 'model_dE': 6697.611, 'model_E0': -5319.0}
+wall {'wall': 'x_floor', 'speed_in': 80, 'truth_vx_after': -28.828, 'truth_dE': 21.489, 'truth_E0': -3919.0, 'model_vx_after': -0.511, 'model_dE': -1698.318, 'model_E0': -3919.0}
+pair {'offset': 0.0, 'speed_in': 3, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.132, 'model_pmom_err': 24.909, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 6, 'truth_relKE_ratio': 1.003, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.317, 'model_pmom_err': 24.715, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 10, 'truth_relKE_ratio': 0.996, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.675, 'model_pmom_err': 9.979, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 15, 'truth_relKE_ratio': 0.999, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.178, 'model_pmom_err': 24.953, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 20, 'truth_relKE_ratio': 1.009, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.626, 'model_pmom_err': 19.033, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 30, 'truth_relKE_ratio': 0.651, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 2.424, 'model_pmom_err': 21.826, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 40, 'truth_relKE_ratio': 0.859, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 3.317, 'model_pmom_err': 42.313, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 60, 'truth_relKE_ratio': 1.052, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.229, 'model_pmom_err': 216.885, 'model_finite': True}
+pair {'offset': 0.0, 'speed_in': 80, 'truth_relKE_ratio': 1.047, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.978, 'model_pmom_err': 72.746, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 3, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 13.479, 'model_pmom_err': 11.162, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 6, 'truth_relKE_ratio': 0.998, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 5.088, 'model_pmom_err': 14.091, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 10, 'truth_relKE_ratio': 1.002, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 2.621, 'model_pmom_err': 18.585, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 15, 'truth_relKE_ratio': 1.0, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.996, 'model_pmom_err': 21.163, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 20, 'truth_relKE_ratio': 1.006, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 3.219, 'model_pmom_err': 26.116, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 30, 'truth_relKE_ratio': 0.978, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 2.677, 'model_pmom_err': 26.367, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 40, 'truth_relKE_ratio': 0.921, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 3.317, 'model_pmom_err': 42.313, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 60, 'truth_relKE_ratio': 1.021, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 0.229, 'model_pmom_err': 216.885, 'model_finite': True}
+pair {'offset': 0.6, 'speed_in': 80, 'truth_relKE_ratio': 1.018, 'truth_pmom_err': 0.0, 'truth_finite': True, 'model_relKE_ratio': 1.978, 'model_pmom_err': 72.746, 'model_finite': True}
+hidden_reset {"carried": {"0": -95.21870040893555, "5": -95.39852237701416, "10": -100.39352989196777, "20": -86.87687158584595, "30": -93.14213848114014, "50": -90.48343324661255, "75": -98.20268630981445, "100": -96.7274260520935}, "zeroed": {"0": -95.21870040893555, "5": -93.59895420074463, "10": -105.42939472198486, "20": -113.48329639434814, "30": -115.8084077835083, "50": -120.31754493713379, "75": -129.9319429397583, "100": -131.76785278320312}, "truth": {"0": -95.21869945526123, "5": -95.03119373321533, "10": -102.72248554229736, "20": -96.92350482940674, "30": -96.79312801361084, "50": -96.41215419769287, "75": -96.85719108581543, "100": -96.27295970916748}, "carried_err": {"1": 0.029067303286865354, "5": 0.10283238324336708, "10": 0.32049101777374744, "20": 3.03949885815382, "30": 4.059122882783413, "50": 7.816444575786591, "100": 7.501412361860275}, "zeroed_err": {"1": 0.029067303286865354, "5": 0.14630107954144478, "10": 0.4948700852692127, "20": 4.598805874586105, "30": 5.95299369096756, "50": 7.825148642063141, "100": 8.027142465114594}}
+done
+=== rollouts energy_ft_ctrl_k8 ===
+== nb=4 n=20 g=9.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE=   -99.73 tKE=     1.32 E=    -99.73 KE=     1.32 sp=   1.52 max=   2.25 err=   0.000 hid=0.000
+   1 tE=   -97.44 tKE=     5.00 E=    -98.33 KE=     4.23 sp=   2.48 max=   4.02 err=   0.023 hid=0.035
+   5 tE=   -99.53 tKE=    24.23 E=   -100.40 KE=    23.62 sp=   6.60 max=   8.10 err=   0.131 hid=0.078
+  10 tE=  -103.48 tKE=    43.40 E=   -103.66 KE=    43.44 sp=   8.01 max=  13.79 err=   0.501 hid=0.221
+  20 tE=  -100.92 tKE=    35.24 E=    -98.05 KE=    18.12 sp=   5.32 max=   8.05 err=   4.800 hid=0.253
+  30 tE=  -102.68 tKE=    28.80 E=    -97.39 KE=    28.50 sp=   6.85 max=  10.26 err=   4.036 hid=0.291
+  50 tE=  -100.60 tKE=    34.42 E=    -98.24 KE=    25.24 sp=   6.77 max=   9.02 err=   9.200 hid=0.300
+ 100 tE=  -103.16 tKE=    37.39 E=    -82.68 KE=    36.68 sp=   7.90 max=  11.72 err=   8.614 hid=0.316
+ 150 tE=  -101.57 tKE=    25.24 E=    -99.94 KE=    32.54 sp=   7.28 max=  11.65 err=   9.068 hid=0.365
+ 200 tE=   -98.38 tKE=    27.99 E=    -76.39 KE=    60.92 sp=  10.00 max=  14.14 err=   7.214 hid=0.377
+== nb=4 n=317 g=9.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE= -1679.28 tKE=     1.32 E=  -1679.28 KE=     1.32 sp=   1.52 max=   2.25 err=   0.000 hid=0.000
+   1 tE= -1679.39 tKE=     2.59 E=  -1679.38 KE=     2.69 sp=   2.05 max=   3.07 err=   0.012 hid=0.034
+   5 tE= -1679.85 tKE=    25.93 E=  -1679.78 KE=    26.22 sp=   7.14 max=   8.10 err=   0.030 hid=0.062
+  10 tE= -1680.42 tKE=    96.10 E=  -1679.44 KE=    97.99 sp=  13.94 max=  14.89 err=   0.121 hid=0.163
+  20 tE= -1680.99 tKE=   348.28 E=  -1620.69 KE=   428.27 sp=  28.71 max=  31.69 err=   2.223 hid=0.425
+  30 tE= -1680.54 tKE=   638.71 E=  -1523.09 KE=   868.66 sp=  38.09 max=  53.31 err=   9.518 hid=0.480
+  50 tE= -1742.92 tKE=   621.83 E=  -1633.22 KE=   658.24 sp=  27.85 max=  61.54 err=  11.748 hid=0.404
+ 100 tE= -1677.35 tKE=   281.83 E=  14094.93 KE= 16443.57 sp=  97.56 max= 207.39 err=  69.029 hid=0.473
+ 150 tE= -1676.97 tKE=   477.05 E=  10121.84 KE= 12465.17 sp=  85.75 max= 192.60 err= 117.966 hid=0.480
+ 200 tE= -1699.76 tKE=   216.53 E=   3062.22 KE=  5205.77 sp=  60.97 max= 168.89 err= 151.633 hid=0.395
+== nb=100 n=100 g=9.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE=  -459.77 tKE=     1.79 E=   -459.77 KE=     1.79 sp=   1.79 max=   3.11 err=   0.000 hid=0.000
+   1 tE=  -459.25 tKE=     3.38 E=   -459.65 KE=     3.07 sp=   2.25 max=   5.60 err=   0.025 hid=0.034
+   5 tE=  -459.71 tKE=    24.92 E=   -460.10 KE=    24.77 sp=   6.86 max=  10.63 err=   0.093 hid=0.063
+  10 tE=  -461.23 tKE=    87.55 E=   -461.17 KE=    88.42 sp=  13.02 max=  17.37 err=   0.270 hid=0.177
+  20 tE=  -466.25 tKE=   253.05 E=   -427.71 KE=   303.30 sp=  22.71 max=  42.30 err=   3.804 hid=0.380
+  30 tE=  -444.81 tKE=   326.58 E=   -308.39 KE=   467.91 sp=  25.06 max=  91.10 err=  20.424 hid=0.256
+  50 tE=  -432.64 tKE=   142.98 E=   1487.02 KE=  2109.29 sp=  34.38 max= 258.84 err=  48.235 hid=0.259
+== nb=1000 n=317 g=9.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE= -1402.93 tKE=     1.77 E=  -1402.93 KE=     1.77 sp=   1.76 max=   3.17 err=   0.000 hid=0.000
+   1 tE= -1401.59 tKE=     4.23 E=  -1402.70 KE=     3.21 sp=   2.29 max=   8.43 err=   0.034 hid=0.034
+   5 tE= -1402.07 tKE=    26.32 E=  -1403.10 KE=    25.48 sp=   6.97 max=  13.75 err=   0.150 hid=0.062
+  10 tE= -1402.75 tKE=    93.36 E=  -1402.84 KE=    94.07 sp=  13.55 max=  21.10 err=   0.390 hid=0.165
+  20 tE= -1405.37 tKE=   336.66 E=  -1378.76 KE=   377.89 sp=  26.71 max=  40.71 err=   2.765 hid=0.341
+  30 tE= -1401.85 tKE=   674.50 E=  -1070.80 KE=  1011.88 sp=  36.35 max= 452.91 err=   9.018 hid=0.226
+done
+ALLDONE

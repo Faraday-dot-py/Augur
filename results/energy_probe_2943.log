@@ -1,0 +1,103 @@
+done nb=4 n=20 g=9.0 seed=4738 finite_step=None
+done nb=4 n=20 g=9.0 seed=5738 finite_step=None
+done nb=4 n=20 g=9.0 seed=6738 finite_step=None
+done nb=4 n=20 g=9.0 seed=7738 finite_step=None
+== nb=4 n=20 g=9.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE=   -99.73 tKE=     1.32 E=    -99.73 KE=     1.32 sp=   1.52 max=   2.25 err=   0.000 hid=0.000
+   1 tE=   -97.44 tKE=     5.00 E=    -98.25 KE=     4.13 sp=   2.43 max=   3.97 err=   0.015 hid=0.035
+   5 tE=   -99.53 tKE=    24.23 E=   -100.73 KE=    22.69 sp=   6.42 max=   7.97 err=   0.117 hid=0.063
+  10 tE=  -103.48 tKE=    43.40 E=   -107.87 KE=    39.34 sp=   7.67 max=  13.58 err=   0.389 hid=0.168
+  20 tE=  -100.92 tKE=    35.24 E=   -104.65 KE=    17.02 sp=   5.33 max=   7.21 err=   4.380 hid=0.230
+  30 tE=  -102.68 tKE=    28.80 E=   -109.61 KE=    18.09 sp=   5.21 max=   9.13 err=   4.371 hid=0.257
+  50 tE=  -100.60 tKE=    34.42 E=   -120.76 KE=     9.59 sp=   3.70 max=   6.30 err=   8.171 hid=0.252
+ 100 tE=  -103.16 tKE=    37.39 E=   -130.03 KE=    16.70 sp=   5.32 max=   8.02 err=   7.137 hid=0.249
+ 150 tE=  -101.57 tKE=    25.24 E=   -132.28 KE=    11.13 sp=   4.02 max=   7.21 err=   7.484 hid=0.239
+ 200 tE=   -98.38 tKE=    27.99 E=   -135.00 KE=     8.97 sp=   3.79 max=   6.26 err=   6.769 hid=0.254
+done nb=4 n=20 g=0.0 seed=4738 finite_step=None
+done nb=4 n=20 g=0.0 seed=5738 finite_step=None
+done nb=4 n=20 g=0.0 seed=6738 finite_step=None
+done nb=4 n=20 g=0.0 seed=7738 finite_step=None
+== nb=4 n=20 g=0.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE=     1.32 tKE=     1.32 E=      1.32 KE=     1.32 sp=   1.52 max=   2.25 err=   0.000 hid=0.000
+   1 tE=     3.72 tKE=     3.72 E=      4.13 KE=     4.13 sp=   2.43 max=   3.97 err=   0.110 hid=0.035
+   5 tE=     3.73 tKE=     3.73 E=     22.69 KE=    22.69 sp=   6.42 max=   7.97 err=   2.299 hid=0.063
+  10 tE=     3.61 tKE=     3.61 E=     39.34 KE=    39.34 sp=   7.67 max=  13.58 err=   5.398 hid=0.168
+  20 tE=     3.66 tKE=     3.66 E=     17.02 KE=    17.02 sp=   5.33 max=   7.21 err=   4.580 hid=0.230
+  30 tE=     3.69 tKE=     3.69 E=     18.09 KE=    18.09 sp=   5.21 max=   9.13 err=   7.788 hid=0.257
+  50 tE=     3.73 tKE=     3.73 E=      9.59 KE=     9.59 sp=   3.70 max=   6.31 err=   8.555 hid=0.252
+ 100 tE=     3.73 tKE=     3.73 E=     13.40 KE=    13.40 sp=   4.63 max=   7.11 err=  10.987 hid=0.268
+ 150 tE=     3.35 tKE=     3.35 E=      9.56 KE=     9.56 sp=   4.15 max=   5.41 err=   9.591 hid=0.250
+ 200 tE=     3.69 tKE=     3.69 E=      9.60 KE=     9.60 sp=   3.92 max=   5.75 err=  11.293 hid=0.254
+done nb=4 n=317 g=9.0 seed=4738 finite_step=None
+done nb=4 n=317 g=9.0 seed=5738 finite_step=None
+done nb=4 n=317 g=9.0 seed=6738 finite_step=None
+done nb=4 n=317 g=9.0 seed=7738 finite_step=None
+== nb=4 n=317 g=9.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE= -1679.28 tKE=     1.32 E=  -1679.28 KE=     1.32 sp=   1.52 max=   2.25 err=   0.000 hid=0.000
+   1 tE= -1679.39 tKE=     2.59 E=  -1679.32 KE=     2.61 sp=   2.02 max=   3.03 err=   0.008 hid=0.035
+   5 tE= -1679.85 tKE=    25.93 E=  -1679.86 KE=    25.63 sp=   7.05 max=   8.01 err=   0.042 hid=0.050
+  10 tE= -1680.42 tKE=    96.10 E=  -1681.90 KE=    94.82 sp=  13.72 max=  14.61 err=   0.057 hid=0.102
+  20 tE= -1680.99 tKE=   348.28 E=  -1683.90 KE=   354.43 sp=  26.30 max=  28.18 err=   1.021 hid=0.351
+  30 tE= -1680.54 tKE=   638.71 E=  -1670.12 KE=   683.07 sp=  34.96 max=  43.41 err=   5.032 hid=0.441
+  50 tE= -1742.92 tKE=   621.83 E=  -1859.85 KE=   470.74 sp=  26.64 max=  44.30 err=  14.452 hid=0.376
+ 100 tE= -1677.35 tKE=   281.83 E=  -1743.58 KE=   452.00 sp=  24.48 max=  40.44 err=  61.747 hid=0.426
+ 150 tE= -1676.97 tKE=   477.05 E=   3101.32 KE=  5304.39 sp=  48.40 max=  99.99 err= 125.835 hid=0.396
+ 200 tE= -1699.76 tKE=   216.53 E=   1769.20 KE=  4187.00 sp=  43.36 max=  82.78 err= 146.471 hid=0.381
+done nb=100 n=100 g=9.0 seed=4738 finite_step=None
+done nb=100 n=100 g=9.0 seed=5738 finite_step=None
+done nb=100 n=100 g=9.0 seed=6738 finite_step=None
+done nb=100 n=100 g=9.0 seed=7738 finite_step=None
+== nb=100 n=100 g=9.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE=  -459.77 tKE=     1.79 E=   -459.77 KE=     1.79 sp=   1.79 max=   3.11 err=   0.000 hid=0.000
+   1 tE=  -459.25 tKE=     3.38 E=   -459.64 KE=     2.93 sp=   2.20 max=   5.26 err=   0.026 hid=0.035
+   5 tE=  -459.71 tKE=    24.92 E=   -460.37 KE=    24.01 sp=   6.76 max=   9.93 err=   0.125 hid=0.052
+  10 tE=  -461.23 tKE=    87.55 E=   -464.18 KE=    84.80 sp=  12.73 max=  16.31 err=   0.260 hid=0.118
+  20 tE=  -466.25 tKE=   253.05 E=   -485.11 KE=   239.14 sp=  20.11 max=  30.69 err=   2.927 hid=0.324
+  30 tE=  -444.81 tKE=   326.58 E=   -558.82 KE=   204.88 sp=  17.77 max=  45.62 err=  14.706 hid=0.280
+  50 tE=  -432.64 tKE=   142.98 E=   -495.33 KE=    84.96 sp=  10.26 max=  48.06 err=  43.825 hid=0.208
+ 100 tE=  -395.83 tKE=   241.84 E=   -717.07 KE=    93.37 sp=   9.25 max=  54.75 err=  46.658 hid=0.248
+ 150 tE=  -363.78 tKE=   302.83 E=    -54.24 KE=   794.02 sp=   9.09 max= 174.24 err=  46.445 hid=0.249
+ 200 tE=  -318.14 tKE=   335.30 E=    129.11 KE=   945.98 sp=  13.92 max= 151.83 err=  47.212 hid=0.258
+done nb=100 n=100 g=0.0 seed=4738 finite_step=None
+done nb=100 n=100 g=0.0 seed=5738 finite_step=None
+done nb=100 n=100 g=0.0 seed=6738 finite_step=None
+done nb=100 n=100 g=0.0 seed=7738 finite_step=None
+== nb=100 n=100 g=0.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE=     1.79 tKE=     1.79 E=      1.79 KE=     1.79 sp=   1.79 max=   3.11 err=   0.000 hid=0.000
+   1 tE=     2.42 tKE=     2.42 E=      2.93 KE=     2.93 sp=   2.20 max=   5.26 err=   0.120 hid=0.035
+   5 tE=     2.45 tKE=     2.45 E=     24.01 KE=    24.01 sp=   6.76 max=   9.93 err=   2.538 hid=0.052
+  10 tE=     2.43 tKE=     2.43 E=     84.80 KE=    84.80 sp=  12.73 max=  16.31 err=   9.738 hid=0.118
+  20 tE=     2.45 tKE=     2.45 E=    239.14 KE=   239.14 sp=  20.11 max=  30.69 err=  29.986 hid=0.324
+  30 tE=     2.44 tKE=     2.44 E=    204.87 KE=   204.87 sp=  17.77 max=  45.62 err=  38.791 hid=0.280
+  50 tE=     2.43 tKE=     2.43 E=    124.77 KE=   124.77 sp=  10.96 max=  65.23 err=  36.671 hid=0.209
+ 100 tE=     2.44 tKE=     2.44 E=    981.72 KE=   981.72 sp=  12.68 max= 228.52 err=  54.144 hid=0.251
+ 150 tE=     2.44 tKE=     2.44 E=   3269.38 KE=  3269.38 sp=  21.42 max= 206.45 err=  58.674 hid=0.247
+ 200 tE=     2.45 tKE=     2.45 E=17780712.34 KE=17780712.34 sp= 856.67 max=16227.24 err= 112.140 hid=0.244
+done nb=1000 n=317 g=9.0 seed=4738 finite_step=84
+== nb=1000 n=317 g=9.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE= -1402.93 tKE=     1.77 E=  -1402.93 KE=     1.77 sp=   1.76 max=   3.17 err=   0.000 hid=0.000
+   1 tE= -1401.59 tKE=     4.23 E=  -1402.76 KE=     3.00 sp=   2.23 max=   6.83 err=   0.038 hid=0.035
+   5 tE= -1402.07 tKE=    26.32 E=  -1403.42 KE=    24.66 sp=   6.87 max=  12.07 err=   0.190 hid=0.051
+  10 tE= -1402.75 tKE=    93.36 E=  -1405.75 KE=    90.43 sp=  13.30 max=  18.60 err=   0.388 hid=0.106
+  20 tE= -1405.37 tKE=   336.66 E=  -1423.23 KE=   327.36 sp=  24.94 max=  32.25 err=   2.141 hid=0.332
+  30 tE= -1401.85 tKE=   674.50 E=  -1679.35 KE=   373.17 sp=  26.02 max=  51.06 err=   8.884 hid=0.284
+  50 tE= -1275.05 tKE=  1170.83 E=  -1911.62 KE=   645.57 sp=  31.07 max= 102.86 err=  56.205 hid=0.181
+done nb=1000 n=317 g=1.0 seed=4738 finite_step=81
+== nb=1000 n=317 g=1.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE=  -154.31 tKE=     1.77 E=   -154.31 KE=     1.77 sp=   1.76 max=   3.17 err=   0.000 hid=0.000
+   1 tE=  -152.86 tKE=     3.24 E=   -153.20 KE=     3.00 sp=   2.23 max=   6.83 err=   0.121 hid=0.035
+   5 tE=  -152.84 tKE=     3.58 E=   -134.02 KE=    24.66 sp=   6.87 max=  12.07 err=   2.328 hid=0.051
+  10 tE=  -152.86 tKE=     4.47 E=    -75.81 KE=    90.43 sp=  13.30 max=  18.60 err=   9.028 hid=0.106
+  20 tE=  -152.87 tKE=     7.89 E=    132.85 KE=   327.36 sp=  24.94 max=  32.25 err=  34.253 hid=0.332
+  30 tE=  -152.90 tKE=    13.35 E=    145.11 KE=   373.16 sp=  26.02 max=  51.02 err=  64.590 hid=0.284
+  50 tE=  -153.03 tKE=    29.84 E=    360.90 KE=   645.01 sp=  30.82 max= 114.46 err= 113.367 hid=0.182
+done nb=1000 n=317 g=0.0 seed=4738 finite_step=81
+== nb=1000 n=317 g=0.0: step  E_model(mean over seeds)  KE_model  speed  maxspeed  err  |hid|
+   0 tE=     1.77 tKE=     1.77 E=      1.77 KE=     1.77 sp=   1.76 max=   3.17 err=   0.000 hid=0.000
+   1 tE=     3.22 tKE=     3.22 E=      3.00 KE=     3.00 sp=   2.23 max=   6.83 err=   0.133 hid=0.035
+   5 tE=     3.23 tKE=     3.23 E=     24.66 KE=    24.66 sp=   6.87 max=  12.07 err=   2.611 hid=0.051
+  10 tE=     3.23 tKE=     3.23 E=     90.43 KE=    90.43 sp=  13.30 max=  18.60 err=  10.146 hid=0.106
+  20 tE=     3.24 tKE=     3.24 E=    327.36 KE=   327.36 sp=  24.94 max=  32.25 err=  38.526 hid=0.332
+  30 tE=     3.23 tKE=     3.23 E=    373.17 KE=   373.17 sp=  26.02 max=  51.06 err=  73.391 hid=0.284
+  50 tE=     3.25 tKE=     3.25 E=    625.47 KE=   625.47 sp=  30.76 max=  85.34 err= 135.186 hid=0.182
+done

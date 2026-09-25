@@ -147,3 +147,62 @@ def test_pair_impulse_conserves_momentum_zero_init_and_mirror_equivariant():
     b = dyn(mirrored_pos, mirrored_vel, hid)
     flip = torch.tensor([1.0, -1.0])
     assert torch.allclose(b[1], a[1] * flip, atol=1e-5)
+
+
+def _conservative(n=40, **kw):
+    torch.manual_seed(4738)
+    dyn = TokenFreeDynamics(n=n, conservative_contact=True, **kw)
+    for net in (dyn.pair_force, dyn.wall_force):
+        torch.nn.init.normal_(net[4].weight, std=0.1)
+    return dyn
+
+
+def test_conservative_zero_init_is_free_flight():
+    dyn = TokenFreeDynamics(n=20, conservative_contact=True)
+    pos = torch.tensor([[10.0, 10.0], [10.5, 10.0]])
+    vel = torch.randn(2, 2)
+    dp, dv, nh = dyn(pos, vel, torch.zeros(2, dyn.hidden_dim))
+    assert torch.allclose(dp, torch.zeros_like(dp), atol=1e-4) and torch.allclose(dv, torch.zeros_like(dv), atol=1e-4)
+
+
+def test_conservative_pair_momentum_exact():
+    dyn = _conservative()
+    pos = torch.tensor([[20.0, 20.0], [20.9, 20.3], [30.0, 30.0]])
+    vel = torch.tensor([[3.0, 0.0], [-3.0, 0.5], [1.0, 1.0]])
+    dp, dv, _ = dyn(pos, vel, torch.zeros(3, dyn.hidden_dim))
+    assert torch.allclose(dv[:2].sum(0), torch.zeros(2), atol=1e-5)
+    assert torch.allclose(dv[2], torch.zeros(2), atol=1e-6)
+
+
+def test_conservative_wall_force_points_inward():
+    dyn = _conservative()
+    torch.nn.init.zeros_(dyn.wall_force[4].weight)
+    dyn.wall_force[4].bias.data.fill_(1.0)
+    pos = torch.tensor([[0.3, 20.0], [39.7, 20.0], [20.0, 0.3], [20.0, 39.7]])
+    acc = dyn.contact_accel(pos)
+    assert acc[0, 0] > 0 and acc[1, 0] < 0 and acc[2, 1] > 0 and acc[3, 1] < 0
+
+
+def test_conservative_energy_bounded_with_potential():
+    dyn = _conservative()
+    dyn.pair_force[4].bias.data.fill_(0.0)
+    pos = torch.tensor([[20.0, 20.0], [21.2, 20.0]])
+    vel = torch.tensor([[2.0, 0.0], [-2.0, 0.0]])
+    e0 = 0.5 * (vel ** 2).sum()
+    for _ in range(20):
+        dp, dv, _ = dyn(pos, vel, torch.zeros(2, dyn.hidden_dim))
+        pos, vel = pos + vel * dyn.dt + dp, vel + dv
+    assert torch.isfinite(vel).all() and torch.allclose(vel.sum(0), torch.zeros(2), atol=1e-4)
+
+
+def test_adaptive_radius_adds_fast_pair_edge():
+    torch.manual_seed(4738)
+    dyn = TokenFreeDynamics(n=800, pair_impulse=True, neighbor_radius=4.0)
+    torch.nn.init.normal_(dyn.pair_head[4].weight, std=0.1)
+    pos = torch.tensor([[400.0, 396.0], [400.0, 404.0]])
+    vel = torch.tensor([[0.0, 40.0], [0.0, -40.0]])
+    hid = torch.zeros(2, dyn.hidden_dim)
+    base = dyn(pos, vel, hid)[1]
+    dyn.adaptive_radius = "pair"
+    wide = dyn(pos, vel, hid)[1]
+    assert torch.allclose(base, torch.zeros_like(base), atol=1e-6) and wide.abs().max() > 0
