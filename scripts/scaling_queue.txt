@@ -1,0 +1,9 @@
+scaling-opt|scripts/scaling_opt_bench.py --ns 100000 --tag opt100k
+scaling-a|scripts/scaling_bench.py --states uniform,flyby --ns 10000,30000,100000 --tag a
+scaling-t10k|scripts/scaling_bench.py --states t10000 --ns 100000 --tag t10k
+scaling-r100k|scripts/scaling_rollout.py --n 100000 --providers exact,mesh,geo_audit,adaptive,adaptive_opt --steps 40 --grid 2048 --tag r100k
+scaling-b|scripts/scaling_bench.py --states uniform,flyby --ns 300000 --tag b
+scaling-c-uni|scripts/scaling_bench.py --states uniform --ns 1000000 --bh-max 0 --exact-max 0 --tag c_uni
+scaling-c-fly|scripts/scaling_bench.py --states flyby --ns 1000000 --bh-max 0 --exact-max 0 --tag c_fly
+scaling-r-big|scripts/scaling_rollout.py --n 1000000 --providers adaptive_opt,adaptive --steps 21 --tag r1m
+scaling-ceil|scripts/scaling_ceiling.py --impl opt --ns 2000000,4000000,8000000,12000000,16000000,24000000 --tag ceil_opt
