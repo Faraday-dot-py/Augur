@@ -28,6 +28,7 @@ class Flat:
         lens = [len(x["key"]) for x in lv]
         self.off = np.concatenate([[0], np.cumsum(lens)])
         self.count = torch.cat([x["count"] for x in lv])
+        self.q = torch.cat([x["q"] for x in lv])
         self.start = torch.cat([x["start"] for x in lv])
         self.com = torch.cat([x["com"] for x in lv])
         self.level = torch.cat([torch.full((n,), l, device=dev, dtype=torch.long) for l, n in enumerate(lens)])
@@ -71,7 +72,7 @@ def direct(tr, fl, ga, gb, a, budget=30_000_000):
 
 
 @torch.no_grad()
-def dual_accel(tr, fl, theta, cap):
+def dual_accel(tr, fl, theta, cap, accept_fn=None, collect=None):
     dev = tr.pos.device
     n_nodes = len(fl.count)
     a_loc = torch.zeros(n_nodes, 2, dtype=torch.float64, device=dev)
@@ -86,7 +87,11 @@ def dual_accel(tr, fl, theta, cap):
         dist = r.norm(dim=1)
         sa, sb = fl.size[ga], fl.size[gb]
         acc = (torch.maximum(sa, sb) < theta * dist) & (ga != gb)
+        if accept_fn is not None:
+            acc = accept_fn(ga, gb, acc)
         if acc.any():
+            if collect is not None:
+                collect.append((ga[acc], gb[acc]))
             r_, cb_, ga_ = r[acc], cb[acc].double(), ga[acc]
             s2 = (r_ ** 2).sum(1) + EPS ** 2
             i3, i5 = s2 ** -1.5, s2 ** -2.5
