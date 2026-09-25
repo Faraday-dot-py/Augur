@@ -1,6 +1,6 @@
 """Long N-body gravity rollout: ground truth and model (free-running from step 0)
 side by side. Positions are cached in an npz (recorded every --every steps), then
-rendered with a window that follows the bodies' 1-99 percentile extent (from the
+rendered with a window centred on the truth centre of mass, sized by the 99th percentile |offset| (from the
 ground truth, smoothed) so it fits the particle cloud at every frame.
 
 Usage: PYTHONPATH=. python3 scripts/gravity_long.py --out videos/gravity_long.mp4
@@ -75,8 +75,8 @@ def render(args):
     frames = truth.shape[0]
     boxes = []
     for f in range(frames):
-        lo, hi = np.percentile(truth[f], 1, axis=0), np.percentile(truth[f], 99, axis=0)
-        c, half = (lo + hi) / 2, (hi - lo).max() / 2 * 1.15 + 1.0
+        c = truth[f].mean(axis=0)
+        half = np.percentile(np.abs(truth[f] - c), 99) * 1.15 + 1.0
         boxes.append(np.concatenate([c, [half]]))
     boxes = np.array(boxes)
     k = 15
