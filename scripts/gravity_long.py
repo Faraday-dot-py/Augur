@@ -38,7 +38,7 @@ def simulate(args):
     pos, vel = torch.tensor(p0, device=dev), torch.tensor(v0, device=dev)
     a = accel_t(pos, args.eps)
     if args.model == "central":
-        dyn = CentralForceDynamics(dt=args.dt, neighbor_radius=100.0).to(dev)
+        dyn = CentralForceDynamics(dt=args.dt, neighbor_radius=args.neighbor_radius).to(dev)
     else:
         dyn = TokenFreeDynamics(n=1000, neighbor_radius=100.0, pair_impulse=True).to(dev)
     dyn.load_state_dict(torch.load(args.checkpoint, map_location=dev))
@@ -106,6 +106,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--checkpoint", default="checkpoints/gravity_dynamics_v2.pt")
     ap.add_argument("--model", choices=["token", "central"], default="token")
+    ap.add_argument("--neighbor-radius", type=float, default=100.0)
     ap.add_argument("--bodies", type=int, default=1000)
     ap.add_argument("--steps", type=int, default=10000)
     ap.add_argument("--every", type=int, default=20)

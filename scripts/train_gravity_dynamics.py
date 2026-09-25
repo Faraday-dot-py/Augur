@@ -74,11 +74,12 @@ def main():
 
     global DEVICE
     DEVICE = torch.device(args.device)
+    DATA_DEVICE = DEVICE if DEVICE.type == "cuda" else None
     torch.manual_seed(args.seed)
     rng = np.random.default_rng(args.seed)
     kw = dict(dt=args.dt, eps=args.eps)
     rng_n = (args.min_bodies, args.max_bodies)
-    train = gs.make_dataset(args.train, rng_n, args.steps, args.seed, scale=args.scale_init, **kw)
+    train = gs.make_dataset(args.train, rng_n, args.steps, args.seed, scale=args.scale_init, device=DATA_DEVICE, **kw)
     if args.model == "central":
         dyn = CentralForceDynamics(dt=args.dt, neighbor_radius=args.neighbor_radius)
     else:
@@ -110,7 +111,7 @@ def main():
     torch.save(dyn.state_dict(), args.checkpoint)
     res = {}
     for seed in (9000, 12000):
-        data = gs.make_dataset(args.eval_scenes, rng_n, args.steps, seed, scale=args.scale_init, **kw)
+        data = gs.make_dataset(args.eval_scenes, rng_n, args.steps, seed, scale=args.scale_init, device=DATA_DEVICE, **kw)
         res[str(seed)] = evaluate(dyn, data, 20, args.dt, args.eps)
         r = res[str(seed)]
         print(seed, "err@5/10/20", [round(r["err"][i], 4) for i in (4, 9, 19)],

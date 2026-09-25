@@ -44,11 +44,36 @@ def rollout(pos, vel, steps, dt=0.1, substeps=4, eps=0.5, g=1.0):
     return np.stack(ps), np.stack(vs)
 
 
-def make_dataset(num, ball_range, steps, seed, scale=False, **kw):
+def rollout_torch(pos, vel, steps, device, dt=0.1, substeps=4, eps=0.5, g=1.0):
+    import torch
+
+    h = dt / substeps
+    pos, vel = torch.tensor(pos, device=device), torch.tensor(vel, device=device)
+    ps, vs = [pos.cpu().numpy()], [vel.cpu().numpy()]
+
+    def acc(p):
+        d = p[None, :, :] - p[:, None, :]
+        inv = ((d ** 2).sum(-1) + eps ** 2) ** -1.5
+        inv.fill_diagonal_(0.0)
+        return g * (d * inv[..., None]).sum(1)
+
+    a = acc(pos)
+    for _ in range(steps):
+        for _ in range(substeps):
+            vel = vel + 0.5 * h * a
+            pos = pos + h * vel
+            a = acc(pos)
+            vel = vel + 0.5 * h * a
+        ps.append(pos.cpu().numpy())
+        vs.append(vel.cpu().numpy())
+    return np.stack(ps), np.stack(vs)
+
+
+def make_dataset(num, ball_range, steps, seed, scale=False, device=None, **kw):
     rng = np.random.default_rng(seed)
     out = []
     for _ in range(num):
         n = int(rng.integers(ball_range[0], ball_range[1] + 1))
         p, v = init_bodies(n, rng, scale=scale)
-        out.append(rollout(p, v, steps, **kw))
+        out.append(rollout(p, v, steps, **kw) if device is None else rollout_torch(p, v, steps, device, **kw))
     return out
