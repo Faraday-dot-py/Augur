@@ -8,12 +8,15 @@ import json
 import numpy as np
 import torch
 
+from model.central_force import CentralForceDynamics
 from model.token_free import TokenFreeDynamics
 from scripts import gravity_sim as gs
 
+DEVICE = torch.device("cpu")
+
 
 def unroll(dyn, pos, vel, k, dt):
-    hidden = torch.zeros(pos.shape[0], dyn.hidden_dim)
+    hidden = torch.zeros(pos.shape[0], dyn.hidden_dim, device=pos.device)
     ps, vs = [], []
     for _ in range(k):
         dp, dv, hidden = dyn(pos, vel, hidden)
@@ -30,13 +33,13 @@ def evaluate(dyn, data, horizon, dt, eps):
     e_model, e_true = np.zeros(horizon), np.zeros(horizon)
     with torch.no_grad():
         for P, V in data:
-            p0 = torch.tensor(P[0], dtype=torch.float32)
-            v0 = torch.tensor(V[0], dtype=torch.float32)
+            p0 = torch.tensor(P[0], dtype=torch.float32, device=DEVICE)
+            v0 = torch.tensor(V[0], dtype=torch.float32, device=DEVICE)
             ps, vs = unroll(dyn, p0, v0, horizon, dt)
             for t in range(horizon):
-                err[t] += np.linalg.norm(ps[t].numpy() - P[t + 1], axis=1).mean()
+                err[t] += np.linalg.norm(ps[t].cpu().numpy() - P[t + 1], axis=1).mean()
                 cv_err[t] += np.linalg.norm(P[0] + V[0] * dt * (t + 1) - P[t + 1], axis=1).mean()
-                e_model[t] += gs.energy(ps[t].numpy().astype(np.float64), vs[t].numpy().astype(np.float64), eps)
+                e_model[t] += gs.energy(ps[t].cpu().numpy().astype(np.float64), vs[t].cpu().numpy().astype(np.float64), eps)
                 e_true[t] += gs.energy(P[t + 1], V[t + 1], eps)
     n = len(data)
     return {"err": (err / n).tolist(), "const_vel_err": (cv_err / n).tolist(),
@@ -61,17 +64,28 @@ def main():
     ap.add_argument("--eval-scenes", type=int, default=48)
     ap.add_argument("--log-every", type=int, default=200)
     ap.add_argument("--no-pair-impulse", action="store_true")
+    ap.add_argument("--model", choices=["token", "central"], default="token")
+    ap.add_argument("--init", type=str, default=None)
+    ap.add_argument("--device", default="cpu")
     ap.add_argument("--seed", type=int, default=4738)
     ap.add_argument("--out", type=str, default="results/gravity_test.json")
     ap.add_argument("--checkpoint", type=str, default="checkpoints/gravity_dynamics.pt")
     args = ap.parse_args()
 
+    global DEVICE
+    DEVICE = torch.device(args.device)
     torch.manual_seed(args.seed)
     rng = np.random.default_rng(args.seed)
     kw = dict(dt=args.dt, eps=args.eps)
     rng_n = (args.min_bodies, args.max_bodies)
     train = gs.make_dataset(args.train, rng_n, args.steps, args.seed, scale=args.scale_init, **kw)
-    dyn = TokenFreeDynamics(n=1000, neighbor_radius=args.neighbor_radius, pair_impulse=not args.no_pair_impulse)
+    if args.model == "central":
+        dyn = CentralForceDynamics(dt=args.dt, neighbor_radius=args.neighbor_radius)
+    else:
+        dyn = TokenFreeDynamics(n=1000, neighbor_radius=args.neighbor_radius, pair_impulse=not args.no_pair_impulse)
+    if args.init:
+        dyn.load_state_dict(torch.load(args.init, map_location=DEVICE))
+    dyn.to(DEVICE)
     opt = torch.optim.Adam(dyn.parameters(), lr=args.lr)
     for it in range(args.iters):
         k = int(round(args.k_start + (args.k_end - args.k_start) * it / max(1, args.iters - 1)))
@@ -80,11 +94,11 @@ def main():
         for _ in range(args.batch):
             P, V = train[rng.integers(len(train))]
             t0 = int(rng.integers(0, args.steps - k + 1))
-            p0 = torch.tensor(P[t0], dtype=torch.float32)
-            v0 = torch.tensor(V[t0], dtype=torch.float32)
+            p0 = torch.tensor(P[t0], dtype=torch.float32, device=DEVICE)
+            v0 = torch.tensor(V[t0], dtype=torch.float32, device=DEVICE)
             ps, vs = unroll(dyn, p0, v0, k, args.dt)
-            tp = torch.tensor(P[t0 + 1:t0 + k + 1], dtype=torch.float32)
-            tv = torch.tensor(V[t0 + 1:t0 + k + 1], dtype=torch.float32)
+            tp = torch.tensor(P[t0 + 1:t0 + k + 1], dtype=torch.float32, device=DEVICE)
+            tv = torch.tensor(V[t0 + 1:t0 + k + 1], dtype=torch.float32, device=DEVICE)
             loss = (((ps - tp) ** 2).mean() + 0.1 * ((vs - tv) ** 2).mean()) / args.batch
             loss.backward()
             total += loss.item()

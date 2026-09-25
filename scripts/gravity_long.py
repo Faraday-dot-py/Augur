@@ -11,6 +11,7 @@ import os
 import numpy as np
 import torch
 
+from model.central_force import CentralForceDynamics
 from model.token_free import TokenFreeDynamics
 from scripts import gravity_sim as gs
 
@@ -36,7 +37,10 @@ def simulate(args):
     dev = torch.device(args.device)
     pos, vel = torch.tensor(p0, device=dev), torch.tensor(v0, device=dev)
     a = accel_t(pos, args.eps)
-    dyn = TokenFreeDynamics(n=1000, neighbor_radius=100.0, pair_impulse=True).to(dev)
+    if args.model == "central":
+        dyn = CentralForceDynamics(dt=args.dt, neighbor_radius=100.0).to(dev)
+    else:
+        dyn = TokenFreeDynamics(n=1000, neighbor_radius=100.0, pair_impulse=True).to(dev)
     dyn.load_state_dict(torch.load(args.checkpoint, map_location=dev))
     mp, mv = torch.tensor(p0, dtype=torch.float32, device=dev), torch.tensor(v0, dtype=torch.float32, device=dev)
     hidden = torch.zeros(args.bodies, dyn.hidden_dim, device=dev)
@@ -101,6 +105,7 @@ def render(args):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--checkpoint", default="checkpoints/gravity_dynamics_v2.pt")
+    ap.add_argument("--model", choices=["token", "central"], default="token")
     ap.add_argument("--bodies", type=int, default=1000)
     ap.add_argument("--steps", type=int, default=10000)
     ap.add_argument("--every", type=int, default=20)
