@@ -3014,3 +3014,12 @@ Post-hoc fixes only delay it. `scripts/probe_gravity_infall.py` (step 0, hidden=
 - interaction cutoff 100 (`neighbor_radius`, edges only between pairs closer than 100; truth is all-pairs): gap 78.5 @1000, 1427 @10000; median radius 977 vs truth 65 @10000; energy -10444 -> +643.
 - cutoff removed at inference (job 2939, radius 1e5, f extrapolated beyond trained d): gap 69.9 @1000, 712 @10000; median radius 98 vs 65; energy -3402 @10000; COM drift 0.
 Old token model: gap 497 @1000, energy +2.59e6. Remaining drift is slow evaporation of the halo; f was only trained on d < ~150.
+
+### 1M bodies: clusters and mesh far field (jobs 2966/2967/2970, 2026-09-24)
+
+`scripts/gravity_1b.py` gains `--clusters/--spacing` (independent scaled-init clusters on a lattice) and `--far-grid` (particle-mesh far field: counts on a grid, FFT-convolved with the learned force kernel, bilinear back; cell-pair kernel averaged over 6x6 sub-points with d<=cutoff masked so the exact near field covers those pairs; model force clamped to its trained range d<=150, constant f above, i.e. a 1/d^2 tail). CentralForceDynamics, cutoff 4 near field.
+- 1M as 1000 clusters x 1000, radius 100, 500 steps (job 2966): 1338 s (2.7 s/step), KE 2.9e6 -> 1.02e7, |P| 0.0033. Frame review: stable ~30x30 lattice of clusters, gradual fade of density contrast and speed noise from step 200; edge strip empty (1000 clusters in a 32x32 lattice).
+- Far-field accuracy at 20k bodies (job 2967, exact all-pairs analytic accel, mean rel err): near-only 0.455; mesh grid 64/128/256/512 0.125/0.092/0.068/0.049.
+- 1M uniform, 100 steps, model vs analytic both near+far (grid 1024): gap 0.136 cells @100 (near-only earlier 0.088).
+- 1B uniform near+far (grid 4096, job 2969, cancelled at step ~12): 22.7 s/step (near-only 21.7), 67 GB peak; overnight run pending.
+- 1M uniform near+far 10000 steps (job 2970, grid 1024): 1030 s (0.10 s/step), 25 GB. KE 9.0e7 -> ~8e8 peak by step ~1000 -> 2.8-3.2e8 (2.80e8 @10000). |P| 27 -> 796 @10000 (peaked ~1000 @9500): the mesh does not conserve momentum. Frame review: uniform square collapses abruptly by step 1000 to a dense central blob with a halo (density and speed saturated at step 1000), then slow relaxation, no lattice/tiling artifacts, nothing leaves the frame. Video videos/gravity_1m_far_10k.mp4.

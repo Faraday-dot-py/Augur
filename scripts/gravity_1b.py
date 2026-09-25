@@ -18,6 +18,9 @@ from model.central_force import CentralForceDynamics
 from model.token_graph import build_radius_graph_cells
 
 
+FORCE_TRAIN_MAX = 150.0
+
+
 def init_state(n, device, seed):
     scale = n / 8
     spread, speed = 5.0 * scale ** 0.5, 0.5 * scale ** 0.25
@@ -48,7 +51,7 @@ def init_clusters(clusters, per_cluster, spacing, device, seed):
 
 
 def model_force(dyn):
-    return lambda d: dyn.force(torch.log(d)) / (d ** 2 + 1.0)
+    return lambda d: dyn.force(torch.log(d.clamp(max=FORCE_TRAIN_MAX))) / (d ** 2 + 1.0)
 
 
 def analytic_force(eps):
@@ -77,10 +80,81 @@ def tiled_accel(force_fn, pos, radius, strips):
 
 
 @torch.no_grad()
-def step(force_fn, pos, vel, dt, radius, strips):
-    a0 = tiled_accel(force_fn, pos, radius, strips)
+def far_kernel(force_fn, h, radius, grid, dev, sub=6, reach=None):
+    """Mesh kernel for the far field, indexed by dst-src cell offset on a
+    (2*grid, 2*grid) periodic layout. Offsets within `reach` cells average the
+    force over sub x sub points per cell with d <= radius masked out (the
+    near field covers those pairs exactly); farther offsets use the cell-centre
+    force."""
+    fn = force_fn
+    force_fn = lambda d: torch.cat([fn(c.reshape(-1, 1)) for c in d.reshape(-1).split(8_000_000)]).reshape(d.shape)
+    reach = reach if reach is not None else int(np.ceil(radius / h)) + 2
+    n = 2 * grid
+    o = torch.arange(n, device=dev)
+    o = torch.where(o >= grid, o - n, o).float()
+    ox, oy = torch.meshgrid(o, o, indexing="ij")
+    rx, ry = -ox * h, -oy * h
+    d = torch.sqrt(rx ** 2 + ry ** 2 + 1e-12)
+    f = force_fn(d) / d
+    f = torch.where(d > radius, f, torch.zeros_like(f))
+    kx, ky = f * rx, f * ry
+    u = (torch.arange(sub, device=dev).float() + 0.5) / sub * h
+    du = (u[:, None] - u[None, :]).reshape(-1)
+    ddx, ddy = torch.meshgrid(du, du, indexing="ij")
+    ddx, ddy = ddx.reshape(-1), ddy.reshape(-1)
+    r = torch.arange(-reach, reach + 1, device=dev).float()
+    for i, a in enumerate(r):
+        for j, b in enumerate(r):
+            x = -a * h + ddx
+            y = -b * h + ddy
+            dd = torch.sqrt(x ** 2 + y ** 2 + 1e-12)
+            ff = torch.where(dd > radius, force_fn(dd) / dd, torch.zeros_like(dd))
+            ix, iy = int(a) % n, int(b) % n
+            kx[ix, iy] = (ff * x).mean()
+            ky[ix, iy] = (ff * y).mean()
+    return torch.fft.rfft2(kx), torch.fft.rfft2(ky)
+
+
+@torch.no_grad()
+def far_accel(force_fn, pos, radius, grid, chunk=100_000_000):
+    """Particle-mesh far field: deposit counts on a grid over the current
+    bounding box, convolve with the force kernel by FFT, interpolate back."""
+    lo = pos.min(0).values - 1e-3
+    hi = pos.max(0).values + 1e-3
+    h = float((hi - lo).max()) / grid
+    counts = torch.zeros(grid * grid, device=pos.device)
+    for i in range(0, pos.shape[0], chunk):
+        ij = ((pos[i:i + chunk] - lo) / h).floor().long().clamp_(0, grid - 1)
+        counts += torch.bincount(ij[:, 0] * grid + ij[:, 1], minlength=grid * grid).float()
+    kx, ky = far_kernel(force_fn, h, radius, grid, pos.device)
+    c = torch.zeros(2 * grid, 2 * grid, device=pos.device)
+    c[:grid, :grid] = counts.view(grid, grid)
+    fc = torch.fft.rfft2(c)
+    fx = torch.fft.irfft2(fc * kx, s=(2 * grid, 2 * grid))[:grid, :grid]
+    fy = torch.fft.irfft2(fc * ky, s=(2 * grid, 2 * grid))[:grid, :grid]
+    field = torch.stack([fx, fy], dim=-1)
+    acc = torch.empty_like(pos)
+    for i in range(0, pos.shape[0], chunk):
+        g = (pos[i:i + chunk] - lo) / h - 0.5
+        i0 = g.floor().long()
+        w = g - i0
+        out = 0
+        for dx in (0, 1):
+            for dy in (0, 1):
+                ix = (i0[:, 0] + dx).clamp(0, grid - 1)
+                iy = (i0[:, 1] + dy).clamp(0, grid - 1)
+                wt = (w[:, 0] if dx else 1 - w[:, 0]) * (w[:, 1] if dy else 1 - w[:, 1])
+                out = out + field[ix, iy] * wt[:, None]
+        acc[i:i + chunk] = out
+    return acc
+
+
+@torch.no_grad()
+def step(force_fn, pos, vel, dt, radius, strips, far=0):
+    accel = lambda p: tiled_accel(force_fn, p, radius, strips) + (far_accel(force_fn, p, radius, far) if far else 0)
+    a0 = accel(pos)
     new_pos = pos + vel * dt + 0.5 * dt * dt * a0
-    a1 = tiled_accel(force_fn, new_pos, radius, strips)
+    a1 = accel(new_pos)
     vel = vel + 0.5 * dt * (a0 + a1)
     return new_pos, vel
 
@@ -111,6 +185,7 @@ def main():
     ap.add_argument("--clusters", type=int, default=0, help="split --bodies into this many independent clusters on a lattice")
     ap.add_argument("--spacing", type=float, default=300.0)
     ap.add_argument("--strips", type=int, default=100)
+    ap.add_argument("--far-grid", type=int, default=0, help="particle-mesh far field on this grid (0 = off, force truncated at --radius)")
     ap.add_argument("--grid", type=int, default=512)
     ap.add_argument("--dt", type=float, default=0.1)
     ap.add_argument("--eps", type=float, default=0.5)
@@ -161,9 +236,9 @@ def main():
     record(0)
     for k in range(1, args.steps + 1):
         ts = time.time()
-        pos, vel = step(force, pos, vel, args.dt, args.radius, args.strips)
+        pos, vel = step(force, pos, vel, args.dt, args.radius, args.strips, args.far_grid)
         if ref is not None:
-            ref = step(analytic_force(args.eps), ref[0], ref[1], args.dt, args.radius, args.strips)
+            ref = step(analytic_force(args.eps), ref[0], ref[1], args.dt, args.radius, args.strips, args.far_grid)
         torch.cuda.synchronize() if dev.type == "cuda" else None
         print(f"step {k} {time.time() - ts:.1f}s elapsed {time.time() - t0:.0f}s peak {torch.cuda.max_memory_allocated() / 1e9 if dev.type == 'cuda' else 0:.0f}GB", flush=True)
         if k % args.record_every == 0:
