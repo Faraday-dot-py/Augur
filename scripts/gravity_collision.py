@@ -78,6 +78,7 @@ def main():
     print("model done", flush=True)
     e0 = energy(pos, vel, args.eps)
     print(f"E0 {e0:.5g} truth end {energy(tp, tv, args.eps):.5g} model end {energy(mp, mv, args.eps):.5g}", flush=True)
+    print(f"|P| start {float(vel.double().sum(0).norm()):.4g} truth end {float(tv.double().sum(0).norm()):.4g} model end {float(mv.double().sum(0).norm()):.4g}", flush=True)
     np.savez_compressed(args.out, truth=truth, model=model, dt=args.dt, record=args.record, bodies=args.bodies, half=half)
 
 

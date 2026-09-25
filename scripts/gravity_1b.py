@@ -80,7 +80,7 @@ def tiled_accel(force_fn, pos, radius, strips):
 
 
 @torch.no_grad()
-def far_kernel(force_fn, h, radius, grid, dev, sub=6, reach=None):
+def far_kernel(force_fn, h, radius, grid, dev, sub=6, reach=None, fft64=False):
     """Mesh kernel for the far field, indexed by dst-src cell offset on a
     (2*grid, 2*grid) periodic layout. Offsets within `reach` cells average the
     force over sub x sub points per cell with d <= radius masked out (the
@@ -112,46 +112,65 @@ def far_kernel(force_fn, h, radius, grid, dev, sub=6, reach=None):
             ix, iy = int(a) % n, int(b) % n
             kx[ix, iy] = (ff * x).mean()
             ky[ix, iy] = (ff * y).mean()
+    if fft64:
+        kx, ky = kx.double(), ky.double()
     return torch.fft.rfft2(kx), torch.fft.rfft2(ky)
 
 
+def cic_corners(g, grid):
+    i0 = g.floor().long()
+    w = g - i0
+    for dx in (0, 1):
+        for dy in (0, 1):
+            ix = (i0[:, 0] + dx).clamp(0, grid - 1)
+            iy = (i0[:, 1] + dy).clamp(0, grid - 1)
+            wt = (w[:, 0] if dx else 1 - w[:, 0]) * (w[:, 1] if dy else 1 - w[:, 1])
+            yield ix * grid + iy, wt
+
+
 @torch.no_grad()
-def far_accel(force_fn, pos, radius, grid, chunk=100_000_000):
+def far_accel(force_fn, pos, radius, grid, chunk=100_000_000, mode="cic", fft64=True):
     """Particle-mesh far field: deposit counts on a grid over the current
-    bounding box, convolve with the force kernel by FFT, interpolate back."""
+    bounding box, convolve with the force kernel by FFT, interpolate back.
+    mode "cic" (default) deposits and gathers with the same bilinear weights
+    (momentum conserving); "ngp" deposits and gathers nearest-cell;
+    "ngp-bilinear" deposits nearest-cell and gathers bilinearly (not an adjoint
+    pair, so momentum is not conserved; the original behaviour)."""
     lo = pos.min(0).values - 1e-3
     hi = pos.max(0).values + 1e-3
     h = float((hi - lo).max()) / grid
-    counts = torch.zeros(grid * grid, device=pos.device)
+    fdt = torch.float64 if fft64 else torch.float32
+    counts = torch.zeros(grid * grid, device=pos.device, dtype=fdt)
     for i in range(0, pos.shape[0], chunk):
-        ij = ((pos[i:i + chunk] - lo) / h).floor().long().clamp_(0, grid - 1)
-        counts += torch.bincount(ij[:, 0] * grid + ij[:, 1], minlength=grid * grid).float()
-    kx, ky = far_kernel(force_fn, h, radius, grid, pos.device)
-    c = torch.zeros(2 * grid, 2 * grid, device=pos.device)
+        if mode == "cic":
+            for idx, wt in cic_corners((pos[i:i + chunk] - lo) / h - 0.5, grid):
+                counts += torch.bincount(idx, weights=wt.to(fdt), minlength=grid * grid).to(fdt)
+        else:
+            ij = ((pos[i:i + chunk] - lo) / h).floor().long().clamp_(0, grid - 1)
+            counts += torch.bincount(ij[:, 0] * grid + ij[:, 1], minlength=grid * grid).to(fdt)
+    kx, ky = far_kernel(force_fn, h, radius, grid, pos.device, fft64=fft64)
+    c = torch.zeros(2 * grid, 2 * grid, device=pos.device, dtype=fdt)
     c[:grid, :grid] = counts.view(grid, grid)
     fc = torch.fft.rfft2(c)
     fx = torch.fft.irfft2(fc * kx, s=(2 * grid, 2 * grid))[:grid, :grid]
     fy = torch.fft.irfft2(fc * ky, s=(2 * grid, 2 * grid))[:grid, :grid]
-    field = torch.stack([fx, fy], dim=-1)
+    field = torch.stack([fx, fy], dim=-1).reshape(grid * grid, 2).float()
     acc = torch.empty_like(pos)
     for i in range(0, pos.shape[0], chunk):
-        g = (pos[i:i + chunk] - lo) / h - 0.5
-        i0 = g.floor().long()
-        w = g - i0
+        if mode == "ngp":
+            ij = ((pos[i:i + chunk] - lo) / h).floor().long().clamp_(0, grid - 1)
+            acc[i:i + chunk] = field[ij[:, 0] * grid + ij[:, 1]]
+            continue
         out = 0
-        for dx in (0, 1):
-            for dy in (0, 1):
-                ix = (i0[:, 0] + dx).clamp(0, grid - 1)
-                iy = (i0[:, 1] + dy).clamp(0, grid - 1)
-                wt = (w[:, 0] if dx else 1 - w[:, 0]) * (w[:, 1] if dy else 1 - w[:, 1])
-                out = out + field[ix, iy] * wt[:, None]
+        for idx, wt in cic_corners((pos[i:i + chunk] - lo) / h - 0.5, grid):
+            out = out + field[idx] * wt[:, None]
         acc[i:i + chunk] = out
     return acc
 
 
 @torch.no_grad()
-def step(force_fn, pos, vel, dt, radius, strips, far=0):
-    accel = lambda p: tiled_accel(force_fn, p, radius, strips) + (far_accel(force_fn, p, radius, far) if far else 0)
+def step(force_fn, pos, vel, dt, radius, strips, far=0, far_mode="cic", far_fft64=True):
+    accel = lambda p: tiled_accel(force_fn, p, radius, strips) + (far_accel(force_fn, p, radius, far, mode=far_mode, fft64=far_fft64) if far else 0)
     a0 = accel(pos)
     new_pos = pos + vel * dt + 0.5 * dt * dt * a0
     a1 = accel(new_pos)
@@ -186,6 +205,8 @@ def main():
     ap.add_argument("--spacing", type=float, default=300.0)
     ap.add_argument("--strips", type=int, default=100)
     ap.add_argument("--far-grid", type=int, default=0, help="particle-mesh far field on this grid (0 = off, force truncated at --radius)")
+    ap.add_argument("--far-fft32", action="store_true", help="float32 mesh counts/kernel/FFT (default float64: fp32 FFT roundoff leaks net force)")
+    ap.add_argument("--far-mode", default="cic", choices=["ngp-bilinear", "cic", "ngp"])
     ap.add_argument("--grid", type=int, default=512)
     ap.add_argument("--dt", type=float, default=0.1)
     ap.add_argument("--eps", type=float, default=0.5)
@@ -236,9 +257,9 @@ def main():
     record(0)
     for k in range(1, args.steps + 1):
         ts = time.time()
-        pos, vel = step(force, pos, vel, args.dt, args.radius, args.strips, args.far_grid)
+        pos, vel = step(force, pos, vel, args.dt, args.radius, args.strips, args.far_grid, args.far_mode, not args.far_fft32)
         if ref is not None:
-            ref = step(analytic_force(args.eps), ref[0], ref[1], args.dt, args.radius, args.strips, args.far_grid)
+            ref = step(analytic_force(args.eps), ref[0], ref[1], args.dt, args.radius, args.strips, args.far_grid, args.far_mode, not args.far_fft32)
         torch.cuda.synchronize() if dev.type == "cuda" else None
         print(f"step {k} {time.time() - ts:.1f}s elapsed {time.time() - t0:.0f}s peak {torch.cuda.max_memory_allocated() / 1e9 if dev.type == 'cuda' else 0:.0f}GB", flush=True)
         if k % args.record_every == 0:
