@@ -18,20 +18,18 @@ import torch.nn as nn
 
 from scripts import adaptive_oracle as ao
 from scripts import dual_tree as dt
+from scripts import kernels
 
 EPS = ao.EPS
+KERNEL_FEATS = False
 
 
 def gmag(dist):
-    return dist * (dist ** 2 + EPS ** 2) ** -1.5
+    return kernels.current.f(dist)
 
 
 def g_and_grad(r):
-    s2 = (r ** 2).sum(1) + EPS ** 2
-    i3, i5 = s2 ** -1.5, s2 ** -2.5
-    g = r * i3[:, None]
-    grad = torch.stack([i3 - 3 * r[:, 0] ** 2 * i5, -3 * r[:, 0] * r[:, 1] * i5, -3 * r[:, 0] * r[:, 1] * i5, i3 - 3 * r[:, 1] ** 2 * i5], 1)
-    return g, grad
+    return kernels.current.g_grad(r)
 
 
 def pair_feats(fl, ga, gb):
@@ -50,7 +48,10 @@ def pair_feats(fl, ga, gb):
                             torch.log((qtt / dist ** 2).clamp(min=1e-14)), corr], 1)
     fa, fb = node(ga), node(gb)
     mx = torch.maximum(fl.size[ga], fl.size[gb])
-    return torch.cat([torch.stack([torch.log(mx / dist), torch.log(dist / EPS)], 1), (fa + fb) / 2, (fa - fb).abs()], 1)
+    parts = [torch.stack([torch.log(mx / dist), torch.log(dist / EPS)], 1), (fa + fb) / 2, (fa - fb).abs()]
+    if KERNEL_FEATS:
+        parts.append(kernels.current.local_feats(dist))
+    return torch.cat(parts, 1)
 
 
 def node_scale(fl, a_sorted):
@@ -80,9 +81,7 @@ def pair_err(tr, fl, ga, gb, gen, budget=30_000_000):
         E = int(c.sum())
         r2 = torch.arange(j0 - i0, device=dev).repeat_interleave(c)
         k = torch.arange(E, device=dev) - (torch.cumsum(c, 0) - c)[r2]
-        d = tr.pos[st_s[i0:j0][r2] + k] - tr.pos[pi[i0:j0]][r2]
-        w = ((d ** 2).sum(1) + EPS ** 2) ** -1.5
-        fs[i0:j0].index_add_(0, r2, d * w[:, None])
+        fs[i0:j0].index_add_(0, r2, kernels.current.pair(tr.pos[st_s[i0:j0][r2] + k] - tr.pos[pi[i0:j0]][r2]))
         i0 = j0
     r = fl.com[gb] - fl.com[ga]
     g, grad = g_and_grad(r)
@@ -208,6 +207,7 @@ def run_est(tr, fl, S, a_ex, cap, head, lam, tol, fs_node, theta_max):
     a[tr.order] = a_s
     N = len(a)
     r = {"cost": (n_m2l + n_dir) / N, "m2l": n_m2l / N, **metrics2(a[S], a_ex), "net_ratio": ao.net_ratio(a)}
+    run_est.last_a = a
     return r, col
 
 
@@ -222,6 +222,13 @@ def audit(tr, fl, col, fs_node, tol, K, gen):
         ga, gb = ga[sel], gb[sel]
     ea, eb = pair_err(tr, fl, ga, gb, gen), pair_err(tr, fl, gb, ga, gen)
     return float(((ea > tol * fs_node[ga]) | (eb > tol * fs_node[gb])).double().mean())
+
+
+def audit_e2e(pos, a_orig, K, gen):
+    n = pos.shape[0]
+    idx = torch.randperm(n, generator=gen, device=pos.device)[:K]
+    a_ex = kernels.current.exact_accel(pos, idx, 128)
+    return float((a_orig[idx].double() - a_ex).norm() / a_ex.norm())
 
 
 def main():
@@ -284,7 +291,7 @@ def main():
         pos, tr, fl = states[s]
         N = pos.shape[0]
         S = torch.randperm(N, generator=torch.Generator().manual_seed(4738))[:args.eval_targets].to(dev)
-        a_ex = ao.exact_accel(pos, S)
+        a_ex = kernels.current.exact_accel(pos, S)
         r = {"geo": [], "est": [], "ctrl": []}
         for th in args.geo_thetas:
             a_s, n_m2l, n_dir = dt.dual_accel(tr, fl, th, args.cap)

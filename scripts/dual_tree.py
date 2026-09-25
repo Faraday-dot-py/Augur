@@ -17,6 +17,7 @@ import numpy as np
 import torch
 
 from scripts import adaptive_oracle as ao
+from scripts import kernels
 
 EPS = ao.EPS
 
@@ -64,9 +65,7 @@ def direct(tr, fl, ga, gb, a, budget=30_000_000):
         cbb = cb[i0:j0][rep]
         pi = fl.start[ga[i0:j0]][rep] + k // cbb
         pj = fl.start[gb[i0:j0]][rep] + k % cbb
-        d = tr.pos[pj] - tr.pos[pi]
-        w = ((d ** 2).sum(1) + EPS ** 2) ** -1.5
-        a.index_add_(0, pi, d * w[:, None])
+        a.index_add_(0, pi, kernels.current.pair(tr.pos[pj] - tr.pos[pi]))
         i0 = j0
     return int(cs[-1])
 
@@ -93,10 +92,8 @@ def dual_accel(tr, fl, theta, cap, accept_fn=None, collect=None):
             if collect is not None:
                 collect.append((ga[acc], gb[acc]))
             r_, cb_, ga_ = r[acc], cb[acc].double(), ga[acc]
-            s2 = (r_ ** 2).sum(1) + EPS ** 2
-            i3, i5 = s2 ** -1.5, s2 ** -2.5
-            a_loc.index_add_(0, ga_, r_ * (cb_ * i3)[:, None])
-            grad = torch.stack([i3 - 3 * r_[:, 0] ** 2 * i5, -3 * r_[:, 0] * r_[:, 1] * i5, -3 * r_[:, 0] * r_[:, 1] * i5, i3 - 3 * r_[:, 1] ** 2 * i5], 1)
+            g_, grad = kernels.current.g_grad(r_)
+            a_loc.index_add_(0, ga_, g_ * cb_[:, None])
             g_loc.index_add_(0, ga_, grad * cb_[:, None])
             n_m2l += int(acc.sum())
         rest = ~acc
