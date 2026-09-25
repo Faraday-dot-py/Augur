@@ -1,0 +1,7 @@
+fix=mom_energy time 668s
+step 20: gap 3.2 COMdrift 0.0 medR model 45.9 truth 43.6 E -10444
+step 100: gap 37.9 COMdrift 0.0 medR model 66.0 truth 31.9 E -10444
+step 200: gap 82.8 COMdrift 0.0 medR model 79.4 truth 15.5 E -10444
+step 500: gap 135.2 COMdrift 0.0 medR model 125.1 truth 19.3 E -5267
+step 1000: gap 264.9 COMdrift 0.0 medR model 260.9 truth 20.1 E -833
+step 2000: gap 566.1 COMdrift 0.0 medR model 561.1 truth 21.1 E 1607

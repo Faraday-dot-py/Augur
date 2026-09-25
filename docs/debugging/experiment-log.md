@@ -3001,3 +3001,9 @@ energy +2.59e6 at step 10000 (unstable). Unbiased read: model panel collapses to
 ~1000 and its points leave the truth-fitted window by ~3000 (mean gap 498 at 1000 -> 32182 at 10000);
 truth stays a dense central clump plus an expanding halo. The render window follows the truth cloud, so
 the model's flight is only visible as points leaving the frame.
+
+### N-body 10k escape: post-hoc fixes (2026-09-24)
+
+Cause of the model leaving the truth-fitted window: COM drift (momentum injected, baseline COM 301 off at step 1000) plus expansion/heating (model median radius 430 vs truth 20 at step 1000, energy -13073 -> +23603; truth clump contracts 44 -> 16-20 while the model expands). `scripts/gravity_long_fix.py`, 1000 bodies, seed 9000, gap = mean position error vs truth at step 1000:
+baseline 497; mean-dp/dv subtraction 428 (COM drift 0, medR unchanged 433, E +5970); subtraction + energy projection every 20 steps (KE rescale to initial E) 265 at step 1000, 566 at step 2000 (medR 261/561; E drifts positive once PE saturates, KE cannot compensate).
+Post-hoc fixes only delay it. `scripts/probe_gravity_infall.py` (step 0, hidden=0): model dv rms 1.08 vs truth 0.053, corr with true accel 0.013, no inward radial component at r<60 -- the model has not learned the collective attraction (single-step probe, hidden state zero, so indicative only). Real fix needs training: long-horizon rollouts with conservation loss, or potential-based forces.
