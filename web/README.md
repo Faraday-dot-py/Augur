@@ -1,6 +1,6 @@
 # Bounce token model in the browser
 
-Static page: the conservative-contact token model (`results/cons_pure.pt`, 8.7k floats: distance-only pair force, wall force, learned gravity, 8 velocity-Verlet substeps) runs a live 100x100 bouncing-ball sim in plain JavaScript. The 3D activation view (`js/viz3d.js`) still targets the old soup B attention trace and is stubbed out in `app.js` until the design pass.
+Static page: the conservative-contact token model (`results/cons_pure.pt`, 8.7k floats: distance-only pair force, wall force, learned gravity, 8 velocity-Verlet substeps) runs a live 100x100 bouncing-ball sim in plain JavaScript. The page renders the arena as a field of spatial tokens (one column of pos/vel channel cubes per ball) in Three.js (loaded from jsDelivr), and unfolds the selected ball's computation beside it: pair-force MLP activations per neighbour, wall-force MLPs, learned gravity, the 8 substeps and the output token.
 
 Open `index.html` through any static server (`python3 -m http.server` in this directory). Published at the Pages root, which redirects here.
 
@@ -8,9 +8,11 @@ Open `index.html` through any static server (`python3 -m http.server` in this di
 
 - `js/model.js`: port of `TokenFreeDynamics._conservative` + `TokenModel.step_free` and the `contain_state` guard from `scripts/realtime_sim.py`. `step(pos, vel, hidden, count, traceIdx)` steps in place (hidden passes through unchanged); `traceIdx >= 0` also returns a trace for that ball.
 - `js/sim.js`: ball state, spawning (same rules as `realtime_sim.py`), ticking.
-- `js/physics.js`: port of the `bounce.py` ground truth, for the side-by-side view.
-- `js/viz3d.js`: instanced-cube renderer; layout of tensors lives in `buildLayout`.
-- `js/app.js`: UI.
+- `js/physics.js`: port of the `bounce.py` ground truth, for the ghost overlay.
+- `js/scene.js`: Three.js scene: arena, token cubes, neighbour links, contact glows, ground-truth ghosts, camera presets, picking.
+- `js/arch.js`: 3D architecture diagram of one trace (cell layout, labels, flow animation) and the diverging colour map.
+- `js/plots.js`: pair/wall force curves sampled from the MLPs, energy plot.
+- `js/app.js`: UI wiring, controls, keyboard shortcuts (space, `.`, r, b, v, g, e, t, 1-4, +/-).
 - `weights.bin` / `weights.json`: fp32 weights + manifest/config (13100 floats).
 
 ## Re-export weights
