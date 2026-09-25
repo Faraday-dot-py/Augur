@@ -1,0 +1,16 @@
+rollout_flyby_exact --ic flyby --n 100000 --steps 4000 --force exact
+rollout_flyby_perturb --ic flyby --n 100000 --steps 500 --force exact --perturb 1e-6 --ref results/rollout_flyby_exact_snaps.npz
+rollout_flyby_adaptive --ic flyby --n 100000 --steps 4000 --force adaptive --ref results/rollout_flyby_exact_snaps.npz
+rollout_flyby_geo_audit --ic flyby --n 100000 --steps 4000 --force geo_audit --ref results/rollout_flyby_exact_snaps.npz
+rollout_flyby_est --ic flyby --n 100000 --steps 4000 --force est --ref results/rollout_flyby_exact_snaps.npz
+rollout_flyby_bh --ic flyby --n 100000 --steps 4000 --force bh --ref results/rollout_flyby_exact_snaps.npz
+rollout_flyby_mesh1024 --ic flyby --n 100000 --steps 4000 --force mesh --grid 1024 --ref results/rollout_flyby_exact_snaps.npz
+rollout_flyby_mesh2048 --ic flyby --n 100000 --steps 4000 --force mesh --grid 2048 --ref results/rollout_flyby_exact_snaps.npz
+rollout_s12000_exact --ic flyby --n 100000 --steps 4000 --force exact --seed 12000
+rollout_s12000_adaptive --ic flyby --n 100000 --steps 4000 --force adaptive --seed 12000 --ref results/rollout_s12000_exact_snaps.npz
+rollout_s12000_geo_audit --ic flyby --n 100000 --steps 4000 --force geo_audit --seed 12000 --ref results/rollout_s12000_exact_snaps.npz
+rollout_s12000_mesh1024 --ic flyby --n 100000 --steps 4000 --force mesh --grid 1024 --seed 12000 --ref results/rollout_s12000_exact_snaps.npz
+rollout_uni_exact --ic uniform --n 100000 --steps 3000 --force exact
+rollout_uni_adaptive --ic uniform --n 100000 --steps 3000 --force adaptive --ref results/rollout_uni_exact_snaps.npz
+rollout_uni_geo_audit --ic uniform --n 100000 --steps 3000 --force geo_audit --ref results/rollout_uni_exact_snaps.npz
+rollout_uni_mesh1024 --ic uniform --n 100000 --steps 3000 --force mesh --grid 1024 --ref results/rollout_uni_exact_snaps.npz
