@@ -10,3 +10,5 @@ results/gravity_1m_*.npz
 results/collision_*.npz
 results/flyby_*.npz
 results/adaptive_oracle_cells_*.npz
+results/rollout_*_snaps.npz
+results/rollout_*_ckpt.pt

@@ -39,6 +39,36 @@ class RadialKernel:
         return torch.stack([s1.detach(), s2.detach()], 1)
 
     @torch.no_grad()
+    def phi(self, d):
+        if not hasattr(self, "_tab"):
+            g = torch.logspace(-4, 7, 400000, dtype=torch.float64, device=d.device)
+            f = torch.cat([self.f(c) for c in g.split(100000)]).double()
+            ph = torch.cat([torch.zeros(1, dtype=torch.float64, device=g.device), torch.cumsum(0.5 * (f[1:] + f[:-1]) * (g[1:] - g[:-1]), 0)]) + 0.5 * f[0] * g[0]
+            self._tab = (g, ph)
+        g, ph = self._tab
+        i = torch.searchsorted(g, d.double().clamp(min=g[0], max=g[-1])).clamp(1, len(g) - 1)
+        w = (d.double().clamp(min=g[0], max=g[-1]) - g[i - 1]) / (g[i] - g[i - 1])
+        return ph[i - 1] * (1 - w) + ph[i] * w
+
+    @torch.no_grad()
+    def pair_sums(self, pos, sub=None, chunk=256):
+        """(sum_{i<j} phi(d_ij), sum_{i<j} d_ij f(d_ij)) over all pairs of pos (or of a random subsample of `sub` particles, rescaled)."""
+        n = pos.shape[0]
+        scale = 1.0
+        if sub is not None and sub < n:
+            pos = pos[torch.randperm(n, device=pos.device)[:sub]]
+            scale = n * (n - 1) / (sub * (sub - 1))
+        p = pos.double()
+        m = p.shape[0]
+        pe = w = 0.0
+        for i in range(0, m, chunk):
+            d = (p[None] - p[i:i + chunk][:, None]).norm(dim=2)
+            mask = d > 0
+            pe += float(self.phi(d)[mask].sum())
+            w += float((d * self.f(d.clamp(min=1e-9)).double())[mask].sum())
+        return 0.5 * pe * scale, 0.5 * w * scale
+
+    @torch.no_grad()
     def exact_accel(self, pos, idx, chunk=256):
         src = pos.double()
         out = torch.empty(len(idx), 2, dtype=torch.float64, device=pos.device)
