@@ -12,3 +12,4 @@ results/flyby_*.npz
 results/adaptive_oracle_cells_*.npz
 results/rollout_*_snaps.npz
 results/rollout_*_ckpt.pt
+results/genker_*_snaps.npz
