@@ -89,7 +89,13 @@ def node_exact(tr, tp, ft, start, cnt, budget):
     return out
 
 
-def traverse(tr, ti, cap, mode="mac", theta=0.5, eps_node=None, ftgt=None, log=False, budget=30_000_000):
+def feats(cnt, size, dist, q):
+    tr = q[:, 0] + q[:, 2]
+    return torch.stack([torch.log(size / dist), torch.log((tr / size ** 2).clamp(min=1e-10)), (q[:, 0] - q[:, 2]) / (tr + 1e-30),
+                        2 * q[:, 1] / (tr + 1e-30), torch.log(cnt.double()), torch.log(dist / EPS), torch.log(torch.as_tensor(size / EPS, dtype=torch.float64, device=dist.device)).expand_as(dist)], 1)
+
+
+def traverse(tr, ti, cap, mode="mac", theta=0.5, eps_node=None, ftgt=None, log=False, budget=30_000_000, est=None, fscale=None):
     dev = tr.pos.device
     M = len(ti)
     tp, tk = tr.pos[ti], tr.key[ti]
@@ -113,6 +119,11 @@ def traverse(tr, ti, cap, mode="mac", theta=0.5, eps_node=None, ftgt=None, log=F
         if mode == "oracle":
             fex = node_exact(tr, tp, ft, start, cnt, budget)
             accept = (~contains) & ((fex - fmono).norm(dim=1) <= eps_node * ftgt[ft])
+        elif mode == "est":
+            with torch.no_grad():
+                yhat = est(feats(cnt, lv["size"], dist, lv["q"][fn]))
+            fm = cnt * dist * (dist ** 2 + EPS ** 2) ** -1.5
+            accept = (~contains) & ((cnt == 1) | ((lv["size"] < theta * dist) & (torch.exp(yhat) * fm <= eps_node * fscale[ft])))
         else:
             accept = (~contains) & (lv["size"] < theta * dist)
         if log and accept.any():
@@ -146,7 +157,8 @@ def traverse(tr, ti, cap, mode="mac", theta=0.5, eps_node=None, ftgt=None, log=F
 
 
 def accel_all(tr, ti, cap, chunk=25000, **kw):
-    parts = [traverse(tr, ti[i:i + chunk], cap, **kw) for i in range(0, len(ti), chunk)]
+    fs = kw.pop("fscale", None)
+    parts = [traverse(tr, ti[i:i + chunk], cap, fscale=None if fs is None else fs[i:i + chunk], **kw) for i in range(0, len(ti), chunk)]
     return (torch.cat([p[0] for p in parts]), torch.cat([p[1] for p in parts]), torch.cat([p[2] for p in parts]))
 
 
