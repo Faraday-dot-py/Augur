@@ -1,12 +1,12 @@
 # Bounce token model in the browser
 
-Static page: the soup B token-per-ball model (`checkpoints/token_model_soup_b.pt`, ~13k parameters) runs a live 100x100 bouncing-ball sim in plain JavaScript, next to a 3D cube view of the selected ball's activations (WebGL2, no libraries).
+Static page: the conservative-contact token model (`results/cons_pure.pt`, 8.7k floats: distance-only pair force, wall force, learned gravity, 8 velocity-Verlet substeps) runs a live 100x100 bouncing-ball sim in plain JavaScript. The 3D activation view (`js/viz3d.js`) still targets the old soup B attention trace and is stubbed out in `app.js` until the design pass.
 
 Open `index.html` through any static server (`python3 -m http.server` in this directory). Published at the Pages root, which redirects here.
 
 ## Files
 
-- `js/model.js`: port of `TokenFreeDynamics._core` + `TokenModel.step_free` (cell graph, global-max softmax, wall head, pair head) and the `contain_state` guard from `scripts/realtime_sim.py`. `step(..., traceIdx)` also returns every intermediate for one ball.
+- `js/model.js`: port of `TokenFreeDynamics._conservative` + `TokenModel.step_free` and the `contain_state` guard from `scripts/realtime_sim.py`. `step(pos, vel, hidden, count, traceIdx)` steps in place (hidden passes through unchanged); `traceIdx >= 0` also returns a trace for that ball.
 - `js/sim.js`: ball state, spawning (same rules as `realtime_sim.py`), ticking.
 - `js/physics.js`: port of the `bounce.py` ground truth, for the side-by-side view.
 - `js/viz3d.js`: instanced-cube renderer; layout of tensors lives in `buildLayout`.
@@ -15,19 +15,27 @@ Open `index.html` through any static server (`python3 -m http.server` in this di
 
 ## Re-export weights
 
-    PYTHONPATH=. python3 scripts/export_web_weights.py --checkpoint checkpoints/token_model_soup_b.pt
+    PYTHONPATH=. python3 scripts/export_web_weights.py --checkpoint results/cons_pure.pt
 
-The flags baked into the config (`wall_lookahead`, `wall_head`, `pair_impulse`, hidden 32, neighbour radius 4.0, arena 100) must match the checkpoint.
+Config (radius 0.75, dt 0.15, force_scale 100, neighbour radius 4.0, arena 100) is baked into the export script; substeps come from the checkpoint flags.
 
 ## Verify against PyTorch
 
-    PYTHONPATH=. python3 scripts/dump_web_testvectors.py
+    PYTHONPATH=. python3 scripts/export_web_testvectors.py
     node web/tests/verify.mjs
     PYTHONPATH=. python3 scripts/dump_web_physics_ref.py
     node web/tests/physics.test.mjs web/tests/physics_ref.json
 
-`verify.mjs` reports 1-step and free-run max abs differences against PyTorch rollouts (fp32 rounding at speed 30 gives ~4e-5 per step; the dynamics amplify it over tens of steps).
+`verify.mjs` gates 1-step max abs diff (< 1e-4) against a float64 PyTorch step from the same float32 states (~2e-6), and reports diffs against the float32 PyTorch rollout (up to ~4e-3 in dense contact, where torch's own float32 rounding is amplified by the stiff force) and free-run diffs at step 20 (chaotic in contact-heavy scenes) and 60. It also checks the per-substep trace of one ball.
 
-## Reading the 3D view
+## Trace
 
-Rows are tensors, top to bottom in data-flow order: input node state, q, per-edge K/V with score and softmax, attention output, GRU gates and new hidden state, delta head, wall head, pair-impulse head, final dp/dv, then the weight matrices below. Colour is a blue/orange diverging map, symmetric about zero (about 0.5 for the gates); height is |value|. Values are shown at the scale of the running maximum of each group. Hover a cell for its value.
+`net.step(..., traceIdx)` returns (arrays are Float64Array unless noted; vectors are [x, y], x is the gravity axis):
+
+- `index`, `pos`, `vel`: ball state at the start of the step. `hidden`: Float32Array(32) passthrough (unused, zero).
+- `wallDist`[4]: distances to walls in order x=0, x=n-1, y=0, y=n-1. `wall`[4]: `{pen, out, force, h1[64], h2[64]}` per wall (pen = relu(r - d)/r, `out` = raw MLP output, `force` = pen * out * 100, h1/h2 = tanh activations). `wallForce`: net wall acceleration [f0 - f1, f2 - f3]. `gravity`: learned acceleration.
+- `edges`: one per other ball within neighbor_radius (4.0): `{src (index), dist, pen, unit (from src to this ball), contact (dist <= 2r), out, mag, force, h1, h2}`. `out`, `mag`, `force` (vector on this ball), `h1`, `h2` are set only when `contact`; otherwise 0/null. `app.js` adds `srcId`.
+- `subPos`, `subVel`, `subAcc`, `subAccWall`, `subAccPair`: (substeps + 1) x 2 flat, row 0 = start state and acceleration there, row s = after substep s. `subAcc` = wall + pair + gravity.
+- `newPos`, `newVel`, `dp`, `dv` (dp relative to pos + vel * dt, as in PyTorch).
+
+`net.edgeList(pos, count, radius)` returns a flat [i, j, ...] pair list.

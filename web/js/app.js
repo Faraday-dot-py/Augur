@@ -1,7 +1,9 @@
 import { loadWeights } from "./model.js";
 import { Sim } from "./sim.js";
 import { Physics } from "./physics.js";
-import { Viz3D } from "./viz3d.js";
+// viz3d.js targets the soup B attention trace; replaced by the design pass for the conservative trace
+const noop = () => {};
+const viz = { showWeights: false, showLabels: false, scales: {}, setTrace: noop, frame: noop, resetCamera: noop };
 
 const $ = (id) => document.getElementById(id);
 const S = 6;
@@ -24,8 +26,6 @@ const cfg = weights.config;
 const gt = new Physics(cfg.n, { dt: cfg.dt, gravity: cfg.gravity, radius: cfg.radius });
 const gtIds = [];
 const arena = $("arena"), gtCanvas = $("gt");
-const viz = new Viz3D($("gl"), $("ov"), weights);
-if (window.innerWidth < 700) { viz.showWeights = false; $("wbtn").setAttribute("aria-pressed", "false"); }
 
 const state = {
   paused: false, tps: 30, held: false, cursor: [0, 0], selected: -1, edges: 0, gtOn: false,
@@ -108,7 +108,7 @@ function previewTrace() {
 }
 
 function labelTrace(tr) {
-  if (tr) for (const e of tr.edges) e.srcId = e.self ? "self" : sim.ids[e.src];
+  if (tr) for (const e of tr.edges) e.srcId = sim.ids[e.src];
   return tr;
 }
 
@@ -159,16 +159,14 @@ function drawArena() {
     ctx.lineWidth = 1;
     const net = sim.net;
     if (state.edges === 2) {
-      for (let i = 0; i < sim.count; i++) {
-        for (let e = net.dstStart[i]; e < net.dstStart[i + 1]; e++) {
-          const s = net.src[e];
-          if (s === i || s >= sim.count) continue;
-          ctx.strokeStyle = `rgba(160,190,255,${0.15 + 0.7 * net.weight[e]})`;
-          ctx.beginPath();
-          ctx.moveTo((sim.pos[2 * i + 1] + 0.5) * S, (sim.pos[2 * i] + 0.5) * S);
-          ctx.lineTo((sim.pos[2 * s + 1] + 0.5) * S, (sim.pos[2 * s] + 0.5) * S);
-          ctx.stroke();
-        }
+      const pairs = net.edgeList(sim.pos, sim.count, cfg.neighbor_radius);
+      for (let k = 0; k < pairs.length; k += 2) {
+        const i = pairs[k], s = pairs[k + 1];
+        ctx.strokeStyle = "rgba(160,190,255,0.35)";
+        ctx.beginPath();
+        ctx.moveTo((sim.pos[2 * i + 1] + 0.5) * S, (sim.pos[2 * i] + 0.5) * S);
+        ctx.lineTo((sim.pos[2 * s + 1] + 0.5) * S, (sim.pos[2 * s] + 0.5) * S);
+        ctx.stroke();
       }
     } else if (selIdx >= 0 && state.trace) {
       const cx = (sim.pos[2 * selIdx + 1] + 0.5) * S, cy = (sim.pos[2 * selIdx] + 0.5) * S;
@@ -179,11 +177,10 @@ function drawArena() {
       ctx.stroke();
       ctx.setLineDash([]);
       for (const e of state.trace.edges) {
-        if (e.self) continue;
         const j = sim.indexOf(e.srcId);
         if (j < 0) continue;
-        ctx.strokeStyle = `rgba(255,255,255,${0.2 + 0.8 * e.weight})`;
-        ctx.lineWidth = 1 + 3 * e.weight;
+        ctx.strokeStyle = `rgba(255,255,255,${0.2 + 0.8 * Math.min(e.pen, 1)})`;
+        ctx.lineWidth = 1 + 3 * Math.min(e.pen, 1);
         ctx.beginPath();
         ctx.moveTo(cx, cy);
         ctx.lineTo((sim.pos[2 * j + 1] + 0.5) * S, (sim.pos[2 * j] + 0.5) * S);
@@ -239,8 +236,7 @@ function updateStats() {
     const tr = state.trace;
     rows.push(["selected", `#${state.selected} at (${sim.pos[2 * i].toFixed(1)}, ${sim.pos[2 * i + 1].toFixed(1)}), speed ${Math.hypot(sim.vel[2 * i], sim.vel[2 * i + 1]).toFixed(2)}`]);
     if (tr) {
-      const self = tr.edges.find((e) => e.self);
-      rows.push(["neighbours", `${tr.edges.length - 1}, self-attention ${self ? self.weight.toFixed(3) : "-"}`]);
+      rows.push(["neighbours", `${tr.edges.length}, in contact ${tr.edges.filter((e) => e.contact).length}`]);
       rows.push(["step dp / dv", `(${tr.dp.map((x) => x.toFixed(3)).join(", ")}) / (${tr.dv.map((x) => x.toFixed(3)).join(", ")})`]);
     }
   }
@@ -255,8 +251,6 @@ function updateStats() {
     rows.push(["mean position gap", m ? `${(sum / m).toFixed(2)} cells` : "-"]);
     rows.push(["KE + gravity PE", `model ${energyModel().toFixed(0)}, truth ${energyGT().toFixed(0)}`]);
   }
-  const sc = viz.scales;
-  if (sc.input) rows.push(["colour full scale", `input ${sc.input.toFixed(1)}, qkv ${sc.qkv.toFixed(1)}, gru ${sc.gru.toFixed(1)}, heads ${sc.head.toFixed(1)}`]);
   $("stats").innerHTML = rows.map(([k, v]) => `<span>${k}</span><b>${v}</b>`).join("");
 }
 

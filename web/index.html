@@ -53,7 +53,7 @@ kbd { background: #202636; border: 1px solid #333c52; border-radius: 3px; paddin
 </head>
 <body>
 <h1>Bounce token model, live in the browser</h1>
-<p class="sub">A 13k-parameter learned emulator (one token per ball: radius-graph attention, GRU, wall head, pair-impulse head) stepping a 100x100 arena. Inference is plain JavaScript. Cubes are the network's activations for the selected ball.</p>
+<p class="sub">A 13k-parameter learned emulator (one token per ball: learned pair force, wall force and gravity, velocity-Verlet substeps) stepping a 100x100 arena. Inference is plain JavaScript. Cubes are the network's activations for the selected ball.</p>
 <main id="main">
   <div class="left">
     <div class="arenas" id="arenas">
@@ -91,7 +91,7 @@ kbd { background: #202636; border: 1px solid #333c52; border-radius: 3px; paddin
 </main>
 <footer>
   Click empty space (hold to stream) to add balls, click a ball to inspect it. Keys: <kbd>space</kbd> pause, <kbd>.</kbd> step, <kbd>c</kbd> clear, <kbd>r</kbd> reset, <kbd>e</kbd> attention edges, <kbd>g</kbd> ground truth, <kbd>w</kbd> weights.
-  Faithfulness: this is a learned emulator (soup B, ~13k parameters), not the physics. Energy drifts and trajectories diverge from the true physics after roughly 20 steps; very dense piles are outside its training distribution and are caught by a containment guard. Colour is a blue/orange diverging map, symmetric about zero (about 0.5 for the gates). Source and weights: <a href="https://github.com/Faraday-dot-py/Bounce/tree/viz-web" style="color:var(--accent)">Faraday-dot-py/Bounce</a>.
+  Faithfulness: this is a learned emulator (conservative-contact model, ~8.7k parameters), not the physics. Energy drifts and trajectories diverge from the true physics after roughly 20 steps; very dense piles are outside its training distribution and are caught by a containment guard. Colour is a blue/orange diverging map, symmetric about zero (about 0.5 for the gates). Source and weights: <a href="https://github.com/Faraday-dot-py/Bounce/tree/viz-web" style="color:var(--accent)">Faraday-dot-py/Bounce</a>.
 </footer>
 <script type="module" src="js/app.js"></script>
 </body>
