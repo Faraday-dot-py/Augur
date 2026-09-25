@@ -289,6 +289,9 @@ export class Scene {
       if (this.camera.position.distanceTo(this.goal.pos) < 0.2) this.goal = null;
     }
     this.controls.update();
+    const fd = this.camera.position.distanceTo(this.controls.target);
+    this.scene.fog.near = fd * 1.2;
+    this.scene.fog.far = fd * 3 + 150;
     if (this.arch.group.visible) this.arch.frame(front);
     this.renderer.render(this.scene, this.camera);
   }

@@ -36,22 +36,44 @@ function syncGT() {
   for (let i = st.gtIds.length - 1; i >= 0; i--) if (sim.indexOf(st.gtIds[i]) < 0) { gt.remove(i); st.gtIds.splice(i, 1); }
 }
 
-function degree(i) {
-  let c = 0;
-  for (let j = 0; j < sim.count; j++) if (j !== i && Math.hypot(sim.pos[2 * i] - sim.pos[2 * j], sim.pos[2 * i + 1] - sim.pos[2 * j + 1]) <= cfg.neighbor_radius) c++;
-  return c;
+function degrees() {
+  const deg = new Int32Array(sim.count), con = new Int32Array(sim.count), cd = 2 * cfg.radius;
+  net.forPairs(sim.pos, sim.count, cfg.neighbor_radius, (i, j, d) => {
+    deg[i]++; deg[j]++;
+    if (d <= cd) { con[i]++; con[j]++; }
+  });
+  return { deg, con };
 }
 
-function busiest() {
+function busiest(random = false) {
+  const { deg, con } = degrees();
+  if (random) {
+    const c = [];
+    for (let i = 0; i < sim.count; i++) if (con[i]) c.push(i);
+    if (c.length) return c[Math.floor(Math.random() * c.length)];
+  }
   let best = -1, bc = -1;
-  for (let i = 0; i < sim.count; i++) { const c = degree(i); if (c > bc) { bc = c; best = i; } }
+  for (let i = 0; i < sim.count; i++) { const s = con[i] * 1000 + deg[i] * 10 - Math.min(Math.hypot(sim.vel[2 * i], sim.vel[2 * i + 1]), 9); if (s > bc) { bc = s; best = i; } }
   return best;
+}
+
+function contacts(i) {
+  return i < 0 ? 0 : degrees().con[i];
 }
 
 function ensureSelection() {
   if (sim.indexOf(st.selected) >= 0) return;
   const i = busiest();
   st.selected = i >= 0 ? sim.ids[i] : -1;
+}
+
+function pickContact() {
+  const i = busiest(true);
+  if (i < 0) return;
+  st.auto = false;
+  st.selected = sim.ids[i];
+  refreshTrace();
+  st.sweep = performance.now();
 }
 
 function setTrace(tr) {
@@ -91,7 +113,9 @@ function energyTruth() {
 
 function tick() {
   ensureSelection();
-  if (st.auto && sim.ticks % 30 === 0 && degree(sim.indexOf(st.selected)) === 0 && sim.count) st.selected = sim.ids[busiest()];
+  const had = st.trace && st.trace.edges.some((e) => e.contact);
+  st.idle = had ? 0 : (st.idle || 0) + 1;
+  if (st.auto && sim.count && st.idle >= 1) { const i = busiest(); if (contacts(i)) { st.selected = sim.ids[i]; st.idle = 0; } }
   const t0 = performance.now();
   const tr = sim.tick(st.selected);
   st.stepMs = st.stepMs * 0.9 + (performance.now() - t0) * 0.1;
@@ -168,6 +192,7 @@ function camera(name) {
   const i = sim.indexOf(st.selected);
   view.preset(name, i >= 0 ? [sim.pos[2 * i], sim.pos[2 * i + 1]] : null);
   st.follow = name === "follow" && i >= 0;
+  st.cam = name;
   for (const n of ["all", "arena", "arch", "follow"]) press("cam-" + n, n === name);
 }
 
@@ -181,13 +206,14 @@ $("b-grav").onclick = () => setGravity(!st.gravity);
 $("b-gt").onclick = () => setGT(!st.gtOn);
 $("b-edges").onclick = () => { st.edges = (st.edges + 1) % 3; press("b-edges", st.edges > 0); $("b-edges").firstChild.textContent = ["Edges", "Edges", "All edges"][st.edges]; };
 $("b-panel").onclick = () => setPanel(!st.panel);
+$("b-pick").onclick = pickContact;
 for (const n of ["all", "arena", "arch", "follow"]) $("cam-" + n).onclick = () => camera(n);
 
 window.addEventListener("keydown", (e) => {
   if (e.ctrlKey || e.metaKey || e.altKey || (e.target.tagName === "INPUT" && e.key !== " ")) return;
   const act = {
     " ": () => setPaused(!st.paused), ".": stepOnce, r: reset, b: () => $("b-burst").click(), v: () => setGravity(!st.gravity),
-    g: () => setGT(!st.gtOn), e: () => $("b-edges").click(), t: () => setPanel(!st.panel),
+    g: () => setGT(!st.gtOn), p: pickContact, e: () => $("b-edges").click(), t: () => setPanel(!st.panel),
     1: () => camera("all"), 2: () => camera("arena"), 3: () => camera("arch"), 4: () => camera("follow"),
     "+": () => $("r-speed").stepUp(), "=": () => $("r-speed").stepUp(), "-": () => $("r-speed").stepDown(),
   }[e.key];
@@ -242,30 +268,45 @@ function hover() {
 }
 
 const labelHost = $("labels"), pool = [];
+const widths = new Map();
+function measure(text, cls) {
+  const key = cls + "|" + text;
+  if (!widths.has(key)) {
+    const el = labelHost.appendChild(document.createElement("div"));
+    el.className = cls;
+    el.textContent = text;
+    widths.set(key, [el.offsetWidth, el.offsetHeight]);
+    el.remove();
+  }
+  return widths.get(key);
+}
+
+const RANK = { arena: 0, sec: 1, op: 2, col: 3, "col off": 3 };
 function labels() {
   const list = [{ text: "arena 100 × 100", u: 49.5, w: -4, y: 0, cls: "arena" }];
   if (st.gravity) list.push({ text: "gravity", u: 7, w: 50, y: 0, cls: "arena" });
-  let ppu = 0;
   if (view.arch.group.visible) {
     const a = view.project(0, 0, 40, true), b = a && { x: a.x, y: a.y };
     const c = b && view.project(10, 0, 40, true);
-    ppu = c ? (Math.hypot((c.x - b.x) * innerWidth, (c.y - b.y) * innerHeight) / 20) : 0;
-    for (const l of view.arch.labels) {
-      if (l.cls.startsWith("col") && ppu < 7) continue;
-      if (ppu < 4) continue;
-      list.push({ ...l, y: 0.1, arch: true });
-    }
+    const ppu = c ? (Math.hypot((c.x - b.x) * innerWidth, (c.y - b.y) * innerHeight) / 20) : 0;
+    for (const l of view.arch.labels) if (ppu >= (l.cls.startsWith("col") ? 6 : 3.5)) list.push({ ...l, y: 0.1, arch: true });
   }
+  list.sort((a, b) => RANK[a.cls] - RANK[b.cls]);
+  const placed = [];
   let n = 0;
   for (const l of list) {
     const p = view.project(l.u, l.y, l.w, l.arch);
     if (!p || Math.abs(p.x) > 1.1 || Math.abs(p.y) > 1.1) continue;
+    const [w, h] = measure(l.text, l.cls);
+    const x = ((p.x + 1) / 2) * innerWidth - (l.left ? 0 : w / 2), y = ((1 - p.y) / 2) * innerHeight - h / 2;
+    if (placed.some((r) => x < r[2] + 4 && x + w + 4 > r[0] && y < r[3] + 1 && y + h + 1 > r[1])) continue;
+    placed.push([x, y, x + w, y + h]);
     const el = pool[n] || labelHost.appendChild(document.createElement("div"));
     pool[n++] = el;
     if (el.textContent !== l.text) el.textContent = l.text;
     if (el.className !== l.cls) el.className = l.cls;
     el.style.display = "";
-    el.style.transform = `translate(${((p.x + 1) / 2) * innerWidth}px, ${((1 - p.y) / 2) * innerHeight}px) translate(-50%, -50%)`;
+    el.style.transform = `translate(${x}px, ${y}px)`;
   }
   for (let k = n; k < pool.length; k++) pool[k].style.display = "none";
 }
@@ -294,10 +335,13 @@ function insets() {
   view.insets(innerWidth, innerHeight, [0, top, right, bottom]);
 }
 
+let wasSmall = null;
 function resize() {
-  const p = view.resize(innerWidth, innerHeight);
+  view.resize(innerWidth, innerHeight);
+  const small = innerWidth <= 760;
+  if (small !== wasSmall) { if (wasSmall !== null) setPanel(!small); wasSmall = small; }
   insets();
-  if (p) camera("all");
+  camera(st.cam || "all");
   st.dirty = true;
 }
 addEventListener("resize", resize);
