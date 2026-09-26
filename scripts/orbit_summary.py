@@ -4,7 +4,7 @@ import sys
 
 d = json.load(open(sys.argv[1]))
 every = int(sys.argv[2]) if len(sys.argv) > 2 else 1000
-print("args", {k: d["args"][k] for k in ("mode", "n", "steps", "dt", "force", "sigma", "d", "vfac", "c", "ratio")}, "wall_s", round(d["wall_s"]))
+print("args", {k: d["args"][k] for k in ("mode", "n", "steps", "dt", "force", "sigma", "d", "vfac", "c", "ratio") if k in d["args"]}, "wall_s", round(d["wall_s"]))
 for s, t in zip(d["track_steps"], d["tracks"]):
     if s % every == 0:
         print(f"step {s:6d} sep {t['sep']:8.1f} a_r4 {t['a_r4']:.3f} a_r8 {t['a_r8']:.3f} a_own {t['a_own']:.3f} b_r4 {t['b_r4']:.3f} b_r8 {t['b_r8']:.3f} b_own {t['b_own']:.3f}")
