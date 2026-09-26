@@ -2,7 +2,7 @@
 time-smoothed centre (median position) with half-width 3.5x the median radius (floor 150), so structure fills the frame;
 brightness is log(1 + density per unit area) with one fixed scale. One frame image in memory at a time.
 
-Usage: PYTHONPATH=. python3 scripts/render_nbody_snaps.py results/rollout_X_snaps.npz videos/X.mp4 [res] [blur_px] [label] [dt]
+Usage: PYTHONPATH=. python3 scripts/render_nbody_snaps.py results/rollout_X_snaps.npz videos/X.mp4 [res] [blur_px] [label] [dt] [min_half]
 """
 import sys
 
@@ -23,7 +23,7 @@ n = frames.shape[1]
 centre = np.stack([np.median(f, axis=0) for f in frames])
 radius = np.array([np.percentile(np.linalg.norm(f - c, axis=1), 45) for f, c in zip(frames, centre)])
 centre = gaussian_filter1d(centre, 4, axis=0, mode="nearest")
-half = np.maximum(3.5 * gaussian_filter1d(radius, 4, mode="nearest"), 150)
+half = np.maximum(3.5 * gaussian_filter1d(radius, 4, mode="nearest"), float(sys.argv[7]) if len(sys.argv) > 7 else 150)
 
 
 def image(i):
