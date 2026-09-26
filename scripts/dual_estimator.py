@@ -173,20 +173,22 @@ class Head(nn.Module):
         return self.est.net(((x - self.est.mu) / self.est.sd).float())[:, self.k].double()
 
 
-def make_accept(fl, head, lam, tol, fs_node):
+def make_accept(fl, head, lam, tol, fs_node, chunk=2_000_000):
     def fn(ga, gb, acc):
         idx = acc.nonzero().squeeze(1)
         out = torch.zeros_like(acc)
         if len(idx) == 0:
             return out
-        a, b = ga[idx], gb[idx]
-        with torch.no_grad():
-            yh = head(pair_feats(fl, a, b))
-        g = gmag((fl.com[b] - fl.com[a]).norm(dim=1))
-        ea = lam * torch.exp(yh) * fl.count[b] * g
-        eb = lam * torch.exp(yh) * fl.count[a] * g
-        ok = ((ea <= tol * fs_node[a]) & (eb <= tol * fs_node[b])) | ((fl.count[a] == 1) & (fl.count[b] == 1))
-        out[idx] = ok
+        for i0 in range(0, len(idx), chunk):
+            ic = idx[i0:i0 + chunk]
+            a, b = ga[ic], gb[ic]
+            with torch.no_grad():
+                yh = head(pair_feats(fl, a, b))
+            g = gmag((fl.com[b] - fl.com[a]).norm(dim=1))
+            ea = lam * torch.exp(yh) * fl.count[b] * g
+            eb = lam * torch.exp(yh) * fl.count[a] * g
+            ok = ((ea <= tol * fs_node[a]) & (eb <= tol * fs_node[b])) | ((fl.count[a] == 1) & (fl.count[b] == 1))
+            out[ic] = ok
         return out
     return fn
 
