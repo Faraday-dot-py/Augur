@@ -14,6 +14,7 @@ PREFIX = {"flyby": "rollout_flyby_", "flyby12000": "rollout_s12000_", "uniform":
 ORDER = ["exact", "adaptive", "geo_audit", "est", "geo", "bh", "mesh1024", "mesh2048"]
 QS = (0.25, 0.5, 0.75, 0.9, 0.99)
 OUT = "videos/rollout_figs"
+COL = {p: f"C{i}" for i, p in enumerate(ORDER)}
 
 
 def load(scn):
@@ -68,17 +69,17 @@ def plots(scn, d, floor):
     for p, r in d.items():
         s, e = series(r, "E")
         _, L = series(r, "L")
-        ax[0, 0].plot(s, (e - e[0]) / abs(E[0]), label=p)
-        ax[0, 1].plot(s, (L - L[0]) / abs(L[0]), label=p)
+        ax[0, 0].plot(s, (e - e[0]) / abs(E[0]), label=p, color=COL[p])
+        ax[0, 1].plot(s, (L - L[0]) / abs(L[0]), label=p, color=COL[p])
         _, P = series(r, "P")
         _, vs = series(r, "vsum")
-        ax[0, 2].semilogy(s, np.maximum(P / vs, 1e-20), label=p)
+        ax[0, 2].semilogy(s, np.maximum(P / vs, 1e-20), label=p, color=COL[p])
         v = r.get("vs_ref")
         if v and p != "exact":
             ss = [x["step"] for x in v]
-            ax[1, 0].plot(ss, [x["rq_ratio"][2] for x in v], label=p)
-            ax[1, 1].plot(ss, [x["rq_ratio"][4] for x in v], label=p)
-            ax[1, 2].plot(ss, [x["density_corr"] for x in v], label=p)
+            ax[1, 0].plot(ss, [x["rq_ratio"][2] for x in v], label=p, color=COL[p])
+            ax[1, 1].plot(ss, [x["rq_ratio"][4] for x in v], label=p, color=COL[p])
+            ax[1, 2].plot(ss, [x["density_corr"] for x in v], label=p, color=COL[p])
     if floor is not None:
         v = floor["vs_ref"]
         ss = [x["step"] for x in v]
