@@ -5,6 +5,7 @@ binary: two n/2 Gaussian clusters (sigma --sigma) on a circular relative orbit a
 blackhole: one Gaussian cluster; --c is a speed limit (bodies are clamped to |v| <= c after every step). With horizon
   R_s = 2 N / c^2 (softened potential depth ~ N / r), a body at r < R_s has |Phi| > c^2 / 2, so E < 0 for every allowed speed and it cannot
   escape; reports the fraction beyond R_s, the fraction with E > 0, and clamp counts. --c 0 is the uncapped control.
+--kernel learned replaces the analytic pair force by the learned CentralForceDynamics f(d) (checkpoints/gravity_central_v1.pt, --force exact only; diagnostics stay analytic). The MLP is tabulated on a 2^20-point log-d grid and linearly interpolated (error vs direct evaluation printed by bench_learned_force.py).
 Force: exact all-pairs or mesh (cutoff 4 near field + cic far field, grid --grid; --box-q q sets the far-field box from the q / 1-q position quantiles, far-field positions clamped to it, so escapers do not coarsen the grid). Full-state checkpoint every --ckpt steps (--resume continues).
 
 Usage: PYTHONPATH=. python scripts/orbit_bh.py --mode binary --steps 18000 --force mesh --tag binary_mesh
@@ -23,6 +24,7 @@ from scripts import est_train
 from scripts import gravity_1b as g1
 from scripts import kernels
 from scripts import nbody_ic
+from model.central_force import CentralForceDynamics
 
 EPS = ao.EPS
 
@@ -61,7 +63,36 @@ def build(args, kernel, dev):
     return nbody_ic._finish(*nbody_ic._cluster(args.n, (0.0, 0.0), args.sigma, kernel, gen, dev, ratio=args.ratio))
 
 
+def learned_table_fn(dyn, dev, m=1 << 20, dmin=1e-6):
+    lo, hi = math.log(dmin), math.log(g1.FORCE_TRAIN_MAX)
+    h = dyn.force(torch.linspace(lo, hi, m, device=dev)[:, None])[:, 0]
+    step = (hi - lo) / (m - 1)
+
+    def fn(d):
+        t = ((d.log() - lo) / step).clamp(0, m - 1)
+        i = t.floor().long().clamp(max=m - 2)
+        w = (t - i).clamp(0, 1)
+        return (h[i] * (1 - w) + h[i + 1] * w) / (d ** 2 + 1.0)
+    return fn
+
+
+def learned_accel(pos, fn, chunk):
+    p = pos.float()
+    out = torch.empty_like(p)
+    for i in range(0, len(p), chunk):
+        rel = p[None] - p[i:i + chunk][:, None]
+        d = (rel ** 2).sum(-1, keepdim=True).add(1e-12).sqrt()
+        out[i:i + chunk] = (fn(d) * rel / d).sum(1)
+    return out.double()
+
+
 def make_force(args, n, dev):
+    if args.kernel == "learned":
+        dyn = CentralForceDynamics(dt=0.1).to(dev)
+        dyn.load_state_dict(torch.load(args.checkpoint, map_location=dev))
+        dyn.eval()
+        fn = learned_table_fn(dyn, dev)
+        return lambda pos: learned_accel(pos, fn, args.lchunk)
     if args.force == "exact":
         idx = torch.arange(n, device=dev)
         return lambda pos: ao.exact_accel(pos, idx, 1024)
@@ -116,6 +147,9 @@ def main():
     ap.add_argument("--steps", type=int, default=18000)
     ap.add_argument("--dt", type=float, default=0.05)
     ap.add_argument("--force", choices=["exact", "mesh"], default="mesh")
+    ap.add_argument("--kernel", choices=["analytic", "learned"], default="analytic")
+    ap.add_argument("--checkpoint", default="checkpoints/gravity_central_v1.pt")
+    ap.add_argument("--lchunk", type=int, default=512)
     ap.add_argument("--grid", type=int, default=1024)
     ap.add_argument("--sigma", type=float, default=40.0)
     ap.add_argument("--d", type=float, default=600.0)
@@ -134,6 +168,7 @@ def main():
     args = ap.parse_args()
     dev = torch.device("cuda")
     kernel = est_train.make_kernel("analytic", dev)
+    torch.set_grad_enabled(False)
     kernels.current = kernel
     torch.manual_seed(args.seed)
     pos, vel = build(args, kernel, dev)
