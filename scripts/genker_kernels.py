@@ -29,6 +29,8 @@ NAMES = ["analytic", "learned", "inv_distance", "yukawa30", "softgrav2", "pow15"
 
 def make_kernel(name, dev, ckpt="checkpoints/gravity_central_v1.pt"):
     if name == "learned":
-        return kernels.learned(ckpt, dev)
+        k = kernels.learned(ckpt, dev)
+        f1 = k.f
+        return RadialKernel(lambda d: f1(d.reshape(-1)).reshape(d.shape), "learned")
     return {"analytic": kernels.analytic, "inv_distance": kernels.inv_distance, "yukawa30": kernels.yukawa, "yukawa": kernels.yukawa,
             "softgrav2": softgrav2, "pow15": pow15, "lj": lj}[name]()
