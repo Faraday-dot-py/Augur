@@ -1,5 +1,5 @@
 """Two-cluster bound binary and speed-limited "black hole" N-body runs (2D, unit masses, softened 1/r^2 gravity, KDK leapfrog), GPU.
-binary: two n/2 Gaussian clusters (sigma --sigma) on a circular relative orbit at separation --d (--vfac scales the circular speed);
+binary: two n/2 Gaussian clusters (sigma --sigma) on a circular relative orbit at separation --d (--vfac scales the circular speed; --vcap-frac f caps each body's initial internal speed at f x its own-cluster escape speed so no body starts unbound);
   tracks each cluster's mass retention (fraction of its own bodies within 4/8 sigma of its own median centre, and closer to its own
   centre than the other's), COM separation, and the fraction of bodies with positive energy in the system frame.
 blackhole: one Gaussian cluster; --c is a speed limit (bodies are clamped to |v| <= c after every step). With horizon
@@ -36,6 +36,11 @@ def potentials(pos, chunk=1024):
     return out
 
 
+def bound_cap(p, v, frac):
+    vesc = (2 * (-potentials(p)).clamp(min=0)).sqrt()
+    return v * (frac * vesc / v.norm(dim=1).clamp(min=1e-12)).clamp(max=1.0)[:, None]
+
+
 def med(x):
     return x.median(0).values
 
@@ -47,6 +52,8 @@ def build(args, kernel, dev):
         pa, va = nbody_ic._cluster(h, (-args.d / 2, 0.0), args.sigma, kernel, gen, dev)
         pb, vb = nbody_ic._cluster(h, (args.d / 2, 0.0), args.sigma, kernel, gen, dev)
         vrel = args.vfac * math.sqrt(args.n * args.d ** 2 / (args.d ** 2 + EPS ** 2) ** 1.5)
+        if args.vcap_frac > 0:
+            va, vb = bound_cap(pa, va, args.vcap_frac), bound_cap(pb, vb, args.vcap_frac)
         va[:, 1] -= vrel / 2
         vb[:, 1] += vrel / 2
         print(f"binary d {args.d} sigma {args.sigma} vrel {vrel:.3f} period {2 * math.pi * args.d / vrel:.1f} = {2 * math.pi * args.d / vrel / args.dt:.0f} steps", flush=True)
@@ -109,6 +116,7 @@ def main():
     ap.add_argument("--vfac", type=float, default=1.0)
     ap.add_argument("--ratio", type=float, default=0.5)
     ap.add_argument("--c", type=float, default=0.0)
+    ap.add_argument("--vcap-frac", type=float, default=0.0)
     ap.add_argument("--seed", type=int, default=4738)
     ap.add_argument("--record", type=int, default=50)
     ap.add_argument("--track", type=int, default=20)
