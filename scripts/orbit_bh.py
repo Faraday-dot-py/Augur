@@ -6,11 +6,13 @@ blackhole: one Gaussian cluster; --c is a speed limit (bodies are clamped to |v|
   R_s = 2 N / c^2 (softened potential depth ~ N / r), a body at r < R_s has |Phi| > c^2 / 2, so E < 0 for every allowed speed and it cannot
   escape; reports the fraction beyond R_s, the fraction with E > 0, and clamp counts. --c 0 is the uncapped control.
 --kernel learned replaces the analytic pair force by the learned CentralForceDynamics f(d) (checkpoints/gravity_central_v1.pt, --force exact only; diagnostics stay analytic). The MLP is tabulated on a 2^20-point log-d grid and linearly interpolated (error vs direct evaluation printed by bench_learned_force.py).
+--spill writes recorded frames to results/orbit_<tag>_frames_<step>.npy at each checkpoint instead of keeping them in memory / the checkpoint (for fine --record under a small host-RAM cap); the final npz is assembled from those chunks.
 Force: exact all-pairs or mesh (cutoff 4 near field + cic far field, grid --grid; --box-q q sets the far-field box from the q / 1-q position quantiles, far-field positions clamped to it, so escapers do not coarsen the grid). Full-state checkpoint every --ckpt steps (--resume continues).
 
 Usage: PYTHONPATH=. python scripts/orbit_bh.py --mode binary --steps 18000 --force mesh --tag binary_mesh
 """
 import argparse
+import glob
 import json
 import math
 import os
@@ -162,6 +164,7 @@ def main():
     ap.add_argument("--record", type=int, default=50)
     ap.add_argument("--track", type=int, default=20)
     ap.add_argument("--diag", type=int, default=250)
+    ap.add_argument("--spill", action="store_true")
     ap.add_argument("--ckpt", type=int, default=1000)
     ap.add_argument("--tag", required=True)
     ap.add_argument("--resume", action="store_true")
@@ -179,6 +182,10 @@ def main():
         b = torch.load(ck, map_location=dev, weights_only=False)
         pos, vel, start, frames, fsteps, diags, tracks, tsteps = b["pos"], b["vel"], b["step"], b["frames"], b["fsteps"], b["diags"], b["tracks"], b["tsteps"]
         print("resumed at", start, flush=True)
+        if args.spill:
+            for f in glob.glob(f"results/orbit_{args.tag}_frames_*.npy"):
+                if int(f[-11:-4]) > start:
+                    os.remove(f)
     if start == 0:
         diags.append(diagnostics(pos, vel, args, 0, 0.0))
         print(json.dumps(diags[-1]), flush=True)
@@ -210,9 +217,18 @@ def main():
             extra = f" sep {tracks[-1]['sep']:.1f} a_r8 {tracks[-1]['a_r8']:.4f} b_r8 {tracks[-1]['b_r8']:.4f}" if tracks else ""
             print(f"step {step} E {d['E']:.6g} P {d['P']:.2e} L {d['L']:.5g} Epos {d['frac_E_pos']:.5f} rq {[round(x, 1) for x in d['rq']]} clamp {d['clamped_frac']:.3f}{extra} {(time.time() - t0) / (step - start):.3f}s/step", flush=True)
         if step % args.ckpt == 0:
+            if args.spill:
+                np.save(f"results/orbit_{args.tag}_frames_{step:07d}.npy", np.stack(frames))
+                frames = []
             torch.save({"pos": pos, "vel": vel, "step": step, "frames": frames, "fsteps": fsteps, "diags": diags, "tracks": tracks, "tsteps": tsteps}, ck + ".tmp")
             os.replace(ck + ".tmp", ck)
-    np.savez_compressed(f"results/orbit_{args.tag}_snaps.npz", pos=np.stack(frames), steps=np.array(fsteps))
+    if args.spill:
+        parts = [np.load(f) for f in sorted(glob.glob(f"results/orbit_{args.tag}_frames_*.npy"))] + ([np.stack(frames)] if frames else [])
+        allf = np.concatenate(parts)
+        del parts
+        np.savez(f"results/orbit_{args.tag}_snaps.npz", pos=allf, steps=np.array(fsteps))
+    else:
+        np.savez_compressed(f"results/orbit_{args.tag}_snaps.npz", pos=np.stack(frames), steps=np.array(fsteps))
     json.dump({"args": vars(args), "wall_s": time.time() - t0, "diags": diags, "tracks": tracks, "track_steps": tsteps}, open(f"results/orbit_{args.tag}.json", "w"))
 
 
