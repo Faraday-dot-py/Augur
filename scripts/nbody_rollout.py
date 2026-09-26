@@ -142,7 +142,7 @@ def main():
     ck = f"results/rollout_{args.tag}_ckpt.pt"
     diags, snaps, snap_steps, step_times, start = [], [], [], [], 0
     if args.resume and os.path.exists(ck):
-        blob = torch.load(ck, map_location=dev)
+        blob = torch.load(ck, map_location=dev, weights_only=False)
         pos, vel, start, diags, snaps, snap_steps, step_times = blob["pos"], blob["vel"], blob["step"], blob["diags"], blob["snaps"], blob["snap_steps"], blob["step_times"]
         print("resumed at", start, flush=True)
     a = force(pos)
