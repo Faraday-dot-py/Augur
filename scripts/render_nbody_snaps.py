@@ -2,7 +2,7 @@
 time-smoothed centre (median position) with half-width 3.5x the median radius (floor 150), so structure fills the frame;
 brightness is log(1 + density per unit area) with one fixed scale. One frame image in memory at a time.
 
-Usage: PYTHONPATH=. python3 scripts/render_nbody_snaps.py results/rollout_X_snaps.npz videos/X.mp4 [res] [blur_px] [label] [dt] [min_half]
+Usage: PYTHONPATH=. python3 scripts/render_nbody_snaps.py results/rollout_X_snaps.npz videos/X.mp4 [res] [blur_px] [label] [dt] [min_half] [fps]
 """
 import sys
 
@@ -49,4 +49,4 @@ def update(i):
 
 
 ani = animation.FuncAnimation(fig, update, frames=len(frames))
-ani.save(sys.argv[2], writer=animation.FFMpegWriter(fps=30, bitrate=12000), savefig_kwargs={"facecolor": "black"})
+ani.save(sys.argv[2], writer=animation.FFMpegWriter(fps=float(sys.argv[8]) if len(sys.argv) > 8 else 30, bitrate=12000), savefig_kwargs={"facecolor": "black"})
