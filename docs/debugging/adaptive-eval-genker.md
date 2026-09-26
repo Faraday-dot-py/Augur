@@ -11,3 +11,18 @@ genker_static.py, genker_rollout.py, polaris_genker_{a,b}.sh; results/genker_*.j
 - Own cost <= 1.1x geometric on all, < 0.7x on >= half (inv_distance ~0.1x, pow15/softgrav2/learned ~0.35x on flyby; yukawa30 and lj the likely misses).
 - Momentum |P| ~1e-13 for all dual-tree providers (exact-pair symmetric); exact providers 1e-12 or better.
 - Learned kernel: tree error << model-vs-analytic deviation (model was trained to reproduce analytic force at short-horizon).
+
+## Static results, job 3014 (100k flyby snapshots, 10k eval targets; results/genker_static_a.json)
+Cost = kernel evals per target at matched rel_l2 (0.01), estimator alone, no audit.
+| kernel | state | geo | own | transfer |
+|---|---|---|---|---|
+| softgrav2 | flyby t5000 | 328 | 103 | 112 |
+| softgrav2 | uniform | 241 | 236 | 236 |
+| pow15 | flyby t5000 | 147 | 38 | 39 |
+| pow15 | uniform | 128 | 71 | 70 |
+| lj | flyby t5000 | 274 | never | never |
+| lj | uniform | 84 | 105 | 103 |
+Held-out R2 (own / transfer, flyby t5000): softgrav2 0.97/0.94, pow15 0.975/0.87, lj 0.885/0.61.
+- softgrav2 and pow15 (own cost 0.3x / 0.26x geo on flyby) confirm the prediction; transfer costs ~10% more for softgrav2 and equals own for pow15 (bias +0.39 in log error but q90 coverage 0.996: conservative).
+- lj on flyby is a failure: own and transfer estimators sit at rel_l2 0.24-0.26 for every tolerance 1e-4..3e-2 (geo reaches 0.0044 at 633 evals). The error does not respond to the tolerance, so the estimator's predicted error for the offending pairs is far below the truth (sign-change labels, as predicted); an audit at 1e-2 will see rel_l2 0.24 and must fall back. On uniform lj is fine.
+- Job 3014 also crashed on the learned-kernel timing run (kernels.learned f is 1D-only, pair_sums passes 2D); fixed with a reshaping wrapper in genker_kernels.make_kernel. lj exact: 0.045 s/step at N=20000.
