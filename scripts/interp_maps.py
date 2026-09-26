@@ -141,6 +141,7 @@ def main():
         for th in (0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6, 0.7):
             trg, flg, ag, gag, gbg, cg = run_geo(pos, kern, th)
             geos[th] = cg
+            torch.cuda.empty_cache()
             if th == 0.35 or abs(cg - cost) == min(abs(v - cost) for v in geos.values()):
                 stg, ago = particle_stats(trg, flg, ag, gag, gbg)
                 terr_g = (ago[idx] - exact).norm(dim=1) / exact.norm(dim=1)
@@ -173,6 +174,8 @@ def main():
         res["runs"][kn] = entry
         print(kn, json.dumps({k: entry[k] for k in ("est", "geo035", "geo_matched")}), flush=True)
         json.dump(res, open(a.out, "w"))
+        del tr, fl, a_s, ga, gb, pe, st, a_o, exact
+        torch.cuda.empty_cache()
         np.savez_compressed(a.out.replace(".json", "_maps.npz"), **maps)
     for kn in NAMES:
         for en in NAMES:
@@ -182,6 +185,8 @@ def main():
             st, a_o = particle_stats(tr, fl, a_s, ga, gb, pe)
             res["matrix"][f"kernel={kn}|est={en}"] = {"cost": cost, "rel_l2": de.metrics2(a_o[idx], exact)["rel_l2"],
                                                        "msize_spearman_vs_own_est": spearman(st["msize"], est_size[kn]), "mean_msize": float(st["msize"].mean())}
+            del tr, fl, a_s, ga, gb, pe, st, a_o, exact
+            torch.cuda.empty_cache()
         json.dump(res, open(a.out, "w"))
     kern, head = kerns["analytic"], heads["analytic"]
     cenp = pos.mean(0)
@@ -199,6 +204,8 @@ def main():
         res["rotation"][str(deg)] = {"est": {"cost": cost, **de.metrics2(a_o[idx], exact)}, "geo035": {"cost": cg, **de.metrics2(ago[idx], exact)}}
         print("rot", deg, json.dumps(res["rotation"][str(deg)]), flush=True)
         json.dump(res, open(a.out, "w"))
+        del tr, fl, a_s, ga, gb, pe, a_o, trg, flg, ag, gag, gbg, ago, exact
+        torch.cuda.empty_cache()
 
 
 if __name__ == "__main__":

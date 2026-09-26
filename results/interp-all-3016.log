@@ -1,0 +1,122 @@
+Fri Sep 25 05:17:45 PM PDT 2026
+record 40 frames (251, 100000, 2)
+epoch 9 train 0.11489068235576566 val 0.10756681384893838
+epoch 19 train 0.08650119825592806 val 0.08367767596819126
+epoch 29 train 0.0796338888290461 val 0.07765783099313778
+epoch 39 train 0.07828917323499407 val 0.07627655540519465
+analytic {"val_rmse": 0.2021759174626453, "val_std_y": 1.3074334017683082, "n": 123894, "time_s": 9.102140426635742}
+epoch 9 train 0.10427582051034107 val 0.09906046860853236
+epoch 19 train 0.09850377362950058 val 0.0941982714497179
+epoch 29 train 0.0845638427925195 val 0.08332177874198152
+epoch 39 train 0.07741921132072077 val 0.07700264949937428
+inv_distance {"val_rmse": 0.20801395087233568, "val_std_y": 1.195817388642114, "n": 123894, "time_s": 6.972452878952026}
+epoch 9 train 0.26263594353215464 val 0.2653871322722037
+epoch 19 train 0.21228453128849262 val 0.215176608749495
+epoch 29 train 0.18889466150655987 val 0.19624064597620383
+epoch 39 train 0.1860447625937805 val 0.1936114510087396
+yukawa30 {"val_rmse": 0.38535592092350146, "val_std_y": 2.0956929038245278, "n": 123894, "time_s": 7.046720504760742}
+epoch 9 train 0.08423867199474991 val 0.0815166805786531
+epoch 19 train 0.0793314166733951 val 0.07752455571259062
+epoch 29 train 0.07452474076916188 val 0.07356261541372938
+epoch 39 train 0.0729719381801687 val 0.07225514651282659
+plw0.5 {"val_rmse": 0.20111530274851883, "val_std_y": 1.190047049786488, "n": 123894, "time_s": 7.07246470451355}
+epoch 9 train 0.11577275238826734 val 0.10783347304743664
+epoch 19 train 0.08358259630890325 val 0.08084514381920468
+epoch 29 train 0.07072170703142402 val 0.06902120997585245
+epoch 39 train 0.06934483521865117 val 0.06757927107545986
+plw1.5 {"val_rmse": 0.18834754423659195, "val_std_y": 1.2415311601630867, "n": 123894, "time_s": 7.0604493618011475}
+epoch 9 train 0.1306400905934781 val 0.12575285840104122
+epoch 19 train 0.11028318922089426 val 0.10830543943610109
+epoch 29 train 0.10505932443810861 val 0.10385645906713722
+epoch 39 train 0.10367006947953865 val 0.10230554040295467
+plw3 {"val_rmse": 0.24572714062102186, "val_std_y": 1.4521629416253048, "n": 123894, "time_s": 6.9846601486206055}
+Fri Sep 25 05:18:32 PM PDT 2026
+analytic
+/home/adamwebb/.local/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+inv_distance
+yukawa30
+plw0.5
+plw1.5
+plw3
+Fri Sep 25 05:18:38 PM PDT 2026
+record 40 frames (251, 100000, 2)
+analytic {"est": {"cost": 121.16348, "rel_l2": 0.008768967789189142, "n_pairs": 2250410, "n_nonfinite_true_err": 0, "pred_vs_true_spearman": 0.4596931958917279, "pred_err_median": 0.048381541895580804, "true_err_median": 0.008416757579948283, "corr_logdens": {"nacc": 0.9038743401447394, "msize": -0.9033776697710658, "prederr": 0.30065677495296567}}, "geo035": {"cost": 161.88278, "rel_l2": 0.017257774045762373, "theta": 0.35, "corr_logdens": {"nacc": 0.9104187114876459, "msize": -0.9103210490636521}, "msize_spearman_vs_est": 0.9886563044963976, "nacc_spearman_vs_est": 0.9803532841506793}, "geo_matched": {"cost": 134.70556, "rel_l2": 0.020717720941232427, "theta": 0.4, "corr_logdens": {"nacc": 0.9109186379954158, "msize": -0.9116260414047106}, "msize_spearman_vs_est": 0.988999899878384, "nacc_spearman_vs_est": 0.980670058696383}}
+yukawa30 {"est": {"cost": 148.85922, "rel_l2": 0.011433988693936688, "n_pairs": 2131690, "n_nonfinite_true_err": 0, "pred_vs_true_spearman": 0.6837035047561403, "pred_err_median": 0.04222685642109189, "true_err_median": 0.008732669679933311, "corr_logdens": {"nacc": 0.908930297191637, "msize": -0.9096364269127957, "prederr": 0.597569924732817}}, "geo035": {"cost": 161.88278, "rel_l2": 0.025029459519587575, "theta": 0.35, "corr_logdens": {"nacc": 0.9104187114876459, "msize": -0.9103115590178151}, "msize_spearman_vs_est": 0.9958826195819283, "nacc_spearman_vs_est": 0.9958442021277564}, "geo_matched": {"cost": 161.88278, "rel_l2": 0.025029459519587575, "theta": 0.35, "corr_logdens": {"nacc": 0.9104187114876459, "msize": -0.9103115590178151}, "msize_spearman_vs_est": 0.9958826195819283, "nacc_spearman_vs_est": 0.9958442021277564}}
+inv_distance {"est": {"cost": 22.95098, "rel_l2": 0.0028856756713512696, "n_pairs": 723592, "n_nonfinite_true_err": 0, "pred_vs_true_spearman": 0.028865041922601684, "pred_err_median": 0.02480768554173381, "true_err_median": 0.0020232597506299457, "corr_logdens": {"nacc": 0.9064557079493856, "msize": -0.9068505148430771, "prederr": 0.884429484876783}}, "geo035": {"cost": 161.88278, "rel_l2": 0.0047907617200442735, "theta": 0.35, "corr_logdens": {"nacc": 0.9104187114876459, "msize": -0.9103207213867561}, "msize_spearman_vs_est": 0.9853860442583106, "nacc_spearman_vs_est": 0.9731813883203141}, "geo_matched": {"cost": 40.45174, "rel_l2": 0.020187494175731027, "theta": 0.7, "corr_logdens": {"nacc": 0.9062990938147979, "msize": -0.9080010434471121}, "msize_spearman_vs_est": 0.9811862773738507, "nacc_spearman_vs_est": 0.9643959464946436}}
+[W925 17:18:51.707741507 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 42479910912 bytes (free: 25492520960, total: 150111715328).
+[W925 17:19:00.160477260 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 44637880320 bytes (free: 24014028800, total: 150111715328).
+[W925 17:19:00.607132032 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 44637880320 bytes (free: 44360597504, total: 150111715328).
+[W925 17:19:00.607768383 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 44637880320 bytes (free: 44360597504, total: 150111715328).
+Traceback (most recent call last):
+  File "/home/adamwebb/bounce/scripts/interp_maps.py", line 205, in <module>
+    main()
+  File "/home/adamwebb/bounce/scripts/interp_maps.py", line 181, in main
+    tr, fl, a_s, ga, gb, pe, cost = run_est(pos, kern, heads[en])
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/bounce/scripts/interp_maps.py", line 52, in run_est
+    yh = head(de.pair_feats(fl, ga, gb))
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/bounce/scripts/dual_estimator.py", line 173, in forward
+    return self.est.net(((x - self.est.mu) / self.est.sd).float())[:, self.k].double()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/.local/lib/python3.12/site-packages/torch/nn/modules/container.py", line 259, in forward
+    input = module(input)
+            ^^^^^^^^^^^^^
+  File "/home/adamwebb/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/.local/lib/python3.12/site-packages/torch/nn/modules/activation.py", line 476, in forward
+    return F.silu(input, inplace=self.inplace)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/.local/lib/python3.12/site-packages/torch/nn/functional.py", line 2451, in silu
+    return torch._C._nn.silu(input)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 41.57 GiB. GPU 0 has a total capacity of 139.80 GiB of which 41.31 GiB is free. Including non-PyTorch memory, this process has 98.48 GiB memory in use. Of the allocated memory 56.31 GiB is allocated by PyTorch, and 41.50 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+Fri Sep 25 05:19:01 PM PDT 2026
+plw0.5 4
+plw0.5 16
+plw0.5 64
+plw0.5 256
+plw1 4
+plw1 16
+plw1 64
+plw1 256
+plw1.5 4
+plw1.5 16
+plw1.5 64
+plw1.5 256
+plw2 4
+plw2 16
+plw2 64
+plw2 256
+plw3 4
+plw3 16
+plw3 64
+plw3 256
+yukawa30 4
+yukawa30 16
+yukawa30 64
+yukawa30 256
+est_route plw0.5
+est_route plw1
+est_route plw1.5
+est_route plw2
+est_route plw3
+est_route yukawa30
+Fri Sep 25 05:28:18 PM PDT 2026
