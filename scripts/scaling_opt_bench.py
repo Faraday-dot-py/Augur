@@ -136,11 +136,15 @@ def main():
         g0 = AdaptiveForce(kernel, head, mode="geo", device="cuda")
         g0(pos)
         tg0, ag0 = med(lambda: g0(pos), args.reps)
-        g1 = so.OptForce(kernel, head, mode="geo", opts=so.Opts(analytic_grad=True, compile=True), device="cuda")
-        g1(pos)
-        tg1, ag1 = med(lambda: g1(pos), args.reps)
-        r["geo"] = {"orig_s": tg0, "opt_s": tg1, "speedup": tg0 / tg1, **diff(ag1, ag0), "cost_orig": g0.stats[-1]["cost"], "cost_opt": g1.stats[-1]["cost"]}
-        print("geo", r["geo"], flush=True)
+        try:
+            g1 = so.OptForce(kernel, head, mode="geo", opts=so.Opts(analytic_grad=True, compile=True), device="cuda")
+            g1(pos)
+            tg1, ag1 = med(lambda: g1(pos), args.reps)
+            r["geo"] = {"orig_s": tg0, "opt_s": tg1, "speedup": tg0 / tg1, **diff(ag1, ag0), "cost_orig": g0.stats[-1]["cost"], "cost_opt": g1.stats[-1]["cost"]}
+            print("geo", r["geo"], flush=True)
+        except Exception as e:
+            r["geo"] = {"error": repr(e)[:400]}
+            print("geo FAILED", repr(e)[:400], flush=True)
         gen0 = torch.Generator(device=dev).manual_seed(4738)
         gen1 = torch.Generator(device=dev).manual_seed(4738)
         e0 = de.audit_e2e(pos, prev, 1000, gen0)

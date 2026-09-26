@@ -132,7 +132,18 @@ _compiled = {}
 def get_compiled(name):
     if name not in _compiled:
         fn = {"pair_feats": de.pair_feats, "pair_analytic": _pair_analytic}[name]
-        _compiled[name] = torch.compile(fn, dynamic=True)
+        compiled = torch.compile(fn, dynamic=True)
+        state = {"failed": False}
+
+        def wrapped(*a, **kw):
+            if not state["failed"]:
+                try:
+                    return compiled(*a, **kw)
+                except Exception:
+                    state["failed"] = True
+            return fn(*a, **kw)
+
+        _compiled[name] = wrapped
     return _compiled[name]
 
 
