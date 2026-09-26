@@ -1,8 +1,8 @@
-"""3D video for an orbit_3d.py snapshot npz: camera orbits the scene (azimuth --turns full turns over the video, fixed elevation --elev), orthographic projection.
+"""3D video for an orbit_3d.py snapshot npz: camera fixed at azimuth --az0, elevation --elev (--turns > 0 makes it orbit), orthographic projection.
 Brightness is log density; colour is the mean depth of the bodies in each pixel (near = warm, far = cool). Fixed cube of half-width --half around the
 median start centre, with its edges drawn for depth reference. One frame image in memory at a time.
 
-Usage: PYTHONPATH=. python3 scripts/render_snaps_3d.py results/orbit_X_snaps.npz videos/X_3d.mp4 [--res 1080] [--half 900] [--elev 25] [--turns 1] [--dt 0.01]
+Usage: PYTHONPATH=. python3 scripts/render_snaps_3d.py results/orbit_X_snaps.npz videos/X_3d.mp4 [--res 1080] [--half 900] [--elev 25] [--az0 30] [--turns 0] [--dt 0.01]
 """
 import argparse
 
@@ -20,7 +20,8 @@ ap.add_argument("out")
 ap.add_argument("--res", type=int, default=1080)
 ap.add_argument("--half", type=float, default=900)
 ap.add_argument("--elev", type=float, default=25)
-ap.add_argument("--turns", type=float, default=1.0)
+ap.add_argument("--turns", type=float, default=0.0)
+ap.add_argument("--az0", type=float, default=30)
 ap.add_argument("--blur", type=float, default=1.5)
 ap.add_argument("--dt", type=float, default=0.01)
 args = ap.parse_args()
@@ -34,7 +35,7 @@ edges = [(a, b) for a in range(8) for b in range(a + 1, 8) if (corners[a] != cor
 
 
 def view(p, i):
-    az = 2 * np.pi * args.turns * i / max(len(frames) - 1, 1)
+    az = np.radians(args.az0) + 2 * np.pi * args.turns * i / max(len(frames) - 1, 1)
     ca, sa, ce, se = np.cos(az), np.sin(az), np.cos(el), np.sin(el)
     x, y, z = p[:, 0], p[:, 1], p[:, 2]
     xr, yr = ca * x - sa * y, sa * x + ca * y
@@ -44,7 +45,7 @@ def view(p, i):
 def image(i):
     v = view(frames[i] - centre, i)
     e = np.linspace(-half, half, res + 1)
-    w = np.clip((v[:, 2] + half) / (2 * half), 0, 1)
+    w = np.clip(0.5 + v[:, 2] / half, 0, 1)
     h = np.histogram2d(v[:, 0], v[:, 1], bins=[e, e])[0]
     hw = np.histogram2d(v[:, 0], v[:, 1], bins=[e, e], weights=w)[0]
     h, hw = gaussian_filter(h, args.blur), gaussian_filter(hw, args.blur)
