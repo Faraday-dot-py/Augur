@@ -92,6 +92,7 @@ def run(cfg, dev=torch.device("cuda")):
     torch.manual_seed(4738)
     n, steps, dt = cfg["n"], cfg["steps"], 0.05
     pos, vel = make_ic(cfg["ic"], n, kernel, dev)
+    n = pos.shape[0]
     head = make_head(cfg["est"], cfg["corrupt"], dev) if cfg["mode"] in ("est", "adaptive") else None
     kw = {k: cfg[k] for k in ("target", "audit_every", "audit_k", "lam_max", "reprobe_every", "severe", "fail_limit") if k in cfg}
     af = AdaptiveForce(kernel, head, mode=cfg["mode"], cap=8, tol=1e-3, geo_theta=0.35, device=str(dev), **kw)

@@ -15,3 +15,4 @@ R="python scripts/fallback_run.py"
 $R --name coll_adaptive --ic collapse --mode adaptive --steps 3000 --true-every 10 --diag-every 150
 $R --name coll_geo_audit --ic collapse --mode geo_audit --steps 3000 --true-every 10 --diag-every 150
 $R --name coll_est --ic collapse --mode est --steps 3000 --true-every 10 --diag-every 150
+$R --name fa_clumpy_adapt --ic clumpy --noise-ks 200 500 1000 3000 --true-every 20

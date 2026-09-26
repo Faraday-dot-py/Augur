@@ -52,7 +52,7 @@ if __name__ == "__main__":
     pats = sys.argv[1:] or [""]
     for p in pats:
         for f in sorted(glob.glob(f"results/fallback_{p}*.json")):
-            if f.endswith("_ckpt.json"):
+            if f.endswith("_ckpt.json") or f.endswith("_overhead.json"):
                 continue
             r = summ(f)
             print(r["name"])
