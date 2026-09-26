@@ -5,7 +5,7 @@ binary: two n/2 Gaussian clusters (sigma --sigma) on a circular relative orbit a
 blackhole: one Gaussian cluster; --c is a speed limit (bodies are clamped to |v| <= c after every step). With horizon
   R_s = 2 N / c^2 (softened potential depth ~ N / r), a body at r < R_s has |Phi| > c^2 / 2, so E < 0 for every allowed speed and it cannot
   escape; reports the fraction beyond R_s, the fraction with E > 0, and clamp counts. --c 0 is the uncapped control.
-Force: exact all-pairs or mesh (cutoff 4 near field + cic far field, grid --grid). Full-state checkpoint every --ckpt steps (--resume continues).
+Force: exact all-pairs or mesh (cutoff 4 near field + cic far field, grid --grid; --box-q q sets the far-field box from the q / 1-q position quantiles, far-field positions clamped to it, so escapers do not coarsen the grid). Full-state checkpoint every --ckpt steps (--resume continues).
 
 Usage: PYTHONPATH=. python scripts/orbit_bh.py --mode binary --steps 18000 --force mesh --tag binary_mesh
 """
@@ -66,6 +66,12 @@ def make_force(args, n, dev):
         idx = torch.arange(n, device=dev)
         return lambda pos: ao.exact_accel(pos, idx, 1024)
     fn = g1.analytic_force(EPS)
+    if args.box_q > 0:
+        def f(pos):
+            p = pos.float()
+            lo, hi = torch.quantile(p, 1 - args.box_q, dim=0), torch.quantile(p, args.box_q, dim=0)
+            return (g1.tiled_accel(fn, p, 4.0, 1) + g1.far_accel(fn, torch.maximum(torch.minimum(p, hi), lo), 4.0, args.grid)).double()
+        return f
     return lambda pos: (g1.tiled_accel(fn, pos.float(), 4.0, 1) + g1.far_accel(fn, pos.float(), 4.0, args.grid)).double()
 
 
@@ -117,6 +123,7 @@ def main():
     ap.add_argument("--ratio", type=float, default=0.5)
     ap.add_argument("--c", type=float, default=0.0)
     ap.add_argument("--vcap-frac", type=float, default=0.0)
+    ap.add_argument("--box-q", type=float, default=0.0)
     ap.add_argument("--seed", type=int, default=4738)
     ap.add_argument("--record", type=int, default=50)
     ap.add_argument("--track", type=int, default=20)
