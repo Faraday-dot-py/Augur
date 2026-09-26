@@ -321,12 +321,25 @@ class OptForce(AdaptiveForce):
         return a
 
 
-@torch.compile(dynamic=False)
-def _exact_chunk(src, tgt, eps: float = EPS):
+def _exact_chunk_eager(src, tgt, eps: float = EPS):
     d = src[None] - tgt[:, None]
     dn = (d * d).sum(-1).sqrt().clamp(min=1e-9)
     w = (dn * (dn * dn + eps * eps) ** -1.5) / dn
     return (d * w[..., None]).sum(1)
+
+
+_exact_state = {"fn": None, "failed": False}
+
+
+def _exact_chunk(src, tgt):
+    if not _exact_state["failed"]:
+        try:
+            if _exact_state["fn"] is None:
+                _exact_state["fn"] = torch.compile(_exact_chunk_eager, dynamic=False)
+            return _exact_state["fn"](src, tgt)
+        except Exception:
+            _exact_state["failed"] = True
+    return _exact_chunk_eager(src, tgt)
 
 
 @torch.no_grad()

@@ -10,3 +10,4 @@ scaling-ceil|scripts/scaling_ceiling.py --impl opt --ns 2000000,4000000,8000000,
 scaling-ceil-orig|scripts/scaling_ceiling.py --impl orig --ns 1000000,2000000,4000000,8000000,12000000 --tag ceil_orig
 scaling-opt-v2|scripts/scaling_opt_bench.py --ns 100000 --tag opt100k
 scaling-c-uni-v2|scripts/scaling_bench.py --states uniform --ns 1000000 --bh-max 0 --exact-max 0 --tag c_uni
+scaling-r100k-opt|scripts/scaling_rollout.py --n 100000 --providers adaptive_opt --steps 40 --grid 2048 --tag r100k_opt
