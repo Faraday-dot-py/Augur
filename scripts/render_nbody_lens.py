@@ -1,9 +1,10 @@
 """Gravitational-lensing render of a 2D nbody/black-hole snapshot npz (pos, steps). Same window/brightness as render_nbody_snaps.py, then the image plane is warped
-with a softened point-mass lens centred on the window centre: source position beta = u (1 - E^2 / (|u|^2 + a^2)), u = image position in window half-widths
-(E = --einstein, a = --core). A fixed starfield (window coordinates, so it does not jitter with the moving window) is warped the same way, so the bending is visible;
-surface brightness is conserved (no extra magnification factor). A black disk of radius --shadow hides the centre. Artistic, not a GR ray trace: E is a fraction of the view.
+by a lens computed from the particles of each frame: the (blurred) particle density is the lens mass, normalised to total 1, and the deflection is
+alpha(u) = E^2 sum_j m_j (u - u_j) / (|u - u_j|^2 + a^2), source position beta = u - alpha (u in window half-widths, E = --einstein, a = --core; far away it is the
+point-mass lens E^2/|u|). The sum is an FFT convolution per frame, so the warp follows the moving, pulsing, clumping cloud. A fixed starfield (window coordinates, so it does not jitter with the moving window) is warped the same way, so the bending is visible;
+surface brightness is conserved (no extra magnification factor). Optional black disk of radius --shadow hides the centre (default off). Artistic, not a GR ray trace: E is a fraction of the view.
 
-Usage: PYTHONPATH=. python3 scripts/render_nbody_lens.py snaps.npz out.mp4 [--fps 30] [--res 1080] [--preview IDX out.png] [--einstein 0.35] [--core 0.08] [--shadow 0.05] [--dt 0.005] [--min-half 3] [--label TEXT]
+Usage: PYTHONPATH=. python3 scripts/render_nbody_lens.py snaps.npz out.mp4 [--fps 30] [--res 1080] [--preview IDX out.png] [--einstein 0.35] [--core 0.08] [--shadow 0.0] [--mass-blur 6] [--dt 0.005] [--min-half 3] [--label TEXT]
 """
 import argparse
 
@@ -22,7 +23,8 @@ ap.add_argument("--res", type=int, default=1080)
 ap.add_argument("--blur", type=float, default=1.2)
 ap.add_argument("--einstein", type=float, default=0.35)
 ap.add_argument("--core", type=float, default=0.08)
-ap.add_argument("--shadow", type=float, default=0.05)
+ap.add_argument("--shadow", type=float, default=0.0)
+ap.add_argument("--mass-blur", type=float, default=6.0)
 ap.add_argument("--stars", type=int, default=6000)
 ap.add_argument("--dt", type=float, default=0.005)
 ap.add_argument("--min-half", type=float, default=3.0)
@@ -56,18 +58,30 @@ tex = gaussian_filter(tex, 1.1)
 tex = (tex / np.percentile(tex, 99.99)).clip(0, 1) ** 0.6
 
 yy, xx = (np.mgrid[0:res, 0:res].astype(np.float64) + 0.5) / res * 2 - 1
-th2 = xx ** 2 + yy ** 2
-fac = 1 - args.einstein ** 2 / (th2 + args.core ** 2)
-bx, by = xx * fac, yy * fac
-img_coords = np.stack([(by + 1) / 2 * res - 0.5, (bx + 1) / 2 * res - 0.5])
-tex_coords = np.stack([(by + 2) / 4 * ts - 0.5, (bx + 2) / 4 * ts - 0.5])
-stars = map_coordinates(tex, tex_coords, order=1, cval=0.0)
-shadow = th2 > args.shadow ** 2
+shadow = (xx ** 2 + yy ** 2) > args.shadow ** 2
+pad = 2 * res
+off = np.fft.fftfreq(pad) * pad * (2.0 / res)
+oy, ox = np.meshgrid(off, off, indexing="ij")
+den = ox ** 2 + oy ** 2 + args.core ** 2
+kx_f, ky_f = np.fft.rfft2(ox / den), np.fft.rfft2(oy / den)
+
+
+def deflection(dens):
+    m = np.zeros((pad, pad))
+    m[:res, :res] = dens / dens.sum()
+    mf = np.fft.rfft2(m)
+    return (args.einstein ** 2 * np.fft.irfft2(mf * kx_f, s=(pad, pad))[:res, :res],
+            args.einstein ** 2 * np.fft.irfft2(mf * ky_f, s=(pad, pad))[:res, :res])
 
 
 def render(i):
-    s = np.log1p(density(i)) / vmax
-    warped = map_coordinates(s, img_coords, order=1, cval=0.0).clip(0, 1)
+    dens = density(i)
+    ax_, ay_ = deflection(gaussian_filter(dens, args.mass_blur))
+    bx, by = xx - ax_, yy - ay_
+    img_coords = np.stack([(by + 1) / 2 * res - 0.5, (bx + 1) / 2 * res - 0.5])
+    tex_coords = np.stack([(by + 2) / 4 * ts - 0.5, (bx + 2) / 4 * ts - 0.5])
+    stars = map_coordinates(tex, tex_coords, order=1, cval=0.0)
+    warped = map_coordinates(np.log1p(dens) / vmax, img_coords, order=1, cval=0.0).clip(0, 1)
     rgb = plt.get_cmap("inferno")(warped)[..., :3] * warped[..., None]
     rgb = rgb + stars[..., None] * np.array([0.55, 0.65, 1.0]) * 0.7
     return (rgb.clip(0, 1) * shadow[..., None]).astype(np.float32)
