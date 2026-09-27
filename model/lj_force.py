@@ -1,6 +1,8 @@
 import torch
 import torch.nn as nn
 
+from model.token_graph import build_radius_graph_periodic
+
 
 class LJForceDynamics(nn.Module):
     """Learned radial pair force on a periodic box, integrated with velocity Verlet in `substeps` steps per
@@ -37,7 +39,7 @@ class LJForceDynamics(nn.Module):
             ii = torch.arange(s, min(s + chunk, n), device=pos.device)
             mask[:, torch.arange(len(ii)), ii] = False
             bi, ri, _ = mask.nonzero(as_tuple=True)
-            d = torch.sqrt(r2[mask])
+            d = torch.sqrt(r2[mask] + 1e-12)
             f = self.pair_force(d)
             acc = acc.index_add(0, bi * n + s + ri, (f / d)[:, None] * rel[mask])
             if stats:
@@ -82,3 +84,37 @@ class LJForceDynamics(nn.Module):
             ps.append(pos)
             vs.append(vel)
         return torch.stack(ps), torch.stack(vs)
+
+    def accel_single(self, pos, box, stats=False):
+        """O(N) periodic cell-list accel for one (unbatched) system: pos (N, 2), box (2,). Same
+        physics as `accel` (verified to match on small N in scripts/lj_scaling.py); used for
+        rollouts too large for the dense chunked all-pairs path in `accel`/`step_frame`."""
+        edges = build_radius_graph_periodic(pos.detach(), box, self.cutoff)
+        acc = torch.zeros_like(pos)
+        pe = pos.new_zeros(())
+        vir = pos.new_zeros(())
+        if edges.shape[1] == 0:
+            return (acc, pe, vir) if stats else acc
+        src, dst = edges[0], edges[1]
+        rel = pos[dst] - pos[src]
+        rel = rel - box * torch.round(rel / box)
+        d = torch.sqrt((rel ** 2).sum(-1) + 1e-12)
+        f = self.pair_force(d)
+        acc = acc.index_add(0, dst, (f / d)[:, None] * rel)
+        if stats:
+            pe = 0.5 * self.potential(d).sum()
+            vir = 0.5 * (f * d).sum()
+        return (acc, pe, vir) if stats else acc
+
+    def force_fn_single(self, pos, box):
+        return self.accel_single(pos, box, stats=True)
+
+    def step_frame_single(self, pos, vel, box):
+        h = self.dt
+        a = self.accel_single(pos, box)
+        for _ in range(self.substeps):
+            vel = vel + 0.5 * h * a
+            pos = pos + h * vel
+            a = self.accel_single(pos, box)
+            vel = vel + 0.5 * h * a
+        return pos, vel

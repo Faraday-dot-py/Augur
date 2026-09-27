@@ -7,9 +7,11 @@ import numpy as np
 import torch
 
 from model.lj_force import LJForceDynamics
+from model.token_graph import build_radius_graph_periodic
 from scripts import lj_sim
 
 BINS = np.arange(0.0, 5.0001, 0.05)
+NN_CUTOFF = 1.6  # first coordination shell scale (see docs/debugging/experiment-log.md, LJ scaling entry)
 
 
 def pair_dist(pos, box):
@@ -37,6 +39,37 @@ def gr_psi6(frames, box, dev):
     ring = np.pi * (BINS[1:] ** 2 - BINS[:-1] ** 2)
     g = hist.cpu().numpy() / (len(frames) * n * rho * ring)
     return g.tolist(), float(np.mean(psi))
+
+
+def gr_psi6_scalable(frames, box, dev, nn_cutoff=NN_CUTOFF):
+    """Same g(r) and psi6 as `gr_psi6`, but via the O(N) periodic cell-list (model/token_graph) instead of
+    a dense N x N distance matrix -- needed once N is large enough that N^2 float64 doesn't fit (see the LJ
+    scaling entry in docs/debugging/experiment-log.md, job 3096 OOM at N=96768). psi6 here averages over
+    neighbours within `nn_cutoff` (first coordination shell) rather than the strict 6 nearest; the two
+    definitions agree closely in a dense solid/liquid, where each shell holds close to 6 neighbours."""
+    box_t = torch.tensor(box, device=dev, dtype=torch.float64)
+    n = frames.shape[1]
+    rho = n / float(box[0] * box[1])
+    hist = torch.zeros(len(BINS) - 1, device=dev, dtype=torch.float64)
+    psi = []
+    for f in frames:
+        p = torch.tensor(f, device=dev, dtype=torch.float64)
+        edges = build_radius_graph_periodic(p, box_t, float(BINS[-1]))
+        src, dst = edges[0], edges[1]
+        rel = p[dst] - p[src]
+        rel = rel - box_t * torch.round(rel / box_t)
+        d = torch.sqrt((rel ** 2).sum(-1) + 1e-12)
+        hist += torch.histc(d[d < BINS[-1]], bins=len(BINS) - 1, min=0.0, max=float(BINS[-1]))
+        keep = d <= nn_cutoff
+        e6 = torch.exp(6j * torch.atan2(rel[keep, 1], rel[keep, 0]).to(torch.complex128))
+        sums = torch.zeros(n, dtype=torch.complex128, device=dev).index_add_(0, dst[keep], e6)
+        counts = torch.zeros(n, dtype=torch.float64, device=dev).index_add_(0, dst[keep], torch.ones(int(keep.sum()), dtype=torch.float64, device=dev))
+        valid = counts > 0
+        if valid.any():
+            psi.append(float((sums[valid] / counts[valid]).abs().mean()))
+    ring = np.pi * (BINS[1:] ** 2 - BINS[:-1] ** 2)
+    g = hist.cpu().numpy() / (len(frames) * n * rho * ring)
+    return g.tolist(), float(np.mean(psi)) if psi else 0.0
 
 
 def err_curve(a, b, box):

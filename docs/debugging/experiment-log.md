@@ -3139,3 +3139,49 @@ Limits: 20-step horizon only; error still grows with N (0.0067 at 50 -> 0.026 at
 - Result v2 (last 200 frames, truth/model): T and psi6 agree to <1%/0.003 in every scene (solid psi6 0.969/0.969, melt 0.795/0.794, quench 0.745/0.746); P within 3-10% (liquid 0.325/0.292, quench -0.243/-0.304); g(r) L2 0.13-0.21 (gas 0.58, few pairs, noisy). E/N offset by 0.04-0.10 (liquid -1.307/-1.370): learned force tail is ~3% off (max |df| 0.033 for d>1.2) and the potential is its integral.
 - Trajectory error vs the truth-rerun chaos floor (mean position error, frame 20 / 50): solid 0.002/0.006 (floor 0.000/0.000), melt 0.001/0.007, liquid 0.096/0.91 (floor 0.000/0.143), coexist 0.12/2.10 (0/0.17), quench 0.19/1.12 (0.158/1.079). Model tracks the true trajectory for ~10-20 frames (1-2 tau) in fluids, then decorrelates; quench reaches the floor. v1 (width 64) was within ~10% of v2 on these, energy offset larger (liquid -1.395).
 - NOT solved: the core. Learned f versus analytic for d in 0.75-1.2 has max abs error 1191 (rel L2 over 0.75-2.5 = 0.56; v1 0.75), because training frames almost never contain d < ~0.9. Rollouts do not reach there (T <= 1.2), so dynamics are fine, but a hotter or denser test would expose it. Rollout is all-pairs min-image, not a cell list, so O(N^2) here; the O(N) and tiling claims are untested for LJ. Energy of the model is only meaningful up to the force error above.
+
+### LJ O(N) cell-list eval path + tiling validation (jobs 3096 train/eval, 3098 scaling, 2026-09-27)
+
+`model/token_graph.py` (`build_radius_graph_periodic`: O(N log N) periodic cell list, verified exact against
+brute force on random configs, 0 missing/extra edges), `model/lj_force.py` (`accel_single`/`step_frame_single`:
+same physics via the periodic graph, for rollouts too large for the dense chunked path), `scripts/lj_scaling.py`
+(correctness + wall-clock scaling + tiling), `render_lj_force_plot.py` (interp figure), `results/lj_scaling.json`.
+- **Bug found and fixed** (caught by the correctness check before wasting the 4h job): `accel_single` had
+  `rel = pos[src] - pos[dst]`, the reverse of the dense path's `pos[receiver] - pos[other]` convention, giving
+  `a_cells = -a_dense` exactly (rel error 2.0). Fixed to `rel = pos[dst] - pos[src]`; now matches to 1e-15
+  (float64 noise) on random and lattice configs. Also hit a second, unrelated bug in the *test itself*: too much
+  init jitter (0.15 sigma) put two particles at d~0 in one random draw, where d^-13 amplifies an epsilon-convention
+  mismatch between the two paths into an apparent 10^4 discrepancy -- not a real bug, fixed by using realistic
+  jitter (0.02) for the correctness check.
+- **Second bug, job 3096 crash**: `lj_eval.gr_psi6` (g(r)/psi6) builds a dense N x N distance matrix -- fine at
+  N=2688 (eval scenes) but tried to allocate 139.5 GiB at N=96768 in the tiling test and crashed the 4h job at
+  the very end (after training + eval had already succeeded and were salvaged). Added `gr_psi6_scalable`
+  (same periodic cell list, radius 5.0 for g(r), first-shell cutoff 1.6 for psi6 instead of a strict top-6) --
+  verified OOM-free up to N=96768 in a smoke job before relaunching the full scaling run.
+- **Correctness**: `accel_single` vs dense chunked `accel`, same state, max abs diff 1.3-2.4e-15 across all
+  scales tested (N=168 to 96768).
+- **O(N) scaling** (fixed density rho=0.70, cell-list path, up to N=172032 -- 1024x the base 168-particle cell):
+  ms/particle 15.2us (N=168) -> 3.84 (672) -> 1.10 (2688) -> 0.375 (10752) -> 0.186 (43008) -> 0.154 (96768) ->
+  0.140 (172032) -- flat/improving per-particle cost (GPU underused at small N, true O(N) once saturated), not
+  the O(N^2) of the dense path. `videos/lj_scaling_tiling_plot.png`.
+- **Tiling** (same unit cell replicated to N=168..172032, short MD, last 10 of 150 recorded frames): T and psi6
+  are flat across the whole 1024x range (T 0.4995-0.5024, psi6 0.5870-0.5889). P rises from 0.217 (N=168) to
+  0.293 (N=2688) then plateaus (0.294-0.297 from N=10752 to 172032) -- a genuine finite-size correction (pressure
+  is more sensitive to small-box surface effects than T or the order parameter in 2D), not a tiling failure or a
+  bug: it converges to a stable intensive value once the box is a few times the interaction cutoff. Video of the
+  172032-particle rollout: `videos/lj_tiling_172k.mp4` (density-field render, too many particles for per-particle
+  markers).
+- **Retrain (v3) to fix the core, mostly did not work**: added a hot/dense sampling fraction (15% of scenes,
+  rho 0.9-1.05, T up to 5.0) specifically to put close encounters (d < 1.2) into the training data. Result:
+  force curve is visually indistinguishable from v2 in `lj_force_interp.png` at any y-scale that also shows
+  the well (linear or clipped axes hide this entirely -- an early version of this plot with `ylim(-3,8)` looked
+  like a near-perfect match and was wrong to trust). On a log/symlog scale the truth is: max abs force error for
+  d in [0.75,1.2] is 1144 (v3) vs 1191-1482 (v1/v2) -- barely moved. The true force there is itself huge (~1841 at
+  d=0.75, d^-13 tail), and free-rollout position/velocity loss gives almost no gradient signal on rarely-visited
+  d, since so few of even the hot-scene frames land there. An explicit force-matching or potential-matching term
+  (not just trajectory loss) is the likely fix; not attempted. NOT solved.
+- **Honest takeaway for interpretability**: the plot is still a genuine interpretability win -- it directly shows,
+  without probing, that the model has correctly recovered the LJ well and tail (error <1e-2 for d>1.3) purely
+  from trajectories, while cleanly separating out where it has NOT learned the physics (the core), and *why*
+  (a training-data coverage gap, not a capacity or architecture limit) -- a legible, checkable diagnosis of a
+  learned force law against ground truth.

@@ -13,10 +13,18 @@ from scripts import lj_sim
 
 HELD_OUT_RHO = (0.62, 0.82)
 TMAX = 2.5
+HOT_FRAC = 0.0
+HOT_RHO = (0.9, 1.05)
+HOT_TMAX = 6.0
 FRAME_STEPS = 20
 
 
 def sample_state(rng):
+    """Hot/dense scenes (a HOT_FRAC fraction) push the Maxwell tail into the repulsive core (d < 1.2,
+    rarely visited by equilibrated liquid/gas states) so the learned f(d) gets supervision there too --
+    see the LJ scaling entry in docs/debugging/experiment-log.md."""
+    if rng.random() < HOT_FRAC:
+        return float(rng.uniform(*HOT_RHO)), float(rng.uniform(2.0, HOT_TMAX))
     while True:
         rho = float(np.exp(rng.uniform(math.log(0.05), math.log(1.05))))
         if not HELD_OUT_RHO[0] <= rho <= HELD_OUT_RHO[1]:
@@ -58,6 +66,8 @@ def main():
     ap.add_argument("--vel-weight", type=float, default=1.0)
     ap.add_argument("--dt", type=float, default=0.005)
     ap.add_argument("--tmax", type=float, default=2.5)
+    ap.add_argument("--hot-frac", type=float, default=0.0)
+    ap.add_argument("--hot-tmax", type=float, default=6.0)
     ap.add_argument("--width", type=int, default=64)
     ap.add_argument("--seed", type=int, default=4738)
     ap.add_argument("--device", default="cuda")
@@ -65,8 +75,10 @@ def main():
     ap.add_argument("--out", default="results/lj_train.json")
     args = ap.parse_args()
 
-    global TMAX
+    global TMAX, HOT_FRAC, HOT_TMAX
     TMAX = args.tmax
+    HOT_FRAC = args.hot_frac
+    HOT_TMAX = args.hot_tmax
     dev = torch.device(args.device)
     torch.manual_seed(args.seed)
     t0 = time.time()
