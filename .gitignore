@@ -15,3 +15,4 @@ results/rollout_*_ckpt.pt
 results/genker_*_snaps.npz
 results/orbit_*_snaps.npz
 results/orbit_*_ckpt.pt
+results/lj_*.npz
