@@ -6,6 +6,8 @@ blackhole: one Gaussian cluster; --c is a speed limit (bodies are clamped to |v|
   R_s = 2 N / c^2 (softened potential depth ~ N / r), a body at r < R_s has |Phi| > c^2 / 2, so E < 0 for every allowed speed and it cannot
   escape; reports the fraction beyond R_s, the fraction with E > 0, and clamp counts. --c 0 is the uncapped control.
 --kernel learned replaces the analytic pair force by the learned CentralForceDynamics f(d) (checkpoints/gravity_central_v1.pt, --force exact only; diagnostics stay analytic). The MLP is tabulated on a 2^20-point log-d grid and linearly interpolated (error vs direct evaluation printed by bench_learned_force.py).
+--kernel learned_rel is the same, with the CentralForceDynamics trained on relativistic trajectories (checkpoints/gravity_relativistic_central.pt, job 3119, c=1 eps=0.5).
+--substeps S splits each step's KDK into S sub-steps of dt/S (clamp after each); --record then counts sub-steps, so --record 1 --substeps 8 records 8 frames per step. Diagnostics and checkpoints stay on outer steps; frame steps are fractional.
 --spill writes recorded frames to results/orbit_<tag>_frames_<step>.npy at each checkpoint instead of keeping them in memory / the checkpoint (for fine --record under a small host-RAM cap); the final npz is assembled from those chunks.
 --relativistic (with --c) replaces the clamp by relativistic kinetics: the state is momentum p (dp/dt = F), v = p / sqrt(1 + p^2/c^2), KE = c^2 (sqrt(1 + p^2/c^2) - 1);
   same leapfrog, |v| < c by construction, energy and momentum conserved.
@@ -91,7 +93,7 @@ def learned_accel(pos, fn, chunk):
 
 
 def make_force(args, n, dev):
-    if args.kernel == "learned":
+    if args.kernel in ("learned", "learned_rel"):
         dyn = CentralForceDynamics(dt=0.1).to(dev)
         dyn.load_state_dict(torch.load(args.checkpoint, map_location=dev))
         dyn.eval()
@@ -155,8 +157,8 @@ def main():
     ap.add_argument("--steps", type=int, default=18000)
     ap.add_argument("--dt", type=float, default=0.05)
     ap.add_argument("--force", choices=["exact", "mesh"], default="mesh")
-    ap.add_argument("--kernel", choices=["analytic", "learned"], default="analytic")
-    ap.add_argument("--checkpoint", default="checkpoints/gravity_central_v1.pt")
+    ap.add_argument("--kernel", choices=["analytic", "learned", "learned_rel"], default="analytic")
+    ap.add_argument("--checkpoint", default=None)
     ap.add_argument("--lchunk", type=int, default=512)
     ap.add_argument("--grid", type=int, default=1024)
     ap.add_argument("--sigma", type=float, default=40.0)
@@ -169,6 +171,7 @@ def main():
     ap.add_argument("--box-q", type=float, default=0.0)
     ap.add_argument("--seed", type=int, default=4738)
     ap.add_argument("--record", type=int, default=50)
+    ap.add_argument("--substeps", type=int, default=1)
     ap.add_argument("--track", type=int, default=20)
     ap.add_argument("--diag", type=int, default=250)
     ap.add_argument("--spill", action="store_true")
@@ -176,6 +179,8 @@ def main():
     ap.add_argument("--tag", required=True)
     ap.add_argument("--resume", action="store_true")
     args = ap.parse_args()
+    if args.checkpoint is None:
+        args.checkpoint = "checkpoints/gravity_relativistic_central.pt" if args.kernel == "learned_rel" else "checkpoints/gravity_central_v1.pt"
     dev = torch.device("cuda")
     kernel = est_train.make_kernel("analytic", dev)
     torch.set_grad_enabled(False)
@@ -205,24 +210,27 @@ def main():
             tsteps.append(0)
     a = force(pos)
     t0 = time.time()
+    S = args.substeps
+    h = args.dt / S
     for step in range(start + 1, args.steps + 1):
-        vel = vel + 0.5 * args.dt * a
-        pos = pos + args.dt * speed(vel, args)
-        a = force(pos)
-        vel = vel + 0.5 * args.dt * a
-        if args.c > 0 and not args.relativistic:
-            sp = vel.norm(dim=1)
-            over = sp > args.c
-            nclamp += int(over.sum())
-            vel = torch.where(over[:, None], vel * (args.c / sp.clamp(min=1e-12))[:, None], vel)
+        for k in range(1, S + 1):
+            vel = vel + 0.5 * h * a
+            pos = pos + h * speed(vel, args)
+            a = force(pos)
+            vel = vel + 0.5 * h * a
+            if args.c > 0 and not args.relativistic:
+                sp = vel.norm(dim=1)
+                over = sp > args.c
+                nclamp += int(over.sum())
+                vel = torch.where(over[:, None], vel * (args.c / sp.clamp(min=1e-12))[:, None], vel)
+            if ((step - 1) * S + k) % args.record == 0:
+                frames.append(pos.float().cpu().numpy())
+                fsteps.append(step - 1 + k / S if S > 1 else step)
         if args.mode == "binary" and step % args.track == 0:
             tracks.append(track_binary(pos, args))
             tsteps.append(step)
-        if step % args.record == 0:
-            frames.append(pos.float().cpu().numpy())
-            fsteps.append(step)
         if step % args.diag == 0 or step == args.steps:
-            d = diagnostics(pos, vel, args, step, nclamp / (pos.shape[0] * args.diag))
+            d = diagnostics(pos, vel, args, step, nclamp / (pos.shape[0] * args.diag * S))
             nclamp = 0
             diags.append(d)
             extra = f" sep {tracks[-1]['sep']:.1f} a_r8 {tracks[-1]['a_r8']:.4f} b_r8 {tracks[-1]['b_r8']:.4f}" if tracks else ""
