@@ -1,0 +1,100 @@
+{
+ "checkpoint": "cons_pure.pt",
+ "config": {
+  "neighbor_radius": 4.0,
+  "radius": 0.75,
+  "dt": 0.15,
+  "force_scale": 100.0,
+  "gravity": 9.0,
+  "n": 100,
+  "max_speed": 30.0,
+  "contact_substeps": 8,
+  "conservative_contact": true
+ },
+ "tensors": {
+  "gravity": {
+   "shape": [
+    2
+   ],
+   "offset": 0
+  },
+  "pair_force.0.weight": {
+   "shape": [
+    64,
+    1
+   ],
+   "offset": 2
+  },
+  "pair_force.0.bias": {
+   "shape": [
+    64
+   ],
+   "offset": 66
+  },
+  "pair_force.2.weight": {
+   "shape": [
+    64,
+    64
+   ],
+   "offset": 130
+  },
+  "pair_force.2.bias": {
+   "shape": [
+    64
+   ],
+   "offset": 4226
+  },
+  "pair_force.4.weight": {
+   "shape": [
+    1,
+    64
+   ],
+   "offset": 4290
+  },
+  "pair_force.4.bias": {
+   "shape": [
+    1
+   ],
+   "offset": 4354
+  },
+  "wall_force.0.weight": {
+   "shape": [
+    64,
+    1
+   ],
+   "offset": 4355
+  },
+  "wall_force.0.bias": {
+   "shape": [
+    64
+   ],
+   "offset": 4419
+  },
+  "wall_force.2.weight": {
+   "shape": [
+    64,
+    64
+   ],
+   "offset": 4483
+  },
+  "wall_force.2.bias": {
+   "shape": [
+    64
+   ],
+   "offset": 8579
+  },
+  "wall_force.4.weight": {
+   "shape": [
+    1,
+    64
+   ],
+   "offset": 8643
+  },
+  "wall_force.4.bias": {
+   "shape": [
+    1
+   ],
+   "offset": 8707
+  }
+ }
+}

@@ -61,7 +61,8 @@ class TokenModel(torch.nn.Module):
                  territory_masking=False, track_query=False, free_rollout=False,
                  mirror_sym=False, velocity_readout=False,
                  wall_lookahead=False, wall_head=False, pair_impulse=False,
-                 position_refine=False, ball_split=False):
+                 position_refine=False, ball_split=False, adaptive_radius="off",
+                 conservative_contact=False, contact_substeps=8, contact_residual=False):
         super().__init__()
         # Initial velocity read from the frame's VX/VY channels instead of
         # finite-differenced from two detections (error 2.1 -> 0.01 cells/s,
@@ -160,7 +161,9 @@ class TokenModel(torch.nn.Module):
         if free_rollout:
             self.dynamics = TokenFreeDynamics(n=n, hidden_dim=hidden_dim, neighbor_radius=neighbor_radius,
                                               mirror_sym=mirror_sym, wall_lookahead=wall_lookahead,
-                                              wall_head=wall_head, radius=radius, dt=dt, pair_impulse=pair_impulse)
+                                              wall_head=wall_head, radius=radius, dt=dt, pair_impulse=pair_impulse,
+                                              adaptive_radius=adaptive_radius, conservative_contact=conservative_contact,
+                                              contact_substeps=contact_substeps, contact_residual=contact_residual)
         elif track_query:
             self.dynamics = TrackQueryDynamics(
                 hidden_dim=hidden_dim, neighbor_radius=neighbor_radius,

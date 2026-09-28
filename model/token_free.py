@@ -47,14 +47,34 @@ def pair_invariants(rel_pos, rel_vel, contact_dist, dt):
     return feats, unit, tangent
 
 
+def _radial_mlp(width=64):
+    net = nn.Sequential(nn.Linear(1, width), nn.Tanh(), nn.Linear(width, width), nn.Tanh(), nn.Linear(width, 1))
+    nn.init.zeros_(net[4].weight)
+    nn.init.zeros_(net[4].bias)
+    return net
+
+
 class TokenFreeDynamics(nn.Module):
     """TokenDynamics (radius-graph attention + GRU + zero-init delta head)
     with wall-proximity node features -- see
     docs/superpowers/specs/2026-09-23-token-free-rollout-design.md."""
 
     def __init__(self, n, hidden_dim=32, neighbor_radius=4.0, wall_range=3.0, mirror_sym=False,
-                 wall_lookahead=False, wall_head=False, radius=0.75, dt=0.15, pair_impulse=False):
+                 wall_lookahead=False, wall_head=False, radius=0.75, dt=0.15, pair_impulse=False,
+                 adaptive_radius="off", conservative_contact=False, contact_substeps=8, contact_residual=False):
         super().__init__()
+        # adaptive_radius: "pair" grows the pair_head edge radius to
+        # 2*max|v|*dt + 2*radius each step so a fast pair cannot cross contact
+        # inside one step with no edge; "all" also grows the attention graph.
+        self.adaptive_radius = adaptive_radius
+        # conservative_contact: replaces wall_head/pair_head with a learned
+        # distance-only pair force and wall force (potential-derived, exact
+        # pair momentum), integrated by `contact_substeps` velocity-Verlet
+        # sub-steps with a learned uniform acceleration. contact_residual keeps
+        # the attention/GRU/delta_head path as an additive residual.
+        self.conservative_contact = conservative_contact
+        self.contact_substeps = contact_substeps
+        self.contact_residual = contact_residual
         self.n = n
         self.radius = radius
         self.dt = dt
@@ -77,7 +97,15 @@ class TokenFreeDynamics(nn.Module):
         nn.init.zeros_(self.delta_head.weight)
         nn.init.zeros_(self.delta_head.bias)
         self.wall_head = None
-        if wall_head:
+        self.pair_head = None
+        if conservative_contact:
+            if wall_head or pair_impulse:
+                raise ValueError("conservative_contact replaces wall_head/pair_head")
+            self.force_scale = 100.0
+            self.pair_force = _radial_mlp()
+            self.wall_force = _radial_mlp()
+            self.gravity = nn.Parameter(torch.zeros(2))
+        if wall_head and not conservative_contact:
             # Separate two-layer path from (velocity, wall features) to the
             # delta, outside the GRU: the wall impulse is a sharp function
             # of position and velocity that the linear->GRU->linear path
@@ -87,8 +115,7 @@ class TokenFreeDynamics(nn.Module):
                                            nn.Linear(self.core_dim, 4))
             nn.init.zeros_(self.wall_head[2].weight)
             nn.init.zeros_(self.wall_head[2].bias)
-        self.pair_head = None
-        if pair_impulse:
+        if pair_impulse and not conservative_contact:
             # Explicit pairwise contact impulse, summed (not softmax-
             # normalized) over neighbours: f = alpha * unit + beta * tangent
             # with alpha/beta from an MLP on invariants, applied +f to dst
@@ -101,7 +128,42 @@ class TokenFreeDynamics(nn.Module):
             nn.init.zeros_(self.pair_head[4].weight)
             nn.init.zeros_(self.pair_head[4].bias)
 
+    def contact_accel(self, positions):
+        n, r = self.n, self.radius
+        x, y = positions[:, 0], positions[:, 1]
+        d = torch.stack([x, (n - 1) - x, y, (n - 1) - y], dim=1)
+        pen = (r - d).clamp(min=0.0) / r
+        f = pen * self.wall_force(pen.unsqueeze(-1)).squeeze(-1) * self.force_scale
+        acc = torch.stack([f[:, 0] - f[:, 1], f[:, 2] - f[:, 3]], dim=1) + self.gravity * 10.0
+        graph = build_radius_graph_cells if self.cell_graph else build_radius_graph
+        edges = graph(positions, 2 * r)
+        if edges.shape[1] > 0:
+            src, dst = edges[0], edges[1]
+            rel = positions[dst] - positions[src]
+            dist = torch.sqrt((rel ** 2).sum(dim=-1, keepdim=True) + 1e-12)
+            pen = (2 * r - dist).clamp(min=0.0) / (2 * r)
+            fp = pen * self.pair_force(pen) * self.force_scale
+            acc = acc.index_add(0, dst, fp * rel / dist)
+        return acc
+
+    def _conservative(self, positions, velocities, hidden):
+        h = self.dt / self.contact_substeps
+        p, v = positions, velocities
+        a = self.contact_accel(p)
+        for _ in range(self.contact_substeps):
+            v_half = v + 0.5 * h * a
+            p = p + h * v_half
+            a = self.contact_accel(p)
+            v = v_half + 0.5 * h * a
+        dp, dv = p - (positions + velocities * self.dt), v - velocities
+        if self.contact_residual:
+            rp, rv, hidden = self._core(positions, velocities, hidden)
+            return dp + rp, dv + rv, hidden
+        return dp, dv, hidden
+
     def forward(self, positions, velocities, hidden):
+        if self.conservative_contact:
+            return self._conservative(positions, velocities, hidden)
         if not self.mirror_sym:
             return self._core(positions, velocities, hidden)
         h, h_m = hidden[:, :self.core_dim], hidden[:, self.core_dim:]
@@ -123,6 +185,13 @@ class TokenFreeDynamics(nn.Module):
         graph = build_radius_graph_cells if self.cell_graph else build_radius_graph
         edge_index = graph(positions, self.neighbor_radius)
         pair_edges = edge_index
+        if self.adaptive_radius != "off" and n > 1:
+            wide = max(self.neighbor_radius, 2.0 * float(velocities.norm(dim=1).max()) * self.dt + 2 * self.radius)
+            if wide > self.neighbor_radius:
+                edge_wide = graph(positions, wide)
+                pair_edges = edge_wide
+                if self.adaptive_radius == "all":
+                    edge_index = edge_wide
         self_loops = torch.arange(n, device=positions.device)
         self_loops = torch.stack([self_loops, self_loops], dim=0)
         edge_index = torch.cat([edge_index, self_loops], dim=1)

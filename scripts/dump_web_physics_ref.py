@@ -1,8 +1,8 @@
-"""Dump bounce.py rollouts to web/tests/physics_ref.json for web/tests/physics.test.mjs.
+"""Dump bounce.py rollouts to web/token/tests/physics_ref.json for web/token/tests/physics.test.mjs.
 
 Usage:
     PYTHONPATH=. python3 scripts/dump_web_physics_ref.py
-    node web/tests/physics.test.mjs web/tests/physics_ref.json
+    node web/token/tests/physics.test.mjs web/token/tests/physics_ref.json
 """
 import json
 import random
@@ -20,5 +20,5 @@ for name, num, n in [("n100_12", 12, 100), ("n20_40", 40, 20)]:
         bounce.step(G, n, balls, 0.15, 9.0, 0.75, 400.0, 8)
         frames.append([[b["x"], b["y"], b["vx"], b["vy"]] for b in balls])
     cases.append({"name": name, "n": n, "init": init, "frames": frames})
-with open("web/tests/physics_ref.json", "w") as f:
+with open("web/token/tests/physics_ref.json", "w") as f:
     json.dump(cases, f)
