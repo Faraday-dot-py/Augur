@@ -40,7 +40,7 @@ def sample_scene(rng):
         n, nb, vmax = 20, rng.randint(2, 6), 2.3
     else:
         n = rng.choice([20, 30, 50, 80, 120, 200])
-        nb = min(max(2, int(n * n * rng.uniform(0.005, 0.02))), 120)
+        nb = min(max(2, int(n * n * rng.uniform(0.005, 0.02))), 100)
         vmax = rng.uniform(2.3, VMAX)
     p0 = [[rng.uniform(0, n - 1.0), rng.uniform(0, n - 1.0)] for _ in range(nb)]
     v0 = [[rng.uniform(-vmax, vmax), rng.uniform(-vmax, vmax)] for _ in range(nb)]
