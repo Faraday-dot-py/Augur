@@ -3221,3 +3221,13 @@ curriculum k 4->19, eval on 48 held-out scenes at seeds 9000/12000, horizon 20.
   validated: longer horizons, larger N, whether more training data/capacity tightens the constraint or whether
   it's a fundamental limit of position/velocity MSE loss with no physics-informed term.
   `results/gravity_relativistic_{token,central}.json`, `results/gravity_relativistic_3119.log`.
+- **Unbiased video review** (4 held-out scenes, `videos/gravity_relativistic_grid.png`/`gravity_relativistic_comparison.mp4`,
+  job 3120 rollout export via `scripts/export_gravity_relativistic_rollout.py` + `render_gravity_relativistic_video.py`):
+  spatial layout tracks truth closely by eye in all 4 scenes, no drift/blowup/unphysical clustering. `|v|>c`
+  violations are real, sustained trajectories, not noise -- in one scene 3 of 4 bodies stay red (over c)
+  continuously from step 5 through 20 in both token and central. Violations concentrate on isolated or
+  separating bodies (a diverging close pair, a lone body pulling away from a cluster), never on the tightly
+  clustered multi-body groups, which speed up visibly (dot size grows) but never cross c. Token and central are
+  visually near-identical in 3 of 4 scenes; the one difference found is central producing a spurious 2-step red
+  flare on a close pair in one scene that clears itself, which token doesn't show -- a small, scene-specific
+  difference, not the clean "central fails, token succeeds" story the aggregate energy numbers alone suggested.
