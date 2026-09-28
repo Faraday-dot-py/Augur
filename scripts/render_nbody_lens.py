@@ -30,14 +30,21 @@ ap.add_argument("--dt", type=float, default=0.005)
 ap.add_argument("--min-half", type=float, default=3.0)
 ap.add_argument("--label", default="learned force, c=40")
 ap.add_argument("--preview", type=int, default=-1)
+ap.add_argument("--static", action="store_true", help="fixed camera: centre/half from frame 0, not tracked per frame")
 args = ap.parse_args()
 d = np.load(args.npz)
 frames, steps = d["pos"], d["steps"]
 n, res = frames.shape[1], args.res
-centre = np.stack([np.median(f, axis=0) for f in frames])
-radius = np.array([np.percentile(np.linalg.norm(f - c, axis=1), 45) for f, c in zip(frames, centre)])
-centre = gaussian_filter1d(centre, 4, axis=0, mode="nearest")
-half = np.maximum(3.5 * gaussian_filter1d(radius, 4, mode="nearest"), args.min_half)
+if args.static:
+    c0 = np.median(frames[0], axis=0)
+    h0 = max(3.5 * np.percentile(np.linalg.norm(frames[0] - c0, axis=1), 45), args.min_half)
+    centre = np.tile(c0, (len(frames), 1))
+    half = np.full(len(frames), h0)
+else:
+    centre = np.stack([np.median(f, axis=0) for f in frames])
+    radius = np.array([np.percentile(np.linalg.norm(f - c, axis=1), 45) for f, c in zip(frames, centre)])
+    centre = gaussian_filter1d(centre, 4, axis=0, mode="nearest")
+    half = np.maximum(3.5 * gaussian_filter1d(radius, 4, mode="nearest"), args.min_half)
 
 
 def density(i):
