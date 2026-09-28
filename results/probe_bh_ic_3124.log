@@ -1,0 +1,12 @@
+ratio 0.5 sigma_v/component 46.14 |v| q50/90/99/99.9/max [54.3, 99.2, 140.3, 170.8, 228.9]
+ratio 0.3 sigma_v/component 35.53 |v| q50/90/99/99.9/max [41.8, 76.4, 108.0, 131.5, 176.3]
+ratio 0.2 sigma_v/component 28.94 |v| q50/90/99/99.9/max [34.1, 62.2, 88.0, 107.1, 143.6]
+ratio 0.1 sigma_v/component 20.47 |v| q50/90/99/99.9/max [24.1, 44.0, 62.2, 75.8, 101.6]
+ratio 0.05 sigma_v/component 14.47 |v| q50/90/99/99.9/max [17.0, 31.1, 44.0, 53.6, 71.8]
+phi min -11992.1 median -8862.5; vesc q50/90/99/99.9/max [133.1, 151.2, 154.5, 154.8, 154.9]
+learned force eval 1.06 s
+learned/analytic radial projection q10/50/90 [0.559, 0.562, 0.566]
+r in [0,3) n 182 rel err median 0.4381 |a| median 112.1
+r in [3,10) n 1424 rel err median 0.4394 |a| median 343.1
+r in [10,20) n 1833 rel err median 0.4375 |a| median 399.6
+r in [20,100) n 561 rel err median 0.4344 |a| median 244.2

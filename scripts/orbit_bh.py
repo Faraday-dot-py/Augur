@@ -5,7 +5,7 @@ binary: two n/2 Gaussian clusters (sigma --sigma) on a circular relative orbit a
 blackhole: one Gaussian cluster; --c is a speed limit (bodies are clamped to |v| <= c after every step). With horizon
   R_s = 2 N / c^2 (softened potential depth ~ N / r), a body at r < R_s has |Phi| > c^2 / 2, so E < 0 for every allowed speed and it cannot
   escape; reports the fraction beyond R_s, the fraction with E > 0, and clamp counts. --c 0 is the uncapped control.
---kernel learned replaces the analytic pair force by the learned CentralForceDynamics f(d) (checkpoints/gravity_central_v1.pt, --force exact only; diagnostics stay analytic). The MLP is tabulated on a 2^20-point log-d grid and linearly interpolated (error vs direct evaluation printed by bench_learned_force.py).
+--kernel learned replaces the analytic pair force by the learned CentralForceDynamics f(d) (checkpoints/gravity_central_v1.pt, --force exact only; E/frac_E_pos stay analytic, E_l/frac_E_pos_l use the learned pair potential = the tabulated force integrated inward from infinity). The MLP is tabulated on a 2^20-point log-d grid and linearly interpolated (error vs direct evaluation printed by bench_learned_force.py).
 --kernel learned_rel is the same, with the CentralForceDynamics trained on relativistic trajectories (checkpoints/gravity_relativistic_central.pt, job 3119, c=1 eps=0.5).
 --substeps S splits each step's KDK into S sub-steps of dt/S (clamp after each); --record then counts sub-steps, so --record 1 --substeps 8 records 8 frames per step. Diagnostics and checkpoints stay on outer steps; frame steps are fractional.
 --spill writes recorded frames to results/orbit_<tag>_frames_<step>.npy at each checkpoint instead of keeping them in memory / the checkpoint (for fine --record under a small host-RAM cap); the final npz is assembled from those chunks.
@@ -35,12 +35,12 @@ from model.central_force import CentralForceDynamics
 EPS = ao.EPS
 
 
-def potentials(pos, chunk=1024):
+def potentials(pos, chunk=1024, pot=None):
     p = pos.double()
     out = torch.empty(len(p), dtype=torch.float64, device=p.device)
     for i in range(0, len(p), chunk):
         d2 = ((p[None] - p[i:i + chunk][:, None]) ** 2).sum(-1)
-        out[i:i + chunk] = -((d2 + EPS ** 2) ** -0.5).sum(1) + 1 / EPS
+        out[i:i + chunk] = pot(d2) if pot else -((d2 + EPS ** 2) ** -0.5).sum(1) + 1 / EPS
     return out
 
 
@@ -79,6 +79,28 @@ def learned_table_fn(dyn, dev, m=1 << 20, dmin=1e-6):
         i = t.floor().long().clamp(max=m - 2)
         w = (t - i).clamp(0, 1)
         return (h[i] * (1 - w) + h[i + 1] * w) / (d ** 2 + 1.0)
+    return fn
+
+
+def learned_pot_fn(dyn, dev, m=1 << 20, dmin=1e-6):
+    lo, hi = math.log(dmin), math.log(g1.FORCE_TRAIN_MAX)
+    t = torch.linspace(lo, hi, m, device=dev, dtype=torch.float64)
+    d = t.exp()
+    f = dyn.force(t.float()[:, None])[:, 0].double() / (d ** 2 + 1.0)
+    seg = 0.5 * (f[1:] * d[1:] + f[:-1] * d[:-1]) * (t[1] - t[0])
+    tail = float(dyn.force(torch.tensor([[hi]], device=dev))[0, 0]) * (math.pi / 2 - math.atan(g1.FORCE_TRAIN_MAX))
+    table = -(tail + torch.cat([seg.flip(0).cumsum(0).flip(0), seg.new_zeros(1)]))
+    step = (hi - lo) / (m - 1)
+
+    def fn(d2):
+        dd = d2.add(1e-12).sqrt()
+        k = ((dd.log() - lo) / step).clamp(0, m - 1)
+        i = k.floor().long().clamp(max=m - 2)
+        w = (k - i).clamp(0, 1)
+        far = dd > g1.FORCE_TRAIN_MAX
+        tl = float(dyn.force(torch.tensor([[hi]], device=dev))[0, 0])
+        ph = torch.where(far, -tl * (math.pi / 2 - dd.clamp(min=1).atan()), table[i] * (1 - w) + table[i + 1] * w)
+        return ph.sum(1) - table[0]
     return fn
 
 
@@ -128,7 +150,7 @@ def speed(p, args):
     return p / (1 + (p ** 2).sum(1, keepdim=True) / args.c ** 2).sqrt() if args.relativistic else p
 
 
-def diagnostics(pos, vel, args, step, clamped):
+def diagnostics(pos, vel, args, step, clamped, pot=None):
     vcm = vel.mean(0)
     phi = potentials(pos)
     ke_i = args.c ** 2 * ((1 + ((vel - vcm) ** 2).sum(1) / args.c ** 2).sqrt() - 1) if args.relativistic else 0.5 * ((vel - vcm) ** 2).sum(1)
@@ -147,6 +169,10 @@ def diagnostics(pos, vel, args, step, clamped):
         rs = 2 * args.n / args.c ** 2
         d["R_s"], d["frac_beyond_Rs"] = rs, float((r > rs).double().mean())
         d["max_speed"] = float(speed(vel, args).norm(dim=1).max())
+    if pot:
+        phl = potentials(pos, pot=pot)
+        d["E_l"], d["frac_E_pos_l"] = float(ke_i.sum() + 0.5 * phl.sum()), float((ke_i + phl > 0).double().mean())
+        d["v_q"] = [float(x) for x in speed(vel - vcm, args).norm(dim=1).quantile(torch.tensor([0.5, 0.9, 0.99], device=vel.device, dtype=vel.dtype))]
     return d
 
 
@@ -192,6 +218,11 @@ def main():
         vel = vel * (1 / (1 - (vs / args.c).clamp(max=0.99) ** 2).sqrt()) * (vs.clamp(max=0.99 * args.c) / vs.clamp(min=1e-12))
         vel = vel - vel.mean(0)
     force = make_force(args, pos.shape[0], dev)
+    pot = None
+    if args.kernel in ("learned", "learned_rel"):
+        dyn = CentralForceDynamics(dt=0.1).to(dev)
+        dyn.load_state_dict(torch.load(args.checkpoint, map_location=dev))
+        pot = learned_pot_fn(dyn.eval(), dev)
     ck = f"results/orbit_{args.tag}_ckpt.pt"
     frames, fsteps, diags, tracks, tsteps, start, nclamp = [pos.float().cpu().numpy()], [0], [], [], [], 0, 0
     if args.resume and os.path.exists(ck):
@@ -203,7 +234,7 @@ def main():
                 if int(f[-11:-4]) > start:
                     os.remove(f)
     if start == 0:
-        diags.append(diagnostics(pos, vel, args, 0, 0.0))
+        diags.append(diagnostics(pos, vel, args, 0, 0.0, pot))
         print(json.dumps(diags[-1]), flush=True)
         if args.mode == "binary":
             tracks.append(track_binary(pos, args))
@@ -230,11 +261,11 @@ def main():
             tracks.append(track_binary(pos, args))
             tsteps.append(step)
         if step % args.diag == 0 or step == args.steps:
-            d = diagnostics(pos, vel, args, step, nclamp / (pos.shape[0] * args.diag * S))
+            d = diagnostics(pos, vel, args, step, nclamp / (pos.shape[0] * args.diag * S), pot)
             nclamp = 0
             diags.append(d)
             extra = f" sep {tracks[-1]['sep']:.1f} a_r8 {tracks[-1]['a_r8']:.4f} b_r8 {tracks[-1]['b_r8']:.4f}" if tracks else ""
-            print(f"step {step} E {d['E']:.6g} P {d['P']:.2e} L {d['L']:.5g} Epos {d['frac_E_pos']:.5f} rq {[round(x, 1) for x in d['rq']]} clamp {d['clamped_frac']:.3f}{extra} {(time.time() - t0) / (step - start):.3f}s/step", flush=True)
+            print(f"step {step} E {d['E']:.6g} P {d['P']:.2e} L {d['L']:.5g} Epos {d['frac_E_pos']:.5f} rq {[round(x, 1) for x in d['rq']]} clamp {d['clamped_frac']:.3f}{extra} {(time.time() - t0) / (step - start):.3f}s/step" + (f" E_l {d['E_l']:.6g} Epos_l {d['frac_E_pos_l']:.5f} vq {[round(x, 1) for x in d['v_q']]} vmax {d['max_speed']:.2f}" if pot else ""), flush=True)
         if step % args.ckpt == 0:
             if args.spill:
                 np.save(f"results/orbit_{args.tag}_frames_{step:07d}.npy", np.stack(frames))
