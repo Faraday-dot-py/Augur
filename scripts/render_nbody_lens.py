@@ -4,7 +4,9 @@ alpha(u) = E^2 sum_j m_j (u - u_j) / (|u - u_j|^2 + a^2), source position beta =
 point-mass lens E^2/|u|). The sum is an FFT convolution per frame, so the warp follows the moving, pulsing, clumping cloud. A fixed starfield (window coordinates, so it does not jitter with the moving window) is warped the same way, so the bending is visible;
 surface brightness is conserved (no extra magnification factor). Optional black disk of radius --shadow hides the centre (default off). Artistic, not a GR ray trace: E is a fraction of the view.
 
-Usage: PYTHONPATH=. python3 scripts/render_nbody_lens.py snaps.npz out.mp4 [--fps 30] [--res 1080] [--preview IDX out.png] [--einstein 0.35] [--core 0.08] [--shadow 0.0] [--mass-blur 6] [--dt 0.005] [--min-half 3] [--label TEXT]
+The density grid (both the displayed image and the mass fed to the deflection FFT) is Poisson-noisy: N particles over res^2 pixels, tracked window shrinks as the cloud collapses, so particles/pixel stays roughly fixed while the physical smoothing length implied by a fixed-pixel blur shrinks with the window. At ~0.09 particles/pixel (100k bodies, 1080^2 grid) the old fixed --blur 1.2 left the raw shot noise on screen, visible as streaky "cracks"/facets that a naive read could mistake for lensing caustics. --mass-blur-n sizes the blur to a target particle count per smoothing cell instead of a fixed pixel count, so it tightens/loosens automatically with local density, and is used for both the display density and the deflection source; --mass-blur-n 0 falls back to the old two-stage fixed blur (--blur for display, --mass-blur for the deflection source only).
+
+Usage: PYTHONPATH=. python3 scripts/render_nbody_lens.py snaps.npz out.mp4 [--fps 30] [--res 1080] [--preview IDX out.png] [--einstein 0.35] [--core 0.08] [--shadow 0.0] [--mass-blur 6] [--mass-blur-n 150] [--dt 0.005] [--min-half 3] [--label TEXT]
 """
 import argparse
 
@@ -25,6 +27,7 @@ ap.add_argument("--einstein", type=float, default=0.35)
 ap.add_argument("--core", type=float, default=0.08)
 ap.add_argument("--shadow", type=float, default=0.0)
 ap.add_argument("--mass-blur", type=float, default=6.0)
+ap.add_argument("--mass-blur-n", type=float, default=150.0, help="target particles per adaptive mass-blur cell (area ~ pi*sigma^2); 0 uses fixed --mass-blur instead")
 ap.add_argument("--stars", type=int, default=6000)
 ap.add_argument("--dt", type=float, default=0.005)
 ap.add_argument("--min-half", type=float, default=3.0)
@@ -47,13 +50,32 @@ else:
     half = np.maximum(3.5 * gaussian_filter1d(radius, 4, mode="nearest"), args.min_half)
 
 
-def density(i):
+def raw_hist(i):
     e = [np.linspace(centre[i, k] - half[i], centre[i, k] + half[i], res + 1) for k in range(2)]
-    h = np.histogram2d(frames[i][:, 0], frames[i][:, 1], bins=e)[0].astype(np.float32)
-    return gaussian_filter(h, args.blur).T / (2 * half[i] / res) ** 2
+    return np.histogram2d(frames[i][:, 0], frames[i][:, 1], bins=e)[0].astype(np.float32)
 
 
-peaks = [np.percentile(density(i), 99.95) for i in range(0, len(frames), max(len(frames) // 40, 1))]
+def density(i, h=None, sigma=None):
+    h = raw_hist(i) if h is None else h
+    s = args.blur if sigma is None else sigma
+    return gaussian_filter(h, s).T / (2 * half[i] / res) ** 2
+
+
+def frame_sigma(h):
+    """Adaptive blur sigma (px) targeting --mass-blur-n particles per smoothing cell, or
+    None to signal the legacy fixed two-stage blur (--blur for display, --mass-blur for deflection)."""
+    if args.mass_blur_n <= 0:
+        return None
+    per_px = max(h.sum() / res ** 2, 1e-12)
+    return np.clip(np.sqrt(args.mass_blur_n / (np.pi * per_px)), 1.0, res / 3)
+
+
+def peak_density(i):
+    h = raw_hist(i)
+    return density(i, h, frame_sigma(h))
+
+
+peaks = [np.percentile(peak_density(i), 99.95) for i in range(0, len(frames), max(len(frames) // 40, 1))]
 vmax = np.log1p(0.5 * max(peaks))
 
 rng = np.random.default_rng(4738)
@@ -82,8 +104,11 @@ def deflection(dens):
 
 
 def render(i):
-    dens = density(i)
-    ax_, ay_ = deflection(gaussian_filter(dens, args.mass_blur))
+    h = raw_hist(i)
+    sigma = frame_sigma(h)
+    dens = density(i, h, sigma)
+    defl_src = gaussian_filter(dens, args.mass_blur) if sigma is None else dens
+    ax_, ay_ = deflection(defl_src)
     bx, by = xx - ax_, yy - ay_
     img_coords = np.stack([(by + 1) / 2 * res - 0.5, (bx + 1) / 2 * res - 0.5])
     tex_coords = np.stack([(by + 2) / 4 * ts - 0.5, (bx + 2) / 4 * ts - 0.5])
