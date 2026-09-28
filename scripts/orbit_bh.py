@@ -7,6 +7,8 @@ blackhole: one Gaussian cluster; --c is a speed limit (bodies are clamped to |v|
   escape; reports the fraction beyond R_s, the fraction with E > 0, and clamp counts. --c 0 is the uncapped control.
 --kernel learned replaces the analytic pair force by the learned CentralForceDynamics f(d) (checkpoints/gravity_central_v1.pt, --force exact only; diagnostics stay analytic). The MLP is tabulated on a 2^20-point log-d grid and linearly interpolated (error vs direct evaluation printed by bench_learned_force.py).
 --spill writes recorded frames to results/orbit_<tag>_frames_<step>.npy at each checkpoint instead of keeping them in memory / the checkpoint (for fine --record under a small host-RAM cap); the final npz is assembled from those chunks.
+--relativistic (with --c) replaces the clamp by relativistic kinetics: the state is momentum p (dp/dt = F), v = p / sqrt(1 + p^2/c^2), KE = c^2 (sqrt(1 + p^2/c^2) - 1);
+  same leapfrog, |v| < c by construction, energy and momentum conserved.
 Force: exact all-pairs or mesh (cutoff 4 near field + cic far field, grid --grid; --box-q q sets the far-field box from the q / 1-q position quantiles, far-field positions clamped to it, so escapers do not coarsen the grid). Full-state checkpoint every --ckpt steps (--resume continues).
 
 Usage: PYTHONPATH=. python scripts/orbit_bh.py --mode binary --steps 18000 --force mesh --tag binary_mesh
@@ -120,10 +122,14 @@ def track_binary(pos, args):
             "a_own": float((ra < xa).double().mean()), "b_own": float((rb < xb).double().mean())}
 
 
+def speed(p, args):
+    return p / (1 + (p ** 2).sum(1, keepdim=True) / args.c ** 2).sqrt() if args.relativistic else p
+
+
 def diagnostics(pos, vel, args, step, clamped):
     vcm = vel.mean(0)
     phi = potentials(pos)
-    ke_i = 0.5 * ((vel - vcm) ** 2).sum(1)
+    ke_i = args.c ** 2 * ((1 + ((vel - vcm) ** 2).sum(1) / args.c ** 2).sqrt() - 1) if args.relativistic else 0.5 * ((vel - vcm) ** 2).sum(1)
     ei = ke_i + phi
     com = pos.mean(0)
     rel = pos - com
@@ -138,7 +144,7 @@ def diagnostics(pos, vel, args, step, clamped):
     if args.c > 0:
         rs = 2 * args.n / args.c ** 2
         d["R_s"], d["frac_beyond_Rs"] = rs, float((r > rs).double().mean())
-        d["max_speed"] = float(vel.norm(dim=1).max())
+        d["max_speed"] = float(speed(vel, args).norm(dim=1).max())
     return d
 
 
@@ -158,6 +164,7 @@ def main():
     ap.add_argument("--vfac", type=float, default=1.0)
     ap.add_argument("--ratio", type=float, default=0.5)
     ap.add_argument("--c", type=float, default=0.0)
+    ap.add_argument("--relativistic", action="store_true")
     ap.add_argument("--vcap-frac", type=float, default=0.0)
     ap.add_argument("--box-q", type=float, default=0.0)
     ap.add_argument("--seed", type=int, default=4738)
@@ -175,6 +182,10 @@ def main():
     kernels.current = kernel
     torch.manual_seed(args.seed)
     pos, vel = build(args, kernel, dev)
+    if args.relativistic:
+        vs = vel.norm(dim=1, keepdim=True)
+        vel = vel * (1 / (1 - (vs / args.c).clamp(max=0.99) ** 2).sqrt()) * (vs.clamp(max=0.99 * args.c) / vs.clamp(min=1e-12))
+        vel = vel - vel.mean(0)
     force = make_force(args, pos.shape[0], dev)
     ck = f"results/orbit_{args.tag}_ckpt.pt"
     frames, fsteps, diags, tracks, tsteps, start, nclamp = [pos.float().cpu().numpy()], [0], [], [], [], 0, 0
@@ -196,10 +207,10 @@ def main():
     t0 = time.time()
     for step in range(start + 1, args.steps + 1):
         vel = vel + 0.5 * args.dt * a
-        pos = pos + args.dt * vel
+        pos = pos + args.dt * speed(vel, args)
         a = force(pos)
         vel = vel + 0.5 * args.dt * a
-        if args.c > 0:
+        if args.c > 0 and not args.relativistic:
             sp = vel.norm(dim=1)
             over = sp > args.c
             nclamp += int(over.sum())
