@@ -1,0 +1,70 @@
+
+[notice] A new release of pip is available: 26.0.1 -> 26.2.1
+[notice] To update, run: python3.12 -m pip install --upgrade pip
+[2026-09-27T23:03:00-07:00] token model on relativistic trajectories (c=1.0)
+it 0 k 4 loss 0.000526
+it 200 k 5 loss 0.000088
+it 400 k 5 loss 0.000208
+it 600 k 6 loss 0.000237
+it 800 k 6 loss 0.000196
+it 1000 k 7 loss 0.000479
+it 1200 k 7 loss 0.000316
+it 1400 k 8 loss 0.000797
+it 1600 k 8 loss 0.000418
+it 1800 k 9 loss 0.000757
+it 2000 k 9 loss 0.000509
+it 2200 k 10 loss 0.001319
+it 2400 k 10 loss 0.001156
+it 2600 k 11 loss 0.001891
+it 2800 k 11 loss 0.001313
+it 3000 k 12 loss 0.001224
+it 3200 k 13 loss 0.002579
+it 3400 k 13 loss 0.001979
+it 3600 k 14 loss 0.003114
+it 3800 k 14 loss 0.001949
+it 4000 k 15 loss 0.009556
+it 4200 k 15 loss 0.002496
+it 4400 k 16 loss 0.003586
+it 4600 k 16 loss 0.004237
+it 4800 k 17 loss 0.002479
+it 5000 k 17 loss 0.003446
+it 5200 k 18 loss 0.004062
+it 5400 k 18 loss 0.006336
+it 5600 k 19 loss 0.004408
+it 5800 k 19 loss 0.004084
+9000 err@5/10/20 [0.0147, 0.0451, 0.1308] constvel [0.0294, 0.1118, 0.3691] max_speed model/true @20 0.9007 0.8652 c 1.0 frac_scenes_over_c@20 0.3333 E true/model @20 1.1479 0.8837
+12000 err@5/10/20 [0.0122, 0.0378, 0.1212] constvel [0.0239, 0.0895, 0.315] max_speed model/true @20 0.8704 0.8271 c 1.0 frac_scenes_over_c@20 0.3333 E true/model @20 0.627 0.4225
+[2026-09-27T23:43:31-07:00] central-force baseline (expected structural failure: no v-dependent dv)
+it 0 k 4 loss 0.000526
+it 200 k 5 loss 0.000076
+it 400 k 5 loss 0.000261
+it 600 k 6 loss 0.000460
+it 800 k 6 loss 0.000333
+it 1000 k 7 loss 0.000585
+it 1200 k 7 loss 0.000372
+it 1400 k 8 loss 0.001487
+it 1600 k 8 loss 0.000468
+it 1800 k 9 loss 0.000926
+it 2000 k 9 loss 0.000894
+it 2200 k 10 loss 0.001901
+it 2400 k 10 loss 0.001450
+it 2600 k 11 loss 0.002723
+it 2800 k 11 loss 0.001641
+it 3000 k 12 loss 0.002433
+it 3200 k 13 loss 0.002961
+it 3400 k 13 loss 0.003444
+it 3600 k 14 loss 0.004626
+it 3800 k 14 loss 0.003095
+it 4000 k 15 loss 0.011229
+it 4200 k 15 loss 0.003387
+it 4400 k 16 loss 0.004787
+it 4600 k 16 loss 0.004645
+it 4800 k 17 loss 0.004478
+it 5000 k 17 loss 0.006026
+it 5200 k 18 loss 0.006671
+it 5400 k 18 loss 0.009038
+it 5600 k 19 loss 0.009673
+it 5800 k 19 loss 0.007141
+9000 err@5/10/20 [0.0134, 0.049, 0.1544] constvel [0.0294, 0.1118, 0.3691] max_speed model/true @20 0.913 0.8652 c 1.0 frac_scenes_over_c@20 0.3542 E true/model @20 1.1479 1.5358
+12000 err@5/10/20 [0.0108, 0.0389, 0.1298] constvel [0.0239, 0.0895, 0.315] max_speed model/true @20 0.9013 0.8271 c 1.0 frac_scenes_over_c@20 0.375 E true/model @20 0.627 1.6019
+[2026-09-28T00:06:57-07:00] done

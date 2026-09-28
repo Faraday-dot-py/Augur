@@ -3185,3 +3185,39 @@ same physics via the periodic graph, for rollouts too large for the dense chunke
   from trajectories, while cleanly separating out where it has NOT learned the physics (the core), and *why*
   (a training-data coverage gap, not a capacity or architecture limit) -- a legible, checkable diagnosis of a
   learned force law against ground truth.
+
+### Can a next-state predictor learn relativistic kinematics? (job 3119, 2026-09-27)
+
+Re-applied `orbit_bh.py --relativistic` (momentum state, `v = p/sqrt(1+p^2/c^2)`, reverted 2026-09-26 in
+a6dee14, now `35898ee`). Added the same kinematics to `scripts/gravity_sim.py` (`rollout_torch(relativistic=True,
+c=...)`, `energy_rel`) and `scripts/train_gravity_relativistic.py`: trains `TokenFreeDynamics` (a generic
+attention+GRU next-state predictor with **no built-in speed limit or gamma factor** -- it only sees (pos, vel)
+each step) purely on relativistic 2D N-body trajectories (3-8 bodies, softened gravity eps=0.5, `c=1.0` chosen
+so a meaningful fraction of each rollout saturates -- uncapped Newtonian close encounters at these settings hit
+median peak speed 1.5, p99 2.9). `--model central` (CentralForceDynamics) run alongside as a structural-failure
+control: its velocity-Verlet update `v_{t+1} = v_t + dt*a` has no v-dependence in `dv` at all, so it cannot
+represent saturation even in principle, regardless of training. Seed 4738, 2000 train scenes, 6000 iters,
+curriculum k 4->19, eval on 48 held-out scenes at seeds 9000/12000, horizon 20.
+- **Token model beats const-vel by 2-3x** (err@5/10/20 0.0147/0.0451/0.1308 and 0.0122/0.0378/0.1212 vs
+  constvel 0.0294/0.1118/0.3691 and 0.0239/0.0895/0.315) -- it is genuinely tracking relativistic trajectories,
+  not just failing gracefully.
+- **It does not hard-learn the speed limit**: `frac_scenes_over_c@20` = 0.333-0.375 (both models, both seeds) --
+  in roughly 1 in 3 eval scenes, the rollout produces at least one body exceeding c=1.0 by step 20. Mean
+  max-speed-per-scene tracks truth closely (model 0.87-0.91 vs true 0.83-0.87 @20), so the *average* behavior is
+  right but there is no hard constraint -- consistent with nothing in the architecture enforcing `|v|<c`, only
+  loss pressure.
+- **Central baseline is NOT clearly worse on position error** (err@5/10/20 0.0134/0.049/0.1544 and
+  0.0108/0.0389/0.1298 -- same order as token, actually slightly worse at longer horizons) but **is clearly
+  worse on energy**: token's energy is 23-92% *low* at step 20 (true/model 1.148/0.884, 0.627/0.423 in the
+  first run logged mid-job; final run 1.148/1.536 -- energy drifts both directions across seeds, not a clean
+  systematic bias) vs central's energy is 33-155% *high* at step 20 (1.148/1.536, 0.627/1.602) and visibly worse
+  earlier in the rollout too (0.627/-0.016 at step 5, sign flip). The structural gap shows up in energy
+  conservation, which is the physically meaningful diagnostic here, not in short-horizon position tracking (20
+  steps / 2 time units may not be enough for the missing v-dependence to show up positionally).
+- **Verdict**: partial credit, not a clean discovery. A generic next-state predictor with no relativity built in
+  can learn an *approximately* saturating response to force near c well enough to beat constant-velocity and
+  track trajectories 2-3x tighter, purely from data -- but it does not converge to a hard `|v|<c` constraint (violates
+  it in ~1/3 of scenes) and its energy is off by double-digit to triple-digit percentages at step 20. Not
+  validated: longer horizons, larger N, whether more training data/capacity tightens the constraint or whether
+  it's a fundamental limit of position/velocity MSE loss with no physics-informed term.
+  `results/gravity_relativistic_{token,central}.json`, `results/gravity_relativistic_3119.log`.
