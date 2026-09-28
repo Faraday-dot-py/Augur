@@ -42,6 +42,15 @@ aside canvas { width: 100%; height: 108px; display: block; }
 #sel b { color: var(--fg); font-weight: 500; }
 .key { display: flex; gap: 10px; flex-wrap: wrap; font-size: 11px; color: var(--dim); margin-top: 6px; }
 .key i { display: inline-block; width: 10px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 4px; }
+#wt { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+#wt select, #wt input[type=number] { width: 100%; background: #0d131d; color: var(--fg); border: 1px solid var(--line2); border-radius: 6px; height: 28px; font: 12px var(--mono); padding: 0 6px; }
+#wt select, #wt input[type=range], #wt .row, #wt .hint { grid-column: 1 / -1; }
+#wt label { display: flex; align-items: center; gap: 6px; color: var(--dim); font-size: 11px; }
+#wt input[type=range] { width: 100%; }
+#wt .row { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+#wt .row button { height: 26px; margin-left: 4px; }
+#wt small { color: var(--faint); font: 11px var(--mono); }
+#wt .hint { font: 11px system-ui, sans-serif; }
 .ramp { height: 6px; border-radius: 3px; background: linear-gradient(90deg, #cfe3ff, var(--neg) 25%, #161b25 50%, var(--pos) 75%, #ffe7c8); margin: 6px 0 2px; }
 .ramp + div { display: flex; justify-content: space-between; font-size: 10px; color: var(--faint); }
 nav { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); width: max-content; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: center; padding: 8px; max-width: calc(100% - 32px); }
@@ -86,7 +95,7 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
 <div id="labels" aria-hidden="true"></div>
 <header class="glass">
   <h1>Bounce <span>token model</span></h1>
-  <p>One token per ball. A learned pair force, wall force and gravity drive 8 velocity-Verlet substeps. Plain JavaScript, 8.7k weights. Click a ball to unfold its computation.</p>
+  <p>One token per ball. A learned pair force, wall force and gravity drive 8 velocity-Verlet substeps. Plain JavaScript, 8.7k weights, all editable live. Click a ball to unfold its computation.</p>
   <dl id="stats">
     <div><dt>tick</dt><dd id="s-tick">0</dd></div>
     <div><dt>balls</dt><dd id="s-balls">0</dd></div>
@@ -106,6 +115,15 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
   <h2>Energy <small id="e-read"></small></h2>
   <canvas id="c-energy" aria-label="total energy over time for the model and ground truth"></canvas>
   <div class="key"><span><i style="background:var(--accent)"></i>model</span><span><i style="background:var(--pos)"></i>ground truth</span><span><i style="background:var(--pos);width:7px;height:7px;border-radius:50%"></i>operating point</span></div>
+  <h2>Weights <small id="w-note"></small></h2>
+  <div id="wt">
+    <select id="w-name" aria-label="weight tensor"></select>
+    <label>index <input type="number" id="w-idx" min="0" step="1" value="0" aria-label="weight index"></label>
+    <input type="range" id="w-slide" step="any" aria-label="weight slider">
+    <label>value <input type="number" id="w-val" step="any" aria-label="weight value"></label>
+    <div class="row"><small id="w-info"></small><span><button id="w-reset">Reset</button><button id="w-all">Reset all</button></span></div>
+    <small class="hint">Click a cube in the model view to pick its weight. Gravity is in accel units (10x the stored parameter).</small>
+  </div>
   <h2>Colour</h2>
   <div class="ramp"></div><div><span>negative</span><span>0</span><span>positive</span></div>
   <div class="key"><span><i style="background:var(--pos)"></i>pair accel</span><span><i style="background:var(--wall)"></i>wall accel</span><span><i style="background:var(--grav)"></i>gravity</span><span><i style="background:#fff"></i>total</span></div>

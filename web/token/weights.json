@@ -1,5 +1,5 @@
 {
- "checkpoint": "cons_pure.pt",
+ "checkpoint": "cons_pure_100.pt",
  "config": {
   "neighbor_radius": 4.0,
   "radius": 0.75,

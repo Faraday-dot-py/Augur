@@ -12,9 +12,8 @@ const weights = await loadWeights("weights");
 const sim = new Sim(weights);
 const cfg = weights.config;
 const net = sim.net;
-const g0 = [net.gx, net.gy];
-const lut = forceLut(net);
-const gt = new Physics(cfg.n, { dt: cfg.dt, gravity: cfg.gravity, radius: cfg.radius });
+let lut = forceLut(net);
+const gt = new Physics(cfg.n, { dt: cfg.dt, gravity: cfg.gravity, radius: cfg.radius, substeps: 64 });
 const view = new Scene($("stage"), cfg);
 
 const st = {
@@ -119,7 +118,7 @@ function tick() {
   const t0 = performance.now();
   const tr = sim.tick(st.selected);
   st.stepMs = st.stepMs * 0.9 + (performance.now() - t0) * 0.1;
-  if (st.gtOn) { gt.step(); syncGT(); }
+  if (st.gtOn) { gt.substeps = sim.count > 150 ? 32 : 64; gt.step(); syncGT(); }
   setTrace(tr);
   st.eModel.push(energyModel()[1]);
   if (st.gtOn) st.eTruth.push(energyTruth());
@@ -169,13 +168,75 @@ function setGT(on) {
 function setGravity(on) {
   st.gravity = on;
   press("b-grav", on);
-  net.gx = on ? g0[0] : 0;
-  net.gy = on ? g0[1] : 0;
+  net.gOn = on;
   gt.gravity = on ? cfg.gravity : 0;
-  view.gravArrow.visible = on;
+  view.setGravity(net.gx, net.gy);
   st.eModel.length = st.eTruth.length = 0;
   refreshTrace();
 }
+
+// live weight editing: net.w's typed arrays are shared with the MLPs and
+// physics, so a set() takes effect on the next tick; the pair/wall force
+// curves (plots.js) are sampled once into a LUT, so those get resampled.
+const ws = { name: "gravity", i: 0 };
+const wname = $("w-name"), widx = $("w-idx"), wval = $("w-val"), wslide = $("w-slide");
+const wshape = (name) => (name === "gravity" ? 2 : net.w[name].length);
+for (const k of Object.keys(net.w)) wname.add(new Option(`${k} [${wshape(k)}]`, k));
+
+function wrange() {
+  if (ws.name === "gravity") return [-30, 30, 0.05];
+  let m = 1;
+  for (const v of net.trained[ws.name]) m = Math.max(m, 3 * Math.abs(v));
+  return [-m, m, m / 500];
+}
+
+function syncWeight() {
+  const n = net.edited();
+  const v = net.get(ws.name, ws.i), t = ws.name === "gravity" ? net.trained.gravity[ws.i] * 10 : net.trained[ws.name][ws.i];
+  const [lo, hi, step] = wrange();
+  wname.value = ws.name;
+  widx.max = wshape(ws.name) - 1;
+  if (document.activeElement !== widx) widx.value = ws.i;
+  if (document.activeElement !== wval) wval.value = +v.toPrecision(6);
+  wslide.min = Math.min(lo, v); wslide.max = Math.max(hi, v); wslide.step = step; wslide.value = v;
+  $("w-info").textContent = `trained ${+t.toPrecision(5)}${Math.abs(v - t) > 1e-9 ? " · edited" : ""}`;
+  $("w-all").disabled = !n;
+  $("w-note").textContent = n ? `${n} edited` : "";
+}
+
+function selectWeight(name, i) {
+  ws.name = name;
+  ws.i = Math.max(0, Math.min(wshape(name) - 1, i | 0));
+  syncWeight();
+}
+
+function editWeight(v) {
+  net.set(ws.name, ws.i, v);
+  lut = forceLut(net);
+  st.eModel.length = st.eTruth.length = 0;
+  view.setGravity(net.gx, net.gy);
+  syncWeight();
+  st.dirty = true;
+  refreshTrace();
+}
+
+function resetWeights(all) {
+  if (all) net.reset(); else net.reset(ws.name, ws.name === "gravity" ? -1 : ws.i);
+  lut = forceLut(net);
+  st.eModel.length = st.eTruth.length = 0;
+  view.setGravity(net.gx, net.gy);
+  syncWeight();
+  st.dirty = true;
+  refreshTrace();
+}
+
+wname.onchange = () => selectWeight(wname.value, 0);
+widx.oninput = () => selectWeight(ws.name, +widx.value);
+wval.oninput = () => { if (wval.value !== "") editWeight(+wval.value); };
+wslide.oninput = () => editWeight(+wslide.value);
+$("w-reset").onclick = () => resetWeights(false);
+$("w-all").onclick = () => resetWeights(true);
+
 function setPanel(on) {
   st.panel = on;
   press("b-panel", on);
@@ -210,7 +271,7 @@ $("b-pick").onclick = pickContact;
 for (const n of ["all", "arena", "arch", "follow"]) $("cam-" + n).onclick = () => camera(n);
 
 window.addEventListener("keydown", (e) => {
-  if (e.ctrlKey || e.metaKey || e.altKey || (e.target.tagName === "INPUT" && e.key !== " ")) return;
+  if (e.ctrlKey || e.metaKey || e.altKey || (e.target.tagName === "INPUT" && e.key !== " ") || e.target.tagName === "SELECT") return;
   const act = {
     " ": () => setPaused(!st.paused), ".": stepOnce, r: reset, b: () => $("b-burst").click(), v: () => setGravity(!st.gravity),
     g: () => setGT(!st.gtOn), p: pickContact, e: () => $("b-edges").click(), t: () => setPanel(!st.panel),
@@ -237,7 +298,8 @@ canvas.addEventListener("pointerup", (e) => {
     st.selected = sim.ids[hit.index];
     refreshTrace();
     st.sweep = performance.now();
-  } else if (hit && hit.kind === "arena") burst(hit.x, hit.y, 8, 1.2);
+  } else if (hit && hit.kind === "cell" && hit.cell.par) selectWeight(...hit.cell.par);
+  else if (hit && hit.kind === "arena") burst(hit.x, hit.y, 8, 1.2);
   if (e.pointerType !== "mouse") { hoverAt = { x: e.clientX, y: e.clientY }; }
 });
 canvas.addEventListener("pointermove", (e) => { hoverAt = { x: e.clientX, y: e.clientY }; if (e.buttons) tip.classList.remove("on"); });
@@ -351,6 +413,8 @@ if (small) { setPanel(false); $("r-balls").value = 30; }
 sim.populate(+$("r-balls").value);
 countChanged();
 refreshTrace();
+selectWeight("gravity", 0);
+view.setGravity(net.gx, net.gy);
 resize();
 view.camera.position.copy(view.goal.pos).multiplyScalar(1.6);
 
@@ -391,7 +455,7 @@ function loop(now) {
 }
 requestAnimationFrame(loop);
 
-window.__bounce = { sim, view, st, gt, setGT, setPaused, setGravity, camera, benchTicks(count, ticks = 300) {
+window.__bounce = { net, selectWeight, editWeight, sim, view, st, gt, setGT, setPaused, setGravity, camera, benchTicks(count, ticks = 300) {
   sim.clear();
   sim.populate(count);
   const t0 = performance.now();
