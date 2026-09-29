@@ -48,17 +48,16 @@ class ContactForceDynamics(nn.Module):
             feat = self.pair_features(d, r_sum, mass[src].unsqueeze(-1), mass[dst].unsqueeze(-1))
             v = self.potential(feat)
             (grad_d,) = torch.autograd.grad(v.sum(), d, create_graph=True)
-        force = (-grad_d) * rel / d
+        force = grad_d * rel / d
         net_force = acc.index_add(0, dst, force)
         return net_force / mass.unsqueeze(-1)
 
     def forward(self, positions, velocities, hidden, radius, mass, kinematic):
         dt = self.dt
+        kin = kinematic.unsqueeze(-1)
         a0 = self.accel(positions, radius, mass)
-        dp = 0.5 * dt * dt * a0
+        dp = torch.where(kin, torch.zeros_like(a0), 0.5 * dt * dt * a0)
         a1 = self.accel(positions + velocities * dt + dp, radius, mass)
         dv = 0.5 * dt * (a0 + a1)
-        kin = kinematic.unsqueeze(-1)
-        dp = torch.where(kin, torch.zeros_like(dp), dp)
         dv = torch.where(kin, torch.zeros_like(dv), dv)
         return dp, dv, hidden

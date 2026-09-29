@@ -1,6 +1,7 @@
 import torch
 
 from model.contact_force import ContactForceDynamics
+from model.token_graph import build_radius_graph_cells
 
 
 def _dyn():
@@ -66,3 +67,53 @@ def test_radius_zero_is_finite():
     kinematic = torch.zeros(2, dtype=torch.bool)
     dp, dv, _ = dyn(pos, vel, torch.zeros(2, 1), radius, mass, kinematic)
     assert torch.isfinite(dp).all() and torch.isfinite(dv).all()
+
+
+def test_energy_conserved_bounded():
+    dyn = _dyn()
+    pos = torch.tensor([[10.0, 10.0], [10.5, 10.0]])
+    vel = torch.tensor([[1.0, 0.0], [-1.0, 0.0]])
+    radius = torch.tensor([0.75, 0.75])
+    mass = torch.tensor([1.0, 1.0])
+    kinematic = torch.zeros(2, dtype=torch.bool)
+    hidden = torch.zeros(2, 1)
+
+    def total_energy(pos, vel):
+        ke = 0.5 * (mass.unsqueeze(-1) * vel ** 2).sum()
+        edges = build_radius_graph_cells(pos, dyn.neighbor_radius)
+        src, dst = edges[0], edges[1]
+        rel = pos[src] - pos[dst]
+        d = torch.sqrt((rel ** 2).sum(dim=-1, keepdim=True) + 1e-12)
+        r_sum = (radius[src] + radius[dst]).unsqueeze(-1)
+        feat = dyn.pair_features(d, r_sum, mass[src].unsqueeze(-1), mass[dst].unsqueeze(-1))
+        v = dyn.potential(feat).sum() / 2  # each undirected pair appears as two directed edges
+        return ke + v
+
+    e0 = total_energy(pos, vel)
+    energies = [e0]
+    for _ in range(20):
+        dp, dv, hidden = dyn(pos, vel, hidden, radius, mass, kinematic)
+        pos, vel = pos + vel * dyn.dt + dp, vel + dv
+        energies.append(total_energy(pos, vel))
+    energies = torch.stack(energies)
+    assert torch.isfinite(energies).all()
+    assert (energies - e0).abs().max() < 0.5  # bounded oscillation, not a runaway drift
+
+
+def test_kinematic_body_pinned_during_predictor_step():
+    dyn = _dyn()
+    pos = torch.tensor([[10.0, 10.0], [10.5, 10.0]])
+    vel = torch.tensor([[3.0, 0.0], [0.0, 0.0]])
+    radius = torch.tensor([0.75, 1.0])
+    mass = torch.tensor([1.0, 1.0])
+    kinematic = torch.tensor([False, True])
+    dt = dyn.dt
+    kin = kinematic.unsqueeze(-1)
+    a0 = dyn.accel(pos, radius, mass)
+    dp_ref = torch.where(kin, torch.zeros_like(a0), 0.5 * dt * dt * a0)
+    a1 = dyn.accel(pos + vel * dt + dp_ref, radius, mass)
+    dv_ref = 0.5 * dt * (a0 + a1)
+    dv_ref = torch.where(kin, torch.zeros_like(dv_ref), dv_ref)
+
+    dp, dv, _ = dyn(pos, vel, torch.zeros(2, 1), radius, mass, kinematic)
+    assert torch.allclose(dv[0], dv_ref[0], atol=1e-6)
