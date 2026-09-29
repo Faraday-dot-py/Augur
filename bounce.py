@@ -168,8 +168,9 @@ def compute_forces(balls, n, gravity, radius, stiffness, segments=None):
     xs = np.array([b["x"] for b in balls])
     ys = np.array([b["y"] for b in balls])
     radii = np.array([b.get("radius", radius) for b in balls])
+    masses = np.array([b.get("mass", 1.0) for b in balls])
     wfx, wfy = wall_force(xs, ys, n, radii, stiffness)
-    base_x = gravity + wfx
+    base_x = gravity * masses + wfx
     base_y = wfy
     if segments:
         for seg in segments:

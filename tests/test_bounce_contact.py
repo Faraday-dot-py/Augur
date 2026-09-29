@@ -75,6 +75,15 @@ def test_integrate_divides_by_mass():
     assert light[0]["vx"] > heavy[0]["vx"] > 0.0
 
 
+def test_gravity_acceleration_is_mass_independent():
+    balls = [{"x": 10.0, "y": 10.0, "vx": 0.0, "vy": 0.0, "mass": 1.0},
+             {"x": 20.0, "y": 20.0, "vx": 0.0, "vy": 0.0, "mass": 4.0}]
+    forces = bounce.compute_forces(balls, n=40, gravity=9.0, radius=0.75, stiffness=400.0)
+    bounce.integrate(balls, forces, dt=0.1)
+    assert balls[0]["vx"] > 0.0
+    assert np.isclose(balls[0]["vx"], balls[1]["vx"])
+
+
 def test_compute_forces_backward_compatible_default():
     # no radius/mass/kinematic keys, no segments: same as before the change
     balls = bounce.init_balls(3, n=20, vy=2.0, rng=__import__("random").Random(4738))

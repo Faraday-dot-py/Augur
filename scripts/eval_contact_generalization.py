@@ -93,7 +93,7 @@ def evaluate_scenario(dyn, balls, steps, dt, gravity, stiffness, substeps, devic
     ps, vs = ps.cpu().numpy(), vs.cpu().numpy()
     real = ~kinematic.cpu().numpy()
     err = {t: float(np.linalg.norm(ps[t - 1][real] - truth_pos[t][real], axis=1).mean())
-           for t in (5, 10, 20) if t <= steps}
+           for t in (5, 10, 20, 30) if t <= steps}
     kin_drift = float(np.abs(ps[:, ~real] - truth_pos[0][None, ~real]).max()) if (~real).any() else 0.0
     return {"err": err, "kinematic_drift": kin_drift}
 

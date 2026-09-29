@@ -3231,3 +3231,14 @@ curriculum k 4->19, eval on 48 held-out scenes at seeds 9000/12000, horizon 20.
   visually near-identical in 3 of 4 scenes; the one difference found is central producing a spurious 2-step red
   flare on a close pair in one scene that clears itself, which token doesn't show -- a small, scene-specific
   difference, not the clean "central fails, token succeeds" story the aggregate energy numbers alone suggested.
+
+### CFD contact-gen Phase 1 v1 final-review fixes, v2 retrain pending (jobs 3133 train, 3134 eval, 2026-09-28)
+
+`scripts/train_contact_dynamics.py`, `model/contact_force.py`, `scripts/contact_truth.py`, `bounce.py`, `scripts/eval_contact_generalization.py`. The v1 checkpoint (`checkpoints/contact_dynamics_v1.pt`, job 3133) and its eval (`results/contact_generalization_v1.json`, job 3134) are superseded by these fixes; the whole-branch review found, by simulation probe:
+- **Wall contamination**: `build_truth`'s `n=1000` only moved the far wall; bounce.py's walls sit at `lo=0` always, so ~16% of training scenes (spawned in `[0, 40]`) drifted into an unlearnable `x=0`/`y=0` wall force. Fix: scenes offset by `CENTER=500` (as in `gravity_sim.py`), truth `n=2000`.
+- **No far-field decay**: the potential took `log(d)` and kept real force well past contact (7.7 at d=1.5, 0.11 at d=5.9 for a held-out mass ratio; truth 0). Fix: first feature is `pen = r_i+r_j - d` and `V` is gated by `sigmoid(pen/0.5)`; still `-dV/dd`, momentum exact.
+- **Overlapping spawns**: 463/753 obstacle and 147/386 ball-ball scenes (reviewer's sample) started overlapped, some balls trapped inside circle rings. Fix: obstacle placed first, real balls re-drawn up to 20 times until non-overlapping.
+- **Gravity as force, not acceleration**: `compute_forces`/`contact_truth.forces` added `g` before mass division, so heavier balls fell slower. Fix: `g * mass`. Inert in v1 (trained at `--gravity 0.0`).
+- **Wall-density scenario never scored post-contact**: contact at step ~20-21, errors only at 5/10/20. Fix: err@30 added.
+- Training JSON now records `loss_history`. Obstacle truth is still the sampled point cloud (not `segments=`), so "unseen shape/density" measures ball-ball potential extrapolation, not shape fidelity -- open design question, see plan notes.
+v2 retrain + re-eval: **pending, not yet run**.

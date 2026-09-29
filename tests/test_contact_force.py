@@ -14,10 +14,19 @@ def _dyn():
 
 def test_pair_features_is_swap_symmetric_in_mass():
     dyn = ContactForceDynamics()
-    d = torch.tensor([[2.0], [2.0]])
+    pen = torch.tensor([[0.3], [0.3]])
     r_sum = torch.tensor([[0.5], [0.5]])
-    ab = dyn.pair_features(d, r_sum, torch.tensor([[1.0], [3.0]]), torch.tensor([[3.0], [1.0]]))
+    ab = dyn.pair_features(pen, r_sum, torch.tensor([[1.0], [3.0]]), torch.tensor([[3.0], [1.0]]))
     assert torch.allclose(ab[0], ab[1])  # m_i, m_j swapped gives the same feature vector
+
+
+def test_potential_decays_far_from_contact():
+    dyn = _dyn()
+    pos = torch.tensor([[10.0, 10.0], [16.5, 10.0]])  # d=6.5, r_sum=1.5, pen=-5
+    radius = torch.tensor([0.75, 0.75])
+    mass = torch.tensor([1.0, 1.0])
+    acc = dyn.accel(pos, radius, mass)
+    assert acc.abs().max() < 1e-3
 
 
 def test_zero_init_is_free_flight():
@@ -85,8 +94,9 @@ def test_energy_conserved_bounded():
         rel = pos[src] - pos[dst]
         d = torch.sqrt((rel ** 2).sum(dim=-1, keepdim=True) + 1e-12)
         r_sum = (radius[src] + radius[dst]).unsqueeze(-1)
-        feat = dyn.pair_features(d, r_sum, mass[src].unsqueeze(-1), mass[dst].unsqueeze(-1))
-        v = dyn.potential(feat).sum() / 2  # each undirected pair appears as two directed edges
+        pen = r_sum - d
+        feat = dyn.pair_features(pen, r_sum, mass[src].unsqueeze(-1), mass[dst].unsqueeze(-1))
+        v = (dyn.potential(feat) * torch.sigmoid(pen / 0.5)).sum() / 2  # each undirected pair appears as two directed edges
         return ke + v
 
     e0 = total_energy(pos, vel)

@@ -63,12 +63,13 @@ def _ball_pair_forces(xs, ys, radii, stiffness):
     return f * nx, f * ny
 
 
-def forces(p, radii, n, gravity, stiffness, segments=None):
+def forces(p, radii, masses, n, gravity, stiffness, segments=None):
     """Net force (not yet divided by mass) on each body: gravity + walls +
-    obstacle segments + pairwise ball contact. `p` is (m, 2), `radii` (m,)."""
+    obstacle segments + pairwise ball contact. `p` is (m, 2), `radii` and
+    `masses` (m,)."""
     xs, ys = p[:, 0], p[:, 1]
     wfx, wfy = _wall_force(xs, ys, n, radii, stiffness)
-    base_x = gravity + wfx
+    base_x = gravity * masses + wfx
     base_y = wfy
     for seg in (segments or []):
         seg_radii = radii + seg["radius"]
@@ -101,7 +102,7 @@ def rollout(balls, n, steps, dt, gravity, stiffness, substeps, segments, device)
     ps, vs = [p.cpu().numpy().copy()], [v.cpu().numpy().copy()]
     for _ in range(steps):
         for _ in range(substeps):
-            f = forces(p, radii, n, gravity, stiffness, segments)
+            f = forces(p, radii, masses, n, gravity, stiffness, segments)
             new_v = v + (f / masses.unsqueeze(-1)) * sub_dt
             v = torch.where(kinematic.unsqueeze(-1), v, new_v)
             new_p = p + v * sub_dt

@@ -20,44 +20,56 @@ from scripts import contact_truth as ct
 MASS_RANGE = (0.25, 4.0)  # train range per docs/debugging/z-and-mass-channels-feasibility.md recommendation
 RADIUS_RANGE = (0.4, 1.2)
 SPACING_RANGE = (0.6, 2.0)  # swept boundary-point spacing (spec §4 boundary-sampling question)
+CENTER = 500.0  # scene offset away from bounce.py's lo=0 walls, as in scripts/gravity_sim.py
+SPAWN_TRIES = 20
 
 
 def make_scene(rng, min_bodies, max_bodies, n):
     """One training scene: a handful of real balls, plus (with some
     probability) one obstacle -- a circle or a finite wall segment,
     injected as extra kinematic point-cloud entries in the same ball list
-    scripts/contact_truth.py already understands."""
-    num_real = rng.randint(min_bodies, max_bodies)
-    balls = []
-    for _ in range(num_real):
-        r = rng.uniform(*RADIUS_RANGE)
-        m = math.exp(rng.uniform(math.log(MASS_RANGE[0]), math.log(MASS_RANGE[1])))
-        balls.append({
-            "x": rng.uniform(2 * r, n - 1 - 2 * r), "y": rng.uniform(2 * r, n - 1 - 2 * r),
-            "vx": rng.uniform(-3.0, 3.0), "vy": rng.uniform(-3.0, 3.0),
-            "radius": r, "mass": m,
-        })
+    scripts/contact_truth.py already understands. The scene sits at
+    [CENTER, CENTER+n], far from bounce.py's lo=0 walls. The obstacle is
+    placed first so real balls can be re-drawn (up to SPAWN_TRIES times)
+    until they overlap nothing already placed."""
+    obstacle = []
     kind = rng.choice(["none", "circle", "wall"])
     spacing = rng.uniform(*SPACING_RANGE)
     point_radius = ob.default_point_radius(spacing)
     if kind == "circle":
         cx, cy, cr = rng.uniform(0.2 * n, 0.8 * n), rng.uniform(0.2 * n, 0.8 * n), rng.uniform(2.0, 6.0)
-        pts, radii = ob.sample_circle_boundary(cx, cy, cr, spacing, point_radius)
+        pts, radii = ob.sample_circle_boundary(CENTER + cx, CENTER + cy, cr, spacing, point_radius)
         for (x, y), r in zip(pts, radii):
-            balls.append({"x": float(x), "y": float(y), "vx": 0.0, "vy": 0.0, "radius": float(r), "kinematic": True})
+            obstacle.append({"x": float(x), "y": float(y), "vx": 0.0, "vy": 0.0, "radius": float(r), "kinematic": True})
     elif kind == "wall":
         orientation = rng.choice(["h", "v"])
         coord = rng.uniform(0.3 * n, 0.7 * n)
         lo = rng.uniform(0.1 * n, 0.4 * n)
         hi = lo + rng.uniform(0.2 * n, 0.4 * n)
-        pts, radii = ob.sample_wall_segment_boundary(orientation, coord, lo, hi, spacing, point_radius)
+        pts, radii = ob.sample_wall_segment_boundary(orientation, CENTER + coord, CENTER + lo, CENTER + hi,
+                                                     spacing, point_radius)
         for (x, y), r in zip(pts, radii):
-            balls.append({"x": float(x), "y": float(y), "vx": 0.0, "vy": 0.0, "radius": float(r), "kinematic": True})
-    return balls
+            obstacle.append({"x": float(x), "y": float(y), "vx": 0.0, "vy": 0.0, "radius": float(r), "kinematic": True})
+    num_real = rng.randint(min_bodies, max_bodies)
+    balls = []
+    for _ in range(num_real):
+        r = rng.uniform(*RADIUS_RANGE)
+        m = math.exp(rng.uniform(math.log(MASS_RANGE[0]), math.log(MASS_RANGE[1])))
+        for _ in range(SPAWN_TRIES):
+            x = CENTER + rng.uniform(2 * r, n - 1 - 2 * r)
+            y = CENTER + rng.uniform(2 * r, n - 1 - 2 * r)
+            if all(math.hypot(x - b["x"], y - b["y"]) >= r + b["radius"] for b in balls + obstacle):
+                break
+        balls.append({
+            "x": x, "y": y,
+            "vx": rng.uniform(-3.0, 3.0), "vy": rng.uniform(-3.0, 3.0),
+            "radius": r, "mass": m,
+        })
+    return balls + obstacle
 
 
 def build_truth(balls, steps, dt, gravity, stiffness, substeps, device):
-    pos, vel = ct.rollout(balls, n=1000, steps=steps, dt=dt, gravity=gravity, stiffness=stiffness,
+    pos, vel = ct.rollout(balls, n=2000, steps=steps, dt=dt, gravity=gravity, stiffness=stiffness,
                            substeps=substeps, segments=None, device=device)
     pos = torch.tensor(pos, dtype=torch.float32, device=device)
     vel = torch.tensor(vel, dtype=torch.float32, device=device)
@@ -105,6 +117,7 @@ def main():
     rng = random.Random(args.seed)
     dyn = ContactForceDynamics(dt=args.dt, neighbor_radius=args.neighbor_radius).to(args.device)
     opt = torch.optim.Adam(dyn.parameters(), lr=args.lr)
+    loss_history = []
     for it in range(args.iters):
         k = int(round(args.k_start + (args.k_end - args.k_start) * it / max(1, args.iters - 1)))
         opt.zero_grad()
@@ -128,10 +141,11 @@ def main():
         opt.step()
         if it % args.log_every == 0:
             print(f"it {it} k {k} loss {total:.6f} skipped {skipped}/{args.batch}", flush=True)
+            loss_history.append([it, total])
             torch.save(dyn.state_dict(), args.checkpoint)
     torch.save(dyn.state_dict(), args.checkpoint)
     with open(args.out, "w") as f:
-        json.dump({"args": vars(args)}, f)
+        json.dump({"args": vars(args), "loss_history": loss_history}, f)
 
 
 if __name__ == "__main__":

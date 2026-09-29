@@ -5,14 +5,17 @@ from model.token_graph import build_radius_graph_cells
 
 
 class ContactForceDynamics(nn.Module):
-    """Learned pairwise potential V(d, r_i+r_j, s_ij), s_ij a swap-symmetric
-    function of (mass_i, mass_j). Force is -dV/dd along the pair line (via
-    autograd), so momentum is conserved exactly and a step is symplectic
-    (same structure as CentralForceDynamics, generalized per
+    """Learned pairwise potential V(pen, r_i+r_j, s_ij), pen = r_i+r_j - d
+    (negative when apart), s_ij a swap-symmetric function of (mass_i,
+    mass_j). V is gated by sigmoid(pen / 0.5), so it goes smoothly to zero
+    once bodies are well apart, like bounce.py's penalty force (exactly zero
+    without overlap). Force is -dV/dd along the pair line (via autograd), so
+    momentum is conserved exactly and a step is symplectic -- the same
+    design pattern as CentralForceDynamics (learned pairwise function,
+    same integrator), per
     docs/superpowers/specs/2026-09-28-cfd-contact-generalization-design.md
-    §3). radius=0 for every body reduces this to CentralForceDynamics'
-    f(d) exactly (spec §5) since r_sum/m_sum/m_prod/m_diff are then extra,
-    learnable-away input channels rather than a structural change.
+    §3, but not a literal superset of it: CentralForceDynamics has no decay
+    gate, no mass division and a different graph builder.
     kinematic bodies (obstacles) still exert force but never receive a
     position/velocity update (spec §2). Same call convention as
     CentralForceDynamics/TokenFreeDynamics otherwise: returns (dp, dv,
@@ -28,11 +31,11 @@ class ContactForceDynamics(nn.Module):
         nn.init.zeros_(self.potential[-1].weight)
         nn.init.zeros_(self.potential[-1].bias)
 
-    def pair_features(self, d, r_sum, mass_src, mass_dst):
+    def pair_features(self, pen, r_sum, mass_src, mass_dst):
         m_sum = mass_src + mass_dst
         m_prod = mass_src * mass_dst
         m_diff = (mass_src - mass_dst).abs()
-        return torch.cat([torch.log(d), r_sum, m_sum, m_prod, m_diff], dim=-1)
+        return torch.cat([pen, r_sum, m_sum, m_prod, m_diff], dim=-1)
 
     def accel(self, positions, radius, mass):
         edges = build_radius_graph_cells(positions, self.neighbor_radius)
@@ -45,8 +48,10 @@ class ContactForceDynamics(nn.Module):
             d = torch.sqrt((rel ** 2).sum(dim=-1, keepdim=True) + 1e-12)
             d.requires_grad_(True)
             r_sum = (radius[src] + radius[dst]).unsqueeze(-1)
-            feat = self.pair_features(d, r_sum, mass[src].unsqueeze(-1), mass[dst].unsqueeze(-1))
-            v = self.potential(feat)
+            pen = r_sum - d
+            feat = self.pair_features(pen, r_sum, mass[src].unsqueeze(-1), mass[dst].unsqueeze(-1))
+            gate = torch.sigmoid(pen / 0.5)
+            v = self.potential(feat) * gate
             (grad_d,) = torch.autograd.grad(v.sum(), d, create_graph=True)
         force = grad_d * rel / d
         net_force = acc.index_add(0, dst, force)
