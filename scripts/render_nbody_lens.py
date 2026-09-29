@@ -1,4 +1,8 @@
-"""Gravitational-lensing render of a 2D nbody/black-hole snapshot npz (pos, steps). Same window/brightness as render_nbody_snaps.py, then the image plane is warped
+"""NOTE: per explicit user request (2026-09-28), do NOT use blur by default for lensing renders —
+pass --blur 0 --mass-blur-n 0 --mass-blur 0. This reintroduces a known shot-noise artifact at
+high body counts; see docs/debugging/render-lensing-no-blur.md before "fixing" it by re-adding blur.
+
+Gravitational-lensing render of a 2D nbody/black-hole snapshot npz (pos, steps). Same window/brightness as render_nbody_snaps.py, then the image plane is warped
 by a lens computed from the particles of each frame: the (blurred) particle density is the lens mass, normalised to total 1, and the deflection is
 alpha(u) = E^2 sum_j m_j (u - u_j) / (|u - u_j|^2 + a^2), source position beta = u - alpha (u in window half-widths, E = --einstein, a = --core; far away it is the
 point-mass lens E^2/|u|). The sum is an FFT convolution per frame, so the warp follows the moving, pulsing, clumping cloud. A fixed starfield (window coordinates, so it does not jitter with the moving window) is warped the same way, so the bending is visible;
