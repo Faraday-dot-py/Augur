@@ -1103,8 +1103,14 @@ from scripts.train_contact_dynamics import unroll
 def scenario_unseen_obstacle_shape(rng, n=40):
     """Held-out: a much bigger circle at a swept density outside training's
     SPACING_RANGE (0.6-2.0), and a ball aimed straight at it -- the actual
-    target capability (spec §0/§7): drop a shape in after training."""
-    spacing, point_radius = 3.0, ob.default_point_radius(3.0)
+    target capability (spec §0/§7): drop a shape in after training. Spacing
+    is jittered per seed (2.5-4.0, still above training's 2.0 ceiling) so
+    seeds 9000/12000 aren't byte-identical scenes -- a review finding
+    caught this when both seeds produced identical numbers, defeating the
+    point of a held-out-seed sweep (obstacle radius/position/ball path stay
+    fixed at their verified-to-contact-within-horizon values)."""
+    spacing = rng.uniform(2.5, 4.0)
+    point_radius = ob.default_point_radius(spacing)
     pts, radii = ob.sample_circle_boundary(20.0, 20.0, 10.0, spacing, point_radius)
     balls = [{"x": float(x), "y": float(y), "vx": 0.0, "vy": 0.0, "radius": float(r), "kinematic": True}
              for (x, y), r in zip(pts, radii)]
@@ -1113,18 +1119,32 @@ def scenario_unseen_obstacle_shape(rng, n=40):
 
 
 def scenario_unseen_mass_ratio(rng, n=40):
-    """Held-out: mass ratio 1:10 (train range 0.25-4)."""
+    """Held-out: mass ratio 1:10 or 10:1 (train range 0.25-4), chosen per
+    seed so 9000/12000 differ. Initial gap (2.5, closing at vx=2.0 -> contact
+    around step 10) was shortened from an earlier draft that put the pair
+    5.0 apart -- at the default --steps 20/dt 0.05, that gap needed 35 steps
+    to close and the two bodies never actually touched within the eval
+    horizon, silently testing free-flight instead of mass-ratio-dependent
+    contact response. A review finding caught this by directly checking the
+    minimum inter-body distance over the rollout."""
+    ratio = rng.choice([10.0, 0.1])
     return [
-        {"x": 15.0, "y": 15.0, "vx": 2.0, "vy": 0.0, "radius": 0.75, "mass": 1.0},
-        {"x": 20.0, "y": 15.3, "vx": 0.0, "vy": 0.0, "radius": 0.75, "mass": 10.0},
+        {"x": 17.5, "y": 15.0, "vx": 2.0, "vy": 0.0, "radius": 0.75, "mass": 1.0},
+        {"x": 20.0, "y": 15.3, "vx": 0.0, "vy": 0.0, "radius": 0.75, "mass": 1.0 / ratio},
     ]
 
 
 def scenario_unseen_wall_density(rng, n=40):
-    """Held-out: wall segment sampled at spacing 4.0, above training's
-    0.6-2.0 range -- tests robustness to sparser-than-trained sampling
-    (spec §4 boundary-sampling question #3)."""
-    spacing, point_radius = 4.0, ob.default_point_radius(4.0)
+    """Held-out: wall segment sampled at a jittered density (3.0-5.0),
+    above training's 0.6-2.0 range -- tests robustness to sparser-than-
+    trained sampling (spec §4 boundary-sampling question #3). Spacing is
+    jittered per seed (approach speed/positions stay fixed: the original
+    vy=12.0 barely closes the 15-unit gap within the eval horizon, so a
+    wider jitter there risked reintroducing the no-contact bug found in
+    scenario_unseen_mass_ratio -- see main()'s --steps default, raised to
+    30 for margin)."""
+    spacing = rng.uniform(3.0, 5.0)
+    point_radius = ob.default_point_radius(spacing)
     pts, radii = ob.sample_wall_segment_boundary("h", 20.0, 5.0, 35.0, spacing, point_radius)
     balls = [{"x": float(x), "y": float(y), "vx": 0.0, "vy": 0.0, "radius": float(r), "kinematic": True}
              for (x, y), r in zip(pts, radii)]
@@ -1177,7 +1197,7 @@ def main():
     ap.add_argument("--stiffness", type=float, default=400.0)
     ap.add_argument("--substeps", type=int, default=8)
     ap.add_argument("--neighbor-radius", type=float, default=6.0)
-    ap.add_argument("--steps", type=int, default=20)
+    ap.add_argument("--steps", type=int, default=30)  # raised from 20 for contact-timing margin across scenarios, see scenario_unseen_wall_density
     ap.add_argument("--device", default="cpu")
     ap.add_argument("--out", default="results/contact_generalization_v1.json")
     args = ap.parse_args()
