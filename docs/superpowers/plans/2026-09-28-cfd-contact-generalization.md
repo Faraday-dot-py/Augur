@@ -672,12 +672,18 @@ from model.contact_force import ContactForceDynamics
 
 
 def _dyn():
+    # random-weight fixture for the momentum/kinematic tests below, matching
+    # tests/test_central_force.py::test_momentum_conserved_by_construction's
+    # pattern -- do NOT re-zero the final layer here (that's only for the
+    # separate "zero-init is free flight" test): re-zeroing it after
+    # randomizing everything else makes V identically 0 (zero weight matrix
+    # kills the last layer's output regardless of what the Tanh layers
+    # upstream computed), producing a dead network where dv is always 0 --
+    # a bug caught during Task 4's implementation.
     torch.manual_seed(4738)
     dyn = ContactForceDynamics()
     for p in dyn.parameters():
         torch.nn.init.normal_(p, std=0.3)
-    torch.nn.init.zeros_(dyn.potential[-1].weight)
-    torch.nn.init.zeros_(dyn.potential[-1].bias)
     return dyn
 
 
