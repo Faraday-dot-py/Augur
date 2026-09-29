@@ -17,13 +17,15 @@ from matplotlib.animation import FFMpegWriter
 
 from model.contact_force import ContactForceDynamics
 from scripts import contact_truth as ct
-from scripts.eval_contact_generalization import scenario_unseen_obstacle_shape
+from scripts.eval_contact_generalization import SCENARIOS
 from scripts.train_contact_dynamics import unroll
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--checkpoint", default="checkpoints/contact_dynamics_v1.pt")
+    ap.add_argument("--scenario", default="unseen_obstacle_shape", choices=list(SCENARIOS))
+    ap.add_argument("--seed", type=int, default=4738)
     ap.add_argument("--dt", type=float, default=0.05)
     ap.add_argument("--gravity", type=float, default=0.0)  # see Task 5: ContactForceDynamics has no external-field term
     ap.add_argument("--stiffness", type=float, default=400.0)
@@ -36,7 +38,7 @@ def main():
     args = ap.parse_args()
 
     import random
-    balls = scenario_unseen_obstacle_shape(random.Random(4738))
+    balls = SCENARIOS[args.scenario](random.Random(args.seed))
     truth_pos, _ = ct.rollout(balls, n=1000, steps=args.steps, dt=args.dt, gravity=args.gravity,
                                stiffness=args.stiffness, substeps=args.substeps, segments=None, device=args.device)
     radius = torch.tensor([b.get("radius", 0.75) for b in balls], dtype=torch.float32, device=args.device)
