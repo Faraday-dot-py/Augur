@@ -708,7 +708,13 @@ def test_zero_init_is_free_flight():
 
 def test_momentum_conserved_with_unequal_mass():
     dyn = _dyn()
-    pos = torch.tensor([[10.0, 10.0], [10.5, 10.0], [30.0, 30.0]])
+    # third body must be outside ContactForceDynamics' default
+    # neighbor_radius=100.0 to be graph-disconnected and genuinely
+    # unaffected -- (30, 30) is only ~28 units from the pair, well inside
+    # that cutoff, and was a second bug caught during Task 4's
+    # implementation (dv[2] was not actually zero: the body was connected
+    # and felt a small random-potential force).
+    pos = torch.tensor([[10.0, 10.0], [10.5, 10.0], [1000.0, 1000.0]])
     vel = torch.tensor([[1.0, 0.0], [-1.0, 0.0], [0.0, 0.0]])
     radius = torch.tensor([0.75, 0.75, 0.75])
     mass = torch.tensor([1.0, 3.0, 1.0])
