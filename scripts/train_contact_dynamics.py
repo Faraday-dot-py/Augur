@@ -8,9 +8,9 @@ Usage: PYTHONPATH=. python3 -m scripts.train_contact_dynamics --device cuda
 """
 import argparse
 import json
+import math
 import random
 
-import numpy as np
 import torch
 
 from model import obstacles as ob
@@ -31,7 +31,7 @@ def make_scene(rng, min_bodies, max_bodies, n):
     balls = []
     for _ in range(num_real):
         r = rng.uniform(*RADIUS_RANGE)
-        m = rng.uniform(*MASS_RANGE)
+        m = math.exp(rng.uniform(math.log(MASS_RANGE[0]), math.log(MASS_RANGE[1])))
         balls.append({
             "x": rng.uniform(2 * r, n - 1 - 2 * r), "y": rng.uniform(2 * r, n - 1 - 2 * r),
             "vx": rng.uniform(-3.0, 3.0), "vy": rng.uniform(-3.0, 3.0),
@@ -90,7 +90,7 @@ def main():
     ap.add_argument("--k-end", type=int, default=16)
     ap.add_argument("--lr", type=float, default=1e-3)
     ap.add_argument("--dt", type=float, default=0.05)
-    ap.add_argument("--gravity", type=float, default=9.0)
+    ap.add_argument("--gravity", type=float, default=0.0)
     ap.add_argument("--stiffness", type=float, default=400.0)
     ap.add_argument("--substeps", type=int, default=8)
     ap.add_argument("--neighbor-radius", type=float, default=6.0)
@@ -109,6 +109,7 @@ def main():
         k = int(round(args.k_start + (args.k_end - args.k_start) * it / max(1, args.iters - 1)))
         opt.zero_grad()
         total = 0.0
+        skipped = 0
         for _ in range(args.batch):
             balls = make_scene(rng, args.min_bodies, args.max_bodies, n=40)
             pos, vel, radius, mass, kinematic = build_truth(balls, args.steps, args.dt, args.gravity,
@@ -119,13 +120,14 @@ def main():
             tv = vel[t0 + 1:t0 + k + 1].clone()
             loss = (((ps - tp) ** 2).mean() + 0.1 * ((vs - tv) ** 2).mean()) / args.batch
             if not loss.requires_grad:
+                skipped += 1
                 continue  # scene had no contact pairs within neighbor_radius for the whole horizon
             loss.backward()
             total += loss.item()
         torch.nn.utils.clip_grad_norm_(dyn.parameters(), 1.0)
         opt.step()
         if it % args.log_every == 0:
-            print(f"it {it} k {k} loss {total:.6f}", flush=True)
+            print(f"it {it} k {k} loss {total:.6f} skipped {skipped}/{args.batch}", flush=True)
             torch.save(dyn.state_dict(), args.checkpoint)
     torch.save(dyn.state_dict(), args.checkpoint)
     with open(args.out, "w") as f:
