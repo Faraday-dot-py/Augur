@@ -8,8 +8,8 @@ def test_ball_pair_forces_uses_per_ball_radius():
     ys = np.array([10.0, 10.0])
     radii = np.array([0.75, 0.5])  # sum 1.25 > distance 1.0 -> overlapping
     fx, fy = bounce.ball_pair_forces(xs, ys, radii, stiffness=400.0)
-    assert fx[0] < 0.0 and fx[1] > 0.0  # pushed apart along x
-    assert np.isclose(fx[0], -fx[1])
+    assert fx[1, 0] < 0.0 and fx[0, 1] > 0.0  # pushed apart along x
+    assert np.isclose(fx[1, 0], -fx[0, 1])
     assert np.all(fy == 0.0)
 
 

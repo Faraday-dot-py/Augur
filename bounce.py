@@ -139,12 +139,9 @@ def wall_segment_force(xs, ys, orientation, coord, lo, hi, radii, stiffness):
 def ball_pair_forces(xs, ys, radii, stiffness):
     """Continuous repulsive force between every pair of overlapping balls,
     directed along their center line. `radii` is per-ball (obstacle circles
-    and real balls can have different radii). Returns (fx, fy), each a 1D
-    array where entry [i] is the net force on ball i from all pairwise
-    interactions (antisymmetric: force on i from j = -force on j from i)."""
-    m = len(xs)
-    if m <= 1:
-        return np.zeros(m), np.zeros(m)
+    and real balls can have different radii). Returns (fx, fy), each an
+    (m, m) matrix where entry [i, j] is the force applied to ball j by ball
+    i (antisymmetric: entry [j, i] == -entry [i, j], diagonal is zero)."""
     dx = xs.reshape(1, -1) - xs.reshape(-1, 1)
     dy = ys.reshape(1, -1) - ys.reshape(-1, 1)
     dist = np.hypot(dx, dy)
@@ -156,9 +153,7 @@ def ball_pair_forces(xs, ys, radii, stiffness):
     pair_radii = radii.reshape(1, -1) + radii.reshape(-1, 1)
     f = penalty_force(pair_radii - dist, stiffness)
     np.fill_diagonal(f, 0.0)
-    fx = np.sum(f * nx, axis=0)
-    fy = np.sum(f * ny, axis=0)
-    return fx, fy
+    return f * nx, f * ny
 
 
 def compute_forces(balls, n, gravity, radius, stiffness, segments=None):
@@ -185,8 +180,16 @@ def compute_forces(balls, n, gravity, radius, stiffness, segments=None):
             base_y = base_y + sfy
     if m > 1:
         pfx, pfy = ball_pair_forces(xs, ys, radii, stiffness)
-        fx = base_x + pfx
-        fy = base_y + pfy
+        # this system is numerically chaotic (stiff contacts), so matching
+        # the original loop's exact left-to-right float accumulation order
+        # (base term first, then each pairwise contribution in ascending
+        # ball-index order) matters, not just the summation's math value --
+        # cumsum (unlike .sum, which uses pairwise summation for long rows)
+        # preserves that order
+        chain_x = np.concatenate([base_x.reshape(-1, 1), -pfx], axis=1)
+        chain_y = np.concatenate([base_y.reshape(-1, 1), -pfy], axis=1)
+        fx = np.cumsum(chain_x, axis=1)[:, -1]
+        fy = np.cumsum(chain_y, axis=1)[:, -1]
     else:
         fx, fy = base_x, base_y
     return np.stack([fx, fy], axis=1).tolist()
