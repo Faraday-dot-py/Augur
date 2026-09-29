@@ -944,7 +944,13 @@ def main():
     ap.add_argument("--k-end", type=int, default=16)
     ap.add_argument("--lr", type=float, default=1e-3)
     ap.add_argument("--dt", type=float, default=0.05)
-    ap.add_argument("--gravity", type=float, default=9.0)
+    # ContactForceDynamics is a pure pairwise-potential model (no external
+    # uniform-field term, same as CentralForceDynamics) -- an external
+    # gravity default here would bake an unlearnable systematic bias into
+    # every training scene. 0.0 keeps Phase 1 scoped to what the
+    # architecture can actually represent: pairwise contact/gravity-tail
+    # physics, not bounce.py's separate uniform-downward-acceleration term.
+    ap.add_argument("--gravity", type=float, default=0.0)
     ap.add_argument("--stiffness", type=float, default=400.0)
     ap.add_argument("--substeps", type=int, default=8)
     ap.add_argument("--neighbor-radius", type=float, default=6.0)
@@ -1167,7 +1173,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--checkpoint", default="checkpoints/contact_dynamics_v1.pt")
     ap.add_argument("--dt", type=float, default=0.05)
-    ap.add_argument("--gravity", type=float, default=9.0)
+    ap.add_argument("--gravity", type=float, default=0.0)  # see Task 5: ContactForceDynamics has no external-field term
     ap.add_argument("--stiffness", type=float, default=400.0)
     ap.add_argument("--substeps", type=int, default=8)
     ap.add_argument("--neighbor-radius", type=float, default=6.0)
@@ -1256,7 +1262,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--checkpoint", default="checkpoints/contact_dynamics_v1.pt")
     ap.add_argument("--dt", type=float, default=0.05)
-    ap.add_argument("--gravity", type=float, default=9.0)
+    ap.add_argument("--gravity", type=float, default=0.0)  # see Task 5: ContactForceDynamics has no external-field term
     ap.add_argument("--stiffness", type=float, default=400.0)
     ap.add_argument("--substeps", type=int, default=8)
     ap.add_argument("--neighbor-radius", type=float, default=6.0)
