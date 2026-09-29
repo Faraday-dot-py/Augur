@@ -14,7 +14,7 @@ import random
 import torch
 
 from model import obstacles as ob
-from model.contact_force import ContactForceDynamics
+from model.contact_force import ContactForceDynamics, ContactForceDynamicsSymlog
 from scripts import contact_truth as ct
 
 MASS_RANGE = (0.25, 4.0)  # train range per docs/debugging/z-and-mass-channels-feasibility.md recommendation
@@ -111,11 +111,13 @@ def main():
     ap.add_argument("--seed", type=int, default=4738)
     ap.add_argument("--checkpoint", default="checkpoints/contact_dynamics_v1.pt")
     ap.add_argument("--out", default="results/contact_dynamics_v1.json")
+    ap.add_argument("--model", default="linear", choices=["linear", "symlog"])
     args = ap.parse_args()
 
     torch.manual_seed(args.seed)
     rng = random.Random(args.seed)
-    dyn = ContactForceDynamics(dt=args.dt, neighbor_radius=args.neighbor_radius).to(args.device)
+    model_cls = ContactForceDynamicsSymlog if args.model == "symlog" else ContactForceDynamics
+    dyn = model_cls(dt=args.dt, neighbor_radius=args.neighbor_radius).to(args.device)
     opt = torch.optim.Adam(dyn.parameters(), lr=args.lr)
     loss_history = []
     for it in range(args.iters):

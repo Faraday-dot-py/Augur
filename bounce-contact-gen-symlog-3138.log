@@ -1,0 +1,45 @@
+
+[notice] A new release of pip is available: 26.0.1 -> 26.2.1
+[notice] To update, run: python3.12 -m pip install --upgrade pip
+[2026-09-29T14:22:28-07:00] contact-gen Phase 1 training symlog head (sign+log-scale potential decomposition, same scenes/hparams as v2)
+it 0 k 4 loss 0.000000 skipped 3/8
+it 50 k 4 loss 0.000000 skipped 2/8
+it 100 k 5 loss 0.000002 skipped 2/8
+it 150 k 5 loss 0.000247 skipped 1/8
+it 200 k 5 loss 0.000001 skipped 1/8
+it 250 k 6 loss 0.000040 skipped 3/8
+it 300 k 6 loss 0.000142 skipped 3/8
+it 350 k 6 loss 0.000000 skipped 1/8
+it 400 k 6 loss 0.000018 skipped 2/8
+it 450 k 7 loss 0.000001 skipped 4/8
+it 500 k 7 loss 0.000066 skipped 1/8
+it 550 k 7 loss 0.000001 skipped 1/8
+it 600 k 8 loss 0.000000 skipped 1/8
+it 650 k 8 loss 0.000000 skipped 1/8
+it 700 k 8 loss 0.000003 skipped 1/8
+it 750 k 9 loss 0.000000 skipped 1/8
+it 800 k 9 loss 0.000000 skipped 2/8
+it 850 k 9 loss 0.000576 skipped 0/8
+it 900 k 9 loss 0.000039 skipped 2/8
+it 950 k 10 loss 0.000033 skipped 4/8
+it 1000 k 10 loss 0.000001 skipped 2/8
+it 1050 k 10 loss 0.000001 skipped 4/8
+it 1100 k 11 loss 0.000080 skipped 1/8
+it 1150 k 11 loss 0.000012 skipped 2/8
+it 1200 k 11 loss 0.000000 skipped 3/8
+it 1250 k 12 loss 0.000001 skipped 0/8
+it 1300 k 12 loss 0.000003 skipped 3/8
+it 1350 k 12 loss 0.000014 skipped 0/8
+it 1400 k 12 loss 0.000000 skipped 3/8
+it 1450 k 13 loss 0.000336 skipped 0/8
+it 1500 k 13 loss 0.000002 skipped 3/8
+it 1550 k 13 loss 0.000001 skipped 2/8
+it 1600 k 14 loss 0.000000 skipped 0/8
+it 1650 k 14 loss 0.000000 skipped 3/8
+it 1700 k 14 loss 0.000019 skipped 1/8
+it 1750 k 15 loss 0.000000 skipped 2/8
+it 1800 k 15 loss 0.000000 skipped 2/8
+it 1850 k 15 loss 0.000026 skipped 1/8
+it 1900 k 15 loss 0.000059 skipped 2/8
+it 1950 k 16 loss 0.004443 skipped 1/8
+[2026-09-29T14:55:36-07:00] done

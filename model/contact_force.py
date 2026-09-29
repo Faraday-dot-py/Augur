@@ -66,3 +66,35 @@ class ContactForceDynamics(nn.Module):
         dv = 0.5 * dt * (a0 + a1)
         dv = torch.where(kin, torch.zeros_like(dv), dv)
         return dp, dv, hidden
+
+
+class ContactForceDynamicsSymlog(ContactForceDynamics):
+    """Same as ContactForceDynamics, but the potential head's final Linear(64,1)
+    is replaced with a sign+log-magnitude decomposition:
+    V_raw = tanh(sign_head(feat)) * exp(log_scale_head(feat)), still * gate.
+    sign_head and log_scale_head are both plain Linear(width,1) on the same
+    shared trunk (the two hidden Tanh layers), everywhere-differentiable (no
+    hard threshold), so -dV/dd in accel() stays exact. Hypothesis: giving the
+    head unconstrained log-scale range (instead of a raw unbounded linear
+    scalar) fits the contact potential's dynamic range better, in particular
+    at sparse boundary-point spacing (see the v2 wall-density rebound-failure
+    finding in docs/debugging/experiment-log.md, 2026-09-29)."""
+
+    def __init__(self, dt=0.1, neighbor_radius=100.0, width=64):
+        nn.Module.__init__(self)
+        self.dt = dt
+        self.neighbor_radius = neighbor_radius
+        self.hidden_dim = 1
+        self.trunk = nn.Sequential(nn.Linear(5, width), nn.Tanh(), nn.Linear(width, width), nn.Tanh())
+        self.sign_head = nn.Linear(width, 1)
+        self.log_scale_head = nn.Linear(width, 1)
+        nn.init.zeros_(self.sign_head.weight)
+        nn.init.zeros_(self.sign_head.bias)
+        nn.init.zeros_(self.log_scale_head.weight)
+        nn.init.zeros_(self.log_scale_head.bias)
+
+    def potential(self, feat):
+        h = self.trunk(feat)
+        sign = torch.tanh(self.sign_head(h))
+        scale = torch.exp(self.log_scale_head(h))
+        return sign * scale
