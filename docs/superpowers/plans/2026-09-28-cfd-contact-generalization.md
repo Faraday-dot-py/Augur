@@ -150,7 +150,7 @@ def test_compute_forces_includes_obstacle_circle_as_kinematic_ball():
     obstacle = {"x": 10.0, "y": 10.0, "vx": 0.0, "vy": 0.0, "radius": 1.0, "kinematic": True}
     forces = bounce.compute_forces([real, obstacle], n=40, gravity=0.0, radius=0.75, stiffness=400.0)
     assert forces[0][0] > 0.0  # real ball pushed away (+x) from the obstacle at its left
-    assert forces[1] == (0.0, 0.0) or abs(forces[1][0]) > 0.0  # obstacle feels reaction force too (not asserted zero)
+    assert forces[1][0] == -forces[0][0]  # Newton's 3rd law: obstacle feels the exact opposite force (still won't move -- that's integrate's job, not compute_forces')
 
 
 def test_compute_forces_with_wall_segment():
