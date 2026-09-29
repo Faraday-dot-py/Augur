@@ -98,3 +98,30 @@ class ContactForceDynamicsSymlog(ContactForceDynamics):
         sign = torch.tanh(self.sign_head(h))
         scale = torch.exp(self.log_scale_head(h))
         return sign * scale
+
+
+class ContactForceDynamicsSymlogCapped(ContactForceDynamicsSymlog):
+    """Same as ContactForceDynamicsSymlog, but log_scale_head's raw output is
+    soft-capped to +/-log_scale_cap via log_scale_cap * tanh(raw / log_scale_cap)
+    before exp(), instead of being left unconstrained. Hypothesis (see
+    docs/debugging/contact-force-architecture-ideas-untested.md, 'Likely next
+    step'): the symlog head's wall-contact fix works by giving it more dynamic
+    range, but that same unconstrained range is what let it overfit the
+    under-sampled unseen_obstacle_shape/long-horizon cases (err@20/30 0.046/0.044
+    -> 0.33/0.33 regression, job 3139). Capping log_scale should still leave
+    enough range to fix wall-pinning (which needed ~11-24x, i.e. roughly
+    exp(2.5)) while bounding how far the head can extrapolate outside training
+    distribution. Everywhere-differentiable (smooth tanh cap, no hard clamp), so
+    -dV/dd in accel() stays exact."""
+
+    def __init__(self, dt=0.1, neighbor_radius=100.0, width=64, log_scale_cap=4.0):
+        super().__init__(dt=dt, neighbor_radius=neighbor_radius, width=width)
+        self.log_scale_cap = log_scale_cap
+
+    def potential(self, feat):
+        h = self.trunk(feat)
+        sign = torch.tanh(self.sign_head(h))
+        raw_log_scale = self.log_scale_head(h)
+        log_scale = self.log_scale_cap * torch.tanh(raw_log_scale / self.log_scale_cap)
+        scale = torch.exp(log_scale)
+        return sign * scale

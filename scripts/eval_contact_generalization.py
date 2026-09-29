@@ -15,7 +15,7 @@ import numpy as np
 import torch
 
 from model import obstacles as ob
-from model.contact_force import ContactForceDynamics, ContactForceDynamicsSymlog
+from model.contact_force import ContactForceDynamics, ContactForceDynamicsSymlog, ContactForceDynamicsSymlogCapped
 from model.token_graph import build_radius_graph_cells
 from scripts import contact_truth as ct
 from scripts.train_contact_dynamics import unroll
@@ -121,11 +121,14 @@ def main():
     ap.add_argument("--steps", type=int, default=30)  # raised from 20 for contact-timing margin across scenarios, see scenario_unseen_wall_density
     ap.add_argument("--device", default="cpu")
     ap.add_argument("--out", default="results/contact_generalization_v1.json")
-    ap.add_argument("--model", default="linear", choices=["linear", "symlog"])
+    ap.add_argument("--model", default="linear", choices=["linear", "symlog", "symlog_capped"])
+    ap.add_argument("--log-scale-cap", type=float, default=4.0)  # symlog_capped only, must match training
     args = ap.parse_args()
 
-    model_cls = ContactForceDynamicsSymlog if args.model == "symlog" else ContactForceDynamics
-    dyn = model_cls(dt=args.dt, neighbor_radius=args.neighbor_radius)
+    model_cls = {"linear": ContactForceDynamics, "symlog": ContactForceDynamicsSymlog,
+                 "symlog_capped": ContactForceDynamicsSymlogCapped}[args.model]
+    model_kwargs = {"log_scale_cap": args.log_scale_cap} if args.model == "symlog_capped" else {}
+    dyn = model_cls(dt=args.dt, neighbor_radius=args.neighbor_radius, **model_kwargs)
     dyn.load_state_dict(torch.load(args.checkpoint, map_location=args.device))
     dyn.to(args.device)
 

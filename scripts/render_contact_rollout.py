@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import torch
 from matplotlib.animation import FFMpegWriter
 
-from model.contact_force import ContactForceDynamics, ContactForceDynamicsSymlog
+from model.contact_force import ContactForceDynamics, ContactForceDynamicsSymlog, ContactForceDynamicsSymlogCapped
 from scripts import contact_truth as ct
 from scripts.eval_contact_generalization import SCENARIOS
 from scripts.train_contact_dynamics import unroll
@@ -35,7 +35,8 @@ def main():
     ap.add_argument("--fps", type=float, default=12.0)
     ap.add_argument("--device", default="cpu")
     ap.add_argument("--out", default="videos/contact_dynamics_v1_rollout.mp4")
-    ap.add_argument("--model", default="linear", choices=["linear", "symlog"])
+    ap.add_argument("--model", default="linear", choices=["linear", "symlog", "symlog_capped"])
+    ap.add_argument("--log-scale-cap", type=float, default=4.0)  # symlog_capped only, must match training
     args = ap.parse_args()
 
     import random
@@ -46,8 +47,10 @@ def main():
     mass = torch.tensor([b.get("mass", 1.0) for b in balls], dtype=torch.float32, device=args.device)
     kinematic = torch.tensor([b.get("kinematic", False) for b in balls], dtype=torch.bool, device=args.device)
 
-    model_cls = ContactForceDynamicsSymlog if args.model == "symlog" else ContactForceDynamics
-    dyn = model_cls(dt=args.dt, neighbor_radius=args.neighbor_radius)
+    model_cls = {"linear": ContactForceDynamics, "symlog": ContactForceDynamicsSymlog,
+                 "symlog_capped": ContactForceDynamicsSymlogCapped}[args.model]
+    model_kwargs = {"log_scale_cap": args.log_scale_cap} if args.model == "symlog_capped" else {}
+    dyn = model_cls(dt=args.dt, neighbor_radius=args.neighbor_radius, **model_kwargs)
     dyn.load_state_dict(torch.load(args.checkpoint, map_location=args.device))
     dyn.to(args.device)
     pos0 = torch.tensor(truth_pos[0], dtype=torch.float32, device=args.device)
