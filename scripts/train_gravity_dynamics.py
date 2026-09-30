@@ -65,6 +65,7 @@ def main():
     ap.add_argument("--log-every", type=int, default=200)
     ap.add_argument("--no-pair-impulse", action="store_true")
     ap.add_argument("--model", choices=["token", "central"], default="token")
+    ap.add_argument("--dim", type=int, default=2)
     ap.add_argument("--init", type=str, default=None)
     ap.add_argument("--device", default="cpu")
     ap.add_argument("--seed", type=int, default=4738)
@@ -79,7 +80,7 @@ def main():
     rng = np.random.default_rng(args.seed)
     kw = dict(dt=args.dt, eps=args.eps)
     rng_n = (args.min_bodies, args.max_bodies)
-    train = gs.make_dataset(args.train, rng_n, args.steps, args.seed, scale=args.scale_init, device=DATA_DEVICE, **kw)
+    train = gs.make_dataset(args.train, rng_n, args.steps, args.seed, scale=args.scale_init, device=DATA_DEVICE, dim=args.dim, **kw)
     if args.model == "central":
         dyn = CentralForceDynamics(dt=args.dt, neighbor_radius=args.neighbor_radius)
     else:
@@ -111,7 +112,7 @@ def main():
     torch.save(dyn.state_dict(), args.checkpoint)
     res = {}
     for seed in (9000, 12000):
-        data = gs.make_dataset(args.eval_scenes, rng_n, args.steps, seed, scale=args.scale_init, device=DATA_DEVICE, **kw)
+        data = gs.make_dataset(args.eval_scenes, rng_n, args.steps, seed, scale=args.scale_init, device=DATA_DEVICE, dim=args.dim, **kw)
         res[str(seed)] = evaluate(dyn, data, 20, args.dt, args.eps)
         r = res[str(seed)]
         print(seed, "err@5/10/20", [round(r["err"][i], 4) for i in (4, 9, 19)],

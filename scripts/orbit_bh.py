@@ -66,7 +66,7 @@ def build(args, kernel, dev):
         vb[:, 1] += vrel / 2
         print(f"binary d {args.d} sigma {args.sigma} vrel {vrel:.3f} period {2 * math.pi * args.d / vrel:.1f} = {2 * math.pi * args.d / vrel / args.dt:.0f} steps", flush=True)
         return nbody_ic._finish(torch.cat([pa, pb]), torch.cat([va, vb]))
-    return nbody_ic._finish(*nbody_ic._cluster(args.n, (0.0, 0.0), args.sigma, kernel, gen, dev, ratio=args.ratio))
+    return nbody_ic._finish(*nbody_ic._cluster(args.n, (0.0,) * args.dim, args.sigma, kernel, gen, dev, ratio=args.ratio))
 
 
 def learned_table_fn(dyn, dev, m=1 << 20, dmin=1e-6):
@@ -180,6 +180,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--mode", choices=["binary", "blackhole"], required=True)
     ap.add_argument("--n", type=int, default=100000)
+    ap.add_argument("--dim", type=int, default=2, help="spatial dimension for --mode blackhole (binary mode stays 2D)")
     ap.add_argument("--steps", type=int, default=18000)
     ap.add_argument("--dt", type=float, default=0.05)
     ap.add_argument("--force", choices=["exact", "mesh"], default="mesh")

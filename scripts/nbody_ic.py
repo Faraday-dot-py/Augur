@@ -18,10 +18,11 @@ def virial_sigma(pos, kernel, ratio=0.5, sub=6000):
     return math.sqrt(ratio * w / pos.shape[0])
 
 
-def _cluster(n, centre, sigma, kernel, gen, dev, ratio=0.5):
-    pos = torch.randn(n, 2, generator=gen, device=dev, dtype=torch.float64) * sigma + torch.tensor(centre, device=dev, dtype=torch.float64)
+def _cluster(n, centre, sigma, kernel, gen, dev, ratio=0.5, dim=None):
+    dim = dim if dim is not None else len(centre)
+    pos = torch.randn(n, dim, generator=gen, device=dev, dtype=torch.float64) * sigma + torch.tensor(centre, device=dev, dtype=torch.float64)
     sv = virial_sigma(pos, kernel, ratio)
-    return pos, torch.randn(n, 2, generator=gen, device=dev, dtype=torch.float64) * sv
+    return pos, torch.randn(n, dim, generator=gen, device=dev, dtype=torch.float64) * sv
 
 
 def _finish(pos, vel):

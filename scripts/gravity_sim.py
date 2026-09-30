@@ -18,12 +18,12 @@ def energy(pos, vel, eps, g=1.0):
     return 0.5 * (vel ** 2).sum() - g * (1.0 / r[iu]).sum()
 
 
-def init_bodies(n_bodies, rng, spread=5.0, speed=0.5, scale=False):
+def init_bodies(n_bodies, rng, spread=5.0, speed=0.5, scale=False, dim=2):
     if scale:
         f = n_bodies / 8
         spread, speed = spread * f ** 0.5, speed * f ** 0.25
-    pos = CENTER + rng.uniform(-spread, spread, (n_bodies, 2))
-    vel = rng.normal(0.0, speed, (n_bodies, 2))
+    pos = CENTER + rng.uniform(-spread, spread, (n_bodies, dim))
+    vel = rng.normal(0.0, speed, (n_bodies, dim))
     vel -= vel.mean(0)
     return pos, vel
 
@@ -99,11 +99,11 @@ def energy_rel(pos, vel, eps, c, g=1.0):
     return (c ** 2 * (gamma - 1)).sum() - g * (1.0 / r[iu]).sum()
 
 
-def make_dataset(num, ball_range, steps, seed, scale=False, device=None, **kw):
+def make_dataset(num, ball_range, steps, seed, scale=False, device=None, dim=2, **kw):
     rng = np.random.default_rng(seed)
     out = []
     for _ in range(num):
         n = int(rng.integers(ball_range[0], ball_range[1] + 1))
-        p, v = init_bodies(n, rng, scale=scale)
+        p, v = init_bodies(n, rng, scale=scale, dim=dim)
         out.append(rollout(p, v, steps, **kw) if device is None else rollout_torch(p, v, steps, device, **kw))
     return out
