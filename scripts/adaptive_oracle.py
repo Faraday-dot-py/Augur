@@ -164,7 +164,7 @@ def accel_all(tr, ti, cap, chunk=25000, **kw):
 
 def exact_accel(pos, idx, chunk=1024):
     src = pos.double()
-    out = torch.empty(len(idx), 2, dtype=torch.float64, device=pos.device)
+    out = torch.empty(len(idx), pos.shape[1], dtype=torch.float64, device=pos.device)
     for i in range(0, len(idx), chunk):
         d = src[None] - src[idx[i:i + chunk]][:, None]
         out[i:i + chunk] = (d * (((d ** 2).sum(-1) + EPS ** 2) ** -1.5)[..., None]).sum(1)
