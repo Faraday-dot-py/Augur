@@ -87,11 +87,23 @@ since a mixture-of-experts-style magnitude head could behave more
 conservatively outside the training distribution than a single unconstrained
 `exp(log_scale)`.
 
-## Likely next step (not started)
+## Likely next step — RESOLVED 2026-09-29
 
 Symlog fixed wall-contact by giving the head more dynamic range but paid for
 it in obstacle-shape generalization — suggests the extra range is being used
 to overfit under-sampled obstacle-shape/long-horizon cases. Two directions
-raised but not tried: denser obstacle-shape sampling paired with the symlog
-head, or capping/regularizing `log_scale`'s effective range so it can't
-extrapolate as freely. Neither implemented yet.
+were raised: denser obstacle-shape sampling paired with the symlog head, or
+capping/regularizing `log_scale`'s effective range so it can't extrapolate as
+freely. Both tried (jobs 3142/3143 capped, 3144/3145 densershape; see
+docs/debugging/experiment-log.md 2026-09-29 entries):
+
+- **Capping**: mostly undid the wall-density fix while only partially
+  recovering obstacle-shape — a bad trade, not adopted.
+- **Denser obstacle-shape sampling** (`--obstacle-prob 0.8`, circle radius
+  2.0-9.0, spacing 0.6-3.0): got both fixes at once — wall-density fix
+  retained, obstacle-shape recovered to (or better than) v2 baseline. This
+  confirms the hypothesis was under-sampling, not head capacity/range.
+  Adopted as the new default candidate (`contact_dynamics_symlog_densershape.pt`).
+
+Open: seed-12000 mass-ratio regression under densershape (err@30 0.425 vs
+v2's 0.124), not yet root-caused.

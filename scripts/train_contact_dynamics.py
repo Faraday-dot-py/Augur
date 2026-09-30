@@ -24,20 +24,25 @@ CENTER = 500.0  # scene offset away from bounce.py's lo=0 walls, as in scripts/g
 SPAWN_TRIES = 20
 
 
-def make_scene(rng, min_bodies, max_bodies, n):
+def make_scene(rng, min_bodies, max_bodies, n, obstacle_prob=2.0 / 3.0, circle_radius_range=(2.0, 6.0),
+               spacing_range=SPACING_RANGE):
     """One training scene: a handful of real balls, plus (with some
     probability) one obstacle -- a circle or a finite wall segment,
     injected as extra kinematic point-cloud entries in the same ball list
     scripts/contact_truth.py already understands. The scene sits at
     [CENTER, CENTER+n], far from bounce.py's lo=0 walls. The obstacle is
     placed first so real balls can be re-drawn (up to SPAWN_TRIES times)
-    until they overlap nothing already placed."""
+    until they overlap nothing already placed. obstacle_prob/circle_radius_range/
+    spacing_range default to the original v1/v2/symlog distribution (1/3 circle,
+    1/3 wall, 1/3 none; radius 2.0-6.0; spacing SPACING_RANGE) -- widened by the
+    densershape variant to give the symlog head more obstacle-shape coverage,
+    per docs/debugging/contact-force-architecture-ideas-untested.md."""
     obstacle = []
-    kind = rng.choice(["none", "circle", "wall"])
-    spacing = rng.uniform(*SPACING_RANGE)
+    kind = "none" if rng.random() >= obstacle_prob else rng.choice(["circle", "wall"])
+    spacing = rng.uniform(*spacing_range)
     point_radius = ob.default_point_radius(spacing)
     if kind == "circle":
-        cx, cy, cr = rng.uniform(0.2 * n, 0.8 * n), rng.uniform(0.2 * n, 0.8 * n), rng.uniform(2.0, 6.0)
+        cx, cy, cr = rng.uniform(0.2 * n, 0.8 * n), rng.uniform(0.2 * n, 0.8 * n), rng.uniform(*circle_radius_range)
         pts, radii = ob.sample_circle_boundary(CENTER + cx, CENTER + cy, cr, spacing, point_radius)
         for (x, y), r in zip(pts, radii):
             obstacle.append({"x": float(x), "y": float(y), "vx": 0.0, "vy": 0.0, "radius": float(r), "kinematic": True})
@@ -113,6 +118,11 @@ def main():
     ap.add_argument("--out", default="results/contact_dynamics_v1.json")
     ap.add_argument("--model", default="linear", choices=["linear", "symlog", "symlog_capped"])
     ap.add_argument("--log-scale-cap", type=float, default=4.0)  # symlog_capped only
+    ap.add_argument("--obstacle-prob", type=float, default=2.0 / 3.0)  # denser-obstacle-shape variant
+    ap.add_argument("--circle-radius-min", type=float, default=2.0)
+    ap.add_argument("--circle-radius-max", type=float, default=6.0)
+    ap.add_argument("--spacing-min", type=float, default=SPACING_RANGE[0])
+    ap.add_argument("--spacing-max", type=float, default=SPACING_RANGE[1])
     args = ap.parse_args()
 
     torch.manual_seed(args.seed)
@@ -129,7 +139,9 @@ def main():
         total = 0.0
         skipped = 0
         for _ in range(args.batch):
-            balls = make_scene(rng, args.min_bodies, args.max_bodies, n=40)
+            balls = make_scene(rng, args.min_bodies, args.max_bodies, n=40, obstacle_prob=args.obstacle_prob,
+                               circle_radius_range=(args.circle_radius_min, args.circle_radius_max),
+                               spacing_range=(args.spacing_min, args.spacing_max))
             pos, vel, radius, mass, kinematic = build_truth(balls, args.steps, args.dt, args.gravity,
                                                               args.stiffness, args.substeps, args.device)
             t0 = rng.randint(0, args.steps - k)
