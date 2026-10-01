@@ -17,7 +17,9 @@ from model import obstacles as ob
 from model.contact_force import ContactForceDynamics, ContactForceDynamicsSymlog, ContactForceDynamicsSymlogCapped
 from scripts import contact_truth as ct
 
-MASS_RANGE = (0.25, 4.0)  # train range per docs/debugging/z-and-mass-channels-feasibility.md recommendation
+MASS_RANGE = (0.25, 4.0)  # default train range per docs/debugging/z-and-mass-channels-feasibility.md recommendation;
+# --mass-range-min/--mass-range-max override it (see widemass variant, which widens to (0.25, 10.0) to cover the
+# seed-12000 held-out mass-ratio scenario's m_sum=11, per docs/debugging/contact-force-architecture-ideas-untested.md)
 RADIUS_RANGE = (0.4, 1.2)
 SPACING_RANGE = (0.6, 2.0)  # swept boundary-point spacing (spec §4 boundary-sampling question)
 CENTER = 500.0  # scene offset away from bounce.py's lo=0 walls, as in scripts/gravity_sim.py
@@ -25,7 +27,7 @@ SPAWN_TRIES = 20
 
 
 def make_scene(rng, min_bodies, max_bodies, n, obstacle_prob=2.0 / 3.0, circle_radius_range=(2.0, 6.0),
-               spacing_range=SPACING_RANGE):
+               spacing_range=SPACING_RANGE, mass_range=MASS_RANGE):
     """One training scene: a handful of real balls, plus (with some
     probability) one obstacle -- a circle or a finite wall segment,
     injected as extra kinematic point-cloud entries in the same ball list
@@ -59,7 +61,7 @@ def make_scene(rng, min_bodies, max_bodies, n, obstacle_prob=2.0 / 3.0, circle_r
     balls = []
     for _ in range(num_real):
         r = rng.uniform(*RADIUS_RANGE)
-        m = math.exp(rng.uniform(math.log(MASS_RANGE[0]), math.log(MASS_RANGE[1])))
+        m = math.exp(rng.uniform(math.log(mass_range[0]), math.log(mass_range[1])))
         for _ in range(SPAWN_TRIES):
             x = CENTER + rng.uniform(2 * r, n - 1 - 2 * r)
             y = CENTER + rng.uniform(2 * r, n - 1 - 2 * r)
@@ -123,6 +125,8 @@ def main():
     ap.add_argument("--circle-radius-max", type=float, default=6.0)
     ap.add_argument("--spacing-min", type=float, default=SPACING_RANGE[0])
     ap.add_argument("--spacing-max", type=float, default=SPACING_RANGE[1])
+    ap.add_argument("--mass-range-min", type=float, default=MASS_RANGE[0])  # widemass variant
+    ap.add_argument("--mass-range-max", type=float, default=MASS_RANGE[1])
     args = ap.parse_args()
 
     torch.manual_seed(args.seed)
@@ -141,7 +145,8 @@ def main():
         for _ in range(args.batch):
             balls = make_scene(rng, args.min_bodies, args.max_bodies, n=40, obstacle_prob=args.obstacle_prob,
                                circle_radius_range=(args.circle_radius_min, args.circle_radius_max),
-                               spacing_range=(args.spacing_min, args.spacing_max))
+                               spacing_range=(args.spacing_min, args.spacing_max),
+                               mass_range=(args.mass_range_min, args.mass_range_max))
             pos, vel, radius, mass, kinematic = build_truth(balls, args.steps, args.dt, args.gravity,
                                                               args.stiffness, args.substeps, args.device)
             t0 = rng.randint(0, args.steps - k)

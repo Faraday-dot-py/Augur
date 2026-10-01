@@ -107,3 +107,17 @@ docs/debugging/experiment-log.md 2026-09-29 entries):
 
 Open: seed-12000 mass-ratio regression under densershape (err@30 0.425 vs
 v2's 0.124), not yet root-caused.
+
+## Mass-ratio blind spot -- RESOLVED (within range) 2026-09-30
+
+Root cause: training's `MASS_RANGE=(0.25,4.0)` can't produce the seed-12000
+scenario's `m_sum=11` (max trainable `m_sum`~8), so the symlog head's
+sign-crossing lands near this exact OOD mass ratio with a near-zero/wrong-sign
+contact force. Fix: widen `MASS_RANGE` to `(0.25,10.0)` (now a CLI flag,
+`--mass-range-min/--mass-range-max`, see `scripts/train_contact_dynamics.py`)
+and retrain -- `symlog_densershape_widemass`, jobs 3177/3178. Fixes the 10:1
+boundary case (err@30 0.425->0.0177) with no regression on wall-density
+(improved) or obstacle-shape (flat). Does NOT generalize past the new range's
+boundary: a 30:1 stress case still fails badly (err@30 up to 2.09). See
+docs/debugging/experiment-log.md 2026-09-30 entry for full numbers. Adopted
+as new default.

@@ -55,6 +55,22 @@ def scenario_unseen_mass_ratio(rng, n=40):
     ]
 
 
+def scenario_unseen_mass_ratio_stress(rng, n=40):
+    """Stress case beyond scenario_unseen_mass_ratio's 10:1 boundary case:
+    mass ratio 30:1 (masses 1.0/0.0333 or 0.0333/1.0... actually 1.0 vs
+    30.0, m_sum~31), comfortably outside even the widened
+    MASS_RANGE=(0.25,10.0) used by the widemass fix -- required per the
+    mass-ratio-blind-spot task so a fix can be checked for whether it
+    actually solves the problem or just moves the OOD boundary further out
+    (project_cfd_contact_gen_variant_status.md). Same contact-timing
+    geometry as scenario_unseen_mass_ratio (gap 2.5, vx=2.0)."""
+    ratio = rng.choice([30.0, 1.0 / 30.0])
+    return [
+        {"x": 17.5, "y": 15.0, "vx": 2.0, "vy": 0.0, "radius": 0.75, "mass": 1.0},
+        {"x": 20.0, "y": 15.3, "vx": 0.0, "vy": 0.0, "radius": 0.75, "mass": 1.0 / ratio},
+    ]
+
+
 def scenario_unseen_wall_density(rng, n=40):
     """Held-out: wall segment sampled at a jittered density (3.0-5.0),
     above training's 0.6-2.0 range -- tests robustness to sparser-than-
@@ -77,6 +93,12 @@ SCENARIOS = {
     "unseen_obstacle_shape": scenario_unseen_obstacle_shape,
     "unseen_mass_ratio": scenario_unseen_mass_ratio,
     "unseen_wall_density": scenario_unseen_wall_density,
+}
+
+# Extra stress scenario beyond the standard SCENARIOS sweep, evaluated separately in main()
+# so it doesn't perturb the existing seeds-9000/12000 x SCENARIOS numbers used for cross-variant comparison.
+STRESS_SCENARIOS = {
+    "unseen_mass_ratio_stress": scenario_unseen_mass_ratio_stress,
 }
 
 
@@ -137,6 +159,13 @@ def main():
         rng = random.Random(seed)
         for name, builder in SCENARIOS.items():
             balls = builder(rng)
+            res = evaluate_scenario(dyn, balls, args.steps, args.dt, args.gravity, args.stiffness,
+                                     args.substeps, args.device)
+            results[f"{name}_{seed}"] = res
+            print(name, seed, res, flush=True)
+        rng_stress = random.Random(seed)
+        for name, builder in STRESS_SCENARIOS.items():
+            balls = builder(rng_stress)
             res = evaluate_scenario(dyn, balls, args.steps, args.dt, args.gravity, args.stiffness,
                                      args.substeps, args.device)
             results[f"{name}_{seed}"] = res
