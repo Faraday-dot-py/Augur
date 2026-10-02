@@ -4,6 +4,7 @@ use: box n=1000, bodies near the centre). Reports free-rollout position
 error and energy drift vs a constant-velocity baseline."""
 import argparse
 import json
+import time
 
 import numpy as np
 import torch
@@ -62,6 +63,7 @@ def main():
     ap.add_argument("--neighbor-radius", type=float, default=100.0)
     ap.add_argument("--scale-init", action="store_true", help="constant density, virial speed for n bodies (relative to 8)")
     ap.add_argument("--eval-scenes", type=int, default=48)
+    ap.add_argument("--time-budget", type=float, default=0.0)
     ap.add_argument("--log-every", type=int, default=200)
     ap.add_argument("--no-pair-impulse", action="store_true")
     ap.add_argument("--model", choices=["token", "central"], default="token")
@@ -89,8 +91,21 @@ def main():
         dyn.load_state_dict(torch.load(args.init, map_location=DEVICE))
     dyn.to(DEVICE)
     opt = torch.optim.Adam(dyn.parameters(), lr=args.lr)
-    for it in range(args.iters):
-        k = int(round(args.k_start + (args.k_end - args.k_start) * it / max(1, args.iters - 1)))
+    t_start = time.time()
+    it = -1
+    while True:
+        it += 1
+        if args.time_budget > 0:
+            frac = (time.time() - t_start) / args.time_budget
+            if frac >= 1.0:
+                break
+            for pg in opt.param_groups:
+                pg["lr"] = args.lr * (0.05 + 0.95 * 0.5 * (1 + np.cos(np.pi * frac)))
+        else:
+            if it >= args.iters:
+                break
+            frac = it / max(1, args.iters - 1)
+        k = int(round(args.k_start + (args.k_end - args.k_start) * frac))
         opt.zero_grad()
         total = 0.0
         for _ in range(args.batch):
@@ -107,10 +122,11 @@ def main():
         torch.nn.utils.clip_grad_norm_(dyn.parameters(), 1.0)
         opt.step()
         if it % args.log_every == 0:
-            print(f"it {it} k {k} loss {total:.6f}", flush=True)
+            print(f"it {it} k {k} loss {total:.6f} t {time.time() - t_start:.0f}s", flush=True)
             torch.save(dyn.state_dict(), args.checkpoint)
     torch.save(dyn.state_dict(), args.checkpoint)
-    res = {}
+    print(f"trained {it} iters in {time.time() - t_start:.0f}s", flush=True)
+    res = {"train_iters": it, "train_seconds": time.time() - t_start}
     for seed in (9000, 12000):
         data = gs.make_dataset(args.eval_scenes, rng_n, args.steps, seed, scale=args.scale_init, device=DATA_DEVICE, dim=args.dim, **kw)
         res[str(seed)] = evaluate(dyn, data, 20, args.dt, args.eps)

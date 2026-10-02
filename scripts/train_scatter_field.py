@@ -5,6 +5,7 @@ scripts/train_gravity_dynamics.py (train seed 4738, held-out eval seeds 9000/120
 import argparse
 import json
 import os
+import time
 
 import numpy as np
 import torch
@@ -86,9 +87,20 @@ def train(model, tensors, args, ckpt_path, log):
         log(f"resumed from it {start}")
     g = torch.Generator(device="cpu").manual_seed(args.seed + start)
     skipped = 0
-    for it in range(start, args.iters):
-        k = int(round(args.k_start + (args.k_end - args.k_start) * it / max(1, args.iters - 1)))
-        lr = args.lr * (0.05 + 0.95 * 0.5 * (1 + np.cos(np.pi * it / args.iters)))
+    t_start = time.time()
+    it = start - 1
+    while True:
+        it += 1
+        if args.time_budget > 0:
+            frac = (time.time() - t_start) / args.time_budget
+            if frac >= 1.0:
+                break
+        else:
+            if it >= args.iters:
+                break
+            frac = it / max(1, args.iters - 1)
+        k = int(round(args.k_start + (args.k_end - args.k_start) * frac))
+        lr = args.lr * (0.05 + 0.95 * 0.5 * (1 + np.cos(np.pi * frac)))
         for pg in opt.param_groups:
             pg["lr"] = lr
         idx = torch.randint(S, (args.batch,), generator=g).to(args.device)
@@ -116,13 +128,15 @@ def train(model, tensors, args, ckpt_path, log):
             opt.zero_grad()
             skipped += 1
             log(f"it {it} non-finite loss/grad, step skipped ({skipped} total)")
-        if it % args.log_every == 0 or it == args.iters - 1:
-            log(f"it {it} k {k} loss {loss.item():.6f}")
+        if it % args.log_every == 0:
+            log(f"it {it} k {k} loss {loss.item():.6f} t {time.time() - t_start:.0f}s")
             if all(torch.isfinite(p).all() for p in model.parameters()):
                 torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, ckpt_path)
                 if it % 5000 == 0:
                     torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, f"{ckpt_path}.it{it}")
-    torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": args.iters}, ckpt_path)
+    torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it}, ckpt_path)
+    log(f"trained {it} iters in {time.time() - t_start:.0f}s")
+    return it, time.time() - t_start
 
 
 def headline(m):
@@ -196,6 +210,7 @@ def main():
     ap.add_argument("--baseline-ckpt", default=None)
     ap.add_argument("--train", type=int, default=2000)
     ap.add_argument("--steps", type=int, default=30)
+    ap.add_argument("--time-budget", type=float, default=0.0)
     ap.add_argument("--orbit-mix", type=float, default=0.0)
     ap.add_argument("--eval-steps", type=int, default=100)
     ap.add_argument("--eval-scenes", type=int, default=48)
@@ -260,8 +275,8 @@ def main():
         else:
             r, rc, glob = sf.receptive_field(model)
         log(f"=== {args.exp} {name} params {sum(p.numel() for p in model.parameters())} receptive field {r} cells = {rc:.1f} units global={glob}")
-        train(model, tensors, args, f"{args.ckpt_dir}/{args.exp}_{name}.pt", log)
-        res = {"variant": name, "cfg": {**BASE, **VARIANTS[name]}, "rf_cells": r, "rf_units": rc, "rf_global": glob,
+        n_it, secs = train(model, tensors, args, f"{args.ckpt_dir}/{args.exp}_{name}.pt", log)
+        res = {"train_iters": n_it, "train_seconds": secs, "variant": name, "cfg": {**BASE, **VARIANTS[name]}, "rf_cells": r, "rf_units": rc, "rf_global": glob,
                "args": vars(args), "self_force": sf.self_force_probe(model, dev)}
         for seed in EVAL_SEEDS:
             res[str(seed)], (Pm, _, Pt, _) = evaluate_model(model, eval_sets[seed], dev, args.dt, args.eps)
