@@ -61,3 +61,5 @@ Retrain best CFD (CentralForceDynamics) on a smaller fixed budget; see how good 
   sfv_k50 (steps100 k<=50, 6202 it) .0002/.0007/.0018 | .007 | .026 | .023 | .050
   vs same-budget old integrator sf_k20 .0004/.0011/.0033 | .015 | .084 and CFD .0001/.0002/.0006 | .002 | .006.
   => Verlet = 2-6x better at equal budget; err@5 now equals CFD; gap to CFD ~2x @20, 2.5x @100. BEST at 900 s: sfv_k20. Momentum exactly conserved.
+- probe (3255) sfv_k20 force rel err vs separation: d=.25 .010, .5 .022, 1 .013, 2 .011, 4 .008, 8 .010, 14 .028 (old integrator 60k: .073/.070/.007/.009/.005/.011/.031). Near-field 7% error was integrator compensation, not a near-field defect: now ~1% everywhere in 900 s.
+- budgetB (3256): 10-100 bodies, 900 s each: CFD (batch16 cosine, steps30 k<=20) vs ms_kp_pot_v_g128 (steps30 k<=20 batch16) -> results/budgetB/{cfd,sfv}.

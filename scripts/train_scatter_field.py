@@ -36,6 +36,7 @@ VARIANTS = {
     "ms_kp_pot_g128": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, grid=128),
     "ms_kp_pot_g128": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, grid=128),
     "ms_kp_pot_v": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True),
+    "ms_kp_pot_v_g128": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128),
     "ms_pot": dict(net="unet", potential=True),
     "ms_pot_g128": dict(net="unet", potential=True, grid=128),
     "ml_rec": dict(arch="ml"),
@@ -47,7 +48,7 @@ VARIANTS = {
 ML_BASE = dict(quad=True, recurrent=True, hidden_ch=0, momfix=True, k_leaf=1, dm_apply=True)
 EXPS = {
     "A": dict(n=(2, 2), scale=False, extent=32.0, in_scale=1.0, star=False,
-              variants=["ss_rec", "ss_norec", "ms_rec", "ms_norec", "ms_rec_g32", "ms_rec_g128", "ms_rec_nomomfix", "ss_rec_h8", "ml_rec", "ml_norec", "ml_noquad", "ml_k4", "ml_nodm", "ss_pot", "ms_pot", "ms_pot_g128", "ms_ker", "ms_ker_g128", "ms_ker_pp", "ms_ker_pp_g128", "kp_nonet", "ms_kp_split", "ms_kp_pot", "ms_kp_pot_g128", "ms_kp_pot_v"]),
+              variants=["ss_rec", "ss_norec", "ms_rec", "ms_norec", "ms_rec_g32", "ms_rec_g128", "ms_rec_nomomfix", "ss_rec_h8", "ml_rec", "ml_norec", "ml_noquad", "ml_k4", "ml_nodm", "ss_pot", "ms_pot", "ms_pot_g128", "ms_ker", "ms_ker_g128", "ms_ker_pp", "ms_ker_pp_g128", "kp_nonet", "ms_kp_split", "ms_kp_pot", "ms_kp_pot_g128", "ms_kp_pot_v", "ms_kp_pot_v_g128"]),
     "B": dict(n=(10, 100), scale=True, extent=64.0, in_scale=1.0, star=False,
               variants=["ss_rec", "ss_norec", "ms_rec", "ms_norec", "ms_rec_g32", "ms_rec_g128", "ms_rec_nomomfix", "ml_rec", "ml_norec", "ml_k4"]),
     "C": dict(n=None, scale=False, extent=64.0, in_scale=0.1, star=True,
