@@ -62,6 +62,37 @@ def main():
         out["full_fwd_bwd_bf16"] = timeit(lambda: full(torch.bfloat16), 5)
     except Exception as e:
         out["full_fwd_bwd_bf16"] = str(e)[:100]
+    for mode in ("default", "max-autotune-no-cudagraphs"):
+        try:
+            m2 = build(EXPS["A"], "ms_kp_pot", 0.1).to(dev)
+            m2.step = torch.compile(m2.step, mode=mode)
+
+            def full2():
+                m2.zero_grad()
+                p, v, f = pos, vel, field
+                loss = 0
+                for _ in range(k):
+                    p, v, f, _ = m2.step(p, v, mass, mask, f)
+                    loss = loss + (p ** 2).mean() + (v ** 2).mean()
+                loss.backward()
+
+            out["compiled_" + mode] = timeit(full2, 5)
+        except Exception as e:
+            out["compiled_" + mode] = "ERR " + str(e)[:200]
+    for B2 in (128,):
+        pos2, vel2 = pos.repeat(4, 1, 1), vel.repeat(4, 1, 1)
+        mass2, mask2, f2 = mass.repeat(4, 1), mask.repeat(4, 1), field.repeat(4, 1, 1, 1)
+
+        def full3():
+            m.zero_grad()
+            p, v, f = pos2, vel2, f2
+            loss = 0
+            for _ in range(k):
+                p, v, _, f, _ = sf._step_m(m, p, v, mass2, mask2, f)
+                loss = loss + (p ** 2).mean() + (v ** 2).mean()
+            loss.backward()
+
+        out["eager_batch128"] = timeit(full3, 5)
     for k_, v_ in out.items():
         print(k_, v_, flush=True)
 

@@ -45,3 +45,7 @@ Retrain best CFD (CentralForceDynamics) on a smaller fixed budget; see how good 
   cfd_long (steps100 k<=50) .0002/.0004/.0013 | .006 | .019 | .014 (worse: long horizon hurts CFD at this budget)
   sf_v0 (ms_kp_pot steps100 k<=50; 6756 it) .0008/.0014/.0037 | .010 | .054 | .065 | .053 [12000: .0006/.0014/.0028]
   => at 900 s the baseline is ~6x better @20, ~9x @100. Scatter needs efficiency work. Next: profile per-iteration cost (job 3240: scripts/profile_scatter_step.py) -> TF32/bf16, recipe (k_end, batch), net size; choose by measured throughput/accuracy, not sweep.
+- profile (3244): per-op fwd 0.3-0.9 ms, but 20-step fwd+bwd = 134 ms (6.7 ms/step) and TF32/bf16 do not help (134/134/126) => launch/latency bound, GPU underused. Lever: bigger batch is ~free per iteration (and cuts gradient noise, which limited convergence). Also torch.compile / CUDA graphs later.
+- budget2 (3245): sf_b128 = sf_v0 recipe with batch 128 (single change), 900 s.
+- budget2 result (3245, batch 128, 900 s): 3879 it (vs 6756 at batch 32 => batch 4x costs 1.7x, not free). .0008/.0015/.0037 | @100 .042 (12000: .0006/.0011/.0026) vs sf_v0 .0037 | .054. ~no gain at @20, slight at @100. Batch not the limiter.
+- profile2 (3246): torch.compile(step) default / max-autotune-no-cudagraphs and eager batch128 timing, to cut launch overhead (more optimizer steps per 900 s is what correlates with accuracy: 4k it .0049, 12k .0030, 30k .0015 @20).
