@@ -56,3 +56,8 @@ Retrain best CFD (CentralForceDynamics) on a smaller fixed budget; see how good 
 - integrator floor (3251, EXACT force, seed 9000 err@5/10/20/50/100): kick_drift (ScatterField.step: x+=dt v+.5dt^2 a, v+=dt a) .00099/.0040/.0169/.075/.254; verlet2 and staggered leapfrog (1 eval/step) .00008/.00014/.00019/.00051/.0015. => the scatter integrator alone is 90x worse than the model's learned .0009@20 floor allows; the net must learn force + integrator compensation (explains slow sample-efficiency vs CFD, which uses 2-eval Verlet). Change: verlet=True (state carries a_prev; one force eval/step; vel_new=v+.5dt(a_prev+a_new); first step does an extra eval). Variant ms_kp_pot_v. Old ckpts unaffected (flag).
 - budget4 (3252, after 3250): ms_kp_pot_v 900 s with (a) steps30/k<=20 -> results/budget/sfv_k20, (b) steps100/k<=50 -> sfv_k50.
 - budget3 result (3250, sf_k20, steps30 k<=20, 12187 it/900 s): .0004/.0011/.0033 | @50 .015 | @100 .084 | dE .112 (12000: .0002/.0007/.0021). vs sf_v0 .0008/.0014/.0037 | .054. Short recipe: slightly better @5-20, worse @100. Recipe is not the main lever; waiting on verlet (3252).
+- budget4 result (3252, verlet=True, 900 s, seed 9000 err@5/10/20 | @50 | @100 | dE | dL):
+  sfv_k20 (steps30 k<=20, 10953 it) .0001/.0003/.0013 | .004 | .015 | .018 | .011 [12000: .0001/.0004/.0008]
+  sfv_k50 (steps100 k<=50, 6202 it) .0002/.0007/.0018 | .007 | .026 | .023 | .050
+  vs same-budget old integrator sf_k20 .0004/.0011/.0033 | .015 | .084 and CFD .0001/.0002/.0006 | .002 | .006.
+  => Verlet = 2-6x better at equal budget; err@5 now equals CFD; gap to CFD ~2x @20, 2.5x @100. BEST at 900 s: sfv_k20. Momentum exactly conserved.
