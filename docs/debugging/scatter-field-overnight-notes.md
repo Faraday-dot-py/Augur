@@ -40,3 +40,8 @@ Remote: submit via script_or_code; cp files to ~/polaris-mcp-files/bounce/script
 Retrain best CFD (CentralForceDynamics) on a smaller fixed budget; see how good scatter-field can get in the SAME budget. Budget chosen: 900 s wall-clock training per model on 1 H200 (data gen + eval excluded), Exp A (2 body). Both trainers got --time-budget (lr cosine + k curriculum by elapsed fraction). Exp B long job 3236 cancelled for this.
 - budget1 (3239): cfd_orig (steps 30, k_end 20), cfd_long (steps 100, k_end 50), sf_v0 = ms_kp_pot steps100/k_end50 -> remote results/budget/{cfd_orig,cfd_long,sf_v0}. Slip: used one python3 -c syntax check (violates standing rule); not repeating.
 - iter13 result (3235, orbit-mix 0.3, 60k): .0003/.0006/.0013 | @100 .030 | dE .047 (vs no-mix 60k .0009 | .020 | .021); force err d=.25 .167, .5 .155 (vs .073/.07). REJECTED: close-pass data coverage does not fix near field (worse). Near-field accuracy cause still open (pp MLP/window/mesh interplay).
+- budget1 result (3239; 900 s train each, Exp A, seed 9000 err@5/10/20 | @50 | @100 | dE | dL):
+  cfd_orig (CentralForce, steps30 k<=20, cosine lr; 4766 it) .0001/.0002/.0006 | .002 | .006 | .004 | 0 [12000: .0001/.0002/.0005]
+  cfd_long (steps100 k<=50) .0002/.0004/.0013 | .006 | .019 | .014 (worse: long horizon hurts CFD at this budget)
+  sf_v0 (ms_kp_pot steps100 k<=50; 6756 it) .0008/.0014/.0037 | .010 | .054 | .065 | .053 [12000: .0006/.0014/.0028]
+  => at 900 s the baseline is ~6x better @20, ~9x @100. Scatter needs efficiency work. Next: profile per-iteration cost (job 3240: scripts/profile_scatter_step.py) -> TF32/bf16, recipe (k_end, batch), net size; choose by measured throughput/accuracy, not sweep.
