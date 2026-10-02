@@ -128,13 +128,20 @@ class ScatterField(nn.Module):
         phi = torch.fft.irfft2(rf * Kf, s=(2 * G, 2 * G))[..., :G, :G] * self.h ** 2
         return self.neg_grad(phi)
 
-    def pp_acc(self, pos, mass, mask):
-        d = pos[:, None, :, :] - pos[:, :, None, :]
-        r = torch.sqrt((d ** 2).sum(-1) + 1e-8)
+    def pp_acc(self, pos, mass, mask, knn=16):
+        B, N = mask.shape
+        k = min(knn, N - 1)
+        d_all = pos[:, None, :, :] - pos[:, :, None, :]
+        r_all = torch.sqrt((d_all ** 2).sum(-1) + 1e-8)
+        bad = (1 - mask)[:, None, :] + torch.eye(N, device=pos.device, dtype=pos.dtype)[None]
+        r_sel, idx = torch.topk(r_all + 1e6 * (bad > 0).to(pos.dtype), k, dim=-1, largest=False)
+        d = torch.gather(d_all, 2, idx[..., None].expand(B, N, k, 2))
+        mj = torch.gather((mass * mask)[:, None, :].expand(B, N, N), 2, idx)
+        ok = (r_sel < 1e5).to(pos.dtype) * mask[:, :, None]
+        r = r_sel.clamp(max=1e5)
         g = self.ppmlp(torch.stack([r, torch.log(r + 0.05)], -1))[..., 0]
         win = (1 - (r / self.pp).clamp(max=1.0) ** 2) ** 2
-        n = pos.shape[1]
-        w = g * win * (mass * mask)[:, None, :] * mask[:, :, None] * (1 - torch.eye(n, device=pos.device, dtype=pos.dtype))
+        w = g * win * mj * ok
         return (w[..., None] * d / r[..., None]).sum(2)
 
     def neg_grad(self, phi):

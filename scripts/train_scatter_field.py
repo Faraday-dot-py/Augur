@@ -33,6 +33,7 @@ VARIANTS = {
     "ms_kp_split": dict(net="unet", kernel=True, pp=2.0, split=True),
     "ms_kp_pot": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True),
     "ms_kp_pot_g128": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, grid=128),
+    "ms_kp_pot_g128": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, grid=128),
     "ms_pot": dict(net="unet", potential=True),
     "ms_pot_g128": dict(net="unet", potential=True, grid=128),
     "ml_rec": dict(arch="ml"),
@@ -84,6 +85,7 @@ def train(model, tensors, args, ckpt_path, log):
         start = st["it"]
         log(f"resumed from it {start}")
     g = torch.Generator(device="cpu").manual_seed(args.seed + start)
+    skipped = 0
     for it in range(start, args.iters):
         k = int(round(args.k_start + (args.k_end - args.k_start) * it / max(1, args.iters - 1)))
         lr = args.lr * (0.05 + 0.95 * 0.5 * (1 + np.cos(np.pi * it / args.iters)))
@@ -107,11 +109,19 @@ def train(model, tensors, args, ckpt_path, log):
         loss = lp + 0.1 * lv + lm
         opt.zero_grad()
         loss.backward()
-        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-        opt.step()
+        gn = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        if torch.isfinite(loss) and torch.isfinite(gn):
+            opt.step()
+        else:
+            opt.zero_grad()
+            skipped += 1
+            log(f"it {it} non-finite loss/grad, step skipped ({skipped} total)")
         if it % args.log_every == 0 or it == args.iters - 1:
             log(f"it {it} k {k} loss {loss.item():.6f}")
-            torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, ckpt_path)
+            if all(torch.isfinite(p).all() for p in model.parameters()):
+                torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, ckpt_path)
+                if it % 5000 == 0:
+                    torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, f"{ckpt_path}.it{it}")
     torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": args.iters}, ckpt_path)
 
 
