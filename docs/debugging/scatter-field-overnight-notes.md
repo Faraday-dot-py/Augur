@@ -49,3 +49,7 @@ Retrain best CFD (CentralForceDynamics) on a smaller fixed budget; see how good 
 - budget2 (3245): sf_b128 = sf_v0 recipe with batch 128 (single change), 900 s.
 - budget2 result (3245, batch 128, 900 s): 3879 it (vs 6756 at batch 32 => batch 4x costs 1.7x, not free). .0008/.0015/.0037 | @100 .042 (12000: .0006/.0011/.0026) vs sf_v0 .0037 | .054. ~no gain at @20, slight at @100. Batch not the limiter.
 - profile2 (3246): torch.compile(step) default / max-autotune-no-cudagraphs and eager batch128 timing, to cut launch overhead (more optimizer steps per 900 s is what correlates with accuracy: 4k it .0049, 12k .0030, 30k .0015 @20).
+- profile2 (3246): torch.compile unusable on Polaris (gcc fails: no Python.h for triton). eager batch128 fwd+bwd 249 ms vs 134 at batch 32 => near compute-bound already, not purely launch-bound.
+- graph test (3249): per-step CUDA graphs (one graphed copy per unroll step; a single graphed callable reused k times corrupts saved activations -> index OOB) match eager (loss identical, grad rel diff 6e-5); fwd+bwd k=20 136 -> 94 ms (1.45x). Moderate win, not integrated into train yet (scripts/test_graph_step.py has the recipe).
+- diagnosis: at 900 s CFD gets .0006 @20 with 4766 it; scatter .0037 with 6756 it => gap is sample-efficiency, not iteration count. cfd_long showed long horizon hurts CFD at this budget; matched recipe for scatter = steps30/k<=20.
+- budget3 (3250): sf_k20 = ms_kp_pot, steps 30, k_end 20, batch 32, 900 s (CFD's best recipe).
