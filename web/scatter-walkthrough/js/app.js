@@ -210,7 +210,7 @@ function buildUi() {
   });
 }
 
-let poseNow = false;
+let poseNow = false, lastPoseKey = "";
 function togglePlay() {
   if (walk.playing) walk.playing = false;
   else if (walk.time >= walk.length - 1e-6) walk.next();
@@ -252,7 +252,9 @@ function loop(t0) {
       const moved = walk.update(dt);
       const key = walk.phase + "|" + walk.time.toFixed(3) + "|" + S.sel + "|" + S.tick + "|" + hoverRef + "|" + (hoverPick ? (hoverPick.type === "body" ? hoverPick.i : hoverPick.block.id + hoverPick.k + hoverPick.ix + "," + hoverPick.iy) : "");
       if (key !== lastKey || moved) {
-        const timeChanged = key.split("|").slice(0, 4).join("|") !== lastKey.split("|").slice(0, 4).join("|");
+        const poseKey = key.split("|").slice(0, 4).join("|");
+        const timeChanged = poseKey !== lastPoseKey;
+        lastPoseKey = poseKey;
         lastKey = key;
         const c = walk.frame(hoverRef, extra);
         if (timeChanged || poseNow) { const p = c.pose(); stage.setPose(p.target, p.pos); poseNow = false; }
