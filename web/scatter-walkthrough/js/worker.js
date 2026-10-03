@@ -5,7 +5,7 @@ let net, pos, vel, n = 0, tick = 0;
 async function init() {
   const w = await loadWeights(new URL("../../scatter/weights", import.meta.url).href);
   net = new ScatterNet(w);
-  postMessage({ type: "ready", config: w.config, checkpoint: w.checkpoint, iters: w.iters, curve: net.kernelCurve(16, 160), pair: net.kernelCurve(w.config.pp, 64) });
+  postMessage({ type: "ready", config: w.config, checkpoint: w.checkpoint, iters: w.iters, curve: net.kernelCurve(24, 192), pair: net.kernelCurve(w.config.pp, 64) });
 }
 
 function collect(tr, bufs) {

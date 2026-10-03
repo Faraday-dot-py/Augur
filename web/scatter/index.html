@@ -20,6 +20,8 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); f
 header { position: fixed; left: 16px; top: 16px; padding: 12px 14px; max-width: 340px; }
 h1 { font-size: 15px; margin: 0; font-weight: 650; letter-spacing: 0.01em; }
 h1 span { color: var(--scatter); font-weight: 500; }
+a.walk { display: block; margin-top: 4px; font-size: 11px; color: var(--accent); text-decoration: none; }
+a.walk:hover { text-decoration: underline; }
 dl { margin: 0; display: grid; grid-template-columns: repeat(2, auto); gap: 6px 16px; }
 dt { color: var(--faint); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; }
 dd { margin: 0; font: 13px var(--mono); font-variant-numeric: tabular-nums; }
@@ -67,6 +69,7 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
 <canvas id="stage" aria-label="2D view of an N-body cluster over the learned potential field: blue bodies are the scatter-field model; orange ghosts, shown only when ground truth is enabled in the dev menu, are the softened-gravity ground truth"></canvas>
 <header class="glass">
   <h1>Bounce <span>scatter-field model</span></h1>
+  <a class="walk" href="../scatter-walkthrough/">3D walkthrough of one forward pass &rarr;</a>
 </header>
 <section id="debug" class="glass" hidden aria-label="developer statistics">
   <h2>Dev statistics <kbd>d</kbd></h2>

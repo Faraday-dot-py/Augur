@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="A 3D step-through of one forward pass of the learned scatter-field gravity model: scatter, kernel, UNet, gather, integrate.">
+<title>Bounce Scatter-Field Walkthrough</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%2306080c'/%3E%3Crect x='3' y='3' width='10' height='10' fill='none' stroke='%2362d6a4' stroke-width='1.5'/%3E%3Crect x='6' y='6' width='4' height='4' fill='%2362d6a4'/%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #06080c; --glass: rgba(12, 16, 24, 0.78); --line: #1c2535; --line2: #2a3850; --fg: #e4eaf5; --dim: #8390a8; --faint: #56627a;
+  --accent: #6fc3ff; --truth: #ff9a3c; --scatter: #62d6a4;
+  --mono: ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); font: 13px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
+#stage { position: fixed; inset: 0; display: block; width: 100%; height: 100%; touch-action: none; }
+#labels { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+.lab { position: absolute; left: 0; top: 0; font: 11px var(--mono); color: var(--fg); background: rgba(6, 8, 12, 0.7); border: 1px solid var(--line2); border-radius: 5px; padding: 1px 6px; white-space: nowrap; }
+.lab.w { color: var(--scatter); border-color: #2c6a54; }
+.lab.k1 { color: #a79ccd; }
+.lab.k2 { color: var(--truth); }
+.glass { background: var(--glass); border: 1px solid var(--line); border-radius: 10px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+header { position: fixed; left: 16px; top: 16px; padding: 12px 14px; width: 250px; }
+h1 { font-size: 15px; margin: 0; font-weight: 650; letter-spacing: 0.01em; }
+h1 span { color: var(--scatter); font-weight: 500; }
+header p { margin: 6px 0 0; color: var(--dim); font-size: 12px; }
+header a { color: var(--accent); text-decoration: none; }
+header a:hover { text-decoration: underline; }
+details { margin-top: 8px; font-size: 12px; color: var(--dim); }
+details summary { cursor: pointer; color: var(--fg); }
+details ul { margin: 6px 0 0; padding-left: 16px; }
+details li { margin-bottom: 4px; }
+#phases { position: fixed; left: 16px; top: 160px; width: 250px; padding: 6px; display: flex; flex-direction: column; gap: 2px; }
+#phases button { text-align: left; background: transparent; border-color: transparent; height: 28px; display: flex; gap: 8px; align-items: center; color: var(--dim); }
+#phases button i { font: normal 10px var(--mono); color: var(--faint); width: 14px; }
+#phases button[aria-current="true"] { background: rgba(17, 72, 120, 0.55); border-color: var(--accent); color: #fff; }
+#phases button:hover { background: rgba(255, 255, 255, 0.08); }
+#comment { position: fixed; right: 16px; top: 16px; bottom: 76px; width: 360px; padding: 14px 16px; display: flex; flex-direction: column; }
+#comment h2 { margin: 0 0 8px; font-size: 11px; color: var(--dim); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+#comment h2 b { color: var(--fg); font-weight: 600; letter-spacing: 0; text-transform: none; font-size: 13px; margin-left: 6px; }
+#text { overflow-y: auto; flex: 1; font-size: 13px; line-height: 1.55; scrollbar-width: thin; }
+#text p { margin: 0 0 10px; color: var(--dim); }
+#text p:last-child { color: var(--fg); }
+#text b { color: var(--fg); font-weight: 600; }
+#text kbd, .hint kbd { font: 10px var(--mono); border: 1px solid var(--line2); border-radius: 4px; padding: 0 4px; color: var(--dim); }
+.dim { font-family: var(--mono); font-size: 12px; border-radius: 4px; padding: 0 4px; border: 1px solid; }
+.d-N { color: #6fc3ff; border-color: #2b5f86; }
+.d-G { color: #62d6a4; border-color: #2c6a54; }
+.d-C { color: #c79bff; border-color: #5f4a86; }
+.d-h { color: #ffd36e; border-color: #86702c; }
+.d-L { color: #ff8c9e; border-color: #86414c; }
+a.ref { color: var(--accent); border-bottom: 1px dotted var(--accent); cursor: help; }
+a.ref:hover { background: rgba(111, 195, 255, 0.18); }
+#tip { position: fixed; pointer-events: none; padding: 5px 8px; font: 11px var(--mono); max-width: 280px; z-index: 5; }
+#tip[hidden] { display: none; }
+nav.glass { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); width: max-content; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: center; padding: 8px; max-width: calc(100% - 32px);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.03) 60%, rgba(111, 195, 255, 0.05)); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 14px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 10px 40px rgba(0, 0, 0, 0.45); backdrop-filter: blur(16px) saturate(1.4); -webkit-backdrop-filter: blur(16px) saturate(1.4); }
+nav .grp { display: flex; gap: 4px; align-items: center; }
+nav .sep { width: 1px; height: 24px; background: rgba(255, 255, 255, 0.16); margin: 0 2px; }
+button { background: rgba(255, 255, 255, 0.07); color: var(--fg); border: 1px solid var(--line2); border-radius: 7px; padding: 0 10px; height: 32px; font: 500 12px system-ui, sans-serif; cursor: pointer; white-space: nowrap; }
+button:hover { background: rgba(255, 255, 255, 0.13); border-color: #3a4d6c; }
+button:disabled { opacity: 0.45; cursor: default; }
+button[aria-pressed="true"] { background: rgba(17, 72, 120, 0.7); border-color: var(--accent); color: #fff; }
+button kbd { font: 10px var(--mono); color: var(--faint); margin-left: 5px; }
+label.sl { display: flex; align-items: center; gap: 6px; color: var(--dim); font-size: 11px; height: 32px; padding: 0 4px; }
+label.sl output { font: 12px var(--mono); color: var(--fg); min-width: 26px; text-align: right; }
+input[type=range] { width: 88px; accent-color: var(--accent); }
+input#r-time { width: 170px; }
+#status { font: 11px var(--mono); color: var(--faint); min-width: 92px; text-align: right; }
+#err { position: fixed; inset: 0; display: grid; place-items: center; color: var(--dim); padding: 16px; text-align: center; pointer-events: none; }
+#err[hidden] { display: none; }
+@media (max-width: 760px) {
+  header { left: 12px; right: 12px; top: 12px; width: auto; padding: 8px 12px; }
+  header p, details { display: none; }
+  #phases { left: 12px; right: 12px; top: 56px; width: auto; flex-direction: row; overflow-x: auto; padding: 4px; scrollbar-width: none; }
+  #phases button { flex: none; height: 26px; }
+  #phases button span { display: none; }
+  #phases button[aria-current="true"] span { display: inline; }
+  #comment { left: 12px; right: 12px; top: auto; bottom: 66px; width: auto; height: 32vh; padding: 10px 12px; }
+  nav.glass { left: 12px; right: 12px; bottom: 10px; transform: none; width: auto; max-width: none; flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; gap: 4px; padding: 6px; scrollbar-width: none; }
+  nav > * { flex: none; }
+  button kbd { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { a.ref { transition: none; } }
+</style>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+</head>
+<body>
+<canvas id="stage" aria-label="3D walkthrough of one traced tick of the scatter-field model: the arena and bodies, the input grids, the UNet encoder and decoder, the potential and the gathered accelerations. Drag to orbit, scroll or pinch to zoom, click a body to follow it, hover any cell for its value."></canvas>
+<div id="labels" aria-hidden="true"></div>
+<header class="glass">
+  <h1>Bounce <span>scatter-field walkthrough</span></h1>
+  <p>One forward pass of the learned grid model, as 3D objects. <a href="../scatter/">Run the live model</a></p>
+  <details>
+    <summary>About and caveats</summary>
+    <ul>
+      <li>This is one real traced tick of the JavaScript port in a web worker (about 0.5 s), not a live simulation.</li>
+      <li>The port assumes unit mass for every body. Bodies outside the 64 x 64 arena get no grid force.</li>
+      <li>UNet channels are not individually interpretable: the scrubber shows raw channels, not named features.</li>
+      <li>The kernel convolution and the pair term are not softmax attention.</li>
+      <li>Velocity Verlet runs the force pipeline twice per tick; one pass (the end-of-tick one) is shown.</li>
+      <li>Layout sizes are schematic: every field covers the whole arena, drawn at different scales.</li>
+    </ul>
+  </details>
+</header>
+<div id="phases" class="glass" role="tablist" aria-label="phases"></div>
+<section id="comment" class="glass" aria-live="polite" aria-label="commentary">
+  <h2><span id="ph-n">1 / 9</span><b id="ph-t"></b></h2>
+  <div id="text"></div>
+</section>
+<div id="tip" class="glass" hidden></div>
+<nav class="glass" aria-label="controls">
+  <div class="grp">
+    <button id="b-prev" aria-keyshortcuts="ArrowLeft">Prev<kbd>&larr;</kbd></button>
+    <button id="b-play" aria-pressed="false" aria-keyshortcuts="Space">Play<kbd>space</kbd></button>
+    <button id="b-next" aria-keyshortcuts="ArrowRight">Next<kbd>&rarr;</kbd></button>
+  </div>
+  <input type="range" id="r-time" min="0" max="1000" value="0" aria-label="time within phase">
+  <span class="sep"></span>
+  <label class="sl">channel <input type="range" id="r-ch" min="0" max="31" value="0" aria-label="UNet channel"><output id="o-ch">0</output></label>
+  <span class="sep"></span>
+  <label class="sl">bodies <input type="range" id="r-n" min="8" max="40" value="16" aria-label="body count"><output id="o-n">16</output></label>
+  <div class="grp">
+    <button id="b-tick" aria-keyshortcuts=".">Next tick<kbd>.</kbd></button>
+    <button id="b-reset" aria-keyshortcuts="r">Reset<kbd>r</kbd></button>
+  </div>
+  <span id="status">loading</span>
+</nav>
+<div id="err" hidden></div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

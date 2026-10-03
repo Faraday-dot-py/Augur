@@ -1,0 +1,105 @@
+import sys
+from playwright.sync_api import sync_playwright
+
+out = sys.argv[1]
+base = "http://localhost:8765/scatter-walkthrough/index.html"
+errors = []
+
+def check(c, msg):
+    print(("ok   " if c else "FAIL ") + msg)
+    if not c:
+        errors.append(msg)
+
+with sync_playwright() as p:
+    b = p.chromium.launch(args=["--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"])
+    ctx = b.new_context(viewport={"width": 1400, "height": 850})
+    pg = ctx.new_page()
+    logs = []
+    pg.on("console", lambda m: logs.append(m.text) if m.type == "error" else None)
+    pg.on("pageerror", lambda e: logs.append(str(e)))
+    pg.goto(base)
+    pg.wait_for_function("window.__walk && window.__walk.S.trace", timeout=60000)
+    st = lambda: pg.evaluate("({p: window.__walk.walk.phase, t: window.__walk.walk.time, play: window.__walk.walk.playing, tick: window.__walk.S.tick, sel: window.__walk.S.sel})")
+    pg.wait_for_timeout(600)
+    s0 = st()
+    check(s0["play"] or s0["t"] > 0, f"autoplay on first trace {s0}")
+    pg.wait_for_timeout(8000)
+    s1 = st()
+    check(not s1["play"] and s1["p"] == 0, f"pauses at a break in phase 1 {s1}")
+    pg.keyboard.press("ArrowRight")
+    pg.wait_for_timeout(300)
+    check(st()["play"], "Next resumes playing")
+    pg.keyboard.press("Space")
+    pg.keyboard.press("ArrowRight")
+    pg.wait_for_timeout(100)
+    for _ in range(40):
+        pg.evaluate("(() => { const w = window.__walk.walk; w.time = w.length; w.playing = false; })()")
+        pg.keyboard.press("ArrowRight")
+        pg.wait_for_timeout(50)
+        if st()["p"] >= 1:
+            break
+    check(st()["p"] == 1, f"Next at phase end advances phase {st()}")
+    pg.keyboard.press("Space")
+    pg.keyboard.press("ArrowLeft")
+    pg.wait_for_timeout(200)
+    check(st()["t"] == 0 and st()["p"] == 1, f"Prev goes to phase start {st()}")
+    pg.keyboard.press("ArrowLeft")
+    pg.wait_for_timeout(200)
+    check(st()["p"] == 0, f"Prev again goes to previous phase {st()}")
+    pg.click("#phases button:nth-child(6)")
+    pg.wait_for_timeout(200)
+    check(st()["p"] == 5, "phase chip jumps")
+    check(pg.evaluate("localStorage.getItem('scatterwalk.phase')") == "5", "phase persisted")
+    pg.evaluate("(() => { const w = window.__walk.walk; w.go(0, 0); })()")
+    pg.fill("#r-time", "400")
+    pg.wait_for_timeout(200)
+    check(0 < st()["t"] and not st()["play"], "scrubber seeks")
+    pg.evaluate("(() => { const w = window.__walk.walk; w.go(3, 0); w.time = w.length; })()")
+    pg.wait_for_timeout(500)
+    for key in ["]", "]", "]"]:
+        pg.keyboard.press(key)
+    check(pg.inner_text("#o-ch") == "3", "channel keys")
+    pg.evaluate("(() => { const w = window.__walk.walk; w.go(0, 0); w.time = w.length; })()")
+    pg.wait_for_timeout(500)
+    box = pg.evaluate("""(() => { const { stage, S } = window.__walk; const v = stage.bodyWorld(S.sel).clone().project(stage.camera); return [(v.x + 1) / 2 * innerWidth, (1 - v.y) / 2 * innerHeight]; })()""")
+    pg.mouse.move(box[0], box[1])
+    pg.wait_for_timeout(500)
+    tip = pg.inner_text("#tip") if pg.is_visible("#tip") else ""
+    check("body" in tip, f"body tooltip: {tip!r}")
+    pg.screenshot(path=f"{out}/walk_hover_body.png")
+    cell = pg.evaluate("""(() => { const { stage } = window.__walk; const b = stage.block('enc0'); const v = b.group.position.clone().project(stage.camera); return [(v.x + 1) / 2 * innerWidth, (1 - v.y) / 2 * innerHeight]; })()""")
+    pg.mouse.move(cell[0], cell[1])
+    pg.wait_for_timeout(500)
+    tip = pg.inner_text("#tip") if pg.is_visible("#tip") else ""
+    check("encoder 0" in tip and "value" in tip, f"cell tooltip: {tip!r}")
+    pg.screenshot(path=f"{out}/walk_hover_cell.png")
+    pg.mouse.move(box[0], box[1])
+    pg.wait_for_timeout(300)
+    other = (st()["sel"] + 3) % 16
+    pg.evaluate(f"(() => {{ const {{ stage }} = window.__walk; window.__walk.pt = stage.bodyWorld({other}).clone().project(stage.camera); }})()")
+    pt = pg.evaluate("[(window.__walk.pt.x + 1) / 2 * innerWidth, (1 - window.__walk.pt.y) / 2 * innerHeight]")
+    pg.mouse.click(pt[0], pt[1])
+    pg.wait_for_timeout(500)
+    check(st()["sel"] == other, f"click selects body {other}: {st()}")
+    pg.hover("a.ref >> nth=0")
+    pg.wait_for_timeout(400)
+    hl = pg.evaluate("[...window.__walk.stage.blocks.values()].filter((b) => b.hl > 0.9).map((b) => b.id)")
+    check(len(hl) > 0, f"commentary ref highlights {hl}")
+    n0 = st()["tick"]
+    pg.keyboard.press(".")
+    pg.wait_for_function(f"window.__walk.S.tick === {n0 + 1}", timeout=20000)
+    check(True, "next tick advances to " + str(n0 + 1))
+    pg.set_viewport_size({"width": 390, "height": 800})
+    pg.wait_for_timeout(500)
+    check(pg.evaluate("document.documentElement.scrollWidth <= innerWidth"), "no horizontal page scroll at 390px")
+    ctx.close()
+    ctx2 = b.new_context(viewport={"width": 1200, "height": 800}, reduced_motion="reduce")
+    pg2 = ctx2.new_page()
+    pg2.on("pageerror", lambda e: logs.append(str(e)))
+    pg2.goto(base)
+    pg2.wait_for_function("window.__walk && window.__walk.S.trace", timeout=60000)
+    pg2.wait_for_timeout(1500)
+    check(not pg2.evaluate("window.__walk.walk.playing") and pg2.evaluate("window.__walk.walk.time") == 0, "reduced motion: no autoplay")
+    b.close()
+print("console errors:", logs)
+sys.exit(1 if errors or logs else 0)

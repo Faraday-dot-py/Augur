@@ -19,7 +19,7 @@ body { display: grid; place-items: center; padding: 32px 16px; }
 main { max-width: 1000px; width: 100%; }
 h1 { font-size: 22px; margin: 0 0 6px; font-weight: 650; }
 p.lede { color: var(--dim); margin: 0 0 28px; font-size: 14px; }
-.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
 @media (max-width: 800px) { .cards { grid-template-columns: 1fr; } }
 a.card { display: block; background: var(--glass); border: 1px solid var(--line); border-radius: 12px; padding: 20px; text-decoration: none; color: var(--fg); transition: border-color 0.12s, transform 0.12s; }
 a.card:hover { border-color: var(--line2); transform: translateY(-1px); }
@@ -34,7 +34,7 @@ footer a { color: var(--dim); }
 <body>
 <main>
   <h1>Bounce</h1>
-  <p class="lede">Three learned physics models, running live in the browser as plain JavaScript ports of their PyTorch checkpoints.</p>
+  <p class="lede">Three learned physics models, running live in the browser as plain JavaScript ports of their PyTorch checkpoints, plus a 3D walkthrough of the grid model.</p>
   <div class="cards">
     <a class="card" href="token/">
       <h2><i style="background:var(--token)"></i>Token model</h2>
@@ -49,6 +49,11 @@ footer a { color: var(--dim); }
     <a class="card" href="scatter/">
       <h2><i style="background:var(--scatter)"></i>Scatter-field model</h2>
       <p>A grid architecture: bodies are scattered onto a field, a learned kernel and UNet produce a potential, and bodies gather their acceleration from it. Watch the learned potential evolve under the bodies.</p>
+      <div class="go">open &rarr;</div>
+    </a>
+    <a class="card" href="scatter-walkthrough/">
+      <h2><i style="background:var(--scatter)"></i>Scatter-field walkthrough</h2>
+      <p>A 3D, step-by-step tour of one forward pass of the scatter-field model: scatter, kernel, UNet, gather and integrate, as spatial tensors with linked commentary.</p>
       <div class="go">open &rarr;</div>
     </a>
   </div>
