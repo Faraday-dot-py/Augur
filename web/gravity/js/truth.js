@@ -7,7 +7,7 @@ export function accel(pos, count, out) {
   for (let i = 0; i < count; i++) {
     for (let j = 0; j < count; j++) {
       if (i === j) continue;
-      const dx = pos[2 * i] - pos[2 * j], dy = pos[2 * i + 1] - pos[2 * j + 1];
+      const dx = pos[2 * j] - pos[2 * i], dy = pos[2 * j + 1] - pos[2 * i + 1];
       const r2 = dx * dx + dy * dy + EPS2;
       const inv = Math.pow(r2, -1.5);
       out[2 * i] += dx * inv; out[2 * i + 1] += dy * inv;
