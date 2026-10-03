@@ -5,13 +5,17 @@ const EPS2 = 0.5 * 0.5;
 export function accel(pos, count, out) {
   out.fill(0, 0, 2 * count);
   for (let i = 0; i < count; i++) {
-    for (let j = 0; j < count; j++) {
-      if (i === j) continue;
-      const dx = pos[2 * j] - pos[2 * i], dy = pos[2 * j + 1] - pos[2 * i + 1];
+    const xi = pos[2 * i], yi = pos[2 * i + 1];
+    let ax = 0, ay = 0;
+    for (let j = i + 1; j < count; j++) {
+      const dx = pos[2 * j] - xi, dy = pos[2 * j + 1] - yi;
       const r2 = dx * dx + dy * dy + EPS2;
-      const inv = Math.pow(r2, -1.5);
-      out[2 * i] += dx * inv; out[2 * i + 1] += dy * inv;
+      const inv = 1 / (r2 * Math.sqrt(r2));
+      const fx = dx * inv, fy = dy * inv;
+      ax += fx; ay += fy;
+      out[2 * j] -= fx; out[2 * j + 1] -= fy;
     }
+    out[2 * i] += ax; out[2 * i + 1] += ay;
   }
 }
 
