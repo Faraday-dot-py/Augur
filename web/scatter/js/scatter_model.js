@@ -279,7 +279,7 @@ export class ScatterNet {
   }
 
   // grid net on [scatter(3), kernel accel(2), previous potential(1)] -> potential (G*G)
-  unet(x) {
+  unet(x, trace = null) {
     const { w, G } = this;
     const L = this.cfg.levels;
     let h = conv3(x, 6, G, G, w["net.inp.weight"], w["net.inp.bias"], 32);
@@ -291,6 +291,7 @@ export class ScatterNet {
       geluInPlace(a);
       return a;
     };
+    if (trace) trace.inp = h;
     h = block(h, 32, G, G, "net.enc.0");
     const skips = [h];
     let H = G;
@@ -304,7 +305,9 @@ export class ScatterNet {
       h = upCat(h, skips[l], 32, H, H);
       H <<= 1;
       h = block(h, 64, H, H, "net.dec." + l);
+      if (trace) trace.dec[l] = h;
     }
+    if (trace) trace.enc = skips;
     return conv3(h, 32, G, G, w["net.out.weight"], w["net.out.bias"], 1);
   }
 
@@ -323,7 +326,7 @@ export class ScatterNet {
   }
 
   // acceleration of every token; also leaves the new potential in this.field
-  force(pos, vel, n, out) {
+  force(pos, vel, n, out, trace = null) {
     const { G, h, cfg, n2 } = this;
     const GG = G * G;
     const x = new Float32Array(6 * GG);
@@ -350,23 +353,47 @@ export class ScatterNet {
     x.set(kx, 3 * GG);
     x.set(ky, 4 * GG);
     x.set(this.field, 5 * GG);
-    const phi = this.unet(x);
+    if (trace) {
+      trace.pos = Float64Array.from(pos.subarray(0, 2 * n)); trace.vel = Float64Array.from(vel.subarray(0, 2 * n)); trace.n = n;
+      trace.input = x; trace.phiK = phiK; trace.dec = [];
+    }
+    const phi = this.unet(x, trace);
     this.field = phi;
     const gx = new Float32Array(GG), gy = new Float32Array(GG);
     this.negGrad(phi, gx, gy);
+    if (trace) { trace.phi = phi; trace.gradPhi = [gx.slice(), gy.slice()]; }
     for (let i = 0; i < GG; i++) { gx[i] += kx[i]; gy[i] += ky[i]; }
+    if (trace) trace.aGrid = [gx, gy];
     out.fill(0, 0, 2 * n);
     this.corners(pos, n, (f, wt, i) => {
       out[2 * i] += gx[f] * wt;
       out[2 * i + 1] += gy[f] * wt;
     });
+    if (trace) trace.gather = out.slice(0, 2 * n);
     this.pairTerm(pos, n, out);
+    if (trace) trace.pairAcc = Float64Array.from(out.subarray(0, 2 * n), (v, i) => v - trace.gather[i]);
     if (cfg.momfix) {
       let mx = 0, my = 0;
       for (let i = 0; i < n; i++) { mx += out[2 * i]; my += out[2 * i + 1]; }
       mx /= n; my /= n;
       for (let i = 0; i < n; i++) { out[2 * i] -= mx; out[2 * i + 1] -= my; }
+      if (trace) trace.momfix = [mx, my];
     }
+    if (trace) trace.accel = out.slice(0, 2 * n);
+  }
+
+  // learned radial profiles sampled at m radii in (0, rmax]: raw kernel, tapered kernel, pair force magnitude
+  kernelCurve(rmax, m) {
+    const { h, cfg, kmlp, ppmlp } = this;
+    const r = new Float32Array(m), raw = new Float32Array(m), tap = new Float32Array(m), pair = new Float32Array(m);
+    for (let i = 0; i < m; i++) {
+      const rr = r[i] = rmax * (i + 1) / m;
+      raw[i] = kmlp.eval(rr, Math.log(rr + h));
+      const t = Math.min(rr / cfg.pp, 1);
+      tap[i] = cfg.split ? raw[i] * (1 - (1 - t * t) ** 2) : raw[i];
+      pair[i] = rr < cfg.pp ? ppmlp.eval(rr, Math.log(rr + 0.05)) * (1 - (rr / cfg.pp) ** 2) ** 2 : 0;
+    }
+    return { r, raw, tap, pair };
   }
 
   // learned short-range pair force within cfg.pp over the (at most knn) nearest neighbours
@@ -408,8 +435,9 @@ export class ScatterNet {
     }
   }
 
-  // one velocity-Verlet step in place (one force evaluation, plus one on the first step)
-  step(pos, vel, n) {
+  // one velocity-Verlet step in place (one force evaluation, plus one on the first step);
+  // trace, if given, records the second (end-of-step) force pass
+  step(pos, vel, n, trace = null) {
     this.grow(n);
     const { dt, aTok } = this;
     if (!this.aPrev || this.aPrevN !== n) {
@@ -423,7 +451,7 @@ export class ScatterNet {
       pos[i] += dt * vel[i] + 0.5 * dt * dt * aPrev[i];
       vHalf[i] = vel[i] + dt * aPrev[i];
     }
-    this.force(pos, vHalf, n, aTok);
+    this.force(pos, vHalf, n, aTok, trace);
     for (let i = 0; i < 2 * n; i++) {
       vel[i] += 0.5 * dt * (aPrev[i] + aTok[i]);
       aPrev[i] = aTok[i];
