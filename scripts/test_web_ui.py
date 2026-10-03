@@ -57,6 +57,12 @@ with sync_playwright() as p:
     pg.wait_for_function("parseInt(document.getElementById('s-tick').textContent) >= 3", timeout=60000)
     err_txt = pg.evaluate("document.getElementById('s-err').textContent")
     check("scatter-field model ticks and reports error", err_txt != "-", err_txt)
+    check("dev statistics hidden by default", not pg.is_visible("#debug"))
+    pg.keyboard.press("d")
+    check("d opens dev statistics", pg.is_visible("#debug"))
+    with pg.expect_download(timeout=20000) as dl:
+        pg.click("#b-export")
+    check("export state downloads json", dl.value.suggested_filename.startswith("scatter_state_tick"), dl.value.suggested_filename)
     check("scatter page links back to landing", pg.get_attribute("header a", "href") == "../")
 
     check("no page/console errors across all four pages", not errs, errs[:5])

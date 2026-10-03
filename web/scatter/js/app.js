@@ -8,11 +8,12 @@ const err = document.getElementById("err");
 const heat = document.createElement("canvas");
 const heatCtx = heat.getContext("2d");
 
+const debug = document.getElementById("debug");
 const state = {
   n: 40, pos: null, vel: null, field: null, G: 128, extent: 64, dt: 0.1,
   tPos: null, tVel: null, tAcc: null, tTick: 0,
   seed: 4738, tick: 0, running: true, showTruth: true, showField: true,
-  ms: 0, ready: false,
+  ms: 0, ready: false, meta: null,
   err: [], modelE: [], truthE: [], histLen: 200,
 };
 
@@ -35,6 +36,7 @@ worker.onmessage = (e) => {
   if (m.type === "error") { err.textContent = "Failed to load weights: " + m.message; err.hidden = false; return; }
   if (m.type === "ready") {
     Object.assign(state, { G: m.config.grid, extent: m.config.extent, dt: m.config.dt, ready: true });
+    state.meta = { checkpoint: m.checkpoint, iters: m.iters, config: m.config };
     document.getElementById("s-ckpt").textContent = `${m.checkpoint} (${m.iters} it)`;
     spawn(state.n);
     worker.postMessage({ cmd: "run", run: state.running });
@@ -133,6 +135,15 @@ function frame() {
   document.getElementById("s-ms").textContent = state.ms ? state.ms.toFixed(0) + " ms" : "-";
   const e = state.err[state.err.length - 1];
   document.getElementById("s-err").textContent = e === undefined ? "-" : e.toFixed(3);
+  if (!debug.hidden) {
+    let out = 0, vmax = 0;
+    for (let i = 0; i < state.n; i++) {
+      if (Math.abs(state.pos[2 * i]) > state.extent / 2 || Math.abs(state.pos[2 * i + 1]) > state.extent / 2) out++;
+      vmax = Math.max(vmax, Math.hypot(state.vel[2 * i], state.vel[2 * i + 1]));
+    }
+    document.getElementById("s-out").textContent = `${out} / ${state.n}`;
+    document.getElementById("s-vmax").textContent = vmax.toFixed(2);
+  }
   drawSeries(document.getElementById("c-err"), state.err, "#6fc3ff");
   drawEnergy(document.getElementById("c-energy"), state.modelE, state.truthE);
 }
@@ -157,6 +168,18 @@ document.getElementById("b-field").addEventListener("click", (e) => {
   state.showField = !state.showField;
   e.target.setAttribute("aria-pressed", String(state.showField));
 });
+document.getElementById("b-export").addEventListener("click", () => {
+  const snap = {
+    tick: state.tick, n: state.n, dt: state.dt, extent: state.extent, G: state.G, meta: state.meta, exportedAt: new Date().toISOString(),
+    pos: Array.from(state.pos), vel: Array.from(state.vel), truthPos: Array.from(state.tPos), truthVel: Array.from(state.tVel),
+    field: state.field ? Array.from(state.field) : null, err: state.err, modelE: state.modelE, truthE: state.truthE,
+  };
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(snap)], { type: "application/json" }));
+  a.download = `scatter_state_tick${state.tick}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
 const rBodies = document.getElementById("r-bodies"), oBodies = document.getElementById("o-bodies");
 rBodies.addEventListener("input", () => { oBodies.textContent = rBodies.value; });
 rBodies.addEventListener("change", () => state.ready && spawn(parseInt(rBodies.value, 10)));
@@ -168,4 +191,5 @@ window.addEventListener("keydown", (e) => {
   else if (e.key === "r") document.getElementById("b-reset").click();
   else if (e.key === "g") document.getElementById("b-truth").click();
   else if (e.key === "f") document.getElementById("b-field").click();
+  else if (e.key === "d") debug.hidden = !debug.hidden;
 });

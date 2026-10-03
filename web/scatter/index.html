@@ -43,7 +43,14 @@ label.sl output { font: 12px var(--mono); color: var(--fg); min-width: 26px; tex
 input[type=range] { width: 88px; accent-color: var(--accent); }
 #err { position: fixed; inset: 0; display: grid; place-items: center; color: var(--dim); padding: 16px; text-align: center; }
 #err[hidden] { display: none; }
+#debug { position: fixed; left: 16px; bottom: 76px; width: 340px; padding: 12px 14px; }
+#debug[hidden] { display: none; }
+#debug h2 { font-size: 11px; margin: 0 0 8px; color: var(--dim); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+#debug h2 kbd { font: 10px var(--mono); color: var(--faint); margin-left: 5px; }
+#debug dl + dl { margin-top: 6px; }
+#debug button { margin-top: 10px; width: 100%; }
 @media (max-width: 760px) {
+  #debug { left: 16px; right: 16px; top: 64px; bottom: auto; width: auto; }
   header { left: 16px; right: 16px; top: 12px; max-width: none; padding: 9px 12px; }
   header p { display: none; }
   aside { left: 16px; right: 16px; top: auto; bottom: 76px; width: auto; max-height: 34%; overflow: auto; }
@@ -60,6 +67,9 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
 <header class="glass">
   <h1>Bounce <span>scatter-field model</span></h1>
   <p>Bodies are scattered onto a 128&times;128 grid, a learned kernel and UNet turn the grid into a potential, and each body gathers its acceleration from it (plus a learned short-range pair term), integrated with velocity Verlet. Runs in plain JavaScript, ~0.4 s per tick. <a href="../">&larr; other models</a></p>
+</header>
+<section id="debug" class="glass" hidden aria-label="developer statistics">
+  <h2>Dev statistics <kbd>d</kbd></h2>
   <dl id="stats">
     <div><dt>tick</dt><dd id="s-tick">0</dd></div>
     <div><dt>bodies</dt><dd id="s-bodies">0</dd></div>
@@ -67,7 +77,12 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
     <div><dt>step time</dt><dd id="s-ms">-</dd></div>
     <div><dt>checkpoint</dt><dd id="s-ckpt">-</dd></div>
   </dl>
-</header>
+  <dl id="stats2">
+    <div><dt>outside arena</dt><dd id="s-out">-</dd></div>
+    <div><dt>max speed</dt><dd id="s-vmax">-</dd></div>
+  </dl>
+  <button id="b-export" type="button">Export state (JSON)</button>
+</section>
 <aside class="glass">
   <h2>Mean position error vs ground truth</h2>
   <canvas id="c-err" aria-label="mean position error of the model against ground truth over time"></canvas>
