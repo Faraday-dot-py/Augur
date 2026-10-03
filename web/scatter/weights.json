@@ -1,0 +1,459 @@
+{
+ "checkpoint": "B_ms_kp_pot_v_g128.pt",
+ "iters": 8087,
+ "config": {
+  "grid": 128,
+  "extent": 64.0,
+  "dt": 0.1,
+  "levels": 5,
+  "pp": 2.0,
+  "knn": 16,
+  "eps": 0.5,
+  "in_scale": 1.0,
+  "momfix": true,
+  "potential": true,
+  "kernel": true,
+  "split": true,
+  "verlet": true
+ },
+ "tensors": {
+  "ppmlp.0.weight": {
+   "shape": [
+    64,
+    2
+   ],
+   "offset": 0
+  },
+  "ppmlp.0.bias": {
+   "shape": [
+    64
+   ],
+   "offset": 128
+  },
+  "ppmlp.2.weight": {
+   "shape": [
+    64,
+    64
+   ],
+   "offset": 192
+  },
+  "ppmlp.2.bias": {
+   "shape": [
+    64
+   ],
+   "offset": 4288
+  },
+  "ppmlp.4.weight": {
+   "shape": [
+    1,
+    64
+   ],
+   "offset": 4352
+  },
+  "ppmlp.4.bias": {
+   "shape": [
+    1
+   ],
+   "offset": 4416
+  },
+  "kmlp.0.weight": {
+   "shape": [
+    64,
+    2
+   ],
+   "offset": 4417
+  },
+  "kmlp.0.bias": {
+   "shape": [
+    64
+   ],
+   "offset": 4545
+  },
+  "kmlp.2.weight": {
+   "shape": [
+    64,
+    64
+   ],
+   "offset": 4609
+  },
+  "kmlp.2.bias": {
+   "shape": [
+    64
+   ],
+   "offset": 8705
+  },
+  "kmlp.4.weight": {
+   "shape": [
+    1,
+    64
+   ],
+   "offset": 8769
+  },
+  "kmlp.4.bias": {
+   "shape": [
+    1
+   ],
+   "offset": 8833
+  },
+  "net.inp.weight": {
+   "shape": [
+    32,
+    6,
+    3,
+    3
+   ],
+   "offset": 8834
+  },
+  "net.inp.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 10562
+  },
+  "net.enc.0.0.weight": {
+   "shape": [
+    32,
+    32,
+    3,
+    3
+   ],
+   "offset": 10594
+  },
+  "net.enc.0.0.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 19810
+  },
+  "net.enc.0.2.weight": {
+   "shape": [
+    32,
+    32,
+    3,
+    3
+   ],
+   "offset": 19842
+  },
+  "net.enc.0.2.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 29058
+  },
+  "net.enc.1.0.weight": {
+   "shape": [
+    32,
+    32,
+    3,
+    3
+   ],
+   "offset": 29090
+  },
+  "net.enc.1.0.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 38306
+  },
+  "net.enc.1.2.weight": {
+   "shape": [
+    32,
+    32,
+    3,
+    3
+   ],
+   "offset": 38338
+  },
+  "net.enc.1.2.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 47554
+  },
+  "net.enc.2.0.weight": {
+   "shape": [
+    32,
+    32,
+    3,
+    3
+   ],
+   "offset": 47586
+  },
+  "net.enc.2.0.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 56802
+  },
+  "net.enc.2.2.weight": {
+   "shape": [
+    32,
+    32,
+    3,
+    3
+   ],
+   "offset": 56834
+  },
+  "net.enc.2.2.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 66050
+  },
+  "net.enc.3.0.weight": {
+   "shape": [
+    32,
+    32,
+    3,
+    3
+   ],
+   "offset": 66082
+  },
+  "net.enc.3.0.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 75298
+  },
+  "net.enc.3.2.weight": {
+   "shape": [
+    32,
+    32,
+    3,
+    3
+   ],
+   "offset": 75330
+  },
+  "net.enc.3.2.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 84546
+  },
+  "net.enc.4.0.weight": {
+   "shape": [
+    32,
+    32,
+    3,
+    3
+   ],
+   "offset": 84578
+  },
+  "net.enc.4.0.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 93794
+  },
+  "net.enc.4.2.weight": {
+   "shape": [
+    32,
+    32,
+    3,
+    3
+   ],
+   "offset": 93826
+  },
+  "net.enc.4.2.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 103042
+  },
+  "net.enc.5.0.weight": {
+   "shape": [
+    32,
+    32,
+    3,
+    3
+   ],
+   "offset": 103074
+  },
+  "net.enc.5.0.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 112290
+  },
+  "net.enc.5.2.weight": {
+   "shape": [
+    32,
+    32,
+    3,
+    3
+   ],
+   "offset": 112322
+  },
+  "net.enc.5.2.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 121538
+  },
+  "net.dec.0.0.weight": {
+   "shape": [
+    32,
+    64,
+    3,
+    3
+   ],
+   "offset": 121570
+  },
+  "net.dec.0.0.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 140002
+  },
+  "net.dec.0.2.weight": {
+   "shape": [
+    32,
+    32,
+    3,
+    3
+   ],
+   "offset": 140034
+  },
+  "net.dec.0.2.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 149250
+  },
+  "net.dec.1.0.weight": {
+   "shape": [
+    32,
+    64,
+    3,
+    3
+   ],
+   "offset": 149282
+  },
+  "net.dec.1.0.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 167714
+  },
+  "net.dec.1.2.weight": {
+   "shape": [
+    32,
+    32,
+    3,
+    3
+   ],
+   "offset": 167746
+  },
+  "net.dec.1.2.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 176962
+  },
+  "net.dec.2.0.weight": {
+   "shape": [
+    32,
+    64,
+    3,
+    3
+   ],
+   "offset": 176994
+  },
+  "net.dec.2.0.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 195426
+  },
+  "net.dec.2.2.weight": {
+   "shape": [
+    32,
+    32,
+    3,
+    3
+   ],
+   "offset": 195458
+  },
+  "net.dec.2.2.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 204674
+  },
+  "net.dec.3.0.weight": {
+   "shape": [
+    32,
+    64,
+    3,
+    3
+   ],
+   "offset": 204706
+  },
+  "net.dec.3.0.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 223138
+  },
+  "net.dec.3.2.weight": {
+   "shape": [
+    32,
+    32,
+    3,
+    3
+   ],
+   "offset": 223170
+  },
+  "net.dec.3.2.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 232386
+  },
+  "net.dec.4.0.weight": {
+   "shape": [
+    32,
+    64,
+    3,
+    3
+   ],
+   "offset": 232418
+  },
+  "net.dec.4.0.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 250850
+  },
+  "net.dec.4.2.weight": {
+   "shape": [
+    32,
+    32,
+    3,
+    3
+   ],
+   "offset": 250882
+  },
+  "net.dec.4.2.bias": {
+   "shape": [
+    32
+   ],
+   "offset": 260098
+  },
+  "net.out.weight": {
+   "shape": [
+    1,
+    32,
+    3,
+    3
+   ],
+   "offset": 260130
+  },
+  "net.out.bias": {
+   "shape": [
+    1
+   ],
+   "offset": 260418
+  }
+ }
+}

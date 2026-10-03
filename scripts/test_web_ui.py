@@ -1,4 +1,4 @@
-"""Smoke-tests the Pages site: landing page links, and both model pages load,
+"""Smoke-tests the Pages site: landing page links, and the three model pages load,
 run a few ticks and produce no console/page errors. Adapted from the pages
 worktree's original single-model version (.claude/worktrees/pages).
 
@@ -31,7 +31,7 @@ with sync_playwright() as p:
 
     pg.goto(BASE + "/")
     cards = pg.eval_on_selector_all("a.card", "els => els.map(e => e.getAttribute('href'))")
-    check("landing page has both cards", sorted(cards) == ["gravity/", "token/"], cards)
+    check("landing page has all three cards", sorted(cards) == ["gravity/", "scatter/", "token/"], cards)
 
     pg.click("a.card[href='token/']")
     pg.wait_for_url("**/token/**", timeout=10000)
@@ -53,7 +53,13 @@ with sync_playwright() as p:
     back = pg.get_attribute("header a", "href")
     check("gravity page links back to landing", back == "../")
 
-    check("no page/console errors across all three pages", not errs, errs[:5])
+    pg.goto(BASE + "/scatter/")
+    pg.wait_for_function("parseInt(document.getElementById('s-tick').textContent) >= 3", timeout=60000)
+    err_txt = pg.evaluate("document.getElementById('s-err').textContent")
+    check("scatter-field model ticks and reports error", err_txt != "-", err_txt)
+    check("scatter page links back to landing", pg.get_attribute("header a", "href") == "../")
+
+    check("no page/console errors across all four pages", not errs, errs[:5])
     b.close()
 
 sys.exit(1 if check.failed else 0)
