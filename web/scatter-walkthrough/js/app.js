@@ -1,17 +1,14 @@
-import { Stage, fmt } from "./stage.js";
-import { buildLayout, buildCharts } from "./layout.js";
+import { Stage } from "./stage.js";
+import { buildLayout, buildCharts, paintTrace, paintKernel, paintWeights, hoverMarks, tipText } from "./layout.js";
 import { Walk, PHASE_TITLES, PHASE_COUNT } from "./walk.js";
-import { bodyCorners } from "./cic.js";
-import { sl } from "./colors.js";
 import { loadWeights, mulberry32, initBodies } from "../../scatter/js/scatter_model.js";
 
 const $ = (id) => document.getElementById(id);
 const err = (m) => { $("err").hidden = false; $("err").textContent = m; };
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const KEY = "scatterwalk.phase";
-const GG = 128 * 128;
 
-let stage, layout, charts, walk, worker, weights, wname = null;
+let stage, layout, charts, walk, worker, weights;
 let S = { n: 0, trace: null, sel: 0, picked: false, tick: 0 };
 let hoverRef = null, hoverPick = null, busy = true, lastKey = "", lastSays = "", seedN = 16;
 
@@ -49,16 +46,7 @@ function onTrace(m) {
     S.picked = false;
   }
   stage.setBodies(tr.pos, m.n);
-  const b = (id) => stage.block(id);
-  for (let k = 0; k < 6; k++) b("input").paint(k, tr.input, k * GG);
-  b("phik").paint(0, tr.phiK, 0, 0, true);
-  b("ak").paint(0, tr.input, 3 * GG); b("ak").paint(1, tr.input, 4 * GG);
-  b("h0").setTensor(tr.inp);
-  tr.enc.forEach((a, l) => b("enc" + l).setTensor(a));
-  tr.dec.forEach((a, l) => b("dec" + l).setTensor(a));
-  b("phi").paint(0, tr.phi, 0, 0, true);
-  b("grad").paint(0, tr.gradPhi[0]); b("grad").paint(1, tr.gradPhi[1]);
-  b("agrid").paint(0, tr.aGrid[0]); b("agrid").paint(1, tr.aGrid[1]);
+  paintTrace(stage, tr);
   walk.invalidate();
   busy = false;
   $("b-tick").disabled = false;
@@ -68,42 +56,17 @@ function onTrace(m) {
 
 function onReady(m) {
   charts = buildCharts(stage, m.curve, m.pair);
-  const c = m.curve, kr = new Float32Array(64 * 64), ring = [];
-  let kmax = 0;
-  for (let i = 0; i < c.r.length; i++) kmax = Math.max(kmax, Math.abs(c.tap[i]));
-  for (let y = 0; y < 64; y++) {
-    for (let x = 0; x < 64; x++) {
-      const r = Math.hypot(x - 32, y - 32) * 0.5, f = Math.min(c.r.length - 1, Math.max(0, r / c.r[c.r.length - 1] * c.r.length - 1)), i0 = Math.floor(f);
-      const v = c.tap[i0] + (c.tap[Math.min(i0 + 1, c.r.length - 1)] - c.tap[i0]) * (f - i0);
-      kr[y * 64 + x] = sl(v, kmax / 100);
-    }
-  }
-  stage.block("kring").paint(0, kr, 0, 1);
-  stage.block("kw").paint(0, weights.w["kmlp.2.weight"]);
-  charts.maxK = kmax;
+  charts.maxK = paintKernel(stage, m.curve, weights.w);
   walk.env.charts = charts;
   reset(true);
 }
 
 function showWeights(name, anchor, alpha) {
-  const b = stage.block("wconv"), w = weights.w[name + ".weight"];
-  const cout = name === "net.out" ? 1 : 32, cin = w.length / cout / 9;
-  if (wname !== name) {
-    const a = new Float32Array(192 * 96);
-    for (let co = 0; co < cout; co++) for (let ci = 0; ci < cin; ci++) for (let ky = 0; ky < 3; ky++) for (let kx = 0; kx < 3; kx++) a[(co * 3 + ky) * 192 + ci * 3 + kx] = w[((co * cin + ci) * 3 + ky) * 3 + kx];
-    b.paint(0, a);
-    const m = b.planes[0].map;
-    m.repeat.set(cin * 3 / 192, cout * 3 / 96);
-    b.sub = { w: cin * 3, h: cout * 3 };
-    b.meta = { cin, cout, name };
-    b.planes[0].mesh.scale.set(cin * 3 / 192, cout * 3 / 96, 1);
-    wname = name;
-  }
-  const sx = cin * 3 / 192, sy = cout * 3 / 96;
-  b.group.position.set(anchor.x, anchor.y + 2.4 + sy * 2.4, anchor.z);
+  const b = paintWeights(stage, weights.w, name), { cin, cout } = b.meta;
+  b.group.position.set(anchor.x, anchor.y + 2.4 + cout * 3 / 96 * 2.4, anchor.z);
   b.op = alpha;
   stage.note("wlab", name.replace("net.", "") + " weights: " + cout + " x " + cin + " kernels of 3 x 3", b.group.position.clone().add({ x: 0, y: 0.1 + 0, z: 0 }), alpha, "w");
-  stage.block("wconv").hl = 0.4;
+  b.hl = 0.4;
 }
 
 function reset(first) {
@@ -134,39 +97,7 @@ function commentary(c) {
 }
 
 function extra() {
-  const tr = S.trace;
-  if (!tr || !hoverPick) return;
-  const mark = (block, ix, iy, alpha, color, lift) => {
-    const h = 64 / block.W;
-    stage.markList.push({ p: stage.world(block.id, (ix + 0.5) * h - 32, (iy + 0.5) * h - 32, lift), size: block.size / block.W * 1.1, alpha, color });
-  };
-  if (hoverPick.type === "body") {
-    const i = hoverPick.i;
-    stage.bodyHl[i] = 1;
-    for (const [cx, cy] of bodyCorners(tr.pos[2 * i], tr.pos[2 * i + 1], 128, 64)) mark(stage.block("input"), cx, cy, 0.7, 0x6fc3ff, 0.04);
-  } else if (hoverPick.type === "cell") {
-    const { block, k, ix, iy } = hoverPick;
-    const py = block.planes[k].mesh.position.y + 0.04;
-    mark(block, ix, iy, 0.8, 0x6fc3ff, py);
-    if (block.W === block.H && block.W <= 128 && !["kring", "kw", "wconv"].includes(block.id)) {
-      const f = 128 / block.W;
-      for (let i = 0; i < S.n; i++) {
-        if (bodyCorners(tr.pos[2 * i], tr.pos[2 * i + 1], 128, 64).some(([cx, cy]) => Math.floor(cx / f) === ix && Math.floor(cy / f) === iy)) stage.bodyHl[i] = 1;
-      }
-    }
-  }
-}
-
-function tipText(p) {
-  if (p.type === "body") {
-    const i = p.i;
-    return `body ${i}<br>pos (${S.trace.pos[2 * i].toFixed(2)}, ${S.trace.pos[2 * i + 1].toFixed(2)})<br>vel (${S.vel[2 * i].toFixed(2)}, ${S.vel[2 * i + 1].toFixed(2)})`;
-  }
-  const b = p.block;
-  if (b.id === "wconv" && b.meta) return `${b.meta.name}<br>out ${Math.floor(p.iy / 3)}, in ${Math.floor(p.ix / 3)}, k(${p.iy % 3},${p.ix % 3}) = ${fmt(p.v)}`;
-  const ch = b.thick ? ` ch ${b.chan}` : b.n > 1 ? ` #${p.k + 1}` : "";
-  const x = b.W === b.H ? ` sim (${((p.ix + 0.5) * 64 / b.W - 32).toFixed(1)}, ${((p.iy + 0.5) * 64 / b.H - 32).toFixed(1)})` : "";
-  return `${b.title}${ch}<br>cell ${p.ix}, ${p.iy} of ${b.W}${x}<br>value ${p.v === null ? "-" : fmt(p.v)}`;
+  hoverMarks(stage, hoverPick, S.trace, S.n);
 }
 
 function buildUi() {
@@ -235,7 +166,7 @@ function pointer() {
       const key = p ? (p.type === "body" ? "b" + p.i : p.block.id + p.k + ":" + p.ix + "," + p.iy) : "";
       const prev = hoverPick ? (hoverPick.type === "body" ? "b" + hoverPick.i : hoverPick.block.id + hoverPick.k + ":" + hoverPick.ix + "," + hoverPick.iy) : "";
       hoverPick = p;
-      if (p) { tip.hidden = false; tip.innerHTML = tipText(p); tip.style.left = Math.min(innerWidth - 300, x + 14) + "px"; tip.style.top = Math.min(innerHeight - 80, y + 14) + "px"; } else tip.hidden = true;
+      if (p) { tip.hidden = false; tip.innerHTML = tipText(p, S.trace, S.vel); tip.style.left = Math.min(innerWidth - 300, x + 14) + "px"; tip.style.top = Math.min(innerHeight - 80, y + 14) + "px"; } else tip.hidden = true;
       if (key !== prev) lastKey = "";
     });
     pending = [e.clientX, e.clientY];

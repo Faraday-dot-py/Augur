@@ -1,4 +1,5 @@
 import { loadWeights, ScatterNet } from "../../scatter/js/scatter_model.js";
+import { collect } from "../../scatter/js/trace.js";
 
 let net, pos, vel, n = 0, tick = 0;
 
@@ -6,12 +7,6 @@ async function init() {
   const w = await loadWeights(new URL("../../scatter/weights", import.meta.url).href);
   net = new ScatterNet(w);
   postMessage({ type: "ready", config: w.config, checkpoint: w.checkpoint, iters: w.iters, curve: net.kernelCurve(24, 192), pair: net.kernelCurve(w.config.pp, 64) });
-}
-
-function collect(tr, bufs) {
-  const add = (a) => { bufs.push(a.buffer); return a; };
-  for (const k of ["pos", "vel", "input", "phiK", "inp", "phi", "gather", "pairAcc", "accel"]) add(tr[k]);
-  for (const k of ["enc", "dec", "gradPhi", "aGrid"]) tr[k].forEach(add);
 }
 
 function run(advance) {

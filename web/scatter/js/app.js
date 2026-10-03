@@ -19,6 +19,7 @@ const state = {
 const cam = { auto: true, cx: 0, cy: 0, scale: 1 };
 const history = new Map();
 let dirty = true, plotsDirty = true, fieldDirty = false, truthWorker = null;
+let model = null, modelOpen = false, modelLoading = false, traceBusy = false, traceKey = "", traceT = 0, curvesSent = false;
 
 const worker = new Worker("js/worker.js", { type: "module" });
 
@@ -83,6 +84,14 @@ function onTruth(e) {
 worker.onmessage = (e) => {
   const m = e.data;
   if (m.type === "error") { err.textContent = "Failed to load weights: " + m.message; err.hidden = false; return; }
+  if (m.type === "trace") {
+    traceBusy = false;
+    if (m.epoch !== state.epoch || !model) return;
+    traceKey = m.epoch + ":" + m.tick; traceT = performance.now();
+    if (m.curve) curvesSent = true;
+    model.onTrace(m);
+    return;
+  }
   if (m.type === "ready") {
     Object.assign(state, { G: m.config.grid, extent: m.config.extent, dt: m.config.dt, ready: true });
     state.meta = { checkpoint: m.checkpoint, iters: m.iters, config: m.config };
@@ -105,7 +114,48 @@ worker.onmessage = (e) => {
     if (state.modelE.length > state.histLen) state.modelE.shift();
   }
   touch(); plotsDirty = true;
+  wantTrace();
 };
+
+function wantTrace() {
+  if (!modelOpen || traceBusy || !state.ready || !state.pos) return;
+  if (traceKey === state.epoch + ":" + state.tick) return;
+  if (state.running && performance.now() - traceT < 1000) return;
+  traceBusy = true;
+  worker.postMessage({ cmd: "trace", curves: !curvesSent });
+}
+setInterval(wantTrace, 250);
+
+async function toggleModel() {
+  const on = !modelOpen;
+  if (on && !model) {
+    if (modelLoading) return;
+    modelLoading = true;
+    $("b-model").textContent = "Loading...";
+    try {
+      const { createView } = await import("./model3d.js");
+      model = await createView({ canvas: $("stage3d"), labelsEl: $("labels"), tip: $("tip") });
+      $("mview").open = innerWidth > 760;
+      window.__model = model;
+    } catch (e) {
+      console.error(e);
+      $("b-model").textContent = "Model view unavailable";
+      $("b-model").disabled = true;
+      return;
+    } finally {
+      modelLoading = false;
+    }
+    $("b-model").innerHTML = "Model<kbd>m</kbd>";
+  }
+  modelOpen = on;
+  document.body.classList.toggle("model", on);
+  $("b-model").setAttribute("aria-pressed", String(on));
+  $("stage").hidden = on;
+  $("mview").hidden = !on;
+  model.show(on);
+  worker.postMessage({ cmd: "field", on: on ? false : state.showField });
+  if (on) wantTrace(); else touch();
+}
 
 function bounds() {
   let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
@@ -200,7 +250,7 @@ function render() {
 
 function frame() {
   requestAnimationFrame(frame);
-  if (dirty) render();
+  if (dirty && !modelOpen) render();
   if (plotsDirty && !debug.hidden) {
     plotsDirty = false;
     if (state.truthOn) drawSeries($("c-err"), state.err, "#6fc3ff");
@@ -227,6 +277,7 @@ function updateStats() {
   }
   $("s-out").textContent = `${out} / ${state.n}`;
   $("s-vmax").textContent = vmax.toFixed(2);
+  if (modelOpen) return;
   const v = view(stage.clientWidth, stage.clientHeight);
   $("s-zoom").textContent = `${(v.scale / v.fit).toFixed(2)}x ${cam.auto ? "auto" : "manual"}`;
   $("s-centre").textContent = `${v.cx.toFixed(1)}, ${v.cy.toFixed(1)}`;
@@ -251,6 +302,11 @@ $("b-step").addEventListener("click", () => {
   worker.postMessage({ cmd: "step" });
 });
 $("b-reset").addEventListener("click", () => spawn(state.n));
+$("b-model").addEventListener("click", (e) => { toggleModel(); e.target.blur(); });
+$("r-ch").addEventListener("input", (e) => {
+  $("o-ch").textContent = e.target.value;
+  if (model) model.setChannel(+e.target.value);
+});
 $("b-fit").addEventListener("click", () => { cam.auto = true; syncFit(); touch(); });
 $("b-field").addEventListener("click", (e) => {
   state.showField = !state.showField;
@@ -315,7 +371,14 @@ window.addEventListener("resize", touch);
 window.addEventListener("keydown", (e) => {
   if (e.target.tagName === "INPUT" && e.target.type !== "checkbox") return;
   const cx = stage.clientWidth / 2, cy = stage.clientHeight / 2;
-  if (e.key === " ") { e.preventDefault(); $("b-pause").click(); }
+  if (e.key === "m") toggleModel();
+  else if (modelOpen && (e.key === "[" || e.key === "]")) {
+    const r = $("r-ch");
+    r.value = Math.min(31, Math.max(0, +r.value + (e.key === "]" ? 1 : -1)));
+    r.dispatchEvent(new Event("input"));
+  }
+  else if (modelOpen && (e.key === "f" || e.key === "0" || e.key === "+" || e.key === "=" || e.key === "-" || e.key.startsWith("Arrow"))) return;
+  else if (e.key === " ") { e.preventDefault(); $("b-pause").click(); }
   else if (e.key === ".") $("b-step").click();
   else if (e.key === "r") $("b-reset").click();
   else if (e.key === "f") $("b-field").click();

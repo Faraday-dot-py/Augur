@@ -1,5 +1,6 @@
 import * as THREE from "three";
-import { sl } from "./colors.js";
+import { sl, fmt } from "./colors.js";
+import { bodyCorners } from "./cic.js";
 
 export const LEVELS = 5;
 export const sizeOf = (H) => 12 - 1.5 * (7 - Math.log2(H));
@@ -75,4 +76,86 @@ export function buildCharts(stage, curve, pair) {
   stage.addCurve("pcurve", Array.from(pair.r, (r, i) => new THREE.Vector3(pb.x + r / pr * pw, pb.y + pair.pair[i] / (pmax || 1) * ph, pb.z)), 0xffd36e);
   stage.addCurve("paxis", [new THREE.Vector3(pb.x, pb.y - ph, pb.z), new THREE.Vector3(pb.x, pb.y + ph, pb.z), new THREE.Vector3(pb.x, pb.y, pb.z), new THREE.Vector3(pb.x + pw, pb.y, pb.z)], 0x56627a);
   return { kbase: base, kW: W, kH: Hc, kmax, rmax, pbase: pb, pw, ph, pmax, pr };
+}
+
+const GG = 128 * 128;
+
+export function paintTrace(stage, tr) {
+  const b = (id) => stage.block(id);
+  for (let k = 0; k < 6; k++) b("input").paint(k, tr.input, k * GG);
+  b("phik").paint(0, tr.phiK, 0, 0, true);
+  b("ak").paint(0, tr.input, 3 * GG); b("ak").paint(1, tr.input, 4 * GG);
+  b("h0").setTensor(tr.inp);
+  tr.enc.forEach((a, l) => b("enc" + l).setTensor(a));
+  tr.dec.forEach((a, l) => b("dec" + l).setTensor(a));
+  b("phi").paint(0, tr.phi, 0, 0, true);
+  b("grad").paint(0, tr.gradPhi[0]); b("grad").paint(1, tr.gradPhi[1]);
+  b("agrid").paint(0, tr.aGrid[0]); b("agrid").paint(1, tr.aGrid[1]);
+}
+
+export function paintKernel(stage, c, w) {
+  const kr = new Float32Array(64 * 64);
+  let kmax = 0;
+  for (let i = 0; i < c.r.length; i++) kmax = Math.max(kmax, Math.abs(c.tap[i]));
+  for (let y = 0; y < 64; y++) {
+    for (let x = 0; x < 64; x++) {
+      const r = Math.hypot(x - 32, y - 32) * 0.5, f = Math.min(c.r.length - 1, Math.max(0, r / c.r[c.r.length - 1] * c.r.length - 1)), i0 = Math.floor(f);
+      const v = c.tap[i0] + (c.tap[Math.min(i0 + 1, c.r.length - 1)] - c.tap[i0]) * (f - i0);
+      kr[y * 64 + x] = sl(v, kmax / 100);
+    }
+  }
+  stage.block("kring").paint(0, kr, 0, 1);
+  stage.block("kw").paint(0, w["kmlp.2.weight"]);
+  return kmax;
+}
+
+// lays one conv layer's kernels out as a (cout x 3) by (cin x 3) picture on the shared weights block
+export function paintWeights(stage, w, name) {
+  const b = stage.block("wconv");
+  if (b.meta && b.meta.name === name) return b;
+  const ww = w[name + ".weight"];
+  const cout = name === "net.out" ? 1 : 32, cin = ww.length / cout / 9;
+  const a = new Float32Array(192 * 96);
+  for (let co = 0; co < cout; co++) for (let ci = 0; ci < cin; ci++) for (let ky = 0; ky < 3; ky++) for (let kx = 0; kx < 3; kx++) a[(co * 3 + ky) * 192 + ci * 3 + kx] = ww[((co * cin + ci) * 3 + ky) * 3 + kx];
+  b.paint(0, a);
+  b.planes[0].map.repeat.set(cin * 3 / 192, cout * 3 / 96);
+  b.sub = { w: cin * 3, h: cout * 3 };
+  b.meta = { cin, cout, name };
+  b.planes[0].mesh.scale.set(cin * 3 / 192, cout * 3 / 96, 1);
+  return b;
+}
+
+export function hoverMarks(stage, p, tr, n) {
+  if (!tr || !p) return;
+  const mark = (block, ix, iy, alpha, color, lift) => {
+    const h = 64 / block.W;
+    stage.markList.push({ p: stage.world(block.id, (ix + 0.5) * h - 32, (iy + 0.5) * h - 32, lift), size: block.size / block.W * 1.1, alpha, color });
+  };
+  if (p.type === "body") {
+    const i = p.i;
+    stage.bodyHl[i] = 1;
+    for (const [cx, cy] of bodyCorners(tr.pos[2 * i], tr.pos[2 * i + 1], 128, 64)) mark(stage.block("input"), cx, cy, 0.7, 0x6fc3ff, 0.04);
+  } else if (p.type === "cell") {
+    const { block, k, ix, iy } = p;
+    const py = block.planes[k].mesh.position.y + 0.04;
+    mark(block, ix, iy, 0.8, 0x6fc3ff, py);
+    if (block.W === block.H && block.W <= 128 && !["kring", "kw", "wconv"].includes(block.id)) {
+      const f = 128 / block.W;
+      for (let i = 0; i < n; i++) {
+        if (bodyCorners(tr.pos[2 * i], tr.pos[2 * i + 1], 128, 64).some(([cx, cy]) => Math.floor(cx / f) === ix && Math.floor(cy / f) === iy)) stage.bodyHl[i] = 1;
+      }
+    }
+  }
+}
+
+export function tipText(p, tr, vel) {
+  if (p.type === "body") {
+    const i = p.i;
+    return `body ${i}<br>pos (${tr.pos[2 * i].toFixed(2)}, ${tr.pos[2 * i + 1].toFixed(2)})<br>vel (${vel[2 * i].toFixed(2)}, ${vel[2 * i + 1].toFixed(2)})`;
+  }
+  const b = p.block;
+  if (b.id === "wconv" && b.meta) return `${b.meta.name}<br>out ${Math.floor(p.iy / 3)}, in ${Math.floor(p.ix / 3)}, k(${p.iy % 3},${p.ix % 3}) = ${fmt(p.v)}`;
+  const ch = b.thick ? ` ch ${b.chan}` : b.n > 1 ? ` #${p.k + 1}` : "";
+  const x = b.W === b.H ? ` sim (${((p.ix + 0.5) * 64 / b.W - 32).toFixed(1)}, ${((p.iy + 0.5) * 64 / b.H - 32).toFixed(1)})` : "";
+  return `${b.title}${ch}<br>cell ${p.ix}, ${p.iy} of ${b.W}${x}<br>value ${p.v === null ? "-" : fmt(p.v)}`;
 }

@@ -40,6 +40,11 @@ directory, then visit `/scatter/`). The landing page at the Pages root links her
   dev menu is open.
 - `js/truth.js`: softened all-pairs gravity (symmetric pair loop), leapfrog, energy.
 - `js/truth_worker.js`: runs the ground truth off the main thread, created only when enabled.
+- `js/model3d.js`: the Model view (key `m`): the model's 3D layout drawn with the current sim's
+  tensors, free orbit and hover values, no walkthrough. Lazy-loaded with three.js on first open; the
+  worker answers a `trace` command with one force pass on a copy of the recurrent state, so the
+  sim is unaffected. Reuses `../scatter-walkthrough/js/{stage,layout,colors,cic}.js`.
+- `js/trace.js`: transfer-list helper shared by this worker and the walkthrough worker.
 - `js/plots.js`, `js/app.js`: canvas plots, dirty-flag rendering, camera, controls.
 - `weights.bin` / `weights.json`: fp32 weights + manifest/config (260419 floats).
 

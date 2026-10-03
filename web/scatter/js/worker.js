@@ -1,5 +1,6 @@
 import { loadWeights, ScatterNet } from "./scatter_model.js";
 import * as truth from "./truth.js";
+import { collect } from "./trace.js";
 
 let net, pos, vel, n = 0, tick = 0, epoch = 0, running = false, busy = false, wantField = true, wantEnergy = false;
 
@@ -24,6 +25,18 @@ function one() {
   send(performance.now() - t0);
 }
 
+function traceNow(curves) {
+  const t0 = performance.now(), saved = net.field, tr = {};
+  net.grow(n);
+  net.force(pos, vel, n, new Float64Array(2 * n), tr);
+  net.field = saved;
+  const msg = { type: "trace", epoch, tick, n, ms: performance.now() - t0, trace: tr };
+  const bufs = [];
+  collect(tr, bufs);
+  if (curves) { msg.curve = net.kernelCurve(24, 192); msg.pair = net.kernelCurve(net.cfg.pp, 64); }
+  postMessage(msg, bufs);
+}
+
 function loop() {
   if (!running || busy) return;
   busy = true;
@@ -46,6 +59,8 @@ onmessage = (e) => {
   } else if (m.cmd === "energy") {
     wantEnergy = m.on;
     if (wantEnergy && net && n) postMessage({ type: "energy", epoch, energy: truth.energy(pos, vel, n) });
+  } else if (m.cmd === "trace") {
+    if (net && n) traceNow(m.curves);
   } else if (m.cmd === "field") {
     wantField = m.on;
     if (wantField && net && n) {
