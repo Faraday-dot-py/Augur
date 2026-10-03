@@ -305,6 +305,27 @@ def make_star_dataset(num, steps, seed, device, dt=0.1, eps=0.5, n_light=(3, 11)
     return out
 
 
+def make_cluster_dataset(num, steps, seed, device, n_range=(80, 300), sigma=(5.0, 10.0), vfac=(0.1, 0.6), dt=0.1, eps=0.5):
+    """Cold Gaussian clusters (collapse scenes): sigma U(sigma), per-component speed vfac * sqrt(N / (4 sigma)), zero net momentum."""
+    rng = np.random.default_rng(seed)
+    out = []
+    for _ in range(num):
+        n = int(rng.integers(n_range[0], n_range[1] + 1))
+        sg = rng.uniform(*sigma)
+        pos = np.clip(rng.normal(0.0, sg, (n, 2)), -28.0, 28.0) + CENTER
+        vel = rng.normal(0.0, rng.uniform(*vfac) * np.sqrt(n / (4 * sg)), (n, 2))
+        vel -= vel.mean(0)
+        P, V = rollout_torch_np(pos, vel, steps, device, dt, eps)
+        out.append((P, V))
+    return out
+
+
+def rollout_torch_np(pos, vel, steps, device, dt, eps):
+    from scripts import gravity_sim as gs
+
+    return gs.rollout_torch(pos, vel, steps, device, dt=dt, eps=eps)
+
+
 def traj_metrics(Pm, Vm, Pt, Vt, M, mask, eps):
     """Per-step means over scenes. Pm/Vm model, Pt/Vt truth, (S,T,N,2); M, mask (S,N)."""
     cnt = mask.sum(1)

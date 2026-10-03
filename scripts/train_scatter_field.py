@@ -51,6 +51,7 @@ EXPS = {
               variants=["ss_rec", "ss_norec", "ms_rec", "ms_norec", "ms_rec_g32", "ms_rec_g128", "ms_rec_nomomfix", "ss_rec_h8", "ml_rec", "ml_norec", "ml_noquad", "ml_k4", "ml_nodm", "ss_pot", "ms_pot", "ms_pot_g128", "ms_ker", "ms_ker_g128", "ms_ker_pp", "ms_ker_pp_g128", "kp_nonet", "ms_kp_split", "ms_kp_pot", "ms_kp_pot_g128", "ms_kp_pot_v", "ms_kp_pot_v_g128"]),
     "B": dict(n=(10, 100), scale=True, extent=64.0, in_scale=1.0, star=False,
               variants=["ss_rec", "ss_norec", "ms_rec", "ms_norec", "ms_rec_g32", "ms_rec_g128", "ms_rec_nomomfix", "ml_rec", "ml_norec", "ml_k4"]),
+    "E": dict(n=(10, 200), scale=True, extent=64.0, in_scale=1.0, star=False, cluster=0.5, variants=["ms_kp_pot_v_g128"]),
     "C": dict(n=None, scale=False, extent=64.0, in_scale=0.1, star=True,
               variants=["ss_rec", "ss_norec", "ms_rec", "ms_norec", "ss_rec_h8", "ml_rec", "ml_norec"]),
     "D": dict(n=(2, 2), scale=False, extent=32.0, in_scale=1.0, star=False, orbit=True,
@@ -64,6 +65,10 @@ def make_data(cfg, num, steps, seed, device, dt, eps):
         return sf.make_star_dataset(num, steps, seed, device, dt=dt, eps=eps)
     if cfg.get("orbit"):
         return sf.make_orbit_dataset(num, steps, seed, device, dt=dt, eps=eps)
+    if cfg.get("cluster"):
+        k = int(num * cfg["cluster"])
+        return (gs.make_dataset(num - k, cfg["n"], steps, seed, scale=cfg["scale"], device=device, dt=dt, eps=eps)
+                + sf.make_cluster_dataset(k, steps, seed + 1, device, dt=dt, eps=eps))
     return gs.make_dataset(num, cfg["n"], steps, seed, scale=cfg["scale"], device=device, dt=dt, eps=eps)
 
 
@@ -210,6 +215,7 @@ def main():
     ap.add_argument("--variant", default="all")
     ap.add_argument("--mode", choices=["train", "baseline", "summarize"], default="train")
     ap.add_argument("--baseline-ckpt", default=None)
+    ap.add_argument("--init-ckpt", default=None, help="warm-start model weights (optimizer and iteration reset)")
     ap.add_argument("--train", type=int, default=2000)
     ap.add_argument("--steps", type=int, default=30)
     ap.add_argument("--time-budget", type=float, default=0.0)
@@ -277,6 +283,9 @@ def main():
         else:
             r, rc, glob = sf.receptive_field(model)
         log(f"=== {args.exp} {name} params {sum(p.numel() for p in model.parameters())} receptive field {r} cells = {rc:.1f} units global={glob}")
+        if args.init_ckpt:
+            model.load_state_dict(torch.load(args.init_ckpt, map_location=dev, weights_only=False)["model"])
+            log(f"warm start from {args.init_ckpt}")
         n_it, secs = train(model, tensors, args, f"{args.ckpt_dir}/{args.exp}_{name}.pt", log)
         res = {"train_iters": n_it, "train_seconds": secs, "variant": name, "cfg": {**BASE, **VARIANTS[name]}, "rf_cells": r, "rf_units": rc, "rf_global": glob,
                "args": vars(args), "self_force": sf.self_force_probe(model, dev)}
