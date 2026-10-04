@@ -48,6 +48,8 @@ def build_model(args, dev):
     model = tsf.build(tsf.EXPS[args.exp], args.variant, args.dt).to(dev)
     model.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
     model.eval()
+    for o in [x for x in args.opt.split(",") if x]:
+        sf.apply_opt(model, o)
     return model
 
 
@@ -158,7 +160,7 @@ def run(args):
     dev = torch.device("cuda")
     model = build_model(args, dev)
     res = {"meta": {"ckpt": args.ckpt, "exp": args.exp, "variant": args.variant, "dt": args.dt, "eps": args.eps, "seeds": list(SEEDS),
-                    "steps": STEPS, "scenes_per_seed": SCENES, "bh": BH, "timing_reps": TIMING_REPS, "torch": torch.__version__,
+                    "opt": args.opt, "steps": STEPS, "scenes_per_seed": SCENES, "bh": BH, "timing_reps": TIMING_REPS, "torch": torch.__version__,
                     "gpu": torch.cuda.get_device_name(dev),
                     "git": subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip(),
                     "date": time.strftime("%Y-%m-%dT%H:%M:%S")},
@@ -235,6 +237,7 @@ def main():
     r.add_argument("--variant", default="ms_kp_pot_v_g128")
     r.add_argument("--dt", type=float, default=0.1)
     r.add_argument("--eps", type=float, default=0.5)
+    r.add_argument("--opt", default="")
     c = sub.add_parser("compare")
     c.add_argument("--baseline", required=True)
     c.add_argument("--candidate", required=True)
