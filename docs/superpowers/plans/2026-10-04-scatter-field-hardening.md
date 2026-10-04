@@ -36,3 +36,4 @@ Timing-sensitive runs (1, 2 perf, 4) must not overlap other GPU jobs.
 ## Status log (append below; newest last)
 - 2026-10-04 13:30: plan written. Nothing launched yet.
 - 2026-10-04 13:45: agent 0 DONE (branch scatter-regress-harness 103be23, baseline job 3296). Launched agent 1 optimization (ac96d685efadf8898, branch scatter-opt) and agent 2 scaling (ad7f2dd079149ecc1, branch scatter-scaling). Agent 5 chaos-floor (a3afdebef86797bbc) resumed after Polaris reconnect. Pending launch: 6 conservation, 7 OOD, 3 scenes, then 4 charge, 8 parity.
+- 2026-10-04 14:50: agent 1 DONE (scatter-opt 95c53db: inference 2.5-4x N<=300, cell-list to 1e5, training 1.27x). Agent 5 DONE (a81ce96): late-horizon error is model error; BH err@100 at chaos ceiling, use err@50. Launched agent 6 conservation (a0f40cbb0bb4a2684), 7 OOD (a8fdb422f5f6c0633), 3 scenes (afaadf422cb215dc4); all branch from scatter-opt. Agent 2 scaling still running. Pending: 4 charge, 8 parity.
