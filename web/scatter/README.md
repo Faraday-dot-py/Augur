@@ -28,6 +28,14 @@ while it is open, baseline = first value after it opens or the model resets), a 
 truth starts it from the model's current state ("truth since tick N") in its own worker, which
 catches up to the latest tick and reports its lag; disabling terminates the worker.
 
+By default the page plays precomputed runs (Precomputed button toggles Live): seed 4738, N = 10..100 in
+steps of 10, 100 ticks each, played at 10 ticks/s with a tick scrubber (the live page starts from a random
+state). Positions and velocities are exact outputs of this model; the field overlay and Model view recompute
+the potential on demand from the stored state, with the recurrent previous potential warmed from the two
+preceding ticks (about 5-9% relative L2 off the live field). Regenerate with
+`node tools/precompute.mjs` (about 35 s per run on one CPU; the shipped files were generated on Polaris and
+`node tests/precomputed.mjs` checks they regenerate bit-exactly).
+
 Open `index.html` through any static server (`python3 -m http.server` from the `web/`
 directory, then visit `/scatter/`). The landing page at the Pages root links here; this page has no link back.
 
@@ -62,3 +70,5 @@ directory, then visit `/scatter/`). The landing page at the Pages root links her
 
 `verify.mjs` compares free float32 JS rollouts (8, 30, 100 bodies, 20 steps) with float64
 PyTorch. Measured: 1-step max abs diff 2.3e-7, step-20 diff 2e-6, potential field 4e-7.
+- `precomputed/`: `index.json` + `nNNN.bin` (32-byte header, then float32 `[pos(2N), vel(2N)]` for ticks 0..100), 868 KiB total.
+- `tools/precompute.mjs`, `tests/precomputed.mjs`, `tests/precomputed.py`: generator, node check, Playwright check.

@@ -59,11 +59,22 @@ onmessage = (e) => {
   } else if (m.cmd === "energy") {
     wantEnergy = m.on;
     if (wantEnergy && net && n) postMessage({ type: "energy", epoch, energy: truth.energy(pos, vel, n) });
+  } else if (m.cmd === "probe") {
+    n = m.n; pos = Float64Array.from(m.pos); vel = Float64Array.from(m.vel); tick = m.tick; epoch = m.epoch;
+    net.reset();
+    net.grow(n);
+    for (const [p, v] of m.warm) net.force(Float64Array.from(p), Float64Array.from(v), n, new Float64Array(2 * n));
+    net.force(pos, vel, n, new Float64Array(2 * n));
+    postMessage({ type: "probed", epoch, tick });
+    if (wantField) {
+      const f = net.field.slice();
+      postMessage({ type: "field", epoch, field: f }, [f.buffer]);
+    }
   } else if (m.cmd === "trace") {
     if (net && n) traceNow(m.curves);
   } else if (m.cmd === "field") {
     wantField = m.on;
-    if (wantField && net && n) {
+    if (wantField && !m.quiet && net && n) {
       const f = net.field.slice();
       postMessage({ type: "field", epoch, field: f }, [f.buffer]);
     }

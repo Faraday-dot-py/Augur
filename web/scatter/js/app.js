@@ -1,5 +1,6 @@
 import { initBodies, mulberry32 } from "./scatter_model.js";
 import { drawEnergy, drawSeries } from "./plots.js";
+import * as truth from "./truth.js";
 
 const stage = document.getElementById("stage");
 const ctx = stage.getContext("2d");
@@ -12,10 +13,13 @@ const debug = $("debug");
 const state = {
   n: 40, pos: null, vel: null, field: null, G: 128, extent: 64, dt: 0.1,
   tPos: null, tVel: null, tTick: 0, tMs: 0, truthOn: false, truthSince: null,
-  seed: 4738, tick: 0, epoch: 0, running: true, showField: true,
+  mode: "pre", run: null, seed: 4738, tick: 0, epoch: 0, running: true, showField: true,
   ms: 0, ready: false, meta: null, E0: undefined, modelEnergy: 0,
   err: [], modelE: [], truthE: [], histLen: 200,
 };
+const PRE_RATE = 10, WARM = 2;
+const runs = new Map();
+let runIndex = null, playTimer = null, probeBusy = false, probeKey = "", probedKey = "";
 const cam = { auto: true, cx: 0, cy: 0, scale: 1 };
 const history = new Map();
 let dirty = true, plotsDirty = true, fieldDirty = false, truthWorker = null;
@@ -35,6 +39,124 @@ function spawn(n) {
   worker.postMessage({ cmd: "reset", epoch: state.epoch, n, pos, vel, energy: !debug.hidden });
   if (state.truthOn) startTruth(pos, vel, 0, true);
   touch();
+}
+
+async function loadRun(n) {
+  if (runs.has(n)) return runs.get(n);
+  if (!runIndex) runIndex = await (await fetch("precomputed/index.json")).json();
+  const buf = await (await fetch("precomputed/" + runIndex.runs[n])).arrayBuffer();
+  const head = new DataView(buf);
+  if (new TextDecoder().decode(new Uint8Array(buf, 0, 4)) !== "SCPC" || head.getUint32(8, true) !== n) throw new Error("bad precomputed file for " + n);
+  const run = { n, ticks: head.getUint32(12, true), data: new Float32Array(buf, 32), energy: null };
+  run.energy = new Float64Array(run.ticks + 1).fill(NaN);
+  runs.set(n, run);
+  return run;
+}
+
+async function spawnPre(n) {
+  state.n = n; state.epoch++;
+  const epoch = state.epoch;
+  stopPlay();
+  let run;
+  try { run = await loadRun(n); } catch (e) {
+    err.textContent = "Failed to load precomputed run: " + e.message; err.hidden = false;
+    return;
+  }
+  if (epoch !== state.epoch || state.mode !== "pre") return;
+  err.hidden = true;
+  $("s-src").textContent = `precomputed, seed ${state.seed}, ${run.ticks} ticks`;
+  $("s-field").textContent = "approx (phi_prev warmed from the previous 2 ticks, ~5-9% off)";
+  state.run = run;
+  state.E0 = undefined; state.err = []; state.modelE = []; state.truthE = [];
+  history.clear(); probeKey = "";
+  $("r-tick").max = run.ticks;
+  showTick(0);
+  if (state.truthOn) startTruth(state.pos, state.vel, 0, true);
+  if (state.running) startPlay();
+}
+
+function energyAt(k) {
+  const run = state.run;
+  if (Number.isNaN(run.energy[k])) {
+    const o = k * 4 * run.n;
+    run.energy[k] = truth.energy(run.data.subarray(o, o + 2 * run.n), run.data.subarray(o + 2 * run.n, o + 4 * run.n), run.n);
+  }
+  return run.energy[k];
+}
+
+function showTick(k) {
+  const { n, data } = state.run;
+  const o = k * 4 * n;
+  state.tick = k; state.ms = 0;
+  state.pos = Float64Array.from(data.subarray(o, o + 2 * n));
+  state.vel = Float64Array.from(data.subarray(o + 2 * n, o + 4 * n));
+  state.modelEnergy = energyAt(k);
+  if (state.E0 === undefined) state.E0 = state.modelEnergy;
+  state.modelE = [];
+  for (let t = Math.max((state.truthSince || 0) + 1, k - state.histLen + 1); t <= k; t++) state.modelE.push((energyAt(t) - state.E0) / Math.abs(state.E0));
+  history.set(k, { pos: state.pos });
+  if (truthWorker) truthWorker.postMessage({ cmd: "advance", epoch: state.epoch, tick: k });
+  $("r-tick").value = k; $("o-tick").textContent = k;
+  touch(); plotsDirty = true;
+  probe();
+  wantTrace();
+}
+
+function probe() {
+  if (state.mode !== "pre" || !state.run || !state.ready || probeBusy || !(state.showField || modelOpen)) return;
+  const key = state.epoch + ":" + state.tick;
+  if (probeKey === key) return;
+  probeBusy = true; probeKey = key;
+  const { n, data } = state.run, k = state.tick, warm = [];
+  for (let t = Math.max(0, k - WARM); t < k; t++) warm.push([data.slice(t * 4 * n, t * 4 * n + 2 * n), data.slice(t * 4 * n + 2 * n, t * 4 * n + 4 * n)]);
+  worker.postMessage({ cmd: "probe", epoch: state.epoch, tick: k, n, pos: state.pos.slice(), vel: state.vel.slice(), warm });
+}
+
+function startPlay() {
+  stopPlay();
+  playTimer = setInterval(() => {
+    if (state.tick < state.run.ticks) showTick(state.tick + 1);
+    if (state.tick >= state.run.ticks) setRunning(false);
+  }, 1000 / PRE_RATE);
+}
+
+function stopPlay() {
+  clearInterval(playTimer);
+  playTimer = null;
+}
+
+function setRunning(on) {
+  state.running = on;
+  const b = $("b-pause");
+  b.setAttribute("aria-pressed", String(!on));
+  b.textContent = on ? "Pause" : "Resume";
+  if (state.mode === "live") { worker.postMessage({ cmd: "run", run: on }); return; }
+  if (!on) stopPlay();
+  else if (state.run && state.tick >= state.run.ticks) spawnPre(state.n);
+  else if (state.run) startPlay();
+}
+
+function setMode(mode) {
+  if (mode === state.mode) return;
+  state.mode = mode; state.epoch++;
+  stopPlay();
+  document.body.classList.toggle("live", mode === "live");
+  $("b-mode").setAttribute("aria-pressed", String(mode === "pre"));
+  $("b-mode").textContent = mode === "pre" ? "Precomputed" : "Live";
+  $("s-src").textContent = mode === "pre" ? `precomputed, seed ${state.seed}, ${runIndex ? runIndex.ticks : "?"} ticks` : "live, random start";
+  $("s-field").textContent = mode === "pre" ? "approx (phi_prev warmed from the previous 2 ticks, ~5-9% off)" : "live";
+  rBodies.step = mode === "pre" ? 10 : 1;
+  history.clear(); probeKey = "";
+  if (mode === "pre") {
+    worker.postMessage({ cmd: "run", run: false });
+    rBodies.value = Math.min(100, Math.max(10, Math.round(state.n / 10) * 10));
+    oBodies.textContent = rBodies.value;
+    spawnPre(+rBodies.value);
+  } else {
+    state.run = null;
+    spawn(state.n);
+    worker.postMessage({ cmd: "run", run: state.running });
+  }
 }
 
 function startTruth(pos, vel, tick, fresh) {
@@ -96,8 +218,17 @@ worker.onmessage = (e) => {
     Object.assign(state, { G: m.config.grid, extent: m.config.extent, dt: m.config.dt, ready: true });
     state.meta = { checkpoint: m.checkpoint, iters: m.iters, config: m.config };
     $("s-ckpt").textContent = `${m.checkpoint} (${m.iters} it)`;
-    spawn(state.n);
-    worker.postMessage({ cmd: "run", run: state.running });
+    if (state.mode === "live") {
+      spawn(state.n);
+      worker.postMessage({ cmd: "run", run: state.running });
+    } else probe();
+    return;
+  }
+  if (m.type === "probed") {
+    probeBusy = false;
+    if (m.epoch === state.epoch) probedKey = m.epoch + ":" + m.tick;
+    probe();
+    wantTrace();
     return;
   }
   if (m.epoch !== state.epoch) return;
@@ -119,6 +250,7 @@ worker.onmessage = (e) => {
 
 function wantTrace() {
   if (!modelOpen || traceBusy || !state.ready || !state.pos) return;
+  if (state.mode === "pre" && probedKey !== state.epoch + ":" + state.tick) return;
   if (traceKey === state.epoch + ":" + state.tick) return;
   if (state.running && performance.now() - traceT < 1000) return;
   traceBusy = true;
@@ -153,7 +285,8 @@ async function toggleModel() {
   $("stage").hidden = on;
   $("mview").hidden = !on;
   model.show(on);
-  worker.postMessage({ cmd: "field", on: on ? false : state.showField });
+  worker.postMessage({ cmd: "field", on: on ? false : state.showField, quiet: state.mode === "pre" });
+  probe();
   if (on) wantTrace(); else touch();
 }
 
@@ -291,17 +424,19 @@ function toggleDebug() {
   updateStats();
 }
 
-$("b-pause").addEventListener("click", (e) => {
-  state.running = !state.running;
-  e.target.setAttribute("aria-pressed", String(!state.running));
-  e.target.textContent = state.running ? "Pause" : "Resume";
-  worker.postMessage({ cmd: "run", run: state.running });
-});
+$("b-pause").addEventListener("click", () => setRunning(!state.running));
 $("b-step").addEventListener("click", () => {
-  if (state.running) $("b-pause").click();
-  worker.postMessage({ cmd: "step" });
+  if (state.running) setRunning(false);
+  if (state.mode === "live") worker.postMessage({ cmd: "step" });
+  else if (state.run && state.tick < state.run.ticks) showTick(state.tick + 1);
 });
-$("b-reset").addEventListener("click", () => spawn(state.n));
+$("b-reset").addEventListener("click", () => state.mode === "pre" ? spawnPre(state.n) : spawn(state.n));
+$("b-mode").addEventListener("click", (e) => { setMode(state.mode === "pre" ? "live" : "pre"); e.target.blur(); });
+$("r-tick").addEventListener("input", (e) => {
+  if (state.mode !== "pre" || !state.run) return;
+  if (state.running) setRunning(false);
+  showTick(+e.target.value);
+});
 $("b-model").addEventListener("click", (e) => { toggleModel(); e.target.blur(); });
 $("r-ch").addEventListener("input", (e) => {
   $("o-ch").textContent = e.target.value;
@@ -311,7 +446,8 @@ $("b-fit").addEventListener("click", () => { cam.auto = true; syncFit(); touch()
 $("b-field").addEventListener("click", (e) => {
   state.showField = !state.showField;
   e.target.setAttribute("aria-pressed", String(state.showField));
-  worker.postMessage({ cmd: "field", on: state.showField });
+  worker.postMessage({ cmd: "field", on: state.showField, quiet: state.mode === "pre" });
+  probe();
   touch();
 });
 $("c-truth").addEventListener("change", (e) => {
@@ -336,8 +472,13 @@ $("b-export").addEventListener("click", () => {
 });
 const rBodies = $("r-bodies"), oBodies = $("o-bodies");
 rBodies.addEventListener("input", () => { oBodies.textContent = rBodies.value; });
-rBodies.addEventListener("change", () => state.ready && spawn(parseInt(rBodies.value, 10)));
+rBodies.addEventListener("change", () => {
+  const v = parseInt(rBodies.value, 10);
+  if (state.mode === "pre") spawnPre(v);
+  else if (state.ready) spawn(v);
+});
 
+spawnPre(state.n);
 const pointers = new Map();
 stage.addEventListener("pointerdown", (e) => {
   stage.setPointerCapture(e.pointerId);
