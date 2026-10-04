@@ -58,23 +58,25 @@ export function buildLayout(stage) {
   return { pos, enc, dec, xs, arcs, THICK };
 }
 
-export function buildCharts(stage, curve, pair) {
+// flat draws the charts in the floor plane (value along -z) so they face the viewer once the stage is stood up as a wall
+export function buildCharts(stage, curve, pair, flat = false) {
   const base = new THREE.Vector3(-44, 0, -30);
   const W = 14, Hc = 5;
   let kmax = 0;
   for (let i = 0; i < curve.r.length; i++) kmax = Math.max(kmax, Math.abs(curve.raw[i]), Math.abs(curve.tap[i]));
   const sc = (k) => sl(k, kmax / 100) * Hc;
   const rmax = curve.r[curve.r.length - 1];
-  const line = (a) => Array.from(curve.r, (r, i) => new THREE.Vector3(base.x + r / rmax * W, base.y + sc(a[i]), base.z));
+  const at = (o, x, v) => flat ? new THREE.Vector3(o.x + x, o.y, o.z - v) : new THREE.Vector3(o.x + x, o.y + v, o.z);
+  const line = (a) => Array.from(curve.r, (r, i) => at(base, r / rmax * W, sc(a[i])));
   stage.addCurve("kraw", line(curve.raw), 0x8a7fb0);
   stage.addCurve("ktap", line(curve.tap), 0xff9a3c);
-  stage.addCurve("kaxis", [new THREE.Vector3(base.x, base.y - Hc, base.z), new THREE.Vector3(base.x, base.y + Hc, base.z), new THREE.Vector3(base.x, base.y, base.z), new THREE.Vector3(base.x + W, base.y, base.z)], 0x56627a);
+  stage.addCurve("kaxis", [at(base, 0, -Hc), at(base, 0, Hc), at(base, 0, 0), at(base, W, 0)], 0x56627a);
   const pb = new THREE.Vector3(-9, 1.5, 14.5), pw = 8, ph = 2.2;
   let pmax = 0;
   for (const v of pair.pair) pmax = Math.max(pmax, Math.abs(v));
   const pr = pair.r[pair.r.length - 1];
-  stage.addCurve("pcurve", Array.from(pair.r, (r, i) => new THREE.Vector3(pb.x + r / pr * pw, pb.y + pair.pair[i] / (pmax || 1) * ph, pb.z)), 0xffd36e);
-  stage.addCurve("paxis", [new THREE.Vector3(pb.x, pb.y - ph, pb.z), new THREE.Vector3(pb.x, pb.y + ph, pb.z), new THREE.Vector3(pb.x, pb.y, pb.z), new THREE.Vector3(pb.x + pw, pb.y, pb.z)], 0x56627a);
+  stage.addCurve("pcurve", Array.from(pair.r, (r, i) => at(pb, r / pr * pw, pair.pair[i] / (pmax || 1) * ph)), 0xffd36e);
+  stage.addCurve("paxis", [at(pb, 0, -ph), at(pb, 0, ph), at(pb, 0, 0), at(pb, pw, 0)], 0x56627a);
   return { kbase: base, kW: W, kH: Hc, kmax, rmax, pbase: pb, pw, ph, pmax, pr };
 }
 
@@ -137,7 +139,7 @@ export function hoverMarks(stage, p, tr, n) {
     for (const [cx, cy] of bodyCorners(tr.pos[2 * i], tr.pos[2 * i + 1], 128, 64)) mark(stage.block("input"), cx, cy, 0.7, 0x6fc3ff, 0.04);
   } else if (p.type === "cell") {
     const { block, k, ix, iy } = p;
-    const py = block.planes[k].mesh.position.y + 0.04;
+    const py = (p.chan !== undefined ? block.allPlanes[p.chan] : block.planes[k].mesh).position.y + 0.04;
     mark(block, ix, iy, 0.8, 0x6fc3ff, py);
     if (block.W === block.H && block.W <= 128 && !["kring", "kw", "wconv"].includes(block.id)) {
       const f = 128 / block.W;
@@ -155,7 +157,7 @@ export function tipText(p, tr, vel) {
   }
   const b = p.block;
   if (b.id === "wconv" && b.meta) return `${b.meta.name}<br>out ${Math.floor(p.iy / 3)}, in ${Math.floor(p.ix / 3)}, k(${p.iy % 3},${p.ix % 3}) = ${fmt(p.v)}`;
-  const ch = b.thick ? ` ch ${b.chan}` : b.n > 1 ? ` #${p.k + 1}` : "";
+  const ch = p.chan !== undefined ? ` ch ${p.chan} (strongest on the ray)` : b.thick ? ` ch ${b.chan}` : b.n > 1 ? ` #${p.k + 1}` : "";
   const x = b.W === b.H ? ` sim (${((p.ix + 0.5) * 64 / b.W - 32).toFixed(1)}, ${((p.iy + 0.5) * 64 / b.H - 32).toFixed(1)})` : "";
   return `${b.title}${ch}<br>cell ${p.ix}, ${p.iy} of ${b.W}${x}<br>value ${p.v === null ? "-" : fmt(p.v)}`;
 }

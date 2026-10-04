@@ -18,12 +18,22 @@ evaluation per tick). The UNet is ~95% of the cost: ~0.4 s per tick (Node 24), s
 runs in a Web Worker and the page shows whatever tick rate the machine sustains. Bodies
 outside the 64x64 arena get no grid force (not trained there).
 
-Controls: space pause, `.` step, `r` reset, `d` dev menu, `[` / `]` or the channel slider scrub the 32
-UNet channels. Drag orbits, wheel / pinch zooms, hover (or tap) shows names and raw values; hovering a UNet
-slab shows that layer's conv weights. Bodies move every tick; the slabs refresh from a traced force pass
-whenever the worker is free (latest tick wins), so while playing they lag the bodies and the key shows
-"slabs: tick k" with "updating" while behind. The bottom bar fades to 25% opacity when the pointer leaves
-it (on touch it shows for 3 s after any tap).
+Controls: space pause, `.` step, `r` reset, `d` dev menu, `[` / `]` or the channel slider pick one of the 32
+UNet channels; channel -1 ("all") overlays every channel of every multi-channel slab, with opacity from |value|
+and hue from sign (the tooltip then names the strongest channel on the ray). Drag orbits, wheel / pinch zooms,
+hover (or tap) shows names and values; hovering a UNet slab shows that layer's conv weights. The model is drawn
+as a diagram standing on a wall (sim x right, sim y up, slab thickness toward the viewer). The bottom bar fades
+to 25% opacity when the pointer leaves it (on touch it shows for 3 s after any tap).
+
+Every displayed frame is one tick: bodies, input stack, kernel branch, all UNet activations, potential,
+gradient and acceleration come from the same traced force pass and are shown together (the readout is
+"tick t · buffer b/100 · x ticks/s shown · y frames/s computed"). One producer worker runs the true Verlet
+sequence (so the recurrent potential is exact) and keeps up to 100 frames ahead of the playhead, 30 behind for
+scrubbing, in memory only: nothing beyond the weights is shipped, and the sim runs past tick 100. A frame is
+about 2.3 MB (UNet activations 8-bit and fields 16-bit, sqrt-companded per channel, vs 8.5 MB as float32), so
+the window is about 300 MB. Playback is capped at 10 ticks/s and slows to the producer's rate when the buffer
+is empty (about 2 ticks/s here, since the sequence is inherently serial); pause to let the buffer fill.
+Tooltips show dequantised values (at most 0.8% of the channel's max off for activations).
 
 The dev menu (`d`) holds the stats, the energy-drift plot of the model (energy is only computed
 while it is open, baseline = first value after it opens or the model resets), a "Ground truth
@@ -31,13 +41,10 @@ while it is open, baseline = first value after it opens or the model resets), a 
 truth starts it from the model's current state ("truth since tick N") in its own worker, which
 catches up to the latest tick and reports its lag; disabling terminates the worker.
 
-By default the page plays precomputed runs (Precomputed button toggles Live): seed 4738, N = 10..100 in
-steps of 10, 100 ticks each, played at 10 ticks/s with a tick scrubber (the live page starts from a random
-state. Positions and velocities are exact outputs of this model; the slabs recompute the tensors on demand
-from the stored state, with the recurrent previous potential warmed from the two preceding ticks (about 5-9%
-relative L2 off the live field). Regenerate with
-`node tools/precompute.mjs` (about 35 s per run on one CPU; the shipped files were generated on Polaris and
-`node tests/precomputed.mjs` checks they regenerate bit-exactly).
+"Fixed seed" (default) starts every run from seed 4738 with the page's `initBodies`; "Random" starts from a
+random state. `precomputed/` holds seed-4738 runs for N = 10..100 (100 ticks, positions and velocities) generated
+on Polaris with `node tools/precompute.mjs`; the page no longer fetches them, `tests/precomputed.mjs` checks they
+regenerate bit-exactly and `tests/seed.py` checks the browser's sequence reproduces them.
 
 Open `index.html` through any static server (`python3 -m http.server` from the `web/`
 directory, then visit `/scatter/`). The landing page at the Pages root links here; this page has no link back.
@@ -46,14 +53,14 @@ directory, then visit `/scatter/`). The landing page at the Pages root links her
 
 - `js/scatter_model.js`: port of `ScatterField` (`scripts/scatter_field.py`): scatter/gather,
   FFT kernel convolution, UNet (4-output-channel blocked 3x3 convs), pair term, Verlet.
-- `js/worker.js`: steps the model off the main thread and posts positions and velocities
-  (transferred) and the energy only while the dev menu is open; answers `trace` (live state) and
-  `tracetick` (stored state + warm ticks) with one traced force pass that leaves the sim untouched.
+- `js/worker.js`: the producer: steps the model and posts one quantised frame per tick (state, energy and the
+  traced tensors), producing while the tick is below the limit the page sends (playhead + 100).
+- `js/frames.js`: frame quantisation / dequantisation shared by the worker and the page.
 - `js/truth.js`: softened all-pairs gravity (symmetric pair loop), leapfrog, energy.
 - `js/truth_worker.js`: runs the ground truth off the main thread, created only when enabled.
 - `js/model3d.js`: the page's 3D view: the model's layout drawn with the current sim's tensors, free
   orbit and hover values, no walkthrough. Reuses `../scatter-walkthrough/js/{stage,layout,colors,cic}.js`.
-- `js/trace.js`: transfer-list helper shared by this worker and the walkthrough worker.
+- `js/trace.js`: transfer-list helper used by the walkthrough worker.
 - `js/plots.js`, `js/app.js`: dev-menu plots, playback, trace scheduling, controls.
 - `weights.bin` / `weights.json`: fp32 weights + manifest/config (260419 floats).
 

@@ -2,6 +2,7 @@ import { initBodies, mulberry32 } from "./scatter_model.js";
 import { drawEnergy, drawSeries } from "./plots.js";
 import * as truth from "./truth.js";
 import { createView } from "./model3d.js";
+import { makeOut, dequant, frameBytes } from "./frames.js";
 
 const err = document.getElementById("err");
 const $ = (id) => document.getElementById(id);
@@ -10,149 +11,103 @@ const debug = $("debug");
 const state = {
   n: 40, pos: null, vel: null, G: 128, extent: 64, dt: 0.1,
   tPos: null, tVel: null, tTick: 0, tMs: 0, truthOn: false, truthSince: null,
-  mode: "pre", run: null, seed: 4738, tick: 0, epoch: 0, running: true,
+  mode: "fixed", seed: 4738, tick: -1, epoch: 0, running: true,
   ms: 0, ready: false, meta: null, E0: undefined, modelEnergy: 0,
   err: [], modelE: [], truthE: [], histLen: 200,
 };
-const PRE_RATE = 10, WARM = 2, LIVE_TRACE_GAP = 600;
-const runs = new Map();
-let runIndex = null, playTimer = null;
-const history = new Map();
-let plotsDirty = true, truthWorker = null;
-let model = null, traceBusy = false, traceKey = "", traceTick = -1, traceT = 0, curvesSent = false;
+const RATE = 10, BUF_AHEAD = 100, BUF_BEHIND = 30;
+const frames = new Map(), out = makeOut(), history = new Map();
+let oldest = 0, newest = -1, want = -1, lastAdv = 0, stepPending = false, curves = null;
+const arrivals = [], shownAt = [];
+let plotsDirty = true, truthWorker = null, model = null;
 
 const worker = new Worker("js/worker.js", { type: "module" });
 
-function syncBodies() {
-  if (!model || !state.pos) return;
-  model.setBodies(state.pos, state.vel, state.n);
-  model.setTruth(state.truthOn ? state.tPos : null);
-  updateStatus();
+function rate(list) {
+  const now = performance.now();
+  while (list.length && now - list[0] > 3000) list.shift();
+  return list.length > 1 ? (list.length - 1) / ((list[list.length - 1] - list[0]) / 1000) : 0;
 }
 
 function updateStatus() {
-  if (!state.pos) return;
-  const lag = traceTick >= 0 && traceTick !== state.tick;
-  $("mstat").textContent = traceTick < 0 ? "waiting for trace" : `bodies: tick ${state.tick} · slabs: tick ${traceTick}${traceBusy && lag ? " · updating" : ""}`;
+  if (state.tick < 0) { $("mstat").textContent = state.ready ? "computing tick 0" : "loading weights"; return; }
+  const ahead = newest - state.tick, starved = state.running && !frames.has(state.tick + 1);
+  $("mstat").textContent = `tick ${state.tick} · buffer ${ahead}/${BUF_AHEAD} · ${rate(shownAt).toFixed(1)} ticks/s shown · ${rate(arrivals).toFixed(1)} frames/s computed${starved ? " · waiting for next frame" : ""}`;
 }
 
-function spawn(n) {
-  const rng = mulberry32(state.seed + Math.floor(performance.now()));
-  const { pos, vel } = initBodies(n, rng);
+function syncTruth() {
+  if (model) model.setTruth(state.truthOn ? state.tPos : null);
+}
+
+function startRun(n) {
   state.n = n; state.epoch++;
-  state.E0 = undefined; state.err = []; state.modelE = []; state.truthE = [];
-  state.pos = pos; state.vel = vel; state.tick = 0;
-  history.clear();
-  worker.postMessage({ cmd: "reset", epoch: state.epoch, n, pos, vel, energy: !debug.hidden });
+  frames.clear(); history.clear();
+  oldest = 0; newest = -1; want = BUF_AHEAD; stepPending = false;
+  state.tick = -1; state.E0 = undefined; state.err = []; state.modelE = []; state.truthE = []; state.pos = state.vel = null;
+  const { pos, vel } = initBodies(n, mulberry32(state.mode === "fixed" ? state.seed : state.seed + Math.floor(performance.now())));
+  $("s-src").textContent = state.mode === "fixed" ? `fixed seed ${state.seed}` : "random start";
+  worker.postMessage({ cmd: "reset", epoch: state.epoch, n, pos, vel, limit: want });
   if (state.truthOn) startTruth(pos, vel, 0, true);
-  syncBodies();
-  wantTrace();
+  updateStatus();
 }
 
-async function loadRun(n) {
-  if (runs.has(n)) return runs.get(n);
-  if (!runIndex) runIndex = await (await fetch("precomputed/index.json")).json();
-  const buf = await (await fetch("precomputed/" + runIndex.runs[n])).arrayBuffer();
-  const head = new DataView(buf);
-  if (new TextDecoder().decode(new Uint8Array(buf, 0, 4)) !== "SCPC" || head.getUint32(8, true) !== n) throw new Error("bad precomputed file for " + n);
-  const run = { n, ticks: head.getUint32(12, true), data: new Float32Array(buf, 32), energy: null };
-  run.energy = new Float64Array(run.ticks + 1).fill(NaN);
-  runs.set(n, run);
-  return run;
-}
-
-async function spawnPre(n) {
-  state.n = n; state.epoch++; state.run = null;
-  const epoch = state.epoch;
-  stopPlay();
-  let run;
-  try { run = await loadRun(n); } catch (e) {
-    err.textContent = "Failed to load precomputed run: " + e.message; err.hidden = false;
-    return;
-  }
-  if (epoch !== state.epoch || state.mode !== "pre") return;
-  err.hidden = true;
-  $("s-src").textContent = `precomputed, seed ${state.seed}, ${run.ticks} ticks`;
-  state.run = run;
-  state.E0 = undefined; state.err = []; state.modelE = []; state.truthE = [];
-  history.clear();
-  $("r-tick").max = run.ticks;
-  showTick(0);
-  if (state.truthOn) startTruth(state.pos, state.vel, 0, true);
-  if (state.running) startPlay();
-}
-
-function energyAt(k) {
-  const run = state.run;
-  if (Number.isNaN(run.energy[k])) {
-    const o = k * 4 * run.n;
-    run.energy[k] = truth.energy(run.data.subarray(o, o + 2 * run.n), run.data.subarray(o + 2 * run.n, o + 4 * run.n), run.n);
-  }
-  return run.energy[k];
-}
-
-function showTick(k) {
-  const { n, data } = state.run;
-  const o = k * 4 * n;
-  state.tick = k; state.ms = 0;
-  state.pos = Float64Array.from(data.subarray(o, o + 2 * n));
-  state.vel = Float64Array.from(data.subarray(o + 2 * n, o + 4 * n));
-  state.modelEnergy = energyAt(k);
-  if (state.E0 === undefined) state.E0 = state.modelEnergy;
+function show(k) {
+  const fr = frames.get(k);
+  state.tick = k; state.pos = fr.pos; state.vel = fr.vel; state.ms = fr.ms; state.modelEnergy = fr.energy;
+  if (state.E0 === undefined) state.E0 = fr.energy;
   state.modelE = [];
-  for (let t = Math.max((state.truthSince || 0) + 1, k - state.histLen + 1); t <= k; t++) state.modelE.push((energyAt(t) - state.E0) / Math.abs(state.E0));
-  history.set(k, { pos: state.pos });
+  for (let t = Math.max((state.truthSince || 0) + 1, k - state.histLen + 1); t <= k; t++) {
+    const f = frames.get(t);
+    if (f) state.modelE.push((f.energy - state.E0) / Math.abs(state.E0));
+  }
+  history.set(k, { pos: fr.pos });
+  history.delete(k - 64);
   if (truthWorker) truthWorker.postMessage({ cmd: "advance", epoch: state.epoch, tick: k });
-  $("r-tick").value = k; $("o-tick").textContent = k;
+  dequant(fr, out);
+  if (model) model.showFrame(out);
+  for (; oldest < k - BUF_BEHIND; oldest++) frames.delete(oldest);
+  if (k + BUF_AHEAD !== want) { want = k + BUF_AHEAD; worker.postMessage({ cmd: "want", epoch: state.epoch, limit: want }); }
+  shownAt.push(performance.now());
+  syncRange();
   plotsDirty = true;
-  syncBodies();
-  wantTrace();
+  syncTruth();
+  updateStatus();
 }
 
-function startPlay() {
-  stopPlay();
-  playTimer = setInterval(() => {
-    if (state.tick < state.run.ticks) showTick(state.tick + 1);
-    if (state.tick >= state.run.ticks) setRunning(false);
-  }, 1000 / PRE_RATE);
+function syncRange() {
+  const r = $("r-tick");
+  r.min = oldest; r.max = newest; r.value = state.tick;
+  $("o-tick").textContent = state.tick;
 }
 
-function stopPlay() {
-  clearInterval(playTimer);
-  playTimer = null;
+function tryAdvance() {
+  if (state.tick < 0) return;
+  const next = state.tick + 1, now = performance.now();
+  if (!frames.has(next)) return;
+  if (stepPending) { stepPending = false; lastAdv = now; show(next); }
+  else if (state.running && now - lastAdv >= 1000 / RATE) { lastAdv = now; show(next); }
 }
+setInterval(tryAdvance, 20);
 
 function setRunning(on) {
   state.running = on;
   const b = $("b-pause");
   b.setAttribute("aria-pressed", String(!on));
   b.textContent = on ? "Pause" : "Resume";
-  if (state.mode === "live") { worker.postMessage({ cmd: "run", run: on }); return; }
-  if (!on) stopPlay();
-  else if (state.run && state.tick >= state.run.ticks) spawnPre(state.n);
-  else if (state.run) startPlay();
+  lastAdv = performance.now();
 }
 
 function setMode(mode) {
   if (mode === state.mode) return;
-  state.mode = mode; state.epoch++;
-  stopPlay();
-  document.body.classList.toggle("live", mode === "live");
-  $("b-mode").setAttribute("aria-pressed", String(mode === "pre"));
-  $("b-mode").textContent = mode === "pre" ? "Precomputed" : "Live";
-  $("s-src").textContent = mode === "pre" ? `precomputed, seed ${state.seed}, ${runIndex ? runIndex.ticks : "?"} ticks` : "live, random start";
-  rBodies.step = mode === "pre" ? 10 : 1;
-  history.clear();
-  if (mode === "pre") {
-    worker.postMessage({ cmd: "run", run: false });
+  state.mode = mode;
+  $("b-mode").setAttribute("aria-pressed", String(mode === "fixed"));
+  $("b-mode").textContent = mode === "fixed" ? "Fixed seed" : "Random";
+  rBodies.step = mode === "fixed" ? 10 : 1;
+  if (mode === "fixed") {
     rBodies.value = Math.min(100, Math.max(10, Math.round(state.n / 10) * 10));
     oBodies.textContent = rBodies.value;
-    spawnPre(+rBodies.value);
-  } else {
-    state.run = null;
-    spawn(state.n);
-    worker.postMessage({ cmd: "run", run: state.running });
   }
+  startRun(+rBodies.value);
 }
 
 function startTruth(pos, vel, tick, fresh) {
@@ -164,7 +119,7 @@ function startTruth(pos, vel, tick, fresh) {
   truthWorker.onmessage = onTruth;
   truthWorker.postMessage({ cmd: "init", epoch: state.epoch, n: state.n, dt: state.dt, tick, pos, vel });
   syncTruthUI();
-  syncBodies();
+  syncTruth();
 }
 
 function stopTruth() {
@@ -172,7 +127,7 @@ function stopTruth() {
   truthWorker = null;
   state.truthOn = false; state.truthSince = null; state.tPos = null; state.tVel = null; state.truthE = []; state.err = [];
   syncTruthUI();
-  syncBodies();
+  syncTruth();
   plotsDirty = true;
 }
 
@@ -198,68 +153,30 @@ function onTruth(e) {
     state.truthE.push((m.energy - state.E0) / Math.abs(state.E0));
     if (state.err.length > state.histLen) { state.err.shift(); state.truthE.shift(); }
   }
-  syncBodies();
+  syncTruth();
   plotsDirty = true;
 }
 
 worker.onmessage = (e) => {
   const m = e.data;
   if (m.type === "error") { err.textContent = "Failed to load weights: " + m.message; err.hidden = false; return; }
-  if (m.type === "trace") {
-    traceBusy = false;
-    traceT = performance.now();
-    if (m.epoch === state.epoch && model) {
-      traceKey = m.epoch + ":" + m.tick; traceTick = m.tick;
-      if (m.curve) curvesSent = true;
-      model.onTrace(m);
-      $("s-trace").textContent = m.ms.toFixed(0) + " ms";
-    }
-    updateStatus();
-    wantTrace();
-    return;
-  }
   if (m.type === "ready") {
     Object.assign(state, { G: m.config.grid, extent: m.config.extent, dt: m.config.dt, ready: true });
     state.meta = { checkpoint: m.checkpoint, iters: m.iters, config: m.config };
     $("s-ckpt").textContent = `${m.checkpoint} (${m.iters} it)`;
-    if (state.mode === "live") {
-      spawn(state.n);
-      worker.postMessage({ cmd: "run", run: state.running });
-    } else wantTrace();
+    curves = { curve: m.curve, pair: m.pair };
+    if (model) model.setCurves(curves.curve, curves.pair);
+    startRun(state.n);
     return;
   }
-  if (m.epoch !== state.epoch) return;
-  if (m.type === "energy") { state.modelEnergy = m.energy; if (state.E0 === undefined) state.E0 = m.energy; return; }
-  state.pos = m.pos; state.vel = m.vel; state.tick = m.tick; state.ms = m.ms;
-  if (m.energy !== null) { state.modelEnergy = m.energy; if (state.E0 === undefined) state.E0 = m.energy; }
-  history.set(m.tick, { pos: m.pos });
-  history.delete(m.tick - 64);
-  if (truthWorker) truthWorker.postMessage({ cmd: "advance", epoch: state.epoch, tick: m.tick });
-  if (m.energy !== null && m.tick > 0 && m.tick > (state.truthSince || 0)) {
-    state.modelE.push((m.energy - state.E0) / Math.abs(state.E0));
-    if (state.modelE.length > state.histLen) state.modelE.shift();
-  }
-  plotsDirty = true;
-  syncBodies();
-  wantTrace();
+  if (m.type !== "frame" || m.epoch !== state.epoch) return;
+  frames.set(m.tick, m);
+  newest = m.tick;
+  arrivals.push(performance.now());
+  if (state.tick < 0) { lastAdv = performance.now(); show(0); } else syncRange();
+  $("s-trace").textContent = `${newest - state.tick} / ${BUF_AHEAD}`;
+  tryAdvance();
 };
-
-function wantTrace() {
-  if (!model || traceBusy || !state.ready || !state.pos) return;
-  if (traceKey === state.epoch + ":" + state.tick) return;
-  if (state.mode === "live") {
-    if (state.running && performance.now() - traceT < LIVE_TRACE_GAP) return;
-    traceBusy = true;
-    worker.postMessage({ cmd: "trace", curves: !curvesSent });
-    return;
-  }
-  if (!state.run) return;
-  const { n, data } = state.run, k = state.tick, warm = [];
-  for (let t = Math.max(0, k - WARM); t < k; t++) warm.push([data.slice(t * 4 * n, t * 4 * n + 2 * n), data.slice(t * 4 * n + 2 * n, t * 4 * n + 4 * n)]);
-  traceBusy = true;
-  worker.postMessage({ cmd: "tracetick", epoch: state.epoch, tick: k, n, pos: state.pos.slice(), vel: state.vel.slice(), warm, curves: !curvesSent });
-}
-setInterval(wantTrace, 250);
 
 function frame() {
   requestAnimationFrame(frame);
@@ -272,10 +189,12 @@ function frame() {
 requestAnimationFrame(frame);
 
 function updateStats() {
+  updateStatus();
   if (debug.hidden || !state.pos) return;
   $("s-tick").textContent = state.tick;
   $("s-bodies").textContent = state.n;
   $("s-ms").textContent = state.ms ? state.ms.toFixed(0) + " ms" : "-";
+  $("s-trace").textContent = `${Math.max(0, newest - state.tick)} / ${BUF_AHEAD}`;
   if (state.truthOn) {
     const e = state.err[state.err.length - 1];
     $("s-err").textContent = e === undefined ? "-" : e.toFixed(3);
@@ -294,7 +213,6 @@ setInterval(updateStats, 250);
 
 function toggleDebug() {
   debug.hidden = !debug.hidden;
-  worker.postMessage({ cmd: "energy", on: !debug.hidden });
   plotsDirty = true;
   updateStats();
 }
@@ -302,18 +220,18 @@ function toggleDebug() {
 $("b-pause").addEventListener("click", () => setRunning(!state.running));
 $("b-step").addEventListener("click", () => {
   if (state.running) setRunning(false);
-  if (state.mode === "live") worker.postMessage({ cmd: "step" });
-  else if (state.run && state.tick < state.run.ticks) showTick(state.tick + 1);
+  stepPending = true;
+  tryAdvance();
 });
-$("b-reset").addEventListener("click", () => state.mode === "pre" ? spawnPre(state.n) : spawn(state.n));
-$("b-mode").addEventListener("click", (e) => { setMode(state.mode === "pre" ? "live" : "pre"); e.target.blur(); });
+$("b-reset").addEventListener("click", () => startRun(state.n));
+$("b-mode").addEventListener("click", (e) => { setMode(state.mode === "fixed" ? "random" : "fixed"); e.target.blur(); });
 $("r-tick").addEventListener("input", (e) => {
-  if (state.mode !== "pre" || !state.run) return;
+  const k = +e.target.value;
   if (state.running) setRunning(false);
-  showTick(+e.target.value);
+  if (frames.has(k)) show(k); else syncRange();
 });
 $("r-ch").addEventListener("input", (e) => {
-  $("o-ch").textContent = e.target.value;
+  $("o-ch").textContent = +e.target.value < 0 ? "all" : e.target.value;
   if (model) model.setChannel(+e.target.value);
 });
 $("c-truth").addEventListener("change", (e) => {
@@ -337,17 +255,13 @@ $("b-export").addEventListener("click", () => {
 });
 const rBodies = $("r-bodies"), oBodies = $("o-bodies");
 rBodies.addEventListener("input", () => { oBodies.textContent = rBodies.value; });
-rBodies.addEventListener("change", () => {
-  const v = parseInt(rBodies.value, 10);
-  if (state.mode === "pre") spawnPre(v);
-  else if (state.ready) spawn(v);
-});
+rBodies.addEventListener("change", () => { if (state.ready) startRun(parseInt(rBodies.value, 10)); });
 
 window.addEventListener("keydown", (e) => {
   if (e.target.tagName === "INPUT" && e.target.type !== "checkbox") return;
   if (e.key === "[" || e.key === "]") {
     const r = $("r-ch");
-    r.value = Math.min(31, Math.max(0, +r.value + (e.key === "]" ? 1 : -1)));
+    r.value = Math.min(31, Math.max(-1, +r.value + (e.key === "]" ? 1 : -1)));
     r.dispatchEvent(new Event("input"));
   }
   else if (e.key === " ") { e.preventDefault(); $("b-pause").click(); }
@@ -375,10 +289,16 @@ async function main() {
   }
   $("mview").open = innerWidth > 760;
   model.show(true);
+  if (curves) model.setCurves(curves.curve, curves.pair);
+  if (state.tick >= 0) model.showFrame(out);
+  syncTruth();
   window.__model = model;
-  syncBodies();
-  wantTrace();
+  window.__frames = frames;
+  window.__sim = () => {
+    let bytes = 0;
+    for (const f of frames.values()) bytes += frameBytes(f);
+    return { tick: state.tick, ahead: newest - state.tick, frames: frames.size, bytes, shown: model.shown, shownRate: rate(shownAt), prodRate: rate(arrivals), epoch: state.epoch };
+  };
 }
 
-spawnPre(state.n);
 main();

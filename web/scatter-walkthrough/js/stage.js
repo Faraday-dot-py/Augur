@@ -12,7 +12,7 @@ export class Block {
   constructor(id, o) {
     Object.assign(this, { id, kind: o.kind, H: o.H, W: o.W || o.H, n: o.n || 1, size: o.size, sizeY: o.sizeY || o.size, title: o.title, C: o.C || 1, gap: o.gap || 0, thick: o.thick || 0, base: o.opacity || 1, rest: o.rest === undefined ? 1 : o.rest });
     this.kinds = o.kinds || null; this.sub = null;
-    this.op = 1; this.hl = 0; this.chan = 0; this.src = []; this.planes = [];
+    this.op = 1; this.hl = 0; this.chan = 0; this.src = []; this.planes = []; this.all = false; this.allPlanes = null; this.allThick = o.size * 0.5;
     this.group = new THREE.Group();
     this.group.position.set(...o.pos);
     const geo = new THREE.PlaneGeometry(this.size, this.sizeY);
@@ -40,6 +40,13 @@ export class Block {
 
   paint(k, arr, off = 0, scale = 0, center = false) {
     const W = this.W, H = this.H, n = W * H, p = this.planes[k];
+    if (this.all && this.n > 1) {
+      const kind = this.kinds ? this.kinds[k] : this.kind, med = kind === "pot" ? arr.slice(off, off + n).sort()[n >> 1] : 0;
+      this.fillAlpha(p.data, arr, off, n, allScale(arr, off, W, H, 1, med), lut(kind), 0.85, med);
+      p.map.needsUpdate = true;
+      this.src[k] = { arr, off, s: 0, scale, center };
+      return;
+    }
     let med = 0;
     if (center) med = arr.slice(off, off + n).sort()[n >> 1];
     let s = scale;
@@ -55,7 +62,7 @@ export class Block {
       d[4 * i] = L[q]; d[4 * i + 1] = L[q + 1]; d[4 * i + 2] = L[q + 2];
     }
     p.map.needsUpdate = true;
-    this.src[k] = { arr, off, s };
+    this.src[k] = { arr, off, s, scale, center };
   }
 
   setTensor(arr) {
@@ -63,11 +70,68 @@ export class Block {
     this.setChannel(this.chan);
   }
 
+  // c < 0 overlays every channel (or every plane of a stack) with alpha from |value| and hue from sign
   setChannel(c) {
-    this.chan = Math.min(c, this.C - 1);
+    if (c < 0 && this.C === 1 && this.n === 1) return;
+    const all = c < 0;
+    if (all !== this.all) this.setAll(all);
+    this.chan = all ? -1 : Math.min(c, this.C - 1);
     if (!this.tensor) return;
+    if (all) { this.paintAll(); return; }
     this.paint(0, this.tensor, this.chan * this.W * this.H, 0, true);
     if (this.thick) this.planes[0].mesh.position.y = (this.C > 1 ? this.chan / (this.C - 1) - 0.5 : 0) * this.thick;
+  }
+
+  setAll(all) {
+    this.all = all;
+    if (this.C > 1) {
+      if (all) this.buildAll();
+      this.planes[0].mesh.visible = !all;
+      if (this.box) this.box.scale.y = all ? this.allThick / this.thick : 1;
+      if (this.allPlanes) for (const m of this.allPlanes) m.visible = all;
+    } else if (this.n > 1) {
+      this.planes.forEach((p, k) => { p.mesh.position.y = -k * (all ? this.gap * 0.15 : this.gap); });
+      this.src.forEach((q, k) => { if (q) this.paint(k, q.arr, q.off, q.scale, q.center); });
+    }
+  }
+
+  buildAll() {
+    if (this.allPlanes) return;
+    const geo = new THREE.PlaneGeometry(this.size, this.sizeY);
+    this.allPlanes = Array.from({ length: this.C }, (_, c) => {
+      const data = new Uint8Array(this.W * this.H * 4);
+      const map = new THREE.DataTexture(data, this.W, this.H, THREE.RGBAFormat);
+      map.magFilter = map.minFilter = THREE.NearestFilter;
+      map.needsUpdate = true;
+      const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map, transparent: true, side: THREE.DoubleSide, depthWrite: false }));
+      mesh.rotation.x = -Math.PI / 2;
+      mesh.position.y = (c / (this.C - 1) - 0.5) * this.allThick;
+      mesh.userData = { block: this, k: 0, chan: c, data, map };
+      mesh.visible = false;
+      this.group.add(mesh);
+      return mesh;
+    });
+  }
+
+  paintAll() {
+    const n = this.W * this.H, t = this.tensor, s = allScale(t, 0, this.W, this.H, this.C), L = lut(this.kind);
+    this.allPlanes.forEach((m, c) => {
+      this.fillAlpha(m.userData.data, t, c * n, n, s, L, 0.2, 0);
+      m.userData.map.needsUpdate = true;
+    });
+  }
+
+  fillAlpha(d, arr, off, n, s, L, amax, med) {
+    for (let i = 0; i < n; i++) {
+      const t = (arr[off + i] - med) / s, a = t < 0 ? -t : t, m = a > 1 ? 1 : a;
+      const e = 0.45 + 0.55 * m, q = 3 * (((t < 0 ? 1 - e : 1 + e) * 127.5) | 0), al = m < 0.08 ? 0 : (m - 0.08) / 0.92;
+      d[4 * i] = L[q]; d[4 * i + 1] = L[q + 1]; d[4 * i + 2] = L[q + 2];
+      d[4 * i + 3] = 255 * amax * Math.pow(al, 1.4);
+    }
+  }
+
+  valueAtChan(c, ix, iy) {
+    return this.tensor ? this.tensor[c * this.W * this.H + iy * this.W + ix] : null;
   }
 
   valueAt(k, ix, iy) {
@@ -87,8 +151,17 @@ export class Block {
       p.edge.material.color.copy(col);
       p.edge.material.opacity = this.op;
     }
+    if (this.allPlanes) for (const m of this.allPlanes) { m.material.opacity = this.op * this.base; m.material.color.setScalar(b); }
     if (this.box) { this.box.material.color.copy(col); this.box.material.opacity = this.op; }
   }
+}
+
+// 98th percentile of |value| over interior cells (borders carry padding artefacts), sampled; floored at 30% of the max so sparse fields don't saturate
+function allScale(arr, off, W, H, C = 1, med = 0) {
+  const m = W >= 16 ? 2 : 0, vals = [], st = Math.max(1, Math.floor(W * H * C / 20000));
+  for (let c = 0; c < C; c++) for (let y = m; y < H - m; y++) for (let x = m + ((y + c) % st); x < W - m; x += st) vals.push(Math.abs(arr[off + c * W * H + y * W + x] - med));
+  vals.sort((a, b) => a - b);
+  return vals.length ? Math.max(vals[Math.floor(vals.length * 0.98)], 0.3 * vals[vals.length - 1], 1e-12) : 1;
 }
 
 class Segs {
@@ -129,6 +202,7 @@ class Segs {
 export class Stage {
   constructor(el, labelsEl) {
     this.el = el; this.labelsEl = labelsEl;
+    this.narrowShift = 0.16;
     this.renderer = new THREE.WebGLRenderer({ canvas: el, antialias: true, powerPreference: "high-performance" });
     this.renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
     this.renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
@@ -147,7 +221,6 @@ export class Stage {
     this.blocks = new Map();
     this.curves = new Map();
     this.notes = new Map();
-    this.pickables = [];
     this.root = new THREE.Group();
     this.scene.add(this.root);
     this.dirty = true;
@@ -184,12 +257,19 @@ export class Stage {
     addEventListener("resize", () => this.resize());
   }
 
+  // stands the floor layout up on a wall facing +z: sim x stays right, sim y becomes up, lift becomes toward the viewer
+  setWall(on) {
+    this.root.rotation.x = on ? Math.PI / 2 : 0;
+    this.root.updateMatrixWorld(true);
+    this.dirty = true;
+  }
+
   resize() {
     const w = innerWidth, h = innerHeight;
     this.renderer.setSize(w, h, false);
     this.camera.aspect = w / h;
     const wide = w > 760;
-    this.camera.setViewOffset(w, h, wide ? 60 : 0, wide ? 0 : h * 0.16, w, h);
+    this.camera.setViewOffset(w, h, wide ? 60 : 0, wide ? 0 : h * this.narrowShift, w, h);
     this.camera.updateProjectionMatrix();
     this.dirty = true;
   }
@@ -198,7 +278,6 @@ export class Stage {
     const b = new Block(id, o);
     this.blocks.set(id, b);
     this.root.add(b.group);
-    for (const p of b.planes) this.pickables.push(p.mesh);
     return b;
   }
 
@@ -312,7 +391,7 @@ export class Stage {
     this.renderer.render(this.scene, this.camera);
     const w = innerWidth, h = innerHeight, v = this.v;
     for (const n of this.notes.values()) {
-      v.copy(n.p).project(this.camera);
+      v.copy(n.p).applyMatrix4(this.root.matrixWorld).project(this.camera);
       const on = n.alpha > 0.02 && v.z < 1 && Math.abs(v.x) < 1.15 && Math.abs(v.y) < 1.15;
       n.el.style.opacity = on ? n.alpha : 0;
       n.el.style.visibility = on ? "visible" : "hidden";
@@ -330,13 +409,30 @@ export class Stage {
   pick(cx, cy) {
     const r = this.el.getBoundingClientRect();
     this.ray.setFromCamera(new THREE.Vector2((cx - r.left) / r.width * 2 - 1, -((cy - r.top) / r.height * 2 - 1)), this.camera);
-    const live = this.pickables.filter((m) => m.userData.block.op > 0.3 && m.userData.block.group.visible);
+    const live = [];
+    for (const b of this.blocks.values()) {
+      if (b.op <= 0.3 || !b.group.visible) continue;
+      for (const m of b.all && b.allPlanes ? b.allPlanes : b.planes.map((p) => p.mesh)) live.push(m);
+    }
     const hits = this.ray.intersectObjects([...live, this.bodies], false);
+    const cell = (h) => {
+      const { block } = h.object.userData;
+      const W = block.sub ? block.sub.w : block.W, H = block.sub ? block.sub.h : block.H;
+      return [Math.min(W - 1, Math.floor(h.uv.x * W)), Math.min(H - 1, Math.floor(h.uv.y * H))];
+    };
     for (const h of hits) {
       if (h.object === this.bodies) return { type: "body", i: h.instanceId };
-      const { block, k } = h.object.userData;
-      const W = block.sub ? block.sub.w : block.W, H = block.sub ? block.sub.h : block.H;
-      const ix = Math.min(W - 1, Math.floor(h.uv.x * W)), iy = Math.min(H - 1, Math.floor(h.uv.y * H));
+      const { block, k, chan } = h.object.userData;
+      if (chan !== undefined) {
+        let best = null;
+        for (const g of hits) {
+          if (g.object === this.bodies || g.object.userData.block !== block) continue;
+          const [ix, iy] = cell(g), c = g.object.userData.chan, v = block.valueAtChan(c, ix, iy);
+          if (!best || Math.abs(v) > Math.abs(best.v)) best = { type: "cell", block, k: 0, ix, iy, v, chan: c, p: g.point };
+        }
+        return best;
+      }
+      const [ix, iy] = cell(h);
       return { type: "cell", block, k, ix, iy, v: block.valueAt(k, ix, iy), p: h.point };
     }
     return null;

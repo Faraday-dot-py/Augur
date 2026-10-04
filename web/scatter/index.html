@@ -43,7 +43,6 @@ nav.glass { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%
 nav.glass.active { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { nav.glass { transition: none; } }
 nav .grp { display: flex; gap: 4px; align-items: center; }
-body.live #l-tick { display: none; }
 #mview { position: fixed; left: 284px; right: 16px; top: 16px; max-height: calc(100% - 100px); overflow-y: auto; padding: 10px 14px; font-size: 12px; color: var(--dim); scrollbar-width: thin; }
 #mview summary { cursor: pointer; color: var(--fg); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; }
 #mview ul { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; }
@@ -96,7 +95,7 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
   <summary>Model structure</summary>
   <ul id="mleg"></ul>
   <p id="mcap"></p>
-  <p id="mstat">waiting for trace</p>
+  <p id="mstat">loading weights</p>
   <p><a href="../scatter-walkthrough/">Step-through walkthrough &rarr;</a></p>
 </details>
 <div id="tip" class="glass" hidden></div>
@@ -106,10 +105,10 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
     <div><dt>tick</dt><dd id="s-tick">0</dd></div>
     <div><dt>bodies</dt><dd id="s-bodies">0</dd></div>
     <div><dt>mean err vs truth</dt><dd id="s-err">off</dd></div>
-    <div><dt>step time</dt><dd id="s-ms">-</dd></div>
+    <div><dt>frame time</dt><dd id="s-ms">-</dd></div>
     <div><dt>checkpoint</dt><dd id="s-ckpt">-</dd></div>
     <div><dt>source</dt><dd id="s-src">-</dd></div>
-    <div><dt>trace time</dt><dd id="s-trace">-</dd></div>
+    <div><dt>buffer ahead</dt><dd id="s-trace">-</dd></div>
   </dl>
   <dl id="stats2">
     <div><dt>outside arena</dt><dd id="s-out">-</dd></div>
@@ -133,11 +132,11 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
     <button id="b-reset" aria-keyshortcuts="r">Reset<kbd>r</kbd></button>
   </div>
   <span class="sep"></span>
-  <button id="b-mode" aria-pressed="true" title="Precomputed: fixed-seed 100-tick runs played instantly. Live: the model runs in your browser from a random start.">Precomputed</button>
+  <button id="b-mode" aria-pressed="true" title="Fixed seed: every run starts from seed 4738 (deterministic). Random: starts from a random state.">Fixed seed</button>
   <label class="sl">bodies <input type="range" id="r-bodies" min="10" max="100" step="10" value="40" aria-label="body count"><output id="o-bodies">40</output></label>
   <label class="sl" id="l-tick">tick <input type="range" id="r-tick" min="0" max="100" value="0" aria-label="tick"><output id="o-tick">0</output></label>
   <span class="sep"></span>
-  <label class="sl">channel <input type="range" id="r-ch" min="0" max="31" value="0" aria-label="UNet channel"><output id="o-ch">0</output></label>
+  <label class="sl">channel <input type="range" id="r-ch" min="-1" max="31" value="0" aria-label="UNet channel, -1 overlays all channels"><output id="o-ch">0</output></label>
 </nav>
 <div id="err" class="glass" hidden></div>
 <script type="module" src="js/app.js"></script>
