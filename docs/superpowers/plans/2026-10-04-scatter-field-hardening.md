@@ -35,3 +35,4 @@ Timing-sensitive runs (1, 2 perf, 4) must not overlap other GPU jobs.
 
 ## Status log (append below; newest last)
 - 2026-10-04 13:30: plan written. Nothing launched yet.
+- 2026-10-04 13:45: agent 0 DONE (branch scatter-regress-harness 103be23, baseline job 3296). Launched agent 1 optimization (ac96d685efadf8898, branch scatter-opt) and agent 2 scaling (ad7f2dd079149ecc1, branch scatter-scaling). Agent 5 chaos-floor (a3afdebef86797bbc) resumed after Polaris reconnect. Pending launch: 6 conservation, 7 OOD, 3 scenes, then 4 charge, 8 parity.
