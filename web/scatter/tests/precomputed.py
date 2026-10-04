@@ -69,10 +69,8 @@ with sync_playwright() as p:
     pg.wait_for_function("+document.getElementById('o-tick').textContent >= 0")
     check(pg.locator("#l-tick").is_visible(), "tick slider back in precomputed mode")
 
-    pg.keyboard.press("m")
-    pg.wait_for_function("document.getElementById('mstat').textContent.startsWith('live')", timeout=60000)
+    pg.wait_for_function("document.getElementById('mstat').textContent.includes('slabs')", timeout=60000)
     check(True, "Model view traces a precomputed tick")
-    pg.keyboard.press("m")
 
     pg.set_viewport_size({"width": 390, "height": 800})
     pg.wait_for_timeout(300)
@@ -82,7 +80,7 @@ with sync_playwright() as p:
     pg.evaluate("document.getElementById('b-pause').textContent.startsWith('Pause') && document.getElementById('b-pause').click()")
     pg.evaluate("(() => { const r = document.getElementById('r-tick'); r.value = 30; r.dispatchEvent(new Event('input')); })()")
     pg.wait_for_timeout(3500)
-    pg.screenshot(path=f"{out}/pre_field.png")
+    pg.screenshot(path=f"{out}/pre_tick30.png")
     check(not logs, f"no console errors {logs}")
     b.close()
 sys.exit(1 if errors else 0)

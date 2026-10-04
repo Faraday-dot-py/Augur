@@ -4,7 +4,7 @@ import { lut, fmt } from "./colors.js";
 
 THREE.ColorManagement.enabled = false;
 
-const BG = 0x06080c, MAXN = 64, POOL = 16;
+const BG = 0x06080c, MAXN = 128, POOL = 16;
 const EDGE = new THREE.Color(0x2b3a52), HOT = new THREE.Color(0x6fc3ff);
 const BODY = new THREE.Color(0x62d6a4), BODY_HOT = new THREE.Color(0xffffff);
 
