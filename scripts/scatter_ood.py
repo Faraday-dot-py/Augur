@@ -350,6 +350,12 @@ def specs():
     for v in (1.5, 4.0):
         for o in (0.0, 20.0):
             add("boundary_offset", f"cluster_vfac{v}_shift{o}", "cluster", dict(vfac=v), shift=(o, 0.0))
+    for m in (0.1, 0.3, 3.0, 10.0, 30.0, 100.0):
+        add("mass_dtmatched", f"equal_m{m}_dt0.1/sqrt(m)", "cluster_scale", dict(m=m), tscale=float(m) ** -0.5)
+    for mh in (10, 30, 100, 300, 1000):
+        add("mass_dtmatched", f"cluster_heavy{mh}_dt*sqrt(10/Mh)", "cluster_heavy", dict(mh=float(mh)), tscale=min(1.0, (10.0 / mh) ** 0.5))
+    for q in (10, 100, 1000):
+        add("mass_dtmatched", f"binary_q{q}_dt*sqrt(2/(1+q))", "binary", dict(d=4.0, m1=1.0, m2=float(q)), tscale=(2.0 / (1 + q)) ** 0.5)
     for pr in ("fp32", "fp64", "tf32", "half16", "bf16"):
         add("precision", f"cluster_{pr}", "cluster", precision=pr)
         add("precision", f"bh300_c10_{pr}", "cluster", dict(n=300), c=10.0, precision=pr)
@@ -359,7 +365,10 @@ def specs():
 def run_point(model, spec, seed, dev, args, save):
     sc = scene(spec, seed)
     c, eps, dt = sc["c"], sc["eps"], sc["dt"]
-    steps = int(round(T_TOTAL / dt))
+    ts = spec.get("tscale", 1.0)
+    dt = dt * ts
+    sc["dt"] = dt
+    steps = int(round(T_TOTAL * ts / dt))
     pos0, vel0, mass = sc["pos"], sc["vel"], sc["mass"]
     n = len(mass)
     prec = spec.get("precision", "fp32")
@@ -369,7 +378,7 @@ def run_point(model, spec, seed, dev, args, save):
     L = max(float(np.sqrt((pos0 ** 2).sum(1).mean())), 1.0)
     Pp, _ = truth(pos0 + 1e-5 * L * rng.normal(size=pos0.shape), vel0, mass, steps, dt, eps, c, dev)
     m_t = torch.tensor(mass, dtype=torch.float64, device=dev)
-    ticks = {t: int(round(t / dt)) for t in TIMES}
+    ticks = {t: int(round(t * ts / dt)) for t in TIMES}
     if prec != "fp32":
         model._graphs = {}
         model._kf = None
