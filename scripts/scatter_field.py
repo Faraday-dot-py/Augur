@@ -129,8 +129,51 @@ class ScatterField(nn.Module):
         phi = torch.fft.irfft2(rf * Kf, s=(2 * G, 2 * G))[..., :G, :G] * self.h ** 2
         return self.neg_grad(phi)
 
+    def pp_acc_cell(self, pos, mass, mask, knn=16, budget=2 ** 25):
+        B, N = mask.shape
+        dev = pos.device
+        C = int(math.ceil(self.extent / self.pp))
+        pf, mm, mk = pos.reshape(B * N, 2), (mass * mask).reshape(-1), mask.reshape(-1)
+        c = ((pf + self.extent / 2) / self.pp).floor().clamp(0, C - 1).long().detach()
+        b = torch.arange(B, device=dev).repeat_interleave(N)
+        nc = B * C * C
+        key = torch.where(mk > 0, b * C * C + c[:, 1] * C + c[:, 0], torch.full_like(b, nc))
+        order = torch.argsort(key, stable=True)
+        counts = torch.bincount(key, minlength=nc + 1)
+        starts = torch.cumsum(counts, 0) - counts
+        M = int(counts[:nc].max())
+        sh = torch.tensor([-1, 0, 1], device=dev)
+        k = min(knn, 9 * M)
+        j = torch.arange(M, device=dev)
+        outs = []
+        Q = max(1, budget // (9 * M))
+        for q0 in range(0, B * N, Q):
+            q = torch.arange(q0, min(q0 + Q, B * N), device=dev)
+            ncx = (c[q, 0, None] + sh)[:, None, :].expand(-1, 3, -1)
+            ncy = (c[q, 1, None] + sh)[:, :, None].expand(-1, -1, 3)
+            inside = ((ncx >= 0) & (ncx < C) & (ncy >= 0) & (ncy < C)).reshape(len(q), 9)
+            ncell = b[q, None] * C * C + ncy.clamp(0, C - 1).reshape(len(q), 9) * C + ncx.clamp(0, C - 1).reshape(len(q), 9)
+            cnt = counts[ncell] * inside
+            idx = (starts[ncell][..., None] + j).clamp(max=B * N - 1)
+            valid = j < cnt[..., None]
+            cand = order[idx].reshape(len(q), 9 * M)
+            bad = (~valid.reshape(len(q), 9 * M)) | (cand == q[:, None])
+            d = pf[cand] - pf[q][:, None]
+            r_all = torch.sqrt((d ** 2).sum(-1) + 1e-8)
+            r_sel, i = torch.topk(r_all + 1e6 * bad.to(pos.dtype), k, dim=-1, largest=False)
+            ds = torch.gather(d, 1, i[..., None].expand(-1, -1, 2))
+            mj = mm[torch.gather(cand, 1, i)]
+            ok = (r_sel < 1e5).to(pos.dtype) * mk[q][:, None]
+            r = r_sel.clamp(max=1e5)
+            g = self.ppmlp(torch.stack([r, torch.log(r + 0.05)], -1))[..., 0]
+            win = (1 - (r / self.pp).clamp(max=1.0) ** 2) ** 2
+            outs.append(((g * win * mj * ok)[..., None] * ds / r[..., None]).sum(1))
+        return torch.cat(outs).reshape(B, N, 2)
+
     def pp_acc(self, pos, mass, mask, knn=16):
         B, N = mask.shape
+        if "cell" in self.opt and N > 512:
+            return self.pp_acc_cell(pos, mass, mask, knn)
         k = min(knn, N - 1)
         d_all = pos[:, None, :, :] - pos[:, :, None, :]
         r_all = torch.sqrt((d_all ** 2).sum(-1) + 1e-8)

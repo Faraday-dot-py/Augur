@@ -210,6 +210,19 @@ def phase_nsweep(model, dev, out, ns):
             torch.cuda.empty_cache()
 
 
+def phase_nsweepL(model, dev, out):
+    res = load_json(out)
+    for fam, vfac in (("cold", 0.3), ("warm", 1.0)):
+        for n in (100, 316, 1000, 3162, 10000, 31623, 100000):
+            key = f"L256_{fam}_{n}"
+            if key in res:
+                continue
+            print(f"== nsweepL {key}", flush=True)
+            res[key] = point(model, n, 8.0, vfac, 512, 256.0, dev, label=key)
+            save_json(out, res)
+            torch.cuda.empty_cache()
+
+
 def world_points():
     pts = []
     for g in (32, 64, 128, 256, 512):
@@ -330,7 +343,7 @@ def phase_comp(ckpt, dev, out):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ckpt", required=True)
-    ap.add_argument("--phase", required=True, choices=["nsweep", "worlds", "stock", "comp", "equiv", "dump", "fprobe", "equivcell"])
+    ap.add_argument("--phase", required=True, choices=["nsweep", "worlds", "stock", "comp", "equiv", "dump", "fprobe", "equivcell", "nsweepL"])
     ap.add_argument("--out", required=True)
     ap.add_argument("--max-n", type=int, default=100000)
     ap.add_argument("--pp", default=None, choices=[None, "chunked", "cell"])
@@ -390,7 +403,9 @@ def main():
         save_json(args.out, out)
     else:
         model = load(args.ckpt, dev, True)
-        if args.phase == "nsweep":
+        if args.phase == "nsweepL":
+            phase_nsweepL(model, dev, args.out)
+        elif args.phase == "nsweep":
             phase_nsweep(model, dev, args.out, [n for n in NS if n <= args.max_n])
         else:
             phase_worlds(model, dev, args.out)
