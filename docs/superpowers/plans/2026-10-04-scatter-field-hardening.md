@@ -35,3 +35,4 @@ Timing-sensitive runs (1, 2 perf, 4) must not overlap other GPU jobs.
 
 ## Status log (append below; newest last)
 - 2026-10-04 13:30: plan written. Nothing launched yet.
+- 2026-10-04: agent 5 (chaos-floor): script scripts/chaos_floor.py + prediction in docs/debugging/chaos-floor-investigation.md written; BLOCKED on Polaris (SSH banner error x2, polaris_start needs Duo/reconnect); no job run yet.

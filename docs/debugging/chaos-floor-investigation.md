@@ -1,0 +1,11 @@
+# Chaos-floor investigation (plan agent 5), 2026-10-04
+
+Question: how much of the scatter-field model's late-horizon error (BH 300 bodies c=10: err@50/100 .90/4.9; Exp B 10-100 bodies: .025/.374) is irreducible chaotic divergence of the exact sim versus model error.
+
+Method: `scripts/chaos_floor.py` (Polaris GPU). Exact reference = gravity_sim.rollout_torch math (float64, kick-drift-kick, 4 substeps/tick, eps .5, dt .1; BH relativistic c=10), re-implemented with selectable dtype/substeps (asserted equal to gs.rollout_torch in-script). Per scene: initial positions perturbed by rel * L * N(0,1) (L = rms radius of the scene, same direction for all magnitudes) with rel in 1e-6..1e-2; float32 truth (centered; Exp B also absolute coords with centre 500); substeps 8 and 2 truth. err@k = mean over bodies of |dx|, averaged over scenes, vs unperturbed float64 ref. Same for model. Splits: bodies with a close encounter (min pair distance < eps=.5 over substeps, cumulative up to tick k) vs not; Exp B by N.
+
+## Prediction (written before any run)
+
+- BH (cold collapse, free-fall ~ 35 ticks, collapse near tick 30-50, then violent relaxation): strongly chaotic. Truth-noise floor from a 1e-6 relative perturbation: err@20 ~1e-5, err@50 ~1e-3..1e-2, err@100 ~0.3-3. f32 truth floor ~ a 1e-7 perturbation: err@100 ~0.05-1. Model err@20 (.067) is >>100x above any floor => model error. err@50 (.90): model error still dominant (equivalent perturbation ~1e-4..1e-3 relative, vs 1e-7 f32 noise). err@100 (4.9): near saturation of the system scale (~10-20 units); perturbations >=1e-4 reach it, so ratio -> ~1 there, but that is saturation not irreducibility at the f32 level.
+- Exp B (10-100 bodies, mostly regular with occasional close encounters, Lyapunov rate ~.3-1 per time unit over 10 time units => e^3..e^10 growth): err@5/10/20 are model-dominated (ratio >50x vs f32 floor). err@100 .374: f32 floor ~1e-3..1e-2 (ratio ~30+), perturbation 1e-4 gives ~.01-.1. Model error is equivalent to a ~1e-3 relative perturbation at k=100 and a much larger one (>1e-2) at k=5-20, i.e. equivalent-perturbation is NOT constant in k (model error is not mostly chaotic amplification of a fixed initial error).
+- Close-encounter bodies carry most of the late-horizon floor in both.
