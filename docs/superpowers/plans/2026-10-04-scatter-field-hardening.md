@@ -35,3 +35,4 @@ Timing-sensitive runs (1, 2 perf, 4) must not overlap other GPU jobs.
 
 ## Status log (append below; newest last)
 - 2026-10-04 13:30: plan written. Nothing launched yet.
+- 2026-10-04: agent 0 (baseline harness): scripts/scatter_regress.py + polaris_scatter_regress.sh written and committed on branch scatter-regress-harness (untested); BLOCKED on Polaris Duo approval, so results/scatter_baseline.json and scatter-baseline.md are not yet produced.
