@@ -580,7 +580,7 @@ def run_train(args, dev):
     os.makedirs(CKPT_DIR, exist_ok=True)
     ckpt = f"{CKPT_DIR}/{args.scene}_{args.tag}.pt"
     targs = types.SimpleNamespace(lr=args.lr, device=str(dev), seed=TRAIN_SEED, opt=args.opt, time_budget=args.budget, iters=0, k_start=args.k_start,
-                                  k_end=args.k_end, steps=args.steps, batch=args.batch, log_every=args.log_every)
+                                  k_end=args.k_end, steps=args.steps, batch=args.batch, log_every=args.log_every, loss_cap=args.loss_cap)
     n_it, secs = tsf.train(model, tensors, targs, ckpt, lambda s: print(s, flush=True))
     print(f"TRAIN DONE iters {n_it} secs {secs:.0f}", flush=True)
     model.eval()
@@ -607,6 +607,7 @@ def main():
     ap.add_argument("--k-end", type=int, default=30)
     ap.add_argument("--lr", type=float, default=5e-4)
     ap.add_argument("--log-every", type=int, default=100)
+    ap.add_argument("--loss-cap", type=float, default=0.0)
     ap.add_argument("--eval-opt", default="kcache,fastio")
     ap.add_argument("--device", default="cuda")
     args = ap.parse_args()

@@ -130,7 +130,8 @@ def train(model, tensors, args, ckpt_path, log):
         opt.zero_grad()
         loss.backward()
         gn = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-        if torch.isfinite(loss) and torch.isfinite(gn):
+        cap = getattr(args, 'loss_cap', 0.0)
+        if torch.isfinite(loss) and torch.isfinite(gn) and (cap <= 0 or loss.item() < cap):
             opt.step()
         else:
             opt.zero_grad()
@@ -142,7 +143,8 @@ def train(model, tensors, args, ckpt_path, log):
                 torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, ckpt_path)
                 if it % 5000 == 0:
                     torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, f"{ckpt_path}.it{it}")
-    torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it}, ckpt_path)
+    if all(torch.isfinite(p).all() for p in model.parameters()):
+        torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it}, ckpt_path)
     log(f"trained {it} iters in {time.time() - t_start:.0f}s")
     return it, time.time() - t_start
 

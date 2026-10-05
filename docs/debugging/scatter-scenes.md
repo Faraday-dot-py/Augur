@@ -36,3 +36,56 @@ Predictions: Exp E was trained on 10-200 uniform-box bodies and cold Gaussian co
 
 ## Results
 (filled in below as jobs finish)
+
+### Jobs
+Zero-shot eval 3319 (all scenes). Fine-tune 3325 (bounce ft4/ft1, orbit ft [DIVERGED: one finite-but-huge step at it ~5780 wrecked the weights, 3968 skipped steps after; discarded], globular ft). 3328: orbit ft2 (lr 2e-4, `--loss-cap`), bounce full4 (scratch), orbit full (scratch), globular full (scratch; trained but diverged at eval, see below). Work copy on Polaris `~/bounce-scenes`; checkpoints in `~/bounce-scenes/checkpoints_scenes/`. `scripts/scatter_scenes_summary.py` prints the table below. Added `loss_cap` to `train_scatter_field.train` (opt-in, default off) and made the final save conditional on finite weights.
+
+### Results (mean of held-out seeds 9100/9200/9300; err in sim units, bounce in cells)
+
+BOUNCE (48 scenes/seed, 2-20 balls, 100 ticks). Truth-noise floor (1e-5 perturbation) .0035/.12/2.5/6.3 at k=5/10/20/100: the ceiling at k=100 is chaos (box-size saturation), err@20 within 2x of floor is near the best achievable.
+| tier | err@5 | @10 | @20 | @100 | outside box @100 | restitution v=10 / 15 |
+|---|---|---|---|---|---|---|
+| zero-shot | 3.16 | 6.63 | 7.64 | 23.1 | 91% | no wall contact (balls leave) |
+| ft, sub=1 | 1.10 | 2.67 | 5.41 | 5.71 | 0% | 1.05 / 1.03 |
+| ft, sub=4 | 0.65 | 2.04 | 5.60 | 6.43 | 1% | 1.05 / 1.02 |
+| full-train, sub=4 (scratch, 20 min) | 0.33 | 1.66 | 5.28 | 6.41 | 0% | 1.01 / 1.02 |
+| ballistic (gravity only) | 1.95 | 6.60 | 38.9 | 1009 | | |
+Prediction check: zero-shot failure CONFIRMED (err ~ ballistic early, 91% leave the box; restitution undefined). WRONG: sub=1 fine-tune passes (I predicted it would fail restitution); the 9190 vs 5156 iterations of sub=1 vs sub=4 and lack of a clear sub=4 win at err@20 mean contact is resolved well enough at dt .15 by a learned 1-step Verlet; sub=4 only helps err@5/10. Pass criteria: err@20 <= .5 x ballistic (5.4 vs 38.9) PASS; outside < 1% PASS (ft4 .96%, ft1/full 0%); restitution .85-1.15 to v=15 PASS; KE tracking criterion not tabulated here (ke curves in json, not checked: untested). err@5/10 are not close to the cons-contact model's .12/.31 order (different box/density; not a same-scene comparison, attempted comparison NOT run).
+
+ORBIT (24 scenes/seed per family, 1000 ticks; truth dE/E ~6e-6, floor err@1000 1e-3 binary / .56 planetary).
+| family | tier | err@20 | @100 | @1000 | period err (median) | planets lost | dE/E @1000 | dL/L @1000 |
+|---|---|---|---|---|---|---|---|---|
+| binary | zero-shot | .0081 | .094 | 3.22 | 10% | 0 | .18 | .17 |
+| binary | ft (E replay + mix) | .0056 | .081 | 3.60 | 28% | 0 | .40 | .19 |
+| binary | full-train scratch | .0026 | .038 | 2.39 | 7.9% | 0 | .13 | .072 |
+| planetary | zero-shot | 1.16 | 33.8 | 3124 | 93% | 100% | 1300 | 2600 |
+| planetary | ft | .049 | 1.27 | 18.5 | 37% | 26% | .53 | 5.1 |
+| planetary | full-train scratch | .063 | 1.97 | 27 | 60% | 31% | .67 | 4.9 |
+Prediction check: binary zero-shot "5-30% drift, period 3-10%" roughly right (period 10%, dE/E 18%). Planetary zero-shot worse than predicted (all lost, not 30-70%): the star-mass OOD failure. No tier meets the 5% period/drift pass bar; binary is closest (scratch 7.9%/13%). Fine-tune fixes escape (100% -> 26% lost) but not energy/L drift (dL/L 5: planets exchange angular momentum non-physically). The first ft attempt (lr 5e-4, no loss cap) blew up from one close-encounter step; ft2 with lr 2e-4 + loss cap OK. Binary fine-tune was WORSE than zero-shot at long horizon (period 28%) because half the data is planetary+replay and it trades off; scratch binary is better, an effect of 1800 s vs 1200 s and of 14.5k vs 9.7k iterations is not separated (untested).
+
+GLOBULAR (Plummer, unit masses, 1000 ticks; 6 N=300 runs, 3 N=100, 3 N=1000; band = fraction of ticks where |model - truth| <= max(2x |1e-4-perturbed twin - truth|, 15% of truth) for r50 / E).
+| tier | N | err@20 | r50 band | E band | dE/E @1000 | escapers model/truth |
+|---|---|---|---|---|---|---|
+| zero-shot | 100 | .065 | .82 | 1.00 | .033 | .10/.04 |
+| zero-shot | 300 | .231 | .85 | .97 | .131 | .12/.04 |
+| zero-shot | 1000 | .868 | .97 | .91 | .179 | .12/.03 |
+| ft | 100 | .074 | .83 | 1.00 | .103 | .08/.04 |
+| ft | 300 | .210 | .91 | .96 | .112 | .10/.04 |
+| ft | 1000 | .897 | .82 | .64 | .220 | .15/.03 |
+| full-train scratch | any | err@5 ~6, NaN by tick 50-100 | - | - | - | - |
+Truth dE/E < 0.4%. The 90%-of-ticks band criterion is marginal at N=300 (zero-shot .85, ft .91); dE/E is 11-13% (fails the 10% bar, truth <.1%), escapers 3x the truth's. err@20 .21-.23 vs predicted <.1 (FAIL; the 1e-4-twin floor err@20 is much smaller, so this is model error). Fine-tune changes little: r50 band +6 points at N=300, dE/E same, worse at N=1000. The model keeps r50 right and loses energy: r90 grows to ~180 vs truth ~50 by tick 1000 in the visual review (halo evaporates), E drifts down. Full-train from scratch FAILED: 12.7k of 14.7k training steps skipped as non-finite/over loss-cap, weights never became usable (a long-N 300 scene start from scratch with all-pairs-free mesh + zero-init heads is unstable; Exp E itself needed a warm-start chain from B). Not retried (would need the same B->E curriculum, hours).
+
+BLACK HOLE (in-distribution for Exp E; tier 0 = trained model). err@5/10/20/50/100, floor@50 in brackets:
+| variant | err@20 | err@50 | err@100 | vmax/c max |
+|---|---|---|---|---|
+| N=300, c=10 (headline; 4 scenes) | .062 | .914 [.007] | 4.79 | .94 |
+| N=100 | .031 | .247 [.0015] | 2.97 | .75 |
+| N=1000 (above train N) | .191 | 3.16 [.032] | 9.24 | .99 |
+| sigma 5 | .165 | 2.00 [.015] | 4.76 | .96 |
+| sigma 12 | .042 | .319 [.003] | 3.86 | .91 |
+| c=5 | .054 | .564 [.003] | 3.73 | .997 |
+| c=20 | .066 | 1.09 [.009] | 5.22 | .71 |
+Reproduces baseline (.0080/.021/.062/.91). Predictions: N=100 better CONFIRMED, N=1000 worse CONFIRMED (err@20 .19, in my predicted .15-.5), sigma12 easier CONFIRMED, c=5 err@50 predicted 2-3x worse: WRONG (better, .56); c=20 similar CONFIRMED. All variants are far above the chaos floor at k=50 (60-200x). |v|<c holds everywhere (max .997 c at c=5).
+
+### Minimal architecture additions identified (bounce)
+Needed: (1) uniform acceleration, (2) wall term as a function of distance to each box wall (windowed 2 units), (3) a separate contact kernel (the base pair term is attractive softened gravity; here repulsive, short range), optional (4) substeps for local terms. Implemented opt-in as `BounceScatterField` (scripts/scatter_bounce.py), zero-init, untrained == Exp E. Param count +8.6k (two 64x64 MLPs + 3 scalars), all-pairs contact (N<=20 here; the cell-list kNN path from agent 1 would be needed for large N, not done). The mesh net does the rest: it was never needed for the bounce dynamics here; ablation (turning the base off via gscale) NOT run. Not tested: balls > 20, other box sizes (box bounds are an input but trained only at 15), non-unit mass, the cons-contact model on the same scenes.
