@@ -32,10 +32,12 @@ def make_model(args, dev):
     return m
 
 
-def scene(n, B, dev, seed=4738):
+def scene(n, B, dev, seed=4738, cold=False):
     g = torch.Generator(device="cpu").manual_seed(seed)
     s = max(8.0, 0.5 * n ** 0.5)
     s = min(s, 28.0)
+    if cold:
+        s = 16.0
     pos = (torch.randn(B, n, 2, generator=g) * s / 2).clamp(-29, 29).to(dev)
     vel = (torch.randn(B, n, 2, generator=g) * 0.3).to(dev)
     return pos, vel, torch.ones(B, n, device=dev), torch.ones(B, n, device=dev)
@@ -46,7 +48,7 @@ def infer(args, dev):
     out = {}
     for n in [int(x) for x in args.ns.split(",")]:
         B = args.batch
-        pos, vel, mass, mask = scene(n, B, dev)
+        pos, vel, mass, mask = scene(n, B, dev, cold=args.cold)
         steps = args.steps if n <= 1000 else max(5, args.steps // 10)
         try:
             sf.rollout(m, pos, vel, mass, mask, 3)
@@ -163,6 +165,7 @@ def main():
     ap.add_argument("--ckpt", default=None)
     ap.add_argument("--opt", default="")
     ap.add_argument("--tag", default="bench")
+    ap.add_argument("--cold", action="store_true")
     ap.add_argument("--save", action="store_true")
     args = ap.parse_args()
     dev = torch.device("cuda")

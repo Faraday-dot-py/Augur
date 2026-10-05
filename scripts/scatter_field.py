@@ -207,8 +207,92 @@ class ScatterField(nn.Module):
             outs.append(((g * win * mj * ok)[..., None] * ds / r[..., None]).sum(1))
         return torch.cat(outs).reshape(B, N, 2)
 
+    def _pp_force(self, ds, r_sel, mj):
+        ok = (r_sel < 1e5).to(ds.dtype)
+        r = r_sel.clamp(max=1e5)
+        g = self.ppmlp(torch.stack([r, torch.log(r + 0.05)], -1))[..., 0]
+        win = (1 - (r / self.pp).clamp(max=1.0) ** 2) ** 2
+        return ((g * win * mj * ok)[..., None] * ds / r[..., None]).sum(1)
+
+    def pp_acc_adapt(self, pos, mass, mask, knn=16, cap=48, lmax=8, budget=2 ** 25):
+        """Exact top-knn pair term with an adaptive multilevel cell list: level l has cells pp/2^l; a query is resolved at the
+        coarsest level whose window (3x3 cells at l=0, 5x5 after) holds few enough candidates, and for l>=2 only if its knn-th
+        neighbour lies inside the window's guaranteed radius (else it goes finer, then to chunked all-pairs)."""
+        B, N = mask.shape
+        dev = pos.device
+        pf, mm, mk = pos.reshape(B * N, 2), (mass * mask).reshape(-1), mask.reshape(-1)
+        act = (mk > 0).nonzero()[:, 0]
+        n = act.numel()
+        pa, ma = pf[act], mm[act]
+        ba = (act // N)
+        k = min(knn, n - 1)
+        done = torch.zeros(n, dtype=torch.bool, device=dev)
+        qs, accs = [], []
+        for l in range(lmax + 1):
+            rem = (~done).nonzero()[:, 0]
+            if rem.numel() == 0:
+                break
+            s = self.pp / 2 ** l
+            R = 1 if l == 0 else 2
+            W = (2 * R + 1) ** 2
+            cover = R * s
+            C = int(math.ceil(self.extent / s))
+            cc = ((pa + self.extent / 2) / s).floor().clamp(0, C - 1).long().detach()
+            skey, order = torch.sort(ba * C * C + cc[:, 1] * C + cc[:, 0])
+            qc, qb = cc[rem], ba[rem]
+            sh = torch.arange(-R, R + 1, device=dev)
+            ncx = (qc[:, 0, None] + sh)[:, None, :].expand(-1, 2 * R + 1, -1).reshape(-1, W)
+            ncy = (qc[:, 1, None] + sh)[:, :, None].expand(-1, -1, 2 * R + 1).reshape(-1, W)
+            inside = (ncx >= 0) & (ncx < C) & (ncy >= 0) & (ncy < C)
+            nk = (qb[:, None] * C * C + ncy.clamp(0, C - 1) * C + ncx.clamp(0, C - 1)).reshape(-1)
+            lo = torch.searchsorted(skey, nk, right=False).view(-1, W)
+            cnt = (torch.searchsorted(skey, nk, right=True).view(-1, W) - lo) * inside
+            mc = cnt.max(1).values
+            for m in (1, 2, 4, 8, 16, 32, 64)[: 7 if l == 0 else 6]:
+                sel = ((mc <= m) & (mc > m // 2)).nonzero()[:, 0]
+                if sel.numel():
+                    ql = rem[sel]
+                    Q = max(1, budget // (W * m))
+                    for c0 in range(0, ql.numel(), Q):
+                        qq, sl = ql[c0:c0 + Q], sel[c0:c0 + Q]
+                        j = torch.arange(m, device=dev)
+                        valid = (j < cnt[sl][..., None]).reshape(len(qq), W * m)
+                        cand = order[(lo[sl][..., None] + j).clamp(max=n - 1)].reshape(len(qq), W * m)
+                        d = pa[cand] - pa[qq][:, None]
+                        r_all = torch.sqrt((d ** 2).sum(-1) + 1e-8)
+                        bad = (~valid) | (cand == qq[:, None])
+                        kk = min(k, W * m)
+                        r_sel, i = torch.topk(r_all + 1e6 * bad.to(pos.dtype), kk, dim=-1, largest=False)
+                        if cover < self.pp:
+                            okq = (r_sel[:, kk - 1] <= cover) if kk == k else torch.zeros(len(qq), dtype=torch.bool, device=dev)
+                        else:
+                            okq = torch.ones(len(qq), dtype=torch.bool, device=dev)
+                        if not okq.any():
+                            continue
+                        ds = torch.gather(d, 1, i[..., None].expand(-1, -1, 2))[okq]
+                        mj = ma[torch.gather(cand, 1, i)][okq]
+                        qs.append(qq[okq])
+                        accs.append(self._pp_force(ds, r_sel[okq], mj))
+                        done[qq[okq]] = True
+        rem = (~done).nonzero()[:, 0]
+        if rem.numel():
+            Q = max(1, budget // n)
+            for c0 in range(0, rem.numel(), Q):
+                qq = rem[c0:c0 + Q]
+                d = pa[None, :, :] - pa[qq][:, None]
+                r_all = torch.sqrt((d ** 2).sum(-1) + 1e-8)
+                bad = (ba[None, :] != ba[qq][:, None]) | (torch.arange(n, device=dev)[None] == qq[:, None])
+                r_sel, i = torch.topk(r_all + 1e6 * bad.to(pos.dtype), k, dim=-1, largest=False)
+                ds = torch.gather(d, 1, i[..., None].expand(-1, -1, 2))
+                qs.append(qq)
+                accs.append(self._pp_force(ds, r_sel, ma[i]))
+        a_act = torch.zeros(n, 2, device=dev, dtype=pos.dtype).index_copy(0, torch.cat(qs), torch.cat(accs))
+        return torch.zeros(B * N, 2, device=dev, dtype=pos.dtype).index_copy(0, act, a_act).reshape(B, N, 2)
+
     def pp_acc(self, pos, mass, mask, knn=16):
         B, N = mask.shape
+        if "adapt" in self.opt and N > 512:
+            return self.pp_acc_adapt(pos, mass, mask, knn)
         if "cell" in self.opt and N > 512:
             return self.pp_acc_cell(pos, mass, mask, knn)
         k = min(knn, N - 1)
