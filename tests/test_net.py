@@ -1,16 +1,16 @@
 import torch
-from model.net import BounceNextFrameModel
+from model.net import AugurNextFrameModel
 
 
 def test_model_output_shape_matches_input():
-    model = BounceNextFrameModel(channels=16, depth=2)
+    model = AugurNextFrameModel(channels=16, depth=2)
     g_t = torch.randn(2, 3, 50, 50)
     out = model(g_t)
     assert out.shape == g_t.shape
 
 
 def test_model_runs_at_a_different_resolution_without_retraining():
-    model = BounceNextFrameModel(channels=16, depth=2)
+    model = AugurNextFrameModel(channels=16, depth=2)
     for n in (50, 300):
         g_t = torch.randn(1, 3, n, n)
         out = model(g_t)
@@ -26,7 +26,7 @@ def test_zero_init_heads_give_exact_identity_at_init():
     # docs/debugging/findings-quilting-artifact.md) which is a deliberate
     # shrink-and-rescale, not an identity map, so it's checked separately:
     # background (exactly 0) stays exactly 0, and total mass is conserved.
-    model = BounceNextFrameModel(channels=16, depth=2)
+    model = AugurNextFrameModel(channels=16, depth=2)
     g_t = torch.zeros(1, 3, 50, 50)
     g_t[0, 0, 10:15, 10:15] = 0.8
     g_t[:, 1:] = torch.randn(1, 2, 50, 50)
@@ -43,7 +43,7 @@ def test_prob_below_threshold_is_zeroed():
     # across nearly the whole grid; soft-thresholding before renorm should
     # zero it out rather than let exact mass renormalization amplify it
     # back up (see docs/debugging/findings-quilting-artifact.md).
-    model = BounceNextFrameModel(channels=16, depth=2)
+    model = AugurNextFrameModel(channels=16, depth=2)
     g_t = torch.zeros(1, 3, 20, 20)
     g_t[0, 0, 5, 5] = 1.0
     g_t[0, 0] += 0.005  # below prob_threshold=0.015 everywhere
@@ -54,7 +54,7 @@ def test_prob_below_threshold_is_zeroed():
 
 
 def test_nonzero_flow_head_shifts_content():
-    model = BounceNextFrameModel(channels=16, depth=2, max_flow=4.0)
+    model = AugurNextFrameModel(channels=16, depth=2, max_flow=4.0)
     with torch.no_grad():
         model.flow_head.bias[0] = 2.0  # constant +2 px shift in x
     g_t = torch.zeros(1, 3, 20, 20)
@@ -74,7 +74,7 @@ def test_uniform_correction_bias_is_centered_away():
     # it can only redistribute mass, not inject a sustained per-channel
     # bias. A purely uniform correction should therefore cancel to exactly
     # zero, leaving the identity warp untouched.
-    model = BounceNextFrameModel(channels=16, depth=2, max_correction=0.2)
+    model = AugurNextFrameModel(channels=16, depth=2, max_correction=0.2)
     with torch.no_grad():
         model.correction_head.bias[0] = 10.0
     g_t = torch.zeros(1, 3, 20, 20)
@@ -87,7 +87,7 @@ def test_correction_is_centered_and_bounded_per_channel():
     # be able to redistribute mass locally, but the *spatial mean* per
     # channel must land at ~0 (centering), and no single cell can exceed
     # 2*max_correction (the full tanh saturation range after centering).
-    model = BounceNextFrameModel(channels=16, depth=2, max_correction=0.2)
+    model = AugurNextFrameModel(channels=16, depth=2, max_correction=0.2)
     g_t = torch.randn(1, 3, 20, 20)
     raw = torch.randn(1, 3, 20, 20) * 50  # saturates tanh, varies spatially
     model.correction_head.forward = lambda x: raw
@@ -104,7 +104,7 @@ def test_correction_is_centered_and_bounded_per_channel():
 
 
 def test_gradients_flow_to_all_params():
-    model = BounceNextFrameModel(channels=16, depth=2)
+    model = AugurNextFrameModel(channels=16, depth=2)
     g_t = torch.randn(1, 3, 20, 20, requires_grad=False)
     target = torch.randn(1, 3, 20, 20)
     out = model(g_t)

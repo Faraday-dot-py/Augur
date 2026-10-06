@@ -1,15 +1,15 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-scatter-scenes
+#SBATCH --job-name=augur-scatter-scenes
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=04:00:00
-#SBATCH --output=bounce-scatter-scenes-%j.log
+#SBATCH --output=augur-scatter-scenes-%j.log
 
 set -uo pipefail
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce-scenes"
+cd "$HOME/augur-scenes"
 export PYTHONPATH=.
 mkdir -p results/scenes checkpoints_scenes
 # STEPS: newline-separated argument lines for scripts/scatter_scenes.py, e.g. "eval --scene bounce --model E --tag zeroshot"

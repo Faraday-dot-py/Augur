@@ -1,15 +1,15 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-eval-energy-fix
+#SBATCH --job-name=augur-eval-energy-fix
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=02:00:00
-#SBATCH --output=bounce-eval-energy-fix-%j.log
+#SBATCH --output=augur-eval-energy-fix-%j.log
 
 set -euo pipefail
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 mkdir -p results
 MODELS="soupb=soupb:checkpoints/token_model_soup_b.pt ${EXTRA_MODELS:-}"

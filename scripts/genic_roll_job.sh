@@ -1,6 +1,6 @@
 #!/bin/bash
 # usage: genic_roll_job.sh ic [ic...]
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=. PYTHONUNBUFFERED=1
 for ic in "$@"; do
   T=genic_r50k_$ic

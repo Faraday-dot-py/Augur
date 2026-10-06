@@ -34,9 +34,9 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-import bounce
+import augur
 from model.dataset import make_scenario_uniform
-from model.net import BounceNextFrameModel, DILATIONS
+from model.net import AugurNextFrameModel, DILATIONS
 
 
 def path_count_coverage(size=65, with_residual=True):
@@ -94,8 +94,8 @@ def instrumented_forward(model, g_t, padding_mode="zeros"):
 def build_initial(n, num_balls, seed, radius=0.75, vy=2.3):
     rng = random.Random(seed)
     balls = make_scenario_uniform(num_balls, n, vy, rng)
-    G = bounce.make_grid(n)
-    bounce.splat_all(G, n, balls, radius)
+    G = augur.make_grid(n)
+    augur.splat_all(G, n, balls, radius)
     return np.array(G, dtype=np.float32)
 
 
@@ -127,7 +127,7 @@ if __name__ == "__main__":
         pj = 1 / fj if fj else float("inf")
         print(f"  mag={mag:.3f} freq=({fi:+.3f},{fj:+.3f}) period=({pi:+.1f}px,{pj:+.1f}px)")
 
-    model = BounceNextFrameModel(channels=64, depth=len(DILATIONS))
+    model = AugurNextFrameModel(channels=64, depth=len(DILATIONS))
     model.load_state_dict(torch.load(args.checkpoint, map_location="cpu"))
     model.eval()
 

@@ -4,8 +4,8 @@ import random
 import torch
 from torch.utils.data import DataLoader
 
-from model.dataset import BounceSequenceDataset
-from model.net import BounceNextFrameModel
+from model.dataset import AugurSequenceDataset
+from model.net import AugurNextFrameModel
 from model.losses import occupancy_weighted_mse
 
 
@@ -37,7 +37,7 @@ def train(args):
     torch.manual_seed(args.seed)
     random.seed(args.seed)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    dataset = BounceSequenceDataset(
+    dataset = AugurSequenceDataset(
         num_samples=args.num_samples,
         n=args.n,
         ball_range=(args.min_balls, args.max_balls),
@@ -46,7 +46,7 @@ def train(args):
         cache_path=args.cache_path,
     )
     loader = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
-    model = BounceNextFrameModel(
+    model = AugurNextFrameModel(
         channels=args.channels, depth=args.depth, max_flow=args.max_flow,
     ).to(device)
     opt = torch.optim.Adam(model.parameters(), lr=args.lr)

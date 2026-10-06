@@ -1,4 +1,4 @@
-# Bounce central-force model in the browser
+# Augur central-force model in the browser
 
 Static page: the learned central-force N-body model (`checkpoints/gravity_central_v1.pt`,
 a single distance-only pairwise-force MLP, 4353 floats, err@20 = 0.0054 on held-out

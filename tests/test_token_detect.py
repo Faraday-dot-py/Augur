@@ -1,14 +1,14 @@
 import numpy as np
 import torch
 
-import bounce
+import augur
 from model.token_detect import centroid_near, find_token_positions, read_token_velocities, territory_mask
 
 
 def _prob_channel(balls, n, radius):
-    G = bounce.make_grid(n)
-    bounce.splat_all(G, n, balls, radius)
-    return torch.from_numpy(np.array(G, dtype=np.float32)[:, :, bounce.PROB])
+    G = augur.make_grid(n)
+    augur.splat_all(G, n, balls, radius)
+    return torch.from_numpy(np.array(G, dtype=np.float32)[:, :, augur.PROB])
 
 
 def test_centroid_near_recovers_isolated_ball_center():
@@ -233,8 +233,8 @@ def test_centroid_near_still_masks_when_own_territory_has_some_mass():
 def test_read_token_velocities_exact_for_isolated_balls():
     n = 20
     balls = [{"x": 5.3, "y": 6.6, "vx": 2.0, "vy": -1.5}, {"x": 14.2, "y": 12.4, "vx": -3.0, "vy": 0.5}]
-    G = bounce.make_grid(n)
-    bounce.splat_all(G, n, balls, 0.75)
+    G = augur.make_grid(n)
+    augur.splat_all(G, n, balls, 0.75)
     frame = torch.from_numpy(np.array(G, dtype=np.float32).transpose(2, 0, 1))
     pos = torch.tensor([[5.3, 6.6], [14.2, 12.4]])
     vel = read_token_velocities(frame, pos)

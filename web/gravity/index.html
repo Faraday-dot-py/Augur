@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark">
 <meta name="description" content="A learned pairwise gravity law running live in the browser, scaling to thousands of bodies.">
-<title>Bounce Central-Force Model</title>
+<title>Augur Central-Force Model</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%2306080c'/%3E%3Ccircle cx='8' cy='8' r='4' fill='%23ff9a3c'/%3E%3C/svg%3E">
 <style>
 :root {
@@ -58,7 +58,7 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
 <body>
 <canvas id="stage" aria-label="2D view of an N-body cluster: blue bodies are the learned central-force model, orange ghosts are the softened-gravity ground truth"></canvas>
 <header class="glass">
-  <h1>Bounce <span>central-force model</span></h1>
+  <h1>Augur <span>central-force model</span></h1>
   <p>A single learned pairwise force f(log d)/(d²+1), summed over neighbours and integrated with velocity Verlet. No walls, no per-ball state &mdash; trained on 100&ndash;1000 bodies, generalizes past 10,000. <a href="../">&larr; other model</a></p>
   <dl id="stats">
     <div><dt>tick</dt><dd id="s-tick">0</dd></div>

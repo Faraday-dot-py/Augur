@@ -1,15 +1,15 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-orbit-bh-100k-collapse-substep-test
+#SBATCH --job-name=augur-orbit-bh-100k-collapse-substep-test
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=00:30:00
-#SBATCH --output=bounce-orbit-bh-100k-collapse-substep-test-%j.log
+#SBATCH --output=augur-orbit-bh-100k-collapse-substep-test-%j.log
 
 set -euo pipefail
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 for S in 1 2 4; do
     echo "== substeps $S"

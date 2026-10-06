@@ -1,11 +1,11 @@
 import torch
 
-from model.net import BounceNextFrameModel
+from model.net import AugurNextFrameModel
 from model.evaluate import rollout_divergence
 
 
 def load_model(checkpoint_path):
-    model = BounceNextFrameModel(channels=64, depth=7)
+    model = AugurNextFrameModel(channels=64, depth=7)
     model.load_state_dict(torch.load(checkpoint_path, map_location="cpu"))
     model.eval()
     return model
@@ -14,13 +14,13 @@ def load_model(checkpoint_path):
 def occupied_cell_count(model, n, num_balls, seed, num_steps, radius=0.75, **kwargs):
     import random
     import numpy as np
-    import bounce
+    import augur
     from model.dataset import make_scenario_uniform
 
     rng = random.Random(seed)
     balls = make_scenario_uniform(num_balls, n, kwargs.get("vy", 2.3), rng)
-    G = bounce.make_grid(n)
-    bounce.splat_all(G, n, balls, radius)
+    G = augur.make_grid(n)
+    augur.splat_all(G, n, balls, radius)
     g_true = np.array(G, dtype=np.float32)
     g_pred = torch.from_numpy(g_true.transpose(2, 0, 1)).unsqueeze(0)
 

@@ -1,15 +1,15 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-stage2-flownet-v7
+#SBATCH --job-name=augur-stage2-flownet-v7
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=02:30:00
-#SBATCH --output=bounce-stage2-flownet-v7-%j.log
+#SBATCH --output=augur-stage2-flownet-v7-%j.log
 
 set -euo pipefail
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 
 echo "[$(date -Iseconds)] starting pip install"
 pip install -r requirements.txt

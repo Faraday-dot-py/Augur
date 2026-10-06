@@ -19,7 +19,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-import bounce
+import augur
 from model.dataset import make_scenario_uniform
 from model.token_model import TokenModel
 
@@ -28,11 +28,11 @@ def simulate_ground_truth(n, num_balls, seed, num_steps, dt=0.15, gravity=9.0,
                            radius=0.75, stiffness=400.0, substeps=8, vy=2.3):
     rng = random.Random(seed)
     balls = make_scenario_uniform(num_balls, n, vy, rng)
-    G = bounce.make_grid(n)
-    bounce.splat_all(G, n, balls, radius)
+    G = augur.make_grid(n)
+    augur.splat_all(G, n, balls, radius)
     frames = [np.array(G, dtype=np.float32)]
     for _ in range(num_steps):
-        bounce.step(G, n, balls, dt, gravity, radius, stiffness, substeps)
+        augur.step(G, n, balls, dt, gravity, radius, stiffness, substeps)
         frames.append(np.array(G, dtype=np.float32))
     return frames
 
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     for r, (name, frames) in enumerate(rows.items()):
         for c, step in enumerate(args.steps):
             ax = axes[r][c]
-            frame = frames[step][:, :, bounce.PROB]
+            frame = frames[step][:, :, augur.PROB]
             ax.imshow(frame, cmap="viridis")
             ax.set_xticks([]); ax.set_yticks([])
             if r == 0:

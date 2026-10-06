@@ -1,15 +1,15 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-cons-pure
+#SBATCH --job-name=augur-cons-pure
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=04:00:00
-#SBATCH --output=bounce-cons-pure-%j.log
+#SBATCH --output=augur-cons-pure-%j.log
 
 set -euo pipefail
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 mkdir -p checkpoints results
 # checkpoint (model + optimizer + epoch) is saved every epoch by train_conservative.py

@@ -1,15 +1,15 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-energy-ft2
+#SBATCH --job-name=augur-energy-ft2
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=03:00:00
-#SBATCH --output=bounce-energy-ft2-%j.log
+#SBATCH --output=augur-energy-ft2-%j.log
 
 set -euo pipefail
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 for cfg in "wall 1" "wall 8" "pair 1" "pair 8"; do
   set -- $cfg

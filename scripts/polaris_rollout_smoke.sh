@@ -1,14 +1,14 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-rollout-smoke
+#SBATCH --job-name=augur-rollout-smoke
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=00:30:00
-#SBATCH --output=bounce-rollout-smoke-%j.log
+#SBATCH --output=augur-rollout-smoke-%j.log
 
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 mkdir -p results checkpoints
 python scripts/est_train.py --kernel analytic --out checkpoints/est_analytic.pt

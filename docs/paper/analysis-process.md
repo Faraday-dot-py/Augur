@@ -1,4 +1,4 @@
-# Bounce: analysis process (for the paper)
+# Augur (formerly Bounce): analysis process (for the paper)
 
 Record of how results are produced and checked, so the method section can be
 written without reconstructing it. Living document; append as the process

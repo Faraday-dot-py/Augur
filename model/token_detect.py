@@ -196,7 +196,7 @@ def find_token_positions(prob, radius, threshold=0.1, margin=1.0):
 
 def read_token_velocities(frame, positions, window_radius=1.0):
     """Velocity of each token read straight off the frame's VX/VY channels
-    (bounce.py: channel 1/2 hold the probability-weighted mean velocity of
+    (augur.py: channel 1/2 hold the probability-weighted mean velocity of
     the ball(s) covering each cell), averaged over cells within
     `window_radius` of the token, weighted by the undone PROB saturation
     (-log(1 - PROB) recovers the summed splat weight). Exact for an

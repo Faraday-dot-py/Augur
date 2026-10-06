@@ -1,15 +1,15 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-lj-eval
+#SBATCH --job-name=augur-lj-eval
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=02:30:00
-#SBATCH --output=bounce-lj-eval-%j.log
+#SBATCH --output=augur-lj-eval-%j.log
 
 set -euo pipefail
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 
 pip install -q -r requirements.txt

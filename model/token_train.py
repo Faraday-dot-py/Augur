@@ -4,7 +4,7 @@ import random
 import torch
 from torch.utils.data import DataLoader
 
-from model.token_dataset import BounceTokenSequenceDataset, load_dataset_samples
+from model.token_dataset import AugurTokenSequenceDataset, load_dataset_samples
 from model.token_match import match_tokens_to_state
 from model.token_model import TokenModel
 from model.token_losses import boundary_loss, contact_mask, token_grid_loss, token_state_loss, window_collapse_loss
@@ -144,10 +144,10 @@ def train(args):
     random.seed(args.seed)
     if args.dataset_cache:
         print(f"loading cached dataset from {args.dataset_cache}", flush=True)
-        dataset = BounceTokenSequenceDataset.from_samples(load_dataset_samples(args.dataset_cache))
+        dataset = AugurTokenSequenceDataset.from_samples(load_dataset_samples(args.dataset_cache))
         print(f"loaded {len(dataset)} samples", flush=True)
     else:
-        dataset = BounceTokenSequenceDataset(
+        dataset = AugurTokenSequenceDataset(
             num_samples=args.num_samples, n=args.n, ball_range=(args.min_balls, args.max_balls),
             seed=args.seed, horizon=args.horizon, gravity=args.gravity,
         )

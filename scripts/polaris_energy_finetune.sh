@@ -1,15 +1,15 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-energy-ft
+#SBATCH --job-name=augur-energy-ft
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=04:00:00
-#SBATCH --output=bounce-energy-ft-%j.log
+#SBATCH --output=augur-energy-ft-%j.log
 
 set -euo pipefail
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 mkdir -p results checkpoints
 

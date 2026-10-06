@@ -3,7 +3,7 @@ from unittest.mock import patch
 import torch
 
 import model.token_train as token_train_module
-from model.token_dataset import BounceTokenSequenceDataset
+from model.token_dataset import AugurTokenSequenceDataset
 from model.token_model import TokenModel
 from model.token_train import horizon_for_epoch, sampling_probability, token_rollout_loss
 
@@ -17,7 +17,7 @@ def test_sampling_probability_ramps_linearly_and_clamps():
 
 def test_token_rollout_loss_overfits_a_single_sequence():
     torch.manual_seed(4738)
-    dataset = BounceTokenSequenceDataset(num_samples=1, n=20, ball_range=(2, 3), seed=4738, horizon=3)
+    dataset = AugurTokenSequenceDataset(num_samples=1, n=20, ball_range=(2, 3), seed=4738, horizon=3)
     grid_seq, state_seq = dataset[0]
     model = TokenModel(n=20, radius=0.75, dt=0.15, hidden_dim=8, neighbor_radius=3.0)
     opt = torch.optim.Adam(model.parameters(), lr=1e-2)
@@ -44,7 +44,7 @@ def test_token_rollout_loss_overfits_a_single_sequence():
 
 def test_token_rollout_loss_self_feeds_when_sampling_p_is_one():
     torch.manual_seed(4738)
-    dataset = BounceTokenSequenceDataset(num_samples=1, n=20, ball_range=(2, 3), seed=4738, horizon=3)
+    dataset = AugurTokenSequenceDataset(num_samples=1, n=20, ball_range=(2, 3), seed=4738, horizon=3)
     grid_seq, state_seq = dataset[0]
     model = TokenModel(n=20, radius=0.75, dt=0.15, hidden_dim=8, neighbor_radius=3.0)
     weights = torch.tensor([1.0, 0.1, 0.1])
@@ -55,7 +55,7 @@ def test_token_rollout_loss_self_feeds_when_sampling_p_is_one():
 
 def test_token_rollout_loss_self_feed_decided_per_step():
     torch.manual_seed(4738)
-    dataset = BounceTokenSequenceDataset(num_samples=1, n=20, ball_range=(2, 3), seed=4738, horizon=4)
+    dataset = AugurTokenSequenceDataset(num_samples=1, n=20, ball_range=(2, 3), seed=4738, horizon=4)
     grid_seq, state_seq = dataset[0]
     model = TokenModel(n=20, radius=0.75, dt=0.15, hidden_dim=8, neighbor_radius=3.0)
     weights = torch.tensor([1.0, 0.1, 0.1])
@@ -77,7 +77,7 @@ def test_token_rollout_loss_grid_weight_is_zero_at_sampling_p_zero():
     # (start of the ramp) token_grid_loss must not contribute at all, so
     # a wildly wrong rasterized-grid comparison can't move the loss.
     torch.manual_seed(4738)
-    dataset = BounceTokenSequenceDataset(num_samples=1, n=20, ball_range=(2, 3), seed=4738, horizon=3)
+    dataset = AugurTokenSequenceDataset(num_samples=1, n=20, ball_range=(2, 3), seed=4738, horizon=3)
     grid_seq, state_seq = dataset[0]
     model = TokenModel(n=20, radius=0.75, dt=0.15, hidden_dim=8, neighbor_radius=3.0)
     weights = torch.tensor([1.0, 0.1, 0.1])
@@ -95,7 +95,7 @@ def test_token_rollout_loss_grid_weight_is_zero_at_sampling_p_zero():
 
 def test_token_rollout_loss_state_weight_scales_state_term():
     torch.manual_seed(4738)
-    dataset = BounceTokenSequenceDataset(num_samples=1, n=20, ball_range=(2, 3), seed=4738, horizon=3)
+    dataset = AugurTokenSequenceDataset(num_samples=1, n=20, ball_range=(2, 3), seed=4738, horizon=3)
     grid_seq, state_seq = dataset[0]
     model = TokenModel(n=20, radius=0.75, dt=0.15, hidden_dim=8, neighbor_radius=3.0)
     weights = torch.tensor([1.0, 0.1, 0.1])
@@ -119,7 +119,7 @@ def test_token_rollout_loss_collapse_weight_scales_collapse_term():
     # positions off-lattice across a few steps -- mirrors
     # test_token_rollout_loss_state_weight_scales_state_term's pattern.
     torch.manual_seed(4738)
-    dataset = BounceTokenSequenceDataset(num_samples=1, n=20, ball_range=(2, 3), seed=4738, horizon=5)
+    dataset = AugurTokenSequenceDataset(num_samples=1, n=20, ball_range=(2, 3), seed=4738, horizon=5)
     grid_seq, state_seq = dataset[0]
     model = TokenModel(n=20, radius=0.75, dt=0.15, hidden_dim=8, neighbor_radius=3.0)
     weights = torch.tensor([1.0, 0.1, 0.1])
@@ -140,7 +140,7 @@ def test_token_rollout_loss_collapse_weight_scales_collapse_term():
 
 def test_token_rollout_loss_collapse_weight_zero_matches_no_collapse_call():
     torch.manual_seed(4738)
-    dataset = BounceTokenSequenceDataset(num_samples=1, n=20, ball_range=(2, 3), seed=4738, horizon=3)
+    dataset = AugurTokenSequenceDataset(num_samples=1, n=20, ball_range=(2, 3), seed=4738, horizon=3)
     grid_seq, state_seq = dataset[0]
     model = TokenModel(n=20, radius=0.75, dt=0.15, hidden_dim=8, neighbor_radius=3.0)
     weights = torch.tensor([1.0, 0.1, 0.1])
@@ -154,7 +154,7 @@ def test_token_rollout_loss_collapse_weight_zero_matches_no_collapse_call():
 
 
 def _free_sample(horizon=6, seed=4738):
-    ds = BounceTokenSequenceDataset(num_samples=1, n=20, ball_range=(3, 3), seed=seed, horizon=horizon)
+    ds = AugurTokenSequenceDataset(num_samples=1, n=20, ball_range=(3, 3), seed=seed, horizon=horizon)
     return ds[0]
 
 

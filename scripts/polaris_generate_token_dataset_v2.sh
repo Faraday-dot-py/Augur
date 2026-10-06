@@ -1,14 +1,14 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-token-dataset-v2
+#SBATCH --job-name=augur-token-dataset-v2
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --time=02:00:00
-#SBATCH --output=bounce-token-dataset-v2-%j.log
+#SBATCH --output=augur-token-dataset-v2-%j.log
 
 set -euo pipefail
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 
 echo "[$(date -Iseconds)] starting pip install"
 pip install -r requirements.txt

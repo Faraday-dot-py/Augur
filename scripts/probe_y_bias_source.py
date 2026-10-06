@@ -10,15 +10,15 @@ import argparse
 
 import torch
 
-import bounce
+import augur
 from scripts.eval_free_rollout import load_model
 
 
 def true_run(balls, steps):
-    G = bounce.make_grid(20)
+    G = augur.make_grid(20)
     out = []
     for _ in range(steps):
-        bounce.step(G, 20, balls, 0.15, 9.0, 0.75, 400.0, 8)
+        augur.step(G, 20, balls, 0.15, 9.0, 0.75, 400.0, 8)
         out.append([(round(b["x"], 2), round(b["y"], 2), round(b["vx"], 2), round(b["vy"], 2)) for b in balls])
     return out
 

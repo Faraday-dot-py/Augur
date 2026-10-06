@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
-import bounce
+import augur
 from model.dataset import generate_scenario_balls
 
 
@@ -18,12 +18,12 @@ def generate_token_sequence(balls, n, dt, gravity, radius, stiffness, substeps, 
     rendering; the token model needs them for initialization and for
     collision-specific eval metrics that the grid-only dataset can't
     supply (see design spec's Validation plan)."""
-    G = bounce.make_grid(n)
-    bounce.splat_all(G, n, balls, radius)
+    G = augur.make_grid(n)
+    augur.splat_all(G, n, balls, radius)
     frames = [np.array(G, dtype=np.float32)]
     states = [_copy_states(balls)]
     for _ in range(horizon):
-        bounce.step(G, n, balls, dt, gravity, radius, stiffness, substeps)
+        augur.step(G, n, balls, dt, gravity, radius, stiffness, substeps)
         frames.append(np.array(G, dtype=np.float32))
         states.append(_copy_states(balls))
     return frames, states
@@ -63,7 +63,7 @@ def load_dataset_samples(path):
     return torch.load(path, weights_only=False)
 
 
-class BounceTokenSequenceDataset(Dataset):
+class AugurTokenSequenceDataset(Dataset):
     SCENARIOS = SCENARIOS
 
     def __init__(self, num_samples, n, ball_range, seed, horizon=3, dt=0.15, gravity=9.0,

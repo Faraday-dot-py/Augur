@@ -8,7 +8,7 @@
 #SBATCH --output=fallback-c1-%j.log
 
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 mkdir -p results
 R="python scripts/fallback_run.py"

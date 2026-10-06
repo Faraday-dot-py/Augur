@@ -1,4 +1,4 @@
-# Bounce scatter-field model in the browser
+# Augur scatter-field model in the browser
 
 Static page: the learned scatter-field N-body model (`B_ms_kp_pot_v_g128`, trained on 10-100
 unit-mass bodies, 8087 iterations in a fixed 900 s budget, err@5/10/20 = .0006/.0014/.0039,

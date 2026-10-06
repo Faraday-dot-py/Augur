@@ -1,15 +1,15 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-scatter-field
+#SBATCH --job-name=augur-scatter-field
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=04:00:00
-#SBATCH --output=bounce-scatter-field-%j.log
+#SBATCH --output=augur-scatter-field-%j.log
 
 set -euo pipefail
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 mkdir -p results/scatter_field checkpoints/scatter_field
 EXP="${EXP:-A}"

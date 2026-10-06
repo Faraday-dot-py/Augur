@@ -1,15 +1,15 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-scatter-scaling
+#SBATCH --job-name=augur-scatter-scaling
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=04:00:00
-#SBATCH --output=bounce-scatter-scaling-%j.log
+#SBATCH --output=augur-scatter-scaling-%j.log
 
 set -uo pipefail
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce_scaling"
+cd "$HOME/augur_scaling"
 export PYTHONPATH=.
 CKPT="${CKPT:-checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt}"
 PHASES="${PHASES:-equiv stock comp nsweep worlds}"

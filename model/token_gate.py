@@ -4,7 +4,7 @@ import torch
 def occluding_mask(positions, radius):
     """Per-token boolean mask: True if this token's position is within
     2*radius of any other token -- the same contact-overlap condition as
-    bounce.py's ball_pair_forces (`2 * radius - dist`) when `radius` is
+    augur.py's ball_pair_forces (`2 * radius - dist`) when `radius` is
     the physical ball radius. Callers decide which radius to pass:
     TokenModel passes a widened one (see TokenModel._gate_radius) because
     the question it needs answered is not "are these balls touching" but

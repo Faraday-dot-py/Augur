@@ -23,9 +23,9 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-import bounce
+import augur
 from model.dataset import make_scenario_uniform
-from model.net import BounceNextFrameModel
+from model.net import AugurNextFrameModel
 
 
 def fft_top_peaks(img2d, min_freq=0.03, n_peaks=5):
@@ -54,7 +54,7 @@ def describe_peaks(peaks):
 
 
 def load_model(checkpoint_path):
-    model = BounceNextFrameModel(channels=64, depth=7)
+    model = AugurNextFrameModel(channels=64, depth=7)
     model.load_state_dict(torch.load(checkpoint_path, map_location="cpu"))
     model.eval()
     return model
@@ -63,8 +63,8 @@ def load_model(checkpoint_path):
 def build_initial(n, num_balls, seed, radius=0.75, vy=2.3):
     rng = random.Random(seed)
     balls = make_scenario_uniform(num_balls, n, vy, rng)
-    G = bounce.make_grid(n)
-    bounce.splat_all(G, n, balls, radius)
+    G = augur.make_grid(n)
+    augur.splat_all(G, n, balls, radius)
     return np.array(G, dtype=np.float32)
 
 
@@ -82,7 +82,7 @@ def real_rollout(model, g0, num_steps):
 
 
 def instrumented_forward(model, g_t, padding_mode, grid_sample_mode="bicubic"):
-    """Mirrors BounceNextFrameModel.forward exactly (renorm, threshold,
+    """Mirrors AugurNextFrameModel.forward exactly (renorm, threshold,
     VX/VY recenter all included), except grid_sample's padding_mode (and
     optionally its interpolation mode) is swappable at call time -- for
     the inference-only counterfactual, no retraining, same method as

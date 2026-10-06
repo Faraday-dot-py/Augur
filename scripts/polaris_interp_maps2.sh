@@ -8,7 +8,7 @@
 #SBATCH --output=interp-maps2-%j.log
 
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 date
 python scripts/interp_maps.py --out results/interp_maps.json

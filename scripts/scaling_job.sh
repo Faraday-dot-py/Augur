@@ -6,7 +6,7 @@
 #SBATCH --time=00:40:00
 
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 mkdir -p results
 python "$@"

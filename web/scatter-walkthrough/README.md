@@ -1,4 +1,4 @@
-# Bounce scatter-field walkthrough
+# Augur scatter-field walkthrough
 
 Static page: a 3D, step-through view of one traced tick of the scatter-field model, in the spirit of
 bbycroft.net/llm. Fields (128x128 grids, 32-channel UNet slabs, potentials) are textured planes laid out

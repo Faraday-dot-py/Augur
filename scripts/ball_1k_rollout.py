@@ -11,7 +11,7 @@ import random
 import numpy as np
 import torch
 
-import bounce
+import augur
 from model.dataset import make_scenario_uniform
 from scripts.eval_free_rollout import load_model
 

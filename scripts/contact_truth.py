@@ -1,8 +1,8 @@
-"""GPU-vectorized torch port of bounce.py's penalty-force physics (per-ball
+"""GPU-vectorized torch port of augur.py's penalty-force physics (per-ball
 radius/mass/kinematic, plus wall-segment obstacles), for generating Phase 1
 contact-generalization training data at scale. Must stay bit-comparable
-(within float precision) with bounce.py's CPU reference -- see
-tests/test_contact_truth.py -- since bounce.py is the one source of truth
+(within float precision) with augur.py's CPU reference -- see
+tests/test_contact_truth.py -- since augur.py is the one source of truth
 (spec docs/superpowers/specs/2026-09-28-cfd-contact-generalization-design.md §6/§9).
 
 Usage: PYTHONPATH=. python3 -c "from scripts import contact_truth" (library module, no CLI)
@@ -88,7 +88,7 @@ def forces(p, radii, masses, n, gravity, stiffness, segments=None):
 
 
 def rollout(balls, n, steps, dt, gravity, stiffness, substeps, segments, device):
-    """Symplectic-Euler rollout matching bounce.py's step()/integrate(),
+    """Symplectic-Euler rollout matching augur.py's step()/integrate(),
     with per-ball mass division and kinematic bodies frozen. Returns
     (pos, vel) as (steps+1, m, 2) numpy arrays, dtype float64 to match the
     CPU reference's accumulation precision closely enough for parity

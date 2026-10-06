@@ -8,7 +8,7 @@ class ContactForceDynamics(nn.Module):
     """Learned pairwise potential V(pen, r_i+r_j, s_ij), pen = r_i+r_j - d
     (negative when apart), s_ij a swap-symmetric function of (mass_i,
     mass_j). V is gated by sigmoid(pen / 0.5), so it goes smoothly to zero
-    once bodies are well apart, like bounce.py's penalty force (exactly zero
+    once bodies are well apart, like augur.py's penalty force (exactly zero
     without overlap). Force is -dV/dd along the pair line (via autograd), so
     momentum is conserved exactly and a step is symplectic -- the same
     design pattern as CentralForceDynamics (learned pairwise function,

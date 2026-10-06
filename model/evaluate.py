@@ -2,7 +2,7 @@ import random
 
 import torch
 
-import bounce
+import augur
 from model.dataset import make_scenario_uniform, generate_sequence
 from model.losses import weighted_channel_mse
 
@@ -38,8 +38,8 @@ def rollout_divergence(model, n, num_balls, seed, num_steps,
     model.eval()
 
     balls = make_scenario_uniform(num_balls, n, vy, rng)
-    G = bounce.make_grid(n)
-    bounce.splat_all(G, n, balls, radius)
+    G = augur.make_grid(n)
+    augur.splat_all(G, n, balls, radius)
     import numpy as np
     g_true = np.array(G, dtype=np.float32)
     g_pred = torch.from_numpy(g_true.transpose(2, 0, 1)).unsqueeze(0).to(device)
@@ -47,7 +47,7 @@ def rollout_divergence(model, n, num_balls, seed, num_steps,
     divergences = []
     with torch.no_grad():
         for _ in range(num_steps):
-            bounce.step(G, n, balls, dt, gravity, radius, stiffness, substeps)
+            augur.step(G, n, balls, dt, gravity, radius, stiffness, substeps)
             g_true = np.array(G, dtype=np.float32)
             g_true_t = torch.from_numpy(g_true.transpose(2, 0, 1)).unsqueeze(0).to(device)
 

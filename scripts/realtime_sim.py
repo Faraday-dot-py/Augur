@@ -106,7 +106,7 @@ def main():
     sim = Sim(model, args.max_balls, args.spawn_every, args.spawn_speed, args.seed)
 
     root = tk.Tk()
-    root.title("Bounce real-time")
+    root.title("Augur real-time")
     canvas = tk.Canvas(root, width=args.n * args.scale, height=args.n * args.scale, highlightthickness=0, bg="black")
     canvas.pack()
     label = tk.Label(root, text="", anchor="w", font=("monospace", 10))

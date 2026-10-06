@@ -1,15 +1,15 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-bench-scaling
+#SBATCH --job-name=augur-bench-scaling
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=02:00:00
-#SBATCH --output=bounce-bench-scaling-%j.log
+#SBATCH --output=augur-bench-scaling-%j.log
 
 set -euo pipefail
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 pip install -q -r requirements.txt
 

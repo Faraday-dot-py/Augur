@@ -1,13 +1,13 @@
 import numpy as np
 import torch
 
-import bounce
+import augur
 from model.token_rasterize import rasterize_tokens
 
 
 def _numpy_ground_truth(balls, n, radius):
-    G = bounce.make_grid(n)
-    bounce.splat_all(G, n, balls, radius)
+    G = augur.make_grid(n)
+    augur.splat_all(G, n, balls, radius)
     return np.array(G, dtype=np.float32).transpose(2, 0, 1)
 
 

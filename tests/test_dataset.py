@@ -1,7 +1,7 @@
 import os
 import random
 import numpy as np
-import bounce
+import augur
 from model.dataset import generate_sequence, make_scenario_uniform
 
 
@@ -11,10 +11,10 @@ def test_generate_sequence_shapes_and_prob_bounds():
     frames = generate_sequence(balls, 50, 0.15, 9.0, 0.75, 400.0, 8, horizon=3)
     assert len(frames) == 4
     for frame in frames:
-        assert frame.shape == (50, 50, bounce.NUM_CHANNELS)
+        assert frame.shape == (50, 50, augur.NUM_CHANNELS)
         assert frame.dtype == np.float32
-        assert (frame[:, :, bounce.PROB] >= 0.0).all()
-        assert (frame[:, :, bounce.PROB] < 1.0).all()
+        assert (frame[:, :, augur.PROB] >= 0.0).all()
+        assert (frame[:, :, augur.PROB] < 1.0).all()
 
 
 def test_generate_sequence_frames_differ_across_steps():
@@ -52,12 +52,12 @@ def test_settled_scenario_balls_move_toward_high_x_under_gravity():
 
 
 import torch
-from model.dataset import BounceSequenceDataset
+from model.dataset import AugurSequenceDataset
 
 
 def test_bounce_sequence_dataset_shapes_and_determinism():
-    ds1 = BounceSequenceDataset(num_samples=6, n=50, ball_range=(5, 15), seed=4738, horizon=3)
-    ds2 = BounceSequenceDataset(num_samples=6, n=50, ball_range=(5, 15), seed=4738, horizon=3)
+    ds1 = AugurSequenceDataset(num_samples=6, n=50, ball_range=(5, 15), seed=4738, horizon=3)
+    ds2 = AugurSequenceDataset(num_samples=6, n=50, ball_range=(5, 15), seed=4738, horizon=3)
     assert len(ds1) == 6
     seq = ds1[0]
     assert seq.shape == (4, 3, 50, 50)
@@ -68,9 +68,9 @@ def test_bounce_sequence_dataset_shapes_and_determinism():
 
 def test_bounce_sequence_dataset_cache_roundtrip(tmp_path):
     cache_path = str(tmp_path / "cache.npz")
-    ds1 = BounceSequenceDataset(num_samples=4, n=50, ball_range=(5, 15), seed=4738, horizon=3, cache_path=cache_path)
+    ds1 = AugurSequenceDataset(num_samples=4, n=50, ball_range=(5, 15), seed=4738, horizon=3, cache_path=cache_path)
     assert os.path.exists(cache_path)
-    ds2 = BounceSequenceDataset(num_samples=4, n=50, ball_range=(5, 15), seed=4738, horizon=3, cache_path=cache_path)
+    ds2 = AugurSequenceDataset(num_samples=4, n=50, ball_range=(5, 15), seed=4738, horizon=3, cache_path=cache_path)
     assert len(ds2) == len(ds1)
     for i in range(len(ds1)):
         assert torch.equal(ds1[i], ds2[i])
@@ -78,9 +78,9 @@ def test_bounce_sequence_dataset_cache_roundtrip(tmp_path):
 
 def test_bounce_sequence_dataset_cache_rejects_mismatched_config(tmp_path):
     cache_path = str(tmp_path / "cache.npz")
-    BounceSequenceDataset(num_samples=4, n=50, ball_range=(5, 15), seed=4738, horizon=3, cache_path=cache_path)
+    AugurSequenceDataset(num_samples=4, n=50, ball_range=(5, 15), seed=4738, horizon=3, cache_path=cache_path)
     try:
-        BounceSequenceDataset(num_samples=4, n=50, ball_range=(5, 15), seed=4738, horizon=2, cache_path=cache_path)
+        AugurSequenceDataset(num_samples=4, n=50, ball_range=(5, 15), seed=4738, horizon=2, cache_path=cache_path)
         assert False, "expected ValueError for mismatched cache config"
     except ValueError:
         pass

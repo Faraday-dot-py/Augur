@@ -89,7 +89,7 @@ def bounce_forces(p, lo, hi):
 
 
 def bounce_truth(pos0, vel0, steps, dev, dt=BOX_DT, sub=BOX_SUB):
-    """bounce.py physics (centered coords, box [-7,7]; symplectic Euler, penalty contact), fp64."""
+    """augur.py physics (centered coords, box [-7,7]; symplectic Euler, penalty contact), fp64."""
     lo, hi = -(BOX - 1) / 2, (BOX - 1) / 2
     p = torch.tensor(pos0, dtype=torch.float64, device=dev)
     v = torch.tensor(vel0, dtype=torch.float64, device=dev)
@@ -239,10 +239,10 @@ def build_model(name, dt, dev, ckpt=None):
     if name == "E":
         model = sf.ScatterField(extent=cfg["extent"], dt=dt, in_scale=cfg["in_scale"], **kw)
     else:
-        from scripts.scatter_bounce import BounceScatterField
+        from scripts.scatter_bounce import AugurScatterField
 
         sub = int(name.replace("bounce", ""))
-        model = BounceScatterField(extent=cfg["extent"], dt=dt, in_scale=cfg["in_scale"], sub=sub, **kw)
+        model = AugurScatterField(extent=cfg["extent"], dt=dt, in_scale=cfg["in_scale"], sub=sub, **kw)
     if ckpt and ckpt != "none":
         sd = torch.load(ckpt, map_location=dev, weights_only=False)["model"]
         missing = model.load_state_dict(sd, strict=False)

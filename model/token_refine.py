@@ -1,5 +1,5 @@
 """Sub-cell refinement of frame-1 token positions by fitting the two frames'
-exact splats (bounce.splat_ball semantics, PROB saturation undone), with no
+exact splats (augur.splat_ball semantics, PROB saturation undone), with no
 simulator constants: velocities come from the frames' own VX/VY channels and
 the frame-0 position is p1 - dt * (v0 + v1) / 2. Cuts init position error
 from 0.244 to ~0.06 cells on seeds 4738-4785 (docs/debugging/

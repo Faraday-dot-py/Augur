@@ -1,15 +1,15 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-lj-sim
+#SBATCH --job-name=augur-lj-sim
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=01:30:00
-#SBATCH --output=bounce-lj-sim-%j.log
+#SBATCH --output=augur-lj-sim-%j.log
 
 set -euo pipefail
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 
 pip install -q -r requirements.txt

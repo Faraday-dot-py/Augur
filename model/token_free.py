@@ -17,7 +17,7 @@ def wall_features(positions, n, wall_range):
 def wall_contact_features(positions, velocities, n, radius, dt):
     """(N, 8): penetration depth into each wall now, then after one
     free-flight step (`pos + vel * dt`), as relu(radius - distance) / radius.
-    Contact -- the stiff, near-elastic wall impulse in bounce.py -- starts
+    Contact -- the stiff, near-elastic wall impulse in augur.py -- starts
     at penetration > 0, and whether a step is an impulse step depends on
     where the ball will be, so the lookahead half tells the network that
     before it happens."""

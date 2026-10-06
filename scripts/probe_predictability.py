@@ -13,16 +13,16 @@ import random
 
 import numpy as np
 
-import bounce
+import augur
 from scripts.diagnose_token_dropout import make_scenario_uniform
 
 
 def run(balls, n, num_steps, dt, gravity, radius, stiffness, substeps):
-    G = bounce.make_grid(n)
-    bounce.splat_all(G, n, balls, radius)
+    G = augur.make_grid(n)
+    augur.splat_all(G, n, balls, radius)
     traj = []
     for _ in range(num_steps):
-        bounce.step(G, n, balls, dt, gravity, radius, stiffness, substeps)
+        augur.step(G, n, balls, dt, gravity, radius, stiffness, substeps)
         traj.append(np.array([[b["x"], b["y"]] for b in balls]))
     return np.stack(traj)
 

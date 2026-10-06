@@ -1,14 +1,14 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-dual-kernels2
+#SBATCH --job-name=augur-dual-kernels2
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=02:00:00
-#SBATCH --output=bounce-dual-kernels2-%j.log
+#SBATCH --output=augur-dual-kernels2-%j.log
 
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 mkdir -p results checkpoints
 python scripts/dual_kernels_run.py --kernel-feats 1 --ctrl-iters 25 --out results/dual_kernels_kfeat.json

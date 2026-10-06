@@ -1,15 +1,15 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-scatter-bh-select
+#SBATCH --job-name=augur-scatter-bh-select
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=01:00:00
-#SBATCH --output=bounce-scatter-bh-select-%j.log
+#SBATCH --output=augur-scatter-bh-select-%j.log
 
 set -euo pipefail
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 C=checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt
 for ck in "$C" "$C.it55000" "$C.it50000" "$C.it45000"; do

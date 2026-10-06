@@ -1,4 +1,4 @@
-"""Dump bounce.py rollouts to web/token/tests/physics_ref.json for web/token/tests/physics.test.mjs.
+"""Dump augur.py rollouts to web/token/tests/physics_ref.json for web/token/tests/physics.test.mjs.
 
 Usage:
     PYTHONPATH=. python3 scripts/dump_web_physics_ref.py
@@ -7,17 +7,17 @@ Usage:
 import json
 import random
 
-import bounce
+import augur
 
 cases = []
 for name, num, n in [("n100_12", 12, 100), ("n20_40", 40, 20)]:
     rng = random.Random(4738)
-    balls = bounce.init_balls(num, n, 3.0, rng)
+    balls = augur.init_balls(num, n, 3.0, rng)
     init = [dict(b) for b in balls]
-    G = bounce.make_grid(n)
+    G = augur.make_grid(n)
     frames = []
     for _ in range(200):
-        bounce.step(G, n, balls, 0.15, 9.0, 0.75, 400.0, 8)
+        augur.step(G, n, balls, 0.15, 9.0, 0.75, 400.0, 8)
         frames.append([[b["x"], b["y"], b["vx"], b["vy"]] for b in balls])
     cases.append({"name": name, "n": n, "init": init, "frames": frames})
 with open("web/token/tests/physics_ref.json", "w") as f:

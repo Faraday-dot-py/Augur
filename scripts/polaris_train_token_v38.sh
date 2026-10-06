@@ -1,15 +1,15 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-token-model-v38
+#SBATCH --job-name=augur-token-model-v38
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=04:00:00
-#SBATCH --output=bounce-token-model-v38-%j.log
+#SBATCH --output=augur-token-model-v38-%j.log
 
 set -euo pipefail
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 
 echo "[$(date -Iseconds)] starting pip install"
 pip install -r requirements.txt

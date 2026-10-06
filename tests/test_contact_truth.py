@@ -3,16 +3,16 @@ import random
 import numpy as np
 import torch
 
-import bounce
+import augur
 from scripts import contact_truth as ct
 
 
 def _cpu_rollout(balls, n, steps, dt, gravity, stiffness, substeps, segments):
-    G = bounce.make_grid(n)
+    G = augur.make_grid(n)
     balls = [dict(b) for b in balls]
     ps, vs = [np.array([[b["x"], b["y"]] for b in balls])], [np.array([[b["vx"], b["vy"]] for b in balls])]
     for _ in range(steps):
-        bounce.step(G, n, balls, dt, gravity, bounce_default_radius(balls), stiffness, substeps, segments)
+        augur.step(G, n, balls, dt, gravity, bounce_default_radius(balls), stiffness, substeps, segments)
         ps.append(np.array([[b["x"], b["y"]] for b in balls]))
         vs.append(np.array([[b["vx"], b["vy"]] for b in balls]))
     return np.array(ps), np.array(vs)

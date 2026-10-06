@@ -455,7 +455,7 @@ function loop(now) {
 }
 requestAnimationFrame(loop);
 
-window.__bounce = { net, selectWeight, editWeight, sim, view, st, gt, setGT, setPaused, setGravity, camera, benchTicks(count, ticks = 300) {
+window.__augur = { net, selectWeight, editWeight, sim, view, st, gt, setGT, setPaused, setGravity, camera, benchTicks(count, ticks = 300) {
   sim.clear();
   sim.populate(count);
   const t0 = performance.now();

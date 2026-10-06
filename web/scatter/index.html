@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark">
 <meta name="description" content="The structure of a learned grid-field gravity model (scatter, convolve, UNet, gather) in 3D, drawn with the tensors of a running simulation.">
-<title>Bounce Scatter-Field Model</title>
+<title>Augur Scatter-Field Model</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%2306080c'/%3E%3Ccircle cx='8' cy='8' r='4' fill='%2362d6a4'/%3E%3C/svg%3E">
 <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
 <style>
@@ -88,7 +88,7 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
 <canvas id="stage3d" aria-label="3D view of the scatter-field model's structure with the current simulation's tensors drawn on it: input grids, kernel branch, UNet encoder and decoder, potential and accelerations. Drag to orbit, scroll or pinch to zoom, hover any cell for its value."></canvas>
 <div id="labels" aria-hidden="true"></div>
 <header class="glass">
-  <h1>Bounce <span>scatter-field model</span></h1>
+  <h1>Augur <span>scatter-field model</span></h1>
   <a class="walk" href="../scatter-walkthrough/">3D walkthrough of one forward pass &rarr;</a>
 </header>
 <details id="mview" class="glass" aria-label="model structure key">

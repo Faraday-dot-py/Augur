@@ -8,7 +8,7 @@
 #SBATCH --output=interp-train-%j.log
 
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 mkdir -p results checkpoints
 python scripts/interp_train.py --kernels analytic,inv_distance,yukawa30,plw0.5,plw1.5,plw3 --out results/interp_train.json

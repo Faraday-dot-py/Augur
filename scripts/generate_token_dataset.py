@@ -1,4 +1,4 @@
-"""Generate and cache a BounceTokenSequenceDataset to disk, so a training
+"""Generate and cache a AugurTokenSequenceDataset to disk, so a training
 job can load it instead of paying the physics-sim generation cost on
 every run.
 

@@ -1,4 +1,4 @@
-# Bounce — browser demos
+# Augur — browser demos
 
 Static site, published via GitHub Pages. `index.html` is a landing page linking
 to the current models, each a self-contained static page:

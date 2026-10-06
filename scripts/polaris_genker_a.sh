@@ -8,7 +8,7 @@
 #SBATCH --output=genker-a-%j.log
 
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 mkdir -p results checkpoints
 python scripts/genker_rollout.py --kernel learned --n 20000 --steps 10 --providers exact --diag-every 10 --snap-every 10 --tag time_learned

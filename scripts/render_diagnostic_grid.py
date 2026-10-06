@@ -20,13 +20,13 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-import bounce
+import augur
 from model.dataset import make_scenario_uniform
-from model.net import BounceNextFrameModel
+from model.net import AugurNextFrameModel
 
 
 def load_model(checkpoint_path):
-    model = BounceNextFrameModel(channels=64, depth=7)
+    model = AugurNextFrameModel(channels=64, depth=7)
     model.load_state_dict(torch.load(checkpoint_path, map_location="cpu"))
     model.eval()
     return model
@@ -35,18 +35,18 @@ def load_model(checkpoint_path):
 def build_initial_grid(n, num_balls, seed, radius=0.75, vy=2.3):
     rng = random.Random(seed)
     balls = make_scenario_uniform(num_balls, n, vy, rng)
-    G = bounce.make_grid(n)
-    bounce.splat_all(G, n, balls, radius)
+    G = augur.make_grid(n)
+    augur.splat_all(G, n, balls, radius)
     return np.array(G, dtype=np.float32)
 
 
 def rollout_frames(model, g0, num_steps):
     g_pred = torch.from_numpy(g0.transpose(2, 0, 1)).unsqueeze(0)
-    frames = {0: g0[:, :, bounce.PROB]}
+    frames = {0: g0[:, :, augur.PROB]}
     with torch.no_grad():
         for i in range(1, num_steps + 1):
             g_pred = model(g_pred)
-            frames[i] = g_pred[0, bounce.PROB].numpy()
+            frames[i] = g_pred[0, augur.PROB].numpy()
     return frames
 
 

@@ -1,15 +1,15 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-sf-iter
+#SBATCH --job-name=augur-sf-iter
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=04:00:00
-#SBATCH --output=bounce-sf-iter-%j.log
+#SBATCH --output=augur-sf-iter-%j.log
 
 set -euo pipefail
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 EXP="${EXP:-A}"
 ITERS="${ITERS:-4000}"

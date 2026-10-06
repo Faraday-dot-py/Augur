@@ -1,15 +1,15 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-contact-gen-symlog-capped
+#SBATCH --job-name=augur-contact-gen-symlog-capped
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=03:00:00
-#SBATCH --output=bounce-contact-gen-symlog-capped-%j.log
+#SBATCH --output=augur-contact-gen-symlog-capped-%j.log
 
 set -euo pipefail
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 pip install -q -r requirements.txt
 mkdir -p checkpoints results

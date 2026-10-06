@@ -1,5 +1,5 @@
 #!/bin/bash
-cd "$HOME/bounce"
+cd "$HOME/augur"
 while IFS='|' read -r name cmd; do
   [ -z "$name" ] && continue
   while squeue -u adamwebb -h -o %j | grep -q '^scaling-'; do sleep 30; done

@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 
-import bounce
+import augur
 from model.token_detect import find_token_positions, read_token_velocities
 from model.token_refine import refine_positions
 from model.token_model import TokenModel
@@ -10,8 +10,8 @@ from model.token_model import TokenModel
 def _frames(balls0, balls1, n=20, radius=0.75):
     out = []
     for balls in (balls0, balls1):
-        G = bounce.make_grid(n)
-        bounce.splat_all(G, n, balls, radius)
+        G = augur.make_grid(n)
+        augur.splat_all(G, n, balls, radius)
         out.append(torch.from_numpy(np.array(G, dtype=np.float32).transpose(2, 0, 1)))
     return out
 

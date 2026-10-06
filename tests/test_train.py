@@ -4,8 +4,8 @@ import torch
 from torch.utils.data import DataLoader
 
 import model.train as train_module
-from model.dataset import BounceSequenceDataset
-from model.net import BounceNextFrameModel
+from model.dataset import AugurSequenceDataset
+from model.net import AugurNextFrameModel
 from model.losses import occupancy_weighted_mse
 from model.train import sampling_probability, rollout_loss
 
@@ -19,11 +19,11 @@ def test_sampling_probability_ramps_linearly_and_clamps():
 
 def test_rollout_loss_overfits_a_single_batch():
     torch.manual_seed(4738)
-    dataset = BounceSequenceDataset(num_samples=4, n=20, ball_range=(3, 6), seed=4738, horizon=3)
+    dataset = AugurSequenceDataset(num_samples=4, n=20, ball_range=(3, 6), seed=4738, horizon=3)
     loader = DataLoader(dataset, batch_size=4, shuffle=False)
     sequence = next(iter(loader))
 
-    model = BounceNextFrameModel(channels=16, depth=2)
+    model = AugurNextFrameModel(channels=16, depth=2)
     opt = torch.optim.Adam(model.parameters(), lr=1e-3)
     weights = torch.tensor([1.0, 0.1, 0.1])
 
@@ -47,10 +47,10 @@ def test_rollout_loss_overfits_a_single_batch():
 
 def test_rollout_loss_self_feeds_when_sampling_p_is_one():
     torch.manual_seed(4738)
-    dataset = BounceSequenceDataset(num_samples=2, n=20, ball_range=(3, 6), seed=4738, horizon=3)
+    dataset = AugurSequenceDataset(num_samples=2, n=20, ball_range=(3, 6), seed=4738, horizon=3)
     loader = DataLoader(dataset, batch_size=2, shuffle=False)
     sequence = next(iter(loader))
-    model = BounceNextFrameModel(channels=16, depth=2)
+    model = AugurNextFrameModel(channels=16, depth=2)
     weights = torch.tensor([1.0, 0.1, 0.1])
 
     # sampling_p=1.0 must run without error even though the model's own
@@ -65,10 +65,10 @@ def test_rollout_loss_self_feed_decided_per_step_not_per_rollout():
     # never trains the model to recover mid-chain from a single drifted
     # input, which is exactly the failure mode seen at long eval rollouts.
     torch.manual_seed(4738)
-    dataset = BounceSequenceDataset(num_samples=2, n=20, ball_range=(3, 6), seed=4738, horizon=3)
+    dataset = AugurSequenceDataset(num_samples=2, n=20, ball_range=(3, 6), seed=4738, horizon=3)
     loader = DataLoader(dataset, batch_size=2, shuffle=False)
     sequence = next(iter(loader))
-    model = BounceNextFrameModel(channels=16, depth=2)
+    model = AugurNextFrameModel(channels=16, depth=2)
     weights = torch.tensor([1.0, 0.1, 0.1])
 
     # random() sequence -> self_feed per step: False (0.9>=0.5), True (0.1<0.5), unused

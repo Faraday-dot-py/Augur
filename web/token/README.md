@@ -1,4 +1,4 @@
-# Bounce token model in the browser
+# Augur token model in the browser
 
 Static page: the conservative-contact token model (`results/cons_pure_100.pt`, job 3114, retrained capped at 100 balls and verified out to 50k via a scaling test — supersedes `results/cons_pure.pt`, commit 3dc1bb1 — 8.7k floats: distance-only pair force, wall force, learned gravity, 8 velocity-Verlet substeps) runs a live 100x100 bouncing-ball sim in plain JavaScript. The page renders the arena as a field of spatial tokens (one column of pos/vel channel cubes per ball) in Three.js (loaded from jsDelivr), and unfolds the selected ball's computation beside it: pair-force MLP activations per neighbour, wall-force MLPs, learned gravity, the 8 substeps and the output token. Every weight is editable live from the side panel (or by clicking its cube in the model view).
 
@@ -8,7 +8,7 @@ Open `index.html` through any static server (`python3 -m http.server` from the `
 
 - `js/model.js`: port of `TokenFreeDynamics._conservative` + `TokenModel.step_free` and the `contain_state` guard from `scripts/realtime_sim.py`. `step(pos, vel, hidden, count, traceIdx)` steps in place (hidden passes through unchanged); `traceIdx >= 0` also returns a trace for that ball.
 - `js/sim.js`: ball state, spawning (same rules as `realtime_sim.py`), ticking.
-- `js/physics.js`: port of the `bounce.py` ground truth, for the ghost overlay.
+- `js/physics.js`: port of the `augur.py` ground truth, for the ghost overlay.
 - `js/scene.js`: Three.js scene: arena, token cubes, neighbour links, contact glows, ground-truth ghosts, camera presets, picking.
 - `js/arch.js`: 3D architecture diagram of one trace (cell layout, labels, flow animation) and the diverging colour map.
 - `js/plots.js`: pair/wall force curves sampled from the MLPs, energy plot.
@@ -44,4 +44,4 @@ Config (radius 0.75, dt 0.15, force_scale 100, neighbour radius 4.0, arena 100) 
 
 ## Editing weights
 
-The Weights section of the side panel edits any tensor entry live: pick a tensor (in the model's own order, see above) and a flat index, then type a value or drag the slider. `net.get`/`net.set(name, i, v)` read/write directly into the typed arrays the MLPs and physics already reference, so an edit is live on the next tick (gravity is reported/set in accel units, 10x the stored parameter, matching the trace's `gravity` field). Clicking a cube in the model view selects the weight behind it: an `h1` cube -> that unit's `*.0.weight` row, `h2` -> `*.2.bias`, an MLP-out cube -> `*.4.bias`, a gravity cube -> `gravity[0]`/`gravity[1]`. Reset restores the trained value at the current index, Reset all restores every weight; both resample the pair/wall force-curve plots. The ground-truth ghost overlay always runs unedited `bounce.py` physics, so it does not track weight edits.
+The Weights section of the side panel edits any tensor entry live: pick a tensor (in the model's own order, see above) and a flat index, then type a value or drag the slider. `net.get`/`net.set(name, i, v)` read/write directly into the typed arrays the MLPs and physics already reference, so an edit is live on the next tick (gravity is reported/set in accel units, 10x the stored parameter, matching the trace's `gravity` field). Clicking a cube in the model view selects the weight behind it: an `h1` cube -> that unit's `*.0.weight` row, `h2` -> `*.2.bias`, an MLP-out cube -> `*.4.bias`, a gravity cube -> `gravity[0]`/`gravity[1]`. Reset restores the trained value at the current index, Reset all restores every weight; both resample the pair/wall force-curve plots. The ground-truth ghost overlay always runs unedited `augur.py` physics, so it does not track weight edits.

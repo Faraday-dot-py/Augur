@@ -1,6 +1,6 @@
 """Phase 1 CFD contact-generalization training: ball-ball contact (varying
 mass/radius), ball-vs-circle-obstacle, and ball-vs-wall-segment-obstacle
-scenes, truth from scripts/contact_truth.py (bounce.py's own physics, GPU
+scenes, truth from scripts/contact_truth.py (augur.py's own physics, GPU
 vectorized), model from model/contact_force.py. Boundary-point density is
 swept per scene (spec §4/§6/§9 resolved decision), not fixed.
 
@@ -22,7 +22,7 @@ MASS_RANGE = (0.25, 4.0)  # default train range per docs/debugging/z-and-mass-ch
 # seed-12000 held-out mass-ratio scenario's m_sum=11, per docs/debugging/contact-force-architecture-ideas-untested.md)
 RADIUS_RANGE = (0.4, 1.2)
 SPACING_RANGE = (0.6, 2.0)  # swept boundary-point spacing (spec §4 boundary-sampling question)
-CENTER = 500.0  # scene offset away from bounce.py's lo=0 walls, as in scripts/gravity_sim.py
+CENTER = 500.0  # scene offset away from augur.py's lo=0 walls, as in scripts/gravity_sim.py
 SPAWN_TRIES = 20
 
 
@@ -32,7 +32,7 @@ def make_scene(rng, min_bodies, max_bodies, n, obstacle_prob=2.0 / 3.0, circle_r
     probability) one obstacle -- a circle or a finite wall segment,
     injected as extra kinematic point-cloud entries in the same ball list
     scripts/contact_truth.py already understands. The scene sits at
-    [CENTER, CENTER+n], far from bounce.py's lo=0 walls. The obstacle is
+    [CENTER, CENTER+n], far from augur.py's lo=0 walls. The obstacle is
     placed first so real balls can be re-drawn (up to SPAWN_TRIES times)
     until they overlap nothing already placed. obstacle_prob/circle_radius_range/
     spacing_range default to the original v1/v2/symlog distribution (1/3 circle,

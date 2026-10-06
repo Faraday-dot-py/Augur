@@ -1,14 +1,14 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-tile-box
+#SBATCH --job-name=augur-tile-box
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=01:30:00
-#SBATCH --output=bounce-tile-box-%j.log
+#SBATCH --output=augur-tile-box-%j.log
 
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 mkdir -p results
 python scripts/tile_box_test.py --out results/tile_box_test.json

@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 
-import bounce
+import augur
 from model.token_model import TokenModel
 from model.token_split import detect_balls
 
@@ -10,8 +10,8 @@ def _frames(balls1, dt=0.15, n=20, radius=0.75):
     balls0 = [dict(b, x=b["x"] - b["vx"] * dt, y=b["y"] - b["vy"] * dt) for b in balls1]
     out = []
     for balls in (balls0, balls1):
-        G = bounce.make_grid(n)
-        bounce.splat_all(G, n, balls, radius)
+        G = augur.make_grid(n)
+        augur.splat_all(G, n, balls, radius)
         out.append(torch.from_numpy(np.array(G, dtype=np.float32).transpose(2, 0, 1)))
     return out
 

@@ -1,6 +1,6 @@
 """Opt-in bounce extension of ScatterField: uniform acceleration, wall term, separate contact term, optional substepped local terms.
 
-All new parameters are zero-initialised (gscale=1), so an untrained BounceScatterField loaded from a plain ScatterField checkpoint reproduces it exactly.
+All new parameters are zero-initialised (gscale=1), so an untrained AugurScatterField loaded from a plain ScatterField checkpoint reproduces it exactly.
 Box: walls at box_lo / box_hi on both axes (centered coordinates), tokens are balls of unit mass.
 """
 import torch
@@ -23,7 +23,7 @@ def _win(r, rng):
     return (1 - (r / rng).clamp(max=1.0) ** 2) ** 2
 
 
-class BounceScatterField(sf.ScatterField):
+class AugurScatterField(sf.ScatterField):
     def __init__(self, *args, sub=1, box_lo=-7.0, box_hi=7.0, pw=2.0, pc=2.0, **kw):
         super().__init__(*args, **kw)
         self.sub, self.box_lo, self.box_hi, self.pw, self.pc = sub, box_lo, box_hi, pw, pc

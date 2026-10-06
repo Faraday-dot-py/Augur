@@ -2,14 +2,14 @@ import torch
 
 
 def rasterize_tokens(positions, velocities, n, radius):
-    """Differentiable equivalent of bounce.py's splat_all for a single
+    """Differentiable equivalent of augur.py's splat_all for a single
     frame's worth of tokens (no batch dimension -- token count varies per
     sample, so the token pipeline processes one sample at a time).
 
     positions: (N, 2) tensor, columns (x, y) in grid-cell coordinates.
     velocities: (N, 2) tensor, columns (vx, vy).
-    Returns a (3, n, n) tensor in bounce.py's channel order
-    (PROB, VX, VY). Matches bounce.py's splat_ball/splat_all exactly:
+    Returns a (3, n, n) tensor in augur.py's channel order
+    (PROB, VX, VY). Matches augur.py's splat_ball/splat_all exactly:
     each token contributes a linear-falloff disk weight
     `w = max(0, 1 - d/radius)`; the *raw* weight sum is used as the
     VX/VY averaging denominator before PROB is saturated via

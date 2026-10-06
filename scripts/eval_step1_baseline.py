@@ -15,16 +15,16 @@ import random
 import numpy as np
 import torch
 
-import bounce
+import augur
 from model.dataset import make_scenario_uniform
-from model.net import BounceNextFrameModel
+from model.net import AugurNextFrameModel
 
 
 def build_initial(n, num_balls, seed, radius=0.75, vy=2.3):
     rng = random.Random(seed)
     balls = make_scenario_uniform(num_balls, n, vy, rng)
-    G = bounce.make_grid(n)
-    bounce.splat_all(G, n, balls, radius)
+    G = augur.make_grid(n)
+    augur.splat_all(G, n, balls, radius)
     return balls, np.array(G, dtype=np.float32)
 
 
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     checkpoints = parse_checkpoints(args.checkpoints)
     models = {}
     for name, path in checkpoints.items():
-        model = BounceNextFrameModel(channels=64, depth=7)
+        model = AugurNextFrameModel(channels=64, depth=7)
         model.load_state_dict(torch.load(path, map_location="cpu"), strict=False)
         model.eval()
         models[name] = model
@@ -57,8 +57,8 @@ if __name__ == "__main__":
     model_mses = {name: [] for name in checkpoints}
     for seed in args.seeds:
         balls, g0 = build_initial(args.n, args.num_balls, seed)
-        G = bounce.make_grid(args.n)
-        bounce.step(G, args.n, balls, dt=0.15, gravity=9.0, radius=0.75, stiffness=400.0, substeps=8)
+        G = augur.make_grid(args.n)
+        augur.step(G, args.n, balls, dt=0.15, gravity=9.0, radius=0.75, stiffness=400.0, substeps=8)
         g1_true = np.array(G, dtype=np.float32)
         prob_true = g1_true[:, :, 0]
         copy_mses.append(((g0[:, :, 0] - prob_true) ** 2).mean())

@@ -1,14 +1,14 @@
 #!/bin/bash
-#SBATCH --job-name=bounce-lut-bench
+#SBATCH --job-name=augur-lut-bench
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=03:00:00
-#SBATCH --output=bounce-lut-bench-%j.log
+#SBATCH --output=augur-lut-bench-%j.log
 
 export PYTHONUNBUFFERED=1
-cd "$HOME/bounce"
+cd "$HOME/augur"
 export PYTHONPATH=.
 mkdir -p results
 python scripts/lut_eval.py --out results/lut_eval.json

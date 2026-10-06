@@ -25,7 +25,7 @@ class ResidualConvBlock(nn.Module):
 DILATIONS = (1, 2, 4, 8, 4, 2, 1)
 
 
-class BounceNextFrameModel(nn.Module):
+class AugurNextFrameModel(nn.Module):
     """Predicts g_{t+1} from g_t by warping the grid along a predicted
     per-cell flow field (advection) plus a small local correction, instead
     of regressing new pixel values from scratch. Direct regression under

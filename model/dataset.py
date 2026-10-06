@@ -3,20 +3,20 @@ import random
 import time
 import numpy as np
 import torch
-import bounce
+import augur
 from torch.utils.data import Dataset
 
 
 def make_scenario_uniform(num_balls, n, vy, rng):
-    return bounce.init_balls(num_balls, n, vy, rng)
+    return augur.init_balls(num_balls, n, vy, rng)
 
 
 def generate_sequence(balls, n, dt, gravity, radius, stiffness, substeps, horizon):
-    G = bounce.make_grid(n)
-    bounce.splat_all(G, n, balls, radius)
+    G = augur.make_grid(n)
+    augur.splat_all(G, n, balls, radius)
     frames = [np.array(G, dtype=np.float32)]
     for _ in range(horizon):
-        bounce.step(G, n, balls, dt, gravity, radius, stiffness, substeps)
+        augur.step(G, n, balls, dt, gravity, radius, stiffness, substeps)
         frames.append(np.array(G, dtype=np.float32))
     return frames
 
@@ -36,17 +36,17 @@ def make_scenario_clustered(num_balls, n, vy, rng, cluster_radius):
 
 
 def make_scenario_settled(num_balls, n, vy, rng, radius, gravity, stiffness, dt, substeps, settle_steps):
-    balls = bounce.init_balls(num_balls, n, vy, rng)
-    G = bounce.make_grid(n)
+    balls = augur.init_balls(num_balls, n, vy, rng)
+    G = augur.make_grid(n)
     for _ in range(settle_steps):
-        bounce.step(G, n, balls, dt, gravity, radius, stiffness, substeps)
+        augur.step(G, n, balls, dt, gravity, radius, stiffness, substeps)
     return balls
 
 
 def generate_scenario_balls(scenario, num_balls, n, vy, rng, cluster_radius, radius, gravity,
                             stiffness, dt, substeps, settle_steps):
-    """Dispatch to the scenario builders. Shared by BounceSequenceDataset
-    and model.token_dataset.BounceTokenSequenceDataset so the two can't
+    """Dispatch to the scenario builders. Shared by AugurSequenceDataset
+    and model.token_dataset.AugurTokenSequenceDataset so the two can't
     drift apart on how a scenario is constructed."""
     if scenario == "uniform":
         return make_scenario_uniform(num_balls, n, vy, rng)
@@ -58,7 +58,7 @@ def generate_scenario_balls(scenario, num_balls, n, vy, rng, cluster_radius, rad
         )
 
 
-class BounceSequenceDataset(Dataset):
+class AugurSequenceDataset(Dataset):
     SCENARIOS = ("uniform", "clustered", "settled")
 
     def __init__(self, num_samples, n, ball_range, seed, horizon=3, dt=0.15, gravity=9.0,

@@ -1,5 +1,5 @@
 """Renders a ground-truth vs. model-rollout comparison video for any
-BounceNextFrameModel checkpoint (generalizes render_rollout_video.py,
+AugurNextFrameModel checkpoint (generalizes render_rollout_video.py,
 which is hardcoded to the old stage1/stage2 checkpoints).
 
 Usage:
@@ -18,13 +18,13 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-import bounce
+import augur
 from model.dataset import make_scenario_uniform
-from model.net import BounceNextFrameModel
+from model.net import AugurNextFrameModel
 
 
 def load_model(checkpoint_path):
-    model = BounceNextFrameModel(channels=64, depth=7)
+    model = AugurNextFrameModel(channels=64, depth=7)
     model.load_state_dict(torch.load(checkpoint_path, map_location="cpu"))
     model.eval()
     return model
@@ -34,11 +34,11 @@ def simulate_ground_truth(n, num_balls, seed, num_steps, dt=0.15, gravity=9.0,
                            radius=0.75, stiffness=400.0, substeps=8, vy=2.3):
     rng = random.Random(seed)
     balls = make_scenario_uniform(num_balls, n, vy, rng)
-    G = bounce.make_grid(n)
-    bounce.splat_all(G, n, balls, radius)
+    G = augur.make_grid(n)
+    augur.splat_all(G, n, balls, radius)
     frames = [np.array(G, dtype=np.float32)]
     for _ in range(num_steps):
-        bounce.step(G, n, balls, dt, gravity, radius, stiffness, substeps)
+        augur.step(G, n, balls, dt, gravity, radius, stiffness, substeps)
         frames.append(np.array(G, dtype=np.float32))
     return frames
 
@@ -73,14 +73,14 @@ if __name__ == "__main__":
         ax.set_xticks([])
         ax.set_yticks([])
     ims = [
-        axes[0].imshow(truth[0][:, :, bounce.PROB], vmin=0, vmax=1, cmap="inferno"),
-        axes[1].imshow(pred[0][:, :, bounce.PROB], vmin=0, vmax=1, cmap="inferno"),
+        axes[0].imshow(truth[0][:, :, augur.PROB], vmin=0, vmax=1, cmap="inferno"),
+        axes[1].imshow(pred[0][:, :, augur.PROB], vmin=0, vmax=1, cmap="inferno"),
     ]
     step_text = fig.suptitle("step 0")
 
     def update(i):
-        ims[0].set_data(truth[i][:, :, bounce.PROB])
-        ims[1].set_data(pred[i][:, :, bounce.PROB])
+        ims[0].set_data(truth[i][:, :, augur.PROB])
+        ims[1].set_data(pred[i][:, :, augur.PROB])
         step_text.set_text(f"step {i}")
         return ims + [step_text]
 
