@@ -1,0 +1,1 @@
+{"args": {"min_bodies": 2, "max_bodies": 6, "steps": 30, "iters": 2000, "batch": 8, "k_start": 4, "k_end": 16, "lr": 0.001, "dt": 0.05, "gravity": 0.0, "stiffness": 400.0, "substeps": 8, "neighbor_radius": 6.0, "log_every": 50, "device": "cuda", "seed": 4738, "checkpoint": "checkpoints/contact_dynamics_v1.pt", "out": "results/contact_dynamics_v1.json"}}

@@ -91,28 +91,57 @@ def penalty_force(penetration, stiffness):
     return np.where(penetration > 0.0, stiffness * penetration * penetration, 0.0)
 
 
-def wall_force(xs, ys, n, radius, stiffness):
+def wall_force(xs, ys, n, radii, stiffness):
     """Continuous force pushing each ball back once it overlaps a wall, in
     place of the old hard position-reflect. Walls are treated as immovable,
-    so all of the force/energy goes into the ball. xs/ys are numpy arrays,
-    one entry per ball."""
+    so all of the force/energy goes into the ball. xs/ys/radii are numpy
+    arrays, one entry per ball (radii lets obstacle/real balls differ)."""
     lo, hi = 0.0, n - 1.0
-    left_x = (xs - lo) < radius
-    right_x = ~left_x & ((hi - xs) < radius)
-    fx = np.where(left_x, penalty_force(radius - (xs - lo), stiffness), 0.0)
-    fx -= np.where(right_x, penalty_force(radius - (hi - xs), stiffness), 0.0)
-    left_y = (ys - lo) < radius
-    right_y = ~left_y & ((hi - ys) < radius)
-    fy = np.where(left_y, penalty_force(radius - (ys - lo), stiffness), 0.0)
-    fy -= np.where(right_y, penalty_force(radius - (hi - ys), stiffness), 0.0)
+    left_x = (xs - lo) < radii
+    right_x = ~left_x & ((hi - xs) < radii)
+    fx = np.where(left_x, penalty_force(radii - (xs - lo), stiffness), 0.0)
+    fx -= np.where(right_x, penalty_force(radii - (hi - xs), stiffness), 0.0)
+    left_y = (ys - lo) < radii
+    right_y = ~left_y & ((hi - ys) < radii)
+    fy = np.where(left_y, penalty_force(radii - (ys - lo), stiffness), 0.0)
+    fy -= np.where(right_y, penalty_force(radii - (hi - ys), stiffness), 0.0)
     return fx, fy
 
 
-def ball_pair_forces(xs, ys, radius, stiffness):
+def wall_segment_force(xs, ys, orientation, coord, lo, hi, radii, stiffness):
+    """Force from one finite, axis-aligned wall segment (e.g. an obstacle
+    edge, not necessarily a box boundary) on every ball. The nearest point
+    on the segment to a ball is the perpendicular foot when the ball's
+    along-segment coordinate falls inside [lo, hi], and the nearer endpoint
+    otherwise -- the same point-to-segment distance used for the finite
+    extent, so a ball can't clip past a segment's tip (radii is the sum of
+    each ball's own radius and the segment's radius, precomputed by the
+    caller)."""
+    if orientation == "h":
+        along, perp = xs, ys
+    else:
+        along, perp = ys, xs
+    nearest_along = np.clip(along, lo, hi)
+    d_along = along - nearest_along
+    d_perp = perp - coord
+    dist = np.hypot(d_along, d_perp)
+    close = dist < 1e-9
+    safe_dist = np.where(close, 1.0, dist)
+    n_along = np.where(close, 0.0, d_along / safe_dist)
+    n_perp = np.where(close, 1.0, d_perp / safe_dist)
+    f = penalty_force(radii - dist, stiffness)
+    f_along, f_perp = f * n_along, f * n_perp
+    if orientation == "h":
+        return f_along, f_perp
+    return f_perp, f_along
+
+
+def ball_pair_forces(xs, ys, radii, stiffness):
     """Continuous repulsive force between every pair of overlapping balls,
-    directed along their center line. Returns (fx, fy), each an (m, m)
-    matrix where entry [i, j] is the force applied to ball j by ball i
-    (antisymmetric: entry [j, i] == -entry [i, j], diagonal is zero)."""
+    directed along their center line. `radii` is per-ball (obstacle circles
+    and real balls can have different radii). Returns (fx, fy), each an
+    (m, m) matrix where entry [i, j] is the force applied to ball j by ball
+    i (antisymmetric: entry [j, i] == -entry [i, j], diagonal is zero)."""
     dx = xs.reshape(1, -1) - xs.reshape(-1, 1)
     dy = ys.reshape(1, -1) - ys.reshape(-1, 1)
     dist = np.hypot(dx, dy)
@@ -121,24 +150,37 @@ def ball_pair_forces(xs, ys, radius, stiffness):
     nx = np.where(close, 1.0, dx / safe_dist)
     ny = np.where(close, 0.0, dy / safe_dist)
     dist = np.where(close, 0.0, dist)
-    f = penalty_force(2 * radius - dist, stiffness)
+    pair_radii = radii.reshape(1, -1) + radii.reshape(-1, 1)
+    f = penalty_force(pair_radii - dist, stiffness)
     np.fill_diagonal(f, 0.0)
     return f * nx, f * ny
 
 
-def compute_forces(balls, n, gravity, radius, stiffness):
-    """Net force (== acceleration, unit mass) on each ball this step:
-    gravity + wall contact + pairwise ball contact."""
+def compute_forces(balls, n, gravity, radius, stiffness, segments=None):
+    """Net force on each ball this step: gravity + wall contact + pairwise
+    ball contact + any wall-segment obstacles. `radius`/`stiffness` are the
+    defaults for balls without their own "radius" key (obstacle balls
+    normally set their own). Force is no longer == acceleration once a ball
+    has mass != 1 -- `integrate` divides by mass."""
     m = len(balls)
     if m == 0:
         return []
     xs = np.array([b["x"] for b in balls])
     ys = np.array([b["y"] for b in balls])
-    wfx, wfy = wall_force(xs, ys, n, radius, stiffness)
-    base_x = gravity + wfx
+    radii = np.array([b.get("radius", radius) for b in balls])
+    masses = np.array([b.get("mass", 1.0) for b in balls])
+    wfx, wfy = wall_force(xs, ys, n, radii, stiffness)
+    base_x = gravity * masses + wfx
     base_y = wfy
+    if segments:
+        for seg in segments:
+            seg_radii = radii + seg["radius"]
+            sfx, sfy = wall_segment_force(xs, ys, seg["orientation"], seg["coord"], seg["lo"], seg["hi"],
+                                           seg_radii, stiffness)
+            base_x = base_x + sfx
+            base_y = base_y + sfy
     if m > 1:
-        pfx, pfy = ball_pair_forces(xs, ys, radius, stiffness)
+        pfx, pfy = ball_pair_forces(xs, ys, radii, stiffness)
         # this system is numerically chaotic (stiff contacts), so matching
         # the original loop's exact left-to-right float accumulation order
         # (base term first, then each pairwise contribution in ascending
@@ -155,23 +197,27 @@ def compute_forces(balls, n, gravity, radius, stiffness):
 
 
 def integrate(balls, forces, dt):
-    """Semi-implicit (symplectic) Euler: velocity updated from force first,
-    then position updated from the new velocity. Keeps total energy
-    oscillating in a bounded band instead of drifting."""
+    """Semi-implicit (symplectic) Euler: velocity updated from force/mass
+    first, then position updated from the new velocity. A kinematic body
+    (obstacle) still receives a force above but skips this update entirely
+    -- it exerts force without ever being moved by it."""
     for state, (fx, fy) in zip(balls, forces):
-        state["vx"] += fx * dt
-        state["vy"] += fy * dt
+        if state.get("kinematic", False):
+            continue
+        m = state.get("mass", 1.0)
+        state["vx"] += fx / m * dt
+        state["vy"] += fy / m * dt
         state["x"] += state["vx"] * dt
         state["y"] += state["vy"] * dt
 
 
-def step(G, n, balls, dt, gravity, radius, stiffness, substeps):
+def step(G, n, balls, dt, gravity, radius, stiffness, substeps, segments=None):
     """Advance by dt total, but in `substeps` smaller physics steps: the
     penalty force is stiff enough that symplectic Euler needs a finer
     resolution than one step per render frame to stay stable."""
     sub_dt = dt / substeps
     for _ in range(substeps):
-        forces = compute_forces(balls, n, gravity, radius, stiffness)
+        forces = compute_forces(balls, n, gravity, radius, stiffness, segments)
         integrate(balls, forces, sub_dt)
     splat_all(G, n, balls, radius)
 
