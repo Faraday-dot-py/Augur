@@ -61,6 +61,10 @@ class ScatterField(nn.Module):
         super().__init__()
         self.potential, self.kernel, self.pp, self.split, self.nonet = potential, kernel, pp, split, nonet
         self.verlet = verlet
+        self.opt = set()
+        self._kf = None
+        self._off = None
+        self._graphs = {}
         if pp:
             self.ppmlp = nn.Sequential(nn.Linear(2, 64), nn.GELU(), nn.Linear(64, 64), nn.GELU(), nn.Linear(64, 1))
             nn.init.zeros_(self.ppmlp[-1].weight)
@@ -98,11 +102,31 @@ class ScatterField(nn.Module):
                 flat = bidx * G * G + iy.clamp(0, G - 1) * G + ix.clamp(0, G - 1)
                 yield flat, wt * ok
 
+    def _corners4(self, pos):
+        G = self.grid
+        i0, w = self._corners(pos)
+        B, N = pos.shape[:2]
+        if self._off is None or self._off[0].device != pos.device:
+            self._off = (torch.tensor([0, 0, 1, 1], device=pos.device), torch.tensor([0, 1, 0, 1], device=pos.device))
+        ox, oy = self._off
+        ix, iy = i0[..., 0:1] + ox, i0[..., 1:2] + oy
+        wx = torch.where(ox.bool(), w[..., 0:1], 1 - w[..., 0:1])
+        wy = torch.where(oy.bool(), w[..., 1:2], 1 - w[..., 1:2])
+        ok = ((ix >= 0) & (ix < G) & (iy >= 0) & (iy < G)).to(pos.dtype)
+        bidx = torch.arange(B, device=pos.device)[:, None, None]
+        flat = bidx * G * G + iy.clamp(0, G - 1) * G + ix.clamp(0, G - 1)
+        return flat, wx * wy * ok
+
     def scatter(self, pos, vel, mass, mask):
         B, N = pos.shape[:2]
         G = self.grid
         mm = mass * mask
         val = torch.stack([mm, mm * vel[..., 0], mm * vel[..., 1]], -1) * (self.in_scale / self.h ** 2)
+        if "fastio" in self.opt:
+            flat, w = self._corners4(pos)
+            out = torch.zeros(B * G * G, 3, device=pos.device, dtype=pos.dtype)
+            out.index_add_(0, flat.reshape(-1), (val[:, :, None, :] * w[..., None]).reshape(-1, 3))
+            return out.view(B, G, G, 3).permute(0, 3, 1, 2)
         out = torch.zeros(B * G * G, 3, device=pos.device, dtype=pos.dtype)
         for flat, w in self._corner_iter(pos):
             out = out.index_add(0, flat.reshape(-1), (val * w[..., None]).reshape(-1, 3))
@@ -111,12 +135,15 @@ class ScatterField(nn.Module):
     def gather(self, field, pos):
         B, C, G, _ = field.shape
         fl = field.permute(0, 2, 3, 1).reshape(B * G * G, C)
+        if "fastio" in self.opt:
+            flat, w = self._corners4(pos)
+            return (fl[flat] * w[..., None]).sum(2)
         out = 0
         for flat, w in self._corner_iter(pos):
             out = out + fl[flat] * w[..., None]
         return out
 
-    def kernel_acc(self, rho):
+    def _kernel_fft(self, rho):
         G = self.grid
         idx = torch.arange(2 * G, device=rho.device, dtype=rho.dtype)
         d = torch.minimum(idx, 2 * G - idx) * self.h
@@ -124,13 +151,66 @@ class ScatterField(nn.Module):
         K = self.kmlp(torch.stack([r, torch.log(r + self.h)], -1))[..., 0]
         if self.split:
             K = K * (1 - (1 - (r / self.pp).clamp(max=1.0) ** 2) ** 2)
-        Kf = torch.fft.rfft2(K)
+        return torch.fft.rfft2(K)
+
+    def kernel_acc(self, rho):
+        G = self.grid
+        if "kcache" in self.opt and not torch.is_grad_enabled():
+            key = (rho.dtype, rho.device, tuple(p._version for p in self.kmlp.parameters()))
+            if self._kf is None or self._kf[0] != key:
+                self._kf = (key, self._kernel_fft(rho))
+            Kf = self._kf[1]
+        else:
+            Kf = self._kernel_fft(rho)
         rf = torch.fft.rfft2(rho, s=(2 * G, 2 * G))
         phi = torch.fft.irfft2(rf * Kf, s=(2 * G, 2 * G))[..., :G, :G] * self.h ** 2
         return self.neg_grad(phi)
 
+    def pp_acc_cell(self, pos, mass, mask, knn=16, budget=2 ** 25):
+        B, N = mask.shape
+        dev = pos.device
+        C = int(math.ceil(self.extent / self.pp))
+        pf, mm, mk = pos.reshape(B * N, 2), (mass * mask).reshape(-1), mask.reshape(-1)
+        c = ((pf + self.extent / 2) / self.pp).floor().clamp(0, C - 1).long().detach()
+        b = torch.arange(B, device=dev).repeat_interleave(N)
+        nc = B * C * C
+        key = torch.where(mk > 0, b * C * C + c[:, 1] * C + c[:, 0], torch.full_like(b, nc))
+        order = torch.argsort(key, stable=True)
+        counts = torch.bincount(key, minlength=nc + 1)
+        starts = torch.cumsum(counts, 0) - counts
+        M = int(counts[:nc].max())
+        sh = torch.tensor([-1, 0, 1], device=dev)
+        k = min(knn, 9 * M)
+        j = torch.arange(M, device=dev)
+        outs = []
+        Q = max(1, budget // (9 * M))
+        for q0 in range(0, B * N, Q):
+            q = torch.arange(q0, min(q0 + Q, B * N), device=dev)
+            ncx = (c[q, 0, None] + sh)[:, None, :].expand(-1, 3, -1)
+            ncy = (c[q, 1, None] + sh)[:, :, None].expand(-1, -1, 3)
+            inside = ((ncx >= 0) & (ncx < C) & (ncy >= 0) & (ncy < C)).reshape(len(q), 9)
+            ncell = b[q, None] * C * C + ncy.clamp(0, C - 1).reshape(len(q), 9) * C + ncx.clamp(0, C - 1).reshape(len(q), 9)
+            cnt = counts[ncell] * inside
+            idx = (starts[ncell][..., None] + j).clamp(max=B * N - 1)
+            valid = j < cnt[..., None]
+            cand = order[idx].reshape(len(q), 9 * M)
+            bad = (~valid.reshape(len(q), 9 * M)) | (cand == q[:, None])
+            d = pf[cand] - pf[q][:, None]
+            r_all = torch.sqrt((d ** 2).sum(-1) + 1e-8)
+            r_sel, i = torch.topk(r_all + 1e6 * bad.to(pos.dtype), k, dim=-1, largest=False)
+            ds = torch.gather(d, 1, i[..., None].expand(-1, -1, 2))
+            mj = mm[torch.gather(cand, 1, i)]
+            ok = (r_sel < 1e5).to(pos.dtype) * mk[q][:, None]
+            r = r_sel.clamp(max=1e5)
+            g = self.ppmlp(torch.stack([r, torch.log(r + 0.05)], -1))[..., 0]
+            win = (1 - (r / self.pp).clamp(max=1.0) ** 2) ** 2
+            outs.append(((g * win * mj * ok)[..., None] * ds / r[..., None]).sum(1))
+        return torch.cat(outs).reshape(B, N, 2)
+
     def pp_acc(self, pos, mass, mask, knn=16):
         B, N = mask.shape
+        if "cell" in self.opt and N > 512:
+            return self.pp_acc_cell(pos, mass, mask, knn)
         k = min(knn, N - 1)
         d_all = pos[:, None, :, :] - pos[:, :, None, :]
         r_all = torch.sqrt((d_all ** 2).sum(-1) + 1e-8)
@@ -156,6 +236,32 @@ class ScatterField(nn.Module):
         return (f, None) if self.verlet else f
 
     def force(self, pos, vel, mass, mask, field):
+        if "graph" in self.opt and not torch.is_grad_enabled() and not torch.cuda.is_current_stream_capturing():
+            return self._graphed("force", self._force, pos, vel, mass, mask, field)
+        return self._force(pos, vel, mass, mask, field)
+
+    def _graphed(self, name, fn, *args):
+        key = (name,) + tuple((tuple(a.shape), a.dtype) for a in args)
+        ent = self._graphs.get(key)
+        if ent is None:
+            static = [a.clone() for a in args]
+            s = torch.cuda.Stream()
+            s.wait_stream(torch.cuda.current_stream())
+            with torch.cuda.stream(s):
+                for _ in range(3):
+                    fn(*static)
+            torch.cuda.current_stream().wait_stream(s)
+            g = torch.cuda.CUDAGraph()
+            with torch.cuda.graph(g):
+                out = fn(*static)
+            ent = self._graphs[key] = (g, static, out)
+        g, static, out = ent
+        for a, b in zip(static, args):
+            a.copy_(b)
+        g.replay()
+        return tuple(o.clone() for o in out)
+
+    def _force(self, pos, vel, mass, mask, field):
         x = self.scatter(pos, vel, mass, mask)
         if self.kernel:
             ak = self.kernel_acc(x[:, :1])
@@ -165,7 +271,17 @@ class ScatterField(nn.Module):
         if self.nonet:
             field = x.new_zeros(x.shape[0], self.cf, self.grid, self.grid)
         else:
-            field = self.net(x)
+            if "cl" in self.opt:
+                x = x.contiguous(memory_format=torch.channels_last)
+            amp = "half" if "half" in self.opt else "bf16" if "bf16" in self.opt else None
+            if "half16" in self.opt and not torch.is_grad_enabled():
+                field = self._net16(x.half()).float()
+            elif amp:
+                with torch.autocast("cuda", dtype=torch.float16 if amp == "half" else torch.bfloat16):
+                    field = self.net(x)
+                field = field.float()
+            else:
+                field = self.net(x)
         acc = self.neg_grad(field[:, :1]) if self.potential else field[:, :2]
         if self.kernel:
             acc = acc + ak
@@ -189,6 +305,42 @@ class ScatterField(nn.Module):
         a_new, field = self.force(pos_new, vel + self.dt * a_prev, mass, mask, field)
         dv = 0.5 * self.dt * (a_prev + a_new)
         return pos_new, vel + dv, (field, a_new), dv
+
+
+class _StepMod(nn.Module):
+    def __init__(self, model):
+        super().__init__()
+        self.m = model
+
+    def forward(self, pos, vel, mass, mask, field, a_prev):
+        p, v, (f, a), dv = self.m.step(pos, vel, mass, mask, (field, a_prev))
+        return p, v, f, a, dv
+
+
+def make_step_fns(model, B, N, k_max, device):
+    """Per-unroll-step CUDA-graphed (fwd+bwd) copies of the Verlet step for training at fixed (B, N). Returns fns with the
+    sf._step_m signature; use fns[i] for unroll step i."""
+    assert model.verlet
+    mods = tuple(_StepMod(model) for _ in range(k_max))
+    pos = ((torch.rand(B, N, 2, device=device) - 0.5) * 20).requires_grad_(True)
+    vel = torch.randn(B, N, 2, device=device).requires_grad_(True)
+    mass = torch.ones(B, N, device=device)
+    mask = torch.ones(B, N, device=device)
+    field = model.init_field(B, device)[0].requires_grad_(True)
+    a_prev = torch.zeros(B, N, 2, device=device).requires_grad_(True)
+    sample = tuple((pos, vel, mass, mask, field, a_prev) for _ in range(k_max))
+    graphed = torch.cuda.make_graphed_callables(mods, sample)
+
+    def make(i):
+        def fn(pos, vel, mass, mask, state):
+            field, a_prev = state
+            if a_prev is None:
+                a_prev, field = model.force(pos, vel, mass, mask, field)
+            p, v, f, a, dv = graphed[i](pos, vel, mass, mask, field, a_prev)
+            return p, v, mass, (f, a), dv
+        return fn
+
+    return [make(i) for i in range(k_max)]
 
 
 def receptive_field(model):
@@ -658,3 +810,15 @@ def curl_probe(model, device, mstar=5.0, extent=8.0, n=21, hold=3):
     tot = np.sqrt((curl[ok] ** 2).mean() + (div[ok] ** 2).mean())
     return {"curl_over_total": float(np.sqrt((curl[ok] ** 2).mean()) / tot), "rms_curl": float(np.sqrt((curl[ok] ** 2).mean())),
             "rms_div": float(np.sqrt((div[ok] ** 2).mean())), "a_map": a.tolist()}
+
+
+def apply_opt(model, name):
+    model.opt.add(name)
+    if name == "graph":
+        torch.backends.cudnn.benchmark = True
+    if name == "cl":
+        model.net.to(memory_format=torch.channels_last)
+    if name == "half16":
+        import copy
+
+        model._net16 = copy.deepcopy(model.net).half()

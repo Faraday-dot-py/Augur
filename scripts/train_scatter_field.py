@@ -93,6 +93,7 @@ def train(model, tensors, args, ckpt_path, log):
         start = st["it"]
         log(f"resumed from it {start}")
     g = torch.Generator(device="cpu").manual_seed(args.seed + start)
+    fns = sf.make_step_fns(model, args.batch, P.shape[2], args.k_end, P.device) if "graphtrain" in args.opt.split(",") else None
     skipped = 0
     t_start = time.time()
     it = start - 1
@@ -121,7 +122,7 @@ def train(model, tensors, args, ckpt_path, log):
         w = mk[:, :, None]
         denom = mk.sum() * 2 * k
         for s in range(k):
-            pos, vel, m, field, _ = sf._step_m(model, pos, vel, m, mk, field)
+            pos, vel, m, field, _ = fns[s](pos, vel, m, mk, field) if fns else sf._step_m(model, pos, vel, m, mk, field)
             lm = lm + (((m - M[idx]) ** 2) * mk).sum() / (mk.sum() * k)
             lp = lp + (((pos - Pw[:, s + 1]) ** 2) * w).sum() / denom
             lv = lv + (((vel - Vw[:, s + 1]) ** 2) * w).sum() / denom
@@ -214,6 +215,7 @@ def main():
     ap.add_argument("--exp", choices=list(EXPS), required=True)
     ap.add_argument("--variant", default="all")
     ap.add_argument("--mode", choices=["train", "baseline", "summarize"], default="train")
+    ap.add_argument("--opt", default="", help="speed flags: cl, graphtrain, half, bf16 (see scatter_field.apply_opt)")
     ap.add_argument("--baseline-ckpt", default=None)
     ap.add_argument("--init-ckpt", default=None, help="warm-start model weights (optimizer and iteration reset)")
     ap.add_argument("--train", type=int, default=2000)
@@ -278,6 +280,8 @@ def main():
             log(f"skip {name} (done)")
             continue
         model = build(cfg, name, args.dt).to(dev)
+        for o in [x for x in args.opt.split(",") if x]:
+            sf.apply_opt(model, o)
         if isinstance(model, sf.MultiLevelScatterField):
             r, rc, glob = 3, 3 * model.h0, True
         else:
