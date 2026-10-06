@@ -55,7 +55,12 @@ def main():
         with torch.no_grad():
             a0 = ref.pp_acc(pos, mass, mask)
             cell = load(args.ckpt, dev, ["cell"])
-            a1 = cell.pp_acc_cell(pos, mass, mask)
+            a1 = cell.pp_acc_adapt(pos, mass, mask)
+            if n == 3000:
+                dense = (torch.randn(1, n, 2, device=dev) * 0.5)
+                dense[:, 1500:] = torch.randn(1, n - 1500, 2, device=dev) * 6
+                dm = torch.ones(1, n, device=dev)
+                print(f"PPDENSE core0.5+halo6 N {n}: max|a_eager-a_adapt| {(ref.pp_acc(dense, dm, dm) - cell.pp_acc_adapt(dense, dm, dm)).abs().max().item():.3e}", flush=True)
         print(f"PPFORCE N {n}: max|a_eager-a_cell| {(a0 - a1).abs().max().item():.3e}, max|a| {a0.abs().max().item():.3e}", flush=True)
     for opts in [o for o in args.train_opts.split(";") if o]:
         B, n, k = 8, 50, 6
