@@ -1,0 +1,12 @@
+init rms speed 25.53
+model 10 E -7.188e+06 |P| 4573 com 499.84 499.74 0.09s/step
+model 20 E -7.1662e+06 |P| 4573 com 499.88 499.71 0.09s/step
+model 30 E -7.1456e+06 |P| 4573 com 499.91 499.68 0.09s/step
+model 40 E -7.1201e+06 |P| 4573 com 499.95 499.65 0.09s/step
+model 50 E -7.0961e+06 |P| 4573 com 499.98 499.62 0.08s/step
+model 60 E -7.0782e+06 |P| 4573 com 500.02 499.59 0.08s/step
+model 70 E -7.0575e+06 |P| 4573 com 500.05 499.56 0.08s/step
+model 80 E -7.0345e+06 |P| 4573 com 500.09 499.53 0.08s/step
+model 90 E -7.0143e+06 |P| 4573 com 500.12 499.50 0.08s/step
+model 100 E -6.9984e+06 |P| 4573 com 500.16 499.47 0.08s/step
+model done 0.08s/step
