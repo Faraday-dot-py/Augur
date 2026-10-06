@@ -38,6 +38,7 @@ def main():
     ap.add_argument("--c", type=float, default=10.0)
     ap.add_argument("--dt", type=float, default=0.1)
     ap.add_argument("--eps", type=float, default=0.5)
+    ap.add_argument("--v0", type=float, default=None)
     ap.add_argument("--seed", type=int, default=4738)
     ap.add_argument("--tag", default="scatter_bh")
     ap.add_argument("--device", default="cuda")
@@ -48,6 +49,9 @@ def main():
     pos0 = np.clip(rng.normal(0.0, args.sigma, (n, 2)), -29.0, 29.0)
     vel0 = rng.normal(0.0, args.vfac * np.sqrt(n / (4 * args.sigma)), (n, 2))
     vel0 -= vel0.mean(0)
+    if args.v0 is not None:
+        vel0[:] = 0.0
+        vel0[0, 0] = args.v0
     c = args.c
 
     model = tsf.build(tsf.EXPS["E"], "ms_kp_pot_v_g128", args.dt).to(dev)
