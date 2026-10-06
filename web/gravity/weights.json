@@ -1,0 +1,48 @@
+{
+ "checkpoint": "gravity_central_v1.pt",
+ "config": {
+  "dt": 0.1,
+  "neighbor_radius": 100.0
+ },
+ "tensors": {
+  "force.0.weight": {
+   "shape": [
+    64,
+    1
+   ],
+   "offset": 0
+  },
+  "force.0.bias": {
+   "shape": [
+    64
+   ],
+   "offset": 64
+  },
+  "force.2.weight": {
+   "shape": [
+    64,
+    64
+   ],
+   "offset": 128
+  },
+  "force.2.bias": {
+   "shape": [
+    64
+   ],
+   "offset": 4224
+  },
+  "force.4.weight": {
+   "shape": [
+    1,
+    64
+   ],
+   "offset": 4288
+  },
+  "force.4.bias": {
+   "shape": [
+    1
+   ],
+   "offset": 4352
+  }
+ }
+}

@@ -16,3 +16,6 @@ results/genker_*_snaps.npz
 results/orbit_*_snaps.npz
 results/orbit_*_ckpt.pt
 results/lj_*.npz
+web/token/tests/vectors.json
+web/token/tests/physics_ref.json
+web/gravity/tests/vectors.json

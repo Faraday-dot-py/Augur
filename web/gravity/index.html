@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="A learned pairwise gravity law running live in the browser, scaling to thousands of bodies.">
+<title>Bounce Central-Force Model</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%2306080c'/%3E%3Ccircle cx='8' cy='8' r='4' fill='%23ff9a3c'/%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #06080c; --glass: rgba(12, 16, 24, 0.78); --line: #1c2535; --line2: #2a3850; --fg: #e4eaf5; --dim: #8390a8; --faint: #56627a;
+  --accent: #6fc3ff; --truth: #ff9a3c;
+  --mono: ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); font: 13px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
+#stage { position: fixed; inset: 0; display: block; width: 100%; height: 100%; touch-action: none; }
+.glass { background: var(--glass); border: 1px solid var(--line); border-radius: 10px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+header { position: fixed; left: 16px; top: 16px; padding: 12px 14px; max-width: 340px; }
+h1 { font-size: 15px; margin: 0; font-weight: 650; letter-spacing: 0.01em; }
+h1 span { color: var(--truth); font-weight: 500; }
+header p { margin: 4px 0 10px; color: var(--dim); font-size: 12px; }
+header a { color: var(--accent); }
+dl { margin: 0; display: grid; grid-template-columns: repeat(2, auto); gap: 6px 16px; }
+dt { color: var(--faint); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; }
+dd { margin: 0; font: 13px var(--mono); font-variant-numeric: tabular-nums; }
+aside { position: fixed; right: 16px; top: 16px; width: 280px; padding: 12px 14px; }
+aside h2 { font-size: 11px; margin: 12px 0 4px; color: var(--dim); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+aside h2:first-child { margin-top: 0; }
+aside canvas { width: 100%; height: 100px; display: block; }
+.key { display: flex; gap: 10px; flex-wrap: wrap; font-size: 11px; color: var(--dim); margin-top: 6px; }
+.key i { display: inline-block; width: 10px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 4px; }
+nav { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); width: max-content; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: center; padding: 8px; max-width: calc(100% - 32px); }
+nav .grp { display: flex; gap: 4px; align-items: center; }
+nav .sep { width: 1px; height: 24px; background: var(--line2); margin: 0 2px; }
+button { background: #131a26; color: var(--fg); border: 1px solid var(--line2); border-radius: 7px; padding: 0 10px; height: 32px; font: 500 12px system-ui, sans-serif; cursor: pointer; white-space: nowrap; }
+button:hover { background: #1b2434; border-color: #3a4d6c; }
+button[aria-pressed="true"] { background: #11304f; border-color: var(--accent); color: #fff; }
+button kbd { font: 10px var(--mono); color: var(--faint); margin-left: 5px; }
+label.sl { display: flex; align-items: center; gap: 6px; color: var(--dim); font-size: 11px; height: 32px; padding: 0 4px; }
+label.sl output { font: 12px var(--mono); color: var(--fg); min-width: 26px; text-align: right; }
+input[type=range] { width: 88px; accent-color: var(--accent); }
+#err { position: fixed; inset: 0; display: grid; place-items: center; color: var(--dim); padding: 16px; text-align: center; }
+#err[hidden] { display: none; }
+@media (max-width: 760px) {
+  header { left: 16px; right: 16px; top: 12px; max-width: none; padding: 9px 12px; }
+  header p { display: none; }
+  aside { left: 16px; right: 16px; top: auto; bottom: 76px; width: auto; max-height: 34%; overflow: auto; }
+  aside canvas { height: 80px; }
+  nav { left: 16px; right: 16px; bottom: 12px; transform: none; width: auto; max-width: none; flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; gap: 4px; padding: 6px; scrollbar-width: none; }
+  nav::-webkit-scrollbar { display: none; }
+  nav > * { flex: none; }
+  button kbd { display: none; }
+}
+</style>
+</head>
+<body>
+<canvas id="stage" aria-label="2D view of an N-body cluster: blue bodies are the learned central-force model, orange ghosts are the softened-gravity ground truth"></canvas>
+<header class="glass">
+  <h1>Bounce <span>central-force model</span></h1>
+  <p>A single learned pairwise force f(log d)/(d²+1), summed over neighbours and integrated with velocity Verlet. No walls, no per-ball state &mdash; trained on 100&ndash;1000 bodies, generalizes past 10,000. <a href="../">&larr; other model</a></p>
+  <dl id="stats">
+    <div><dt>tick</dt><dd id="s-tick">0</dd></div>
+    <div><dt>bodies</dt><dd id="s-bodies">0</dd></div>
+    <div><dt>KE</dt><dd id="s-ke">0</dd></div>
+    <div><dt>fps</dt><dd id="s-fps">0</dd></div>
+  </dl>
+</header>
+<aside class="glass">
+  <h2>Pair force f(d)</h2>
+  <canvas id="c-force" aria-label="learned pairwise force against distance"></canvas>
+  <h2>Kinetic + potential energy</h2>
+  <canvas id="c-energy" aria-label="energy over time, model (blue, kinetic only) vs ground truth (orange, kinetic + potential)"></canvas>
+  <div class="key"><span><i style="background:var(--accent)"></i>model</span><span><i style="background:var(--truth)"></i>ground truth</span></div>
+</aside>
+<nav class="glass" aria-label="controls">
+  <div class="grp">
+    <button id="b-pause" aria-pressed="false" aria-keyshortcuts="Space">Pause<kbd>space</kbd></button>
+    <button id="b-step" aria-keyshortcuts=".">Step<kbd>.</kbd></button>
+    <button id="b-reset" aria-keyshortcuts="r">Reset<kbd>r</kbd></button>
+  </div>
+  <span class="sep"></span>
+  <label class="sl">bodies <input type="range" id="r-bodies" min="4" max="400" value="60" aria-label="body count"><output id="o-bodies">60</output></label>
+  <label class="sl">speed <input type="range" id="r-speed" min="1" max="60" value="20" aria-label="ticks per second"><output id="o-speed">20</output></label>
+  <span class="sep"></span>
+  <div class="grp">
+    <button id="b-truth" aria-pressed="true" aria-keyshortcuts="g">Truth<kbd>g</kbd></button>
+    <button id="b-edges" aria-pressed="true" aria-keyshortcuts="e">Edges<kbd>e</kbd></button>
+  </div>
+</nav>
+<div id="err" class="glass" hidden></div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

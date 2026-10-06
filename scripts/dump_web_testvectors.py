@@ -1,5 +1,5 @@
 """Dump PyTorch rollouts (token_model_soup_b, cell graph, contain_state as in
-scripts/realtime_sim.py) to web/tests/vectors.json for web/tests/verify.mjs.
+scripts/realtime_sim.py) to web/token/tests/vectors.json for web/token/tests/verify.mjs.
 
 Usage:
     PYTHONPATH=. python3 scripts/dump_web_testvectors.py
@@ -63,7 +63,7 @@ def main():
             "hooks_step2": first,
         }
         print(name, count, "->", states[-1][0].shape[0], "balls at end")
-    with open("web/tests/vectors.json", "w") as f:
+    with open("web/token/tests/vectors.json", "w") as f:
         json.dump(out, f, separators=(",", ":"))
 
 
