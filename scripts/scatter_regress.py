@@ -20,6 +20,7 @@ import torch
 
 from scripts import gravity_sim as gs
 from scripts import scatter_field as sf
+from scripts import scatter_ood as so
 from scripts import train_scatter_field as tsf
 
 SEEDS = (9100, 9200, 9300, 4738)
@@ -46,7 +47,7 @@ def sync():
 
 def build_model(args, dev):
     model = tsf.build(tsf.EXPS[args.exp], args.variant, args.dt).to(dev)
-    model.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
+    sf.load_compat(model, torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
     model.eval()
     for o in [x for x in args.opt.split(",") if x]:
         sf.apply_opt(model, o)
@@ -156,6 +157,28 @@ def aggregate(per_seed):
     return mean, spread
 
 
+BATTERY = [("ref", "cluster_N100_s8_v0.3"), ("mass_ratio_2body", "binary_q10"), ("mass_dominant", "cluster_heavy30"),
+           ("mass_spectrum", "logunif_0.1_10"), ("mass_scale_equal", "equal_m3.0"), ("mass_scale_equal", "equal_m10.0"),
+           ("density_sigma", "sigma2.0"), ("density_plummer", "plummer_a0.25"), ("softening_eps", "cluster_eps0.1"),
+           ("softening_eps", "cluster_eps2.0"), ("boundary_offset", "cluster_shift24.0"), ("dt", "cluster_dt0.4"),
+           ("velocity_scale", "vfac4.0"), ("ic_shape", "filament"), ("binary_tight", "binary_d0.25")]
+BATTERY_SEEDS = (4738, 9100)
+
+
+def battery(model, dev, args):
+    """Compact OOD battery (decision #6.5): err@2 time units per point (mean of BATTERY_SEEDS), non-gating."""
+    specs = so.specs()
+    out = {}
+    for ax, name in BATTERY:
+        spec = [x for x in specs[ax] if x["name"] == name][0]
+        spec["axis"] = ax
+        rows = [so.run_point(model, spec, sd, dev, args, None) for sd in BATTERY_SEEDS]
+        out[f"{ax}/{name}"] = {"err@2": float(np.mean([r["err@2.0"] for r in rows])), "floor@2": float(np.mean([r["floor@2.0"] for r in rows])),
+                               "ballistic@2": float(np.mean([r["ballistic@2.0"] for r in rows])), "nonfinite": any(r["nonfinite_tick"] is not None for r in rows)}
+        print(f"battery {ax}/{name} err@2 {out[f'{ax}/{name}']['err@2']:.4g} floor {out[f'{ax}/{name}']['floor@2']:.2g}", flush=True)
+    return out
+
+
 def run(args):
     dev = torch.device("cuda")
     model = build_model(args, dev)
@@ -197,6 +220,10 @@ def run(args):
     res["timing"]["expB_batch1_n100"].update(batch=1, n_max=100)
     for k, v in res["timing"].items():
         print(f"timing {k}: {v['tick_ms']:.3f} ms/tick, peak +{v['peak_mem_mb']:.1f} MB (batch {v['batch']}, N {v['n_max']})", flush=True)
+    if args.battery:
+        res["ood_battery"] = battery(model, dev, args)
+        ref = res["ood_battery"]["ref/cluster_N100_s8_v0.3"]["err@2"]
+        res["ood_battery_summary"] = {"geomean_ratio_to_ref": float(np.exp(np.mean([np.log(max(v["err@2"], 1e-9) / ref) for v in res["ood_battery"].values()])))}
     json.dump(res, open(args.out, "w"), indent=1)
     print("wrote", args.out)
 
@@ -221,6 +248,12 @@ def compare(args):
     print(f"{'metric':32s} {'baseline':>12s} {'candidate':>12s} {'delta%':>8s}")
     for name, b, c, d, v in rows:
         print(f"{name:32s} {b:12.5g} {c:12.5g} {d:8.1f}  {v}")
+    if "ood_battery" in cand:
+        print("OOD battery (non-gating), err@2 time units: baseline -> candidate")
+        for k, v in cand["ood_battery"].items():
+            b = base.get("ood_battery", {}).get(k)
+            print(f"  {k:42s} {'%.4g' % b['err@2'] if b else '-':>10s} -> {v['err@2']:.4g}")
+        print("  geomean ratio to ref:", base.get("ood_battery_summary", {}).get("geomean_ratio_to_ref"), "->", cand["ood_battery_summary"]["geomean_ratio_to_ref"])
     info = [f"{reg} err@{k} {base['regimes'][reg]['mean']['err'][k]:.4g} -> {cand['regimes'][reg]['mean']['err'][k]:.4g}" for reg in REGIMES for k in ("50", "100")]
     print("info (not gated):", "; ".join(info))
     print("OVERALL", "PASS" if ok else "FAIL")
@@ -238,6 +271,7 @@ def main():
     r.add_argument("--dt", type=float, default=0.1)
     r.add_argument("--eps", type=float, default=0.5)
     r.add_argument("--opt", default="")
+    r.add_argument("--battery", action="store_true")
     c = sub.add_parser("compare")
     c.add_argument("--baseline", required=True)
     c.add_argument("--candidate", required=True)

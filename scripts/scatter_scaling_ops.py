@@ -31,8 +31,8 @@ def _pp_acc_chunked(self, pos, mass, mask, knn=16):
         mj = torch.gather(mj_all[:, None, :].expand(B, e - s, N), 2, idx)
         ok = (r2_sel < 1e11).to(pos.dtype) * mask[:, s:e, None]
         r = torch.sqrt(r2_sel.clamp(max=1e11) + 1e-8)
-        g = self.ppmlp(torch.stack([r, torch.log(r + 0.05)], -1))[..., 0]
-        win = (1 - (r / self.pp).clamp(max=1.0) ** 2) ** 2
+        g = self.ppmlp(self._feat(r, "p"))[..., 0]
+        win = (1 - (r / self.ppe()).clamp(max=1.0) ** 2) ** 2
         w = g * win * mj * ok
         outs.append((w[..., None] * d / r[..., None]).sum(2))
     return torch.cat(outs, 1)

@@ -65,13 +65,14 @@ def truth(pos0, vel0, mass, steps, dt, eps, c, dev):
     return torch.stack(ps), torch.stack(vs)
 
 
-def model_rollout(model, pos0, vel0, mass, steps, dt, c, dev, dtype=torch.float32):
+def model_rollout(model, pos0, vel0, mass, steps, dt, c, dev, dtype=torch.float32, eps=0.5):
     n = pos0.shape[0]
     pos = torch.tensor(pos0, dtype=dtype, device=dev)[None]
     vel = torch.tensor(vel0, dtype=dtype, device=dev)[None]
     m = torch.tensor(mass, dtype=dtype, device=dev)[None]
     mask = torch.ones(1, n, dtype=dtype, device=dev)
     model.dt = dt
+    model.eps_cur = eps
     ps, vs = [pos[0].clone()], [vel[0].clone()]
     field = model.init_field(1, dev, dtype)
     nonfinite = None
@@ -392,7 +393,7 @@ def run_point(model, spec, seed, dev, args, save):
     amp = prec == "bf16"
     try:
         with torch.autocast("cuda", dtype=torch.bfloat16, enabled=amp):
-            Pm, Vm, nonfinite = model_rollout(model, pos0, vel0, mass, steps, dt, c, dev, dtype)
+            Pm, Vm, nonfinite = model_rollout(model, pos0, vel0, mass, steps, dt, c, dev, dtype, eps)
     finally:
         if prec == "fp64":
             model.float()
@@ -457,8 +458,8 @@ def min_sep(P, n):
 
 
 def build_model(args, dev):
-    model = tsf.build(tsf.EXPS["E"], "ms_kp_pot_v_g128", 0.1).to(dev)
-    model.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
+    model = tsf.build(tsf.EXPS["E"], args.variant, 0.1).to(dev)
+    sf.load_compat(model, torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
     model.eval()
     for o in [x for x in args.opt.split(",") if x]:
         sf.apply_opt(model, o)
@@ -492,6 +493,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ckpt", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--variant", default="ms_kp_pot_v_g128")
     ap.add_argument("--axes", default="")
     ap.add_argument("--opt", default="kcache,fastio,cl,graph")
     ap.add_argument("--traj", default="")

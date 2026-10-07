@@ -6,6 +6,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 CENTER = 500.0
+H0 = 0.5
+EPS0 = 0.5
 
 
 class LocalNet(nn.Module):
@@ -57,24 +59,30 @@ class ScatterField(nn.Module):
     grid covers [-extent/2, extent/2)^2 and tokens outside it get zero force."""
 
     def __init__(self, grid=64, extent=64.0, net="local", recurrent=True, hidden_ch=0, dt=0.1, width=32, layers=8,
-                 levels=5, momfix=True, in_scale=1.0, potential=False, kernel=False, pp=0.0, split=False, nonet=False, verlet=False):
+                 levels=5, momfix=True, in_scale=1.0, potential=False, kernel=False, pp=0.0, split=False, nonet=False, verlet=False,
+                 cu=False, epsin=False, norm=""):
         super().__init__()
         self.potential, self.kernel, self.pp, self.split, self.nonet = potential, kernel, pp, split, nonet
         self.verlet = verlet
+        self.cu, self.epsin, self.norm = cu, epsin, norm
+        self.eps_cur = EPS0
+        ncol = 2 + int(cu) + int(epsin)
+        if norm == "dens":
+            self.register_buffer("d0", torch.tensor(8.0))
         self.opt = set()
         self._kf = None
         self._off = None
         self._graphs = {}
         if pp:
-            self.ppmlp = nn.Sequential(nn.Linear(2, 64), nn.GELU(), nn.Linear(64, 64), nn.GELU(), nn.Linear(64, 1))
+            self.ppmlp = nn.Sequential(nn.Linear(ncol, 64), nn.GELU(), nn.Linear(64, 64), nn.GELU(), nn.Linear(64, 1))
             nn.init.zeros_(self.ppmlp[-1].weight)
             nn.init.zeros_(self.ppmlp[-1].bias)
         self.grid, self.extent, self.h = grid, extent, extent / grid
         self.recurrent, self.dt, self.momfix, self.in_scale = recurrent, dt, momfix, in_scale
         self.cf = (1 if potential else 2) + hidden_ch
-        cin = 3 + (self.cf if recurrent else 0) + (2 if kernel else 0)
+        cin = 3 + (self.cf if recurrent else 0) + (2 if kernel else 0) + (1 if epsin else 0)
         if kernel:
-            self.kmlp = nn.Sequential(nn.Linear(2, 64), nn.GELU(), nn.Linear(64, 64), nn.GELU(), nn.Linear(64, 1))
+            self.kmlp = nn.Sequential(nn.Linear(ncol, 64), nn.GELU(), nn.Linear(64, 64), nn.GELU(), nn.Linear(64, 1))
             nn.init.zeros_(self.kmlp[-1].weight)
             nn.init.zeros_(self.kmlp[-1].bias)
         if net == "local":
@@ -83,6 +91,28 @@ class ScatterField(nn.Module):
             self.net = UNet(cin, self.cf, width, min(levels, int(math.log2(grid)) - 2))
         nn.init.zeros_(self.net.out.weight)
         nn.init.zeros_(self.net.out.bias)
+
+    def ppe(self):
+        return self.pp * self.h / H0 if self.cu else self.pp
+
+    def _feat(self, r, kind):
+        h = self.h
+        if self.cu:
+            f = [r / h, torch.log(r / h + (1.0 if kind == "k" else 0.1)), torch.full_like(r, math.log(H0 / h))]
+        else:
+            f = [r, torch.log(r + (h if kind == "k" else 0.05))]
+        if self.epsin:
+            f.append(torch.full_like(r, math.log(self.eps_cur / EPS0)))
+        return torch.stack(f, -1)
+
+    def _nscale(self, x, mass, mask):
+        if self.norm == "mass":
+            s = ((mass * mask).sum(1) / mask.sum(1).clamp_min(1.0)).clamp_min(1e-6)
+        else:
+            rho = x[:, 0].flatten(1)
+            top = rho.topk(min(64, rho.shape[1]), dim=1).values.mean(1)
+            s = (top / self.d0).clamp_min(1.0)
+        return s.detach().view(-1, 1, 1, 1)
 
     def _corners(self, pos):
         u = (pos + self.extent / 2) / self.h - 0.5
@@ -148,15 +178,15 @@ class ScatterField(nn.Module):
         idx = torch.arange(2 * G, device=rho.device, dtype=rho.dtype)
         d = torch.minimum(idx, 2 * G - idx) * self.h
         r = torch.sqrt(d[:, None] ** 2 + d[None, :] ** 2)
-        K = self.kmlp(torch.stack([r, torch.log(r + self.h)], -1))[..., 0]
+        K = self.kmlp(self._feat(r, "k"))[..., 0]
         if self.split:
-            K = K * (1 - (1 - (r / self.pp).clamp(max=1.0) ** 2) ** 2)
+            K = K * (1 - (1 - (r / self.ppe()).clamp(max=1.0) ** 2) ** 2)
         return torch.fft.rfft2(K)
 
     def kernel_acc(self, rho):
         G = self.grid
         if "kcache" in self.opt and not torch.is_grad_enabled():
-            key = (rho.dtype, rho.device, tuple(p._version for p in self.kmlp.parameters()))
+            key = (rho.dtype, rho.device, self.grid, self.h, self.eps_cur, tuple(p._version for p in self.kmlp.parameters()))
             if self._kf is None or self._kf[0] != key:
                 self._kf = (key, self._kernel_fft(rho))
             Kf = self._kf[1]
@@ -169,9 +199,9 @@ class ScatterField(nn.Module):
     def pp_acc_cell(self, pos, mass, mask, knn=16, budget=2 ** 25):
         B, N = mask.shape
         dev = pos.device
-        C = int(math.ceil(self.extent / self.pp))
+        C = int(math.ceil(self.extent / self.ppe()))
         pf, mm, mk = pos.reshape(B * N, 2), (mass * mask).reshape(-1), mask.reshape(-1)
-        c = ((pf + self.extent / 2) / self.pp).floor().clamp(0, C - 1).long().detach()
+        c = ((pf + self.extent / 2) / self.ppe()).floor().clamp(0, C - 1).long().detach()
         b = torch.arange(B, device=dev).repeat_interleave(N)
         nc = B * C * C
         key = torch.where(mk > 0, b * C * C + c[:, 1] * C + c[:, 0], torch.full_like(b, nc))
@@ -202,16 +232,16 @@ class ScatterField(nn.Module):
             mj = mm[torch.gather(cand, 1, i)]
             ok = (r_sel < 1e5).to(pos.dtype) * mk[q][:, None]
             r = r_sel.clamp(max=1e5)
-            g = self.ppmlp(torch.stack([r, torch.log(r + 0.05)], -1))[..., 0]
-            win = (1 - (r / self.pp).clamp(max=1.0) ** 2) ** 2
+            g = self.ppmlp(self._feat(r, "p"))[..., 0]
+            win = (1 - (r / self.ppe()).clamp(max=1.0) ** 2) ** 2
             outs.append(((g * win * mj * ok)[..., None] * ds / r[..., None]).sum(1))
         return torch.cat(outs).reshape(B, N, 2)
 
     def _pp_force(self, ds, r_sel, mj):
         ok = (r_sel < 1e5).to(ds.dtype)
         r = r_sel.clamp(max=1e5)
-        g = self.ppmlp(torch.stack([r, torch.log(r + 0.05)], -1))[..., 0]
-        win = (1 - (r / self.pp).clamp(max=1.0) ** 2) ** 2
+        g = self.ppmlp(self._feat(r, "p"))[..., 0]
+        win = (1 - (r / self.ppe()).clamp(max=1.0) ** 2) ** 2
         return ((g * win * mj * ok)[..., None] * ds / r[..., None]).sum(1)
 
     def pp_acc_adapt(self, pos, mass, mask, knn=16, cap=48, lmax=8, budget=2 ** 25):
@@ -232,7 +262,7 @@ class ScatterField(nn.Module):
             rem = (~done).nonzero()[:, 0]
             if rem.numel() == 0:
                 break
-            s = self.pp / 2 ** l
+            s = self.ppe() / 2 ** l
             R = 1 if l == 0 else 2
             W = (2 * R + 1) ** 2
             cover = R * s
@@ -263,7 +293,7 @@ class ScatterField(nn.Module):
                         bad = (~valid) | (cand == qq[:, None])
                         kk = min(k, W * m)
                         r_sel, i = torch.topk(r_all + 1e6 * bad.to(pos.dtype), kk, dim=-1, largest=False)
-                        if cover < self.pp:
+                        if cover < self.ppe():
                             okq = (r_sel[:, kk - 1] <= cover) if kk == k else torch.zeros(len(qq), dtype=torch.bool, device=dev)
                         else:
                             okq = torch.ones(len(qq), dtype=torch.bool, device=dev)
@@ -304,8 +334,8 @@ class ScatterField(nn.Module):
         mj = torch.gather((mass * mask)[:, None, :].expand(B, N, N), 2, idx)
         ok = (r_sel < 1e5).to(pos.dtype) * mask[:, :, None]
         r = r_sel.clamp(max=1e5)
-        g = self.ppmlp(torch.stack([r, torch.log(r + 0.05)], -1))[..., 0]
-        win = (1 - (r / self.pp).clamp(max=1.0) ** 2) ** 2
+        g = self.ppmlp(self._feat(r, "p"))[..., 0]
+        win = (1 - (r / self.ppe()).clamp(max=1.0) ** 2) ** 2
         w = g * win * mj * ok
         return (w[..., None] * d / r[..., None]).sum(2)
 
@@ -325,7 +355,7 @@ class ScatterField(nn.Module):
         return self._force(pos, vel, mass, mask, field)
 
     def _graphed(self, name, fn, *args):
-        key = (name,) + tuple((tuple(a.shape), a.dtype) for a in args)
+        key = (name, self.grid, self.extent, self.eps_cur) + tuple((tuple(a.shape), a.dtype) for a in args)
         ent = self._graphs.get(key)
         if ent is None:
             static = [a.clone() for a in args]
@@ -347,11 +377,16 @@ class ScatterField(nn.Module):
 
     def _force(self, pos, vel, mass, mask, field):
         x = self.scatter(pos, vel, mass, mask)
+        ns = self._nscale(x, mass, mask) if self.norm else None
+        if ns is not None:
+            x = x / ns
         if self.kernel:
             ak = self.kernel_acc(x[:, :1])
             x = torch.cat([x, ak], 1)
         if self.recurrent:
             x = torch.cat([x, field], 1)
+        if self.epsin:
+            x = torch.cat([x, x.new_full((x.shape[0], 1, self.grid, self.grid), math.log(self.eps_cur / EPS0))], 1)
         if self.nonet:
             field = x.new_zeros(x.shape[0], self.cf, self.grid, self.grid)
         else:
@@ -370,6 +405,8 @@ class ScatterField(nn.Module):
         if self.kernel:
             acc = acc + ak
         a_tok = self.gather(acc, pos)
+        if ns is not None:
+            a_tok = a_tok * ns.view(-1, 1, 1)
         if self.pp:
             a_tok = a_tok + self.pp_acc(pos, mass, mask)
         if self.momfix:
@@ -894,6 +931,33 @@ def curl_probe(model, device, mstar=5.0, extent=8.0, n=21, hold=3):
     tot = np.sqrt((curl[ok] ** 2).mean() + (div[ok] ** 2).mean())
     return {"curl_over_total": float(np.sqrt((curl[ok] ** 2).mean()) / tot), "rms_curl": float(np.sqrt((curl[ok] ** 2).mean())),
             "rms_div": float(np.sqrt((div[ok] ** 2).mean())), "a_map": a.tolist()}
+
+
+def load_compat(model, state):
+    """Load a checkpoint state_dict into a model that may carry extra opt-in inputs (cell-unit / eps columns, eps channel, d0 buffer).
+    Cell-unit variants map a plain checkpoint exactly at h = H0; new columns/channels start at zero."""
+    own = model.state_dict()
+    state = dict(state)
+    if getattr(model, "cu", False):
+        for k in ("kmlp.0", "ppmlp.0"):
+            if k + ".weight" in state and state[k + ".weight"].shape[1] == 2:
+                w = state[k + ".weight"]
+                state[k + ".bias"] = state[k + ".bias"] + w[:, 1] * math.log(H0)
+                state[k + ".weight"] = torch.cat([w[:, :1] * H0, w[:, 1:2], torch.zeros_like(w[:, :1])], 1)
+    new = {}
+    for k, v in state.items():
+        if k not in own:
+            continue
+        w = own[k]
+        if v.shape == w.shape:
+            new[k] = v
+        else:
+            z = torch.zeros_like(w)
+            z[tuple(slice(0, n) for n in v.shape)] = v
+            new[k] = z
+    own.update(new)
+    model.load_state_dict(own)
+    return model
 
 
 def apply_opt(model, name):
