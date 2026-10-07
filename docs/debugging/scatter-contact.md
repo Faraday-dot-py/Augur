@@ -22,3 +22,6 @@ Models, each tested separately on identical eval sets: E zero-shot (frozen basel
 
 ## Results
 (filled in below)
+
+### Jobs
+3359: unit tests (2 gradient-test failures from a test-geometry bug: pair head had no neighbour in window; fixed in test) + truth cache (387 s). 3372: ONE serial wrapper (tests, E zero-shot, augur1, train_eval B 8000 it, train_eval A 8000 it; checkpoints every 100 it via tsf.train, resumable). Pending on QOSMaxGRESPerUser at time of writing.
