@@ -26,8 +26,8 @@ VAR = "ms_kp_pot_v_g128"
 EPS_SET = (0.1, 0.2, 0.35, 0.5, 1.0, 2.0)
 
 
-def group(name, data, dev, weight, batch, kmax, setup=None):
-    return dict(name=name, t=[t.float() for t in sf.to_tensors(data, dev)], weight=weight, batch=batch, kmax=kmax, setup=setup)
+def group(name, data, dev, weight, batch, kmax, setup=None, cap=True):
+    return dict(name=name, t=[t.float() for t in sf.to_tensors(data, dev)], weight=weight, batch=batch, kmax=kmax, setup=setup, cap=cap)
 
 
 def set_h(grid):
@@ -53,15 +53,15 @@ def build_groups(args, dev, log):
             g.append(dict(first, name=f"base_G{grid}", weight=w, setup=set_h(grid)))
     elif args.fix == "largen":
         g.append(group("base", fd.base(n, s, args.seed, dev), dev, 0.4, args.batch, 99))
-        g.append(group("N1000-2500", fd.large_n(max(24, n // 25), s, args.seed + 7, dev, (1000, 2500)), dev, 0.4, 2, 12))
-        g.append(group("N3000-6000", fd.large_n(max(12, n // 50), s, args.seed + 8, dev, (3000, 6000)), dev, 0.2, 1, 8))
+        g.append(group("N1000-2500", fd.large_n(max(24, n // 25), s, args.seed + 7, dev, (1000, 2500)), dev, 0.4, 2, 12, cap=False))
+        g.append(group("N3000-6000", fd.large_n(max(12, n // 50), s, args.seed + 8, dev, (3000, 6000)), dev, 0.2, 1, 8, cap=False))
     elif args.fix in ("mass", "massnorm"):
         g.append(group("mass0.1-10", fd.mass_spectrum(n, s, args.seed, dev, 0.1, 10.0), dev, 1.0, args.batch, 99))
     elif args.fix == "masswide":
         g.append(group("mass0.01-100", fd.mass_spectrum(n, s, args.seed, dev, 0.01, 100.0), dev, 1.0, args.batch, 99))
     elif args.fix == "eps":
         for e in EPS_SET:
-            g.append(group(f"eps{e}", fd.eps_scenes(max(60, n // len(EPS_SET)), s, args.seed + int(e * 100), dev, e), dev, 1.0, args.batch, 99, set_eps(e)))
+            g.append(group(f"eps{e}", fd.eps_scenes(max(60, n // len(EPS_SET)), s, args.seed + int(e * 100), dev, e), dev, 1.0, args.batch, 10 if e <= 0.2 else 99, set_eps(e)))
     elif args.fix == "dense":
         g.append(group("dense", fd.dense(n, s, args.seed, dev), dev, 1.0, args.batch, 99))
     for x in g:
@@ -97,7 +97,7 @@ def train(model, groups, args, ckpt_path, log):
         P, V, M, mask = grp["t"]
         S, B = P.shape[0], grp["batch"]
         k = min(int(round(args.k_start + (args.k_end - args.k_start) * frac)), grp["kmax"])
-        lr = args.lr * (0.05 + 0.95 * 0.5 * (1 + np.cos(np.pi * frac)))
+        lr = args.lr * (0.05 + 0.95 * 0.5 * (1 + np.cos(np.pi * frac))) * min(1.0, (it - start + 1) / args.warmup)
         for pg in opt.param_groups:
             pg["lr"] = lr
         idx = torch.randint(S, (B,), generator=g).to(args.device)
@@ -118,12 +118,12 @@ def train(model, groups, args, ckpt_path, log):
         opt.zero_grad()
         loss.backward()
         gn = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-        if torch.isfinite(loss) and torch.isfinite(gn):
+        if torch.isfinite(loss) and torch.isfinite(gn) and (not grp["cap"] or args.loss_cap <= 0 or loss.item() < args.loss_cap):
             opt.step()
         else:
             opt.zero_grad()
             skipped += 1
-            log(f"it {it} non-finite loss/grad, step skipped ({skipped} total)")
+            log(f"it {it} {grp['name']} loss {loss.item():.3g} non-finite or above cap, step skipped ({skipped} total)")
         last.setdefault(grp["name"], []).append(loss.item())
         if it % args.log_every == 0:
             msg = " ".join(f"{k_}:{np.mean(v[-20:]):.5f}" for k_, v in last.items())
@@ -148,6 +148,8 @@ def main():
     ap.add_argument("--k-start", type=int, default=4)
     ap.add_argument("--k-end", type=int, default=20)
     ap.add_argument("--lr", type=float, default=2e-4)
+    ap.add_argument("--warmup", type=int, default=200)
+    ap.add_argument("--loss-cap", type=float, default=3.0)
     ap.add_argument("--time-budget", type=float, default=2400.0)
     ap.add_argument("--log-every", type=int, default=50)
     ap.add_argument("--seed", type=int, default=4738)
