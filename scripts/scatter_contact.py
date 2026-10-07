@@ -21,6 +21,11 @@ import torch.nn.functional as F
 from scripts import scatter_field as sf
 
 OUT_SCALE = 10.0
+FMAX = 40.0
+
+
+def bound(x):
+    return FMAX * torch.tanh(x * (OUT_SCALE / FMAX))
 
 
 def hbox(lo, hi):
@@ -246,7 +251,7 @@ class ContactScatterField(sf.ScatterField):
         gap = d0 - rad
         feat = torch.cat([gap.clamp(min=-3.0, max=8.0)[..., None], torch.log(gap.clamp(min=0.0) + 0.05)[..., None],
                           ((vel * n).sum(-1) / 10.0)[..., None], ((vel * t).sum(-1) / 10.0)[..., None], ds.clamp(-2, 2), g0[..., 3:4]], -1)
-        o = OUT_SCALE * self.wmlp(feat) * _win(gap, self.pw)[..., None]
+        o = bound(self.wmlp(feat)) * _win(gap, self.pw)[..., None]
         return o[..., :1] * n + o[..., 1:] * t
 
     def wall_acc_kernel(self, pos):
@@ -260,7 +265,7 @@ class ContactScatterField(sf.ScatterField):
         a = self.neg_grad(phi)
         if a.shape[0] != pos.shape[0]:
             a = a.expand(pos.shape[0], -1, -1, -1).contiguous()
-        return OUT_SCALE * self.gather(a, pos)
+        return bound(self.gather(a, pos))
 
     def pair_acc(self, pos, mask, rad):
         B, N = mask.shape
@@ -275,7 +280,7 @@ class ContactScatterField(sf.ScatterField):
         r = r.clamp(max=1e5)
         gap = r - (rf[:, None] + rf[nb])
         feat = torch.stack([gap.clamp(max=8.0), torch.log(gap.clamp(min=0.0) + 0.05)], -1)
-        g = OUT_SCALE * self.cmlp(feat)[..., 0] * _win(gap, self.pc) * ok
+        g = bound(self.cmlp(feat)[..., 0]) * _win(gap, self.pc) * ok
         return ((g[..., None] * ds / r[..., None]).sum(1)).reshape(B, N, 2)
 
     def local_acc(self, pos, vel, mask):
