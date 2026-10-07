@@ -38,7 +38,7 @@ Decision: KEEP the working fix (sf_prior_pp8 = 1+2+3; err@20 .0019 @4000 it vs C
 
 ## 9. Tick-8109 state analysis
 Proposed: (1) fix sign in web/scatter/js/truth.js accel, verify truth energy conserved/bound; (2) escaper/boundary policy in web model (= #5 fix 2); (3) log model E and #outside per tick for first 1000 ticks; (4) include seed + meta in state export; (5) investigate faint straight bands in field heatmap (low priority); (6) treat earlier err/truthE readouts from the page as invalid.
-Decision: ACCEPT all 6. Not yet applied.
+Decision: ACCEPT all 6. APPLIED 2026-10-06 except item 2 (deferred to far-field fix #5.2): 1 was already fixed in ff36e31, now covered by tests/truth.mjs; 3 and 4 in the page + tools/log_energy.mjs; 5 reported, 6 banner added. Results in scatter-state-8109-analysis.md "Follow-up 2026-10-06". Earlier err/truthE readouts from the page (before ff36e31) are INVALID.
 
 ## 10. Causal field 2-body
 Proposed: (1) filter field (smoothed source ramp / filtered stencil) and re-run delete-the-star; (2) isolate early onset via dx/CIC footprint; (3) physically consistent truth (Lienard-Wiechert); (4) no retarded-Newton training target for m>0; (5) benchmark N>2, shared single field; (6) park learned field.

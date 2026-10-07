@@ -35,8 +35,8 @@ the window is about 300 MB. Playback is capped at 10 ticks/s and slows to the pr
 is empty (about 2 ticks/s here, since the sequence is inherently serial); pause to let the buffer fill.
 Tooltips show dequantised values (at most 0.8% of the channel's max off for activations).
 
-The dev menu (`d`) holds the stats, the energy-drift plot of the model (energy is only computed
-while it is open, baseline = first value after it opens or the model resets), a "Ground truth
+The dev menu (`d`) holds the stats, the energy-drift plot of the model (energy is computed for every
+frame by the worker, baseline = the first shown value after a reset; the first 1000 ticks of E and bodies outside the arena are logged and exported), a "Ground truth
 (slow)" toggle, the error-vs-truth plot (shown while truth is on) and state export. Enabling
 truth starts it from the model's current state ("truth since tick N") in its own worker, which
 catches up to the latest tick and reports its lag; disabling terminates the worker.

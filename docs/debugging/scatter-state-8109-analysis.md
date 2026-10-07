@@ -1,5 +1,7 @@
 # Scatter-field live page, state export at tick 8109
 
+**INVALID READOUTS (2026-10-06):** the `err`, `truthE`, truth-ghost and ghost-overlay numbers in this analysis and in any earlier export or page readout from before ff36e31 (2026-10-03, truth.js sign fix) came from a repulsive ghost and are not a valid reference. The export analysed here was from a stale worktree copy of truth.js. The sign is correct on master (checked by `web/scatter/tests/truth.mjs`: n=100 seed 4738, 1000 ticks, max |dE|/|E0| 4.8e-4, E<0 throughout, positions match `gravity_sim.py` to 1.8e-13 at tick 100). The model-side findings (escapers, energy gain, clumps, field) are unaffected by the ghost bug but their start state/seed is unknown. See "Follow-up 2026-10-06" at the end.
+
 File: `results/scatter_state_tick8109.json` (n=100, dt=0.1, 811 time units of simulated time). Figures: `videos/scatter_state_8109_{positions,speed_distance,history,field}.png`. Analysis scripts were run from a scratchpad (not committed). No NaN/inf anywhere. No `meta`/`exportedAt` keys are present in the file despite the spec.
 
 ## Headline
@@ -70,6 +72,23 @@ When the model's energy was created (cannot be seen in a 200-tick window). Likel
 2. Log model energy and #outside-arena per tick from tick 0 for 1000 ticks to see when and how energy is created.
 3. Add a "recentre/rescale" or boundary policy for escapers (outside bodies get no force; they never come back).
 4. Include the seed in the export.
+
+## Follow-up 2026-10-06 (decision #9, items 1, 3, 4, 5, 6)
+
+1. Truth sign: already fixed on master in ff36e31 (2026-10-03); the analysed export predates it. `tests/truth.mjs`: n=100, seed 4738, 1000 ticks, E0 -287.09, max |dE|/|E0| 4.8e-4, E<0 throughout, momentum 7e-14, positions vs `gravity_sim.py` 1.8e-15 @10, 1.8e-13 @100 (diverge by chaos at 1000, energy still matches to 3e-2 abs).
+2. Escaper/boundary policy: deferred, depends on the far-field fix (#5 fix 2).
+3. Per-tick log (`tools/log_energy.mjs`, Polaris job 3351, CPU, 5m52s, results/scatter_energy_log_n{100,40}_seed4738.json; the page now logs the same for ticks 0-1000 and exports it as `startLog`). Model energy is the true softened function. Ghost energy stays within 1.6e-4 relative of E0 in both runs.
+
+| run | E0 | first tick with 1% / 5% / 100% drift | first body outside arena | E at 100/300/500/1000 | outside at 1000 | err@20 / err@100 |
+|---|---|---|---|---|---|---|
+| n=100 | -287.1 | 87 / 269 / 641 | tick 269 | -288 / -149 / -146 / +302 | 19 (truth ghost max 17) | 0.0035 / 0.234 |
+| n=40 | -70.6 | 153 / 428 / never | tick 429 | -70.5 / -71.0 / -59.3 / -36.2 | 3 (truth 3) | 0.0031 / 0.21 |
+
+Energy is created in discrete jumps (n=100: +24.9 at tick 269, +21.7 at 281, +23.6 at 594, +25.0 at 642; n=40: +5.2 at 428, +5.4 at 882), the first coinciding exactly with the first body leaving the arena (269 vs 269, 428 vs 429). Slow creep before that (1% by tick 87 / 153) is inside the arena. So the answer to "when is the energy created" is: slow drift from about tick 90, then step jumps at edge crossings; the system goes unbound at tick 641 (n=100). Whether every jump is an edge crossing was not tested (ticks 281, 594 not matched against crossings). The truth ghost also ejects bodies past the arena (17 outside at n=100) so outside count alone is not a model failure.
+4. Export now carries `seed` (actual run seed), `baseSeed`, `mode`, `E0`, `epoch`, plus the existing `meta`/`exportedAt` (checked by `tests/export.py`).
+5. Bands in the field (report only): in the tick-8109 field, row dip is centred at row 114 (y about +25), width about 6 cells, depth 0.007 (about 25% of field std 0.026); column dip centred at col 14 (x about -25). Both sit within 2-4 cells of a multiple of 16 cells (rows 112, cols 16), the finest-but-one pooling boundary of the 5-level UNet (2^4 = 16 cell blocks). Suggestive of a UNet pooling-footprint artifact, not confirmed (needs the same field with a shifted input, or channel-wise activations at the coarse levels). Smooth, not grid-scale, no action taken.
+   Shift test (`tools/band_probe.mjs`, Polaris job 3366, CPU since the JS model has no GPU path; results/scatter_band_probe.json): empty arena and one body at offsets of 0 / 8 / 16 cells in x and y, recurrent state reset, 1 and 3 force passes. The strongest dip stays at row 115 and col 115 (plus row/col 12) whatever the input, and does not move when the body moves 8 cells, so it is tied to the grid, not to the input. Amplitude is only 1.0e-4 to 3.2e-4 after 1 pass and about 0 after 3, versus 0.007 at tick 8109, so it is a fixed-position footprint that the 8000-tick recurrence amplified (or an out-of-distribution state excites). Rows 112-115 and col 12-16 are the 16-cell block boundaries. Not tested: which UNet level produces it.
+6. Invalid readouts: see banner at top.
 
 ## Future direction
 
