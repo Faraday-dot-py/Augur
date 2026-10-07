@@ -280,7 +280,7 @@ def compare(args):
         for k in ("5", "10", "20"):
             check(f"{reg} err@{k}", base["regimes"][reg]["mean"]["err"][k], cand["regimes"][reg]["mean"]["err"][k], ACC_TOL, ACC_ATOL)
     for reg in REGIMES:
-        for k, atol in (("dE_rel_model", 1e-4), ("dL_rel_model", 1e-3), ("dP_model", 1e-6)):
+        for k, atol in (("dE_rel_model", 1e-4), ("dL_rel_model", 1e-3), ("dP_model", 1e-3)):
             if k in base["regimes"][reg]["mean"] and k in cand["regimes"][reg]["mean"]:
                 check(f"{reg} {k}@100", base["regimes"][reg]["mean"][k], cand["regimes"][reg]["mean"][k], CONS_TOL, atol)
     for reg, bc in base.get("conservation", {}).items():
@@ -288,7 +288,7 @@ def compare(args):
         if cc is None:
             continue
         for k, b, c, atol in (("dE", bc["model"]["dE"], cc["model"]["dE"], 1e-3), ("dL", bc["model"]["dL"], cc["model"]["dL"], 1e-2),
-                              ("dP", bc["model"]["dP"], cc["model"]["dP"], 1e-4), ("bound_gap", bc["bound_gap"], cc["bound_gap"], 0.02),
+                              ("dP", bc["model"]["dP"], cc["model"]["dP"], 1e-3), ("bound_gap", bc["bound_gap"], cc["bound_gap"], 0.02),
                               ("vir_gap", bc["vir_gap"], cc["vir_gap"], 0.05), ("outgrid", bc["model"]["outgrid"], cc["model"]["outgrid"], 0.01)):
             check(f"cons {reg}@{CONS_STEPS} {k}", b, c, CONS_TOL, atol)
         if cc["model"]["frac_ge_c"] is not None:

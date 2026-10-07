@@ -25,7 +25,7 @@ mkdir -p results/ft_$TAG checkpoints/ft_$TAG
 nvidia-smi --query-gpu=name,utilization.gpu,memory.used --format=csv
 python scripts/train_scatter_field.py --exp E --variant ms_kp_pot_v_g128 --train 1500 --steps 50 --batch 16 --k-start 20 --k-end 20 \
   --lr 1e-4 --iters "$ITERS" --eval-steps 100 --log-every "$LOGEVERY" --device cuda --seed 4738 \
-  --long-windows "$WINDOWS" --long-k "$LONGK" --lam-e "$LAME" --lam-l "$LAML" \
+  ${TRAINOPT:+--opt $TRAINOPT} --long-windows "$WINDOWS" --long-k "$LONGK" --lam-e "$LAME" --lam-l "$LAML" \
   --init-ckpt "$INIT" --out-dir results/ft_$TAG --ckpt-dir checkpoints/ft_$TAG
 if [ -z "${NO_EVAL:-}" ]; then
   export CKPT=checkpoints/ft_$TAG/E_ms_kp_pot_v_g128.pt BASE=results/baseline_v2_regress.json

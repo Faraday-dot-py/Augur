@@ -110,8 +110,8 @@ def long_penalty(model, pos, vel, m, mk, field, args):
         de = ((E1 - E0).abs() / es.clamp_min(1e-9)).mean()
         dl = ((L1 - L0).abs() / ls.clamp_min(1e-9)).mean()
         (args.lam_e * de + args.lam_l * dl).backward()
-        de_tot += float(de) / args.long_windows
-        dl_tot += float(dl) / args.long_windows
+        de_tot += float(de.detach()) / args.long_windows
+        dl_tot += float(dl.detach()) / args.long_windows
         pos, vel, field = detach_state(pos), detach_state(vel), detach_state(field)
     return de_tot, dl_tot
 
