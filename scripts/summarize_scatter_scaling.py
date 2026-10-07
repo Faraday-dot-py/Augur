@@ -1,4 +1,5 @@
-"""Markdown tables + plots from results/scatter_scaling_{nsweep,worlds,stock}.json. Usage: python scripts/summarize_scatter_scaling.py [--tag SUFFIX]"""
+"""Markdown tables + plots from results/scatter_scaling_{nsweep,worlds,stock}.json. Usage: python scripts/summarize_scatter_scaling.py [--tag SUFFIX]
+Headline metric is err@5 and err@5/constvel@5 (decision #4.4): err@20 saturates at the box size for N >= ~1e4 (cold) and says nothing at N = 1e5."""
 import argparse
 import json
 
@@ -13,13 +14,13 @@ def row(r):
     t = r.get("timing", {})
     e = r["err"]
     cv = r["constvel"]
-    return (f"| {r['n']} | {r['grid']} | {r['extent']:g} | {r['h']:.3g} | {e['5']:.3g} | {e['10']:.3g} | {e['20']:.3g} | {e['50']:.3g} | {e['100']:.3g} | {e['20'] / max(cv['20'], 1e-12):.2f} | "
+    return (f"| {r['n']} | {r['grid']} | {r['extent']:g} | {r['h']:.3g} | {e['5']:.3g} | {e['10']:.3g} | {e['20']:.3g} | {e['50']:.3g} | {e['100']:.3g} | {e['5'] / max(cv['5'], 1e-12):.2f} | {e['20'] / max(cv['20'], 1e-12):.2f} | "
             f"{r['selfnoise']['20']:.2g} | {r['dE_rel_model']:.3g} ({r['dE_rel_truth']:.2g}) | {r['dP_model']:.2g} | {r['first_nonfinite']} | {r['frac_out_model']:.3f} | "
             f"{t.get('tick_ms', float('nan')):.3g} | {t.get('peak_mem_mb', float('nan')):.0f} |")
 
 
-HEAD = ("| N | G | extent | h | err@5 | @10 | @20 | @50 | @100 | err@20/constvel@20 | self-noise@20 | dE/E (truth) | dP | first nonfinite | frac out | ms/tick | peak MB |\n"
-        "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|")
+HEAD = ("| N | G | extent | h | err@5 | @10 | @20 | @50 | @100 | err@5/constvel@5 | err@20/constvel@20 | self-noise@20 | dE/E (truth) | dP | first nonfinite | frac out | ms/tick | peak MB |\n"
+        "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|")
 
 
 def slope(ns, ts):
@@ -39,9 +40,9 @@ def main():
         out.append(f"\n### N sweep, extent 64, G 128, {fam}\n\n{HEAD}")
         out += [row(r) for r in pts if "selfnoise" in r]
         N = np.array([r["n"] for r in pts])
-        ax[0].loglog(N, [r["err"]["20"] for r in pts], "o-", label=f"{fam} err@20")
-        ax[0].loglog(N, [r["constvel"]["20"] for r in pts], "x--", label=f"{fam} const-vel@20")
-        ax[1].semilogx(N, [r["err"]["20"] / max(r["constvel"]["20"], 1e-12) for r in pts], "o-", label=fam)
+        ax[0].loglog(N, [r["err"]["5"] for r in pts], "o-", label=f"{fam} err@5")
+        ax[0].loglog(N, [r["constvel"]["5"] for r in pts], "x--", label=f"{fam} const-vel@5")
+        ax[1].semilogx(N, [r["err"]["5"] / max(r["constvel"]["5"], 1e-12) for r in pts], "o-", label=fam)
         if fam == "cold":
             tt = [(r["n"], r["timing"]["tick_ms"]) for r in pts if "tick_ms" in r.get("timing", {})]
             n_, t_ = zip(*tt)
@@ -49,11 +50,11 @@ def main():
             big = [(a, b) for a, b in tt if a >= 1e4]
             out.append(f"\nlog-log slope of ms/tick vs N: all N {slope(*zip(*tt)):.2f}; N>=1e4 {slope(*zip(*big)):.2f}")
     ax[0].set_xlabel("N")
-    ax[0].set_ylabel("err@20 (sim units)")
+    ax[0].set_ylabel("err@5 (sim units)")
     ax[0].legend(fontsize=7)
     ax[1].axhline(1, color="k", lw=0.5)
     ax[1].set_xlabel("N")
-    ax[1].set_ylabel("err@20 / const-vel err@20")
+    ax[1].set_ylabel("err@5 / const-vel err@5")
     ax[1].legend()
     ax[2].set_xlabel("N")
     ax[2].set_ylabel("ms/tick")
