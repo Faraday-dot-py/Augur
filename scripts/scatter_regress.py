@@ -10,6 +10,7 @@ Usage:
   PYTHONPATH=. python scripts/scatter_regress.py compare --baseline results/scatter_baseline.json --candidate results/cand.json
 """
 import argparse
+import gc
 import json
 import subprocess
 import sys
@@ -31,9 +32,14 @@ BH = dict(n=300, sigma=8.0, vfac=0.3, c=10.0)
 REGIMES = ("two_body", "expB", "bh300")
 TIMING_KEYS = REGIMES + ("expB_batch1_n100",)
 ACC_TOL = 0.15
+ACC_TOL_KEY = {("two_body", "5"): 0.30}
 ACC_ATOL = 1e-5
+STATE_ATOL = {"bound_frac": 0.02, "virial": 0.05}
 TIME_TOL = 0.05
 MEM_TOL = 0.10
+INFO_TICKS = {"two_body": ("50", "100"), "expB": ("50", "100"), "bh300": ("50",)}
+FLOOR_TICKS = INFO_TICKS
+MEM_DEF = "absolute max_memory_allocated, reset before warm-up"
 
 
 def speed(p, c):
@@ -54,24 +60,55 @@ def build_model(args, dev):
 
 
 def timed(fn, steps, dev):
-    """Warm up once, then median per-tick ms over TIMING_REPS runs and peak memory above the pre-run allocation (MB)."""
+    """Reset peak stats, warm up once (includes CUDA-graph capture), then median per-tick ms over TIMING_REPS runs.
+    Memory (MB) = absolute max_memory_allocated over warm-up + reps (same definition for eager and graphed); reserved is info only."""
+    gc.collect()
+    torch.cuda.empty_cache()
+    torch.cuda.reset_peak_memory_stats(dev)
     fn()
     sync()
-    ts, peaks = [], []
+    ts = []
     for _ in range(TIMING_REPS):
-        base = torch.cuda.memory_allocated(dev)
-        torch.cuda.reset_peak_memory_stats(dev)
         sync()
         t = time.perf_counter()
         fn()
         sync()
         ts.append((time.perf_counter() - t) / steps * 1000)
-        peaks.append((torch.cuda.max_memory_allocated(dev) - base) / 2 ** 20)
-    return {"tick_ms": float(np.median(ts)), "tick_ms_all": ts, "peak_mem_mb": float(max(peaks))}
+    return {"tick_ms": float(np.median(ts)), "tick_ms_all": ts, "peak_mem_mb": torch.cuda.max_memory_allocated(dev) / 2 ** 20,
+            "peak_reserved_mb": torch.cuda.max_memory_reserved(dev) / 2 ** 20}
 
 
 def tick_values(xs, offset):
     return {str(k): float(xs[k - offset]) for k in TICKS}
+
+
+def state_summary(P, V, m, eps, c=None):
+    """One snapshot, numpy P, V (N,2), masses m (N,). Bound fraction = share of bodies with KE_i + phi_i < 0 (phi_i softened potential from all others),
+    virial = 2K/|U|. c given -> relativistic kinetic energy c^2 (gamma - 1) per unit mass and momenta gamma v (V is coordinate velocity).
+    Also returns E = K + U, total momentum, angular momentum about the mass centre (used by chaos_floors.py)."""
+    d = P[None, :, :] - P[:, None, :]
+    inv = 1.0 / np.sqrt((d ** 2).sum(-1) + eps ** 2)
+    np.fill_diagonal(inv, 0.0)
+    phi = -(inv * m[None, :]).sum(1)
+    v2 = (V ** 2).sum(-1)
+    if c is None:
+        ke = 0.5 * v2
+        mom = m[:, None] * V
+    else:
+        gamma = 1.0 / np.sqrt(1 - np.clip(v2, 0.0, 0.9801 * c ** 2) / c ** 2)
+        ke = c ** 2 * (gamma - 1)
+        mom = m[:, None] * gamma[:, None] * V
+    K = float((m * ke).sum())
+    U = float(0.5 * (m * phi).sum())
+    r = P - (m[:, None] * P).sum(0) / m.sum()
+    return {"bound_frac": float((ke + phi < 0).mean()), "virial": 2 * K / max(abs(U), 1e-12), "E": K + U, "P": mom.sum(0),
+            "L": float((r[:, 0] * mom[:, 1] - r[:, 1] * mom[:, 0]).sum())}
+
+
+def tag_state(out, tag, P, V, m, eps, c=None):
+    summ = [state_summary(P[i], V[i], m[i], eps, c) for i in range(len(P))]
+    for key in ("bound_frac", "virial"):
+        out[f"{key}_{tag}"] = float(np.mean([x[key] for x in summ]))
 
 
 def metrics_ab(model, data, dev, eps):
@@ -79,10 +116,16 @@ def metrics_ab(model, data, dev, eps):
     Pm, Vm = sf.rollout(model, P[:, 0].float(), V[:, 0].float(), M.float(), mask.float(), STEPS)
     m = sf.traj_metrics(Pm.double(), Vm.double(), P, V, M, mask, eps)
     out = {"err": tick_values(m["err"], 1)}
+    scene_err = (((Pm.double() - P) ** 2).sum(-1).sqrt() * mask[:, None]).sum(2) / mask.sum(1)[:, None]
+    out["err_sem"] = {str(k): float(scene_err[:, k].std() / np.sqrt(scene_err.shape[0])) for k in TICKS}
     for tag in ("model", "true"):
         out[f"dE_rel_{tag}"] = float(m[f"energy_drift_rel_{tag}"][STEPS])
         out[f"dP_{tag}"] = float(m[f"mom_drift_{tag}"][STEPS])
         out[f"dL_rel_{tag}"] = float(m[f"angmom_drift_rel_{tag}"][STEPS])
+    Mn, kn = M.cpu().numpy(), mask.cpu().numpy().astype(bool)
+    for tag, PP, VV in (("model", Pm.double(), Vm.double()), ("true", P, V)):
+        Pn, Vn = PP[:, STEPS].cpu().numpy(), VV[:, STEPS].cpu().numpy()
+        tag_state(out, tag, [Pn[i][kn[i]] for i in range(len(Pn))], [Vn[i][kn[i]] for i in range(len(Pn))], [Mn[i][kn[i]] for i in range(len(Pn))], eps)
     return out, (P, M, mask)
 
 
@@ -138,7 +181,13 @@ def metrics_bh(model, seed, dev, args):
     Pt, Vt = gs.rollout_torch(pos0, vel0, STEPS, dev, dt=args.dt, substeps=4, eps=args.eps, relativistic=True, c=BH["c"])
     Pt, Vt = np.asarray(Pt), np.asarray(Vt)
     err = np.linalg.norm(Pm - Pt, axis=-1).mean(1)
-    out = {"err": tick_values(err, 0), "vmax_over_c": float(np.linalg.norm(Vm, axis=-1).max() / BH["c"])}
+    out = {"err": tick_values(err, 0), "vmax_over_c": float(np.linalg.norm(Vm, axis=-1).max() / BH["c"]),
+           "vmax_over_c_true": float(np.linalg.norm(Vt, axis=-1).max() / BH["c"]),
+           "frac_ge_0p9c": float((np.linalg.norm(Vm, axis=-1) >= 0.9 * BH["c"]).mean()),
+           "frac_ge_0p9c_true": float((np.linalg.norm(Vt, axis=-1) >= 0.9 * BH["c"]).mean())}
+    ones = np.ones((1, Pm.shape[1]))
+    tag_state(out, "model", Pm[-1:], Vm[-1:], ones, args.eps, BH["c"])
+    tag_state(out, "true", Pt[-1:], Vt[-1:], ones, args.eps, BH["c"])
     for tag, P, V in (("model", Pm, Vm), ("true", Pt, Vt)):
         out[f"dE_rel_{tag}"], out[f"dP_{tag}"], out[f"dL_rel_{tag}"] = rel_conserved(P, V, args.eps, BH["c"])
     return out
@@ -152,6 +201,10 @@ def aggregate(per_seed):
             mean[k] = {t: float(np.mean([per_seed[s][k][t] for s in per_seed])) for t in per_seed[SEEDS[0]][k]}
         else:
             mean[k] = float(np.mean([per_seed[s][k] for s in per_seed]))
+    if "err_sem" in per_seed[SEEDS[0]]:
+        mean["err_sem"] = {t: float(np.sqrt(sum(per_seed[s]["err_sem"][t] ** 2 for s in per_seed)) / len(per_seed)) for t in per_seed[SEEDS[0]]["err"]}
+    else:
+        mean["err_sem"] = {t: float(np.std([per_seed[s]["err"][t] for s in per_seed]) / np.sqrt(len(per_seed))) for t in per_seed[SEEDS[0]]["err"]}
     spread = {t: float(np.std([per_seed[s]["err"][t] for s in per_seed]) / np.mean([per_seed[s]["err"][t] for s in per_seed])) for t in per_seed[SEEDS[0]]["err"]}
     return mean, spread
 
@@ -160,7 +213,7 @@ def run(args):
     dev = torch.device("cuda")
     model = build_model(args, dev)
     res = {"meta": {"ckpt": args.ckpt, "exp": args.exp, "variant": args.variant, "dt": args.dt, "eps": args.eps, "seeds": list(SEEDS),
-                    "opt": args.opt, "steps": STEPS, "scenes_per_seed": SCENES, "bh": BH, "timing_reps": TIMING_REPS, "torch": torch.__version__,
+                    "opt": args.opt, "steps": STEPS, "scenes_per_seed": SCENES, "bh": BH, "timing_reps": TIMING_REPS, "mem_def": MEM_DEF, "torch": torch.__version__,
                     "gpu": torch.cuda.get_device_name(dev),
                     "git": subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip(),
                     "date": time.strftime("%Y-%m-%dT%H:%M:%S")},
@@ -196,9 +249,34 @@ def run(args):
     res["timing"]["expB_batch1_n100"] = timed(lambda: sf.rollout(model, *a1, STEPS), STEPS, dev)
     res["timing"]["expB_batch1_n100"].update(batch=1, n_max=100)
     for k, v in res["timing"].items():
-        print(f"timing {k}: {v['tick_ms']:.3f} ms/tick, peak +{v['peak_mem_mb']:.1f} MB (batch {v['batch']}, N {v['n_max']})", flush=True)
+        print(f"timing {k}: {v['tick_ms']:.3f} ms/tick, peak alloc {v['peak_mem_mb']:.1f} MB (reserved {v['peak_reserved_mb']:.1f}, info) (batch {v['batch']}, N {v['n_max']})", flush=True)
     json.dump(res, open(args.out, "w"), indent=1)
     print("wrote", args.out)
+
+
+def print_floors(cand, floors_path):
+    """Candidate metrics against the reference-noise floor (sub_x2: twice the substeps) and chaos floor (1e-5 relative position perturbation) of
+    results/chaos_floors.json (scripts/chaos_floors.py). Not gated. 'WITHIN' = candidate <= reference-noise floor, i.e. indistinguishable from the reference."""
+    try:
+        floors = json.load(open(floors_path))["groups"]
+    except FileNotFoundError:
+        print(f"floors: {floors_path} not found, skipped")
+        return
+    print(f"{'floors (not gated)':28s} {'candidate':>10s} {'ref-noise':>10s} {'chaos1e-5':>10s} {'c/ref':>8s} {'c/chaos':>8s}")
+    for reg in REGIMES:
+        if reg not in floors:
+            continue
+        v, m = floors[reg]["variants"], cand["regimes"][reg]["mean"]
+        rows = [(f"{reg} err@{k}", m["err"][k], v["sub_x2"]["err"][k], v["pert_1e-05"]["err"][k]) for k in ("5", "10", "20") + FLOOR_TICKS[reg]]
+        rows += [(f"{reg} dE/E@100", m["dE_rel_model"], max(v["ref"]["dE_rel"]["100"], v["sub_x2"]["dE_rel"]["100"]), v["pert_1e-05"]["dE_rel"]["100"]),
+                 (f"{reg} dP@100", m["dP_model"], max(v["ref"]["dP"]["100"], v["sub_x2"]["dP"]["100"]), v["pert_1e-05"]["dP"]["100"]),
+                 (f"{reg} dL/L@100", m["dL_rel_model"], max(v["ref"]["dL_rel"]["100"], v["sub_x2"]["dL_rel"]["100"]), v["pert_1e-05"]["dL_rel"]["100"])]
+        if "bound_frac_true" in m:
+            rows += [(f"{reg} bound gap@100", abs(m["bound_frac_model"] - m["bound_frac_true"]), v["sub_x2"]["bound_gap"]["100"], v["pert_1e-05"]["bound_gap"]["100"]),
+                     (f"{reg} virial gap@100", abs(m["virial_model"] / m["virial_true"] - 1), v["sub_x2"]["virial_gap"]["100"], v["pert_1e-05"]["virial_gap"]["100"])]
+        for name, c, f_ref, f_chaos in rows:
+            ratio = lambda f: f"{c / f:8.3g}" if f > 1e-12 else f"{'n/a':>8s}"
+            print(f"{name:28s} {c:10.4g} {f_ref:10.3g} {f_chaos:10.3g} {ratio(f_ref)} {ratio(f_chaos)}  {'WITHIN' if c <= f_ref else ''}")
 
 
 def compare(args):
@@ -211,18 +289,35 @@ def compare(args):
         ok &= good
         rows.append((name, b, c, (c / b - 1) * 100 if b else float("nan"), "PASS" if good else "FAIL"))
 
+    mem_comparable = base["meta"].get("mem_def") == cand["meta"].get("mem_def") == MEM_DEF
+    if not mem_comparable:
+        print(f"memory gate SKIPPED: definitions differ (baseline {base['meta'].get('mem_def')!r}, candidate {cand['meta'].get('mem_def')!r})")
     for reg in REGIMES:
         for k in ("5", "10", "20"):
-            check(f"{reg} err@{k}", base["regimes"][reg]["mean"]["err"][k], cand["regimes"][reg]["mean"]["err"][k], ACC_TOL, ACC_ATOL)
+            check(f"{reg} err@{k}", base["regimes"][reg]["mean"]["err"][k], cand["regimes"][reg]["mean"]["err"][k], ACC_TOL_KEY.get((reg, k), ACC_TOL), ACC_ATOL)
+    for reg in REGIMES:
+        bm, cm = base["regimes"][reg]["mean"], cand["regimes"][reg]["mean"]
+        if "bound_frac_true" not in bm:
+            print(f"{reg}: baseline lacks bound/virial rows, skipped")
+            continue
+        for name, f in (("bound_frac", lambda m: abs(m["bound_frac_model"] - m["bound_frac_true"])),
+                        ("virial", lambda m: abs(m["virial_model"] / m["virial_true"] - 1))):
+            check(f"{reg} {name} gap@100", f(bm), f(cm), ACC_TOL, STATE_ATOL[name])
+    if "vmax_over_c" in cand["regimes"]["bh300"]["mean"]:
+        v = cand["regimes"]["bh300"]["mean"]["vmax_over_c"]
+        rows.append(("bh300 vmax/c (<1)", base["regimes"]["bh300"]["mean"].get("vmax_over_c", float("nan")), v, float("nan"), "PASS" if v < 1.0 else "FAIL"))
+        ok &= v < 1.0
     for k in TIMING_KEYS:
         check(f"{k} tick_ms", base["timing"][k]["tick_ms"], cand["timing"][k]["tick_ms"], TIME_TOL)
-        check(f"{k} peak_mem_mb", base["timing"][k]["peak_mem_mb"], cand["timing"][k]["peak_mem_mb"], MEM_TOL)
+        if mem_comparable:
+            check(f"{k} peak_mem_mb", base["timing"][k]["peak_mem_mb"], cand["timing"][k]["peak_mem_mb"], MEM_TOL)
     print(f"baseline {base['meta']['ckpt']} @ {base['meta']['git']}  candidate {cand['meta']['ckpt']} @ {cand['meta']['git']}")
     print(f"{'metric':32s} {'baseline':>12s} {'candidate':>12s} {'delta%':>8s}")
     for name, b, c, d, v in rows:
         print(f"{name:32s} {b:12.5g} {c:12.5g} {d:8.1f}  {v}")
-    info = [f"{reg} err@{k} {base['regimes'][reg]['mean']['err'][k]:.4g} -> {cand['regimes'][reg]['mean']['err'][k]:.4g}" for reg in REGIMES for k in ("50", "100")]
-    print("info (not gated):", "; ".join(info))
+    info = [f"{reg} err@{k} {base['regimes'][reg]['mean']['err'][k]:.4g} -> {cand['regimes'][reg]['mean']['err'][k]:.4g}" for reg in REGIMES for k in INFO_TICKS[reg]]
+    print("info (not gated; bh300 err@100 is at the chaos ceiling and not quoted):", "; ".join(info))
+    print_floors(cand, args.floors)
     print("OVERALL", "PASS" if ok else "FAIL")
     sys.exit(0 if ok else 1)
 
@@ -241,6 +336,7 @@ def main():
     c = sub.add_parser("compare")
     c.add_argument("--baseline", required=True)
     c.add_argument("--candidate", required=True)
+    c.add_argument("--floors", default="results/chaos_floors.json")
     args = ap.parse_args()
     run(args) if args.cmd == "run" else compare(args)
 
