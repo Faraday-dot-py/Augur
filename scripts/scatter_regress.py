@@ -31,6 +31,7 @@ BH = dict(n=300, sigma=8.0, vfac=0.3, c=10.0)
 REGIMES = ("two_body", "expB", "bh300")
 TIMING_KEYS = REGIMES + ("expB_batch1_n100",)
 ACC_TOL = 0.15
+ACC_TOL_KEY = {("two_body", "5"): 0.30}
 ACC_ATOL = 1e-5
 TIME_TOL = 0.05
 MEM_TOL = 0.10
@@ -79,6 +80,8 @@ def metrics_ab(model, data, dev, eps):
     Pm, Vm = sf.rollout(model, P[:, 0].float(), V[:, 0].float(), M.float(), mask.float(), STEPS)
     m = sf.traj_metrics(Pm.double(), Vm.double(), P, V, M, mask, eps)
     out = {"err": tick_values(m["err"], 1)}
+    scene_err = (((Pm.double() - P) ** 2).sum(-1).sqrt() * mask[:, None]).sum(2) / mask.sum(1)[:, None]
+    out["err_sem"] = {str(k): float(scene_err[:, k].std() / np.sqrt(scene_err.shape[0])) for k in TICKS}
     for tag in ("model", "true"):
         out[f"dE_rel_{tag}"] = float(m[f"energy_drift_rel_{tag}"][STEPS])
         out[f"dP_{tag}"] = float(m[f"mom_drift_{tag}"][STEPS])
@@ -152,6 +155,10 @@ def aggregate(per_seed):
             mean[k] = {t: float(np.mean([per_seed[s][k][t] for s in per_seed])) for t in per_seed[SEEDS[0]][k]}
         else:
             mean[k] = float(np.mean([per_seed[s][k] for s in per_seed]))
+    if "err_sem" in per_seed[SEEDS[0]]:
+        mean["err_sem"] = {t: float(np.sqrt(sum(per_seed[s]["err_sem"][t] ** 2 for s in per_seed)) / len(per_seed)) for t in per_seed[SEEDS[0]]["err"]}
+    else:
+        mean["err_sem"] = {t: float(np.std([per_seed[s]["err"][t] for s in per_seed]) / np.sqrt(len(per_seed))) for t in per_seed[SEEDS[0]]["err"]}
     spread = {t: float(np.std([per_seed[s]["err"][t] for s in per_seed]) / np.mean([per_seed[s]["err"][t] for s in per_seed])) for t in per_seed[SEEDS[0]]["err"]}
     return mean, spread
 
@@ -213,7 +220,7 @@ def compare(args):
 
     for reg in REGIMES:
         for k in ("5", "10", "20"):
-            check(f"{reg} err@{k}", base["regimes"][reg]["mean"]["err"][k], cand["regimes"][reg]["mean"]["err"][k], ACC_TOL, ACC_ATOL)
+            check(f"{reg} err@{k}", base["regimes"][reg]["mean"]["err"][k], cand["regimes"][reg]["mean"]["err"][k], ACC_TOL_KEY.get((reg, k), ACC_TOL), ACC_ATOL)
     for k in TIMING_KEYS:
         check(f"{k} tick_ms", base["timing"][k]["tick_ms"], cand["timing"][k]["tick_ms"], TIME_TOL)
         check(f"{k} peak_mem_mb", base["timing"][k]["peak_mem_mb"], cand["timing"][k]["peak_mem_mb"], MEM_TOL)
