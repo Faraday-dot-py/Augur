@@ -45,6 +45,14 @@ def sync():
 
 
 def build_model(args, dev):
+    if args.variant == "cf":
+        from scripts.gap_probe import CFDense
+        model = CFDense().to(dev)
+        model.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
+        model.eval()
+        model.init_field = lambda B, device, dtype=torch.float32: (None, None)
+        model.force = lambda pos, vel, mass, mask, field: (model.accel(pos, mass, mask), field)
+        return model
     model = tsf.build(tsf.EXPS[args.exp], args.variant, args.dt).to(dev)
     model.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
     model.eval()
