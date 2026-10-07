@@ -61,6 +61,7 @@ class ScatterField(nn.Module):
         super().__init__()
         self.potential, self.kernel, self.pp, self.split, self.nonet = potential, kernel, pp, split, nonet
         self.verlet = verlet
+        self.far, self.far_band, self.far_eps, self.substeps = 0, 0.25, 0.5, 1
         self.opt = set()
         self._kf = None
         self._off = None
@@ -309,6 +310,33 @@ class ScatterField(nn.Module):
         w = g * win * mj * ok
         return (w[..., None] * d / r[..., None]).sum(2)
 
+    def edge_weight(self, pos):
+        d = pos.abs().amax(-1) / (self.extent / 2)
+        s = 1 - self.far_band
+        t = ((d - s) / self.far_band).clamp(0.0, 1.0)
+        return 0.5 * (1 + torch.cos(math.pi * t))
+
+    def far_acc(self, pos, mass, mask):
+        """Softened-gravity multipole field of all other tokens about their centre of mass (monopole, plus quadrupole when far == 2)."""
+        mm = mass * mask
+        M = mm.sum(1, keepdim=True)
+        Mx = (M - mm).clamp_min(1e-9)
+        com = ((mm[..., None] * pos).sum(1, keepdim=True) - mm[..., None] * pos) / Mx[..., None]
+        R = pos - com
+        r2 = (R ** 2).sum(-1)
+        a = -(Mx * (r2 + self.far_eps ** 2) ** -1.5)[..., None] * R
+        if self.far == 2:
+            outer = pos[..., :, None] * pos[..., None, :]
+            Q0 = (mm[..., None, None] * outer).sum(1, keepdim=True) - mm[..., None, None] * outer
+            S = Q0 - Mx[..., None, None] * com[..., :, None] * com[..., None, :]
+            SR = (S * R[..., None, :]).sum(-1)
+            trS = S[..., 0, 0] + S[..., 1, 1]
+            r2c = r2.clamp_min(1.0)
+            f = 3 * (R * SR).sum(-1) - r2c * trS
+            aq = 0.5 * ((6 * SR - 2 * R * trS[..., None]) / (r2c ** 2.5)[..., None] - 5 * (f / r2c ** 3.5)[..., None] * R)
+            a = a + aq
+        return a * mask[..., None]
+
     def neg_grad(self, phi):
         p = F.pad(phi, (1, 1, 1, 1))
         gx = (p[:, :, 1:-1, 2:] - p[:, :, 1:-1, :-2]) / (2 * self.h)
@@ -370,6 +398,9 @@ class ScatterField(nn.Module):
         if self.kernel:
             acc = acc + ak
         a_tok = self.gather(acc, pos)
+        if self.far:
+            w = self.edge_weight(pos)[..., None]
+            a_tok = a_tok * w + self.far_acc(pos, mass, mask) * (1 - w)
         if self.pp:
             a_tok = a_tok + self.pp_acc(pos, mass, mask)
         if self.momfix:
@@ -378,16 +409,25 @@ class ScatterField(nn.Module):
         return a_tok * mask[..., None], field
 
     def step(self, pos, vel, mass, mask, field):
+        if self.substeps == 1:
+            return self._step(pos, vel, mass, mask, field, self.dt)
+        dvt = 0
+        for _ in range(self.substeps):
+            pos, vel, field, dv = self._step(pos, vel, mass, mask, field, self.dt / self.substeps)
+            dvt = dvt + dv
+        return pos, vel, field, dvt
+
+    def _step(self, pos, vel, mass, mask, field, dt):
         if not self.verlet:
             a_tok, field = self.force(pos, vel, mass, mask, field)
-            dv = a_tok * self.dt
-            return pos + self.dt * (vel + 0.5 * dv), vel + dv, field, dv
+            dv = a_tok * dt
+            return pos + dt * (vel + 0.5 * dv), vel + dv, field, dv
         field, a_prev = field
         if a_prev is None:
             a_prev, field = self.force(pos, vel, mass, mask, field)
-        pos_new = pos + self.dt * vel + 0.5 * self.dt ** 2 * a_prev
-        a_new, field = self.force(pos_new, vel + self.dt * a_prev, mass, mask, field)
-        dv = 0.5 * self.dt * (a_prev + a_new)
+        pos_new = pos + dt * vel + 0.5 * dt ** 2 * a_prev
+        a_new, field = self.force(pos_new, vel + dt * a_prev, mass, mask, field)
+        dv = 0.5 * dt * (a_prev + a_new)
         return pos_new, vel + dv, (field, a_new), dv
 
 
@@ -897,7 +937,17 @@ def curl_probe(model, device, mstar=5.0, extent=8.0, n=21, hold=3):
 
 
 def apply_opt(model, name):
+    """Besides speed flags: far[@band] / farquad[@band] (far-field multipole outside/at the grid edge), subN (N force evals per tick)."""
     model.opt.add(name)
+    if name.startswith("far"):
+        base, _, band = name.partition("@")
+        model.far = 2 if base == "farquad" else 1
+        if band:
+            model.far_band = float(band)
+        return
+    if name.startswith("sub"):
+        model.substeps = int(name[3:])
+        return
     if name == "graph":
         torch.backends.cudnn.benchmark = True
     if name == "cl":
