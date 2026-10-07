@@ -51,3 +51,14 @@ Seed 4738, bh300: err@5/10/20/50/100 = .00828/.0227/.0673/.895/4.93 vs committed
 - two_body/expB numbers are for the Exp E checkpoint (trained on 10-200 bodies incl. clusters), so they are worse than the Exp A/B-specialised numbers in scatter-field-fixed-budget.md (e.g. Exp B err@5/10/20 .0006/.0014/.0039); not comparable across checkpoints.
 - Timing is launch-latency bound (batch 1 N 100 and N 300 are the same ~2.4 ms/tick; batch 48 ~2x).
 - Timing run-to-run noise: see rerun section below.
+
+## Harness v2 (review decision #1, 2026-10-06)
+
+Baseline is now `results/scatter_baseline_v2.json` (job 3358, eager; errors identical to v1 `scatter_baseline.json` to float noise). Graphed stack reference run: `results/scatter_graphed_v2.json` (`--opt kcache,fastio,cl,graph`).
+
+- **Exp E only.** The harness and every baseline number here are for the single Exp E checkpoint (`E_ms_kp_pot_v_g128.pt`). They are not valid for A/B/C/D-specialised checkpoints or other models; do not compare across checkpoints.
+- Gate: `two_body` err@5 tolerance is 30% (seed spread ~30%); other err@5/10/20 15%. Per-regime err standard error is stored (`err_sem`).
+- Memory: absolute `max_memory_allocated` with `reset_peak_memory_stats` before warm-up, same definition for eager and graphed (`meta.mem_def`); `max_memory_reserved` is info only. The gate is skipped against a baseline lacking this definition (v1). Eager peaks 87-889 MB; the graphed stack 235-285 MB. Graphed small-batch memory (bh300 87->241 MB, batch1_n100 87->285 MB) is higher because the graph pool is now counted; accepted (decision 3), so the memory gate FAILs there by design.
+- New gated rows: bound-fraction and virial gaps (model vs truth, tick 100), bh300 max |v|/c < 1 (baseline 0.926).
+- BH err@100 is not quoted (chaos ceiling); bh300 headline is err@50. Info line prints err@50/100 for two_body and expB, err@50 for bh300.
+- Floors: `compare` prints a floors table from `results/chaos_floors.json` (`scripts/chaos_floors.py`, see scatter-chaos-floors.md).
