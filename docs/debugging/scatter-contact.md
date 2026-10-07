@@ -25,3 +25,5 @@ Models, each tested separately on identical eval sets: E zero-shot (frozen basel
 
 ### Jobs
 3359: unit tests (2 gradient-test failures from a test-geometry bug: pair head had no neighbour in window; fixed in test) + truth cache (387 s). 3372: ONE serial wrapper (tests, E zero-shot, augur1, train_eval B 8000 it, train_eval A 8000 it; checkpoints every 100 it via tsf.train, resumable). Pending on QOSMaxGRESPerUser at time of writing.
+
+3372 findings: tests ALL PASS; E zero-shot and augur1 evals done (results/contact/eval_E_zs.json via download pending); first B run (lr 5e-4, no loss cap) DIVERGED at it ~4800 (finite huge loss, 2.5k skipped steps; err@20 ~2000), discarded (results/contact/eval_B_diverged.json). Fixed defaults lr 2e-4 + loss-cap 100 (same fix scenes agent used for orbit ft2). A in 3372 started after the patch (stable settings). 3380: B rerun, tag B2, same settings as A, queued behind 3372.

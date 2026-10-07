@@ -103,7 +103,7 @@ def test_grad(ms):
             torch.nn.init.normal_(mod[-1].weight, std=0.1)
         geom = sc.rasterize([sc.hbox((-7, -7), (7, 7)), sc.circle((0.0, 0.0), 1.5)], 128, 64.0).to(dev)[None]
         m.set_scene(geom, None)
-        pos = torch.tensor([[[5.8, 0.0], [-3.0, 4.0], [1.0, 2.5], [0.2, -3.0]]], device=dev, requires_grad=True)
+        pos = torch.tensor([[[5.8, 0.0], [4.6, 0.6], [1.0, 2.5], [0.2, -3.0]]], device=dev, requires_grad=True)
         vel = torch.randn(1, 4, 2, device=dev)
         mass, mask = torch.ones(1, 4, device=dev), torch.ones(1, 4, device=dev)
         field = m.init_field(1, dev)
