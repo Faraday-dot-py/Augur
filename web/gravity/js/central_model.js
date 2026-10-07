@@ -117,20 +117,58 @@ export class CentralNet {
     });
   }
 
+  // One body's view of accel(): every other body within neighbor_radius as an
+  // edge {src, dist, rel, logd, out, scale, mag, force, h1, h2}, strongest `keep`
+  // with activations. force is the acceleration on body i, i.e. the term
+  // f(log d)/(d^2+1) * (pos[src] - pos[i]) / d that accel() sums.
+  traceAccel(p, count, i, keep) {
+    const { neighbor_radius: R } = this.cfg, m = this.forceMlp;
+    const all = [];
+    let ax = 0, ay = 0;
+    for (let j = 0; j < count; j++) {
+      if (j === i) continue;
+      const rx = p[2 * j] - p[2 * i], ry = p[2 * j + 1] - p[2 * i + 1];
+      const d = Math.sqrt(rx * rx + ry * ry + 1e-12);
+      if (!(d <= R)) continue;
+      const out = m.eval(Math.log(d)), scale = 1 / (d * d + 1), mag = out * scale;
+      ax += mag * rx / d; ay += mag * ry / d;
+      all.push({ src: j, dist: d, rel: [rx, ry], logd: Math.log(d), out, scale, mag, force: [mag * rx / d, mag * ry / d], h1: null, h2: null });
+    }
+    all.sort((a, b) => Math.abs(b.mag) - Math.abs(a.mag));
+    const edges = all.slice(0, keep);
+    for (const e of edges) { m.eval(e.logd); e.h1 = Float64Array.from(m.h1); e.h2 = Float64Array.from(m.h2); }
+    return { acc: [ax, ay], n: all.length, edges };
+  }
+
   // CentralForceDynamics.forward, velocity Verlet: writes pos/vel in place.
-  step(pos, vel, count) {
+  // traceIdx >= 0 also returns that body's per-stage trace (see traceAccel).
+  step(pos, vel, count, traceIdx = -1, keep = 5) {
     const { dt } = this.cfg;
     this.grow(count);
     const { a0, a1, pmid } = this;
     this.accel(pos, count, a0);
     for (let i = 0; i < 2 * count; i++) pmid[i] = pos[i] + vel[i] * dt + 0.5 * dt * dt * a0[i];
     this.accel(pmid, count, a1);
+    let trace = null;
+    if (traceIdx >= 0) {
+      const i = traceIdx, s1 = this.traceAccel(pos, count, i, keep), s2 = this.traceAccel(pmid, count, i, keep);
+      const dp = [0.5 * dt * dt * a0[2 * i], 0.5 * dt * dt * a0[2 * i + 1]];
+      const dv = [0.5 * dt * (a0[2 * i] + a1[2 * i]), 0.5 * dt * (a0[2 * i + 1] + a1[2 * i + 1])];
+      trace = {
+        index: i, dt, pos: [pos[2 * i], pos[2 * i + 1]], vel: [vel[2 * i], vel[2 * i + 1]],
+        s1, a0: [a0[2 * i], a0[2 * i + 1]], dp, pmid: [pmid[2 * i], pmid[2 * i + 1]],
+        s2, a1: [a1[2 * i], a1[2 * i + 1]], dv,
+        newPos: [pos[2 * i] + vel[2 * i] * dt + dp[0], pos[2 * i + 1] + vel[2 * i + 1] * dt + dp[1]],
+        newVel: [vel[2 * i] + dv[0], vel[2 * i + 1] + dv[1]],
+      };
+    }
     for (let i = 0; i < 2 * count; i++) {
       const dp = 0.5 * dt * dt * a0[i];
       const dv = 0.5 * dt * (a0[i] + a1[i]);
       pos[i] += vel[i] * dt + dp;
       vel[i] += dv;
     }
+    return trace;
   }
 
   // flat [i, j, i, j, ...] of pairs within `radius`, for drawing
