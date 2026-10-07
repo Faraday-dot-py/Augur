@@ -26,3 +26,8 @@ Rule: each fix is its own run (one change vs E), judged by (a) the regression ha
 
 ## Results
 (filled in per run below)
+
+## Jobs
+- 3360 seed copy (CPU-ish), 3361 smoke: equivalence vs E at the operating point OK (cu rel 3.4e-4, eps/mnorm/dnorm exact, mnorm linear in mass 2.99999), backward OK, cell/adapt pair term OK with cu. Smoke exposed eps-group divergence (eps .1/.2, k 20) -> added warmup 200 it, loss cap 3 (skipped steps), k cap 10 for eps<=0.2 groups.
+- 3373 E_base harness only (queued behind other agents). 3378 = ONE serial wrapper `scripts/polaris_scatter_s46_all.sh` (12 h limit): E_base (battery + 2 OOD rows), ctrl, cu, largen, mass, massnorm, masswide (init mass), eps, dense; each = 1500 s fine-tune (full-state ckpt every 50 it, resumable) + harness + battery + its stress rows; skips runs whose `results/<name>_regress.json` exists. Estimated 1-1.3 h per run, ~8-10 h total.
+- Headline for N scaling is err@5 (decision #4.4); `scatter_s46_summary.py NAME` prints baseline -> run tables.
