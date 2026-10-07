@@ -93,10 +93,10 @@ def main():
                 dyn = load(args.ckpt, dev, ["cell"])
                 a_dyn = dyn.pp_acc_cell(p0, mass, mask)
                 gm = load(args.ckpt, dev, resolve("default"))
-                fr = ref.force(p0, v0, mass, mask, ref.init_field(1, dev))[0] if n <= 10000 else None
-                fg = gm.force(p0, v0, mass, mask, gm.init_field(1, dev))[0]
-                fg = gm.force(p0, v0, mass, mask, gm.init_field(1, dev))[0]
-                fd = dyn.force(p0, v0, mass, mask, dyn.init_field(1, dev))[0]
+                fr = ref.force(p0, v0, mass, mask, ref.init_field(1, dev)[0])[0] if n <= 10000 else None
+                fg = gm.force(p0, v0, mass, mask, gm.init_field(1, dev)[0])[0]
+                fg = gm.force(p0, v0, mass, mask, gm.init_field(1, dev)[0])[0]
+                fd = dyn.force(p0, v0, mass, mask, dyn.init_field(1, dev)[0])[0]
                 cap = gm._cap_now
                 occ = int(gm.cell_max_occ)
                 msg = f"CELLGRAPH {tag} N {n}: cap {cap} max_occ {occ} overflow {occ > cap}, max|a_celldyn-a_cellgraph| {(fd - fg).abs().max().item():.3e}"
