@@ -37,6 +37,8 @@ ACC_ATOL = 1e-5
 STATE_ATOL = {"bound_frac": 0.02, "virial": 0.05}
 TIME_TOL = 0.05
 MEM_TOL = 0.10
+INFO_TICKS = {"two_body": ("50", "100"), "expB": ("50", "100"), "bh300": ("50",)}
+FLOOR_TICKS = INFO_TICKS
 MEM_DEF = "absolute max_memory_allocated, reset before warm-up"
 
 
@@ -82,7 +84,8 @@ def tick_values(xs, offset):
 
 def state_summary(P, V, m, eps, c=None):
     """One snapshot, numpy P, V (N,2), masses m (N,). Bound fraction = share of bodies with KE_i + phi_i < 0 (phi_i softened potential from all others),
-    virial = 2K/|U|. c given -> relativistic kinetic energy c^2 (gamma - 1) per unit mass (V is coordinate velocity)."""
+    virial = 2K/|U|. c given -> relativistic kinetic energy c^2 (gamma - 1) per unit mass and momenta gamma v (V is coordinate velocity).
+    Also returns E = K + U, total momentum, angular momentum about the mass centre (used by chaos_floors.py)."""
     d = P[None, :, :] - P[:, None, :]
     inv = 1.0 / np.sqrt((d ** 2).sum(-1) + eps ** 2)
     np.fill_diagonal(inv, 0.0)
@@ -90,11 +93,16 @@ def state_summary(P, V, m, eps, c=None):
     v2 = (V ** 2).sum(-1)
     if c is None:
         ke = 0.5 * v2
+        mom = m[:, None] * V
     else:
-        ke = c ** 2 * (1.0 / np.sqrt(1 - np.clip(v2, 0.0, 0.9801 * c ** 2) / c ** 2) - 1)
+        gamma = 1.0 / np.sqrt(1 - np.clip(v2, 0.0, 0.9801 * c ** 2) / c ** 2)
+        ke = c ** 2 * (gamma - 1)
+        mom = m[:, None] * gamma[:, None] * V
     K = float((m * ke).sum())
     U = float(0.5 * (m * phi).sum())
-    return {"bound_frac": float((ke + phi < 0).mean()), "virial": 2 * K / max(abs(U), 1e-12)}
+    r = P - (m[:, None] * P).sum(0) / m.sum()
+    return {"bound_frac": float((ke + phi < 0).mean()), "virial": 2 * K / max(abs(U), 1e-12), "E": K + U, "P": mom.sum(0),
+            "L": float((r[:, 0] * mom[:, 1] - r[:, 1] * mom[:, 0]).sum())}
 
 
 def tag_state(out, tag, P, V, m, eps, c=None):
@@ -246,6 +254,31 @@ def run(args):
     print("wrote", args.out)
 
 
+def print_floors(cand, floors_path):
+    """Candidate metrics against the reference-noise floor (sub_x2: twice the substeps) and chaos floor (1e-5 relative position perturbation) of
+    results/chaos_floors.json (scripts/chaos_floors.py). Not gated. 'WITHIN' = candidate <= reference-noise floor, i.e. indistinguishable from the reference."""
+    try:
+        floors = json.load(open(floors_path))["groups"]
+    except FileNotFoundError:
+        print(f"floors: {floors_path} not found, skipped")
+        return
+    print(f"{'floors (not gated)':28s} {'candidate':>10s} {'ref-noise':>10s} {'chaos1e-5':>10s} {'c/ref':>8s} {'c/chaos':>8s}")
+    for reg in REGIMES:
+        if reg not in floors:
+            continue
+        v, m = floors[reg]["variants"], cand["regimes"][reg]["mean"]
+        rows = [(f"{reg} err@{k}", m["err"][k], v["sub_x2"]["err"][k], v["pert_1e-05"]["err"][k]) for k in ("5", "10", "20") + FLOOR_TICKS[reg]]
+        rows += [(f"{reg} dE/E@100", m["dE_rel_model"], max(v["ref"]["dE_rel"]["100"], v["sub_x2"]["dE_rel"]["100"]), v["pert_1e-05"]["dE_rel"]["100"]),
+                 (f"{reg} dP@100", m["dP_model"], max(v["ref"]["dP"]["100"], v["sub_x2"]["dP"]["100"]), v["pert_1e-05"]["dP"]["100"]),
+                 (f"{reg} dL/L@100", m["dL_rel_model"], max(v["ref"]["dL_rel"]["100"], v["sub_x2"]["dL_rel"]["100"]), v["pert_1e-05"]["dL_rel"]["100"])]
+        if "bound_frac_true" in m:
+            rows += [(f"{reg} bound gap@100", abs(m["bound_frac_model"] - m["bound_frac_true"]), v["sub_x2"]["bound_gap"]["100"], v["pert_1e-05"]["bound_gap"]["100"]),
+                     (f"{reg} virial gap@100", abs(m["virial_model"] / m["virial_true"] - 1), v["sub_x2"]["virial_gap"]["100"], v["pert_1e-05"]["virial_gap"]["100"])]
+        for name, c, f_ref, f_chaos in rows:
+            ratio = lambda f: f"{c / f:8.3g}" if f > 1e-12 else f"{'n/a':>8s}"
+            print(f"{name:28s} {c:10.4g} {f_ref:10.3g} {f_chaos:10.3g} {ratio(f_ref)} {ratio(f_chaos)}  {'WITHIN' if c <= f_ref else ''}")
+
+
 def compare(args):
     base, cand = json.load(open(args.baseline)), json.load(open(args.candidate))
     rows, ok = [], True
@@ -282,8 +315,9 @@ def compare(args):
     print(f"{'metric':32s} {'baseline':>12s} {'candidate':>12s} {'delta%':>8s}")
     for name, b, c, d, v in rows:
         print(f"{name:32s} {b:12.5g} {c:12.5g} {d:8.1f}  {v}")
-    info = [f"{reg} err@{k} {base['regimes'][reg]['mean']['err'][k]:.4g} -> {cand['regimes'][reg]['mean']['err'][k]:.4g}" for reg in REGIMES for k in ("50", "100")]
-    print("info (not gated):", "; ".join(info))
+    info = [f"{reg} err@{k} {base['regimes'][reg]['mean']['err'][k]:.4g} -> {cand['regimes'][reg]['mean']['err'][k]:.4g}" for reg in REGIMES for k in INFO_TICKS[reg]]
+    print("info (not gated; bh300 err@100 is at the chaos ceiling and not quoted):", "; ".join(info))
+    print_floors(cand, args.floors)
     print("OVERALL", "PASS" if ok else "FAIL")
     sys.exit(0 if ok else 1)
 
@@ -302,6 +336,7 @@ def main():
     c = sub.add_parser("compare")
     c.add_argument("--baseline", required=True)
     c.add_argument("--candidate", required=True)
+    c.add_argument("--floors", default="results/chaos_floors.json")
     args = ap.parse_args()
     run(args) if args.cmd == "run" else compare(args)
 

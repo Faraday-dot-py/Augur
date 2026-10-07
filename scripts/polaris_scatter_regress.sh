@@ -9,7 +9,7 @@
 
 set -euo pipefail
 export PYTHONUNBUFFERED=1
-cd "$HOME/augur"
+cd "${ROOT:-$HOME/augur}"
 export PYTHONPATH=.
 CKPT="${CKPT:-checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt}"
 OUT="${OUT:-results/scatter_baseline.json}"
