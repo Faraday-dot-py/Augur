@@ -1,6 +1,6 @@
 import { loadWeights, ScatterNet } from "./scatter_model.js";
 import * as truth from "./truth.js";
-import { quantise } from "./frames.js";
+import { quantise, countOutside } from "./frames.js";
 
 let net, pos, vel, n = 0, tick = -1, epoch = 0, limit = -1, pumping = false;
 
@@ -26,7 +26,7 @@ function produce() {
   }
   const q = quantise(tr);
   const p = pos.slice(), v = vel.slice();
-  const msg = { type: "frame", epoch, tick, n, ms: performance.now() - t0, pos: p, vel: v, energy: truth.energy(pos, vel, n), ...q };
+  const msg = { type: "frame", epoch, tick, n, ms: performance.now() - t0, pos: p, vel: v, energy: truth.energy(pos, vel, n), outside: countOutside(pos, n, net.cfg.extent), ...q };
   postMessage(msg, [p.buffer, v.buffer, q.q16.buffer, q.q8.buffer, q.M.buffer]);
 }
 
