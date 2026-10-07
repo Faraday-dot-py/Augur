@@ -1,6 +1,6 @@
 // Ground-truth softened-gravity leapfrog, ported from scripts/gravity_sim.py
 // (accel/energy/rollout), for the ghost overlay and energy comparison.
-const EPS2 = 0.5 * 0.5;
+export const EPS2 = 0.5 * 0.5;
 
 export function accel(pos, count, out) {
   out.fill(0, 0, 2 * count);
