@@ -34,6 +34,7 @@ TIMING_KEYS = REGIMES + ("expB_batch1_n100",)
 ACC_TOL = 0.15
 ACC_TOL_KEY = {("two_body", "5"): 0.30}
 ACC_ATOL = 1e-5
+STATE_ATOL = {"bound_frac": 0.02, "virial": 0.05}
 TIME_TOL = 0.05
 MEM_TOL = 0.10
 MEM_DEF = "absolute max_memory_allocated, reset before warm-up"
@@ -79,6 +80,29 @@ def tick_values(xs, offset):
     return {str(k): float(xs[k - offset]) for k in TICKS}
 
 
+def state_summary(P, V, m, eps, c=None):
+    """One snapshot, numpy P, V (N,2), masses m (N,). Bound fraction = share of bodies with KE_i + phi_i < 0 (phi_i softened potential from all others),
+    virial = 2K/|U|. c given -> relativistic kinetic energy c^2 (gamma - 1) per unit mass (V is coordinate velocity)."""
+    d = P[None, :, :] - P[:, None, :]
+    inv = 1.0 / np.sqrt((d ** 2).sum(-1) + eps ** 2)
+    np.fill_diagonal(inv, 0.0)
+    phi = -(inv * m[None, :]).sum(1)
+    v2 = (V ** 2).sum(-1)
+    if c is None:
+        ke = 0.5 * v2
+    else:
+        ke = c ** 2 * (1.0 / np.sqrt(1 - np.clip(v2, 0.0, 0.9801 * c ** 2) / c ** 2) - 1)
+    K = float((m * ke).sum())
+    U = float(0.5 * (m * phi).sum())
+    return {"bound_frac": float((ke + phi < 0).mean()), "virial": 2 * K / max(abs(U), 1e-12)}
+
+
+def tag_state(out, tag, P, V, m, eps, c=None):
+    summ = [state_summary(P[i], V[i], m[i], eps, c) for i in range(len(P))]
+    for key in ("bound_frac", "virial"):
+        out[f"{key}_{tag}"] = float(np.mean([x[key] for x in summ]))
+
+
 def metrics_ab(model, data, dev, eps):
     P, V, M, mask = sf.to_tensors(data, dev)
     Pm, Vm = sf.rollout(model, P[:, 0].float(), V[:, 0].float(), M.float(), mask.float(), STEPS)
@@ -90,6 +114,10 @@ def metrics_ab(model, data, dev, eps):
         out[f"dE_rel_{tag}"] = float(m[f"energy_drift_rel_{tag}"][STEPS])
         out[f"dP_{tag}"] = float(m[f"mom_drift_{tag}"][STEPS])
         out[f"dL_rel_{tag}"] = float(m[f"angmom_drift_rel_{tag}"][STEPS])
+    Mn, kn = M.cpu().numpy(), mask.cpu().numpy().astype(bool)
+    for tag, PP, VV in (("model", Pm.double(), Vm.double()), ("true", P, V)):
+        Pn, Vn = PP[:, STEPS].cpu().numpy(), VV[:, STEPS].cpu().numpy()
+        tag_state(out, tag, [Pn[i][kn[i]] for i in range(len(Pn))], [Vn[i][kn[i]] for i in range(len(Pn))], [Mn[i][kn[i]] for i in range(len(Pn))], eps)
     return out, (P, M, mask)
 
 
@@ -145,7 +173,13 @@ def metrics_bh(model, seed, dev, args):
     Pt, Vt = gs.rollout_torch(pos0, vel0, STEPS, dev, dt=args.dt, substeps=4, eps=args.eps, relativistic=True, c=BH["c"])
     Pt, Vt = np.asarray(Pt), np.asarray(Vt)
     err = np.linalg.norm(Pm - Pt, axis=-1).mean(1)
-    out = {"err": tick_values(err, 0), "vmax_over_c": float(np.linalg.norm(Vm, axis=-1).max() / BH["c"])}
+    out = {"err": tick_values(err, 0), "vmax_over_c": float(np.linalg.norm(Vm, axis=-1).max() / BH["c"]),
+           "vmax_over_c_true": float(np.linalg.norm(Vt, axis=-1).max() / BH["c"]),
+           "frac_ge_0p9c": float((np.linalg.norm(Vm, axis=-1) >= 0.9 * BH["c"]).mean()),
+           "frac_ge_0p9c_true": float((np.linalg.norm(Vt, axis=-1) >= 0.9 * BH["c"]).mean())}
+    ones = np.ones((1, Pm.shape[1]))
+    tag_state(out, "model", Pm[-1:], Vm[-1:], ones, args.eps, BH["c"])
+    tag_state(out, "true", Pt[-1:], Vt[-1:], ones, args.eps, BH["c"])
     for tag, P, V in (("model", Pm, Vm), ("true", Pt, Vt)):
         out[f"dE_rel_{tag}"], out[f"dP_{tag}"], out[f"dL_rel_{tag}"] = rel_conserved(P, V, args.eps, BH["c"])
     return out
@@ -228,6 +262,18 @@ def compare(args):
     for reg in REGIMES:
         for k in ("5", "10", "20"):
             check(f"{reg} err@{k}", base["regimes"][reg]["mean"]["err"][k], cand["regimes"][reg]["mean"]["err"][k], ACC_TOL_KEY.get((reg, k), ACC_TOL), ACC_ATOL)
+    for reg in REGIMES:
+        bm, cm = base["regimes"][reg]["mean"], cand["regimes"][reg]["mean"]
+        if "bound_frac_true" not in bm:
+            print(f"{reg}: baseline lacks bound/virial rows, skipped")
+            continue
+        for name, f in (("bound_frac", lambda m: abs(m["bound_frac_model"] - m["bound_frac_true"])),
+                        ("virial", lambda m: abs(m["virial_model"] / m["virial_true"] - 1))):
+            check(f"{reg} {name} gap@100", f(bm), f(cm), ACC_TOL, STATE_ATOL[name])
+    if "vmax_over_c" in cand["regimes"]["bh300"]["mean"]:
+        v = cand["regimes"]["bh300"]["mean"]["vmax_over_c"]
+        rows.append(("bh300 vmax/c (<1)", base["regimes"]["bh300"]["mean"].get("vmax_over_c", float("nan")), v, float("nan"), "PASS" if v < 1.0 else "FAIL"))
+        ok &= v < 1.0
     for k in TIMING_KEYS:
         check(f"{k} tick_ms", base["timing"][k]["tick_ms"], cand["timing"][k]["tick_ms"], TIME_TOL)
         if mem_comparable:
