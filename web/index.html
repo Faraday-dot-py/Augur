@@ -34,18 +34,8 @@ footer a { color: var(--dim); }
 <body>
 <main>
   <h1>Augur</h1>
-  <p class="lede">Three learned physics models, running live in the browser as plain JavaScript ports of their PyTorch checkpoints, plus a 3D walkthrough of the grid model.</p>
+  <p class="lede">The scatter-field model and a 3D walkthrough of it, plus two earlier models, running live in the browser as plain JavaScript ports of their PyTorch checkpoints.</p>
   <div class="cards">
-    <a class="card" href="token/">
-      <h2><i style="background:var(--token)"></i>Token model</h2>
-      <p>General-purpose: one token per ball, a learned pair force, wall force and gravity drive a bouncing-ball arena. Click a ball to unfold its computation in 3D.</p>
-      <div class="go">open &rarr;</div>
-    </a>
-    <a class="card" href="gravity/">
-      <h2><i style="background:var(--grav)"></i>Central-force model</h2>
-      <p>Scales to 10,000+ bodies: a single learned pairwise gravity law, integrated with velocity Verlet, compared live against ground-truth gravity.</p>
-      <div class="go">open &rarr;</div>
-    </a>
     <a class="card" href="scatter/">
       <h2><i style="background:var(--scatter)"></i>Scatter-field model</h2>
       <p>A grid architecture: bodies are scattered onto a field, a learned kernel and UNet produce a potential, and bodies gather their acceleration from it. Explore the model's 3D structure with the tensors of a running simulation drawn on it.</p>
@@ -54,6 +44,16 @@ footer a { color: var(--dim); }
     <a class="card" href="scatter-walkthrough/">
       <h2><i style="background:var(--scatter)"></i>Scatter-field walkthrough</h2>
       <p>A 3D, step-by-step tour of one forward pass of the scatter-field model: scatter, kernel, UNet, gather and integrate, as spatial tensors with linked commentary.</p>
+      <div class="go">open &rarr;</div>
+    </a>
+    <a class="card" href="token/">
+      <h2><i style="background:var(--token)"></i>Token model</h2>
+      <p>General-purpose: one token per ball, a learned pair force, wall force and gravity drive a bouncing-ball arena. Click a ball to unfold its computation in 3D.</p>
+      <div class="go">open &rarr;</div>
+    </a>
+    <a class="card" href="gravity/">
+      <h2><i style="background:var(--grav)"></i>Central-force model</h2>
+      <p>Scales to 10,000+ bodies: a single learned pairwise gravity law, integrated with velocity Verlet, compared live against ground-truth gravity.</p>
       <div class="go">open &rarr;</div>
     </a>
   </div>
