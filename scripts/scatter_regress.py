@@ -10,6 +10,7 @@ Usage:
   PYTHONPATH=. python scripts/scatter_regress.py compare --baseline results/scatter_baseline.json --candidate results/cand.json
 """
 import argparse
+import gc
 import json
 import subprocess
 import sys
@@ -35,6 +36,7 @@ ACC_TOL_KEY = {("two_body", "5"): 0.30}
 ACC_ATOL = 1e-5
 TIME_TOL = 0.05
 MEM_TOL = 0.10
+MEM_DEF = "absolute max_memory_allocated, reset before warm-up"
 
 
 def speed(p, c):
@@ -55,20 +57,22 @@ def build_model(args, dev):
 
 
 def timed(fn, steps, dev):
-    """Warm up once, then median per-tick ms over TIMING_REPS runs and peak memory above the pre-run allocation (MB)."""
+    """Reset peak stats, warm up once (includes CUDA-graph capture), then median per-tick ms over TIMING_REPS runs.
+    Memory (MB) = absolute max_memory_allocated over warm-up + reps (same definition for eager and graphed); reserved is info only."""
+    gc.collect()
+    torch.cuda.empty_cache()
+    torch.cuda.reset_peak_memory_stats(dev)
     fn()
     sync()
-    ts, peaks = [], []
+    ts = []
     for _ in range(TIMING_REPS):
-        base = torch.cuda.memory_allocated(dev)
-        torch.cuda.reset_peak_memory_stats(dev)
         sync()
         t = time.perf_counter()
         fn()
         sync()
         ts.append((time.perf_counter() - t) / steps * 1000)
-        peaks.append((torch.cuda.max_memory_allocated(dev) - base) / 2 ** 20)
-    return {"tick_ms": float(np.median(ts)), "tick_ms_all": ts, "peak_mem_mb": float(max(peaks))}
+    return {"tick_ms": float(np.median(ts)), "tick_ms_all": ts, "peak_mem_mb": torch.cuda.max_memory_allocated(dev) / 2 ** 20,
+            "peak_reserved_mb": torch.cuda.max_memory_reserved(dev) / 2 ** 20}
 
 
 def tick_values(xs, offset):
@@ -167,7 +171,7 @@ def run(args):
     dev = torch.device("cuda")
     model = build_model(args, dev)
     res = {"meta": {"ckpt": args.ckpt, "exp": args.exp, "variant": args.variant, "dt": args.dt, "eps": args.eps, "seeds": list(SEEDS),
-                    "opt": args.opt, "steps": STEPS, "scenes_per_seed": SCENES, "bh": BH, "timing_reps": TIMING_REPS, "torch": torch.__version__,
+                    "opt": args.opt, "steps": STEPS, "scenes_per_seed": SCENES, "bh": BH, "timing_reps": TIMING_REPS, "mem_def": MEM_DEF, "torch": torch.__version__,
                     "gpu": torch.cuda.get_device_name(dev),
                     "git": subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip(),
                     "date": time.strftime("%Y-%m-%dT%H:%M:%S")},
@@ -203,7 +207,7 @@ def run(args):
     res["timing"]["expB_batch1_n100"] = timed(lambda: sf.rollout(model, *a1, STEPS), STEPS, dev)
     res["timing"]["expB_batch1_n100"].update(batch=1, n_max=100)
     for k, v in res["timing"].items():
-        print(f"timing {k}: {v['tick_ms']:.3f} ms/tick, peak +{v['peak_mem_mb']:.1f} MB (batch {v['batch']}, N {v['n_max']})", flush=True)
+        print(f"timing {k}: {v['tick_ms']:.3f} ms/tick, peak alloc {v['peak_mem_mb']:.1f} MB (reserved {v['peak_reserved_mb']:.1f}, info) (batch {v['batch']}, N {v['n_max']})", flush=True)
     json.dump(res, open(args.out, "w"), indent=1)
     print("wrote", args.out)
 
@@ -218,12 +222,16 @@ def compare(args):
         ok &= good
         rows.append((name, b, c, (c / b - 1) * 100 if b else float("nan"), "PASS" if good else "FAIL"))
 
+    mem_comparable = base["meta"].get("mem_def") == cand["meta"].get("mem_def") == MEM_DEF
+    if not mem_comparable:
+        print(f"memory gate SKIPPED: definitions differ (baseline {base['meta'].get('mem_def')!r}, candidate {cand['meta'].get('mem_def')!r})")
     for reg in REGIMES:
         for k in ("5", "10", "20"):
             check(f"{reg} err@{k}", base["regimes"][reg]["mean"]["err"][k], cand["regimes"][reg]["mean"]["err"][k], ACC_TOL_KEY.get((reg, k), ACC_TOL), ACC_ATOL)
     for k in TIMING_KEYS:
         check(f"{k} tick_ms", base["timing"][k]["tick_ms"], cand["timing"][k]["tick_ms"], TIME_TOL)
-        check(f"{k} peak_mem_mb", base["timing"][k]["peak_mem_mb"], cand["timing"][k]["peak_mem_mb"], MEM_TOL)
+        if mem_comparable:
+            check(f"{k} peak_mem_mb", base["timing"][k]["peak_mem_mb"], cand["timing"][k]["peak_mem_mb"], MEM_TOL)
     print(f"baseline {base['meta']['ckpt']} @ {base['meta']['git']}  candidate {cand['meta']['ckpt']} @ {cand['meta']['git']}")
     print(f"{'metric':32s} {'baseline':>12s} {'candidate':>12s} {'delta%':>8s}")
     for name, b, c, d, v in rows:
