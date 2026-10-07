@@ -23,6 +23,7 @@ SEEDS = (4738, 9100, 9200, 9300)
 NS = [1, 2, 3, 6, 10, 18, 32, 56, 100, 178, 316, 562, 1000, 1778, 3162, 5623, 10000, 17783, 31623, 56234, 100000]
 EPS, DT, SUB = 0.5, 0.1, 4
 PP = None
+VARIANT = "ms_kp_pot_v_g128"
 
 
 def sync():
@@ -30,8 +31,8 @@ def sync():
 
 
 def load(ckpt, dev, chunked=True):
-    m = tsf.build(tsf.EXPS["E"], "ms_kp_pot_v_g128", DT).to(dev)
-    m.load_state_dict(torch.load(ckpt, map_location=dev, weights_only=False)["model"])
+    m = tsf.build(tsf.EXPS["E"], VARIANT, DT).to(dev)
+    sf.load_compat(m, torch.load(ckpt, map_location=dev, weights_only=False)["model"])
     m.eval()
     mode = {True: "chunked", False: "stock"}.get(chunked, chunked) if PP is None or chunked is False else PP
     if mode == "cell":
@@ -250,6 +251,31 @@ def phase_worlds(model, dev, out):
         torch.cuda.empty_cache()
 
 
+def phase_r46(model, dev, out):
+    res = load_json(out)
+    for g in (32, 64, 128, 256, 512):
+        key = f"R_G{g}"
+        if key not in res:
+            print(f"== r46 {key}", flush=True)
+            res[key] = point(model, 300, 8.0, 0.3, g, 64.0, dev, label=key)
+            save_json(out, res)
+            torch.cuda.empty_cache()
+    ops.retarget(model, 128, 64.0)
+
+
+def phase_n46(model, dev, out, big):
+    res = load_json(out)
+    for fam, vfac in (("cold", 0.3), ("warm", 1.0)):
+        for n in (316, 1000, 3162, 10000, 31623) + ((100000,) if big and fam == "cold" else ()):
+            key = f"{fam}_{n}"
+            if key in res:
+                continue
+            print(f"== n46 {key}", flush=True)
+            res[key] = point(model, n, 8.0, vfac, 128, 64.0, dev, steps=20 if n >= 100000 else 100, label=key)
+            save_json(out, res)
+            torch.cuda.empty_cache()
+
+
 def phase_fprobe(ckpt, dev, out):
     model = load(ckpt, dev, True)
     res = {}
@@ -343,13 +369,15 @@ def phase_comp(ckpt, dev, out):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ckpt", required=True)
-    ap.add_argument("--phase", required=True, choices=["nsweep", "worlds", "stock", "comp", "equiv", "dump", "fprobe", "equivcell", "nsweepL"])
+    ap.add_argument("--phase", required=True, choices=["nsweep", "worlds", "stock", "comp", "equiv", "dump", "fprobe", "equivcell", "nsweepL", "r46", "n46", "n46big"])
+    ap.add_argument("--variant", default="ms_kp_pot_v_g128")
     ap.add_argument("--out", required=True)
     ap.add_argument("--max-n", type=int, default=100000)
     ap.add_argument("--pp", default=None, choices=[None, "chunked", "cell"])
     args = ap.parse_args()
-    global PP
+    global PP, VARIANT
     PP = args.pp
+    VARIANT = args.variant
     dev = torch.device("cuda")
     print(torch.cuda.get_device_name(dev), flush=True)
     if args.phase == "stock":
@@ -403,7 +431,11 @@ def main():
         save_json(args.out, out)
     else:
         model = load(args.ckpt, dev, True)
-        if args.phase == "nsweepL":
+        if args.phase == "r46":
+            phase_r46(model, dev, args.out)
+        elif args.phase in ("n46", "n46big"):
+            phase_n46(model, dev, args.out, args.phase == "n46big")
+        elif args.phase == "nsweepL":
             phase_nsweepL(model, dev, args.out)
         elif args.phase == "nsweep":
             phase_nsweep(model, dev, args.out, [n for n in NS if n <= args.max_n])
