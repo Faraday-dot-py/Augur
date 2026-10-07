@@ -1,0 +1,74 @@
+name
+NVIDIA H200 NVL
+=== E_base ood 02:42:56
+selftest truth vs gs.rollout_torch c=None: max diff 0.00e+00
+selftest truth vs gs.rollout_torch c=10.0: max diff 0.00e+00
+ref                cluster_N100_s8_v0.3       err@.5/1/2/5 [0.0037, 0.0103, 0.031, 0.2616] floor@5 1.6e-03 ballistic@5 6.89 dE 0.0194 (true 0.000596) nonfinite None t>1 7.300000000000001
+ref                cluster_N300_s8_v0.3       err@.5/1/2/5 [0.0081, 0.0215, 0.0671, 1.1978] floor@5 9.7e-03 ballistic@5 14.1 dE 0.0239 (true 0.00163) nonfinite None t>1 4.75
+ref                bh300_c10                  err@.5/1/2/5 [0.008, 0.0209, 0.0621, 0.9128] floor@5 7.1e-03 ballistic@5 12.5 dE 0.0422 (true 0.00186) nonfinite None t>1 5.2
+mass_ratio_2body   binary_q1                  err@.5/1/2/5 [0.0005, 0.0033, 0.0105, 0.041] floor@5 3.0e-05 ballistic@5 0.747 dE 0.0157 (true 1.74e-11) nonfinite None t>1 99.0
+mass_ratio_2body   binary_q3                  err@.5/1/2/5 [0.0015, 0.0076, 0.0364, 0.25] floor@5 4.5e-05 ballistic@5 1.46 dE 0.0989 (true 1.04e-10) nonfinite None t>1 9.100000000000001
+mass_ratio_2body   binary_q10                 err@.5/1/2/5 [0.0228, 0.0968, 0.3519, 2.2347] floor@5 1.0e-04 ballistic@5 3.73 dE 1.04 (true 8.68e-10) nonfinite None t>1 3.7
+mass_ratio_2body   binary_q100                err@.5/1/2/5 [0.4148, 1.6036, 7.0011, 58.1112] floor@5 4.1e-04 ballistic@5 12.6 dE 306 (true 7.31e-08) nonfinite None t>1 0.8500000000000001
+mass_ratio_2body   binary_q1000               err@.5/1/2/5 [10.1631, 39.9272, 216.27, 1722.8757] floor@5 1.2e-03 ballistic@5 37.9 dE 1.12e+04 (true 7.1e-06) nonfinite None t>1 0.2
+mass_ratio_2body   binary_q10000              err@.5/1/2/5 [130.5118, 505.4192, 2536.7981, 18470.8485] floor@5 3.9e-03 ballistic@5 124 dE 1.18e+05 (true 0.000632) nonfinite None t>1 0.1
+wrote results/E_base_ood_ref,mass_ratio_2body.json
+=== largen n46big 02:43:07
+NVIDIA H200 NVL
+== n46 cold_100000
+  n=100000 grid=128 L=64.0 seed=4738/0 err@5/20/last 80.03 481.2 481.2 cv@20 141.8 nonfinite None truth 49.7s
+== n46 warm_316
+  n=316 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.01202 0.1063 6.024 cv@20 3.381 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=4738/1 err@5/20/last 0.01089 0.1144 5.974 cv@20 3.305 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=4738/2 err@5/20/last 0.01129 0.09865 5.437 cv@20 3.5 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=4738/3 err@5/20/last 0.01257 0.1349 6.14 cv@20 3.511 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/0 err@5/20/last 0.01211 0.1144 5.723 cv@20 3.411 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/1 err@5/20/last 0.01023 0.08171 5.789 cv@20 2.931 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/2 err@5/20/last 0.01186 0.104 5.675 cv@20 3.483 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/3 err@5/20/last 0.01214 0.09884 6.16 cv@20 3.686 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/0 err@5/20/last 0.01225 0.1175 6.93 cv@20 3.269 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/1 err@5/20/last 0.01247 0.0972 5.544 cv@20 3.746 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/2 err@5/20/last 0.01273 0.1097 5.67 cv@20 3.442 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/3 err@5/20/last 0.01022 0.1071 5.905 cv@20 3.332 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/0 err@5/20/last 0.01071 0.09961 5.973 cv@20 3.242 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/1 err@5/20/last 0.0118 0.09847 5.509 cv@20 3.324 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/2 err@5/20/last 0.01046 0.09468 5.949 cv@20 3.247 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/3 err@5/20/last 0.01154 0.09777 5.57 cv@20 3.558 nonfinite None truth 0.0s
+== n46 warm_1000
+  n=1000 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.03246 0.2809 8.238 cv@20 9.713 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=4738/1 err@5/20/last 0.032 0.2762 7.782 cv@20 10.42 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=4738/2 err@5/20/last 0.03013 0.2654 7.824 cv@20 10.14 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=4738/3 err@5/20/last 0.0312 0.2784 7.743 cv@20 9.607 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/0 err@5/20/last 0.03033 0.2579 7.885 cv@20 9.76 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/1 err@5/20/last 0.0312 0.2717 8.388 cv@20 8.88 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/2 err@5/20/last 0.02983 0.2573 7.893 cv@20 9.759 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/3 err@5/20/last 0.03078 0.2687 7.501 cv@20 9.774 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/0 err@5/20/last 0.03082 0.2597 7.647 cv@20 9.553 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/1 err@5/20/last 0.03177 0.2691 7.695 cv@20 9.414 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/2 err@5/20/last 0.0311 0.2696 8.744 cv@20 10.42 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/3 err@5/20/last 0.0312 0.2695 7.766 cv@20 9.502 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/0 err@5/20/last 0.03236 0.2726 7.507 cv@20 9.959 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/1 err@5/20/last 0.0318 0.2839 8.207 cv@20 9.975 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/2 err@5/20/last 0.0319 0.2768 7.996 cv@20 9.784 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/3 err@5/20/last 0.03036 0.2676 7.645 cv@20 9.557 nonfinite None truth 0.1s
+== n46 warm_3162
+  n=3162 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.08895 0.7492 14.14 cv@20 24.07 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=4738/1 err@5/20/last 0.08807 0.7659 14.1 cv@20 24.03 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9100/0 err@5/20/last 0.08825 0.7604 14.03 cv@20 23.96 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9100/1 err@5/20/last 0.08893 0.7459 14.16 cv@20 23.79 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9200/0 err@5/20/last 0.08994 0.7794 13.96 cv@20 24.14 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9200/1 err@5/20/last 0.09279 0.7683 13.43 cv@20 24.46 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9300/0 err@5/20/last 0.08916 0.7469 13.53 cv@20 24.11 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9300/1 err@5/20/last 0.08763 0.7351 14.05 cv@20 23.91 nonfinite None truth 0.3s
+== n46 warm_10000
+  n=10000 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.2303 2.057 24.22 cv@20 43.33 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=4738/1 err@5/20/last 0.2289 1.998 23.47 cv@20 42.83 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9100/0 err@5/20/last 0.2247 2.008 24.17 cv@20 42.7 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9100/1 err@5/20/last 0.229 2.023 24.81 cv@20 42.96 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9200/0 err@5/20/last 0.2287 2.031 24.57 cv@20 42.82 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9200/1 err@5/20/last 0.232 2.197 24.76 cv@20 42.7 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9300/0 err@5/20/last 0.2332 2.088 24.02 cv@20 43.34 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9300/1 err@5/20/last 0.2313 2.043 24.14 cv@20 42.6 nonfinite None truth 2.4s
+== n46 warm_31623
+  n=31623 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.7036 6.673 45.22 cv@20 73.05 nonfinite None truth 25.1s
+S46 ANOM DONE 02:46:39

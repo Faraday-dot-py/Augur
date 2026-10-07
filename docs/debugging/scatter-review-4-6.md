@@ -34,7 +34,7 @@ Anomalies: (1) the E_base row was skipped by the wrapper (`E_base_regress.json` 
 | E_base | 1.00 | PASS | battery ref .028, geomean ratio 11.4 |
 | ctrl | 1.03-1.15 | PASS | noise floor: OOD rows within ~10-25% (binary_q100 7.0->24.8, shift24 .43->.51, plummer a.25 3.4->3.75) |
 | cu (4.2) | 1.30-1.83 | FAIL | G64 err@20 1.12->0.145, G256 1.93->0.105 (pred <0.3, HIT), G512 7.9->1.48 (pred >1, hit), G32 1.79->1.2 (pred >1, hit); h=.5 harness +30-83% (pred +5-10%, MISS); filament battery .31->.97, q10 .37->1.16 worse |
-| largen (4.3a) | 1.68-1.94 | FAIL | cold_1e4 err@5 1.77->1.42 (pred <0.6, MISS), err@20 42->33 (pred <20, MISS); cold_31623 12.7->19.4 worse; warm_1e4 .34->.23, warm_31623 1.67->.70 improved; N=1e5 not run (crash) |
+| largen (4.3a) | 1.68-1.94 | FAIL | cold_1e4 err@5 1.77->1.42 (pred <0.6, MISS), err@20 42->33 (pred <20, MISS); cold_31623 12.7->19.4 worse; warm_1e4 .34->.23, warm_31623 1.67->.70 improved; N=1e5 err@5 35->80, err@20 238->481 (pred: improves less than 1e4: MISS, regressed 2.3x; err@5/constvel 0.93->2.11, worse than constant velocity), see Follow-up |
 | mass (6.1a) | 1.15-1.86 | FAIL | q10 .35->.13 (pred <.1, near miss), q100 7.0->2.4 (pred <1.5, MISS), heavy30 1.47->.39 (pred <.3, miss), spectrum .1-10 .21->.156 (pred <.06, MISS), equal m10 1.9->.92 (pred <.5, MISS); in-dist equal_m1 .031->.058 |
 | massnorm (6.1b) | 1.21-1.93 | FAIL | zero-shot-style gains: q100 7.0->.78, q1000 216->3.4, heavy1000 694->46, m100 737->17; m3 .119->.154 (pred improve: MISS), spectrum/heavy30 .56 vs mass .39 (pred >= 6.1a: MISS on heavy30/spectrum, better on q>=100 and heavy>=300) |
 | masswide (6.1c) | 2.5-3.9 | FAIL (worst) | spectrum .01-100 20.6->2.64 (pred <3, HIT); heavy100 10.6->1.14 (HIT); q1000 216->98 (pred >1, hit); spectrum 0.1-10 .21->.28 and heavy1 .03->.115 degrade |
@@ -43,7 +43,16 @@ Anomalies: (1) the E_base row was skipped by the wrapper (`E_base_regress.json` 
 
 Conclusions: only ctrl passes the gate; every fix regresses the in-distribution harness by 30-280% (ctrl 3-15%), so the harness cost is caused by the fixes, not by extra fine-tuning. Targeted OOD rows mostly improve in the predicted direction (cu resolution sweep, eps, masswide extremes, massnorm large ratios) but magnitudes are often short of the predictions, and mixed-distribution fine-tunes trade away the training regime. Not bundled; no combined run launched.
 
+## Follow-up (job 3400, 2026-10-07)
+Both anomalies resolved. Results: `results/scatter_s46/E_base_ood_ref,mass_ratio_2body.json`, `largen_scaling_n46big.json` (now holds cold_100000), log `job3400.log`.
+- Anomaly 2 root cause: `scatter_scaling.point` always recorded errors at TICKS (5,10,20,50,100) but the N=1e5 rows run 20 steps, so `err[50]` was out of range. `point` now records only ticks <= steps (N=1e5 rows have err/constvel/selfnoise at 5,10,20; progress print uses the last tick). Same ckpt/seed 4738; other rows unchanged.
+- Anomaly 1: E_base OOD (ood:ref, mass_ratio_2body, `--opt kcache,fastio,cl`) now run. They reproduce the old `results/scatter_ood.json` baseline to <0.5% (e.g. binary_q10 err@2 .352 vs .352, q100 7.01 vs 7.00, q1000 216 vs 216, ref N100 .031 vs .031), so the baseline used for the OOD deltas above is valid and the ctrl noise-floor readings (q100 7.0->24.8, q10 .35->.47) are measured against a true E reference, not a different pipeline.
+- largen cold_100000 (N=1e5, grid 128, 20 ticks): err@5/10/20 = 80.0/213/481 vs E 35.1/99.6/238 (x2.3, x2.1, x2.0); err@5/constvel@5 0.93 -> 2.11; dE_rel 11.0; frac out of box 0.99; no nonfinite; tick 1.09 s vs 0.45 s baseline timing run. The 4.3a large-N fine-tune does not help at 1e5 and makes cold_31623/1e5 worse than E, consistent with the 31623 row. Prediction "N=1e5 improves less than 1e4" MISSED (it regresses).
+- Predictions that held (unchanged by this follow-up): cu G256/G64 resolution gains, G512/G32 stay poor, masswide extremes, eps2/binary eps, massnorm large ratios. Missed: all harness-cost predictions, largen N=1e4/1e5, mass/dense magnitudes. Only ctrl passes the gate.
+
 ## Jobs
 - 3360 seed copy (CPU-ish), 3361 smoke: equivalence vs E at the operating point OK (cu rel 3.4e-4, eps/mnorm/dnorm exact, mnorm linear in mass 2.99999), backward OK, cell/adapt pair term OK with cu. Smoke exposed eps-group divergence (eps .1/.2, k 20) -> added warmup 200 it, loss cap 3 (skipped steps), k cap 10 for eps<=0.2 groups.
 - 3373 E_base harness only (queued behind other agents). 3378 = ONE serial wrapper `scripts/polaris_scatter_s46_all.sh` (12 h limit): E_base (battery + 2 OOD rows), ctrl, cu, largen, mass, massnorm, masswide (init mass), eps, dense; each = 1500 s fine-tune (full-state ckpt every 50 it, resumable) + harness + battery + its stress rows; skips runs whose `results/<name>_regress.json` exists. Estimated 1-1.3 h per run, ~8-10 h total.
 - Headline for N scaling is err@5 (decision #4.4); `scatter_s46_summary.py NAME` prints baseline -> run tables.
+
+- 3400 anomaly wrapper (`~/job_s46_fix.sh` style, serial): E_base OOD rows + largen n46big (resume, only cold_100000 plus missing warm rows computed), 03:00 wall.
