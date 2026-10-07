@@ -29,3 +29,51 @@ Models, each tested separately on identical eval sets: E zero-shot (frozen basel
 3372 findings: tests ALL PASS; E zero-shot and augur1 evals done (results/contact/eval_E_zs.json via download pending); first B run (lr 5e-4, no loss cap) DIVERGED at it ~4800 (finite huge loss, 2.5k skipped steps; err@20 ~2000), discarded (results/contact/eval_B_diverged.json). Fixed defaults lr 2e-4 + loss-cap 100 (same fix scenes agent used for orbit ft2). A in 3372 started after the patch (stable settings). 3380: B rerun, tag B2, same settings as A, queued behind 3372.
 
 A (first run, lr 2e-4, cap 100) ALSO diverged at k=21 (loss 10 -> 2.7e3 -> 3e4, then every step skipped by the cap; err@20 ~30). Both B and A blow up at k~20-21, so it is the architecture/training of the added heads, not option-specific. Mitigation (bounded learned force, no conservation hard-coding): forces from all new heads pass through FMAX*tanh(x*OUT_SCALE/FMAX), FMAX=40 (penalty truth peaks ~36 at 0.3 penetration), slope at init unchanged; lr 1e-4; k_end 20. Reruns: 3380 = B2, 3382 = A2 (both serial, one wrapper each). E zero-shot/augur1 results from 3372 stand (frozen baselines).
+
+### Results (2026-10-07; B2 job 3380, A2 job 3382, E/augur1 from 3372; eval seeds 9100/9200/9300 x 8 scenes per family, mean over seeds; err = mean position error per body, sim units; err@k at tick k)
+B2 and A2 trained 8000 it (1212 s / 1285 s) without divergence at k=20-21 (bounded force heads + lr 1e-4 fixed it). Chaos floor (1e-5 perturbed truth) err@20 0.4-0.9, err@100 4.5-5.9; model err ~5 at tick 100 is at the floor (error saturates at box scale), so tunnel fraction, KE ratio and restitution are the discriminating metrics.
+
+| family | model | err@5 | err@20 | err@100 | tunnel@100 % | KE ratio@100 |
+|---|---|---|---|---|---|---|
+| box15 | E zero-shot | 2.37 | 7.03 | 22.97 | 92.9 | 0.049 |
+| box15 | bounce_ft1 | 0.49 | 4.96 | 5.396 | 0.2 | 0.0587 |
+| box15 | B (SDF+MLP) | 1.70 | 5.11 | 5.177 | 0.0 | 0.00267 |
+| box15 | A (kernel) | 1.79 | 5.07 | 3.731e+04 | 100.0 | 4.08e+06 |
+| box15 | floor/ballistic/truth-tunnel | 7.2e-05 | 0.90 (ball. 38.7) | 5.63 | 0.6 | |
+| box_var | E zero-shot | 2.31 | 6.53 | 23.47 | 96.1 | 0.0701 |
+| box_var | bounce_ft1 | 3.43 | 6.00 | 6.568 | 49.5 | 0.0236 |
+| box_var | B (SDF+MLP) | 1.62 | 4.53 | 4.781 | 0.0 | 0.00361 |
+| box_var | A (kernel) | 1.79 | 4.50 | 7.376e+04 | 100.0 | 4.16e+07 |
+| box_var | floor/ballistic/truth-tunnel | 8.5e-05 | 0.68 (ball. 39.2) | 5.31 | 1.5 | |
+| post_circle | E zero-shot | 2.35 | 7.37 | 24.85 | 93.8 | 0.059 |
+| post_circle | bounce_ft1 | 0.56 | 4.54 | 5.511 | 1.4 | 0.0329 |
+| post_circle | B (SDF+MLP) | 1.65 | 4.92 | 5.516 | 0.0 | 0.00385 |
+| post_circle | A (kernel) | 1.81 | 5.11 | 3.531e+04 | 100.0 | 8.89e+05 |
+| post_circle | floor/ballistic/truth-tunnel | 7.2e-05 | 0.44 (ball. 38.0) | 5.88 | 0.6 | |
+| post_rect | E zero-shot | 2.31 | 6.83 | 24.07 | 96.3 | 0.0597 |
+| post_rect | bounce_ft1 | 1.91 | 5.17 | 5.404 | 35.8 | 0.016 |
+| post_rect | B (SDF+MLP) | 1.65 | 4.11 | 4.75 | 0.0 | 0.0038 |
+| post_rect | A (kernel) | 1.80 | 4.25 | 5.606e+04 | 100.0 | 6.32e+06 |
+| post_rect | floor/ballistic/truth-tunnel | 8e-05 | 0.58 (ball. 38.3) | 5.51 | 1.1 | |
+| disc | E zero-shot | 2.36 | 7.00 | 22.51 | 95.3 | 0.0613 |
+| disc | bounce_ft1 | 2.11 | 5.76 | 5.585 | 53.2 | 0.0139 |
+| disc | B (SDF+MLP) | 1.68 | 4.49 | 3.841 | 0.0 | 0.00859 |
+| disc | A (kernel) | 1.80 | 4.44 | 3.814e+04 | 100.0 | 3.7e+06 |
+| disc | floor/ballistic/truth-tunnel | 7.1e-05 | 0.49 (ball. 39.0) | 4.52 | 0.2 | |
+| post_poly | E zero-shot | 2.36 | 7.34 | 24.79 | 95.9 | 0.0528 |
+| post_poly | bounce_ft1 | 0.52 | 4.52 | 5.357 | 0.6 | 0.0193 |
+| post_poly | B (SDF+MLP) | 1.65 | 4.83 | 5.296 | 0.0 | 0.00365 |
+| post_poly | A (kernel) | 1.74 | 4.89 | 4.715e+04 | 100.0 | 2.65e+06 |
+| post_poly | floor/ballistic/truth-tunnel | 7.6e-05 | 0.42 (ball. 37.9) | 5.89 | 0.0 | |
+
+Reading against predictions:
+- B: tunnel 0.0% at tick 100 on ALL six families, including held-out disc and post_poly (predicted <1% in-dist, <3% held-out: met). err@20 4.1-5.1 on all families, within 1.1x of box15 (predicted 5-6 on box15: met; early err@5 1.65 is worse than ft1's 0.49 on box15, ft1 is better where its hard-wired box applies). bounce_ft1 fails box_var (49.5% tunnel), post_rect (35.8%), disc (53.2%), as predicted; it does NOT fail post_circle/post_poly (1.4%/0.6%), contrary to the prediction (box walls hold, posts rarely hit at these densities).
+- B negative: KE ratio vs truth at tick 100 is 0.003-0.009 (ft1 0.014-0.059, E 0.05-0.07): B is heavily dissipative. Restitution probe: wall model 0.49 at v=12, 0.57 at v=15 (truth 1.0); at v<=10 the probe found no rebound (None), circular post None at all speeds (to be verified, probe may be failing to detect rebound rather than the model failing). Restitution prediction (.85-1.15) NOT met for B.
+- A: in-distribution horizon fine (err@20 4.3-5.1, same as B) but unstable beyond the training horizon (k_end 20): 100% "tunnel" and err 3.5e4-7.4e4, KE ratio 1e6-4e7 on every family by tick 50. Restitution probe: wall 0.99-1.01 at v 10-15 (the kernel force conserves energy on a wall when it works), circular post 2.19 at v=2 (spurious energy gain). Prediction "A worse than B" met for rollout stability, not for err@20 (equal) and not for restitution (A better on wall).
+- A2 failure localisation (disc, 3 scenes): max per-tick position step 0.5-2.4 until tick ~25, then 60-76 at tick 30, then a constant ~420-565 per tick from tick 35. Constant step size looks like a clamp/saturation artefact (e.g. ball escaping the occupancy FFT domain) rather than a smoothly growing force; NOT verified in code.
+
+Unbiased review (fresh agent, hypothesis-free, grids only; videos/contact_{disc,post_poly,post_circle}_{B2,A2}_grid.png): B2 red stays inside the container and never overlaps posts; by tick 30-100 red is a compact clump/column against the gravity-side wall while truth (blue) stays a looser, more spread cloud (consistent with the KE ratio 0.003-0.009: B settles, truth keeps bouncing). Error flat 3-7 after tick 20. A2 matches B2 to tick ~25, then red balls fly out of the frame by tick 30-35 (error jumps ~3 orders of magnitude, then grows to 1e4-1e5); by tick 60 no red is visible.
+
+Videos (truth | model, scene 0): videos/contact_{disc,post_poly,post_circle}_{B2,A2}.mp4 in the worktree.
+
+Conclusion: B (SDF gather + MLP) fixes tunnelling on all shapes including held-out ones with no per-shape engineering; the remaining B defect is over-damping (restitution ~0.5 at wall, KE collapse), not geometry. A as trained is unusable beyond its training horizon. Next (not done): add energy/restitution term or train B with longer unrolls and wall-bounce supervision; check A's blow-up in the occupancy FFT domain handling.
