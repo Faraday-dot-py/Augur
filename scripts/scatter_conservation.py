@@ -9,8 +9,8 @@ Writes results/conservation/<regime>.npz (sampled ticks + extremes over every ti
 probe: model-only force probes: two-body force vs truth (radial ratio, tangential fraction, velocity dependence, placement dependence), far-field force on a test
 token outside/inside the grid, curl probe.
 
-Usage: PYTHONPATH=. python scripts/scatter_conservation.py run --ckpt <ckpt> --opt kcache,fastio,cl,graph --steps 10000 [--regimes nr2,bh300]
-       PYTHONPATH=. python scripts/scatter_conservation.py probe --ckpt <ckpt> --opt kcache,fastio,cl,graph
+Usage: PYTHONPATH=. python scripts/scatter_conservation.py run --ckpt <ckpt> --opt default --steps 10000 [--regimes nr2,bh300]
+       PYTHONPATH=. python scripts/scatter_conservation.py probe --ckpt <ckpt> --opt default
 """
 import argparse
 import json
@@ -194,8 +194,7 @@ def build_model(args, dev):
     model = tsf.build(tsf.EXPS["E"], "ms_kp_pot_v_g128", 0.1).to(dev)
     model.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
     model.eval()
-    for o in [x for x in args.opt.split(",") if x]:
-        sf.apply_opt(model, o)
+    sf.apply_opts(model, args.opt)
     return model
 
 
@@ -315,7 +314,7 @@ def main():
     for nm in ("run", "probe"):
         p = sub.add_parser(nm)
         p.add_argument("--ckpt", required=True)
-        p.add_argument("--opt", default="kcache,fastio,cl,graph")
+        p.add_argument("--opt", default="default")
         p.add_argument("--out-dir", default="results/conservation")
         if nm == "run":
             p.add_argument("--steps", type=int, default=10000)

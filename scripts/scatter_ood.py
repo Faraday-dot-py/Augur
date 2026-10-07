@@ -461,8 +461,7 @@ def build_model(args, dev):
     model = tsf.build(tsf.EXPS["E"], args.variant, 0.1).to(dev)
     sf.load_compat(model, torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
     model.eval()
-    for o in [x for x in args.opt.split(",") if x]:
-        sf.apply_opt(model, o)
+    sf.apply_opts(model, args.opt)
     return model
 
 
@@ -495,7 +494,7 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--variant", default="ms_kp_pot_v_g128")
     ap.add_argument("--axes", default="")
-    ap.add_argument("--opt", default="kcache,fastio,cl,graph")
+    ap.add_argument("--opt", default="default")
     ap.add_argument("--traj", default="")
     args = ap.parse_args()
     dev = torch.device("cuda")

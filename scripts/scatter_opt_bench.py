@@ -27,8 +27,7 @@ def make_model(args, dev):
         with torch.no_grad():
             for p in m.parameters():
                 p.add_(0.01 * torch.randn_like(p))
-    for o in [x for x in args.opt.split(",") if x]:
-        sf.apply_opt(m, o)
+    sf.apply_opts(m, args.opt, "train" if "train" in args.mode else "infer")
     return m
 
 
@@ -81,7 +80,7 @@ def train(args, dev):
     pos0, vel0, mass, mask = scene(n, B, dev)
     pos0 = pos0 * 0.5
     tgt = pos0 + 0.1
-    fns = sf.make_step_fns(m, B, n, k, dev) if "graphtrain" in args.opt else None
+    fns = sf.make_step_fns(m, B, n, k, dev) if "graphtrain" in m.opt else None
 
     def it():
         pos, vel, f = pos0, vel0, m.init_field(B, dev)

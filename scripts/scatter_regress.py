@@ -79,8 +79,7 @@ def build_model(args, dev):
     model = tsf.build(tsf.EXPS[args.exp], args.variant, args.dt).to(dev)
     sf.load_compat(model, torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
     model.eval()
-    for o in [x for x in args.opt.split(",") if x]:
-        sf.apply_opt(model, o)
+    sf.apply_opts(model, args.opt)
     return model
 
 
@@ -447,7 +446,7 @@ def main():
     r.add_argument("--variant", default="ms_kp_pot_v_g128")
     r.add_argument("--dt", type=float, default=0.1)
     r.add_argument("--eps", type=float, default=0.5)
-    r.add_argument("--opt", default="")
+    r.add_argument("--opt", default="default", help="default = kcache,fastio,cl,graph,auto; none = eager; -flag opts out")
     r.add_argument("--no-cons", action="store_true")
     r.add_argument("--battery", action="store_true")
     c = sub.add_parser("compare")

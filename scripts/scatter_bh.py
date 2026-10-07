@@ -41,6 +41,7 @@ def main():
     ap.add_argument("--v0", type=float, default=None)
     ap.add_argument("--seed", type=int, default=4738)
     ap.add_argument("--tag", default="scatter_bh")
+    ap.add_argument("--opt", default="default")
     ap.add_argument("--device", default="cuda")
     args = ap.parse_args()
     dev = torch.device(args.device)
@@ -57,6 +58,7 @@ def main():
     model = tsf.build(tsf.EXPS["E"], "ms_kp_pot_v_g128", args.dt).to(dev)
     model.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
     model.eval()
+    sf.apply_opts(model, args.opt)
 
     pos = torch.tensor(pos0, dtype=torch.float32, device=dev)[None]
     vel = torch.tensor(vel0, dtype=torch.float32, device=dev)[None]
