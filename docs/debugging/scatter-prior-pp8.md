@@ -10,3 +10,29 @@ Protocol: all models trained from scratch, identical loop, on Exp E data (2000 s
 - pp8 alone: partial gain over ctl (20-40% on err@20), clearly worse than pair.
 - Ordering err@20 on `ab`: pair < pp8 < ctl <~ prior. CF close to pair on `ab`; CF vs pair on `cl` undecided.
 - Scalability: with knn=48 and pp=8 the truncation fraction passes ~50% of bodies near N~1000 uniform in the 57.6-unit box (about 0.3 bodies/unit^2 x 201 unit^2 = 60 neighbours within pp), so force error rises sharply from N~1000 and in the Gaussian core already at N~300.
+
+## Results (Polaris jobs 3397 train/frozen/scale, 3401 regress; 4000 it each, seed 4738, ~7-9 min/model on H200; full-state ckpts incl. optimizer saved every log step in `train_scatter_field.train`)
+Raw JSON in `results/scatter_pp8/`. Mean position error per body (sim units), Exp E held-out `ab` (10-200 bodies) / `cl` (clusters), seeds 9000+12000 averaged:
+
+| model | ab err@20 | ab err@100 | cl err@20 | cl err@100 | harness expB err@20 / @100 | bh300 err@20 / @100 | train s |
+|---|---|---|---|---|---|---|---|
+| frozen E (60k it) | 0.0242 | 1.416 | 0.0525 | 4.207 | 0.0239 / 1.422 | 0.0622 / 4.774 | - |
+| ctl | 0.0204 | 1.368 | 0.0490 | 4.277 | 0.0201 / 1.280 | 0.0532 / 4.859 | 540 |
+| pair (prior+pp8) | 0.0352 | 1.753 | 0.0762 | 4.768 | 0.0333 / 1.581 | 0.0779 / 5.069 | 570 |
+| prior (fix 1) | 0.0419 | 1.963 | 0.0878 | 4.841 | 0.0423 / 1.831 | 0.0981 / 5.171 | 553 |
+| pp8 (fix 2) | 0.0243 | 1.375 | 0.0555 | 4.450 | 0.0226 / 1.238 | 0.0601 / 4.707 | 556 |
+| CF (CFDense) | 0.0191 | 1.110 | 0.0432 | 4.139 | n/a (harness build_model bug for cf) | n/a | 418 |
+
+Regression harness vs frozen E: ctl PASS, pp8 PASS, pair FAIL (expB err@10/20 +22/+39%, bh300 err@20 +25%), prior FAIL (expB +54..77%, bh300 +31..58%).
+
+Scale (force rel error, trained pair vs trained ctl; floor = untrained pair): gauss_100 0.045 vs 0.087 (floor 0.006), gauss_1000 0.022 vs 0.051 (floor 0.33), unif_1000 0.063 vs 0.171, unif_100000 0.175 vs 0.223 (cell/adapt). Rollout err@20: gauss_1000 pair 0.758 vs ctl 0.618; unif_1000 pair 0.186 vs ctl 0.259; unif_3000 1.395 vs 1.197. Truncation (knn 48) fraction: pair 94% at gauss_1000 / 73% at unif_1000 (ctl 47% / 0%), as predicted.
+
+## Verdict vs predictions
+- pair err@20 at least 40% below ctl on `ab`: REFUTED. Pair is 73% worse than ctl (0.0352 vs 0.0204); cl also worse (+55%), not just smaller gain.
+- prior alone no better than ctl: confirmed, and worse (+105% err@20).
+- pp8 alone 20-40% gain: REFUTED. Neutral at 4000 it (ab +19% vs ctl at e20, harness expB +12%, bh300 +13% e20; but beats ctl on err@100 harness 1.24 vs 1.28 and two_body err@20 0.0056 vs 0.0044 worse). Roughly ctl-equivalent.
+- Ordering predicted pair < pp8 < ctl <~ prior; observed CF < ctl <~ pp8 < pair < prior. CF is best everywhere on err@20/100 and trains fastest (418 s).
+- Force error: untrained pair prior has 0.6% force error at N=100 (best of any), but 4000 it training raises it to 4.5% (ctl 8.7%); trained pair force error is 2x better than ctl while rollout error is worse, so force-rel-error gains do not translate to rollout under this loop.
+- Attribution: the damage is in fix 1 (prior kernel; prior alone worst); fix 2 (pp8) is benign; the pair inherits fix 1's harm, partly offset by fix 2. Both fixes are individually non-beneficial for rollout at 4000 it; no synergy.
+- Scalability: truncation prediction confirmed; force error rises with N as predicted for the untrained floor (0.33 at gauss_1000), trained models flatten it (0.02-0.06).
+- Caveat: single seed, 4000 it only (a longer-trained prior may behave differently; frozen E at 60k it is behind a 4000-it ctl on every metric, so iteration count dominates comparisons). Initial `MODE=all` regress stage failed (MODELS comma-list bug in wrapper loop); re-run separately as job 3401. cf harness run failed (harness `model.force` assignment on an nn.Module).
