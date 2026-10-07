@@ -65,6 +65,10 @@ class ScatterField(nn.Module):
         self._kf = None
         self._off = None
         self._graphs = {}
+        self._cap_now = None
+        self.cell_cap_min = 16
+        self.adapt_n = 50000
+        self.cell_max_occ = None
         if pp:
             self.ppmlp = nn.Sequential(nn.Linear(2, 64), nn.GELU(), nn.Linear(64, 64), nn.GELU(), nn.Linear(64, 1))
             nn.init.zeros_(self.ppmlp[-1].weight)
@@ -166,20 +170,40 @@ class ScatterField(nn.Module):
         phi = torch.fft.irfft2(rf * Kf, s=(2 * G, 2 * G))[..., :G, :G] * self.h ** 2
         return self.neg_grad(phi)
 
-    def pp_acc_cell(self, pos, mass, mask, knn=16, budget=2 ** 25):
+    def _cell_keys(self, pos, mask):
         B, N = mask.shape
-        dev = pos.device
         C = int(math.ceil(self.extent / self.pp))
-        pf, mm, mk = pos.reshape(B * N, 2), (mass * mask).reshape(-1), mask.reshape(-1)
+        pf, mk = pos.reshape(B * N, 2), mask.reshape(-1)
         c = ((pf + self.extent / 2) / self.pp).floor().clamp(0, C - 1).long().detach()
-        b = torch.arange(B, device=dev).repeat_interleave(N)
+        b = torch.arange(B, device=pos.device).repeat_interleave(N)
         nc = B * C * C
         key = torch.where(mk > 0, b * C * C + c[:, 1] * C + c[:, 0], torch.full_like(b, nc))
+        counts = torch.zeros(nc + 1, dtype=torch.long, device=pos.device).index_add_(0, key, torch.ones_like(key))
+        return C, pf, mk, c, b, nc, key, counts
+
+    def pp_mode(self, N):
+        if not self.pp or N <= 512:
+            return "dense"
+        if "adapt" in self.opt:
+            return "adapt"
+        if "cell" in self.opt:
+            return "cell"
+        if "auto" in self.opt:
+            return "adapt" if N >= self.adapt_n else "cell"
+        return "dense"
+
+    def pp_acc_cell(self, pos, mass, mask, knn=16, budget=2 ** 25, cap=None):
+        """cap=None: candidate width = max cell occupancy (host sync, exact). cap=int: static width (graph-compatible, no host
+        sync); cells holding more than cap tokens drop the excess candidates; cell_max_occ holds the device-side max occupancy."""
+        B, N = mask.shape
+        dev = pos.device
+        C, pf, mk, c, b, nc, key, counts = self._cell_keys(pos, mask)
+        mm = (mass * mask).reshape(-1)
         order = torch.argsort(key, stable=True)
-        counts = torch.bincount(key, minlength=nc + 1)
         starts = torch.cumsum(counts, 0) - counts
-        M = int(counts[:nc].max())
-        sh = torch.tensor([-1, 0, 1], device=dev)
+        self.cell_max_occ = counts[:nc].max()
+        M = int(self.cell_max_occ) if cap is None else cap
+        sh = torch.arange(-1, 2, device=dev)
         k = min(knn, 9 * M)
         j = torch.arange(M, device=dev)
         outs = []
@@ -190,7 +214,7 @@ class ScatterField(nn.Module):
             ncy = (c[q, 1, None] + sh)[:, :, None].expand(-1, -1, 3)
             inside = ((ncx >= 0) & (ncx < C) & (ncy >= 0) & (ncy < C)).reshape(len(q), 9)
             ncell = b[q, None] * C * C + ncy.clamp(0, C - 1).reshape(len(q), 9) * C + ncx.clamp(0, C - 1).reshape(len(q), 9)
-            cnt = counts[ncell] * inside
+            cnt = counts[ncell].clamp(max=M) * inside
             idx = (starts[ncell][..., None] + j).clamp(max=B * N - 1)
             valid = j < cnt[..., None]
             cand = order[idx].reshape(len(q), 9 * M)
@@ -291,10 +315,12 @@ class ScatterField(nn.Module):
 
     def pp_acc(self, pos, mass, mask, knn=16):
         B, N = mask.shape
-        if "adapt" in self.opt and N > 512:
+        mode = self.pp_mode(N)
+        if mode == "adapt":
             return self.pp_acc_adapt(pos, mass, mask, knn)
-        if "cell" in self.opt and N > 512:
-            return self.pp_acc_cell(pos, mass, mask, knn)
+        if mode == "cell":
+            static = "graph" in self.opt and not torch.is_grad_enabled()
+            return self.pp_acc_cell(pos, mass, mask, knn, cap=(self._cap_now or self.cell_cap_min) if static else None)
         k = min(knn, N - 1)
         d_all = pos[:, None, :, :] - pos[:, :, None, :]
         r_all = torch.sqrt((d_all ** 2).sum(-1) + 1e-8)
@@ -320,7 +346,8 @@ class ScatterField(nn.Module):
         return (f, None) if self.verlet else f
 
     def force(self, pos, vel, mass, mask, field):
-        if "graph" in self.opt and not torch.is_grad_enabled() and not torch.cuda.is_current_stream_capturing():
+        if "graph" in self.opt and not torch.is_grad_enabled() and not torch.cuda.is_current_stream_capturing() \
+                and self.pp_mode(pos.shape[1]) != "adapt":
             return self._graphed("force", self._force, pos, vel, mass, mask, field)
         return self._force(pos, vel, mass, mask, field)
 
@@ -329,6 +356,9 @@ class ScatterField(nn.Module):
         ent = self._graphs.get(key)
         if ent is None:
             static = [a.clone() for a in args]
+            if name == "force" and self.pp_mode(args[0].shape[1]) == "cell":
+                _, _, _, _, _, nc, _, counts = self._cell_keys(static[0], static[3])
+                self._cap_now = max(self.cell_cap_min, 1 << int(2 * int(counts[:nc].max()) - 1).bit_length())
             s = torch.cuda.Stream()
             s.wait_stream(torch.cuda.current_stream())
             with torch.cuda.stream(s):
@@ -894,6 +924,40 @@ def curl_probe(model, device, mstar=5.0, extent=8.0, n=21, hold=3):
     tot = np.sqrt((curl[ok] ** 2).mean() + (div[ok] ** 2).mean())
     return {"curl_over_total": float(np.sqrt((curl[ok] ** 2).mean()) / tot), "rms_curl": float(np.sqrt((curl[ok] ** 2).mean())),
             "rms_div": float(np.sqrt((div[ok] ** 2).mean())), "a_map": a.tolist()}
+
+
+DEFAULT_OPT = {"infer": ("kcache", "fastio", "cl", "graph", "auto"), "train": ("cl", "graphtrain")}
+
+
+def resolve_opt(spec, kind="infer"):
+    """Opt spec -> flag list. Tokens: default (the stack for kind), none/empty (nothing), -flag (opt out), any other flag."""
+    out = []
+    for t in [x.strip() for x in (spec or "").split(",") if x.strip()]:
+        if t == "default":
+            out += [o for o in DEFAULT_OPT[kind] if o not in out]
+        elif t == "none":
+            out = []
+        elif t.startswith("-"):
+            out = [o for o in out if o != t[1:]]
+        elif t not in out:
+            out.append(t)
+    return out
+
+
+def apply_opts(model, spec, kind="infer"):
+    """Apply resolve_opt(spec, kind); default-stack flags the model can't use (non-Verlet graphtrain, multilevel cl) are skipped."""
+    explicit = set(x.strip() for x in (spec or "").split(","))
+    for o in resolve_opt(spec, kind):
+        if o not in explicit and not _opt_ok(model, o):
+            continue
+        apply_opt(model, o)
+    return model
+
+
+def _opt_ok(model, name):
+    if type(model) is not ScatterField:
+        return False
+    return name != "graphtrain" or model.verlet
 
 
 def apply_opt(model, name):

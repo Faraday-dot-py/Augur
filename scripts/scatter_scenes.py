@@ -570,8 +570,7 @@ def run_train(args, dev):
     dt = BOX_DT if args.scene == "bounce" else 0.1
     model = build_model(args.model, dt, dev, args.init)
     model.train()
-    for o in [x for x in args.opt.split(",") if x]:
-        sf.apply_opt(model, o)
+    sf.apply_opts(model, args.opt, "train")
     if args.scene == "bounce" and args.init in (None, "none"):
         pass
     data = make_train_data(args.scene, args.train, args.steps, TRAIN_SEED, dev)
@@ -598,7 +597,7 @@ def main():
     ap.add_argument("--ckpt", default="checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt")
     ap.add_argument("--init", default="checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt")
     ap.add_argument("--tag", default="zeroshot")
-    ap.add_argument("--opt", default="")
+    ap.add_argument("--opt", default="default")
     ap.add_argument("--budget", type=float, default=900.0)
     ap.add_argument("--train", type=int, default=600)
     ap.add_argument("--steps", type=int, default=80)
@@ -608,7 +607,7 @@ def main():
     ap.add_argument("--lr", type=float, default=5e-4)
     ap.add_argument("--log-every", type=int, default=100)
     ap.add_argument("--loss-cap", type=float, default=0.0)
-    ap.add_argument("--eval-opt", default="kcache,fastio")
+    ap.add_argument("--eval-opt", default="default")
     ap.add_argument("--device", default="cuda")
     args = ap.parse_args()
     dev = torch.device(args.device)
@@ -619,8 +618,7 @@ def main():
         model = build_model(args.model, dt, dev, args.ckpt)
     else:
         model, args.ckpt = run_train(args, dev)
-    for o in [x for x in args.eval_opt.split(",") if x]:
-        sf.apply_opt(model, o)
+    sf.apply_opts(model, args.eval_opt)
     if args.mode == "train":
         return
     for sc in scenes:
