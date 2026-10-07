@@ -99,6 +99,8 @@ def main():
                 fd = dyn.force(p0, v0, mass, mask, dyn.init_field(1, dev)[0])[0]
                 cap = gm._cap_now
                 occ = int(gm.cell_max_occ)
+                a_cap = gm.pp_acc_cell(p0, mass, mask, cap=cap)
+                print(f"PPCAP {tag} N {n}: cap {cap} max|a_celldyn-a_cellcap| {(a_dyn - a_cap).abs().max().item():.3e}, max|a| {a_dyn.abs().max().item():.3e}", flush=True)
                 msg = f"CELLGRAPH {tag} N {n}: cap {cap} max_occ {occ} overflow {occ > cap}, max|a_celldyn-a_cellgraph| {(fd - fg).abs().max().item():.3e}"
                 if fr is not None:
                     msg += f", max|a_eager-a_cellgraph| {(fr - fg).abs().max().item():.3e}, max|a| {fr.abs().max().item():.3e}"
