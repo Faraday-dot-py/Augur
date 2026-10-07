@@ -81,6 +81,41 @@ def build(cfg, name, dt):
     return sf.ScatterField(extent=cfg["extent"], dt=dt, in_scale=cfg["in_scale"], **kw)
 
 
+def detach_state(s):
+    if isinstance(s, tuple):
+        return tuple(detach_state(x) for x in s)
+    return None if s is None else s.detach()
+
+
+def conserved(pos, vel, m, mk, eps):
+    mm = m * mk
+    K = 0.5 * (mm * (vel ** 2).sum(-1)).sum(-1)
+    E = sf.energy(pos, vel, m, mk, eps)
+    L = sf.ang_momentum(pos, vel, m, mk)
+    com = (mm[..., None] * pos).sum(-2) / mm.sum(-1, keepdim=True)
+    r_rms = ((((pos - com[:, None]) ** 2).sum(-1) * mm).sum(-1) / mm.sum(-1)).sqrt()
+    return E, L, K + (K - E).abs(), r_rms * (2 * mm.sum(-1) * K).sqrt()
+
+
+def long_penalty(model, pos, vel, m, mk, field, args):
+    """Soft dE / dL penalties on the model's own free rollout continued past the supervised window: args.long_windows windows of args.long_k
+    ticks, state detached between windows (truncated BPTT), no truth targets (target drift 0). Backprops per window; returns mean |dE|/scale, |dL|/Lscale."""
+    pos, vel, field = detach_state(pos), detach_state(vel), detach_state(field)
+    de_tot = dl_tot = 0.0
+    for _ in range(args.long_windows):
+        E0, L0, es, ls = [x.detach() for x in conserved(pos, vel, m, mk, args.eps)]
+        for _ in range(args.long_k):
+            pos, vel, _, field, _ = sf._step_m(model, pos, vel, m, mk, field)
+        E1, L1, _, _ = conserved(pos, vel, m, mk, args.eps)
+        de = ((E1 - E0).abs() / es.clamp_min(1e-9)).mean()
+        dl = ((L1 - L0).abs() / ls.clamp_min(1e-9)).mean()
+        (args.lam_e * de + args.lam_l * dl).backward()
+        de_tot += float(de) / args.long_windows
+        dl_tot += float(dl) / args.long_windows
+        pos, vel, field = detach_state(pos), detach_state(vel), detach_state(field)
+    return de_tot, dl_tot
+
+
 def train(model, tensors, args, ckpt_path, log):
     P, V, M, mask = [t.float() for t in tensors]
     S = P.shape[0]
@@ -129,7 +164,9 @@ def train(model, tensors, args, ckpt_path, log):
         loss = lp + 0.1 * lv + lm
         opt.zero_grad()
         loss.backward()
-        gn = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        if args.long_windows > 0 and torch.isfinite(loss):
+            pen = long_penalty(model, pos, vel, m, mk, field, args)
+        gn =torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         cap = getattr(args, 'loss_cap', 0.0)
         if torch.isfinite(loss) and torch.isfinite(gn) and (cap <= 0 or loss.item() < cap):
             opt.step()
@@ -138,7 +175,8 @@ def train(model, tensors, args, ckpt_path, log):
             skipped += 1
             log(f"it {it} non-finite loss/grad, step skipped ({skipped} total)")
         if it % args.log_every == 0:
-            log(f"it {it} k {k} loss {loss.item():.6f} t {time.time() - t_start:.0f}s")
+            extra = f" long dE {pen[0]:.4g} dL {pen[1]:.4g}" if args.long_windows > 0 and torch.isfinite(loss) else ""
+            log(f"it {it} k {k} loss {loss.item():.6f} t {time.time() - t_start:.0f}s" + extra)
             if all(torch.isfinite(p).all() for p in model.parameters()):
                 torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, ckpt_path)
                 if it % 5000 == 0:
@@ -230,6 +268,10 @@ def main():
     ap.add_argument("--batch", type=int, default=32)
     ap.add_argument("--k-start", type=int, default=4)
     ap.add_argument("--k-end", type=int, default=20)
+    ap.add_argument("--long-windows", type=int, default=0, help="soft dE/dL penalty on this many extra free-rollout windows after the supervised unroll")
+    ap.add_argument("--long-k", type=int, default=20)
+    ap.add_argument("--lam-e", type=float, default=0.1)
+    ap.add_argument("--lam-l", type=float, default=0.1)
     ap.add_argument("--lr", type=float, default=1e-3)
     ap.add_argument("--dt", type=float, default=0.1)
     ap.add_argument("--eps", type=float, default=0.5)

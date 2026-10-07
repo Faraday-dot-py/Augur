@@ -32,6 +32,9 @@ REGIMES = ("two_body", "expB", "bh300")
 TIMING_KEYS = REGIMES + ("expB_batch1_n100",)
 ACC_TOL = 0.15
 ACC_ATOL = 1e-5
+CONS_STEPS = 1000
+CONS_REGIMES = ("nr100", "bh300")
+CONS_TOL = 0.25
 TIME_TOL = 0.05
 MEM_TOL = 0.10
 
@@ -74,16 +77,73 @@ def tick_values(xs, offset):
     return {str(k): float(xs[k - offset]) for k in TICKS}
 
 
+def state_diag(P, V, M, mask, eps, extent):
+    """P, V (S,N,2) one tick, padded scenes. Median over scenes of bound fraction (K_i+Phi_i<0), virial 2K/|U|, fraction outside the grid."""
+    mm = M * mask
+    d = P[:, None, :, :] - P[:, :, None, :]
+    inv = ((d ** 2).sum(-1) + eps ** 2).rsqrt()
+    inv = inv * (1 - torch.eye(P.shape[1], device=P.device, dtype=P.dtype))[None] * mm[:, None, :]
+    pot = -inv.sum(-1)
+    ke = 0.5 * (V ** 2).sum(-1)
+    K = (mm * ke).sum(1)
+    U = 0.5 * (mm * pot).sum(1)
+    cnt = mask.sum(1)
+    return {"bound": float((((ke + pot) < 0).double() * mask).sum(1).div(cnt).median()),
+            "vir": float((2 * K / U.abs().clamp_min(1e-12)).median()),
+            "outgrid": float(((P.abs() > extent / 2).any(-1).double() * mask).sum(1).div(cnt).median())}
+
+
 def metrics_ab(model, data, dev, eps):
     P, V, M, mask = sf.to_tensors(data, dev)
     Pm, Vm = sf.rollout(model, P[:, 0].float(), V[:, 0].float(), M.float(), mask.float(), STEPS)
     m = sf.traj_metrics(Pm.double(), Vm.double(), P, V, M, mask, eps)
     out = {"err": tick_values(m["err"], 1)}
-    for tag in ("model", "true"):
+    for tag, PP, VV in (("model", Pm.double(), Vm.double()), ("true", P, V)):
         out[f"dE_rel_{tag}"] = float(m[f"energy_drift_rel_{tag}"][STEPS])
         out[f"dP_{tag}"] = float(m[f"mom_drift_{tag}"][STEPS])
         out[f"dL_rel_{tag}"] = float(m[f"angmom_drift_rel_{tag}"][STEPS])
+        for k, v in state_diag(PP[:, STEPS], VV[:, STEPS], M, mask, eps, model.extent).items():
+            out[f"{k}_{tag}"] = v
     return out, (P, M, mask)
+
+
+def conservation_rows(model, dev, args):
+    """Standing long-horizon rows (CONS_STEPS ticks): median over scenes of |dE|/(K0+|U0|), |dL|/Lscale, |dP|, bound fraction, virial, outside-grid fraction,
+    max |v|/c and fraction with |v|>=c (bh only), model and exact-sim truth (4 substeps), regimes from scatter_conservation."""
+    from scripts import scatter_conservation as sc
+
+    out = {}
+    for name in CONS_REGIMES:
+        kind, n, per = sc.REGIMES[name]
+        pos0, vel0, seeds = sc.make_scenes(kind, n, per)
+        P0 = torch.tensor(pos0, device=dev)
+        V0 = torch.tensor(vel0, device=dev)
+        rel = kind == "bh"
+        r0 = (P0 - P0.mean(1, keepdim=True)).norm(dim=-1).pow(2).mean(1).sqrt()
+        recs = {}
+        for tag in ("model", "true"):
+            rec = sc.Recorder(rel, args.eps, model.extent, r0, CONS_STEPS, len(seeds), dev, args.dt)
+            if tag == "model":
+                sc.roll_model(model, P0, V0, rel, CONS_STEPS, rec, None, args.dt)
+            else:
+                sc.roll_truth(P0, V0, rel, CONS_STEPS, 4, args.eps, rec, None, args.dt)
+            recs[tag] = rec.rows
+        res = {}
+        for tag, r in recs.items():
+            K0, U0 = r["K"][0], r["U"][0]
+            lsc = r0 * torch.sqrt(2 * n * K0.clamp_min(1e-12))
+            t = CONS_STEPS
+            res[tag] = {"dE": float(((r["E"][t] - r["E"][0]).abs() / (K0 + U0.abs())).median()),
+                        "dL": float(((r["L"][t] - r["L"][0]).abs() / lsc).median()), "dP": float((r["P"][t] - r["P"][0]).abs().median()),
+                        "bound": float(r["bound"][t].median()), "vir": float(r["vir"][t].median()), "outgrid": float(r["outgrid"][t].median()),
+                        "vmax_over_c": float(r["vmax"].amax() / sc.C) if rel else None, "frac_ge_c": float(r["fracge"].amax()) if rel else None,
+                        "finite": float(r["finite"].min())}
+        res["bound_gap"] = abs(res["model"]["bound"] - res["true"]["bound"])
+        res["vir_gap"] = abs(float(np.log(max(res["model"]["vir"], 1e-9) / max(res["true"]["vir"], 1e-9))))
+        out[name] = res
+        print(f"cons {name} {CONS_STEPS}t dE {res['model']['dE']:.4g} (true {res['true']['dE']:.4g}) dL {res['model']['dL']:.4g} bound {res['model']['bound']:.3f}/{res['true']['bound']:.3f} "
+              f"vir {res['model']['vir']:.3g}/{res['true']['vir']:.3g} outgrid {res['model']['outgrid']:.3f}", flush=True)
+    return out
 
 
 def bh_scene(seed):
@@ -108,11 +168,14 @@ def bh_rollout(model, pos0, vel0, dev, dt):
     ps, vs = [pos[0]], [speed(mom, c)[0]]
     with torch.no_grad():
         a, field = model.force(pos, speed(mom, c), mass, mask, field)
+        sub = getattr(model, "substeps", 1)
+        h = dt / sub
         for _ in range(STEPS):
-            mom = mom + 0.5 * dt * a
-            pos = pos + dt * speed(mom, c)
-            a, field = model.force(pos, speed(mom, c), mass, mask, field)
-            mom = mom + 0.5 * dt * a
+            for _ in range(sub):
+                mom = mom + 0.5 * h * a
+                pos = pos + h * speed(mom, c)
+                a, field = model.force(pos, speed(mom, c), mass, mask, field)
+                mom = mom + 0.5 * h * a
             ps.append(pos[0])
             vs.append(speed(mom, c)[0])
     return torch.stack(ps), torch.stack(vs)
@@ -195,6 +258,8 @@ def run(args):
     a1 = (P1[:, 0].float(), V1[:, 0].float(), M1.float(), k1.float())
     res["timing"]["expB_batch1_n100"] = timed(lambda: sf.rollout(model, *a1, STEPS), STEPS, dev)
     res["timing"]["expB_batch1_n100"].update(batch=1, n_max=100)
+    if not args.no_cons:
+        res["conservation"] = conservation_rows(model, dev, args)
     for k, v in res["timing"].items():
         print(f"timing {k}: {v['tick_ms']:.3f} ms/tick, peak +{v['peak_mem_mb']:.1f} MB (batch {v['batch']}, N {v['n_max']})", flush=True)
     json.dump(res, open(args.out, "w"), indent=1)
@@ -214,6 +279,21 @@ def compare(args):
     for reg in REGIMES:
         for k in ("5", "10", "20"):
             check(f"{reg} err@{k}", base["regimes"][reg]["mean"]["err"][k], cand["regimes"][reg]["mean"]["err"][k], ACC_TOL, ACC_ATOL)
+    for reg in REGIMES:
+        for k, atol in (("dE_rel_model", 1e-4), ("dL_rel_model", 1e-3), ("dP_model", 1e-6)):
+            if k in base["regimes"][reg]["mean"] and k in cand["regimes"][reg]["mean"]:
+                check(f"{reg} {k}@100", base["regimes"][reg]["mean"][k], cand["regimes"][reg]["mean"][k], CONS_TOL, atol)
+    for reg, bc in base.get("conservation", {}).items():
+        cc = cand.get("conservation", {}).get(reg)
+        if cc is None:
+            continue
+        for k, b, c, atol in (("dE", bc["model"]["dE"], cc["model"]["dE"], 1e-3), ("dL", bc["model"]["dL"], cc["model"]["dL"], 1e-2),
+                              ("dP", bc["model"]["dP"], cc["model"]["dP"], 1e-4), ("bound_gap", bc["bound_gap"], cc["bound_gap"], 0.02),
+                              ("vir_gap", bc["vir_gap"], cc["vir_gap"], 0.05), ("outgrid", bc["model"]["outgrid"], cc["model"]["outgrid"], 0.01)):
+            check(f"cons {reg}@{CONS_STEPS} {k}", b, c, CONS_TOL, atol)
+        if cc["model"]["frac_ge_c"] is not None:
+            check(f"cons {reg} frac|v|>=c", 0.0, cc["model"]["frac_ge_c"], 0.0)
+        check(f"cons {reg} nonfinite", 0.0, 1.0 - cc["model"]["finite"], 0.0)
     for k in TIMING_KEYS:
         check(f"{k} tick_ms", base["timing"][k]["tick_ms"], cand["timing"][k]["tick_ms"], TIME_TOL)
         check(f"{k} peak_mem_mb", base["timing"][k]["peak_mem_mb"], cand["timing"][k]["peak_mem_mb"], MEM_TOL)
@@ -238,6 +318,7 @@ def main():
     r.add_argument("--dt", type=float, default=0.1)
     r.add_argument("--eps", type=float, default=0.5)
     r.add_argument("--opt", default="")
+    r.add_argument("--no-cons", action="store_true")
     c = sub.add_parser("compare")
     c.add_argument("--baseline", required=True)
     c.add_argument("--candidate", required=True)

@@ -1,0 +1,16 @@
+# Scatter conservation fixes (decision #5, 2026-10-06): individual tests vs frozen Exp E
+
+Branch `worktree-agent-afa043b23751b5aec`. Baseline: Exp E `E_ms_kp_pot_v_g128.pt` (60769 it), unchanged weights; harness baseline `results/baseline_v2_regress.json` (job 3348, re-run of the frozen protocol with the new conservation rows; err rows reproduce job 3296 to float noise, bh300 dE@100 moves .0478 -> .0391 between identical-weight runs, i.e. chaos/GPU nondeterminism, so tick-100 BH dE is noisy at ~20%). Long-horizon baseline: `results/conservation/` (job 3323). Private Polaris copy `~/augur-fix` (code) with checkpoints symlinked; one GPU job at a time.
+
+Principles applied: fix 1 REJECTED (no hard-coded conservative/central/antisymmetric force). Every fix is an opt-in flag, one change vs the baseline per run, no bundled retrain; combined run only afterwards. Fix 3 is a soft penalty only.
+
+Harness: `scatter_regress.py run` now also emits (a) bound fraction, virial, outside-grid fraction at tick 100 (A/B regimes), (b) a `conservation` block: 1000-tick rollouts of nr100 and bh300 (4 scenes each, seeds 9100/9200/9300/4738) with model and exact-sim truth: |dE|/(K0+|U0|), |dL|/Lscale, |dP|, bound fraction, virial, outside-grid, max |v|/c and fraction |v|>=c (BH), finiteness. `compare` gates (not-worse, x1.25 + atol): dE/dL/dP at tick 100, and at 1000: dE, dL, dP, bound-fraction gap vs truth, |log virial ratio| vs truth, outside-grid; hard rows: no |v|>=c, no non-finite. Run with `scripts/polaris_scatter_fix.sh` (TAG, OPT, BASE).
+
+## Fix 2: far-field multipole outside the grid + edge taper (flags `far`, `farquad`, `far@<band>`)
+
+Implementation: `ScatterField.far_acc` = softened-gravity field of all other tokens about their centre of mass (monopole; `farquad` adds the traceless-quadrupole term, self excluded exactly via moment subtraction), O(N). `edge_weight` = cosine taper of the mesh acceleration from 1 at 75% of the half-extent (Linf) to 0 at the edge (band .25); a_tok = a_mesh*w + a_far*(1-w), pp term and momfix unchanged. No parameters added; checkpoints load unchanged; flag off = bitwise identical (tested). Gravity law with G=1, eps=.5 is a fixed prior here (the user-approved "analytic" variant); a learned residual variant was not built (needs training; see open decisions).
+Unit test (`scatter_fix_tests.py`, job 3348): isolated test token vs 60-body cluster (sigma 4): relative error monopole / quadrupole = .128/.026 (R=20), .053/.005 (30), .029/.0018 (40), .012/.0005 (60).
+
+Predictions (before runs 3354 far, 3355 farquad):
+- Two-body / expB 100-tick err@5/10/20: unchanged within noise (scenes mostly inside 24 units); bh300 (sigma 8, clip 29) has bodies in the taper band at start, so err@5-20 may move by up to ~15% either way (risk: gate FAIL on bh300 err).
+- Long horizon (conservation 10000 ticks): N>=100 and BH: expulsion fixed, bound fraction at 1e4 rises from ~0-.02 to >.3 (truth .6-.8), virial from 100-900 to <20, median radius from 2000-9000 to <1000. N<=10 (nr2, nr10, bh10): confinement near origin (x4 force at R=31) removed, so radius rises toward truth. dE at 1e4 stays O(1): the internal learned-force error dominates, far-field cannot fix it. Quadrupole: small additional gain over monopole only for extended systems (nr300, bh1000).

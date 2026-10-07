@@ -122,11 +122,14 @@ def roll_model(model, pos0, vel0, rel, steps, rec, snap_idx, dt):
             field = model.init_field(B, dev)[0]
             a, field = model.force(pos, speed(mom, C), mass, mask, field)
             rec(0, pos, speed(mom, C), mom, snap_idx)
+            sub = getattr(model, "substeps", 1)
+            h = dt / sub
             for t in range(1, steps + 1):
-                mom = mom + 0.5 * dt * a
-                pos = pos + dt * speed(mom, C)
-                a, field = model.force(pos, speed(mom, C), mass, mask, field)
-                mom = mom + 0.5 * dt * a
+                for _ in range(sub):
+                    mom = mom + 0.5 * h * a
+                    pos = pos + h * speed(mom, C)
+                    a, field = model.force(pos, speed(mom, C), mass, mask, field)
+                    mom = mom + 0.5 * h * a
                 rec(t, pos, speed(mom, C), mom, snap_idx)
                 if t % 250 == 0 and not bool(torch.isfinite(pos).any()):
                     return t
