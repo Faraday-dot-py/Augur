@@ -43,3 +43,7 @@ Best choice: graph stack for N<=~4000, cell stack above. B=48 N<=100: 4.7-4.95 -
 - Remaining inference B=1 cost at N<=1000 is GPU (UNet ~0.4 ms); more needs fused kernels (no nvcc/Triton on Polaris).
 - cell + graph needs a static candidate cap (avoid host sync); dense cores (BH collapse) make 9*maxocc candidates large.
 - bf16/fp16 training needs loss scaling and a retrain-based accuracy check; not done.
+
+## Decision #3 apply (branch worktree-agent-a8d2b3989212e2233)
+Defaults: `--opt default` = infer `kcache,fastio,cl,graph,auto`, train `cl,graphtrain`; `none` = eager, `-flag` opts out (sf.resolve_opt/apply_opts); old checkpoints load unchanged (flags are runtime-only). `auto` pair term: N<=512 dense, 513..49999 cell, >=5e4 adapt (threshold sf.adapt_n, from job 3326). `cell` under `graph` uses a static candidate cap (pow2 >= 2x max occupancy at capture, device-side cell_max_occ for overflow check).
+Jobs (one GPU at a time): 3352 default-stack gate (done: regress OVERALL PASS vs baseline, bh300 2.48->0.71 ms, train B1 134->61 ms/it, auto infer 1e5 193 ms vs cell 254), 3375 cell-graph parity + auto/cell bench (predict: cap parity <1e-6 when no overflow, N=1e4 graph-cell ~<=2.4 ms), 3376 torch.compile/Triton probe (predict: stock fails on missing Python.h; header-path variants may work; speedup over CUDA graph unlikely, <1.3x).
