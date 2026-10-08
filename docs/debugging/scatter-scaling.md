@@ -109,3 +109,22 @@ Reference: smooth blob collapses to a very bright compact core with a faint spec
 - Zero-shot N scaling holds to ~1e3 (collapse) or ~5e3 (warm) bodies per 64-unit box. Beyond that needs training on dense/large clusters (scene agent) or an N-aware input normalisation; not tested here (no fine-tune).
 - World rescaling is free only at fixed cell size 0.5 and scenes up to ~16-32 units wide; otherwise retrain or make the kernel/pair terms scale-free (express r in cell units, train with random h; test kmlp extrapolation at r>40).
 - Agent 1: make the cell-list pair term density-adaptive.
+
+## Zero-shot validity bounds of Exp E (decision #4.1)
+
+For the frozen Exp E checkpoint (`ms_kp_pot_v_g128`: G 128, extent 64, h 0.5, eps 0.5, unit masses, trained N 10-200 box + cold clusters to N 300, sigma 5-10). Criterion: err@20 / const-velocity err@20 < 0.1 unless stated; "ok" is measured, "untested" is not. Numbers from sections 1-4 above and `scatter-ood.md`.
+
+| axis | zero-shot valid | breaks |
+|---|---|---|
+| particle count (64-unit box, h 0.5) | N <= ~1e3 cold collapse, ~5.6e3 warm (vfac 1) | cold ratio@20 .39 at 3e3, 1.7 at 1e4; at N = 1e5 headline is err@5 (ratio .93 cold, err@20 saturates at the box) |
+| cell size h (extent 64) | h = 0.5 only (G 128); h .7 tick-1 force err .17, h 1 .38 | h .25 25x worse, h .125 fails, h 1-2 poor |
+| extent at fixed h = 0.5 | any (zero-padded periphery; D sweep identical to 4 digits 64..512), >= ~48 | extent 32 clips the cluster |
+| scene width at fixed h | cluster sigma <= ~16 units (tick-1 force err .14 at sigma 16) | sigma 32 .57, sigma 64 wrong sign of the far field |
+| core density | sigma >= 5 (trained min), Plummer a >= 2 | sigma <= 2: 37x, Plummer a .25: 107x |
+| mass | equal-mass scale .1-1 (3x at 3), mass ratio <= 3:1, dominant body <= 3x | ratio >= 10:1 (5-50x), equal-mass scale >= 10, dominant >= 30 |
+| softening | eps = 0.5 only (sharp optimum; 2x off is 10x worse) | any other eps |
+| boundary | bodies inside +-32 | cluster offset > 16-24: coasting-level error |
+| dt | 0.25x-2x of 0.1 | 4x |
+| not failures | velocity incl. zero, c, impact parameter, precision (bf16 +2%) | |
+
+Fixes for each break are the per-fix runs in `scatter-review-4-6.md` (cell units + random h, large-N fine-tune, mass/eps/dense fine-tunes, far-field monopole deferred to the conservation branch).
