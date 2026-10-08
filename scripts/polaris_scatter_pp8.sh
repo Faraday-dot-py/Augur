@@ -30,7 +30,7 @@ case "$MODE" in
   frozen) python scripts/scatter_prior_pp8.py --models ctl --eval-ckpt "$EBASE" --tag _frozenE --out results/scatter_pp8
           python scripts/scatter_regress.py run --ckpt "$EBASE" --out results/scatter_pp8/regress_frozenE.json
           python scripts/scatter_regress.py compare --baseline results/scatter_baseline.json --candidate results/scatter_pp8/regress_frozenE.json || true ;;
-  regress) for m in $MODELS; do
+  regress) for m in ${MODELS//,/ }; do
              V=ms_kp_pot_v_g128
              case "$m" in prior) V=ms_kp_pot_v_g128_prior;; pp8) V=ms_kp_pot_v_g128_pp8;; pair) V=ms_kp_pot_v_g128_prior_pp8;; cf) V=cf;; esac
              python scripts/scatter_regress.py run --ckpt "checkpoints/scatter_pp8/$m.pt" --variant "$V" --out "results/scatter_pp8/regress_${m}_${ITERS}.json"

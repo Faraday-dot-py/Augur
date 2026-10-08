@@ -36,3 +36,19 @@ Scale (force rel error, trained pair vs trained ctl; floor = untrained pair): ga
 - Attribution: the damage is in fix 1 (prior kernel; prior alone worst); fix 2 (pp8) is benign; the pair inherits fix 1's harm, partly offset by fix 2. Both fixes are individually non-beneficial for rollout at 4000 it; no synergy.
 - Scalability: truncation prediction confirmed; force error rises with N as predicted for the untrained floor (0.33 at gauss_1000), trained models flatten it (0.02-0.06).
 - Caveat: single seed, 4000 it only (a longer-trained prior may behave differently; frozen E at 60k it is behind a 4000-it ctl on every metric, so iteration count dominates comparisons). Initial `MODE=all` regress stage failed (MODELS comma-list bug in wrapper loop); re-run separately as job 3401. cf harness run failed (harness `model.force` assignment on an nn.Module).
+
+## Protocol reconciliation (job 3408, results/scatter_pp8/protocol_rescore.json)
+The 0.0019 (gap doc, decision #8) vs 0.0243 (this ablation) gap is NOT an eval-protocol difference: every checkpoint scores the same on Exp B eval (10-100 bodies, 48 scenes, seeds 9000/12000) and on Exp E `ab` (10-200). The difference is the TRAINING set: gap run trained on Exp B (10-100 body scale-init), ablation on Exp E (half 80-300 body clusters). The gap-run SFx `sf_prior_pp8` checkpoint loads into the landed `ms_kp_pot_v_g128_prior_pp8` class and reproduces to 4 digits (same architecture). err@20 / err@100, mean of seeds 9000+12000:
+
+| model (train set) | eval B | eval E ab | eval E cl |
+|---|---|---|---|
+| CF (B) | .0026 / .289 | .0027 / .285 | .0185 / 3.70 |
+| sf_prior_pp8 (B) | .0020 / .244 | .0022 / .311 | .463 / 6.54 |
+| CF (E) | .0192 / 1.10 | .0191 / 1.11 | .0432 / 4.14 |
+| ctl (E) | .0202 / 1.26 | .0204 / 1.37 | .0489 / 4.28 |
+| pp8 (E) | .0225 / 1.27 | .0243 / 1.38 | .0554 / 4.45 |
+| frozen E | .0243 / 1.37 | .0242 / 1.42 | .0524 / 4.21 |
+| pair (E) | .0332 / 1.57 | .0352 / 1.75 | .0762 / 4.77 |
+| prior (E) | .0427 / 1.85 | .0419 / 1.96 | .0878 / 4.85 |
+
+Decision #8's win is in-distribution (B-trained, B/ab eval); the same bundle on cluster scenes is 25x worse than CF (.463 vs .0185). Also fixed: wrapper `regress` loop on comma lists, and `scatter_regress.build_model` cf (now `CFHarness` adapter).
