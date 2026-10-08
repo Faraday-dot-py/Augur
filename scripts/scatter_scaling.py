@@ -123,6 +123,7 @@ def timed(model, pos0, vel0, steps, reps, dev):
 
 def point(model, n, sigma, vfac, grid, extent, dev, steps=100, time_it=True, label=None):
     ops.retarget(model, grid, extent)
+    ticks = [k for k in TICKS if k <= steps]
     errs, cverrs, per = [], [], []
     res = {"n": n, "sigma": sigma, "vfac": vfac, "grid": grid, "extent": extent, "h": extent / grid, "label": label}
     first = None
@@ -156,8 +157,8 @@ def point(model, n, sigma, vfac, grid, extent, dev, steps=100, time_it=True, lab
         em = ops.exact_energy(Pm[-1], Vm[-1], EPS) if bool(fin[-1]) else float("nan")
         et = ops.exact_energy(Pt[-1], Vt[-1], EPS)
         lim = extent / 2
-        d = {"seed": seed, "rep": rep, "err": {str(k): float(err[k]) for k in TICKS}, "constvel": {str(k): float(cv[k]) for k in TICKS},
-             "first_nonfinite": int(bad[0]) if len(bad) else None, "selfnoise": {str(k): float(selferr[k]) for k in TICKS},
+        d = {"seed": seed, "rep": rep, "err": {str(k): float(err[k]) for k in ticks}, "constvel": {str(k): float(cv[k]) for k in ticks},
+             "first_nonfinite": int(bad[0]) if len(bad) else None, "selfnoise": {str(k): float(selferr[k]) for k in ticks},
              "dE_rel_model": abs(em - e0) / max(abs(e0), 1e-9), "dE_rel_truth": abs(et - e0) / max(abs(e0), 1e-9),
              "dP_model": float(pm[-1] - pm[0]), "dP_truth": float(pt[-1] - pt[0]),
              "dL_rel_model": float(abs(Lm[-1] - Lm[0]) / Lm[0].abs().clamp_min(1e-3)), "dL_rel_truth": float(abs(Lt[-1] - Lt[0]) / Lt[0].abs().clamp_min(1e-3)),
@@ -170,12 +171,12 @@ def point(model, n, sigma, vfac, grid, extent, dev, steps=100, time_it=True, lab
         if first is None:
             first = (pos0, vel0)
         del Pt, Vt, Pm, Vm
-        print(f"  n={n} grid={grid} L={extent} seed={seed}/{rep} err@5/20/100 {d['err']['5']:.4g} {d['err']['20']:.4g} {d['err']['100']:.4g} "
+        print(f"  n={n} grid={grid} L={extent} seed={seed}/{rep} err@5/20/last {d['err']['5']:.4g} {d['err']['20']:.4g} {d['err'][str(ticks[-1])]:.4g} "
               f"cv@20 {d['constvel']['20']:.4g} nonfinite {d['first_nonfinite']} truth {t_truth:.1f}s", flush=True)
     res["per_scene"] = per
-    res["err"] = {str(k): float(np.mean([d["err"][str(k)] for d in per])) for k in TICKS}
-    res["selfnoise"] = {str(k): float(np.mean([d["selfnoise"][str(k)] for d in per])) for k in TICKS}
-    res["constvel"] = {str(k): float(np.mean([d["constvel"][str(k)] for d in per])) for k in TICKS}
+    res["err"] = {str(k): float(np.mean([d["err"][str(k)] for d in per])) for k in ticks}
+    res["selfnoise"] = {str(k): float(np.mean([d["selfnoise"][str(k)] for d in per])) for k in ticks}
+    res["constvel"] = {str(k): float(np.mean([d["constvel"][str(k)] for d in per])) for k in ticks}
     for k in ("dE_rel_model", "dE_rel_truth", "dP_model", "dP_truth", "dL_rel_model", "dL_rel_truth", "frac_out_model", "frac_out_truth", "rms_r_model", "rms_r_truth"):
         res[k] = float(np.mean([d[k] for d in per]))
     nf = [d["first_nonfinite"] for d in per if d["first_nonfinite"] is not None]

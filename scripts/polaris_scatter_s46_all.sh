@@ -22,7 +22,7 @@ run() {
   if [ -f "results/${name}_regress.json" ]; then echo "skip $name (done)"; return; fi
   echo "=== $name $(date +%T)"
   ck="checkpoints/scatter_s46/$name.pt"
-  python scripts/train_scatter_ft.py --fix "$fix" --variant "$variant" --init-ckpt "$init" --name "$name" --time-budget 1500 || echo "TRAIN $name FAILED"
+  if [ "$fix" = none ]; then ck="$init"; else python scripts/train_scatter_ft.py --fix "$fix" --variant "$variant" --init-ckpt "$init" --name "$name" --time-budget 1500 || echo "TRAIN $name FAILED"; fi
   python scripts/scatter_regress.py run --ckpt "$ck" --variant "$variant" --out "results/${name}_regress.json" --battery || echo "REGRESS $name FAILED"
   python scripts/scatter_regress.py compare --baseline results/scatter_baseline.json --candidate "results/${name}_regress.json" || true
   for st in $stress; do
@@ -34,6 +34,7 @@ run() {
   echo "DONE $name $(date +%T)"
 }
 
+run E_base none $B "$E" "ood:ref,mass_ratio_2body"
 run ctrl ctrl $B "$E" "$OODM,density_sigma,density_plummer,softening_eps r46 n46"
 run cu cu ${B}_cu "$E" "r46 n46"
 run largen largen $B "$E" "n46 n46big"
