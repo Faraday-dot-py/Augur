@@ -1,0 +1,1567 @@
+name, utilization.gpu [%], memory.used [MiB]
+NVIDIA H200 NVL, 0 %, 0 MiB
+=== ctrl_full fix ctrl variant ms_kp_pot_v_g128_cu_eps_mnorm params 260963 init random
+group base: scenes 1500 N 300 weight 1.0 batch 16
+data generation 46s
+it 0 k 4 loss 0.331645 [base:0.33165] t 0s
+it 50 k 4 loss 0.221320 [base:0.17653] t 3s
+it 100 k 4 loss 0.023822 [base:0.03283] t 6s
+it 150 k 4 loss 0.016296 [base:0.01156] t 8s
+it 200 k 4 loss 0.009828 [base:0.00607] t 11s
+it 250 k 4 loss 0.012421 [base:0.00794] t 14s
+it 300 k 4 loss 0.001460 [base:0.00438] t 16s
+it 350 k 4 loss 0.002568 [base:0.00243] t 19s
+it 400 k 4 loss 0.001212 [base:0.00202] t 22s
+it 450 k 4 loss 0.000880 [base:0.00220] t 24s
+it 500 k 4 loss 0.000838 [base:0.00217] t 27s
+it 543 base loss 5.06 non-finite or above cap, step skipped (1 total)
+it 550 k 4 loss 0.001984 [base:0.00299] t 30s
+it 552 base loss 6.1 non-finite or above cap, step skipped (2 total)
+it 600 k 4 loss 0.000840 [base:0.00134] t 32s
+it 650 k 4 loss 0.000875 [base:0.00147] t 35s
+it 700 k 4 loss 0.000601 [base:0.00139] t 38s
+it 750 k 4 loss 0.001435 [base:0.00105] t 40s
+it 800 k 4 loss 0.002059 [base:0.00124] t 43s
+it 850 k 4 loss 0.001136 [base:0.00112] t 46s
+it 900 k 4 loss 0.000388 [base:0.00087] t 48s
+it 925 base loss 5.6 non-finite or above cap, step skipped (3 total)
+it 950 k 4 loss 0.001522 [base:0.00172] t 51s
+it 1000 k 4 loss 0.002546 [base:0.00112] t 54s
+it 1050 k 4 loss 0.000567 [base:0.00123] t 56s
+it 1100 k 4 loss 0.001098 [base:0.00125] t 59s
+it 1150 k 4 loss 0.000224 [base:0.00114] t 62s
+it 1166 base loss 7.02 non-finite or above cap, step skipped (4 total)
+it 1200 k 4 loss 0.001339 [base:0.00078] t 64s
+it 1250 k 4 loss 0.000369 [base:0.00070] t 67s
+it 1300 k 4 loss 0.000806 [base:0.00111] t 70s
+it 1350 k 4 loss 0.000289 [base:0.00083] t 73s
+it 1400 k 4 loss 0.001786 [base:0.00109] t 75s
+it 1450 k 4 loss 0.001129 [base:0.00109] t 78s
+it 1500 k 4 loss 0.000519 [base:0.00116] t 81s
+it 1550 k 4 loss 0.002265 [base:0.00089] t 83s
+it 1600 k 4 loss 0.000787 [base:0.00078] t 86s
+it 1650 k 4 loss 0.001417 [base:0.00077] t 89s
+it 1700 k 4 loss 0.000182 [base:0.00092] t 91s
+it 1750 k 4 loss 0.000255 [base:0.00056] t 94s
+it 1800 k 4 loss 0.000434 [base:0.00114] t 97s
+it 1850 k 4 loss 0.000827 [base:0.00095] t 99s
+it 1900 k 4 loss 0.000474 [base:0.00091] t 102s
+it 1950 k 4 loss 0.000701 [base:0.00083] t 105s
+it 2000 k 4 loss 0.000968 [base:0.00074] t 107s
+it 2050 k 4 loss 0.000755 [base:0.00079] t 110s
+it 2100 k 4 loss 0.000550 [base:0.00079] t 113s
+it 2112 base loss 6.1 non-finite or above cap, step skipped (5 total)
+it 2121 base loss 6.04 non-finite or above cap, step skipped (6 total)
+it 2150 k 4 loss 0.000070 [base:0.00071] t 115s
+it 2200 k 4 loss 0.000248 [base:0.00095] t 118s
+it 2250 k 4 loss 0.001232 [base:0.00080] t 121s
+it 2300 k 4 loss 0.002293 [base:0.00091] t 123s
+it 2350 k 4 loss 0.000809 [base:0.00073] t 126s
+it 2400 k 4 loss 0.002902 [base:0.00107] t 129s
+it 2410 base loss 5.09 non-finite or above cap, step skipped (7 total)
+it 2450 k 4 loss 0.000565 [base:0.00078] t 131s
+it 2500 k 4 loss 0.000430 [base:0.00077] t 134s
+it 2550 k 4 loss 0.001113 [base:0.00068] t 137s
+it 2600 k 4 loss 0.001149 [base:0.00091] t 139s
+it 2650 k 4 loss 0.000707 [base:0.00077] t 142s
+it 2700 k 4 loss 0.000449 [base:0.00062] t 145s
+it 2750 k 4 loss 0.000244 [base:0.00062] t 147s
+it 2800 k 4 loss 0.001583 [base:0.00073] t 150s
+it 2850 k 4 loss 0.000778 [base:0.00074] t 153s
+it 2865 base loss 8.99 non-finite or above cap, step skipped (8 total)
+it 2896 base loss 6.45 non-finite or above cap, step skipped (9 total)
+it 2900 k 4 loss 0.000824 [base:0.00088] t 155s
+it 2950 k 4 loss 0.000556 [base:0.00091] t 158s
+it 3000 k 4 loss 0.001830 [base:0.00078] t 161s
+it 3050 k 4 loss 0.001622 [base:0.00099] t 163s
+it 3100 k 4 loss 0.001036 [base:0.00073] t 166s
+it 3150 k 5 loss 0.003867 [base:0.00090] t 169s
+it 3200 k 5 loss 0.000237 [base:0.00093] t 172s
+it 3250 k 5 loss 0.000797 [base:0.00084] t 175s
+it 3300 k 5 loss 0.001123 [base:0.00117] t 179s
+it 3350 k 5 loss 0.001677 [base:0.00116] t 182s
+it 3400 k 5 loss 0.001808 [base:0.00121] t 185s
+it 3450 k 5 loss 0.001508 [base:0.00098] t 188s
+it 3500 k 5 loss 0.000845 [base:0.00092] t 191s
+it 3550 k 5 loss 0.000138 [base:0.00069] t 194s
+it 3600 k 5 loss 0.001109 [base:0.00102] t 198s
+it 3650 k 5 loss 0.002006 [base:0.00102] t 201s
+it 3700 k 5 loss 0.000283 [base:0.00089] t 204s
+it 3750 k 5 loss 0.000449 [base:0.00089] t 207s
+it 3800 k 5 loss 0.001262 [base:0.00099] t 210s
+it 3850 k 5 loss 0.001117 [base:0.00103] t 213s
+it 3900 k 5 loss 0.001388 [base:0.00101] t 217s
+it 3950 k 5 loss 0.000855 [base:0.00118] t 220s
+it 4000 k 5 loss 0.000819 [base:0.00117] t 223s
+it 4029 base loss 7.63 non-finite or above cap, step skipped (10 total)
+it 4050 k 5 loss 0.000561 [base:0.00096] t 226s
+it 4064 base loss 5.08 non-finite or above cap, step skipped (11 total)
+it 4080 base loss 7.39 non-finite or above cap, step skipped (12 total)
+it 4100 k 5 loss 0.000424 [base:0.00093] t 230s
+it 4150 k 5 loss 0.000396 [base:0.00099] t 233s
+it 4200 k 5 loss 0.000238 [base:0.00096] t 236s
+it 4250 k 5 loss 0.001160 [base:0.00084] t 239s
+it 4300 k 5 loss 0.000762 [base:0.00099] t 242s
+it 4350 k 5 loss 0.000744 [base:0.00100] t 245s
+it 4400 k 5 loss 0.001080 [base:0.00091] t 249s
+it 4450 k 5 loss 0.000111 [base:0.00082] t 252s
+it 4471 base loss 5.02 non-finite or above cap, step skipped (13 total)
+it 4500 k 5 loss 0.001190 [base:0.00115] t 255s
+it 4550 k 5 loss 0.002926 [base:0.00096] t 258s
+it 4600 k 5 loss 0.001067 [base:0.00092] t 261s
+it 4650 k 5 loss 0.000754 [base:0.00091] t 264s
+it 4700 k 5 loss 0.000449 [base:0.00084] t 268s
+it 4750 k 5 loss 0.000600 [base:0.00074] t 271s
+it 4800 k 5 loss 0.001370 [base:0.00091] t 274s
+it 4850 k 5 loss 0.001054 [base:0.00081] t 277s
+it 4900 k 5 loss 0.000329 [base:0.00099] t 280s
+it 4950 k 5 loss 0.001555 [base:0.00105] t 283s
+it 5000 k 5 loss 0.001667 [base:0.00110] t 287s
+it 5050 k 5 loss 0.000868 [base:0.00089] t 290s
+it 5100 k 5 loss 0.001136 [base:0.00107] t 293s
+it 5150 k 5 loss 0.000495 [base:0.00083] t 296s
+it 5200 k 5 loss 0.000367 [base:0.00091] t 299s
+it 5250 k 5 loss 0.000940 [base:0.00102] t 303s
+it 5300 k 5 loss 0.000610 [base:0.00090] t 306s
+it 5345 base loss 5.01 non-finite or above cap, step skipped (14 total)
+it 5350 k 5 loss 0.000282 [base:0.00095] t 309s
+it 5400 k 5 loss 0.000972 [base:0.00107] t 312s
+it 5450 k 5 loss 0.000386 [base:0.00089] t 315s
+it 5500 k 5 loss 0.000309 [base:0.00079] t 319s
+it 5550 k 5 loss 0.001526 [base:0.00086] t 322s
+it 5600 k 5 loss 0.001694 [base:0.00069] t 325s
+it 5650 k 5 loss 0.001143 [base:0.00076] t 328s
+it 5700 k 5 loss 0.001350 [base:0.00089] t 331s
+it 5750 k 5 loss 0.001264 [base:0.00089] t 334s
+it 5800 k 5 loss 0.000610 [base:0.00074] t 338s
+it 5850 k 5 loss 0.000753 [base:0.00112] t 341s
+it 5900 k 5 loss 0.000557 [base:0.00097] t 344s
+it 5950 k 5 loss 0.001414 [base:0.00119] t 347s
+it 6000 k 5 loss 0.001370 [base:0.00078] t 350s
+it 6050 k 5 loss 0.000501 [base:0.00086] t 353s
+it 6100 k 5 loss 0.001150 [base:0.00085] t 357s
+it 6150 k 5 loss 0.001356 [base:0.00119] t 360s
+it 6200 k 5 loss 0.000427 [base:0.00088] t 363s
+it 6250 k 5 loss 0.001205 [base:0.00081] t 366s
+it 6300 k 5 loss 0.002568 [base:0.00119] t 369s
+it 6350 k 5 loss 0.000719 [base:0.00073] t 372s
+it 6400 k 5 loss 0.000742 [base:0.00069] t 376s
+it 6450 k 5 loss 0.000773 [base:0.00076] t 379s
+it 6452 base loss 8.99 non-finite or above cap, step skipped (15 total)
+it 6500 k 5 loss 0.000591 [base:0.00067] t 382s
+it 6550 k 5 loss 0.000556 [base:0.00064] t 385s
+it 6600 k 5 loss 0.000203 [base:0.00066] t 388s
+it 6650 k 5 loss 0.001667 [base:0.00090] t 392s
+it 6700 k 5 loss 0.002521 [base:0.00109] t 395s
+it 6750 k 5 loss 0.000787 [base:0.00091] t 398s
+it 6800 k 5 loss 0.000924 [base:0.00060] t 401s
+it 6850 k 5 loss 0.000359 [base:0.00090] t 404s
+it 6900 k 5 loss 0.001213 [base:0.00081] t 407s
+it 6950 k 5 loss 0.002585 [base:0.00114] t 411s
+it 7000 k 5 loss 0.000286 [base:0.00083] t 414s
+it 7050 k 5 loss 0.000495 [base:0.00073] t 417s
+it 7100 k 5 loss 0.000954 [base:0.00077] t 420s
+it 7150 k 5 loss 0.000989 [base:0.00115] t 423s
+it 7200 k 5 loss 0.000478 [base:0.00071] t 427s
+it 7250 k 5 loss 0.000496 [base:0.00058] t 430s
+it 7300 k 5 loss 0.000331 [base:0.00092] t 433s
+it 7350 k 5 loss 0.000653 [base:0.00072] t 436s
+it 7400 k 5 loss 0.000810 [base:0.00077] t 439s
+it 7450 k 5 loss 0.000934 [base:0.00103] t 442s
+it 7500 k 5 loss 0.000533 [base:0.00085] t 446s
+it 7550 k 5 loss 0.000604 [base:0.00078] t 449s
+it 7600 k 5 loss 0.000708 [base:0.00077] t 452s
+it 7613 base loss 5.68 non-finite or above cap, step skipped (16 total)
+it 7650 k 5 loss 0.000707 [base:0.00084] t 455s
+it 7700 k 5 loss 0.000637 [base:0.00082] t 458s
+it 7750 k 5 loss 0.000482 [base:0.00063] t 461s
+it 7800 k 5 loss 0.001402 [base:0.00093] t 465s
+it 7850 k 5 loss 0.000162 [base:0.00073] t 468s
+it 7900 k 5 loss 0.000872 [base:0.00090] t 471s
+it 7950 k 5 loss 0.000352 [base:0.00069] t 474s
+it 8000 k 5 loss 0.000510 [base:0.00075] t 477s
+it 8050 k 5 loss 0.001056 [base:0.00084] t 481s
+it 8100 k 5 loss 0.000175 [base:0.00080] t 484s
+it 8150 k 5 loss 0.000548 [base:0.00066] t 487s
+it 8200 k 5 loss 0.000360 [base:0.00082] t 490s
+it 8250 k 5 loss 0.000195 [base:0.00052] t 493s
+it 8300 k 5 loss 0.000629 [base:0.00072] t 496s
+it 8350 k 5 loss 0.000738 [base:0.00074] t 500s
+it 8400 k 6 loss 0.000546 [base:0.00094] t 503s
+it 8450 k 6 loss 0.000740 [base:0.00097] t 507s
+it 8500 k 6 loss 0.001312 [base:0.00170] t 511s
+it 8550 k 6 loss 0.001012 [base:0.00133] t 514s
+it 8600 k 6 loss 0.001583 [base:0.00122] t 518s
+it 8650 k 6 loss 0.000941 [base:0.00129] t 522s
+it 8700 k 6 loss 0.000399 [base:0.00098] t 525s
+it 8750 k 6 loss 0.000672 [base:0.00170] t 529s
+it 8800 k 6 loss 0.001287 [base:0.00094] t 533s
+it 8850 k 6 loss 0.001107 [base:0.00123] t 536s
+it 8900 k 6 loss 0.001399 [base:0.00107] t 540s
+it 8950 k 6 loss 0.001923 [base:0.00109] t 544s
+it 8979 base loss 5.94 non-finite or above cap, step skipped (17 total)
+it 9000 k 6 loss 0.001036 [base:0.00096] t 547s
+it 9050 k 6 loss 0.001327 [base:0.00111] t 551s
+it 9100 k 6 loss 0.000473 [base:0.00097] t 555s
+it 9150 k 6 loss 0.000660 [base:0.00125] t 558s
+it 9200 k 6 loss 0.001286 [base:0.00116] t 562s
+it 9250 k 6 loss 0.001031 [base:0.00111] t 566s
+it 9300 k 6 loss 0.000987 [base:0.00104] t 570s
+it 9350 k 6 loss 0.000622 [base:0.00087] t 573s
+it 9400 k 6 loss 0.000534 [base:0.00090] t 577s
+it 9450 k 6 loss 0.001198 [base:0.00117] t 581s
+it 9500 k 6 loss 0.001223 [base:0.00112] t 584s
+it 9550 k 6 loss 0.001330 [base:0.00091] t 588s
+it 9600 k 6 loss 0.000602 [base:0.00112] t 592s
+it 9650 k 6 loss 0.000724 [base:0.00092] t 595s
+it 9697 base loss 5.06 non-finite or above cap, step skipped (18 total)
+it 9700 k 6 loss 0.000845 [base:0.00120] t 599s
+it 9750 k 6 loss 0.000542 [base:0.00080] t 603s
+it 9800 k 6 loss 0.000839 [base:0.00100] t 607s
+it 9850 k 6 loss 0.000796 [base:0.00096] t 610s
+it 9900 k 6 loss 0.000945 [base:0.00086] t 614s
+it 9950 k 6 loss 0.001046 [base:0.00102] t 618s
+it 10000 k 6 loss 0.000865 [base:0.00087] t 621s
+it 10050 k 6 loss 0.001015 [base:0.00099] t 625s
+it 10100 k 6 loss 0.000934 [base:0.00099] t 629s
+it 10150 k 6 loss 0.001771 [base:0.00121] t 632s
+it 10200 k 6 loss 0.001111 [base:0.00114] t 636s
+it 10250 k 6 loss 0.001188 [base:0.00084] t 640s
+it 10300 k 6 loss 0.000551 [base:0.00084] t 643s
+it 10350 k 6 loss 0.000690 [base:0.00093] t 647s
+it 10400 k 6 loss 0.001534 [base:0.00090] t 651s
+it 10450 k 6 loss 0.000656 [base:0.00084] t 654s
+it 10500 k 6 loss 0.000950 [base:0.00080] t 658s
+it 10550 k 6 loss 0.000911 [base:0.00085] t 662s
+it 10600 k 6 loss 0.001131 [base:0.00090] t 666s
+it 10602 base loss 6.05 non-finite or above cap, step skipped (19 total)
+it 10650 k 6 loss 0.002958 [base:0.00101] t 669s
+it 10671 base loss 6.36 non-finite or above cap, step skipped (20 total)
+it 10700 k 6 loss 0.000936 [base:0.00087] t 673s
+it 10701 base loss 7.01 non-finite or above cap, step skipped (21 total)
+it 10750 k 6 loss 0.002222 [base:0.00104] t 677s
+it 10800 k 6 loss 0.001013 [base:0.00104] t 680s
+it 10850 k 6 loss 0.002338 [base:0.00097] t 684s
+it 10900 k 6 loss 0.000236 [base:0.00124] t 688s
+it 10950 k 6 loss 0.001179 [base:0.00137] t 691s
+it 11000 k 6 loss 0.001420 [base:0.00105] t 695s
+it 11050 k 6 loss 0.000566 [base:0.00085] t 699s
+it 11100 k 6 loss 0.000455 [base:0.00125] t 703s
+it 11150 k 6 loss 0.001328 [base:0.00066] t 706s
+it 11200 k 6 loss 0.001243 [base:0.00126] t 710s
+it 11250 k 6 loss 0.001588 [base:0.00090] t 714s
+it 11300 k 6 loss 0.001292 [base:0.00097] t 717s
+it 11350 k 6 loss 0.002244 [base:0.00064] t 721s
+it 11400 k 6 loss 0.000788 [base:0.00120] t 725s
+it 11450 k 6 loss 0.000549 [base:0.00088] t 728s
+it 11500 k 6 loss 0.000402 [base:0.00097] t 732s
+it 11532 base loss 7.85 non-finite or above cap, step skipped (22 total)
+it 11550 k 6 loss 0.001760 [base:0.00166] t 736s
+it 11600 k 6 loss 0.000610 [base:0.00080] t 739s
+it 11650 k 6 loss 0.001328 [base:0.00110] t 743s
+it 11700 k 6 loss 0.000439 [base:0.00110] t 747s
+it 11750 k 6 loss 0.001425 [base:0.00108] t 750s
+it 11800 k 6 loss 0.001858 [base:0.00092] t 754s
+it 11850 k 6 loss 0.001861 [base:0.00115] t 758s
+it 11900 k 6 loss 0.002430 [base:0.00093] t 762s
+it 11950 k 6 loss 0.002467 [base:0.00089] t 765s
+it 12000 k 6 loss 0.001928 [base:0.00118] t 769s
+it 12050 k 6 loss 0.000430 [base:0.00087] t 773s
+it 12077 base loss 5.27 non-finite or above cap, step skipped (23 total)
+it 12100 k 6 loss 0.000506 [base:0.00096] t 776s
+it 12150 k 6 loss 0.000911 [base:0.00093] t 780s
+it 12200 k 6 loss 0.000420 [base:0.00107] t 784s
+it 12250 k 6 loss 0.001288 [base:0.00101] t 787s
+it 12300 k 6 loss 0.000517 [base:0.00095] t 791s
+it 12350 k 6 loss 0.001092 [base:0.00133] t 795s
+it 12400 k 6 loss 0.001637 [base:0.00088] t 798s
+it 12450 k 6 loss 0.001980 [base:0.00104] t 802s
+it 12500 k 6 loss 0.000223 [base:0.00087] t 806s
+it 12550 k 6 loss 0.000513 [base:0.00080] t 809s
+it 12600 k 6 loss 0.000878 [base:0.00114] t 813s
+it 12641 base loss 5.72 non-finite or above cap, step skipped (24 total)
+it 12650 k 6 loss 0.000291 [base:0.00107] t 817s
+it 12700 k 6 loss 0.001105 [base:0.00080] t 820s
+it 12750 k 6 loss 0.000099 [base:0.00091] t 824s
+it 12800 k 6 loss 0.000678 [base:0.00106] t 828s
+it 12850 k 6 loss 0.000674 [base:0.00113] t 832s
+it 12900 k 7 loss 0.000886 [base:0.00116] t 835s
+it 12950 k 7 loss 0.001390 [base:0.00076] t 840s
+it 12953 base loss 7.4 non-finite or above cap, step skipped (25 total)
+it 13000 k 7 loss 0.002363 [base:0.00130] t 844s
+it 13050 k 7 loss 0.000902 [base:0.00124] t 848s
+it 13100 k 7 loss 0.001526 [base:0.00145] t 852s
+it 13107 base loss 5.68 non-finite or above cap, step skipped (26 total)
+it 13150 k 7 loss 0.000696 [base:0.00167] t 856s
+it 13200 k 7 loss 0.001078 [base:0.00144] t 861s
+it 13250 k 7 loss 0.000999 [base:0.00120] t 865s
+it 13300 k 7 loss 0.000928 [base:0.00106] t 869s
+it 13321 base loss 5.31 non-finite or above cap, step skipped (27 total)
+it 13350 k 7 loss 0.000942 [base:0.00161] t 873s
+it 13400 k 7 loss 0.000963 [base:0.00136] t 877s
+it 13450 k 7 loss 0.000486 [base:0.00098] t 882s
+it 13500 k 7 loss 0.000384 [base:0.00134] t 886s
+it 13550 k 7 loss 0.000432 [base:0.00113] t 890s
+it 13600 k 7 loss 0.000530 [base:0.00130] t 894s
+it 13650 k 7 loss 0.001133 [base:0.00106] t 898s
+it 13700 k 7 loss 0.001085 [base:0.00109] t 903s
+it 13750 k 7 loss 0.000844 [base:0.00119] t 907s
+it 13800 k 7 loss 0.000371 [base:0.00124] t 911s
+it 13850 k 7 loss 0.000298 [base:0.00109] t 915s
+it 13900 k 7 loss 0.001094 [base:0.00133] t 919s
+it 13950 k 7 loss 0.000340 [base:0.00100] t 924s
+it 14000 k 7 loss 0.000721 [base:0.00183] t 928s
+it 14050 k 7 loss 0.000645 [base:0.00111] t 932s
+it 14100 k 7 loss 0.000997 [base:0.00107] t 936s
+it 14150 k 7 loss 0.000330 [base:0.00161] t 940s
+it 14200 k 7 loss 0.001340 [base:0.00109] t 945s
+it 14250 k 7 loss 0.001955 [base:0.00132] t 949s
+it 14300 k 7 loss 0.001402 [base:0.00090] t 953s
+it 14350 k 7 loss 0.001954 [base:0.00114] t 957s
+it 14400 k 7 loss 0.000267 [base:0.00101] t 961s
+it 14450 k 7 loss 0.001897 [base:0.00113] t 966s
+it 14500 k 7 loss 0.001564 [base:0.00145] t 970s
+it 14550 k 7 loss 0.000464 [base:0.00169] t 974s
+it 14600 k 7 loss 0.001038 [base:0.00142] t 978s
+it 14650 k 7 loss 0.000504 [base:0.00123] t 982s
+it 14700 k 7 loss 0.002042 [base:0.00108] t 987s
+it 14750 k 7 loss 0.001805 [base:0.00116] t 991s
+it 14800 k 7 loss 0.001675 [base:0.00123] t 995s
+it 14850 k 7 loss 0.002312 [base:0.00130] t 999s
+it 14900 k 7 loss 0.001290 [base:0.00124] t 1003s
+it 14950 k 7 loss 0.001443 [base:0.00093] t 1008s
+it 15000 k 7 loss 0.005304 [base:0.00146] t 1012s
+it 15050 k 7 loss 0.000661 [base:0.00100] t 1016s
+it 15100 k 7 loss 0.001195 [base:0.00149] t 1020s
+it 15150 k 7 loss 0.000538 [base:0.00102] t 1024s
+it 15185 base loss 5.47 non-finite or above cap, step skipped (28 total)
+it 15200 k 7 loss 0.000712 [base:0.00130] t 1029s
+it 15250 k 7 loss 0.001333 [base:0.00098] t 1033s
+it 15300 k 7 loss 0.001346 [base:0.00101] t 1037s
+it 15350 k 7 loss 0.002273 [base:0.00106] t 1041s
+it 15400 k 7 loss 0.002370 [base:0.00120] t 1045s
+it 15450 k 7 loss 0.000789 [base:0.00127] t 1050s
+it 15500 k 7 loss 0.001421 [base:0.00131] t 1054s
+it 15550 k 7 loss 0.000369 [base:0.00124] t 1058s
+it 15600 k 7 loss 0.002458 [base:0.00118] t 1062s
+it 15650 k 7 loss 0.000623 [base:0.00122] t 1066s
+it 15700 k 7 loss 0.001704 [base:0.00132] t 1071s
+it 15732 base loss 6.79 non-finite or above cap, step skipped (29 total)
+it 15750 k 7 loss 0.001360 [base:0.00188] t 1075s
+it 15800 k 7 loss 0.000935 [base:0.00111] t 1079s
+it 15850 k 7 loss 0.000761 [base:0.00114] t 1083s
+it 15900 k 7 loss 0.000944 [base:0.00103] t 1087s
+it 15950 k 7 loss 0.001919 [base:0.00118] t 1092s
+it 16000 k 7 loss 0.001534 [base:0.00117] t 1096s
+it 16050 k 7 loss 0.001552 [base:0.00127] t 1100s
+it 16100 k 7 loss 0.001119 [base:0.00124] t 1104s
+it 16150 k 7 loss 0.000735 [base:0.00111] t 1108s
+it 16200 k 7 loss 0.001838 [base:0.00102] t 1113s
+it 16250 k 7 loss 0.001595 [base:0.00149] t 1117s
+it 16300 k 7 loss 0.002011 [base:0.00131] t 1121s
+it 16350 k 7 loss 0.000946 [base:0.00144] t 1125s
+it 16400 k 7 loss 0.002592 [base:0.00115] t 1129s
+it 16450 k 7 loss 0.000744 [base:0.00149] t 1134s
+it 16500 k 7 loss 0.000855 [base:0.00093] t 1138s
+it 16550 k 7 loss 0.002517 [base:0.00101] t 1142s
+it 16600 k 7 loss 0.000790 [base:0.00140] t 1146s
+it 16650 k 7 loss 0.000911 [base:0.00116] t 1150s
+it 16664 base loss 5.66 non-finite or above cap, step skipped (30 total)
+it 16700 k 7 loss 0.000655 [base:0.00100] t 1155s
+it 16750 k 7 loss 0.001283 [base:0.00114] t 1159s
+it 16800 k 7 loss 0.000330 [base:0.00096] t 1163s
+it 16849 base loss 6.02 non-finite or above cap, step skipped (31 total)
+it 16850 k 8 loss 0.000494 [base:0.00195] t 1167s
+it 16900 k 8 loss 0.000986 [base:0.00133] t 1172s
+it 16950 k 8 loss 0.002437 [base:0.00142] t 1177s
+it 17000 k 8 loss 0.001650 [base:0.00159] t 1181s
+it 17050 k 8 loss 0.000528 [base:0.00116] t 1186s
+it 17100 k 8 loss 0.001529 [base:0.00153] t 1191s
+it 17150 k 8 loss 0.000963 [base:0.00123] t 1196s
+it 17200 k 8 loss 0.000890 [base:0.00143] t 1200s
+it 17250 k 8 loss 0.000597 [base:0.00103] t 1205s
+it 17300 k 8 loss 0.000755 [base:0.00118] t 1210s
+it 17350 k 8 loss 0.000712 [base:0.00159] t 1214s
+it 17400 k 8 loss 0.001422 [base:0.00153] t 1219s
+it 17450 k 8 loss 0.000642 [base:0.00131] t 1224s
+it 17500 k 8 loss 0.001969 [base:0.00135] t 1229s
+it 17550 k 8 loss 0.000769 [base:0.00201] t 1233s
+it 17600 k 8 loss 0.000839 [base:0.00151] t 1238s
+it 17650 k 8 loss 0.003463 [base:0.00141] t 1243s
+it 17700 k 8 loss 0.001677 [base:0.00120] t 1248s
+it 17750 k 8 loss 0.000466 [base:0.00126] t 1252s
+it 17800 k 8 loss 0.000843 [base:0.00143] t 1257s
+it 17850 k 8 loss 0.001620 [base:0.00166] t 1262s
+it 17900 k 8 loss 0.001847 [base:0.00143] t 1266s
+it 17947 base loss 5.18 non-finite or above cap, step skipped (32 total)
+it 17950 k 8 loss 0.004147 [base:0.00157] t 1271s
+it 18000 k 8 loss 0.000811 [base:0.00181] t 1276s
+it 18050 k 8 loss 0.001152 [base:0.00157] t 1281s
+it 18100 k 8 loss 0.001929 [base:0.00137] t 1285s
+it 18150 k 8 loss 0.001004 [base:0.00134] t 1290s
+it 18200 k 8 loss 0.003517 [base:0.00159] t 1295s
+it 18250 k 8 loss 0.001086 [base:0.00120] t 1299s
+it 18300 k 8 loss 0.001054 [base:0.00126] t 1304s
+it 18350 k 8 loss 0.005857 [base:0.00168] t 1309s
+it 18400 k 8 loss 0.000286 [base:0.00167] t 1314s
+it 18450 k 8 loss 0.000988 [base:0.00150] t 1318s
+it 18500 k 8 loss 0.001403 [base:0.00146] t 1323s
+it 18550 k 8 loss 0.002760 [base:0.00138] t 1328s
+it 18600 k 8 loss 0.001540 [base:0.00126] t 1332s
+it 18627 base loss 6.48 non-finite or above cap, step skipped (33 total)
+it 18650 k 8 loss 0.001366 [base:0.00172] t 1337s
+it 18700 k 8 loss 0.001086 [base:0.00160] t 1342s
+it 18750 k 8 loss 0.001130 [base:0.00112] t 1347s
+it 18800 k 8 loss 0.002889 [base:0.00162] t 1351s
+it 18850 k 8 loss 0.002024 [base:0.00153] t 1356s
+it 18900 k 8 loss 0.002685 [base:0.00156] t 1361s
+it 18950 k 8 loss 0.000479 [base:0.00130] t 1365s
+it 19000 k 8 loss 0.001924 [base:0.00187] t 1370s
+it 19050 k 8 loss 0.001669 [base:0.00129] t 1375s
+it 19100 k 8 loss 0.000536 [base:0.00129] t 1380s
+it 19150 k 8 loss 0.000769 [base:0.00141] t 1384s
+it 19200 k 8 loss 0.000664 [base:0.00098] t 1389s
+it 19250 k 8 loss 0.000850 [base:0.00127] t 1394s
+it 19300 k 8 loss 0.002028 [base:0.00169] t 1398s
+it 19350 k 8 loss 0.001504 [base:0.00110] t 1403s
+it 19389 base loss 5.04 non-finite or above cap, step skipped (34 total)
+it 19400 k 8 loss 0.000792 [base:0.00206] t 1408s
+it 19450 k 8 loss 0.001264 [base:0.00135] t 1413s
+it 19500 k 8 loss 0.000773 [base:0.00162] t 1417s
+it 19550 k 8 loss 0.003544 [base:0.00140] t 1422s
+it 19600 k 8 loss 0.003303 [base:0.00191] t 1427s
+it 19650 k 8 loss 0.001038 [base:0.00131] t 1432s
+it 19683 base loss 5.26 non-finite or above cap, step skipped (35 total)
+it 19700 k 8 loss 0.004730 [base:0.00215] t 1436s
+it 19742 base loss 7.95 non-finite or above cap, step skipped (36 total)
+it 19750 k 8 loss 0.000552 [base:0.00174] t 1441s
+it 19800 k 8 loss 0.001440 [base:0.00122] t 1446s
+it 19850 k 8 loss 0.000473 [base:0.00138] t 1450s
+it 19900 k 8 loss 0.001117 [base:0.00127] t 1455s
+it 19950 k 8 loss 0.000899 [base:0.00188] t 1460s
+it 20000 k 8 loss 0.001413 [base:0.00139] t 1464s
+it 20050 k 8 loss 0.000624 [base:0.00155] t 1469s
+it 20100 k 8 loss 0.001411 [base:0.00145] t 1474s
+it 20150 k 8 loss 0.000980 [base:0.00101] t 1479s
+it 20200 k 8 loss 0.001518 [base:0.00111] t 1484s
+it 20250 k 8 loss 0.000335 [base:0.00127] t 1488s
+it 20300 k 8 loss 0.001145 [base:0.00179] t 1493s
+it 20350 k 8 loss 0.001661 [base:0.00148] t 1498s
+it 20400 k 9 loss 0.001778 [base:0.00228] t 1503s
+it 20450 k 9 loss 0.003614 [base:0.00196] t 1508s
+it 20500 k 9 loss 0.001448 [base:0.00208] t 1513s
+it 20550 k 9 loss 0.002003 [base:0.00183] t 1518s
+it 20600 k 9 loss 0.000904 [base:0.00144] t 1523s
+it 20650 k 9 loss 0.001586 [base:0.00162] t 1529s
+it 20700 k 9 loss 0.001179 [base:0.00212] t 1534s
+it 20750 k 9 loss 0.001652 [base:0.00158] t 1539s
+it 20800 k 9 loss 0.000811 [base:0.00143] t 1544s
+it 20850 k 9 loss 0.000973 [base:0.00202] t 1550s
+it 20900 k 9 loss 0.002702 [base:0.00203] t 1555s
+it 20950 k 9 loss 0.001471 [base:0.00112] t 1560s
+it 21000 k 9 loss 0.001359 [base:0.00191] t 1565s
+it 21010 base loss 5.04 non-finite or above cap, step skipped (37 total)
+it 21050 k 9 loss 0.001517 [base:0.00242] t 1571s
+it 21100 k 9 loss 0.000175 [base:0.00207] t 1576s
+it 21150 k 9 loss 0.000997 [base:0.00165] t 1581s
+it 21200 k 9 loss 0.001573 [base:0.00139] t 1586s
+it 21250 k 9 loss 0.001034 [base:0.00180] t 1592s
+it 21300 k 9 loss 0.001662 [base:0.00154] t 1597s
+it 21319 base loss 5.3 non-finite or above cap, step skipped (38 total)
+it 21350 k 9 loss 0.001745 [base:0.00184] t 1602s
+it 21400 k 9 loss 0.001672 [base:0.00171] t 1607s
+it 21450 k 9 loss 0.002823 [base:0.00202] t 1612s
+it 21500 k 9 loss 0.000462 [base:0.00150] t 1618s
+it 21550 k 9 loss 0.001396 [base:0.00177] t 1623s
+it 21555 base loss 7.97 non-finite or above cap, step skipped (39 total)
+it 21600 k 9 loss 0.000882 [base:0.00144] t 1628s
+it 21650 k 9 loss 0.001166 [base:0.00175] t 1633s
+it 21700 k 9 loss 0.002310 [base:0.00215] t 1639s
+it 21750 k 9 loss 0.002179 [base:0.00156] t 1644s
+it 21800 k 9 loss 0.002627 [base:0.00168] t 1649s
+it 21850 k 9 loss 0.001823 [base:0.00175] t 1654s
+it 21900 k 9 loss 0.003380 [base:0.00228] t 1659s
+it 21950 k 9 loss 0.002155 [base:0.00159] t 1665s
+it 22000 k 9 loss 0.000522 [base:0.00171] t 1670s
+it 22050 k 9 loss 0.000942 [base:0.00152] t 1675s
+it 22100 k 9 loss 0.005213 [base:0.00214] t 1681s
+it 22150 k 9 loss 0.001607 [base:0.00207] t 1686s
+it 22200 k 9 loss 0.003891 [base:0.00210] t 1691s
+it 22250 k 9 loss 0.001685 [base:0.00183] t 1696s
+it 22300 k 9 loss 0.001190 [base:0.00175] t 1701s
+it 22350 k 9 loss 0.000616 [base:0.00155] t 1707s
+it 22400 k 9 loss 0.000920 [base:0.00174] t 1712s
+it 22450 k 9 loss 0.001280 [base:0.00158] t 1717s
+it 22500 k 9 loss 0.000628 [base:0.00179] t 1722s
+it 22550 k 9 loss 0.002007 [base:0.00188] t 1728s
+it 22600 k 9 loss 0.000156 [base:0.00207] t 1733s
+it 22650 k 9 loss 0.000732 [base:0.00151] t 1738s
+it 22700 k 9 loss 0.002465 [base:0.00196] t 1743s
+it 22750 k 9 loss 0.004340 [base:0.00210] t 1749s
+it 22800 k 9 loss 0.001093 [base:0.00217] t 1754s
+it 22850 k 9 loss 0.000845 [base:0.00177] t 1759s
+it 22900 k 9 loss 0.002347 [base:0.00194] t 1764s
+it 22950 k 9 loss 0.001429 [base:0.00198] t 1769s
+it 23000 k 9 loss 0.000782 [base:0.00130] t 1775s
+it 23015 base loss 5.18 non-finite or above cap, step skipped (40 total)
+it 23050 k 9 loss 0.001036 [base:0.00182] t 1780s
+it 23100 k 9 loss 0.002644 [base:0.00146] t 1785s
+it 23150 k 9 loss 0.000926 [base:0.00145] t 1790s
+it 23200 k 9 loss 0.001079 [base:0.00167] t 1796s
+it 23250 k 9 loss 0.003832 [base:0.00228] t 1801s
+it 23300 k 9 loss 0.000979 [base:0.00173] t 1806s
+it 23350 k 9 loss 0.001014 [base:0.00154] t 1811s
+it 23400 k 9 loss 0.001004 [base:0.00208] t 1816s
+it 23450 k 9 loss 0.002364 [base:0.00200] t 1822s
+it 23500 k 9 loss 0.002213 [base:0.00143] t 1827s
+it 23550 k 9 loss 0.002251 [base:0.00167] t 1832s
+it 23600 k 10 loss 0.003626 [base:0.00190] t 1838s
+it 23650 k 10 loss 0.002979 [base:0.00222] t 1844s
+it 23700 k 10 loss 0.001291 [base:0.00200] t 1849s
+it 23750 k 10 loss 0.000759 [base:0.00203] t 1855s
+it 23800 k 10 loss 0.001707 [base:0.00190] t 1861s
+it 23850 k 10 loss 0.002842 [base:0.00191] t 1867s
+it 23900 k 10 loss 0.001935 [base:0.00168] t 1872s
+it 23950 k 10 loss 0.002221 [base:0.00240] t 1878s
+it 24000 k 10 loss 0.004247 [base:0.00224] t 1884s
+it 24050 k 10 loss 0.001193 [base:0.00178] t 1890s
+it 24100 k 10 loss 0.004126 [base:0.00230] t 1895s
+it 24150 k 10 loss 0.002765 [base:0.00219] t 1901s
+it 24200 k 10 loss 0.001312 [base:0.00193] t 1907s
+it 24250 k 10 loss 0.001898 [base:0.00236] t 1913s
+it 24300 k 10 loss 0.004489 [base:0.00207] t 1918s
+it 24350 k 10 loss 0.002152 [base:0.00220] t 1924s
+it 24400 k 10 loss 0.002024 [base:0.00206] t 1930s
+it 24450 k 10 loss 0.001860 [base:0.00198] t 1935s
+it 24500 k 10 loss 0.000421 [base:0.00196] t 1941s
+it 24550 k 10 loss 0.003673 [base:0.00297] t 1947s
+it 24600 k 10 loss 0.000678 [base:0.00142] t 1953s
+it 24650 k 10 loss 0.001198 [base:0.00245] t 1958s
+it 24700 k 10 loss 0.000835 [base:0.00198] t 1964s
+it 24750 k 10 loss 0.002116 [base:0.00208] t 1970s
+it 24800 k 10 loss 0.001415 [base:0.00297] t 1976s
+it 24850 k 10 loss 0.001250 [base:0.00148] t 1981s
+it 24900 k 10 loss 0.001433 [base:0.00225] t 1987s
+it 24950 k 10 loss 0.001019 [base:0.00208] t 1993s
+it 25000 k 10 loss 0.003033 [base:0.00190] t 1999s
+it 25050 k 10 loss 0.001587 [base:0.00248] t 2005s
+it 25100 k 10 loss 0.001659 [base:0.00165] t 2010s
+it 25136 base loss 5.02 non-finite or above cap, step skipped (41 total)
+it 25145 base loss 6.11 non-finite or above cap, step skipped (42 total)
+it 25150 k 10 loss 0.002429 [base:0.00449] t 2016s
+it 25200 k 10 loss 0.002383 [base:0.00216] t 2022s
+it 25250 k 10 loss 0.001452 [base:0.00172] t 2028s
+it 25300 k 10 loss 0.000824 [base:0.00198] t 2033s
+it 25350 k 10 loss 0.002665 [base:0.00262] t 2039s
+it 25400 k 10 loss 0.001252 [base:0.00151] t 2045s
+it 25450 k 10 loss 0.001175 [base:0.00245] t 2051s
+it 25500 k 10 loss 0.003137 [base:0.00276] t 2056s
+it 25550 k 10 loss 0.002832 [base:0.00211] t 2062s
+it 25600 k 10 loss 0.004159 [base:0.00275] t 2068s
+it 25650 k 10 loss 0.004418 [base:0.00248] t 2074s
+it 25700 k 10 loss 0.000878 [base:0.00218] t 2079s
+it 25750 k 10 loss 0.002252 [base:0.00264] t 2085s
+it 25800 k 10 loss 0.002035 [base:0.00248] t 2091s
+it 25850 k 10 loss 0.000954 [base:0.00187] t 2097s
+it 25900 k 10 loss 0.004343 [base:0.00238] t 2102s
+it 25950 k 10 loss 0.002370 [base:0.00219] t 2108s
+it 26000 k 10 loss 0.002985 [base:0.00227] t 2114s
+it 26050 k 10 loss 0.002270 [base:0.00198] t 2120s
+it 26100 k 10 loss 0.002571 [base:0.00210] t 2125s
+it 26150 k 10 loss 0.001494 [base:0.00213] t 2131s
+it 26200 k 10 loss 0.001868 [base:0.00186] t 2137s
+it 26250 k 10 loss 0.001988 [base:0.00249] t 2143s
+it 26300 k 10 loss 0.002032 [base:0.00163] t 2148s
+it 26350 k 10 loss 0.000957 [base:0.00174] t 2154s
+it 26400 k 10 loss 0.003046 [base:0.00192] t 2160s
+it 26450 k 10 loss 0.001844 [base:0.00284] t 2166s
+it 26500 k 11 loss 0.001807 [base:0.00299] t 2172s
+it 26550 k 11 loss 0.002706 [base:0.00234] t 2178s
+it 26600 k 11 loss 0.003218 [base:0.00289] t 2184s
+it 26650 k 11 loss 0.002030 [base:0.00234] t 2191s
+it 26677 base loss 5.74 non-finite or above cap, step skipped (43 total)
+it 26700 k 11 loss 0.002515 [base:0.00288] t 2197s
+it 26750 k 11 loss 0.001359 [base:0.00202] t 2203s
+it 26800 k 11 loss 0.001830 [base:0.00303] t 2209s
+it 26850 k 11 loss 0.001345 [base:0.00190] t 2216s
+it 26900 k 11 loss 0.002729 [base:0.00252] t 2222s
+it 26950 k 11 loss 0.000749 [base:0.00299] t 2228s
+it 27000 k 11 loss 0.003607 [base:0.00262] t 2234s
+it 27050 k 11 loss 0.002366 [base:0.00253] t 2241s
+it 27100 k 11 loss 0.001862 [base:0.00302] t 2247s
+it 27150 k 11 loss 0.002617 [base:0.00208] t 2253s
+it 27200 k 11 loss 0.005272 [base:0.00240] t 2260s
+it 27229 base loss 5.64 non-finite or above cap, step skipped (44 total)
+it 27250 k 11 loss 0.001748 [base:0.00266] t 2266s
+it 27300 k 11 loss 0.005369 [base:0.00400] t 2272s
+it 27350 k 11 loss 0.001204 [base:0.00221] t 2278s
+it 27400 k 11 loss 0.001469 [base:0.00247] t 2285s
+it 27450 k 11 loss 0.001203 [base:0.00248] t 2291s
+it 27465 base loss 7.1 non-finite or above cap, step skipped (45 total)
+it 27500 k 11 loss 0.004439 [base:0.00301] t 2297s
+it 27550 k 11 loss 0.003743 [base:0.00202] t 2303s
+it 27600 k 11 loss 0.001833 [base:0.00246] t 2310s
+it 27650 k 11 loss 0.003518 [base:0.00222] t 2316s
+it 27700 k 11 loss 0.003887 [base:0.00276] t 2322s
+it 27742 base loss 5.18 non-finite or above cap, step skipped (46 total)
+it 27750 k 11 loss 0.003027 [base:0.00321] t 2329s
+it 27800 k 11 loss 0.001375 [base:0.00204] t 2335s
+it 27850 k 11 loss 0.005718 [base:0.00304] t 2341s
+it 27900 k 11 loss 0.005252 [base:0.00354] t 2347s
+it 27950 k 11 loss 0.000609 [base:0.00279] t 2354s
+it 28000 k 11 loss 0.003012 [base:0.00265] t 2360s
+it 28050 k 11 loss 0.000661 [base:0.00231] t 2366s
+it 28100 k 11 loss 0.001890 [base:0.00310] t 2372s
+it 28150 k 11 loss 0.003621 [base:0.00239] t 2379s
+it 28200 k 11 loss 0.003954 [base:0.00268] t 2385s
+it 28250 k 11 loss 0.001760 [base:0.00261] t 2391s
+it 28300 k 11 loss 0.001569 [base:0.00251] t 2397s
+it 28350 k 11 loss 0.004536 [base:0.00266] t 2404s
+it 28393 base loss 7.15 non-finite or above cap, step skipped (47 total)
+it 28400 k 11 loss 0.003304 [base:0.00413] t 2410s
+it 28450 k 11 loss 0.002219 [base:0.00223] t 2416s
+it 28500 k 11 loss 0.001953 [base:0.00219] t 2423s
+it 28550 k 11 loss 0.002150 [base:0.00338] t 2429s
+it 28600 k 11 loss 0.001417 [base:0.00224] t 2435s
+it 28650 k 11 loss 0.001161 [base:0.00232] t 2441s
+it 28700 k 11 loss 0.001272 [base:0.00208] t 2448s
+it 28750 k 11 loss 0.004644 [base:0.00328] t 2454s
+it 28800 k 11 loss 0.001712 [base:0.00278] t 2460s
+it 28850 k 11 loss 0.003086 [base:0.00235] t 2466s
+it 28900 k 11 loss 0.001414 [base:0.00253] t 2473s
+it 28950 k 11 loss 0.005255 [base:0.00329] t 2479s
+it 29000 k 11 loss 0.003071 [base:0.00240] t 2485s
+it 29050 k 11 loss 0.002398 [base:0.00293] t 2491s
+it 29100 k 11 loss 0.002240 [base:0.00245] t 2498s
+it 29150 k 12 loss 0.001260 [base:0.00236] t 2504s
+it 29200 k 12 loss 0.000921 [base:0.00278] t 2511s
+it 29250 k 12 loss 0.001909 [base:0.00310] t 2518s
+it 29300 k 12 loss 0.002901 [base:0.00228] t 2525s
+it 29350 k 12 loss 0.002706 [base:0.00349] t 2532s
+it 29400 k 12 loss 0.003051 [base:0.00328] t 2538s
+it 29450 k 12 loss 0.000593 [base:0.00310] t 2545s
+it 29500 k 12 loss 0.001500 [base:0.00315] t 2552s
+it 29550 k 12 loss 0.002375 [base:0.00286] t 2559s
+it 29600 k 12 loss 0.001948 [base:0.00361] t 2566s
+it 29650 k 12 loss 0.005750 [base:0.00373] t 2572s
+it 29700 k 12 loss 0.005737 [base:0.00243] t 2579s
+it 29750 k 12 loss 0.002634 [base:0.00377] t 2586s
+it 29800 k 12 loss 0.003873 [base:0.00343] t 2593s
+it 29850 k 12 loss 0.002499 [base:0.00349] t 2600s
+it 29900 k 12 loss 0.003627 [base:0.00335] t 2607s
+it 29950 k 12 loss 0.002614 [base:0.00401] t 2613s
+it 30000 k 12 loss 0.001415 [base:0.00283] t 2620s
+it 30050 k 12 loss 0.002030 [base:0.00404] t 2627s
+it 30100 k 12 loss 0.014985 [base:0.00351] t 2634s
+it 30150 k 12 loss 0.002989 [base:0.00263] t 2641s
+it 30200 k 12 loss 0.005595 [base:0.00314] t 2647s
+it 30250 k 12 loss 0.001883 [base:0.00306] t 2654s
+it 30300 k 12 loss 0.000868 [base:0.00276] t 2661s
+it 30350 k 12 loss 0.003076 [base:0.00289] t 2668s
+it 30400 k 12 loss 0.003222 [base:0.00268] t 2675s
+it 30450 k 12 loss 0.000704 [base:0.00276] t 2681s
+it 30500 k 12 loss 0.001425 [base:0.00266] t 2688s
+it 30550 k 12 loss 0.004985 [base:0.00415] t 2695s
+it 30600 k 12 loss 0.000497 [base:0.00372] t 2702s
+it 30650 k 12 loss 0.003724 [base:0.00344] t 2709s
+it 30686 base loss 5.7 non-finite or above cap, step skipped (48 total)
+it 30700 k 12 loss 0.003860 [base:0.00386] t 2716s
+it 30750 k 12 loss 0.003134 [base:0.00238] t 2722s
+it 30800 k 12 loss 0.001428 [base:0.00278] t 2729s
+it 30850 k 12 loss 0.004637 [base:0.00336] t 2736s
+it 30900 k 12 loss 0.003907 [base:0.00388] t 2743s
+it 30950 k 12 loss 0.003573 [base:0.00371] t 2749s
+it 31000 k 12 loss 0.003260 [base:0.00270] t 2756s
+it 31050 k 12 loss 0.015268 [base:0.00329] t 2763s
+it 31100 k 12 loss 0.007608 [base:0.00316] t 2770s
+it 31150 k 12 loss 0.002592 [base:0.00315] t 2777s
+it 31200 k 12 loss 0.002874 [base:0.00266] t 2784s
+it 31250 k 12 loss 0.001901 [base:0.00239] t 2790s
+it 31300 k 12 loss 0.001674 [base:0.00318] t 2797s
+it 31350 k 12 loss 0.002638 [base:0.00239] t 2804s
+it 31400 k 12 loss 0.005126 [base:0.00348] t 2811s
+it 31450 k 12 loss 0.003445 [base:0.00324] t 2817s
+it 31500 k 12 loss 0.002191 [base:0.00347] t 2824s
+it 31520 base loss 6.5 non-finite or above cap, step skipped (49 total)
+it 31550 k 12 loss 0.001530 [base:0.00348] t 2831s
+it 31600 k 13 loss 0.003486 [base:0.00359] t 2838s
+it 31650 k 13 loss 0.004546 [base:0.00339] t 2846s
+it 31700 k 13 loss 0.004698 [base:0.00350] t 2853s
+it 31710 base loss 5.18 non-finite or above cap, step skipped (50 total)
+it 31750 k 13 loss 0.003030 [base:0.00390] t 2860s
+it 31800 k 13 loss 0.003604 [base:0.00363] t 2868s
+it 31850 k 13 loss 0.001624 [base:0.00376] t 2875s
+it 31900 k 13 loss 0.002905 [base:0.00448] t 2882s
+it 31950 k 13 loss 0.001133 [base:0.00472] t 2889s
+it 32000 k 13 loss 0.007285 [base:0.00491] t 2897s
+it 32050 k 13 loss 0.002128 [base:0.00282] t 2904s
+it 32100 k 13 loss 0.004049 [base:0.00426] t 2911s
+it 32150 k 13 loss 0.000818 [base:0.00308] t 2919s
+it 32200 k 13 loss 0.002183 [base:0.00365] t 2926s
+it 32250 k 13 loss 0.009561 [base:0.00436] t 2933s
+it 32300 k 13 loss 0.003214 [base:0.00344] t 2941s
+it 32350 k 13 loss 0.002415 [base:0.00416] t 2948s
+it 32400 k 13 loss 0.003293 [base:0.00274] t 2955s
+it 32450 k 13 loss 0.002641 [base:0.00492] t 2963s
+it 32500 k 13 loss 0.009524 [base:0.00388] t 2970s
+it 32550 k 13 loss 0.004926 [base:0.00348] t 2977s
+it 32600 k 13 loss 0.004336 [base:0.00374] t 2985s
+it 32650 k 13 loss 0.016035 [base:0.00407] t 2992s
+it 32700 k 13 loss 0.001692 [base:0.00446] t 2999s
+it 32750 k 13 loss 0.006836 [base:0.00384 pen_dE:0.00292] t 3025s
+it 32800 k 13 loss 0.004319 [base:0.00467 pen_dE:0.00287] t 3052s
+it 32850 k 13 loss 0.003630 [base:0.00345 pen_dE:0.00414] t 3080s
+it 32900 k 13 loss 0.001327 [base:0.00358 pen_dE:0.00378] t 3108s
+it 32950 k 13 loss 0.001731 [base:0.00405 pen_dE:0.00371] t 3136s
+it 33000 k 13 loss 0.003482 [base:0.00466 pen_dE:0.00330] t 3164s
+it 33050 k 14 loss 0.006352 [base:0.00371 pen_dE:0.00330] t 3192s
+it 33100 k 14 loss 0.008439 [base:0.00482 pen_dE:0.00339] t 3220s
+it 33150 k 14 loss 0.001278 [base:0.00506 pen_dE:0.00315] t 3249s
+it 33200 k 14 loss 0.001591 [base:0.00514 pen_dE:0.00340] t 3277s
+it 33250 k 14 loss 0.004555 [base:0.00487 pen_dE:0.00496] t 3305s
+it 33300 k 14 loss 0.002151 [base:0.00379 pen_dE:0.00286] t 3334s
+it 33350 k 14 loss 0.003515 [base:0.00451 pen_dE:0.00345] t 3362s
+it 33400 k 14 loss 0.009148 [base:0.00430 pen_dE:0.00322] t 3390s
+it 33450 k 14 loss 0.008055 [base:0.00511 pen_dE:0.00322] t 3419s
+it 33477 base loss 5.48 non-finite or above cap, step skipped (51 total)
+it 33500 k 14 loss 0.000923 [base:0.00411 pen_dE:0.00355] t 3447s
+it 33550 k 14 loss 0.001531 [base:0.00446 pen_dE:0.00323] t 3475s
+it 33566 base loss 5.61 non-finite or above cap, step skipped (52 total)
+it 33600 k 15 loss 0.004877 [base:0.00431 pen_dE:0.00274] t 3504s
+it 33650 k 15 loss 0.005295 [base:0.00678 pen_dE:0.00446] t 3533s
+it 33700 k 15 loss 0.006774 [base:0.00574 pen_dE:0.00369] t 3561s
+it 33750 k 15 loss 0.002752 [base:0.00462 pen_dE:0.00317] t 3590s
+it 33800 k 15 loss 0.006336 [base:0.00452 pen_dE:0.00348] t 3619s
+it 33850 k 15 loss 0.002349 [base:0.00489 pen_dE:0.00366] t 3648s
+it 33900 k 15 loss 0.005535 [base:0.00481 pen_dE:0.00346] t 3677s
+it 33950 k 15 loss 0.003786 [base:0.00480 pen_dE:0.00299] t 3706s
+it 34000 k 15 loss 0.005060 [base:0.00611 pen_dE:0.00282] t 3734s
+it 34050 k 15 loss 0.004908 [base:0.00603 pen_dE:0.00242] t 3763s
+it 34100 k 15 loss 0.007341 [base:0.00649 pen_dE:0.00368] t 3792s
+it 34150 k 15 loss 0.002665 [base:0.00594 pen_dE:0.00418] t 3821s
+it 34200 k 16 loss 0.003957 [base:0.00672 pen_dE:0.00400] t 3850s
+it 34250 k 16 loss 0.008420 [base:0.00717 pen_dE:0.00332] t 3879s
+it 34300 k 16 loss 0.006815 [base:0.00717 pen_dE:0.00486] t 3909s
+it 34338 base loss 5.54 non-finite or above cap, step skipped (53 total)
+it 34350 k 16 loss 0.015815 [base:0.00951 pen_dE:0.00361] t 3938s
+it 34400 k 16 loss 0.000785 [base:0.00518 pen_dE:0.00359] t 3968s
+it 34450 k 16 loss 0.004037 [base:0.00699 pen_dE:0.00353] t 3997s
+it 34500 k 16 loss 0.012285 [base:0.00789 pen_dE:0.00300] t 4026s
+it 34550 k 16 loss 0.003841 [base:0.00920 pen_dE:0.00270] t 4056s
+it 34600 k 16 loss 0.006058 [base:0.00806 pen_dE:0.00297] t 4085s
+it 34650 k 16 loss 0.003938 [base:0.00549 pen_dE:0.00304] t 4114s
+it 34700 k 16 loss 0.006289 [base:0.00824 pen_dE:0.00249] t 4144s
+it 34750 k 17 loss 0.006764 [base:0.00777 pen_dE:0.00331] t 4173s
+it 34800 k 17 loss 0.003747 [base:0.00928 pen_dE:0.00346] t 4203s
+it 34850 k 17 loss 0.004647 [base:0.00796 pen_dE:0.00256] t 4233s
+it 34900 k 17 loss 0.006194 [base:0.00754 pen_dE:0.00374] t 4263s
+it 34921 base loss 5.63 non-finite or above cap, step skipped (54 total)
+it 34950 k 17 loss 0.006690 [base:0.00876 pen_dE:0.00317] t 4293s
+it 35000 k 17 loss 0.009070 [base:0.00891 pen_dE:0.00276] t 4323s
+it 35050 k 17 loss 0.007299 [base:0.00812 pen_dE:0.00358] t 4353s
+it 35100 k 17 loss 0.019032 [base:0.01077 pen_dE:0.00319] t 4383s
+it 35150 k 17 loss 0.008754 [base:0.01048 pen_dE:0.00291] t 4413s
+it 35200 k 17 loss 0.010840 [base:0.00766 pen_dE:0.00278] t 4442s
+it 35250 k 17 loss 0.003633 [base:0.01018 pen_dE:0.00417] t 4472s
+it 35300 k 18 loss 0.009403 [base:0.00823 pen_dE:0.00303] t 4502s
+it 35350 k 18 loss 0.006201 [base:0.00832 pen_dE:0.00293] t 4533s
+it 35400 k 18 loss 0.008127 [base:0.00892 pen_dE:0.00413] t 4563s
+it 35450 k 18 loss 0.004119 [base:0.00888 pen_dE:0.00231] t 4593s
+it 35500 k 18 loss 0.006042 [base:0.01010 pen_dE:0.00368] t 4624s
+it 35550 k 18 loss 0.014648 [base:0.01055 pen_dE:0.00272] t 4654s
+it 35600 k 18 loss 0.016992 [base:0.00921 pen_dE:0.00296] t 4685s
+it 35650 k 18 loss 0.003902 [base:0.00870 pen_dE:0.00294] t 4715s
+it 35700 k 18 loss 0.010443 [base:0.00986 pen_dE:0.00241] t 4746s
+it 35750 k 18 loss 0.006029 [base:0.00878 pen_dE:0.00243] t 4776s
+it 35800 k 18 loss 0.003097 [base:0.00918 pen_dE:0.00336] t 4806s
+it 35850 k 19 loss 0.004811 [base:0.00854 pen_dE:0.00294] t 4837s
+it 35860 base loss 6.71 non-finite or above cap, step skipped (55 total)
+it 35900 k 19 loss 0.009538 [base:0.01191 pen_dE:0.00255] t 4868s
+it 35950 k 19 loss 0.011070 [base:0.00947 pen_dE:0.00334] t 4899s
+it 36000 k 19 loss 0.022080 [base:0.01164 pen_dE:0.00303] t 4930s
+it 36050 k 19 loss 0.006005 [base:0.01163 pen_dE:0.00288] t 4961s
+it 36100 k 19 loss 0.007155 [base:0.01155 pen_dE:0.00294] t 4992s
+it 36150 k 19 loss 0.010207 [base:0.01029 pen_dE:0.00239] t 5023s
+it 36200 k 19 loss 0.011010 [base:0.00983 pen_dE:0.00269] t 5054s
+it 36250 k 19 loss 0.015709 [base:0.01114 pen_dE:0.00223] t 5085s
+it 36300 k 19 loss 0.022014 [base:0.01115 pen_dE:0.00265] t 5115s
+it 36350 k 19 loss 0.003943 [base:0.01263 pen_dE:0.00248] t 5146s
+it 36400 k 20 loss 0.010579 [base:0.00976 pen_dE:0.00256] t 5178s
+it 36450 k 20 loss 0.012398 [base:0.01559 pen_dE:0.00262] t 5209s
+it 36500 k 20 loss 0.014369 [base:0.01206 pen_dE:0.00258] t 5240s
+it 36550 k 20 loss 0.017507 [base:0.01314 pen_dE:0.00326] t 5272s
+it 36600 k 20 loss 0.008456 [base:0.01112 pen_dE:0.00234] t 5303s
+it 36650 k 20 loss 0.013310 [base:0.01424 pen_dE:0.00273] t 5335s
+it 36700 k 20 loss 0.010107 [base:0.01265 pen_dE:0.00254] t 5366s
+it 36750 k 20 loss 0.006915 [base:0.01407 pen_dE:0.00338] t 5398s
+it 36800 k 20 loss 0.016095 [base:0.01584 pen_dE:0.00250] t 5429s
+it 36850 k 20 loss 0.012314 [base:0.01172 pen_dE:0.00253] t 5461s
+it 36900 k 20 loss 0.008673 [base:0.01184 pen_dE:0.00272] t 5492s
+it 36950 k 21 loss 0.006656 [base:0.01418 pen_dE:0.00200] t 5524s
+it 37000 k 21 loss 0.007086 [base:0.01421 pen_dE:0.00273] t 5556s
+it 37050 k 21 loss 0.007419 [base:0.01224 pen_dE:0.00289] t 5588s
+it 37100 k 21 loss 0.029767 [base:0.01421 pen_dE:0.00211] t 5620s
+it 37150 k 21 loss 0.024050 [base:0.01463 pen_dE:0.00263] t 5652s
+it 37200 k 21 loss 0.023197 [base:0.01850 pen_dE:0.00271] t 5684s
+it 37250 k 21 loss 0.004514 [base:0.01375 pen_dE:0.00238] t 5716s
+it 37300 k 21 loss 0.007539 [base:0.01644 pen_dE:0.00239] t 5748s
+it 37350 k 21 loss 0.008858 [base:0.01504 pen_dE:0.00334] t 5780s
+it 37400 k 21 loss 0.014739 [base:0.01125 pen_dE:0.00187] t 5812s
+it 37450 k 22 loss 0.015214 [base:0.01475 pen_dE:0.00253] t 5845s
+it 37500 k 22 loss 0.036539 [base:0.01781 pen_dE:0.00283] t 5877s
+it 37550 k 22 loss 0.022094 [base:0.01565 pen_dE:0.00310] t 5910s
+it 37600 k 22 loss 0.016948 [base:0.01823 pen_dE:0.00355] t 5942s
+it 37650 k 22 loss 0.029031 [base:0.01686 pen_dE:0.00314] t 5975s
+it 37700 k 22 loss 0.041428 [base:0.01821 pen_dE:0.00347] t 6007s
+it 37750 k 22 loss 0.013434 [base:0.01436 pen_dE:0.00262] t 6040s
+it 37800 k 22 loss 0.009135 [base:0.01850 pen_dE:0.00289] t 6072s
+it 37850 k 22 loss 0.015477 [base:0.01830 pen_dE:0.00282] t 6105s
+it 37900 k 22 loss 0.016273 [base:0.01840 pen_dE:0.00265] t 6137s
+it 37950 k 23 loss 0.012554 [base:0.01846 pen_dE:0.00263] t 6170s
+it 38000 k 23 loss 0.007308 [base:0.02073 pen_dE:0.00357] t 6203s
+it 38050 k 23 loss 0.004213 [base:0.01692 pen_dE:0.00199] t 6236s
+it 38100 k 23 loss 0.030251 [base:0.01755 pen_dE:0.00215] t 6270s
+it 38150 k 23 loss 0.010652 [base:0.02506 pen_dE:0.00263] t 6303s
+it 38200 k 23 loss 0.007142 [base:0.01874 pen_dE:0.00263] t 6336s
+it 38250 k 23 loss 0.037738 [base:0.02298 pen_dE:0.00238] t 6369s
+it 38300 k 23 loss 0.033949 [base:0.01697 pen_dE:0.00276] t 6402s
+it 38350 k 23 loss 0.001966 [base:0.01931 pen_dE:0.00245] t 6435s
+it 38400 k 23 loss 0.010055 [base:0.01582 pen_dE:0.00234] t 6468s
+it 38450 k 24 loss 0.029175 [base:0.01733 pen_dE:0.00231] t 6501s
+it 38500 k 24 loss 0.008416 [base:0.02577 pen_dE:0.00255] t 6535s
+it 38550 k 24 loss 0.014633 [base:0.02145 pen_dE:0.00228] t 6568s
+it 38600 k 24 loss 0.075104 [base:0.02881 pen_dE:0.00321] t 6602s
+it 38650 k 24 loss 0.015160 [base:0.02427 pen_dE:0.00214] t 6636s
+it 38698 base loss 6.05 non-finite or above cap, step skipped (56 total)
+it 38700 k 24 loss 0.016937 [base:0.03312 pen_dE:0.00241] t 6669s
+it 38750 k 24 loss 0.047432 [base:0.02419 pen_dE:0.00260] t 6703s
+it 38800 k 24 loss 0.017858 [base:0.02353 pen_dE:0.00260] t 6736s
+it 38850 k 24 loss 0.013692 [base:0.01866 pen_dE:0.00205] t 6770s
+it 38868 base loss 5.92 non-finite or above cap, step skipped (57 total)
+it 38900 k 24 loss 0.022724 [base:0.02032 pen_dE:0.00199] t 6804s
+it 38950 k 25 loss 0.020269 [base:0.02647 pen_dE:0.00261] t 6837s
+it 39000 k 25 loss 0.031109 [base:0.02362 pen_dE:0.00206] t 6871s
+it 39050 k 25 loss 0.072737 [base:0.02386 pen_dE:0.00224] t 6906s
+it 39100 k 25 loss 0.039089 [base:0.02760 pen_dE:0.00302] t 6940s
+it 39150 k 25 loss 0.015439 [base:0.03310 pen_dE:0.00304] t 6974s
+it 39200 k 25 loss 0.041796 [base:0.03017 pen_dE:0.00290] t 7008s
+it 39250 k 25 loss 0.037050 [base:0.02858 pen_dE:0.00262] t 7042s
+it 39300 k 25 loss 0.023269 [base:0.02246 pen_dE:0.00196] t 7076s
+it 39350 k 25 loss 0.035880 [base:0.02972 pen_dE:0.00279] t 7111s
+it 39400 k 25 loss 0.065320 [base:0.03020 pen_dE:0.00222] t 7145s
+it 39450 k 26 loss 0.040126 [base:0.02504 pen_dE:0.00181] t 7179s
+it 39500 k 26 loss 0.030285 [base:0.03308 pen_dE:0.00218] t 7214s
+it 39550 k 26 loss 0.045262 [base:0.03255 pen_dE:0.00243] t 7248s
+it 39600 k 26 loss 0.017718 [base:0.02974 pen_dE:0.00234] t 7283s
+it 39650 k 26 loss 0.026237 [base:0.03282 pen_dE:0.00251] t 7318s
+it 39700 k 26 loss 0.058955 [base:0.03345 pen_dE:0.00381] t 7352s
+it 39750 k 26 loss 0.017766 [base:0.03691 pen_dE:0.00371] t 7387s
+it 39800 k 26 loss 0.014170 [base:0.02920 pen_dE:0.00217] t 7422s
+it 39850 k 26 loss 0.067053 [base:0.03359 pen_dE:0.00279] t 7456s
+it 39900 k 26 loss 0.040720 [base:0.02916 pen_dE:0.00193] t 7491s
+it 39950 k 27 loss 0.067324 [base:0.03450 pen_dE:0.00246] t 7526s
+it 39962 base loss 6.34 non-finite or above cap, step skipped (58 total)
+it 40000 k 27 loss 0.017606 [base:0.03256 pen_dE:0.00284] t 7562s
+it 40050 k 27 loss 0.006260 [base:0.02918 pen_dE:0.00213] t 7597s
+it 40100 k 27 loss 0.037906 [base:0.03577 pen_dE:0.00248] t 7632s
+it 40150 k 27 loss 0.021450 [base:0.02882 pen_dE:0.00216] t 7667s
+it 40200 k 27 loss 0.052725 [base:0.03878 pen_dE:0.00221] t 7703s
+it 40204 base loss 5.41 non-finite or above cap, step skipped (59 total)
+it 40250 k 27 loss 0.029208 [base:0.03813 pen_dE:0.00221] t 7738s
+it 40300 k 27 loss 0.020196 [base:0.03765 pen_dE:0.00258] t 7773s
+it 40350 k 27 loss 0.023023 [base:0.03354 pen_dE:0.00221] t 7808s
+it 40400 k 28 loss 0.048659 [base:0.03741 pen_dE:0.00229] t 7844s
+it 40450 k 28 loss 0.047717 [base:0.04070 pen_dE:0.00434] t 7879s
+it 40500 k 28 loss 0.031994 [base:0.04173 pen_dE:0.00249] t 7915s
+it 40550 k 28 loss 0.025068 [base:0.04454 pen_dE:0.00224] t 7951s
+it 40600 k 28 loss 0.051760 [base:0.03200 pen_dE:0.00217] t 7987s
+it 40650 k 28 loss 0.091663 [base:0.04180 pen_dE:0.00228] t 8022s
+it 40700 k 28 loss 0.056955 [base:0.04526 pen_dE:0.00264] t 8058s
+it 40750 k 28 loss 0.053062 [base:0.03630 pen_dE:0.00233] t 8094s
+it 40800 k 28 loss 0.068074 [base:0.03504 pen_dE:0.00191] t 8130s
+it 40850 k 28 loss 0.044951 [base:0.04299 pen_dE:0.00202] t 8165s
+it 40900 k 29 loss 0.044860 [base:0.04440 pen_dE:0.00245] t 8202s
+it 40950 k 29 loss 0.093683 [base:0.05133 pen_dE:0.00471] t 8238s
+it 41000 k 29 loss 0.015892 [base:0.04992 pen_dE:0.00265] t 8274s
+it 41050 k 29 loss 0.145876 [base:0.05070 pen_dE:0.00337] t 8311s
+it 41100 k 29 loss 0.061492 [base:0.04610 pen_dE:0.00221] t 8347s
+it 41150 k 29 loss 0.013383 [base:0.05058 pen_dE:0.00224] t 8383s
+it 41200 k 29 loss 0.008025 [base:0.04948 pen_dE:0.00227] t 8420s
+it 41250 k 29 loss 0.069231 [base:0.04418 pen_dE:0.00241] t 8456s
+it 41300 k 29 loss 0.062575 [base:0.03939 pen_dE:0.00216] t 8492s
+it 41350 k 30 loss 0.037274 [base:0.04566 pen_dE:0.00211] t 8529s
+it 41400 k 30 loss 0.099741 [base:0.05845 pen_dE:0.00288] t 8566s
+it 41450 k 30 loss 0.092751 [base:0.05654 pen_dE:0.00238] t 8603s
+it 41500 k 30 loss 0.058132 [base:0.05474 pen_dE:0.00189] t 8639s
+it 41550 k 30 loss 0.025274 [base:0.04895 pen_dE:0.00195] t 8676s
+it 41600 k 30 loss 0.090951 [base:0.04864 pen_dE:0.00194] t 8713s
+it 41650 k 30 loss 0.070767 [base:0.04589 pen_dE:0.00227] t 8750s
+it 41700 k 30 loss 0.047841 [base:0.04325 pen_dE:0.00261] t 8787s
+it 41750 k 30 loss 0.019627 [base:0.04894 pen_dE:0.00347] t 8824s
+it 41800 k 31 loss 0.016115 [base:0.05390 pen_dE:0.00218] t 8861s
+it 41850 k 31 loss 0.097548 [base:0.06044 pen_dE:0.00215] t 8898s
+it 41900 k 31 loss 0.041865 [base:0.05965 pen_dE:0.00257] t 8936s
+it 41950 k 31 loss 0.088712 [base:0.06513 pen_dE:0.00228] t 8973s
+it 42000 k 31 loss 0.076119 [base:0.05119 pen_dE:0.00228] t 9010s
+it 42050 k 31 loss 0.048215 [base:0.06785 pen_dE:0.00224] t 9048s
+it 42100 k 31 loss 0.047232 [base:0.05703 pen_dE:0.00327] t 9085s
+it 42150 k 31 loss 0.050536 [base:0.04700 pen_dE:0.00209] t 9122s
+it 42200 k 31 loss 0.094656 [base:0.07579 pen_dE:0.00205] t 9160s
+it 42250 k 32 loss 0.063815 [base:0.05988 pen_dE:0.00212] t 9198s
+it 42300 k 32 loss 0.082580 [base:0.06464 pen_dE:0.00300] t 9236s
+it 42350 k 32 loss 0.043008 [base:0.08048 pen_dE:0.00223] t 9273s
+it 42400 k 32 loss 0.029723 [base:0.05592 pen_dE:0.00196] t 9311s
+it 42450 k 32 loss 0.039895 [base:0.05183 pen_dE:0.00179] t 9349s
+it 42500 k 32 loss 0.020691 [base:0.05545 pen_dE:0.00227] t 9387s
+it 42550 k 32 loss 0.030547 [base:0.06278 pen_dE:0.00245] t 9425s
+it 42600 k 32 loss 0.082515 [base:0.04997 pen_dE:0.00254] t 9463s
+it 42650 k 33 loss 0.027247 [base:0.06101 pen_dE:0.00227] t 9501s
+it 42700 k 33 loss 0.214014 [base:0.07827 pen_dE:0.00241] t 9539s
+it 42750 k 33 loss 0.040032 [base:0.06507 pen_dE:0.00217] t 9578s
+it 42800 k 33 loss 0.051228 [base:0.07041 pen_dE:0.00194] t 9616s
+it 42850 k 33 loss 0.027347 [base:0.06975 pen_dE:0.00198] t 9654s
+it 42900 k 33 loss 0.041153 [base:0.06501 pen_dE:0.00192] t 9693s
+it 42950 k 33 loss 0.096591 [base:0.05232 pen_dE:0.00226] t 9731s
+it 43000 k 33 loss 0.078627 [base:0.07724 pen_dE:0.00210] t 9770s
+it 43050 k 33 loss 0.136803 [base:0.07584 pen_dE:0.00225] t 9808s
+it 43100 k 34 loss 0.055600 [base:0.07828 pen_dE:0.00215] t 9847s
+it 43150 k 34 loss 0.039927 [base:0.08087 pen_dE:0.00214] t 9886s
+it 43200 k 34 loss 0.074360 [base:0.08213 pen_dE:0.00230] t 9925s
+it 43250 k 34 loss 0.102556 [base:0.08599 pen_dE:0.00222] t 9964s
+it 43300 k 34 loss 0.046143 [base:0.09273 pen_dE:0.00207] t 10003s
+it 43350 k 34 loss 0.153072 [base:0.09556 pen_dE:0.00207] t 10042s
+it 43400 k 34 loss 0.115017 [base:0.07245 pen_dE:0.00207] t 10081s
+it 43450 k 34 loss 0.017124 [base:0.08709 pen_dE:0.00192] t 10120s
+it 43500 k 34 loss 0.069768 [base:0.07464 pen_dE:0.00263] t 10159s
+it 43550 k 35 loss 0.119496 [base:0.08906 pen_dE:0.00189] t 10198s
+it 43600 k 35 loss 0.126704 [base:0.09937 pen_dE:0.00185] t 10238s
+it 43650 k 35 loss 0.183804 [base:0.10474 pen_dE:0.00209] t 10277s
+it 43700 k 35 loss 0.110128 [base:0.09379 pen_dE:0.00185] t 10317s
+it 43750 k 35 loss 0.156384 [base:0.09594 pen_dE:0.00198] t 10356s
+it 43800 k 35 loss 0.078133 [base:0.08061 pen_dE:0.00210] t 10396s
+it 43850 k 35 loss 0.154684 [base:0.08560 pen_dE:0.00207] t 10435s
+it 43900 k 35 loss 0.153335 [base:0.07458 pen_dE:0.00308] t 10475s
+it 43950 k 36 loss 0.048685 [base:0.07594 pen_dE:0.00199] t 10515s
+it 44000 k 36 loss 0.082813 [base:0.09076 pen_dE:0.00195] t 10555s
+it 44050 k 36 loss 0.053152 [base:0.10247 pen_dE:0.00191] t 10595s
+it 44100 k 36 loss 0.076691 [base:0.10772 pen_dE:0.00240] t 10635s
+it 44150 k 36 loss 0.086825 [base:0.09248 pen_dE:0.00179] t 10675s
+it 44200 k 36 loss 0.111583 [base:0.13634 pen_dE:0.00213] t 10715s
+it 44250 k 36 loss 0.186080 [base:0.11489 pen_dE:0.00227] t 10755s
+it 44300 k 36 loss 0.071805 [base:0.09569 pen_dE:0.00207] t 10795s
+it 44350 k 37 loss 0.119321 [base:0.09500 pen_dE:0.00201] t 10835s
+it 44400 k 37 loss 0.087530 [base:0.10892 pen_dE:0.00228] t 10876s
+it 44450 k 37 loss 0.234469 [base:0.13928 pen_dE:0.00203] t 10916s
+it 44500 k 37 loss 0.241074 [base:0.13013 pen_dE:0.00217] t 10957s
+it 44550 k 37 loss 0.157151 [base:0.10382 pen_dE:0.00225] t 10998s
+it 44600 k 37 loss 0.099575 [base:0.11100 pen_dE:0.00231] t 11038s
+it 44650 k 37 loss 0.039209 [base:0.11833 pen_dE:0.00195] t 11079s
+it 44700 k 37 loss 0.043189 [base:0.09118 pen_dE:0.00182] t 11119s
+it 44750 k 37 loss 0.233446 [base:0.11274 pen_dE:0.00225] t 11160s
+it 44800 k 38 loss 0.100227 [base:0.13732 pen_dE:0.00204] t 11201s
+it 44850 k 38 loss 0.096011 [base:0.12355 pen_dE:0.00212] t 11242s
+it 44900 k 38 loss 0.127411 [base:0.12811 pen_dE:0.00266] t 11283s
+it 44950 k 38 loss 0.038494 [base:0.12642 pen_dE:0.00210] t 11325s
+it 45000 k 38 loss 0.082504 [base:0.10606 pen_dE:0.00209] t 11366s
+it 45050 k 38 loss 0.075959 [base:0.10811 pen_dE:0.00179] t 11407s
+it 45100 k 38 loss 0.171763 [base:0.15924 pen_dE:0.00224] t 11448s
+it 45150 k 38 loss 0.080071 [base:0.12095 pen_dE:0.00195] t 11489s
+it 45200 k 39 loss 0.115956 [base:0.14262 pen_dE:0.00195] t 11531s
+it 45250 k 39 loss 0.078341 [base:0.13822 pen_dE:0.00238] t 11573s
+it 45300 k 39 loss 0.128218 [base:0.13465 pen_dE:0.00201] t 11614s
+it 45350 k 39 loss 0.061155 [base:0.11515 pen_dE:0.00194] t 11656s
+it 45400 k 39 loss 0.550573 [base:0.18347 pen_dE:0.00210] t 11698s
+it 45450 k 39 loss 0.108865 [base:0.11304 pen_dE:0.00201] t 11739s
+it 45500 k 39 loss 0.059553 [base:0.12512 pen_dE:0.00215] t 11781s
+it 45550 k 39 loss 0.049429 [base:0.15192 pen_dE:0.00195] t 11823s
+it 45600 k 40 loss 0.097598 [base:0.13169 pen_dE:0.00228] t 11865s
+it 45650 k 40 loss 0.135379 [base:0.13192 pen_dE:0.00241] t 11907s
+it 45700 k 40 loss 0.261037 [base:0.16336 pen_dE:0.00223] t 11949s
+it 45750 k 40 loss 0.194944 [base:0.16153 pen_dE:0.00202] t 11991s
+trained 45762 iters in 12001s
+two_body seed 9100 err@[5, 10, 20, 50, 100] [0.00055, 0.00211, 0.00679, 0.0451, 0.17716]
+two_body seed 9200 err@[5, 10, 20, 50, 100] [0.00152, 0.00452, 0.01124, 0.04433, 0.15076]
+two_body seed 9300 err@[5, 10, 20, 50, 100] [0.00053, 0.00215, 0.00602, 0.03697, 0.14256]
+two_body seed 4738 err@[5, 10, 20, 50, 100] [0.00139, 0.00328, 0.00831, 0.03711, 0.14155]
+two_body MEAN err [0.001, 0.00302, 0.00809, 0.04088, 0.15301] dE/E 0.331 (true 6.189e-05)
+expB seed 9100 err@[5, 10, 20, 50, 100] [0.00318, 0.00876, 0.02562, 0.18859, 1.55119]
+expB seed 9200 err@[5, 10, 20, 50, 100] [0.00347, 0.00942, 0.02726, 0.18377, 1.53596]
+expB seed 9300 err@[5, 10, 20, 50, 100] [0.00346, 0.00882, 0.02631, 0.18686, 1.52382]
+expB seed 4738 err@[5, 10, 20, 50, 100] [0.00319, 0.0085, 0.0256, 0.17969, 1.52789]
+expB MEAN err [0.00333, 0.00888, 0.0262, 0.18473, 1.53472] dE/E 0.02586 (true 0.0001092)
+bh300 seed 9100 err@[5, 10, 20, 50, 100] [0.01094, 0.02647, 0.08003, 0.99095, 5.25947]
+bh300 seed 9200 err@[5, 10, 20, 50, 100] [0.00838, 0.02257, 0.06917, 1.04468, 4.86366]
+bh300 seed 9300 err@[5, 10, 20, 50, 100] [0.00886, 0.02408, 0.07204, 1.01429, 5.0418]
+bh300 seed 4738 err@[5, 10, 20, 50, 100] [0.00965, 0.02578, 0.08244, 0.96608, 4.71224]
+bh300 MEAN err [0.00946, 0.02472, 0.07592, 1.004, 4.96929] dE/E 0.04611 (true 0.0002488)
+cons nr100 1000t dE 0.07421 (true 4.364e-05) dL 0.02519 bound 0.900/0.970 vir 1/0.904 outgrid 0.120
+cons bh300 1000t dE 0.6657 (true 0.0003271) dL 0.6517 bound 0.723/0.880 vir 0.94/0.931 outgrid 0.310
+timing two_body: 4.809 ms/tick, peak alloc 874.4 MB (reserved 1048.0, info) (batch 48, N 2)
+timing expB: 5.026 ms/tick, peak alloc 893.3 MB (reserved 1068.0, info) (batch 48, N 94)
+timing bh300: 2.598 ms/tick, peak alloc 88.2 MB (reserved 98.0, info) (batch 1, N 300)
+timing expB_batch1_n100: 2.545 ms/tick, peak alloc 88.0 MB (reserved 98.0, info) (batch 1, N 100)
+battery ref/cluster_N100_s8_v0.3 err@2 0.03357 floor 0.00028
+battery mass_ratio_2body/binary_q10 err@2 0.09976 floor 4.3e-05
+battery mass_dominant/cluster_heavy30 err@2 0.6178 floor 0.00033
+battery mass_spectrum/logunif_0.1_10 err@2 0.1626 floor 0.00071
+battery mass_scale_equal/equal_m3.0 err@2 0.09621 floor 0.00056
+battery mass_scale_equal/equal_m10.0 err@2 0.9894 floor 0.0044
+battery density_sigma/sigma2.0 err@2 0.3407 floor 0.00026
+battery density_plummer/plummer_a0.25 err@2 3.554 floor 0.00022
+battery softening_eps/cluster_eps0.1 err@2 0.4824 floor 0.085
+battery softening_eps/cluster_eps2.0 err@2 0.7369 floor 0.00015
+battery boundary_offset/cluster_shift24.0 err@2 0.4119 floor 0.00069
+battery dt/cluster_dt0.4 err@2 0.1102 floor 0.00028
+battery velocity_scale/vfac4.0 err@2 0.1 floor 0.00018
+battery ic_shape/filament err@2 0.3312 floor 0.0013
+battery binary_tight/binary_d0.25 err@2 0.1108 floor 1.4e-05
+wrote results/ctrl_full_regress.json
+memory gate SKIPPED: definitions differ (baseline None, candidate 'absolute max_memory_allocated, reset before warm-up')
+two_body: baseline lacks bound/virial rows, skipped
+expB: baseline lacks bound/virial rows, skipped
+bh300: baseline lacks bound/virial rows, skipped
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate checkpoints/scatter_joint/ctrl_full.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521   0.00099864     -5.1  PASS
+two_body err@10                     0.0030977    0.0030158     -2.6  PASS
+two_body err@20                     0.0091024    0.0080897    -11.1  PASS
+expB err@5                          0.0030114    0.0033273     10.5  PASS
+expB err@10                          0.008129    0.0088753      9.2  PASS
+expB err@20                          0.023946       0.0262      9.4  PASS
+bh300 err@5                         0.0079514    0.0094552     18.9  FAIL
+bh300 err@10                           0.0209     0.024722     18.3  FAIL
+bh300 err@20                         0.062157     0.075923     22.1  FAIL
+bh300 vmax/c (<1)                     0.92594      0.92594      nan  PASS
+bh300 dE_rel_model@100               0.039122     0.046107     17.9  PASS
+bh300 dL_rel_model@100                0.30287      0.17082    -43.6  PASS
+bh300 dP_model@100                 4.3719e-05   5.0016e-05     14.4  PASS
+cons nr100@1000 dE                   0.017041     0.074211    335.5  FAIL
+cons nr100@1000 dL                   0.037821     0.025194    -33.4  PASS
+cons nr100@1000 dP                 2.0085e-05   1.9844e-05     -1.2  PASS
+cons nr100@1000 bound_gap                0.08         0.07    -12.5  PASS
+cons nr100@1000 vir_gap                0.1046       0.1049      0.3  PASS
+cons nr100@1000 outgrid                  0.16         0.12    -25.0  PASS
+cons nr100 nonfinite                        0            0      nan  PASS
+cons bh300@1000 dE                    0.48095      0.66568     38.4  FAIL
+cons bh300@1000 dL                     1.4574      0.65167    -55.3  PASS
+cons bh300@1000 dP                 0.00014371   0.00010254    -28.6  PASS
+cons bh300@1000 bound_gap             0.12667      0.15667     23.7  PASS
+cons bh300@1000 vir_gap              0.037173     0.010155    -72.7  PASS
+cons bh300@1000 outgrid               0.27667         0.31     12.0  PASS
+cons bh300 frac|v|>=c                       0            0      nan  PASS
+cons bh300 nonfinite                        0            0      nan  PASS
+two_body tick_ms                       4.7239       4.8088      1.8  PASS
+expB tick_ms                           4.9509       5.0264      1.5  PASS
+bh300 tick_ms                          2.4881       2.5975      4.4  PASS
+expB_batch1_n100 tick_ms               2.4563       2.5445      3.6  PASS
+OOD battery (non-gating), err@2 time units: baseline -> candidate
+  ref/cluster_N100_s8_v0.3                            - -> 0.03357
+  mass_ratio_2body/binary_q10                         - -> 0.09976
+  mass_dominant/cluster_heavy30                       - -> 0.6178
+  mass_spectrum/logunif_0.1_10                        - -> 0.1626
+  mass_scale_equal/equal_m3.0                         - -> 0.09621
+  mass_scale_equal/equal_m10.0                        - -> 0.9894
+  density_sigma/sigma2.0                              - -> 0.3407
+  density_plummer/plummer_a0.25                       - -> 3.554
+  softening_eps/cluster_eps0.1                        - -> 0.4824
+  softening_eps/cluster_eps2.0                        - -> 0.7369
+  boundary_offset/cluster_shift24.0                   - -> 0.4119
+  dt/cluster_dt0.4                                    - -> 0.1102
+  velocity_scale/vfac4.0                              - -> 0.1
+  ic_shape/filament                                   - -> 0.3312
+  binary_tight/binary_d0.25                           - -> 0.1108
+  geomean ratio to ref: None -> 7.909652493482247
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 0.04088; two_body err@100 0.1308 -> 0.153; expB err@50 0.1574 -> 0.1847; expB err@100 1.422 -> 1.535; bh300 err@50 0.9126 -> 1.004
+floors (not gated)            candidate  ref-noise  chaos1e-5    c/ref  c/chaos
+two_body err@5                0.0009986   4.14e-06    5.5e-05      241     18.2  
+two_body err@10                0.003016   6.67e-06   5.52e-05      452     54.7  
+two_body err@20                 0.00809   1.33e-05    5.7e-05      608      142  
+two_body err@50                 0.04088   3.45e-05   6.49e-05 1.18e+03      630  
+two_body err@100                  0.153   8.31e-05   9.27e-05 1.84e+03 1.65e+03  
+two_body dE/E@100                 0.331   6.19e-05   6.19e-05 5.35e+03 5.35e+03  
+two_body dP@100               4.948e-10   1.51e-17   1.33e-17      n/a      n/a  
+two_body dL/L@100                0.2318    2.3e-14   2.32e-14      n/a      n/a  
+two_body bound gap@100          0.01042          0          0      n/a      n/a  
+two_body virial gap@100         0.03442   0.000172   0.000129      200      268  
+expB err@5                     0.003327   2.92e-05   0.000157      114     21.2  
+expB err@10                    0.008875    5.1e-05   0.000171      174     51.9  
+expB err@20                      0.0262   0.000106   0.000234      247      112  
+expB err@50                      0.1847   0.000584   0.000882      316      209  
+expB err@100                      1.535     0.0132     0.0188      117     81.7  
+expB dE/E@100                   0.02586   0.000109   0.000108      237      239  
+expB dP@100                   3.285e-06   3.18e-14   2.46e-14      n/a      n/a  
+expB dL/L@100                    0.3745   1.14e-13    3.8e-14      n/a      n/a  
+expB bound gap@100             0.001331   7.04e-05   7.04e-05     18.9     18.9  
+expB virial gap@100             0.02214    0.00047   0.000684     47.1     32.4  
+bh300 err@5                    0.009455   9.18e-05   0.000158      103       60  
+bh300 err@10                    0.02472   0.000177   0.000208      140      119  
+bh300 err@20                    0.07592   0.000544   0.000389      140      195  
+bh300 err@50                      1.004     0.0151     0.0059     66.3      170  
+bh300 dE/E@100                  0.04611   0.000249   0.000226      185      204  
+bh300 dP@100                  5.002e-05   3.82e-13   1.82e-13      n/a      n/a  
+bh300 dL/L@100                   0.1708   0.000198   0.000198      863      864  
+bh300 bound gap@100           0.0008333     0.0025   0.000833    0.333        1  WITHIN
+bh300 virial gap@100            0.02544     0.0109     0.0123     2.33     2.08  
+OVERALL FAIL
+selftest truth vs gs.rollout_torch c=None: max diff 0.00e+00
+selftest truth vs gs.rollout_torch c=10.0: max diff 0.00e+00
+ref                cluster_N100_s8_v0.3       err@.5/1/2/5 [0.0045, 0.0119, 0.0358, 0.3039] floor@5 1.6e-03 ballistic@5 6.89 dE 0.0275 (true 0.000596) nonfinite None t>1 7.300000000000001
+ref                cluster_N300_s8_v0.3       err@.5/1/2/5 [0.0097, 0.0254, 0.0825, 1.2227] floor@5 9.7e-03 ballistic@5 14.1 dE 0.0278 (true 0.00163) nonfinite None t>1 4.7
+ref                bh300_c10                  err@.5/1/2/5 [0.0095, 0.0247, 0.0759, 1.0005] floor@5 7.1e-03 ballistic@5 12.5 dE 0.0488 (true 0.00186) nonfinite None t>1 5.050000000000001
+mass_ratio_2body   binary_q1                  err@.5/1/2/5 [0.0004, 0.0016, 0.0048, 0.0256] floor@5 3.0e-05 ballistic@5 0.747 dE 0.0104 (true 1.74e-11) nonfinite None t>1 99.0
+mass_ratio_2body   binary_q3                  err@.5/1/2/5 [0.0009, 0.0043, 0.0172, 0.1326] floor@5 4.5e-05 ballistic@5 1.46 dE 0.042 (true 1.04e-10) nonfinite None t>1 99.0
+mass_ratio_2body   binary_q10                 err@.5/1/2/5 [0.0094, 0.0392, 0.1025, 0.1421] floor@5 1.0e-04 ballistic@5 3.73 dE 0.115 (true 8.68e-10) nonfinite None t>1 99.0
+mass_ratio_2body   binary_q100                err@.5/1/2/5 [0.0385, 0.1597, 0.6949, 3.6846] floor@5 4.1e-04 ballistic@5 12.6 dE 0.869 (true 7.31e-08) nonfinite None t>1 2.45
+mass_ratio_2body   binary_q1000               err@.5/1/2/5 [0.512, 1.6681, 3.622, 64.8277] floor@5 1.2e-03 ballistic@5 37.9 dE 18.1 (true 7.1e-06) nonfinite None t>1 0.9
+mass_ratio_2body   binary_q10000              err@.5/1/2/5 [6.5072, 9.9286, 105.9044, 1754.6619] floor@5 3.9e-03 ballistic@5 124 dE 319 (true 0.000632) nonfinite None t>1 0.2
+mass_dominant      cluster_heavy1             err@.5/1/2/5 [0.0046, 0.012, 0.0329, 0.2986] floor@5 1.7e-03 ballistic@5 6.78 dE 0.0289 (true 0.000729) nonfinite None t>1 7.25
+mass_dominant      cluster_heavy3             err@.5/1/2/5 [0.0049, 0.0126, 0.0349, 0.3157] floor@5 1.9e-03 ballistic@5 7.12 dE 0.0305 (true 0.000679) nonfinite None t>1 7.1000000000000005
+mass_dominant      cluster_heavy10            err@.5/1/2/5 [0.0069, 0.0179, 0.054, 0.6709] floor@5 2.4e-03 ballistic@5 8.07 dE 0.0536 (true 0.00142) nonfinite None t>1 6.0
+mass_dominant      cluster_heavy30            err@.5/1/2/5 [0.0451, 0.165, 0.6481, 3.6258] floor@5 5.6e-03 ballistic@5 9.58 dE 0.356 (true 0.00316) nonfinite None t>1 2.5
+mass_dominant      cluster_heavy100           err@.5/1/2/5 [0.3214, 0.99, 3.1992, 18.0323] floor@5 4.1e-01 ballistic@5 12.7 dE 3.73 (true 0.0328) nonfinite None t>1 1.1
+mass_dominant      cluster_heavy300           err@.5/1/2/5 [1.1209, 3.6898, 13.157, 59.3391] floor@5 7.0e+00 ballistic@5 24.2 dE 7.52 (true 0.929) nonfinite None t>1 0.5
+mass_dominant      cluster_heavy1000          err@.5/1/2/5 [4.4534, 15.622, 46.0737, 160.9476] floor@5 4.1e+01 ballistic@5 101 dE 10.1 (true 4.5) nonfinite None t>1 0.30000000000000004
+mass_dominant      cluster_heavy10000         err@.5/1/2/5 [60.0705, 160.9061, 398.2925, 1143.7628] floor@5 1.0e+02 ballistic@5 810 dE 32.8 (true 17.9) nonfinite None t>1 0.1
+mass_spectrum      logunif_0.5_2              err@.5/1/2/5 [0.006, 0.0151, 0.042, 0.3855] floor@5 2.4e-03 ballistic@5 7.55 dE 0.0234 (true 0.000806) nonfinite None t>1 6.45
+mass_spectrum      logunif_0.1_10             err@.5/1/2/5 [0.0131, 0.037, 0.1443, 2.362] floor@5 4.4e-02 ballistic@5 11.8 dE 0.145 (true 0.00339) nonfinite None t>1 4.15
+mass_spectrum      logunif_0.01_100           err@.5/1/2/5 [0.2442, 1.3304, 6.1561, 27.2117] floor@5 8.6e+00 ballistic@5 23.4 dE 1.15 (true 0.163) nonfinite None t>1 0.9
+mass_spectrum      logunif_0.001_1000         err@.5/1/2/5 [16.6079, 91.4632, 280.002, 849.6693] floor@5 7.6e+01 ballistic@5 109 dE 154 (true 1.76) nonfinite None t>1 0.25
+mass_scale_equal   equal_m0.01                err@.5/1/2/5 [0.0001, 0.0002, 0.0007, 0.0043] floor@5 1.5e-04 ballistic@5 0.0976 dE 0.000579 (true 2.23e-07) nonfinite None t>1 99.0
+mass_scale_equal   equal_m0.1                 err@.5/1/2/5 [0.0005, 0.0018, 0.006, 0.0267] floor@5 2.3e-04 ballistic@5 0.873 dE 0.00528 (true 1.04e-05) nonfinite None t>1 99.0
+mass_scale_equal   equal_m0.3                 err@.5/1/2/5 [0.0015, 0.0048, 0.0133, 0.0723] floor@5 4.0e-04 ballistic@5 2.32 dE 0.022 (true 0.000143) nonfinite None t>1 99.0
+mass_scale_equal   equal_m1.0                 err@.5/1/2/5 [0.0045, 0.0119, 0.0358, 0.3041] floor@5 1.6e-03 ballistic@5 6.89 dE 0.0276 (true 0.000596) nonfinite None t>1 7.300000000000001
+mass_scale_equal   equal_m3.0                 err@.5/1/2/5 [0.0115, 0.0297, 0.1029, 1.9951] floor@5 3.8e-02 ballistic@5 13.8 dE 0.0526 (true 0.00195) nonfinite None t>1 4.300000000000001
+mass_scale_equal   equal_m10.0                err@.5/1/2/5 [0.0426, 0.1737, 1.127, 9.0474] floor@5 2.0e+00 ballistic@5 21 dE 0.301 (true 0.0197) nonfinite None t>1 1.9000000000000001
+mass_scale_equal   equal_m30.0                err@.5/1/2/5 [0.3716, 1.9695, 7.2837, 18.14] floor@5 6.9e+00 ballistic@5 29.3 dE 0.446 (true 0.163) nonfinite None t>1 0.8
+mass_scale_equal   equal_m100.0               err@.5/1/2/5 [3.0691, 9.85, 18.6134, 36.4417] floor@5 2.4e+01 ballistic@5 51.8 dE 0.807 (true 0.67) nonfinite None t>1 0.30000000000000004
+velocity_scale     vfac0.0                    err@.5/1/2/5 [0.0052, 0.0106, 0.0308, 0.2877] floor@5 1.6e-03 ballistic@5 6.67 dE 0.0265 (true 0.00106) nonfinite None t>1 7.0
+velocity_scale     vfac0.1                    err@.5/1/2/5 [0.0051, 0.0112, 0.0332, 0.2948] floor@5 1.9e-03 ballistic@5 6.64 dE 0.0355 (true 0.00121) nonfinite None t>1 7.050000000000001
+velocity_scale     vfac0.3                    err@.5/1/2/5 [0.0045, 0.0119, 0.0358, 0.3041] floor@5 1.6e-03 ballistic@5 6.89 dE 0.0276 (true 0.000596) nonfinite None t>1 7.300000000000001
+velocity_scale     vfac0.6                    err@.5/1/2/5 [0.004, 0.0105, 0.0294, 0.2365] floor@5 1.6e-03 ballistic@5 6.91 dE 0.0161 (true 0.000294) nonfinite None t>1 7.800000000000001
+velocity_scale     vfac1.0                    err@.5/1/2/5 [0.0037, 0.0096, 0.0277, 0.1961] floor@5 1.0e-03 ballistic@5 6.05 dE 0.00309 (true 4.7e-05) nonfinite None t>1 8.75
+velocity_scale     vfac1.5                    err@.5/1/2/5 [0.0042, 0.0104, 0.0291, 0.1642] floor@5 7.6e-04 ballistic@5 5.17 dE 0.00791 (true 5.48e-05) nonfinite None t>1 99.0
+velocity_scale     vfac2.5                    err@.5/1/2/5 [0.0061, 0.0156, 0.0467, 0.2492] floor@5 5.2e-04 ballistic@5 3.97 dE 0.0203 (true 4.4e-05) nonfinite None t>1 9.350000000000001
+velocity_scale     vfac4.0                    err@.5/1/2/5 [0.0111, 0.0316, 0.0981, 0.4673] floor@5 3.8e-04 ballistic@5 2.92 dE 0.0218 (true 6.14e-05) nonfinite None t>1 7.35
+velocity_scale     vfac8.0                    err@.5/1/2/5 [0.0281, 0.0949, 0.3183, 1.2867] floor@5 2.6e-04 ballistic@5 1.78 dE 0.0291 (true 0.000157) nonfinite None t>1 4.4
+relativistic_c     bh300_c1.5                 err@.5/1/2/5 [0.0048, 0.012, 0.0273, 0.1061] floor@5 5.7e-04 ballistic@5 5.08 dE 2.15 (true 2.16) nonfinite None t>1 99.0
+relativistic_c     bh300_c3.0                 err@.5/1/2/5 [0.0079, 0.0199, 0.0485, 0.2305] floor@5 1.4e-03 ballistic@5 9.01 dE 2.09 (true 2.05) nonfinite None t>1 8.100000000000001
+relativistic_c     bh300_c5.0                 err@.5/1/2/5 [0.009, 0.023, 0.0642, 0.5726] floor@5 3.3e-03 ballistic@5 10.6 dE 0.199 (true 0.176) nonfinite None t>1 5.800000000000001
+relativistic_c     bh300_c10.0                err@.5/1/2/5 [0.0095, 0.0247, 0.0759, 1.003] floor@5 7.1e-03 ballistic@5 12.5 dE 0.0397 (true 0.00186) nonfinite None t>1 5.050000000000001
+relativistic_c     bh300_c30.0                err@.5/1/2/5 [0.0096, 0.0253, 0.0825, 1.1936] floor@5 9.5e-03 ballistic@5 13.9 dE 0.0275 (true 0.00177) nonfinite None t>1 4.7
+relativistic_c     bh300_c100.0               err@.5/1/2/5 [0.0096, 0.0254, 0.0834, 1.2204] floor@5 9.8e-03 ballistic@5 14.1 dE 0.0251 (true 0.00176) nonfinite None t>1 4.7
+relativistic_c     bh300_c1000.0              err@.5/1/2/5 [0.0096, 0.0254, 0.0836, 1.228] floor@5 9.7e-03 ballistic@5 14.1 dE 0.0254 (true 0.00163) nonfinite None t>1 4.7
+relativistic_c     bh300_c10_vfac0.0          err@.5/1/2/5 [0.0112, 0.0225, 0.0686, 1.1495] floor@5 1.1e-02 ballistic@5 11.7 dE 0.0894 (true 0.0019) nonfinite None t>1 4.9
+relativistic_c     bh300_c10_vfac1.0          err@.5/1/2/5 [0.0066, 0.017, 0.0497, 0.3932] floor@5 1.9e-03 ballistic@5 13.4 dE 0.0187 (true 0.00436) nonfinite None t>1 7.0
+relativistic_c     bh300_c10_vfac3.0          err@.5/1/2/5 [0.0036, 0.0095, 0.026, 0.1211] floor@5 3.5e-04 ballistic@5 18.6 dE 0.027 (true 0.0274) nonfinite None t>1 99.0
+density_sigma      sigma1.0                   err@.5/1/2/5 [0.1408, 0.3977, 1.0889, 1.9194] floor@5 6.8e-03 ballistic@5 9.88 dE 0.0632 (true 0.00673) nonfinite None t>1 2.0
+density_sigma      sigma2.0                   err@.5/1/2/5 [0.0232, 0.1013, 0.403, 1.8253] floor@5 5.4e-03 ballistic@5 8.55 dE 0.0617 (true 0.00433) nonfinite None t>1 3.2
+density_sigma      sigma3.0                   err@.5/1/2/5 [0.0151, 0.0374, 0.1517, 1.4023] floor@5 4.6e-03 ballistic@5 9.63 dE 0.0566 (true 0.00241) nonfinite None t>1 4.25
+density_sigma      sigma5.0                   err@.5/1/2/5 [0.0088, 0.0221, 0.0599, 0.7428] floor@5 4.0e-03 ballistic@5 9.79 dE 0.0248 (true 0.00176) nonfinite None t>1 5.6000000000000005
+density_sigma      sigma8.0                   err@.5/1/2/5 [0.0045, 0.0119, 0.0358, 0.3038] floor@5 1.6e-03 ballistic@5 6.89 dE 0.0275 (true 0.000596) nonfinite None t>1 7.300000000000001
+density_sigma      sigma10.0                  err@.5/1/2/5 [0.0036, 0.0092, 0.0261, 0.2045] floor@5 1.4e-03 ballistic@5 4.64 dE 0.0403 (true 0.000526) nonfinite None t>1 8.4
+density_sigma      sigma16.0                  err@.5/1/2/5 [0.003, 0.0091, 0.0306, 0.1977] floor@5 7.2e-04 ballistic@5 2.41 dE 0.0126 (true 7.75e-05) nonfinite None t>1 54.3
+density_sigma      sigma32.0                  err@.5/1/2/5 [0.0112, 0.0265, 0.0834, 0.4589] floor@5 1.3e-03 ballistic@5 2.09 dE 0.00959 (true 0.000206) nonfinite None t>1 7.3500000000000005
+density_plummer    plummer_a0.25              err@.5/1/2/5 [0.5771, 1.3991, 3.5817, 9.6551] floor@5 1.2e-02 ballistic@5 42.7 dE 0.114 (true 0.009) nonfinite None t>1 0.8500000000000001
+density_plummer    plummer_a0.5               err@.5/1/2/5 [0.1197, 0.2534, 0.5731, 2.2034] floor@5 3.6e-03 ballistic@5 34.3 dE 0.0216 (true 0.00173) nonfinite None t>1 2.75
+density_plummer    plummer_a1.0               err@.5/1/2/5 [0.0411, 0.0904, 0.2522, 1.5295] floor@5 3.0e-03 ballistic@5 24.7 dE 0.0138 (true 0.00028) nonfinite None t>1 3.95
+density_plummer    plummer_a2.0               err@.5/1/2/5 [0.0158, 0.0403, 0.1154, 0.9859] floor@5 2.2e-03 ballistic@5 18.1 dE 0.00584 (true 0.000145) nonfinite None t>1 5.15
+density_plummer    plummer_a4.0               err@.5/1/2/5 [0.0068, 0.0174, 0.0537, 0.4723] floor@5 2.3e-03 ballistic@5 12.4 dE 0.00407 (true 0.000104) nonfinite None t>1 6.4
+density_plummer    plummer_a8.0               err@.5/1/2/5 [0.0037, 0.0106, 0.0333, 0.2219] floor@5 1.0e-03 ballistic@5 5.15 dE 0.00497 (true 6.68e-05) nonfinite None t>1 9.15
+close_pass_impact  pass_b0.0                  err@.5/1/2/5 [0.0003, 0.0014, 0.0063, 0.0499] floor@5 1.2e-04 ballistic@5 0.0309 dE 0.0884 (true 1.22e-07) nonfinite None t>1 99.0
+close_pass_impact  pass_b0.25                 err@.5/1/2/5 [0.0005, 0.0021, 0.0084, 0.0521] floor@5 1.2e-04 ballistic@5 0.0308 dE 0.0872 (true 1.23e-07) nonfinite None t>1 99.0
+close_pass_impact  pass_b0.5                  err@.5/1/2/5 [0.0008, 0.0026, 0.0102, 0.0541] floor@5 1.2e-04 ballistic@5 0.0308 dE 0.0866 (true 1.24e-07) nonfinite None t>1 99.0
+close_pass_impact  pass_b1.0                  err@.5/1/2/5 [0.0006, 0.0014, 0.0046, 0.0422] floor@5 1.2e-04 ballistic@5 0.0307 dE 0.0882 (true 1.23e-07) nonfinite None t>1 99.0
+close_pass_impact  pass_b2.0                  err@.5/1/2/5 [0.0004, 0.0011, 0.0049, 0.0521] floor@5 1.2e-04 ballistic@5 0.0304 dE 0.0979 (true 1.16e-07) nonfinite None t>1 99.0
+close_pass_impact  pass_b4.0                  err@.5/1/2/5 [0.0004, 0.0011, 0.005, 0.0486] floor@5 1.2e-04 ballistic@5 0.0294 dE 0.115 (true 8.73e-08) nonfinite None t>1 99.0
+close_pass_impact  pass_b8.0                  err@.5/1/2/5 [0.0004, 0.0014, 0.007, 0.0634] floor@5 1.3e-04 ballistic@5 0.0261 dE 0.126 (true 2.8e-08) nonfinite None t>1 99.0
+close_pass_impact  headon_fall_d1.0           err@.5/1/2/5 [0.003, 0.0141, 0.0081, 0.0728] floor@5 6.3e-05 ballistic@5 0.229 dE 0.101 (true 0.00209) nonfinite None t>1 99.0
+close_pass_impact  headon_fall_d4.0           err@.5/1/2/5 [0.0004, 0.0017, 0.0087, 0.0661] floor@5 3.7e-05 ballistic@5 0.899 dE 0.319 (true 0.0118) nonfinite None t>1 99.0
+close_pass_impact  headon_fall_d12.0          err@.5/1/2/5 [0.0007, 0.0024, 0.0101, 0.0718] floor@5 7.1e-05 ballistic@5 0.087 dE 0.0174 (true 2.62e-08) nonfinite None t>1 99.0
+binary_tight       binary_d0.125              err@.5/1/2/5 [0.0257, 0.0388, 0.0738, 0.1235] floor@5 1.4e-05 ballistic@5 1.18 dE 0.00523 (true 1.56e-07) nonfinite None t>1 99.0
+binary_tight       binary_d0.25               err@.5/1/2/5 [0.0323, 0.0572, 0.1116, 0.229] floor@5 2.6e-05 ballistic@5 2.24 dE 0.0177 (true 3.43e-07) nonfinite None t>1 99.0
+binary_tight       binary_d0.5                err@.5/1/2/5 [0.0045, 0.0255, 0.0369, 0.1214] floor@5 5.8e-05 ballistic@5 3.13 dE 0.0414 (true 2.5e-07) nonfinite None t>1 99.0
+binary_tight       binary_d1.0                err@.5/1/2/5 [0.0034, 0.012, 0.0404, 0.0529] floor@5 7.0e-05 ballistic@5 3.14 dE 0.0136 (true 3.57e-08) nonfinite None t>1 99.0
+binary_tight       binary_d2.0                err@.5/1/2/5 [0.0004, 0.0015, 0.0082, 0.0782] floor@5 4.4e-05 ballistic@5 2.43 dE 0.0183 (true 1.38e-09) nonfinite None t>1 99.0
+binary_tight       binary_d4.0                err@.5/1/2/5 [0.0004, 0.0016, 0.0048, 0.0256] floor@5 3.0e-05 ballistic@5 0.747 dE 0.0104 (true 1.74e-11) nonfinite None t>1 99.0
+binary_tight       binary_d10.0               err@.5/1/2/5 [0.0005, 0.0022, 0.0104, 0.0574] floor@5 5.9e-05 ballistic@5 0.124 dE 0.0419 (true 6.26e-15) nonfinite None t>1 99.0
+hier_triple        triple_ain0.2              err@.5/1/2/5 [0.0209, 0.0346, 0.0696, 0.1962] floor@5 6.8e-05 ballistic@5 1.38 dE 0.0115 (true 1.08e-06) nonfinite None t>1 99.0
+hier_triple        triple_ain0.5              err@.5/1/2/5 [0.0076, 0.0242, 0.0208, 0.0756] floor@5 1.6e-04 ballistic@5 2.22 dE 0.0207 (true 1.26e-06) nonfinite None t>1 99.0
+hier_triple        triple_ain1.0              err@.5/1/2/5 [0.0015, 0.0066, 0.0284, 0.0836] floor@5 2.0e-04 ballistic@5 2.23 dE 0.0159 (true 9.2e-07) nonfinite None t>1 99.0
+hier_triple        triple_ain2.0              err@.5/1/2/5 [0.0007, 0.0023, 0.0059, 0.0461] floor@5 1.3e-04 ballistic@5 1.74 dE 0.0124 (true 9.44e-07) nonfinite None t>1 99.0
+hier_triple        triple_ain0.5_m3x10        err@.5/1/2/5 [0.007, 0.0108, 0.0907, 0.7317] floor@5 2.5e-04 ballistic@5 2.48 dE 0.0946 (true 0.00725) nonfinite None t>1 6.25
+softening_eps      cluster_eps0.05            err@.5/1/2/5 [0.1471, 0.486, 1.5, 6.5662] floor@5 6.2e+00 ballistic@5 9.27 dE 0.696 (true 1.8) nonfinite None t>1 1.6
+softening_eps      cluster_eps0.1             err@.5/1/2/5 [0.0764, 0.1912, 0.5341, 2.3716] floor@5 1.7e+00 ballistic@5 7.05 dE 0.568 (true 0.327) nonfinite None t>1 3.05
+softening_eps      cluster_eps0.25            err@.5/1/2/5 [0.0496, 0.1189, 0.3188, 1.4126] floor@5 5.7e-02 ballistic@5 6.96 dE 0.252 (true 0.00464) nonfinite None t>1 4.15
+softening_eps      cluster_eps0.5             err@.5/1/2/5 [0.0045, 0.0119, 0.0358, 0.304] floor@5 1.6e-03 ballistic@5 6.89 dE 0.0277 (true 0.000596) nonfinite None t>1 7.300000000000001
+softening_eps      cluster_eps1.0             err@.5/1/2/5 [0.0393, 0.1473, 0.4204, 1.5467] floor@5 4.3e-04 ballistic@5 6.64 dE 0.421 (true 0.00028) nonfinite None t>1 3.75
+softening_eps      cluster_eps2.0             err@.5/1/2/5 [0.0641, 0.2446, 0.7871, 3.0195] floor@5 1.9e-04 ballistic@5 5.6 dE 1.03 (true 9.29e-05) nonfinite None t>1 2.3000000000000003
+softening_eps      binary_d1_eps0.1           err@.5/1/2/5 [0.0409, 0.1552, 0.5782, 1.3389] floor@5 1.5e-04 ballistic@5 3.18 dE 0.071 (true 1.22e-07) nonfinite None t>1 2.9000000000000004
+softening_eps      binary_d1_eps0.25          err@.5/1/2/5 [0.027, 0.103, 0.3955, 0.914] floor@5 1.2e-04 ballistic@5 3.15 dE 0.0325 (true 8.84e-08) nonfinite None t>1 6.6
+softening_eps      binary_d1_eps0.5           err@.5/1/2/5 [0.0034, 0.012, 0.0404, 0.0529] floor@5 7.0e-05 ballistic@5 3.14 dE 0.0136 (true 3.57e-08) nonfinite None t>1 99.0
+softening_eps      binary_d1_eps1.0           err@.5/1/2/5 [0.0501, 0.2379, 0.8024, 0.8028] floor@5 2.4e-05 ballistic@5 2.65 dE 0.491 (true 3.91e-09) nonfinite None t>1 99.0
+dt                 cluster_dt0.0125           err@.5/1/2/5 [0.0043, 0.0134, 0.0423, 0.3398] floor@5 1.6e-03 ballistic@5 6.89 dE 0.198 (true 0.000176) nonfinite None t>1 6.93125
+dt                 cluster_dt0.025            err@.5/1/2/5 [0.0042, 0.0128, 0.0408, 0.3274] floor@5 1.6e-03 ballistic@5 6.89 dE 0.171 (true 0.000702) nonfinite None t>1 7.0
+dt                 cluster_dt0.05             err@.5/1/2/5 [0.0041, 0.0119, 0.0382, 0.3099] floor@5 1.6e-03 ballistic@5 6.89 dE 0.113 (true 0.000612) nonfinite None t>1 7.125
+dt                 cluster_dt0.1              err@.5/1/2/5 [0.0045, 0.0119, 0.0358, 0.304] floor@5 1.6e-03 ballistic@5 6.89 dE 0.0275 (true 0.000596) nonfinite None t>1 7.300000000000001
+dt                 cluster_dt0.2              err@.5/1/2/5 [0.0048, 0.0145, 0.0427, 0.439] floor@5 1.6e-03 ballistic@5 6.89 dE 0.284 (true 0.000505) nonfinite None t>1 6.4
+dt                 cluster_dt0.4              err@.5/1/2/5 [0.0149, 0.0228, 0.1183, 1.2669] floor@5 1.4e-03 ballistic@5 6.36 dE 0.611 (true 0.000492) nonfinite None t>1 4.800000000000001
+dt                 bh300_c10_dt0.05           err@.5/1/2/5 [0.0091, 0.0248, 0.0742, 1.1249] floor@5 7.1e-03 ballistic@5 12.5 dE 0.162 (true 0.00191) nonfinite None t>1 4.875
+dt                 bh300_c10_dt0.1            err@.5/1/2/5 [0.0095, 0.0247, 0.0759, 1.001] floor@5 7.1e-03 ballistic@5 12.5 dE 0.0494 (true 0.00186) nonfinite None t>1 5.050000000000001
+dt                 bh300_c10_dt0.2            err@.5/1/2/5 [0.0099, 0.0311, 0.112, 1.8473] floor@5 7.1e-03 ballistic@5 12.5 dE 0.315 (true 0.00155) nonfinite None t>1 4.2
+dt                 binary_d1_dt0.05           err@.5/1/2/5 [0.0042, 0.0132, 0.0446, 0.09] floor@5 7.0e-05 ballistic@5 3.14 dE 0.0229 (true 3.57e-08) nonfinite None t>1 99.0
+dt                 binary_d1_dt0.1            err@.5/1/2/5 [0.0034, 0.012, 0.0404, 0.0529] floor@5 7.0e-05 ballistic@5 3.14 dE 0.0136 (true 3.57e-08) nonfinite None t>1 99.0
+dt                 binary_d1_dt0.2            err@.5/1/2/5 [0.0044, 0.0055, 0.0258, 0.0372] floor@5 7.0e-05 ballistic@5 3.14 dE 0.0264 (true 3.57e-08) nonfinite None t>1 99.0
+dt                 binary_d1_dt0.4            err@.5/1/2/5 [0.0183, 0.0222, 0.0472, 0.2201] floor@5 6.7e-05 ballistic@5 3.13 dE 0.0873 (true 3.56e-08) nonfinite None t>1 99.0
+ic_shape           uniform_L10                err@.5/1/2/5 [0.008, 0.0196, 0.0531, 0.5429] floor@5 2.8e-03 ballistic@5 10.2 dE 0.0257 (true 0.00133) nonfinite None t>1 5.8500000000000005
+ic_shape           uniform_L25                err@.5/1/2/5 [0.0023, 0.0064, 0.0212, 0.1325] floor@5 8.3e-04 ballistic@5 2.87 dE 0.0146 (true 8.52e-05) nonfinite None t>1 99.0
+ic_shape           shell_R8_rest              err@.5/1/2/5 [0.0199, 0.0398, 0.1185, 0.9704] floor@5 1.1e-02 ballistic@5 9.71 dE 0.0873 (true 0.00356) nonfinite None t>1 5.15
+ic_shape           shell_R16_rest             err@.5/1/2/5 [0.0126, 0.0244, 0.0718, 0.6269] floor@5 7.6e-03 ballistic@5 4.45 dE 0.021 (true 0.000414) nonfinite None t>1 6.1000000000000005
+ic_shape           shell_R12_rot              err@.5/1/2/5 [0.0139, 0.0266, 0.0797, 0.7704] floor@5 6.4e-03 ballistic@5 5.89 dE 0.0179 (true 0.000659) nonfinite None t>1 5.65
+ic_shape           disk_R12                   err@.5/1/2/5 [0.0071, 0.0134, 0.0409, 0.4797] floor@5 2.8e-03 ballistic@5 8.39 dE 0.00796 (true 0.000161) nonfinite None t>1 6.45
+ic_shape           disk_R24                   err@.5/1/2/5 [0.0025, 0.0052, 0.0182, 0.1782] floor@5 1.6e-03 ballistic@5 3.2 dE 0.00967 (true 0.000102) nonfinite None t>1 9.7
+ic_shape           two_cluster_v1             err@.5/1/2/5 [0.0073, 0.0183, 0.0521, 0.5512] floor@5 3.9e-03 ballistic@5 7.45 dE 0.0245 (true 0.000677) nonfinite None t>1 5.9
+ic_shape           two_cluster_v4             err@.5/1/2/5 [0.0071, 0.0169, 0.0486, 0.582] floor@5 4.3e-03 ballistic@5 7.77 dE 0.0314 (true 0.000706) nonfinite None t>1 5.95
+ic_shape           two_cluster_v0             err@.5/1/2/5 [0.0075, 0.0184, 0.0508, 0.5475] floor@5 3.9e-03 ballistic@5 7.41 dE 0.0161 (true 0.000563) nonfinite None t>1 5.95
+ic_shape           filament                   err@.5/1/2/5 [0.0313, 0.0812, 0.2895, 1.9129] floor@5 5.7e-02 ballistic@5 8.02 dE 0.173 (true 0.00244) nonfinite None t>1 3.5
+boundary_offset    cluster_shift0.0           err@.5/1/2/5 [0.0045, 0.0119, 0.0358, 0.3041] floor@5 1.6e-03 ballistic@5 6.89 dE 0.0275 (true 0.000596) nonfinite None t>1 7.300000000000001
+boundary_offset    cluster_shift8.0           err@.5/1/2/5 [0.0045, 0.0122, 0.0375, 0.3158] floor@5 2.1e-03 ballistic@5 6.89 dE 0.0284 (true 0.000596) nonfinite None t>1 7.25
+boundary_offset    cluster_shift16.0          err@.5/1/2/5 [0.0087, 0.0301, 0.0983, 0.623] floor@5 3.0e-03 ballistic@5 6.89 dE 0.0384 (true 0.000596) nonfinite None t>1 6.15
+boundary_offset    cluster_shift24.0          err@.5/1/2/5 [0.0298, 0.1131, 0.4242, 2.5881] floor@5 4.1e-03 ballistic@5 6.89 dE 0.0708 (true 0.000596) nonfinite None t>1 3.1500000000000004
+boundary_offset    cluster_shift32.0          err@.5/1/2/5 [0.0826, 0.3156, 1.1752, 6.3279] floor@5 5.2e-03 ballistic@5 6.89 dE 0.215 (true 0.000596) nonfinite None t>1 1.9000000000000001
+boundary_offset    cluster_shift40.0          err@.5/1/2/5 [0.0941, 0.3642, 1.3708, 7.2269] floor@5 6.4e-03 ballistic@5 6.89 dE 0.216 (true 0.000596) nonfinite None t>1 1.7000000000000002
+boundary_offset    cluster_vfac1.5_shift0.0   err@.5/1/2/5 [0.0042, 0.0104, 0.0291, 0.1642] floor@5 7.6e-04 ballistic@5 5.17 dE 0.00791 (true 5.48e-05) nonfinite None t>1 99.0
+boundary_offset    cluster_vfac1.5_shift20.0  err@.5/1/2/5 [0.019, 0.0691, 0.2338, 1.1714] floor@5 1.5e-03 ballistic@5 5.17 dE 0.0272 (true 5.48e-05) nonfinite None t>1 4.7
+boundary_offset    cluster_vfac4.0_shift0.0   err@.5/1/2/5 [0.0111, 0.0316, 0.0981, 0.4673] floor@5 3.8e-04 ballistic@5 2.92 dE 0.0218 (true 6.14e-05) nonfinite None t>1 7.35
+boundary_offset    cluster_vfac4.0_shift20.0  err@.5/1/2/5 [0.0195, 0.0638, 0.2126, 1.0216] floor@5 7.6e-04 ballistic@5 2.92 dE 0.0103 (true 6.14e-05) nonfinite None t>1 5.15
+mass_dtmatched     equal_m0.1_dt0.1/sqrt(m)   err@.5/1/2/5 [0.0046, 0.0126, 0.0419, 0.3899] floor@5 1.6e-03 ballistic@5 6.89 dE 0.17 (true 5.58e-05) nonfinite None t>1 21.50348808914498
+mass_dtmatched     equal_m0.3_dt0.1/sqrt(m)   err@.5/1/2/5 [0.0046, 0.0123, 0.0393, 0.3555] floor@5 1.6e-03 ballistic@5 6.89 dE 0.109 (true 0.000193) nonfinite None t>1 12.871480101371404
+mass_dtmatched     equal_m3.0_dt0.1/sqrt(m)   err@.5/1/2/5 [0.0046, 0.0123, 0.0372, 0.3039] floor@5 1.6e-03 ballistic@5 6.89 dE 0.176 (true 0.00277) nonfinite None t>1 4.099186911246343
+mass_dtmatched     equal_m10.0_dt0.1/sqrt(m)  err@.5/1/2/5 [0.0049, 0.0154, 0.0538, 0.53] floor@5 1.6e-03 ballistic@5 6.89 dE 0.611 (true 0.0191) nonfinite None t>1 1.9922349259060792
+mass_dtmatched     equal_m30.0_dt0.1/sqrt(m)  err@.5/1/2/5 [0.006, 0.0235, 0.0929, 1.0461] floor@5 1.6e-03 ballistic@5 6.89 dE 1.55 (true 0.0191) nonfinite None t>1 0.9128709291752768
+mass_dtmatched     equal_m100.0_dt0.1/sqrt(m) err@.5/1/2/5 [0.0093, 0.041, 0.1778, 2.0175] floor@5 1.6e-03 ballistic@5 6.89 dE 2.57 (true 0.0191) nonfinite None t>1 0.4000000000000001
+mass_dtmatched     cluster_heavy10_dt*sqrt(10/Mh) err@.5/1/2/5 [0.0069, 0.0179, 0.054, 0.6708] floor@5 2.4e-03 ballistic@5 8.07 dE 0.0496 (true 0.00142) nonfinite None t>1 5.950000000000001
+mass_dtmatched     cluster_heavy30_dt*sqrt(10/Mh) err@.5/1/2/5 [0.0174, 0.0566, 0.1959, 1.1024] floor@5 6.6e-04 ballistic@5 4.32 dE 0.144 (true 0.00426) nonfinite None t>1 2.9156188594076102
+mass_dtmatched     cluster_heavy100_dt*sqrt(10/Mh) err@.5/1/2/5 [0.0343, 0.1221, 0.3635, 1.1394] floor@5 2.6e-03 ballistic@5 2.93 dE 0.1 (true 0.0391) nonfinite None t>1 1.549516053482506
+mass_dtmatched     cluster_heavy300_dt*sqrt(10/Mh) err@.5/1/2/5 [0.0191, 0.097, 0.4354, 1.9135] floor@5 3.6e-03 ballistic@5 2.45 dE 0.282 (true 0.0434) nonfinite None t>1 0.5751086853804244
+mass_dtmatched     cluster_heavy1000_dt*sqrt(10/Mh) err@.5/1/2/5 [0.0346, 0.159, 0.6469, 3.1024] floor@5 4.2e-03 ballistic@5 2.28 dE 1.37 (true 0.0531) nonfinite None t>1 0.25500000000000006
+mass_dtmatched     binary_q10_dt*sqrt(2/(1+q)) err@.5/1/2/5 [0.0014, 0.0058, 0.0252, 0.0876] floor@5 4.0e-05 ballistic@5 0.747 dE 0.0726 (true 2.79e-10) nonfinite None t>1 99.0
+mass_dtmatched     binary_q100_dt*sqrt(2/(1+q)) err@.5/1/2/5 [0.0007, 0.0029, 0.0127, 0.0897] floor@5 4.4e-05 ballistic@5 0.747 dE 0.0861 (true 4.46e-09) nonfinite None t>1 99.0
+mass_dtmatched     binary_q1000_dt*sqrt(2/(1+q)) err@.5/1/2/5 [0.0007, 0.0026, 0.0111, 0.0815] floor@5 4.4e-05 ballistic@5 0.747 dE 0.0798 (true 4.46e-09) nonfinite None t>1 99.0
+precision          cluster_fp32               err@.5/1/2/5 [0.0045, 0.0119, 0.0358, 0.304] floor@5 1.6e-03 ballistic@5 6.89 dE 0.0275 (true 0.000596) nonfinite None t>1 7.300000000000001
+precision          bh300_c10_fp32             err@.5/1/2/5 [0.0095, 0.0247, 0.0759, 1.0012] floor@5 7.1e-03 ballistic@5 12.5 dE 0.0395 (true 0.00186) nonfinite None t>1 5.050000000000001
+precision          cluster_fp64               err@.5/1/2/5 [0.0045, 0.0119, 0.0358, 0.3045] floor@5 1.6e-03 ballistic@5 6.89 dE 0.0278 (true 0.000596) nonfinite None t>1 7.300000000000001
+precision          bh300_c10_fp64             err@.5/1/2/5 [0.0095, 0.0247, 0.0759, 1.0021] floor@5 7.1e-03 ballistic@5 12.5 dE 0.0413 (true 0.00186) nonfinite None t>1 5.050000000000001
+precision          cluster_tf32               err@.5/1/2/5 [0.0045, 0.0119, 0.0358, 0.3041] floor@5 1.6e-03 ballistic@5 6.89 dE 0.0279 (true 0.000596) nonfinite None t>1 7.300000000000001
+precision          bh300_c10_tf32             err@.5/1/2/5 [0.0095, 0.0247, 0.0759, 1.0007] floor@5 7.1e-03 ballistic@5 12.5 dE 0.0393 (true 0.00186) nonfinite None t>1 5.050000000000001
+precision          cluster_half16             err@.5/1/2/5 [0.0046, 0.012, 0.0359, 0.3043] floor@5 1.6e-03 ballistic@5 6.89 dE 0.0268 (true 0.000596) nonfinite None t>1 7.3500000000000005
+precision          bh300_c10_half16           err@.5/1/2/5 [0.0095, 0.0248, 0.0761, 1.007] floor@5 7.1e-03 ballistic@5 12.5 dE 0.0448 (true 0.00186) nonfinite None t>1 5.050000000000001
+precision          cluster_bf16               err@.5/1/2/5 [0.0049, 0.0129, 0.0385, 0.3081] floor@5 1.6e-03 ballistic@5 6.89 dE 0.0278 (true 0.000596) nonfinite None t>1 7.3500000000000005
+precision          bh300_c10_bf16             err@.5/1/2/5 [0.0097, 0.0254, 0.0758, 1.0006] floor@5 7.1e-03 ballistic@5 12.5 dE 0.0405 (true 0.00186) nonfinite None t>1 5.050000000000001
+wrote results/ctrl_full_ood_all.json
+NVIDIA H200 NVL
+== r46 R_G32
+  n=300 grid=32 L=64.0 seed=4738/0 err@5/20/last 0.2337 3.211 12.31 cv@20 3.817 nonfinite None truth 0.1s
+  n=300 grid=32 L=64.0 seed=4738/1 err@5/20/last 0.2347 3.604 11.75 cv@20 3.896 nonfinite None truth 0.0s
+  n=300 grid=32 L=64.0 seed=4738/2 err@5/20/last 0.2403 3.475 10.77 cv@20 3.767 nonfinite None truth 0.0s
+  n=300 grid=32 L=64.0 seed=4738/3 err@5/20/last 0.2471 3.392 12.93 cv@20 3.964 nonfinite None truth 0.0s
+  n=300 grid=32 L=64.0 seed=9100/0 err@5/20/last 0.2288 3.476 11.13 cv@20 4.328 nonfinite None truth 0.0s
+  n=300 grid=32 L=64.0 seed=9100/1 err@5/20/last 0.24 3.629 13.38 cv@20 3.663 nonfinite None truth 0.0s
+  n=300 grid=32 L=64.0 seed=9100/2 err@5/20/last 0.2241 3.554 12.12 cv@20 3.524 nonfinite None truth 0.0s
+  n=300 grid=32 L=64.0 seed=9100/3 err@5/20/last 0.237 3.489 12.26 cv@20 3.636 nonfinite None truth 0.0s
+  n=300 grid=32 L=64.0 seed=9200/0 err@5/20/last 0.231 3.52 13.89 cv@20 3.58 nonfinite None truth 0.0s
+  n=300 grid=32 L=64.0 seed=9200/1 err@5/20/last 0.238 3.501 11.79 cv@20 4.067 nonfinite None truth 0.0s
+  n=300 grid=32 L=64.0 seed=9200/2 err@5/20/last 0.2391 3.326 11.39 cv@20 3.985 nonfinite None truth 0.0s
+  n=300 grid=32 L=64.0 seed=9200/3 err@5/20/last 0.244 3.472 12.8 cv@20 4.082 nonfinite None truth 0.0s
+  n=300 grid=32 L=64.0 seed=9300/0 err@5/20/last 0.2349 3.378 11.9 cv@20 3.797 nonfinite None truth 0.0s
+  n=300 grid=32 L=64.0 seed=9300/1 err@5/20/last 0.2369 3.521 11.02 cv@20 4.145 nonfinite None truth 0.0s
+  n=300 grid=32 L=64.0 seed=9300/2 err@5/20/last 0.2374 3.656 11.52 cv@20 3.822 nonfinite None truth 0.0s
+  n=300 grid=32 L=64.0 seed=9300/3 err@5/20/last 0.235 3.613 13.81 cv@20 3.807 nonfinite None truth 0.0s
+== r46 R_G64
+  n=300 grid=64 L=64.0 seed=4738/0 err@5/20/last 0.1272 2.411 9.856 cv@20 3.817 nonfinite None truth 0.0s
+  n=300 grid=64 L=64.0 seed=4738/1 err@5/20/last 0.1195 2.275 9.228 cv@20 3.896 nonfinite None truth 0.0s
+  n=300 grid=64 L=64.0 seed=4738/2 err@5/20/last 0.1231 2.164 8.795 cv@20 3.767 nonfinite None truth 0.0s
+  n=300 grid=64 L=64.0 seed=4738/3 err@5/20/last 0.1336 2.494 8.714 cv@20 3.964 nonfinite None truth 0.0s
+  n=300 grid=64 L=64.0 seed=9100/0 err@5/20/last 0.1248 2.115 9.42 cv@20 4.328 nonfinite None truth 0.0s
+  n=300 grid=64 L=64.0 seed=9100/1 err@5/20/last 0.1222 2.274 9.226 cv@20 3.663 nonfinite None truth 0.0s
+  n=300 grid=64 L=64.0 seed=9100/2 err@5/20/last 0.1171 2.142 9.831 cv@20 3.524 nonfinite None truth 0.0s
+  n=300 grid=64 L=64.0 seed=9100/3 err@5/20/last 0.1202 2.25 9.316 cv@20 3.636 nonfinite None truth 0.0s
+  n=300 grid=64 L=64.0 seed=9200/0 err@5/20/last 0.1202 2.357 10.56 cv@20 3.58 nonfinite None truth 0.0s
+  n=300 grid=64 L=64.0 seed=9200/1 err@5/20/last 0.1282 2.337 8.63 cv@20 4.067 nonfinite None truth 0.0s
+  n=300 grid=64 L=64.0 seed=9200/2 err@5/20/last 0.1288 2.413 9.217 cv@20 3.985 nonfinite None truth 0.0s
+  n=300 grid=64 L=64.0 seed=9200/3 err@5/20/last 0.128 2.49 9.384 cv@20 4.082 nonfinite None truth 0.0s
+  n=300 grid=64 L=64.0 seed=9300/0 err@5/20/last 0.1207 2.278 8.775 cv@20 3.797 nonfinite None truth 0.0s
+  n=300 grid=64 L=64.0 seed=9300/1 err@5/20/last 0.1279 2.297 8.117 cv@20 4.145 nonfinite None truth 0.0s
+  n=300 grid=64 L=64.0 seed=9300/2 err@5/20/last 0.1234 2.366 8.539 cv@20 3.822 nonfinite None truth 0.0s
+  n=300 grid=64 L=64.0 seed=9300/3 err@5/20/last 0.1253 2.326 9.757 cv@20 3.807 nonfinite None truth 0.0s
+== r46 R_G128
+  n=300 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.008859 0.07182 5.769 cv@20 3.817 nonfinite None truth 0.0s
+  n=300 grid=128 L=64.0 seed=4738/1 err@5/20/last 0.008602 0.07067 5.008 cv@20 3.896 nonfinite None truth 0.0s
+  n=300 grid=128 L=64.0 seed=4738/2 err@5/20/last 0.009382 0.07729 5.46 cv@20 3.767 nonfinite None truth 0.0s
+  n=300 grid=128 L=64.0 seed=4738/3 err@5/20/last 0.01016 0.09312 5.842 cv@20 3.964 nonfinite None truth 0.0s
+  n=300 grid=128 L=64.0 seed=9100/0 err@5/20/last 0.00883 0.09194 5.478 cv@20 4.328 nonfinite None truth 0.0s
+  n=300 grid=128 L=64.0 seed=9100/1 err@5/20/last 0.009593 0.0741 5.045 cv@20 3.663 nonfinite None truth 0.0s
+  n=300 grid=128 L=64.0 seed=9100/2 err@5/20/last 0.007827 0.06293 4.933 cv@20 3.524 nonfinite None truth 0.0s
+  n=300 grid=128 L=64.0 seed=9100/3 err@5/20/last 0.009036 0.07568 4.968 cv@20 3.636 nonfinite None truth 0.0s
+  n=300 grid=128 L=64.0 seed=9200/0 err@5/20/last 0.008111 0.07462 5.474 cv@20 3.58 nonfinite None truth 0.0s
+  n=300 grid=128 L=64.0 seed=9200/1 err@5/20/last 0.01 0.08155 5.417 cv@20 4.067 nonfinite None truth 0.0s
+  n=300 grid=128 L=64.0 seed=9200/2 err@5/20/last 0.008714 0.07999 5.263 cv@20 3.985 nonfinite None truth 0.0s
+  n=300 grid=128 L=64.0 seed=9200/3 err@5/20/last 0.009209 0.08652 5.81 cv@20 4.082 nonfinite None truth 0.0s
+  n=300 grid=128 L=64.0 seed=9300/0 err@5/20/last 0.009319 0.09323 5.606 cv@20 3.797 nonfinite None truth 0.0s
+  n=300 grid=128 L=64.0 seed=9300/1 err@5/20/last 0.009294 0.07764 5.51 cv@20 4.145 nonfinite None truth 0.0s
+  n=300 grid=128 L=64.0 seed=9300/2 err@5/20/last 0.009037 0.07023 5.465 cv@20 3.822 nonfinite None truth 0.0s
+  n=300 grid=128 L=64.0 seed=9300/3 err@5/20/last 0.009045 0.06885 5.203 cv@20 3.807 nonfinite None truth 0.0s
+== r46 R_G256
+  n=300 grid=256 L=64.0 seed=4738/0 err@5/20/last 0.276 1.953 20.38 cv@20 3.817 nonfinite None truth 0.0s
+  n=300 grid=256 L=64.0 seed=4738/1 err@5/20/last 0.2454 1.931 22.31 cv@20 3.896 nonfinite None truth 0.0s
+  n=300 grid=256 L=64.0 seed=4738/2 err@5/20/last 0.2444 2.058 19.28 cv@20 3.767 nonfinite None truth 0.0s
+  n=300 grid=256 L=64.0 seed=4738/3 err@5/20/last 0.2554 2.182 23.27 cv@20 3.964 nonfinite None truth 0.0s
+  n=300 grid=256 L=64.0 seed=9100/0 err@5/20/last 0.2493 2.288 23.36 cv@20 4.328 nonfinite None truth 0.0s
+  n=300 grid=256 L=64.0 seed=9100/1 err@5/20/last 0.253 1.868 21.44 cv@20 3.663 nonfinite None truth 0.0s
+  n=300 grid=256 L=64.0 seed=9100/2 err@5/20/last 0.2065 1.819 20.26 cv@20 3.524 nonfinite None truth 0.0s
+  n=300 grid=256 L=64.0 seed=9100/3 err@5/20/last 0.248 1.898 22.02 cv@20 3.636 nonfinite None truth 0.0s
+  n=300 grid=256 L=64.0 seed=9200/0 err@5/20/last 0.2513 1.98 22 cv@20 3.58 nonfinite None truth 0.0s
+  n=300 grid=256 L=64.0 seed=9200/1 err@5/20/last 0.2629 2.169 22.9 cv@20 4.067 nonfinite None truth 0.0s
+  n=300 grid=256 L=64.0 seed=9200/2 err@5/20/last 0.283 2.111 22.97 cv@20 3.985 nonfinite None truth 0.0s
+  n=300 grid=256 L=64.0 seed=9200/3 err@5/20/last 0.2788 2.195 22.95 cv@20 4.082 nonfinite None truth 0.0s
+  n=300 grid=256 L=64.0 seed=9300/0 err@5/20/last 0.2659 2.052 22.41 cv@20 3.797 nonfinite None truth 0.0s
+  n=300 grid=256 L=64.0 seed=9300/1 err@5/20/last 0.2724 2.269 23.74 cv@20 4.145 nonfinite None truth 0.0s
+  n=300 grid=256 L=64.0 seed=9300/2 err@5/20/last 0.2531 2.064 21.45 cv@20 3.822 nonfinite None truth 0.0s
+  n=300 grid=256 L=64.0 seed=9300/3 err@5/20/last 0.2613 1.882 21.8 cv@20 3.807 nonfinite None truth 0.0s
+== r46 R_G512
+  n=300 grid=512 L=64.0 seed=4738/0 err@5/20/last 0.6821 6.25 36.89 cv@20 3.817 nonfinite None truth 0.0s
+  n=300 grid=512 L=64.0 seed=4738/1 err@5/20/last 0.7849 6.559 38.29 cv@20 3.896 nonfinite None truth 0.0s
+  n=300 grid=512 L=64.0 seed=4738/2 err@5/20/last 0.7078 6.3 36.94 cv@20 3.767 nonfinite None truth 0.0s
+  n=300 grid=512 L=64.0 seed=4738/3 err@5/20/last 0.7402 6.453 39.02 cv@20 3.964 nonfinite None truth 0.0s
+  n=300 grid=512 L=64.0 seed=9100/0 err@5/20/last 0.7729 6.463 35 cv@20 4.328 nonfinite None truth 0.0s
+  n=300 grid=512 L=64.0 seed=9100/1 err@5/20/last 0.6945 6.278 39.19 cv@20 3.663 nonfinite None truth 0.0s
+  n=300 grid=512 L=64.0 seed=9100/2 err@5/20/last 0.5834 5.871 38.35 cv@20 3.524 nonfinite None truth 0.0s
+  n=300 grid=512 L=64.0 seed=9100/3 err@5/20/last 0.6662 6.238 37.28 cv@20 3.636 nonfinite None truth 0.0s
+  n=300 grid=512 L=64.0 seed=9200/0 err@5/20/last 0.7229 6.197 36.92 cv@20 3.58 nonfinite None truth 0.0s
+  n=300 grid=512 L=64.0 seed=9200/1 err@5/20/last 0.7744 6.844 38.64 cv@20 4.067 nonfinite None truth 0.0s
+  n=300 grid=512 L=64.0 seed=9200/2 err@5/20/last 0.7451 6.528 39.38 cv@20 3.985 nonfinite None truth 0.0s
+  n=300 grid=512 L=64.0 seed=9200/3 err@5/20/last 0.7051 6.638 37.28 cv@20 4.082 nonfinite None truth 0.0s
+  n=300 grid=512 L=64.0 seed=9300/0 err@5/20/last 0.673 6.211 36.39 cv@20 3.797 nonfinite None truth 0.0s
+  n=300 grid=512 L=64.0 seed=9300/1 err@5/20/last 0.7988 6.753 36.62 cv@20 4.145 nonfinite None truth 0.0s
+  n=300 grid=512 L=64.0 seed=9300/2 err@5/20/last 0.6477 6.372 37.77 cv@20 3.822 nonfinite None truth 0.0s
+  n=300 grid=512 L=64.0 seed=9300/3 err@5/20/last 0.6985 6.077 37.03 cv@20 3.807 nonfinite None truth 0.0s
+NVIDIA H200 NVL
+== n46 cold_316
+  n=316 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.009752 0.09625 5.53 cv@20 4.166 nonfinite None truth 0.1s
+  n=316 grid=128 L=64.0 seed=4738/1 err@5/20/last 0.009413 0.08512 5.305 cv@20 3.952 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=4738/2 err@5/20/last 0.01016 0.08979 5.614 cv@20 3.943 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=4738/3 err@5/20/last 0.01024 0.09172 5.489 cv@20 4.19 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/0 err@5/20/last 0.009902 0.08544 6.028 cv@20 4.086 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/1 err@5/20/last 0.008038 0.07202 4.612 cv@20 3.535 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/2 err@5/20/last 0.009196 0.07742 6.264 cv@20 4.153 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/3 err@5/20/last 0.009896 0.08769 5.484 cv@20 4.218 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/0 err@5/20/last 0.009836 0.07924 5.277 cv@20 3.905 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/1 err@5/20/last 0.009818 0.08656 5.138 cv@20 4.367 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/2 err@5/20/last 0.009535 0.08189 5.585 cv@20 4.14 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/3 err@5/20/last 0.008703 0.07509 5.702 cv@20 4.023 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/0 err@5/20/last 0.009508 0.08214 5.309 cv@20 3.8 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/1 err@5/20/last 0.0106 0.08448 5.018 cv@20 3.893 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/2 err@5/20/last 0.008653 0.0759 5.025 cv@20 3.671 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/3 err@5/20/last 0.00888 0.07443 5.611 cv@20 4.061 nonfinite None truth 0.0s
+== n46 cold_1000
+  n=1000 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.01771 0.5504 11.5 cv@20 10.8 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=4738/1 err@5/20/last 0.01828 0.5858 10.93 cv@20 11.04 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=4738/2 err@5/20/last 0.01733 0.5532 13.05 cv@20 10.77 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=4738/3 err@5/20/last 0.01721 0.496 11.65 cv@20 10.75 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/0 err@5/20/last 0.01777 0.593 13.13 cv@20 10.79 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/1 err@5/20/last 0.01663 0.39 11.11 cv@20 10.6 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/2 err@5/20/last 0.01751 0.5631 12.48 cv@20 10.74 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/3 err@5/20/last 0.01734 0.4765 11.71 cv@20 10.53 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/0 err@5/20/last 0.01683 0.5128 12.16 cv@20 10.96 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/1 err@5/20/last 0.01683 0.5209 12.72 cv@20 10.58 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/2 err@5/20/last 0.01851 0.5696 12.98 cv@20 10.17 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/3 err@5/20/last 0.01693 0.4106 10.62 cv@20 10.66 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/0 err@5/20/last 0.01754 0.603 12.22 cv@20 11.06 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/1 err@5/20/last 0.01679 0.5867 11.01 cv@20 11.01 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/2 err@5/20/last 0.01782 0.6559 10.58 cv@20 10.91 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/3 err@5/20/last 0.01677 0.5091 10.59 cv@20 10.71 nonfinite None truth 0.1s
+== n46 cold_3162
+  n=3162 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.05494 8.552 77.88 cv@20 17.59 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=4738/1 err@5/20/last 0.05963 5.848 47.33 cv@20 17.61 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9100/0 err@5/20/last 0.05357 5.303 46.7 cv@20 17.6 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9100/1 err@5/20/last 0.05391 8.123 71.01 cv@20 17.2 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9200/0 err@5/20/last 0.05271 9.01 66.67 cv@20 17.68 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9200/1 err@5/20/last 0.0562 7.104 56.68 cv@20 17.35 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9300/0 err@5/20/last 0.05627 5.856 48.53 cv@20 17.28 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9300/1 err@5/20/last 0.05382 7.335 68.12 cv@20 17.55 nonfinite None truth 0.3s
+== n46 cold_10000
+  n=10000 grid=128 L=64.0 seed=4738/0 err@5/20/last 1.821 39.92 262.1 cv@20 24.15 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=4738/1 err@5/20/last 2.089 47.86 311.5 cv@20 24.8 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9100/0 err@5/20/last 1.921 44.11 293.3 cv@20 25.8 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9100/1 err@5/20/last 2.16 55.24 359.8 cv@20 24.8 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9200/0 err@5/20/last 2.036 52.26 342.9 cv@20 24.93 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9200/1 err@5/20/last 2.2 57.25 369.4 cv@20 24.24 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9300/0 err@5/20/last 1.787 41.38 271.7 cv@20 24.15 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9300/1 err@5/20/last 2.109 51.03 336.5 cv@20 25.13 nonfinite None truth 2.4s
+== n46 cold_31623
+  n=31623 grid=128 L=64.0 seed=4738/0 err@5/20/last 12.1 80.53 467.1 cv@20 41.76 nonfinite None truth 25.1s
+== n46 warm_316
+  n=316 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.008731 0.0736 3.751 cv@20 3.381 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=4738/1 err@5/20/last 0.00858 0.07336 3.94 cv@20 3.305 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=4738/2 err@5/20/last 0.008998 0.06791 3.892 cv@20 3.5 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=4738/3 err@5/20/last 0.009128 0.0749 4.013 cv@20 3.511 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/0 err@5/20/last 0.009029 0.07361 3.906 cv@20 3.411 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/1 err@5/20/last 0.007953 0.0582 3.42 cv@20 2.931 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/2 err@5/20/last 0.008964 0.0728 3.978 cv@20 3.483 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/3 err@5/20/last 0.008998 0.07308 4.03 cv@20 3.686 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/0 err@5/20/last 0.009728 0.07594 3.666 cv@20 3.269 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/1 err@5/20/last 0.01017 0.07401 4.083 cv@20 3.746 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/2 err@5/20/last 0.009608 0.0716 3.922 cv@20 3.442 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/3 err@5/20/last 0.008049 0.07379 3.717 cv@20 3.332 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/0 err@5/20/last 0.008562 0.07102 3.909 cv@20 3.242 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/1 err@5/20/last 0.00878 0.06324 3.765 cv@20 3.324 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/2 err@5/20/last 0.008069 0.06495 3.765 cv@20 3.247 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/3 err@5/20/last 0.008368 0.07336 3.987 cv@20 3.558 nonfinite None truth 0.0s
+== n46 warm_1000
+  n=1000 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.02951 0.2465 9.57 cv@20 9.713 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=4738/1 err@5/20/last 0.02892 0.2609 9.586 cv@20 10.42 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=4738/2 err@5/20/last 0.02688 0.2414 9.109 cv@20 10.14 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=4738/3 err@5/20/last 0.02791 0.2455 8.714 cv@20 9.607 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/0 err@5/20/last 0.02745 0.2456 9.26 cv@20 9.76 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/1 err@5/20/last 0.02787 0.246 9.687 cv@20 8.88 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/2 err@5/20/last 0.02663 0.2482 8.531 cv@20 9.759 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/3 err@5/20/last 0.02806 0.2431 8.846 cv@20 9.774 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/0 err@5/20/last 0.02758 0.2334 8.45 cv@20 9.553 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/1 err@5/20/last 0.02723 0.2318 8.519 cv@20 9.414 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/2 err@5/20/last 0.02807 0.2509 9.882 cv@20 10.42 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/3 err@5/20/last 0.02803 0.2475 8.816 cv@20 9.502 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/0 err@5/20/last 0.02823 0.2515 8.939 cv@20 9.959 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/1 err@5/20/last 0.02912 0.2716 9.379 cv@20 9.975 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/2 err@5/20/last 0.02841 0.2511 8.271 cv@20 9.784 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/3 err@5/20/last 0.02673 0.2319 8.555 cv@20 9.557 nonfinite None truth 0.1s
+== n46 warm_3162
+  n=3162 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.09813 0.9751 20.18 cv@20 24.07 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=4738/1 err@5/20/last 0.09614 0.8957 19.52 cv@20 24.03 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9100/0 err@5/20/last 0.09899 0.9602 20.17 cv@20 23.96 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9100/1 err@5/20/last 0.09577 0.9772 21.14 cv@20 23.79 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9200/0 err@5/20/last 0.09779 1.006 20.45 cv@20 24.14 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9200/1 err@5/20/last 0.09937 1.023 19.73 cv@20 24.46 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9300/0 err@5/20/last 0.09647 0.9372 19.19 cv@20 24.11 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9300/1 err@5/20/last 0.094 0.9392 19.93 cv@20 23.91 nonfinite None truth 0.3s
+== n46 warm_10000
+  n=10000 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.2923 3.242 38.77 cv@20 43.33 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=4738/1 err@5/20/last 0.2911 3.211 38.17 cv@20 42.83 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9100/0 err@5/20/last 0.2818 3.21 38.87 cv@20 42.7 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9100/1 err@5/20/last 0.2889 3.185 38.96 cv@20 42.96 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9200/0 err@5/20/last 0.2828 3.25 39.63 cv@20 42.82 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9200/1 err@5/20/last 0.2956 3.472 40.49 cv@20 42.7 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9300/0 err@5/20/last 0.2983 3.23 37.89 cv@20 43.34 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9300/1 err@5/20/last 0.2911 3.288 38.48 cv@20 42.6 nonfinite None truth 2.4s
+== n46 warm_31623
+  n=31623 grid=128 L=64.0 seed=4738/0 err@5/20/last 1.402 11.45 78.76 cv@20 73.05 nonfinite None truth 25.1s
+NVIDIA H200 NVL
+== n46 cold_316
+  n=316 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.009753 0.09625 5.495 cv@20 4.166 nonfinite None truth 0.1s
+  n=316 grid=128 L=64.0 seed=4738/1 err@5/20/last 0.009413 0.08512 5.324 cv@20 3.952 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=4738/2 err@5/20/last 0.01016 0.08979 5.621 cv@20 3.943 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=4738/3 err@5/20/last 0.01024 0.09172 5.553 cv@20 4.19 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/0 err@5/20/last 0.009902 0.08544 5.993 cv@20 4.086 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/1 err@5/20/last 0.008038 0.07202 4.576 cv@20 3.535 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/2 err@5/20/last 0.009196 0.07742 6.283 cv@20 4.153 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/3 err@5/20/last 0.009896 0.08769 5.52 cv@20 4.218 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/0 err@5/20/last 0.009836 0.07925 5.383 cv@20 3.905 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/1 err@5/20/last 0.009818 0.08657 5.191 cv@20 4.367 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/2 err@5/20/last 0.009535 0.08187 5.6 cv@20 4.14 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/3 err@5/20/last 0.008703 0.0751 5.669 cv@20 4.023 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/0 err@5/20/last 0.009508 0.08214 5.357 cv@20 3.8 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/1 err@5/20/last 0.0106 0.08449 5.002 cv@20 3.893 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/2 err@5/20/last 0.008653 0.0759 5.017 cv@20 3.671 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/3 err@5/20/last 0.00888 0.07442 5.58 cv@20 4.061 nonfinite None truth 0.0s
+== n46 cold_1000
+  n=1000 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.01771 0.5504 11.34 cv@20 10.8 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=4738/1 err@5/20/last 0.01828 0.5861 11.08 cv@20 11.04 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=4738/2 err@5/20/last 0.01733 0.5529 13.03 cv@20 10.77 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=4738/3 err@5/20/last 0.01721 0.4957 11.76 cv@20 10.75 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/0 err@5/20/last 0.01777 0.5927 13.07 cv@20 10.79 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/1 err@5/20/last 0.01663 0.3903 11.31 cv@20 10.6 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/2 err@5/20/last 0.01751 0.563 12.61 cv@20 10.74 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/3 err@5/20/last 0.01734 0.4767 11.7 cv@20 10.53 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/0 err@5/20/last 0.01683 0.5127 12.3 cv@20 10.96 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/1 err@5/20/last 0.01683 0.5212 12.76 cv@20 10.58 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/2 err@5/20/last 0.01851 0.5694 12.68 cv@20 10.17 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/3 err@5/20/last 0.01693 0.4105 10.47 cv@20 10.66 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/0 err@5/20/last 0.01754 0.604 12.29 cv@20 11.06 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/1 err@5/20/last 0.01679 0.5867 11.04 cv@20 11.01 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/2 err@5/20/last 0.01782 0.656 10.83 cv@20 10.91 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/3 err@5/20/last 0.01677 0.5087 10.69 cv@20 10.71 nonfinite None truth 0.1s
+== n46 cold_3162
+  n=3162 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.05494 8.552 78.12 cv@20 17.59 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=4738/1 err@5/20/last 0.05963 5.845 47.29 cv@20 17.61 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9100/0 err@5/20/last 0.05357 5.296 47.16 cv@20 17.6 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9100/1 err@5/20/last 0.05391 8.122 71.76 cv@20 17.2 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9200/0 err@5/20/last 0.05271 9.007 65.99 cv@20 17.68 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9200/1 err@5/20/last 0.0562 7.106 56.57 cv@20 17.35 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9300/0 err@5/20/last 0.05627 5.857 48.64 cv@20 17.28 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9300/1 err@5/20/last 0.05382 7.336 67.74 cv@20 17.55 nonfinite None truth 0.3s
+== n46 cold_10000
+  n=10000 grid=128 L=64.0 seed=4738/0 err@5/20/last 1.821 39.91 262.5 cv@20 24.15 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=4738/1 err@5/20/last 2.089 47.84 311.5 cv@20 24.8 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9100/0 err@5/20/last 1.921 44.11 293.1 cv@20 25.8 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9100/1 err@5/20/last 2.16 55.24 359.8 cv@20 24.8 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9200/0 err@5/20/last 2.036 52.26 342.8 cv@20 24.93 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9200/1 err@5/20/last 2.2 57.25 369.4 cv@20 24.24 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9300/0 err@5/20/last 1.786 41.38 271.6 cv@20 24.15 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9300/1 err@5/20/last 2.109 51.03 336.5 cv@20 25.13 nonfinite None truth 2.4s
+== n46 cold_31623
+  n=31623 grid=128 L=64.0 seed=4738/0 err@5/20/last 12.1 80.51 467.1 cv@20 41.76 nonfinite None truth 25.1s
+== n46 cold_100000
+  n=100000 grid=128 L=64.0 seed=4738/0 err@5/20/last 26.7 138.3 138.3 cv@20 141.8 nonfinite None truth 49.6s
+== n46 warm_316
+  n=316 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.008731 0.07359 3.754 cv@20 3.381 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=4738/1 err@5/20/last 0.00858 0.07336 3.943 cv@20 3.305 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=4738/2 err@5/20/last 0.008998 0.06791 3.891 cv@20 3.5 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=4738/3 err@5/20/last 0.009128 0.0749 4.017 cv@20 3.511 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/0 err@5/20/last 0.009029 0.0736 3.905 cv@20 3.411 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/1 err@5/20/last 0.007953 0.05821 3.419 cv@20 2.931 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/2 err@5/20/last 0.008964 0.0728 3.975 cv@20 3.483 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9100/3 err@5/20/last 0.008997 0.07307 4.023 cv@20 3.686 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/0 err@5/20/last 0.009728 0.07594 3.665 cv@20 3.269 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/1 err@5/20/last 0.01017 0.07401 4.083 cv@20 3.746 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/2 err@5/20/last 0.009608 0.07161 3.917 cv@20 3.442 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9200/3 err@5/20/last 0.008049 0.07379 3.713 cv@20 3.332 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/0 err@5/20/last 0.008562 0.07102 3.909 cv@20 3.242 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/1 err@5/20/last 0.00878 0.06324 3.761 cv@20 3.324 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/2 err@5/20/last 0.008069 0.06495 3.767 cv@20 3.247 nonfinite None truth 0.0s
+  n=316 grid=128 L=64.0 seed=9300/3 err@5/20/last 0.008368 0.07335 3.98 cv@20 3.558 nonfinite None truth 0.0s
+== n46 warm_1000
+  n=1000 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.02951 0.2465 9.571 cv@20 9.713 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=4738/1 err@5/20/last 0.02892 0.2609 9.601 cv@20 10.42 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=4738/2 err@5/20/last 0.02688 0.2413 9.109 cv@20 10.14 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=4738/3 err@5/20/last 0.02791 0.2455 8.709 cv@20 9.607 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/0 err@5/20/last 0.02745 0.2456 9.257 cv@20 9.76 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/1 err@5/20/last 0.02787 0.246 9.678 cv@20 8.88 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/2 err@5/20/last 0.02663 0.2482 8.533 cv@20 9.759 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9100/3 err@5/20/last 0.02806 0.2431 8.853 cv@20 9.774 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/0 err@5/20/last 0.02758 0.2333 8.451 cv@20 9.553 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/1 err@5/20/last 0.02723 0.2318 8.521 cv@20 9.414 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/2 err@5/20/last 0.02807 0.251 9.904 cv@20 10.42 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9200/3 err@5/20/last 0.02803 0.2475 8.829 cv@20 9.502 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/0 err@5/20/last 0.02823 0.2515 8.919 cv@20 9.959 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/1 err@5/20/last 0.02912 0.2716 9.393 cv@20 9.975 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/2 err@5/20/last 0.02841 0.2511 8.268 cv@20 9.784 nonfinite None truth 0.1s
+  n=1000 grid=128 L=64.0 seed=9300/3 err@5/20/last 0.02673 0.2319 8.55 cv@20 9.557 nonfinite None truth 0.1s
+== n46 warm_3162
+  n=3162 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.09813 0.9748 20.12 cv@20 24.07 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=4738/1 err@5/20/last 0.09614 0.8958 19.43 cv@20 24.03 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9100/0 err@5/20/last 0.09899 0.9602 20.22 cv@20 23.96 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9100/1 err@5/20/last 0.09577 0.977 21.12 cv@20 23.79 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9200/0 err@5/20/last 0.09779 1.006 20.37 cv@20 24.14 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9200/1 err@5/20/last 0.09937 1.023 19.78 cv@20 24.46 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9300/0 err@5/20/last 0.09647 0.9374 19.12 cv@20 24.11 nonfinite None truth 0.3s
+  n=3162 grid=128 L=64.0 seed=9300/1 err@5/20/last 0.094 0.9393 19.91 cv@20 23.91 nonfinite None truth 0.3s
+== n46 warm_10000
+  n=10000 grid=128 L=64.0 seed=4738/0 err@5/20/last 0.2923 3.241 38.72 cv@20 43.33 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=4738/1 err@5/20/last 0.2911 3.21 37.91 cv@20 42.83 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9100/0 err@5/20/last 0.2818 3.211 38.93 cv@20 42.7 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9100/1 err@5/20/last 0.2889 3.183 38.97 cv@20 42.96 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9200/0 err@5/20/last 0.2828 3.25 39.38 cv@20 42.82 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9200/1 err@5/20/last 0.2956 3.469 40.47 cv@20 42.7 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9300/0 err@5/20/last 0.2983 3.231 37.96 cv@20 43.34 nonfinite None truth 2.4s
+  n=10000 grid=128 L=64.0 seed=9300/1 err@5/20/last 0.2911 3.288 38.43 cv@20 42.6 nonfinite None truth 2.4s
+== n46 warm_31623
+  n=31623 grid=128 L=64.0 seed=4738/0 err@5/20/last 1.402 11.46 79.46 cv@20 73.05 nonfinite None truth 25.1s
+JOINT DONE ctrl_full

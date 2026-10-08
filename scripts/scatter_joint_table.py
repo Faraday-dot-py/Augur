@@ -58,6 +58,7 @@ def main():
     for k in ("two_body", "expB", "bh300", "expB_batch1_n100"):
         row(k, [g(r, lambda r: r["timing"][k]["tick_ms"]) for r in reg])
     bat = [r.get("ood_battery") if r else None for r in reg]
+    bat[0] = bat[0] or (load("results/scatter_baseline.json") or {}).get("ood_battery")
     keys = [k for b in bat if b for k in b]
     header("OOD battery err@2 (mass / eps / density / other)", cols)
     for k in dict.fromkeys(keys):
