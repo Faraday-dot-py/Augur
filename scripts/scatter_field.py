@@ -57,8 +57,11 @@ class ScatterField(nn.Module):
     grid covers [-extent/2, extent/2)^2 and tokens outside it get zero force."""
 
     def __init__(self, grid=64, extent=64.0, net="local", recurrent=True, hidden_ch=0, dt=0.1, width=32, layers=8,
-                 levels=5, momfix=True, in_scale=1.0, potential=False, kernel=False, pp=0.0, split=False, nonet=False, verlet=False):
+                 levels=5, momfix=True, in_scale=1.0, potential=False, kernel=False, pp=0.0, split=False, nonet=False, verlet=False,
+                 prior=False, knn=16, eps=0.5):
         super().__init__()
+        assert not prior or (kernel and pp and split)
+        self.prior, self.knn, self.eps = prior, knn, eps
         self.potential, self.kernel, self.pp, self.split, self.nonet = potential, kernel, pp, split, nonet
         self.verlet = verlet
         self.far, self.far_band, self.far_eps, self.substeps = 0, 0.25, 0.5, 1
@@ -150,6 +153,8 @@ class ScatterField(nn.Module):
         d = torch.minimum(idx, 2 * G - idx) * self.h
         r = torch.sqrt(d[:, None] ** 2 + d[None, :] ** 2)
         K = self.kmlp(torch.stack([r, torch.log(r + self.h)], -1))[..., 0]
+        if self.prior:
+            K = -(1 + K) / torch.sqrt(r ** 2 + self.eps ** 2)
         if self.split:
             K = K * (1 - (1 - (r / self.pp).clamp(max=1.0) ** 2) ** 2)
         return torch.fft.rfft2(K)
@@ -166,6 +171,17 @@ class ScatterField(nn.Module):
         rf = torch.fft.rfft2(rho, s=(2 * G, 2 * G))
         phi = torch.fft.irfft2(rf * Kf, s=(2 * G, 2 * G))[..., :G, :G] * self.h ** 2
         return self.neg_grad(phi)
+
+    def _pair_w(self, r, mj, ok):
+        g = self.ppmlp(torch.stack([r, torch.log(r + 0.05)], -1))[..., 0]
+        u = (r / self.pp).clamp(max=1.0) ** 2
+        win = (1 - u) ** 2
+        w = g * win
+        if self.prior:
+            q = torch.sqrt(r ** 2 + self.eps ** 2)
+            a_mesh = -4 * (1 - u) * r / self.pp ** 2 / q + (1 - win) * r / q ** 3
+            w = w + (r / q ** 3 - a_mesh)
+        return w * mj * ok
 
     def pp_acc_cell(self, pos, mass, mask, knn=16, budget=2 ** 25):
         B, N = mask.shape
@@ -203,17 +219,13 @@ class ScatterField(nn.Module):
             mj = mm[torch.gather(cand, 1, i)]
             ok = (r_sel < 1e5).to(pos.dtype) * mk[q][:, None]
             r = r_sel.clamp(max=1e5)
-            g = self.ppmlp(torch.stack([r, torch.log(r + 0.05)], -1))[..., 0]
-            win = (1 - (r / self.pp).clamp(max=1.0) ** 2) ** 2
-            outs.append(((g * win * mj * ok)[..., None] * ds / r[..., None]).sum(1))
+            outs.append((self._pair_w(r, mj, ok)[..., None] * ds / r[..., None]).sum(1))
         return torch.cat(outs).reshape(B, N, 2)
 
     def _pp_force(self, ds, r_sel, mj):
         ok = (r_sel < 1e5).to(ds.dtype)
         r = r_sel.clamp(max=1e5)
-        g = self.ppmlp(torch.stack([r, torch.log(r + 0.05)], -1))[..., 0]
-        win = (1 - (r / self.pp).clamp(max=1.0) ** 2) ** 2
-        return ((g * win * mj * ok)[..., None] * ds / r[..., None]).sum(1)
+        return (self._pair_w(r, mj, ok)[..., None] * ds / r[..., None]).sum(1)
 
     def pp_acc_adapt(self, pos, mass, mask, knn=16, cap=48, lmax=8, budget=2 ** 25):
         """Exact top-knn pair term with an adaptive multilevel cell list: level l has cells pp/2^l; a query is resolved at the
@@ -305,9 +317,7 @@ class ScatterField(nn.Module):
         mj = torch.gather((mass * mask)[:, None, :].expand(B, N, N), 2, idx)
         ok = (r_sel < 1e5).to(pos.dtype) * mask[:, :, None]
         r = r_sel.clamp(max=1e5)
-        g = self.ppmlp(torch.stack([r, torch.log(r + 0.05)], -1))[..., 0]
-        win = (1 - (r / self.pp).clamp(max=1.0) ** 2) ** 2
-        w = g * win * mj * ok
+        w = self._pair_w(r, mj, ok)
         return (w[..., None] * d / r[..., None]).sum(2)
 
     def edge_weight(self, pos):
@@ -402,7 +412,7 @@ class ScatterField(nn.Module):
             w = self.edge_weight(pos)[..., None]
             a_tok = a_tok * w + self.far_acc(pos, mass, mask) * (1 - w)
         if self.pp:
-            a_tok = a_tok + self.pp_acc(pos, mass, mask)
+            a_tok = a_tok + self.pp_acc(pos, mass, mask, self.knn)
         if self.momfix:
             mm = (mass * mask)[..., None]
             a_tok = a_tok - (mm * a_tok).sum(1, keepdim=True) / mm.sum(1, keepdim=True).clamp_min(1e-9)

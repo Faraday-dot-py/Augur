@@ -53,7 +53,28 @@ def sync():
     torch.cuda.synchronize()
 
 
+class CFHarness(torch.nn.Module):
+    def __init__(self, inner):
+        super().__init__()
+        self.inner, self.extent = inner, inner.extent
+
+    def init_field(self, B, device, dtype=torch.float32):
+        return None, None
+
+    def step(self, pos, vel, mass, mask, field):
+        return self.inner.step(pos, vel, mass, mask, field)
+
+    def force(self, pos, vel, mass, mask, field):
+        return self.inner.accel(pos, mass, mask), field
+
+
 def build_model(args, dev):
+    if args.variant == "cf":
+        from scripts.gap_probe import CFDense
+        inner = CFDense().to(dev)
+        inner.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
+        inner.eval()
+        return CFHarness(inner)
     model = tsf.build(tsf.EXPS[args.exp], args.variant, args.dt).to(dev)
     model.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
     model.eval()
