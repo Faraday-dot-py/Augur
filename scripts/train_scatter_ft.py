@@ -7,6 +7,7 @@
 --fix masswide same with 0.01-100 (init from the mass run)
 --fix eps      softening eps log-uniform groups 0.1-2 and an eps input (variant *_eps)
 --fix dense    sigma 1-5 clusters and Plummer a 0.25-2 mixed with E scenes
+--fix all      integration: E-style replay (h 0.5, eps 0.5, unit mass) + random-h, masses 0.1-10 and 0.01-100, eps 0.1-2, dense, large-N (variant *_cu_eps_mnorm)
 Variants with new opt-in inputs (cu, eps, mnorm, dnorm) warm-start from E via scatter_field.load_compat.
 """
 import argparse
@@ -40,11 +41,37 @@ def set_eps(e):
     return f
 
 
+def set_he(grid, e):
+    def f(m):
+        ops.retarget(m, grid, 64.0)
+        m.eps_cur = e
+    return f
+
+
+def build_all(args, dev, log):
+    s, n = args.steps, args.scenes
+    rp = args.replay
+    r = 1.0 - rp
+    g = [group("base", fd.base(n, s, args.seed, dev), dev, rp * 0.7, args.batch, 99, set_he(128, 0.5))]
+    for grid in (256, 64):
+        g.append(dict(g[0], name=f"base_G{grid}", weight=rp * 0.15, setup=set_he(grid, 0.5)))
+    g.append(group("mass0.1-10", fd.mass_spectrum(max(60, int(n * 0.4)), s, args.seed + 1, dev, 0.1, 10.0), dev, r * 0.25, args.batch, 99, set_he(128, 0.5)))
+    g.append(group("mass0.01-100", fd.mass_spectrum(max(60, int(n * 0.2)), s, args.seed + 2, dev, 0.01, 100.0), dev, r * 0.12, args.batch, 99, set_he(128, 0.5)))
+    for e in (0.1, 0.2, 0.35, 1.0, 2.0):
+        g.append(group(f"eps{e}", fd.eps_scenes(max(60, n // 15), s, args.seed + 3 + int(e * 100), dev, e), dev, r * 0.06, args.batch, 10 if e <= 0.2 else 99, set_he(128, e)))
+    g.append(group("dense", fd.dense(max(60, int(n * 0.35)), s, args.seed + 4, dev), dev, r * 0.2, args.batch, 99, set_he(128, 0.5)))
+    g.append(group("N1000-2500", fd.large_n(max(24, n // 25), s, args.seed + 7, dev, (1000, 2500)), dev, r * 0.09, 2, 12, set_he(128, 0.5), cap=False))
+    g.append(group("N3000-6000", fd.large_n(max(12, n // 50), s, args.seed + 8, dev, (3000, 6000)), dev, r * 0.04, 1, 8, set_he(128, 0.5), cap=False))
+    return g
+
+
 def build_groups(args, dev, log):
     s, n = args.steps, args.scenes
     t0 = time.time()
     g = []
-    if args.fix == "ctrl":
+    if args.fix == "all":
+        g = build_all(args, dev, log)
+    elif args.fix == "ctrl":
         g.append(group("base", fd.base(n, s, args.seed, dev), dev, 1.0, args.batch, 99))
     elif args.fix == "cu":
         first = group("base_G256", fd.base(n, s, args.seed, dev), dev, 0.3, args.batch, 99, set_h(256))
@@ -138,10 +165,11 @@ def train(model, groups, args, ckpt_path, log):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--fix", required=True, choices=["ctrl", "cu", "largen", "mass", "massnorm", "masswide", "eps", "dense"])
+    ap.add_argument("--fix", required=True, choices=["ctrl", "cu", "largen", "mass", "massnorm", "masswide", "eps", "dense", "all"])
     ap.add_argument("--variant", default=VAR)
     ap.add_argument("--init-ckpt", required=True)
     ap.add_argument("--name", required=True)
+    ap.add_argument("--replay", type=float, default=0.4)
     ap.add_argument("--scenes", type=int, default=1500)
     ap.add_argument("--steps", type=int, default=50)
     ap.add_argument("--batch", type=int, default=16)
