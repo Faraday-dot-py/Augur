@@ -9,7 +9,7 @@
 
 set -uo pipefail
 export PYTHONUNBUFFERED=1
-cd "$HOME/augur_s46"
+cd "$HOME/augur_int"
 export PYTHONPATH=.
 E="$HOME/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt"
 V=ms_kp_pot_v_g128_cu_eps_mnorm
@@ -17,7 +17,7 @@ NAME="${NAME:?}"
 BUDGET="${BUDGET:-9000}"
 REPLAY="${REPLAY:-0.4}"
 LR="${LR:-2e-4}"
-STRESS="${STRESS:-ood:all r46 n46 n46big}"
+STRESS="${STRESS-ood:all r46 n46 n46big}"
 BASE=results/baseline_v2_regress.json
 mkdir -p results checkpoints/scatter_s46
 nvidia-smi --query-gpu=name,utilization.gpu,memory.used --format=csv
