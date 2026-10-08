@@ -1,0 +1,101 @@
+{
+ "gpu": "NVIDIA H200 NVL",
+ "args": {
+  "ckpt": "/home/adamwebb/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt",
+  "mode": "run",
+  "n": 1000000000,
+  "steps": 3,
+  "pos_dtype": "fp32",
+  "mom_dtype": "fp32",
+  "mom_scale": 1.0,
+  "chunk": 50000000,
+  "sigma": 8.0,
+  "vfac": 0.3,
+  "c": 10.0,
+  "dt": 0.1,
+  "seed": 4738,
+  "nsub": 1000000,
+  "hist": false,
+  "snaps": false,
+  "tag": "scatter_bh_1b_pilot1e9_fp32",
+  "check_variants": "fp32:fp32,fp16:fp16"
+ },
+ "selftest_rel_err": 0.00021030691277701408,
+ "run": {
+  "label": "scatter_bh_1b_pilot1e9_fp32",
+  "n": 1000000000,
+  "pos_dtype": "torch.float32",
+  "mom_dtype": "torch.float32",
+  "mom_scale": 1.0,
+  "chunk": 50000000,
+  "init_force_ms": 1000.9922250173986,
+  "ms_per_tick": [
+   1003.077422035858,
+   1035.1434539770707,
+   1161.191042046994
+  ],
+  "diag": [
+   {
+    "frac_outside": 0.0,
+    "vmax_over_c": 1.0,
+    "pmax": 373125.3125,
+    "mean_ke": 2464210.8109107404,
+    "nonfinite": 0,
+    "core_r45": 8.751666069030762,
+    "r90": 17.1871337890625,
+    "centre": [
+     -0.006690336856991053,
+     -0.010291342623531818
+    ]
+   },
+   {
+    "frac_outside": 0.0,
+    "vmax_over_c": 1.0,
+    "pmax": 2885603.5,
+    "mean_ke": 10083558.752014525,
+    "nonfinite": 0,
+    "core_r45": 7.753194808959961,
+    "r90": 16.18710708618164,
+    "centre": [
+     0.03189261257648468,
+     0.03715348243713379
+    ],
+    "peak_gb": 21.648926208
+   },
+   {
+    "frac_outside": 0.0,
+    "vmax_over_c": 1.0,
+    "pmax": 15036343.0,
+    "mean_ke": 20778104.246632986,
+    "nonfinite": 0,
+    "core_r45": 6.754995822906494,
+    "r90": 15.189014434814453,
+    "centre": [
+     0.04310488700866699,
+     0.1398673951625824
+    ],
+    "peak_gb": 21.648926208
+   },
+   {
+    "frac_outside": 0.0,
+    "vmax_over_c": 1.0,
+    "pmax": 22126812.0,
+    "mean_ke": 37378385.62260883,
+    "nonfinite": 0,
+    "core_r45": 5.756553649902344,
+    "r90": 14.18923568725586,
+    "centre": [
+     0.02252006158232689,
+     0.17692416906356812
+    ],
+    "peak_gb": 21.648926208
+   }
+  ],
+  "first_tick_ms": 1003.077422035858,
+  "median_ms": 1035.1434539770707,
+  "total_tick_s": 3.1994119180599228,
+  "wall_loop_s": 3.605195577023551,
+  "peak_gb": 21.648926208,
+  "ns_per_body_per_tick": 1.0351434539770707
+ }
+}

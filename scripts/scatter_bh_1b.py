@@ -1,0 +1,292 @@
+"""Mesh-only scatter-field rollout of the relativistic black-hole scene at up to N = 1e9 on one GPU, with low-precision body state and chunked scatter/gather.
+
+Same scene and model as scatter_bh_timing.py (Gaussian cluster sigma 8 clipped +-29, vfac 0.3, c 10, relativistic kick-drift-kick on momentum, dt 0.1, Exp E weights,
+pair term removed) but the body state (pos, momentum) is stored in --pos-dtype / --mom-dtype, and scatter, gather, kick and drift run over body chunks in fp32 so
+temporaries stay O(chunk). Initial conditions are generated on the GPU chunk by chunk.
+
+State is kept in the half-kicked form M = p(t) + dt/2 a(t); one tick is: drift with v(M); scatter; grid force; M += dt (a - mean a). This is the same map as
+kick-drift-kick with the two half-kicks of adjacent ticks merged. mean a over bodies is obtained from the grid (gather is the transpose of scatter), so no second
+gather is needed for the momentum-conservation correction. Diagnostics use v(M) (half a kick ahead of p).
+
+--mode run:   one rollout; --hist/--snaps save per-tick density histograms (results/<tag>_hist.npz) and a fixed 1e6-body subsample (results/<tag>_snaps.npz: pos, steps).
+--mode check: fp32-state vs low-precision-state rollouts from identical ICs, per-tick differences (results/<tag>_check.json).
+
+Usage: PYTHONPATH=. python scripts/scatter_bh_1b.py --ckpt checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt --n 1000000000 --steps 100 --hist --snaps --tag scatter_bh_1b
+"""
+import argparse
+import json
+import math
+import statistics
+import time
+
+import numpy as np
+import torch
+
+from scripts import scatter_bh as sb
+from scripts import scatter_scaling_ops as ops
+from scripts import train_scatter_field as tsf
+
+DT = {"fp32": torch.float32, "fp16": torch.float16, "bf16": torch.bfloat16}
+HB = 1024
+
+
+def sync():
+    torch.cuda.synchronize()
+
+
+def chunks(n, chunk):
+    for s in range(0, n, chunk):
+        yield s, min(n, s + chunk)
+
+
+def make_ic(n, chunk, args, pd, md, ms, dev):
+    pos = torch.empty(n, 2, device=dev, dtype=pd)
+    mom = torch.empty(n, 2, device=dev, dtype=md)
+    vscale = args.vfac * math.sqrt(n / (4 * args.sigma))
+    c = args.c
+    vsum = torch.zeros(2, dtype=torch.float64, device=dev)
+    for pas in range(2):
+        g = torch.Generator(device=dev)
+        g.manual_seed(args.seed)
+        vmean = vsum / n
+        for s, e in chunks(n, chunk):
+            p = (torch.randn(e - s, 2, device=dev, generator=g) * args.sigma).clamp_(-29.0, 29.0)
+            v = torch.randn(e - s, 2, device=dev, generator=g) * vscale
+            if pas == 0:
+                vsum += v.sum(0, dtype=torch.float64)
+                continue
+            v -= vmean.float()
+            vmag = v.norm(dim=-1, keepdim=True).clamp(max=0.99 * c)
+            pos[s:e] = p.to(pd)
+            mom[s:e] = (v * (1 - (vmag / c) ** 2).clamp(min=1e-6).rsqrt() / ms).to(md)
+    return pos, mom
+
+
+class Sim:
+    def __init__(self, model, n, chunk, c, dt, pd, md, ms, dev):
+        self.model, self.n, self.chunk, self.c, self.dt, self.pd, self.md, self.ms, self.dev = model, n, chunk, c, dt, pd, md, ms, dev
+        self.ones = torch.ones(1, min(chunk, n), device=dev)
+        self.field = model.init_field(1, dev)[0]
+
+    def grid_force(self, x):
+        m = self.model
+        ak = m.kernel_acc(x[:, :1])
+        inp = torch.cat([x, ak, self.field], 1)
+        self.field = m.net(inp)
+        acc = m.neg_grad(self.field[:, :1]) + ak
+        w = x[0, 0].double() * (m.h ** 2 / m.in_scale)
+        abar = (acc[0].double() * w).sum((1, 2)) / self.n
+        return acc, abar.float()
+
+    def scatter_pass(self, pos, mom, drift):
+        G = self.model.grid
+        x = torch.zeros(1, 3, G, G, device=self.dev)
+        for s, e in chunks(self.n, self.chunk):
+            v = sb.speed(mom[s:e].float() * self.ms, self.c)
+            if drift:
+                pos[s:e] = (pos[s:e].float() + self.dt * v).to(self.pd)
+            x += self.model.scatter(pos[s:e].float()[None], v[None], self.ones[:, : e - s], self.ones[:, : e - s])
+        return x
+
+    def tick(self, pos, mom):
+        x = self.scatter_pass(pos, mom, True)
+        acc, abar = self.grid_force(x)
+        for s, e in chunks(self.n, self.chunk):
+            a = self.model.gather(acc, pos[s:e].float()[None])[0]
+            mom[s:e] = (mom[s:e].float() + self.dt * (a - abar) / self.ms).to(self.md)
+
+    def init_kick(self, pos, mom):
+        x = self.scatter_pass(pos, mom, False)
+        acc, abar = self.grid_force(x)
+        for s, e in chunks(self.n, self.chunk):
+            a = self.model.gather(acc, pos[s:e].float()[None])[0]
+            mom[s:e] = (mom[s:e].float() + 0.5 * self.dt * (a - abar) / self.ms).to(self.md)
+        return acc
+
+
+@torch.no_grad()
+def diagnostics(sim, pos, mom, sub, hist):
+    c, ms = sim.c, sim.ms
+    half = sim.model.extent / 2
+    out_cnt = torch.zeros((), dtype=torch.float64, device=sim.dev)
+    vmax = torch.zeros((), device=sim.dev)
+    ke = torch.zeros((), dtype=torch.float64, device=sim.dev)
+    bad = torch.zeros((), dtype=torch.float64, device=sim.dev)
+    pmax = torch.zeros((), device=sim.dev)
+    sp = pos[sub].float()
+    cen = sp.median(0).values
+    res = {}
+    if hist:
+        hf = torch.zeros(HB * HB + 1, dtype=torch.int64, device=sim.dev)
+        hz4 = torch.zeros_like(hf)
+        hz1 = torch.zeros_like(hf)
+    for s, e in chunks(sim.n, sim.chunk):
+        p = pos[s:e].float()
+        m = mom[s:e].float() * ms
+        out_cnt += (p.abs() > half).any(-1).sum()
+        bad += (~torch.isfinite(p).all(-1) | ~torch.isfinite(m).all(-1)).sum()
+        p2 = (m ** 2).sum(-1)
+        pmax = torch.maximum(pmax, p2.max().sqrt())
+        vmax = torch.maximum(vmax, (p2 / (1 + p2 / c ** 2)).max().sqrt())
+        ke += (c ** 2 * ((1 + p2 / c ** 2).sqrt() - 1)).sum(dtype=torch.float64)
+        if hist:
+            for h, ctr, hw in ((hf, None, 32.0), (hz4, cen, 4.0), (hz1, cen, 1.0)):
+                q = (p - ctr + hw) if ctr is not None else (p + hw)
+                ij = (q * (HB / (2 * hw))).floor().long()
+                ok = ((ij >= 0) & (ij < HB)).all(-1)
+                flat = torch.where(ok, ij[:, 1] * HB + ij[:, 0], HB * HB)
+                h += torch.bincount(flat, minlength=HB * HB + 1)
+    r = (sp - cen).norm(dim=-1)
+    res.update(frac_outside=float(out_cnt) / sim.n, vmax_over_c=float(vmax) / c, pmax=float(pmax), mean_ke=float(ke) / sim.n, nonfinite=int(bad),
+               core_r45=float(r.quantile(0.45)), r90=float(r.quantile(0.9)), centre=[float(cen[0]), float(cen[1])])
+    if hist:
+        res["hist"] = [h[:-1].view(HB, HB).int() for h in (hf, hz4, hz1)]
+    return res
+
+
+@torch.no_grad()
+def rollout(model, args, pd, md, ms, dev, steps, sub, hist, snaps, label):
+    n = args.n
+    torch.cuda.empty_cache()
+    torch.cuda.reset_peak_memory_stats()
+    sim = Sim(model, n, args.chunk, args.c, args.dt, pd, md, ms, dev)
+    pos, mom = make_ic(n, args.chunk, args, pd, md, ms, dev)
+    sync()
+    t0 = time.perf_counter()
+    sim.init_kick(pos, mom)
+    sync()
+    out = {"label": label, "n": n, "pos_dtype": str(pd), "mom_dtype": str(md), "mom_scale": ms, "chunk": args.chunk,
+           "init_force_ms": (time.perf_counter() - t0) * 1e3, "ms_per_tick": [], "diag": []}
+    d = diagnostics(sim, pos, mom, sub, hist)
+    hists = [d.pop("hist")] if hist else []
+    out["diag"].append(d)
+    sn = [pos[sub].float()] if snaps else []
+    print(f"[{label}] init force {out['init_force_ms']:.0f} ms, peak {torch.cuda.max_memory_allocated() / 1e9:.1f} GB", flush=True)
+    t_all = time.perf_counter()
+    for t in range(steps):
+        sync()
+        t0 = time.perf_counter()
+        sim.tick(pos, mom)
+        sync()
+        out["ms_per_tick"].append((time.perf_counter() - t0) * 1e3)
+        d = diagnostics(sim, pos, mom, sub, hist)
+        if hist:
+            hists.append(d.pop("hist"))
+        d["peak_gb"] = torch.cuda.max_memory_allocated() / 1e9
+        out["diag"].append(d)
+        if snaps:
+            sn.append(pos[sub].float())
+        if t % 5 == 0 or t == steps - 1:
+            print(f"[{label}] tick {t + 1} {out['ms_per_tick'][-1]:.0f} ms out {d['frac_outside']:.3f} vmax/c {d['vmax_over_c']:.4f} pmax {d['pmax']:.3g} "
+                  f"core {d['core_r45']:.3f} nonfinite {d['nonfinite']} peak {d['peak_gb']:.1f} GB wall {time.perf_counter() - t_all:.0f} s", flush=True)
+    ms_ = out["ms_per_tick"]
+    out.update(first_tick_ms=ms_[0], median_ms=statistics.median(ms_), total_tick_s=sum(ms_) / 1e3, wall_loop_s=time.perf_counter() - t_all,
+               peak_gb=torch.cuda.max_memory_allocated() / 1e9, ns_per_body_per_tick=statistics.median(ms_) * 1e6 / n)
+    return out, hists, sn, pos
+
+
+def selftest(model, args, dev):
+    n = 200000
+    a0 = argparse.Namespace(**vars(args))
+    a0.n = n
+    pos, mom = make_ic(n, 70000, a0, torch.float32, torch.float32, 1.0, dev)
+    sim = Sim(model, n, 70000, args.c, args.dt, torch.float32, torch.float32, 1.0, dev)
+    x = sim.scatter_pass(pos, mom, False)
+    acc, abar = sim.grid_force(x)
+    a = torch.cat([model.gather(acc, pos[s:e][None])[0] for s, e in chunks(n, 70000)]) - abar
+    sim2 = Sim(model, n, 70000, args.c, args.dt, torch.float32, torch.float32, 1.0, dev)
+    ref, _ = model.force(pos[None], sb.speed(mom, args.c)[None], torch.ones(1, n, device=dev), torch.ones(1, n, device=dev), sim2.field)
+    err = float((a - ref[0]).abs().max() / ref[0].abs().max())
+    print(f"selftest: max|a_chunked - model.force| / max|a| = {err:.2e}", flush=True)
+    return err
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--ckpt", required=True)
+    ap.add_argument("--mode", choices=["run", "check"], default="run")
+    ap.add_argument("--n", type=int, required=True)
+    ap.add_argument("--steps", type=int, default=100)
+    ap.add_argument("--pos-dtype", default="fp16")
+    ap.add_argument("--mom-dtype", default="fp16")
+    ap.add_argument("--mom-scale", type=float, default=1.0)
+    ap.add_argument("--chunk", type=int, default=50_000_000)
+    ap.add_argument("--sigma", type=float, default=8.0)
+    ap.add_argument("--vfac", type=float, default=0.3)
+    ap.add_argument("--c", type=float, default=10.0)
+    ap.add_argument("--dt", type=float, default=0.1)
+    ap.add_argument("--seed", type=int, default=4738)
+    ap.add_argument("--nsub", type=int, default=1_000_000)
+    ap.add_argument("--hist", action="store_true")
+    ap.add_argument("--snaps", action="store_true")
+    ap.add_argument("--tag", default="scatter_bh_1b")
+    ap.add_argument("--check-variants", default="fp32:fp32,fp16:fp16")
+    args = ap.parse_args()
+    dev = torch.device("cuda")
+    model = tsf.build(tsf.EXPS["E"], "ms_kp_pot_v_g128", args.dt).to(dev)
+    model.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
+    model.eval()
+    ops.no_pp(model)
+    res = {"gpu": torch.cuda.get_device_name(), "args": vars(args)}
+    json_path = f"results/{args.tag}{'_check' if args.mode == 'check' else ''}.json"
+
+    def write():
+        json.dump(res, open(json_path, "w"), indent=1)
+
+    res["selftest_rel_err"] = selftest(model, args, dev)
+    g = torch.Generator(device=dev)
+    g.manual_seed(args.seed + 1)
+    sub = torch.unique(torch.randint(0, args.n, (int(args.nsub * 1.01) + 100,), device=dev, generator=g))
+    sub = sub[torch.randperm(sub.numel(), device=dev, generator=g)[: args.nsub]].sort().values
+    try:
+        if args.mode == "check":
+            runs = {}
+            for v in args.check_variants.split(","):
+                pdn, mdn = v.split(":")
+                o, h, _, pos = rollout(model, args, DT[pdn], DT[mdn], args.mom_scale, dev, args.steps, sub, True, False, v)
+                del pos
+                runs[v] = (o, h)
+                res.setdefault("runs", {})[v] = o
+                write()
+            base = args.check_variants.split(",")[0]
+            for v, (o, h) in runs.items():
+                if v == base:
+                    continue
+                cmp = []
+                for t in range(len(h)):
+                    a, b = runs[base][1][t][0].double(), h[t][0].double()
+                    a128 = a.view(128, 8, 128, 8).sum((1, 3))
+                    b128 = b.view(128, 8, 128, 8).sum((1, 3))
+                    d0, d1 = runs[base][0]["diag"][t], o["diag"][t]
+                    cmp.append({"tick": t, "tv_128": float((a128 - b128).abs().sum() / (2 * args.n)), "tv_1024": float((a - b).abs().sum() / (2 * args.n)),
+                                "core_r45": [d0["core_r45"], d1["core_r45"]], "r90": [d0["r90"], d1["r90"]], "mean_ke": [d0["mean_ke"], d1["mean_ke"]],
+                                "vmax_over_c": [d0["vmax_over_c"], d1["vmax_over_c"]], "frac_outside": [d0["frac_outside"], d1["frac_outside"]],
+                                "pmax": [d0["pmax"], d1["pmax"]]})
+                res.setdefault("compare_vs_" + base, {})[v] = cmp
+                print(f"compare {v} vs {base}: last tick tv_128 {cmp[-1]['tv_128']:.4f} core {cmp[-1]['core_r45']} ke {cmp[-1]['mean_ke']}", flush=True)
+            for o, _ in runs.values():
+                for d in o["diag"]:
+                    d.pop("hist", None)
+        else:
+            o, hists, sn, pos = rollout(model, args, DT[args.pos_dtype], DT[args.mom_dtype], args.mom_scale, dev, args.steps, sub, args.hist, args.snaps, args.tag)
+            res["run"] = o
+            write()
+            print(f"n {args.n}: first {o['first_tick_ms']:.0f} ms median {o['median_ms']:.0f} ms ticks {o['total_tick_s']:.1f} s loop {o['wall_loop_s']:.1f} s "
+                  f"peak {o['peak_gb']:.1f} GB {o['ns_per_body_per_tick']:.2f} ns/body/tick", flush=True)
+            if args.hist:
+                cen = np.array([d["centre"] for d in o["diag"]], dtype=np.float32)
+                np.savez_compressed(f"results/{args.tag}_hist.npz", full=torch.stack([h[0] for h in hists]).cpu().numpy(),
+                                    zoom4=torch.stack([h[1] for h in hists]).cpu().numpy(), zoom1=torch.stack([h[2] for h in hists]).cpu().numpy(),
+                                    centre=cen, steps=np.arange(len(hists)), n=args.n, box_half=32.0, zoom_half=np.array([4.0, 1.0]))
+                print("hist saved", flush=True)
+            if args.snaps:
+                np.savez(f"results/{args.tag}_snaps.npz", pos=torch.stack(sn).cpu().numpy(), steps=np.arange(len(sn)), sub_idx=sub.cpu().numpy())
+                print("snaps saved", flush=True)
+    except torch.cuda.OutOfMemoryError as e:
+        res.update(oom=True, oom_message=str(e).splitlines()[0], peak_gb=torch.cuda.max_memory_allocated() / 1e9)
+        print("OOM", res["oom_message"], flush=True)
+    write()
+
+
+if __name__ == "__main__":
+    main()
