@@ -145,6 +145,7 @@ def train(model, groups, args, ckpt_path, log):
         loss = lp + 0.1 * lv
         raw = loss.item()
         spike = False
+        use_pen = args.long_windows > 0 and frac >= args.long_from and P.shape[2] <= args.long_nmax and np.isfinite(raw)
         if args.loss_norm:
             lv_ = loss.item()
             e0 = ema.get(grp["name"])
@@ -155,6 +156,10 @@ def train(model, groups, args, ckpt_path, log):
             loss = loss / ema.get(grp["name"], lv_)
         opt.zero_grad()
         loss.backward()
+        if use_pen:
+            args.eps = getattr(model, "eps_cur", 0.5)
+            pen = tsf.long_penalty(model, pos, vel, m, mk, field, args)
+            last.setdefault("pen_dE", []).append(pen[0])
         gn = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         if torch.isfinite(loss) and torch.isfinite(gn) and not spike and (args.loss_norm or not grp["cap"] or args.loss_cap <= 0 or loss.item() < args.loss_cap):
             opt.step()
@@ -168,6 +173,8 @@ def train(model, groups, args, ckpt_path, log):
             log(f"it {it} k {k} loss {raw:.6f} [{msg}] t {time.time() - t_start:.0f}s")
             if all(torch.isfinite(p).all() for p in model.parameters()):
                 torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, ckpt_path)
+                if it % 5000 == 0:
+                    torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, f"{ckpt_path}.it{it}")
     if all(torch.isfinite(p).all() for p in model.parameters()):
         torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it}, ckpt_path)
     log(f"trained {it} iters in {time.time() - t_start:.0f}s")
@@ -178,7 +185,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--fix", required=True, choices=["ctrl", "cu", "largen", "mass", "massnorm", "masswide", "eps", "dense", "all"])
     ap.add_argument("--variant", default=VAR)
-    ap.add_argument("--init-ckpt", required=True)
+    ap.add_argument("--init-ckpt", default=None, help="omit for random init")
+    ap.add_argument("--long-windows", type=int, default=0, help="soft dE/dL penalty windows past the supervised unroll (tsf.long_penalty)")
+    ap.add_argument("--long-k", type=int, default=20)
+    ap.add_argument("--long-from", type=float, default=0.25, help="schedule fraction where the penalty switches on")
+    ap.add_argument("--long-nmax", type=int, default=400, help="penalty only on groups with padded N <= this")
+    ap.add_argument("--lam-e", type=float, default=0.3)
+    ap.add_argument("--lam-l", type=float, default=0.3)
     ap.add_argument("--name", required=True)
     ap.add_argument("--loss-norm", action="store_true")
     ap.add_argument("--spike", type=float, default=5.0)
@@ -207,8 +220,9 @@ def main():
         print(s, flush=True)
 
     model = tsf.build(tsf.EXPS["E"], args.variant, 0.1).to(dev)
-    sf.load_compat(model, torch.load(args.init_ckpt, map_location=dev, weights_only=False)["model"])
-    log(f"=== {args.name} fix {args.fix} variant {args.variant} params {sum(p.numel() for p in model.parameters())} init {args.init_ckpt}")
+    if args.init_ckpt:
+        sf.load_compat(model, torch.load(args.init_ckpt, map_location=dev, weights_only=False)["model"])
+    log(f"=== {args.name} fix {args.fix} variant {args.variant} params {sum(p.numel() for p in model.parameters())} init {args.init_ckpt or 'random'}")
     groups = build_groups(args, dev, log)
     ckpt = f"{args.ckpt_dir}/{args.name}.pt"
     n_it, secs = train(model, groups, args, ckpt, log)
