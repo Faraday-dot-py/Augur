@@ -155,6 +155,9 @@ def train(model, tensors, args, ckpt_path, log):
         for pg in opt.param_groups:
             pg["lr"] = lr
         idx = torch.randint(S, (args.batch,), generator=g).to(args.device)
+        hook = getattr(args, 'batch_hook', None)
+        if hook:
+            hook(idx)
         t0 = torch.randint(0, args.steps - k + 1, (args.batch,), generator=g).to(args.device)
         tt = t0[:, None] + torch.arange(k + 1, device=args.device)[None]
         Pw, Vw = P[idx[:, None], tt], V[idx[:, None], tt]
