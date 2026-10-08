@@ -1,0 +1,17 @@
+{
+ "n": 10000000,
+ "pair": "cell",
+ "steps_requested": 20,
+ "sigma": 8.0,
+ "vfac": 0.3,
+ "c": 10.0,
+ "dt": 0.1,
+ "seed": 4738,
+ "dtype": "float32",
+ "ckpt": "/home/adamwebb/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt",
+ "gpu": "NVIDIA H200 NVL",
+ "max_cell_occupancy_t0": 97539,
+ "est_tick_s_from_candidates": 1492.3467,
+ "skipped": true,
+ "reason": "estimated 1492 s/tick at tick 0 (N*9*M = 8.779e+12 candidates) exceeds 900 s; cell search not run"
+}

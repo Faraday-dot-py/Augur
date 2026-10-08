@@ -1,0 +1,54 @@
+{
+ "n": 1000000,
+ "pair": "cell",
+ "steps_requested": 20,
+ "sigma": 8.0,
+ "vfac": 0.3,
+ "c": 10.0,
+ "dt": 0.1,
+ "seed": 4738,
+ "dtype": "float32",
+ "ckpt": "/home/adamwebb/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt",
+ "gpu": "NVIDIA H200 NVL",
+ "max_cell_occupancy_t0": 9917,
+ "est_tick_s_from_candidates": 15.173010000000001,
+ "init_force_ms": 8239.930807962082,
+ "ms_per_tick": [
+  9354.753309045918,
+  15092.545829014853,
+  27386.727326898836,
+  47229.03963807039,
+  68054.63409598451,
+  89095.94088396989,
+  112500.60746399686,
+  135415.2513060253,
+  152400.1131389523,
+  167122.04522406682,
+  180575.97669702955
+ ],
+ "steps_done": 11,
+ "diag_ticks": [
+  1,
+  6,
+  11
+ ],
+ "frac_outside_grid": [
+  0.0,
+  0.0001250000059371814,
+  0.00016900000628083944
+ ],
+ "vmax_over_c": [
+  0.9999915957450867,
+  1.0000001192092896,
+  1.000000238418579
+ ],
+ "max_cell_occupancy_last": 228121,
+ "truncated": true,
+ "projected_total_s": 3611.519533940591,
+ "reason": "stopped after 11 ticks: projected 3612 s for 20 ticks exceeds 3600 s",
+ "peak_mem_gb": 1.68841728,
+ "first_tick_ms": 9354.753309045918,
+ "median_ms": 89095.94088396989,
+ "total_ms": 1004227.6349130552,
+ "ns_per_body_per_tick": 89095.94088396989
+}
