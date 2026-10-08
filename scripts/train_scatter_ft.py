@@ -109,6 +109,7 @@ def train(model, groups, args, ckpt_path, log):
     g = torch.Generator(device="cpu").manual_seed(args.seed + start)
     wts = torch.tensor([x["weight"] for x in groups])
     skipped = 0
+    ema, cnt = {}, {}
     t_start = time.time()
     it = start - 1
     last = {}
@@ -142,19 +143,29 @@ def train(model, groups, args, ckpt_path, log):
             lp = lp + (((pos - Pw[:, s + 1]) ** 2) * w).sum() / denom
             lv = lv + (((vel - Vw[:, s + 1]) ** 2) * w).sum() / denom
         loss = lp + 0.1 * lv
+        raw = loss.item()
+        spike = False
+        if args.loss_norm:
+            lv_ = loss.item()
+            e0 = ema.get(grp["name"])
+            spike = e0 is not None and cnt[grp["name"]] >= 20 and lv_ > args.spike * e0
+            if np.isfinite(lv_) and not spike:
+                ema[grp["name"]] = lv_ if e0 is None else 0.98 * e0 + 0.02 * lv_
+                cnt[grp["name"]] = cnt.get(grp["name"], 0) + 1
+            loss = loss / ema.get(grp["name"], lv_)
         opt.zero_grad()
         loss.backward()
         gn = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-        if torch.isfinite(loss) and torch.isfinite(gn) and (not grp["cap"] or args.loss_cap <= 0 or loss.item() < args.loss_cap):
+        if torch.isfinite(loss) and torch.isfinite(gn) and not spike and (args.loss_norm or not grp["cap"] or args.loss_cap <= 0 or loss.item() < args.loss_cap):
             opt.step()
         else:
             opt.zero_grad()
             skipped += 1
             log(f"it {it} {grp['name']} loss {loss.item():.3g} non-finite or above cap, step skipped ({skipped} total)")
-        last.setdefault(grp["name"], []).append(loss.item())
+        last.setdefault(grp["name"], []).append(raw)
         if it % args.log_every == 0:
             msg = " ".join(f"{k_}:{np.mean(v[-20:]):.5f}" for k_, v in last.items())
-            log(f"it {it} k {k} loss {loss.item():.6f} [{msg}] t {time.time() - t_start:.0f}s")
+            log(f"it {it} k {k} loss {raw:.6f} [{msg}] t {time.time() - t_start:.0f}s")
             if all(torch.isfinite(p).all() for p in model.parameters()):
                 torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, ckpt_path)
     if all(torch.isfinite(p).all() for p in model.parameters()):
@@ -169,6 +180,8 @@ def main():
     ap.add_argument("--variant", default=VAR)
     ap.add_argument("--init-ckpt", required=True)
     ap.add_argument("--name", required=True)
+    ap.add_argument("--loss-norm", action="store_true")
+    ap.add_argument("--spike", type=float, default=5.0)
     ap.add_argument("--replay", type=float, default=0.4)
     ap.add_argument("--scenes", type=int, default=1500)
     ap.add_argument("--steps", type=int, default=50)
