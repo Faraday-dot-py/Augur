@@ -1,0 +1,20 @@
+{
+ "n_on_clip_line_noclip_run": 3,
+ "n_on_clip_line_clip_run": 601,
+ "clip_t5_n_|x|in[16,21]_|y|<12": 7590,
+ "clip_t5_n_r>15": 44230,
+ "resample_t5_n_|x|in[16,21]_|y|<12": 7631,
+ "resample_t5_n_r>15": 43267,
+ "clip_t10_n_|x|in[16,21]_|y|<12": 1518,
+ "clip_t10_n_r>15": 8679,
+ "resample_t10_n_|x|in[16,21]_|y|<12": 1235,
+ "resample_t10_n_r>15": 7716,
+ "clip_t14_n_|x|in[16,21]_|y|<12": 567,
+ "clip_t14_n_r>15": 3590,
+ "resample_t14_n_|x|in[16,21]_|y|<12": 287,
+ "resample_t14_n_r>15": 2767,
+ "clip_t20_n_|x|in[16,21]_|y|<12": 38,
+ "clip_t20_n_r>15": 2029,
+ "resample_t20_n_|x|in[16,21]_|y|<12": 23,
+ "resample_t20_n_r>15": 1485
+}

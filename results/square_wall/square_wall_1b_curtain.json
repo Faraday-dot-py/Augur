@@ -1,0 +1,27 @@
+{
+ "vertical_curtain |x| in [16,21], |y|<12": {
+  "n": 567,
+  "n_clipped": 262,
+  "frac_clipped": 0.4620811287477954
+ },
+ "horizontal curtain |y| in [15,21], |x|<12": {
+  "n": 1001,
+  "n_clipped": 127,
+  "frac_clipped": 0.12687312687312688
+ },
+ "|x| or |y| > 21 (outside the curtains)": {
+  "n": 459,
+  "n_clipped": 159,
+  "frac_clipped": 0.3464052287581699
+ },
+ "all": {
+  "n": 1000000,
+  "n_clipped": 601,
+  "frac_clipped": 0.000601
+ },
+ "overall_clipped_frac": 0.000601,
+ "clipped_with_|x|>=16 or |y|>=15 at t14": 1.0,
+ "nonclipped_with_|x|>=16 or |y|>=15 at t14": 0.0015889549619321213,
+ "nonclipped_n_at_r>15_t14": 2989,
+ "clipped_n_at_r>15_t14": 601
+}
