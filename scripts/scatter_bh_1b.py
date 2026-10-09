@@ -167,6 +167,38 @@ def lens_windows(diag, min_half):
 
 
 @torch.no_grad()
+def force_probe(sim, pos, mom, sub, ntgt, eps=0.5):
+    m = sim.model
+    saved = sim.field.clone()
+    x = sim.scatter_pass(pos, mom, False)
+    ak = m.kernel_acc(x[:, :1])
+    acc, _ = sim.grid_force(x)
+    sim.field = saved
+    src = pos[sub].float()
+    w = sim.n / src.shape[0]
+    tg = src[:ntgt]
+    a_tot = m.gather(acc, tg[None])[0]
+    a_ker = m.gather(ak, tg[None])[0]
+    a_ex = torch.zeros_like(tg)
+    for s in range(0, tg.shape[0], 500):
+        d = src[None] - tg[s:s + 500, None]
+        a_ex[s:s + 500] = w * (d * ((d ** 2).sum(-1, keepdim=True) + eps ** 2) ** -1.5).sum(1)
+    r = (tg - src.median(0).values).norm(dim=-1)
+    edges = [0, 0.5, 1, 2, 4, 8, 16, 32, 1e9]
+    rows = []
+    for lo, hi in zip(edges[:-1], edges[1:]):
+        k = (r >= lo) & (r < hi)
+        if int(k.sum()) < 20:
+            continue
+        ae, at, ak_ = a_ex[k], a_tot[k], a_ker[k]
+        ne, nt, nk = ae.norm(dim=-1), at.norm(dim=-1), ak_.norm(dim=-1)
+        rows.append({"r_lo": lo, "r_hi": hi, "count": int(k.sum()), "exact_mean": float(ne.mean()), "model_mean": float(nt.mean()), "kernel_mean": float(nk.mean()),
+                     "model_over_exact_median": float((nt / ne).median()), "kernel_over_exact_median": float((nk / ne).median()),
+                     "cos_model_exact_median": float(((at * ae).sum(-1) / (nt * ne)).median()), "relerr_model_median": float(((at - ae).norm(dim=-1) / ne).median())})
+    return rows
+
+
+@torch.no_grad()
 def rollout(model, args, pd, md, ms, dev, steps, sub, hist, snaps, label, lens=None):
     n = args.n
     torch.cuda.empty_cache()
@@ -197,6 +229,8 @@ def rollout(model, args, pd, md, ms, dev, steps, sub, hist, snaps, label, lens=N
         d = diagnostics(sim, pos, mom, sub, hist)
         if hist:
             hists.append(d.pop("hist"))
+        if t + 1 in args.force_probe:
+            out.setdefault("force_probe", {})[t + 1] = force_probe(sim, pos, mom, sub, args.probe_targets)
         d["peak_gb"] = torch.cuda.max_memory_allocated() / 1e9
         out["diag"].append(d)
         if snaps:
@@ -252,6 +286,8 @@ def main():
     ap.add_argument("--lens-res", type=int, default=1080)
     ap.add_argument("--lens-min-half", type=float, default=3.0)
     ap.add_argument("--tag", default="scatter_bh_1b")
+    ap.add_argument("--force-probe", type=lambda v: [int(i) for i in v.split(",") if i], default=[], help="ticks at which to compare grid force with exact pairwise force on the subsample")
+    ap.add_argument("--probe-targets", type=int, default=20000)
     ap.add_argument("--check-variants", default="fp32:fp32,fp16:fp16")
     args = ap.parse_args()
     dev = torch.device("cuda")
