@@ -50,8 +50,11 @@ def make_ic(n, chunk, args, pd, md, ms, dev):
         g.manual_seed(args.seed)
         vmean = vsum / n
         for s, e in chunks(n, chunk):
-            p = (torch.randn(e - s, 2, device=dev, generator=g) * args.sigma).clamp_(-29.0, 29.0)
+            p = torch.randn(e - s, 2, device=dev, generator=g) * args.sigma
             v = torch.randn(e - s, 2, device=dev, generator=g) * vscale
+            if args.ic_resample:
+                p = torch.where(p.abs() > 29.0, torch.randn(e - s, 2, device=dev, generator=g) * args.sigma, p)
+            p = p.clamp_(-29.0, 29.0)
             if pas == 0:
                 vsum += v.sum(0, dtype=torch.float64)
                 continue
@@ -145,7 +148,26 @@ def diagnostics(sim, pos, mom, sub, hist):
 
 
 @torch.no_grad()
-def rollout(model, args, pd, md, ms, dev, steps, sub, hist, snaps, label):
+def lens_hist(sim, pos, win, res):
+    cx, cy, hw = (float(v) for v in win)
+    ctr = torch.tensor([cx, cy], device=sim.dev)
+    h = torch.zeros(res * res + 1, dtype=torch.int64, device=sim.dev)
+    for s, e in chunks(sim.n, sim.chunk):
+        ij = ((pos[s:e].float() - ctr + hw) * (res / (2 * hw))).floor().long()
+        ok = ((ij >= 0) & (ij < res)).all(-1)
+        h += torch.bincount(torch.where(ok, ij[:, 1] * res + ij[:, 0], res * res), minlength=res * res + 1)
+    return h[:-1].view(res, res).float().cpu().numpy()
+
+
+def lens_windows(diag, min_half):
+    from scipy.ndimage import gaussian_filter1d
+    centre = gaussian_filter1d(np.array([d["centre"] for d in diag]), 4, axis=0, mode="nearest")
+    radius = gaussian_filter1d(np.array([d["core_r45"] for d in diag]), 4, mode="nearest")
+    return np.concatenate([centre, np.maximum(3.5 * radius, min_half)[:, None]], 1).astype(np.float64)
+
+
+@torch.no_grad()
+def rollout(model, args, pd, md, ms, dev, steps, sub, hist, snaps, label, lens=None):
     n = args.n
     torch.cuda.empty_cache()
     torch.cuda.reset_peak_memory_stats()
@@ -161,6 +183,9 @@ def rollout(model, args, pd, md, ms, dev, steps, sub, hist, snaps, label):
     hists = [d.pop("hist")] if hist else []
     out["diag"].append(d)
     sn = [pos[sub].float()] if snaps else []
+    if lens is not None:
+        lens[0][0] = lens_hist(sim, pos, lens[1][0], args.lens_res)
+        lens[0].flush()
     print(f"[{label}] init force {out['init_force_ms']:.0f} ms, peak {torch.cuda.max_memory_allocated() / 1e9:.1f} GB", flush=True)
     t_all = time.perf_counter()
     for t in range(steps):
@@ -176,6 +201,9 @@ def rollout(model, args, pd, md, ms, dev, steps, sub, hist, snaps, label):
         out["diag"].append(d)
         if snaps:
             sn.append(pos[sub].float())
+        if lens is not None:
+            lens[0][t + 1] = lens_hist(sim, pos, lens[1][t + 1], args.lens_res)
+            lens[0].flush()
         if t % 5 == 0 or t == steps - 1:
             print(f"[{label}] tick {t + 1} {out['ms_per_tick'][-1]:.0f} ms out {d['frac_outside']:.3f} vmax/c {d['vmax_over_c']:.4f} pmax {d['pmax']:.3g} "
                   f"core {d['core_r45']:.3f} nonfinite {d['nonfinite']} peak {d['peak_gb']:.1f} GB wall {time.perf_counter() - t_all:.0f} s", flush=True)
@@ -216,9 +244,13 @@ def main():
     ap.add_argument("--c", type=float, default=10.0)
     ap.add_argument("--dt", type=float, default=0.1)
     ap.add_argument("--seed", type=int, default=4738)
+    ap.add_argument("--ic-resample", action="store_true", help="redraw positions beyond +-29 instead of piling them on the clip lines (square-wall control)")
     ap.add_argument("--nsub", type=int, default=1_000_000)
     ap.add_argument("--hist", action="store_true")
     ap.add_argument("--snaps", action="store_true")
+    ap.add_argument("--lens-out", default=None, help="two-pass: pass 1 finds the renderer windows, pass 2 saves per-frame window histograms of all bodies to this .npy memmap")
+    ap.add_argument("--lens-res", type=int, default=1080)
+    ap.add_argument("--lens-min-half", type=float, default=3.0)
     ap.add_argument("--tag", default="scatter_bh_1b")
     ap.add_argument("--check-variants", default="fp32:fp32,fp16:fp16")
     args = ap.parse_args()
@@ -267,6 +299,20 @@ def main():
             for o, _ in runs.values():
                 for d in o["diag"]:
                     d.pop("hist", None)
+        elif args.lens_out:
+            o1, _, _, pos = rollout(model, args, DT[args.pos_dtype], DT[args.mom_dtype], args.mom_scale, dev, args.steps, sub, False, False, args.tag + "_pass1")
+            del pos
+            win = lens_windows(o1["diag"], args.lens_min_half)
+            np.save(args.lens_out.replace(".npy", "_windows.npy"), win)
+            res["pass1"] = o1
+            write()
+            mm = np.lib.format.open_memmap(args.lens_out, mode="w+", dtype=np.float32, shape=(len(win), args.lens_res, args.lens_res))
+            o, _, _, pos = rollout(model, args, DT[args.pos_dtype], DT[args.mom_dtype], args.mom_scale, dev, args.steps, sub, False, False, args.tag + "_pass2", lens=(mm, win))
+            res["run"] = o
+            res["lens_windows"] = win.tolist()
+            res["pass2_vs_pass1_centre_r45"] = [[a["centre"], a["core_r45"], b["centre"], b["core_r45"]] for a, b in zip(o1["diag"], o["diag"])]
+            write()
+            print(f"n {args.n}: pass2 median {o['median_ms']:.0f} ms peak {o['peak_gb']:.1f} GB", flush=True)
         else:
             o, hists, sn, pos = rollout(model, args, DT[args.pos_dtype], DT[args.mom_dtype], args.mom_scale, dev, args.steps, sub, args.hist, args.snaps, args.tag)
             res["run"] = o
