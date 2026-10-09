@@ -167,6 +167,20 @@ def lens_windows(diag, min_half):
 
 
 @torch.no_grad()
+def grid_dump(sim, pos, mom):
+    m = sim.model
+    G = m.grid
+    saved = sim.field.clone()
+    x = sim.scatter_pass(pos, mom, False)
+    rho = x[:, :1]
+    phi_far = torch.fft.irfft2(torch.fft.rfft2(rho, s=(2 * G, 2 * G)) * m._kernel_fft(rho), s=(2 * G, 2 * G))[..., :G, :G] * m.h ** 2
+    acc, _ = sim.grid_force(x)
+    phi_net = sim.field[:, :1]
+    sim.field = saved
+    return torch.stack([rho[0, 0], acc[0].norm(dim=0), phi_far[0, 0], phi_net[0, 0]]).cpu()
+
+
+@torch.no_grad()
 def force_probe(sim, pos, mom, sub, ntgt, eps=0.5):
     m = sim.model
     saved = sim.field.clone()
@@ -215,6 +229,7 @@ def rollout(model, args, pd, md, ms, dev, steps, sub, hist, snaps, label, lens=N
     hists = [d.pop("hist")] if hist else []
     out["diag"].append(d)
     sn = [pos[sub].float()] if snaps else []
+    gd = [grid_dump(sim, pos, mom)] if args.grid_dump else []
     if lens is not None:
         lens[0][0] = lens_hist(sim, pos, lens[1][0], args.lens_res)
         lens[0].flush()
@@ -229,6 +244,8 @@ def rollout(model, args, pd, md, ms, dev, steps, sub, hist, snaps, label, lens=N
         d = diagnostics(sim, pos, mom, sub, hist)
         if hist:
             hists.append(d.pop("hist"))
+        if args.grid_dump:
+            gd.append(grid_dump(sim, pos, mom))
         if t + 1 in args.force_probe:
             out.setdefault("force_probe", {})[t + 1] = force_probe(sim, pos, mom, sub, args.probe_targets)
         d["peak_gb"] = torch.cuda.max_memory_allocated() / 1e9
@@ -244,6 +261,8 @@ def rollout(model, args, pd, md, ms, dev, steps, sub, hist, snaps, label, lens=N
     ms_ = out["ms_per_tick"]
     out.update(first_tick_ms=ms_[0], median_ms=statistics.median(ms_), total_tick_s=sum(ms_) / 1e3, wall_loop_s=time.perf_counter() - t_all,
                peak_gb=torch.cuda.max_memory_allocated() / 1e9, ns_per_body_per_tick=statistics.median(ms_) * 1e6 / n)
+    if args.grid_dump:
+        np.save(f"results/{args.tag}_grids.npy", torch.stack(gd).numpy())
     return out, hists, sn, pos
 
 
@@ -287,6 +306,7 @@ def main():
     ap.add_argument("--lens-min-half", type=float, default=3.0)
     ap.add_argument("--tag", default="scatter_bh_1b")
     ap.add_argument("--force-probe", type=lambda v: [int(i) for i in v.split(",") if i], default=[], help="ticks at which to compare grid force with exact pairwise force on the subsample")
+    ap.add_argument("--grid-dump", action="store_true", help="save per-tick 128x128 maps (density, |a|, far-field potential, net potential) to results/<tag>_grids.npy")
     ap.add_argument("--probe-targets", type=int, default=20000)
     ap.add_argument("--check-variants", default="fp32:fp32,fp16:fp16")
     args = ap.parse_args()
