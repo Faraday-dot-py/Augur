@@ -14,7 +14,9 @@ const state = {
   mode: "fixed", seed: 4738, tick: -1, epoch: 0, running: true,
   ms: 0, ready: false, meta: null, E0: undefined, modelEnergy: 0,
   err: [], modelE: [], truthE: [], histLen: 200,
+  runSeed: 4738, log: { E: [], outside: [] },
 };
+const LOG_TICKS = 1000;
 const RATE = 10, BUF_AHEAD = 100, BUF_BEHIND = 30;
 const frames = new Map(), out = makeOut(), history = new Map();
 let oldest = 0, newest = -1, want = -1, lastAdv = 0, stepPending = false, curves = null;
@@ -44,7 +46,9 @@ function startRun(n) {
   frames.clear(); history.clear();
   oldest = 0; newest = -1; want = BUF_AHEAD; stepPending = false;
   state.tick = -1; state.E0 = undefined; state.err = []; state.modelE = []; state.truthE = []; state.pos = state.vel = null;
-  const { pos, vel } = initBodies(n, mulberry32(state.mode === "fixed" ? state.seed : state.seed + Math.floor(performance.now())));
+  state.runSeed = state.mode === "fixed" ? state.seed : (state.seed + Math.floor(performance.now())) >>> 0;
+  state.log = { E: [], outside: [] };
+  const { pos, vel } = initBodies(n, mulberry32(state.runSeed));
   $("s-src").textContent = state.mode === "fixed" ? `fixed seed ${state.seed}` : "random start";
   worker.postMessage({ cmd: "reset", epoch: state.epoch, n, pos, vel, limit: want });
   if (state.truthOn) startTruth(pos, vel, 0, true);
@@ -172,6 +176,7 @@ worker.onmessage = (e) => {
   if (m.type !== "frame" || m.epoch !== state.epoch) return;
   frames.set(m.tick, m);
   newest = m.tick;
+  if (m.tick <= LOG_TICKS) { state.log.E[m.tick] = m.energy; state.log.outside[m.tick] = m.outside; }
   arrivals.push(performance.now());
   if (state.tick < 0) { lastAdv = performance.now(); show(0); } else syncRange();
   $("s-trace").textContent = `${newest - state.tick} / ${BUF_AHEAD}`;
@@ -242,6 +247,8 @@ $("c-truth").addEventListener("change", (e) => {
 $("b-export").addEventListener("click", () => {
   const snap = {
     tick: state.tick, n: state.n, dt: state.dt, extent: state.extent, G: state.G, meta: state.meta, exportedAt: new Date().toISOString(),
+    seed: state.runSeed, baseSeed: state.seed, mode: state.mode, epoch: state.epoch, E0: state.E0,
+    startLog: { ticks: LOG_TICKS, E: state.log.E, outside: state.log.outside },
     pos: Array.from(state.pos), vel: Array.from(state.vel),
     truthPos: state.truthOn ? Array.from(state.tPos) : null, truthVel: state.truthOn ? Array.from(state.tVel) : null,
     truthSinceTick: state.truthSince,

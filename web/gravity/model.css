@@ -1,0 +1,26 @@
+header, aside, nav { z-index: 2; }
+#arch { position: fixed; inset: 0; z-index: 1; touch-action: none; background: var(--bg); }
+#arch[hidden] { display: none; }
+#arch canvas { display: block; width: 100%; height: 100%; outline: none; }
+#labels { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+#labels div { position: absolute; left: 0; top: 0; white-space: nowrap; font: 11px var(--mono); color: var(--dim); transform-origin: 0 0; text-shadow: 0 0 4px var(--bg), 0 0 2px var(--bg); will-change: transform; }
+#labels .sec { color: #b9c6dc; font: 600 11.5px system-ui, sans-serif; letter-spacing: 0.02em; }
+#labels .off { color: var(--faint); }
+body:not(.model) #labels { display: none; }
+#tip { position: fixed; left: 0; top: 0; pointer-events: none; padding: 7px 9px; font: 12px/1.45 var(--mono); max-width: 320px; z-index: 5; opacity: 0; transition: opacity 0.08s; }
+#tip.on { opacity: 1; }
+#tip b { color: #fff; font-weight: 600; font-size: 13px; }
+#tip span { color: var(--dim); }
+#sel { font: 12px/1.55 var(--mono); color: var(--dim); font-variant-numeric: tabular-nums; }
+#sel b { color: var(--fg); font-weight: 500; }
+aside h2 { display: flex; justify-content: space-between; gap: 8px; }
+aside h2 small { text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--faint); font-family: var(--mono); }
+#c-hood { height: 120px; margin-top: 6px; }
+.ramp { height: 6px; border-radius: 3px; background: linear-gradient(90deg, #cfe3ff, #4394ff 25%, #161b25 50%, var(--truth) 75%, #ffe7c8); margin: 6px 0 2px; }
+.ramp + div { display: flex; justify-content: space-between; font-size: 10px; color: var(--faint); }
+.mv { display: none; }
+body.model .mv { display: block; }
+@media (max-width: 760px) {
+  body.model aside { display: none; }
+  #c-hood { height: 90px; }
+}

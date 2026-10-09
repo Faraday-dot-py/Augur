@@ -42,26 +42,31 @@ export class Arch {
     this.wires = new THREE.LineSegments(wg, new THREE.LineBasicMaterial({ color: 0x2b5f86, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending, depthWrite: false }));
     this.wires.frustumCulled = false;
     this.group.add(this.wires);
-    const plate = (u0, w0, u1, w1) => {
-      const m = new THREE.Mesh(new THREE.PlaneGeometry(u1 - u0, w1 - w0), new THREE.MeshBasicMaterial({ color: 0x0c1119 }));
-      m.rotation.x = -Math.PI / 2;
-      m.position.set((u0 + u1) / 2, -0.02, (w0 + w1) / 2);
-      const ed = new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry), new THREE.LineBasicMaterial({ color: 0x1b2636 }));
-      m.add(ed);
-      this.group.add(m);
-    };
-    plate(-1, -3.5, 9, 3.5);
-    plate(-1, 3.5, 80, 34);
-    plate(-1, 35, 72, 62);
-    plate(-1, 63, 38, 67);
-    plate(-1, 68.5, 96, 81);
-    plate(-1, 82.5, 22, 87);
+    this.plates();
     this.cells = [];
     this.labels = [];
     this.anchors = { input: [4, 1], output: [4, 85], cols: [] };
     this.hover = -1;
     this.m = new THREE.Matrix4();
     this.c = new THREE.Color();
+  }
+
+  plate(u0, w0, u1, w1) {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(u1 - u0, w1 - w0), new THREE.MeshBasicMaterial({ color: 0x0c1119 }));
+    m.rotation.x = -Math.PI / 2;
+    m.position.set((u0 + u1) / 2, -0.02, (w0 + w1) / 2);
+    const ed = new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry), new THREE.LineBasicMaterial({ color: 0x1b2636 }));
+    m.add(ed);
+    this.group.add(m);
+  }
+
+  plates() {
+    this.plate(-1, -3.5, 9, 3.5);
+    this.plate(-1, 3.5, 80, 34);
+    this.plate(-1, 35, 72, 62);
+    this.plate(-1, 63, 38, 67);
+    this.plate(-1, 68.5, 96, 81);
+    this.plate(-1, 82.5, 22, 87);
   }
 
   set(tr, ids) {

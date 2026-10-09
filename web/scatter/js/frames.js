@@ -54,3 +54,10 @@ export function dequant(fr, out) {
 }
 
 export const frameBytes = (fr) => fr.q16.byteLength + fr.q8.byteLength + fr.M.byteLength + fr.pos.byteLength + fr.vel.byteLength;
+
+export function countOutside(pos, n, extent) {
+  const h = extent / 2;
+  let c = 0;
+  for (let i = 0; i < n; i++) if (Math.abs(pos[2 * i]) > h || Math.abs(pos[2 * i + 1]) > h) c++;
+  return c;
+}

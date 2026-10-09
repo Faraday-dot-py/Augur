@@ -68,11 +68,19 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
   </dl>
 </header>
 <aside class="glass">
-  <h2>Pair force f(d)</h2>
-  <canvas id="c-force" aria-label="learned pairwise force against distance"></canvas>
+  <h2>Selected body <small id="sel-id"></small></h2>
+  <div id="sel">click a body</div>
+  <canvas id="c-hood" aria-label="the selected body and its strongest neighbours, with the force each exerts"></canvas>
+  <h2>Pair force f(d) <small>dashed: true law</small></h2>
+  <canvas id="c-force" aria-label="learned pairwise force against distance (solid) and the true softened-gravity law (dashed), with the selected body's neighbours marked"></canvas>
   <h2>Kinetic + potential energy</h2>
   <canvas id="c-energy" aria-label="energy over time, model (blue, kinetic only) vs ground truth (orange, kinetic + potential)"></canvas>
   <div class="key"><span><i style="background:var(--accent)"></i>model</span><span><i style="background:var(--truth)"></i>ground truth</span></div>
+  <div class="mv">
+    <h2>Model view</h2>
+    <div class="ramp"></div><div><span>negative</span><span>0</span><span>positive</span></div>
+    <div class="key">Bar height and colour show each value. Click a neighbour's bar to follow that body.</div>
+  </div>
 </aside>
 <nav class="glass" aria-label="controls">
   <div class="grp">
@@ -88,8 +96,19 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
     <button id="b-truth" aria-pressed="true" aria-keyshortcuts="g">Truth<kbd>g</kbd></button>
     <button id="b-edges" aria-pressed="true" aria-keyshortcuts="e">Edges<kbd>e</kbd></button>
   </div>
+  <span class="sep"></span>
+  <div class="grp">
+    <button id="b-model" aria-pressed="false" aria-keyshortcuts="m">Model<kbd>m</kbd></button>
+    <button id="b-pick" aria-keyshortcuts="p" title="select a random body">Pick<kbd>p</kbd></button>
+  </div>
 </nav>
 <div id="err" class="glass" hidden></div>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+<link rel="stylesheet" href="model.css">
+<div id="arch" hidden role="img" aria-label="3D diagram of one body's step through the model. Drag to orbit, scroll or pinch to zoom, hover a bar for its value, click a neighbour's bar to follow that body."></div>
+<div id="labels" aria-hidden="true"></div>
+<div id="tip" class="glass" role="tooltip"></div>
 <script type="module" src="js/app.js"></script>
+<script src="../shared/notice.js" data-model="gravity"></script>
 </body>
 </html>
