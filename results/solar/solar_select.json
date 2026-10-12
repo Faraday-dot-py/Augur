@@ -1,0 +1,240 @@
+{
+ "E": {
+  "9100": {
+   "period_err_median": 0.9251134567073245,
+   "planets_lost_frac": 1.0,
+   "err100_over_r0_median": 4.22803321048742,
+   "orbit_energy_drift_median": 382.5992022668295,
+   "dE_over_E_1000": 691.9952524435639,
+   "dL_over_L_1000": 4173.399398117
+  },
+  "9200": {
+   "period_err_median": 0.9363478376943637,
+   "planets_lost_frac": 1.0,
+   "err100_over_r0_median": 5.317493938014266,
+   "orbit_energy_drift_median": 544.0821501863549,
+   "dE_over_E_1000": 1706.3208796119677,
+   "dL_over_L_1000": 2270.20762267134
+  },
+  "9300": {
+   "period_err_median": 0.9380778029251166,
+   "planets_lost_frac": 1.0,
+   "err100_over_r0_median": 4.18154364353982,
+   "orbit_energy_drift_median": 1032.3471961948362,
+   "dE_over_E_1000": 1558.3917370004074,
+   "dL_over_L_1000": 1232.841516793259
+  },
+  "mean": {
+   "period_err_median": 0.9331796991089348,
+   "planets_lost_frac": 1.0,
+   "err100_over_r0_median": 4.5756902640138355,
+   "orbit_energy_drift_median": 653.0095162160069,
+   "dE_over_E_1000": 1318.9026230186464,
+   "dL_over_L_1000": 2558.816179193866
+  }
+ },
+ "orbit_ft2": {
+  "9100": {
+   "period_err_median": 0.37948285758090594,
+   "planets_lost_frac": 0.25862068965517243,
+   "err100_over_r0_median": 0.1968698584848887,
+   "orbit_energy_drift_median": 0.6354826583833365,
+   "dE_over_E_1000": 0.530475073422262,
+   "dL_over_L_1000": 2.4827016593391398
+  },
+  "9200": {
+   "period_err_median": 0.3792580747824677,
+   "planets_lost_frac": 0.27884615384615385,
+   "err100_over_r0_median": 0.16923279706441108,
+   "orbit_energy_drift_median": 0.6837398707194711,
+   "dE_over_E_1000": 0.7420001371626199,
+   "dL_over_L_1000": 32.40264701136023
+  },
+  "9300": {
+   "period_err_median": 0.3158704436882742,
+   "planets_lost_frac": 0.21153846153846154,
+   "err100_over_r0_median": 0.1554960033170089,
+   "orbit_energy_drift_median": 0.4356971136594251,
+   "dE_over_E_1000": 0.5511667804797952,
+   "dL_over_L_1000": 1.5205075963973351
+  },
+  "mean": {
+   "period_err_median": 0.3582037920172159,
+   "planets_lost_frac": 0.24966843501326264,
+   "err100_over_r0_median": 0.17386621962210289,
+   "orbit_energy_drift_median": 0.5849732142540777,
+   "dE_over_E_1000": 0.6078806636882258,
+   "dL_over_L_1000": 12.13528542236557
+  }
+ },
+ "orbit_full": {
+  "9100": {
+   "period_err_median": 0.4926053867327369,
+   "planets_lost_frac": 0.3103448275862069,
+   "err100_over_r0_median": 0.3213513096660825,
+   "orbit_energy_drift_median": 0.6222577775802882,
+   "dE_over_E_1000": 0.5182477327642174,
+   "dL_over_L_1000": 5.251878123440535
+  },
+  "9200": {
+   "period_err_median": 0.6559307846018333,
+   "planets_lost_frac": 0.3269230769230769,
+   "err100_over_r0_median": 0.300984399576145,
+   "orbit_energy_drift_median": 0.6124691340679034,
+   "dE_over_E_1000": 1.0026470618310532,
+   "dL_over_L_1000": 8.15075740024325
+  },
+  "9300": {
+   "period_err_median": 0.6048960959794569,
+   "planets_lost_frac": 0.375,
+   "err100_over_r0_median": 0.3139284693775614,
+   "orbit_energy_drift_median": 0.7920881103274704,
+   "dE_over_E_1000": 0.7500229284741504,
+   "dL_over_L_1000": 2.809576391289952
+  },
+  "mean": {
+   "period_err_median": 0.584477422438009,
+   "planets_lost_frac": 0.337422634836428,
+   "err100_over_r0_median": 0.31208805953992963,
+   "orbit_energy_drift_median": 0.6756050073252208,
+   "dE_over_E_1000": 0.7569725743564737,
+   "dL_over_L_1000": 5.404070638324579
+  }
+ },
+ "int_full1": {
+  "9100": {
+   "period_err_median": 0.8214344575242201,
+   "planets_lost_frac": 0.8362068965517241,
+   "err100_over_r0_median": 1.259708516136266,
+   "orbit_energy_drift_median": 3.618521521813515,
+   "dE_over_E_1000": 5.1226766775913495,
+   "dL_over_L_1000": 15.942963461485972
+  },
+  "9200": {
+   "period_err_median": 0.8084386825135852,
+   "planets_lost_frac": 0.7788461538461539,
+   "err100_over_r0_median": 1.34673405608204,
+   "orbit_energy_drift_median": 3.2637014229234884,
+   "dE_over_E_1000": 3.7953385242556874,
+   "dL_over_L_1000": 300.52283336524175
+  },
+  "9300": {
+   "period_err_median": 0.8104732955220768,
+   "planets_lost_frac": 0.7692307692307693,
+   "err100_over_r0_median": 1.1057924338360312,
+   "orbit_energy_drift_median": 3.3857304077977384,
+   "dE_over_E_1000": 4.46957819333134,
+   "dL_over_L_1000": 10.047010802069485
+  },
+  "mean": {
+   "period_err_median": 0.8134488118532941,
+   "planets_lost_frac": 0.794761273209549,
+   "err100_over_r0_median": 1.2374116686847791,
+   "orbit_energy_drift_median": 3.422651117511581,
+   "dE_over_E_1000": 4.462531131726126,
+   "dL_over_L_1000": 108.83760254293242
+  }
+ },
+ "C_ms_rec": {
+  "9100": {
+   "period_err_median": 0.5215012794282846,
+   "planets_lost_frac": 0.6120689655172413,
+   "err100_over_r0_median": 0.21593373725542567,
+   "orbit_energy_drift_median": 1.2063479307192768,
+   "dE_over_E_1000": 8.691101315305058,
+   "dL_over_L_1000": 33.51388141086219
+  },
+  "9200": {
+   "period_err_median": 0.5163511961160372,
+   "planets_lost_frac": 0.6538461538461539,
+   "err100_over_r0_median": 0.2989305036301295,
+   "orbit_energy_drift_median": 1.292155354218846,
+   "dE_over_E_1000": 7.317839902121256,
+   "dL_over_L_1000": 56.50526924244384
+  },
+  "9300": {
+   "period_err_median": 0.5303205013025584,
+   "planets_lost_frac": 0.6346153846153846,
+   "err100_over_r0_median": 0.19752781989228418,
+   "orbit_energy_drift_median": 1.2013567191488317,
+   "dE_over_E_1000": 8.305919506898116,
+   "dL_over_L_1000": 25.506168216614782
+  },
+  "mean": {
+   "period_err_median": 0.5227243256156267,
+   "planets_lost_frac": 0.6335101679929266,
+   "err100_over_r0_median": 0.2374640202592798,
+   "orbit_energy_drift_median": 1.233286668028985,
+   "dE_over_E_1000": 8.104953574774811,
+   "dL_over_L_1000": 38.508439623306934
+  }
+ },
+ "C_ml_rec": {
+  "9100": {
+   "period_err_median": 0.8335468637963354,
+   "planets_lost_frac": 0.9741379310344828,
+   "err100_over_r0_median": 1.191447741153409,
+   "orbit_energy_drift_median": 2.8636481478646045,
+   "dE_over_E_1000": 4.168049517489906,
+   "dL_over_L_1000": 34.64702048928677
+  },
+  "9200": {
+   "period_err_median": 0.8700983156694868,
+   "planets_lost_frac": 0.9711538461538461,
+   "err100_over_r0_median": 1.411579694215248,
+   "orbit_energy_drift_median": 3.5440197492014054,
+   "dE_over_E_1000": 4.51864333468211,
+   "dL_over_L_1000": 55.92159504548217
+  },
+  "9300": {
+   "period_err_median": 0.8552669781038618,
+   "planets_lost_frac": 0.9807692307692307,
+   "err100_over_r0_median": 1.1649406736665144,
+   "orbit_energy_drift_median": 3.996561858164451,
+   "dE_over_E_1000": 9.87980806593216,
+   "dL_over_L_1000": 25.87716038943397
+  },
+  "mean": {
+   "period_err_median": 0.8529707191898946,
+   "planets_lost_frac": 0.9753536693191865,
+   "err100_over_r0_median": 1.2559893696783906,
+   "orbit_energy_drift_median": 3.4680765850768203,
+   "dE_over_E_1000": 6.188833639368059,
+   "dL_over_L_1000": 38.815258641400966
+  }
+ },
+ "C_ss_rec": {
+  "9100": {
+   "period_err_median": 0.7381031255574976,
+   "planets_lost_frac": 0.7758620689655172,
+   "err100_over_r0_median": 0.30972549440809394,
+   "orbit_energy_drift_median": 2.858829221104135,
+   "dE_over_E_1000": 86.71214019578598,
+   "dL_over_L_1000": 83.5379236615272
+  },
+  "9200": {
+   "period_err_median": 0.77285767714827,
+   "planets_lost_frac": 0.75,
+   "err100_over_r0_median": 0.4553716513237147,
+   "orbit_energy_drift_median": 2.1798547893997062,
+   "dE_over_E_1000": 77.08450646248794,
+   "dL_over_L_1000": 157.71867562441085
+  },
+  "9300": {
+   "period_err_median": 0.7249530086596718,
+   "planets_lost_frac": 0.8173076923076923,
+   "err100_over_r0_median": 0.30383270201434043,
+   "orbit_energy_drift_median": 15.603556917423958,
+   "dE_over_E_1000": 74.81329027185353,
+   "dL_over_L_1000": 69.73761087352028
+  },
+  "mean": {
+   "period_err_median": 0.7453046037884797,
+   "planets_lost_frac": 0.7810565870910698,
+   "err100_over_r0_median": 0.35630994924871634,
+   "orbit_energy_drift_median": 6.880746975975934,
+   "dE_over_E_1000": 79.53664564337582,
+   "dL_over_L_1000": 103.66473671981946
+  }
+ }
+}
