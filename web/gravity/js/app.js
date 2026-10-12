@@ -147,7 +147,8 @@ function frame(t) {
     let steps = 0;
     while (state.acc >= 1 && steps < 8) { stepOnce(); state.acc -= 1; steps++; }
   }
-  if (state.model && mv) mv.frame(t); else render();
+  render();
+  if (state.model && mv) mv.frame(t);
   fpsN++;
   if (t - fpsT > 500) { fps = (fpsN * 1000) / (t - fpsT); fpsN = 0; fpsT = t; }
 
@@ -218,14 +219,26 @@ stage.addEventListener("click", (e) => {
 document.getElementById("b-pick").addEventListener("click", () => select(Math.floor(Math.random() * state.n)));
 
 const archEl = document.getElementById("arch");
+const asideEl = document.querySelector("aside");
 function insets() {
-  const small = innerWidth <= 760, side = document.querySelector("aside").getBoundingClientRect();
-  const top = small ? document.querySelector("header").getBoundingClientRect().bottom + 4 : 16;
-  const bottom = innerHeight - document.querySelector("nav").getBoundingClientRect().top + 8;
-  const left = small ? 0 : document.querySelector("header").getBoundingClientRect().right + 8;
-  mv.resize(innerWidth, innerHeight, [left, top, small ? 0 : side.width + 24, bottom]);
+  const small = innerWidth <= 760, host = archEl.getBoundingClientRect(), side = asideEl.getBoundingClientRect();
+  const top = small ? 4 : 16;
+  let bottom = Math.max(0, host.bottom - document.querySelector("nav").getBoundingClientRect().top + 8);
+  let right = 0;
+  if (!asideEl.hidden) {
+    if (small) bottom = Math.max(bottom, host.bottom - side.top + 8);
+    else right = Math.max(0, host.right - side.left + 8);
+  }
+  mv.resize(host.width, host.height, [0, top, right, bottom]);
   mv.fit();
 }
+function setPanel(on) {
+  asideEl.hidden = !on;
+  document.getElementById("b-panel").setAttribute("aria-pressed", String(on));
+  if (state.model && mv) insets();
+}
+document.getElementById("b-panel").addEventListener("click", () => setPanel(asideEl.hidden));
+setPanel(innerWidth >= 1100);
 async function setModel(on) {
   const btn = document.getElementById("b-model");
   if (on && !mv) {
@@ -252,7 +265,8 @@ addEventListener("resize", () => { if (state.model) insets(); });
 
 window.addEventListener("keydown", (e) => {
   if (e.target.tagName === "INPUT") return;
-  if (e.key === "m") document.getElementById("b-model").click();
+  if (e.key === "t") document.getElementById("b-panel").click();
+  else if (e.key === "m") document.getElementById("b-model").click();
   else if (e.key === "p") document.getElementById("b-pick").click();
   if (e.key === " ") { e.preventDefault(); document.getElementById("b-pause").click(); }
   else if (e.key === ".") document.getElementById("b-step").click();
@@ -260,3 +274,4 @@ window.addEventListener("keydown", (e) => {
   else if (e.key === "g") document.getElementById("b-truth").click();
   else if (e.key === "e") document.getElementById("b-edges").click();
 });
+setModel(true);

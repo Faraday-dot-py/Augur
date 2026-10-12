@@ -1,8 +1,9 @@
 header, aside, nav { z-index: 2; }
-#arch { position: fixed; inset: 0; z-index: 1; touch-action: none; background: var(--bg); }
+body.model #stage { width: 45%; }
+#arch { position: fixed; inset: 0 0 0 45%; z-index: 1; touch-action: none; background: var(--bg); }
 #arch[hidden] { display: none; }
 #arch canvas { display: block; width: 100%; height: 100%; outline: none; }
-#labels { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+#labels { position: fixed; inset: 0 0 0 45%; z-index: 1; pointer-events: none; overflow: hidden; }
 #labels div { position: absolute; left: 0; top: 0; white-space: nowrap; font: 11px var(--mono); color: var(--dim); transform-origin: 0 0; text-shadow: 0 0 4px var(--bg), 0 0 2px var(--bg); will-change: transform; }
 #labels .sec { color: #b9c6dc; font: 600 11.5px system-ui, sans-serif; letter-spacing: 0.02em; }
 #labels .off { color: var(--faint); }
@@ -21,6 +22,7 @@ aside h2 small { text-transform: none; letter-spacing: 0; font-weight: 400; colo
 .mv { display: none; }
 body.model .mv { display: block; }
 @media (max-width: 760px) {
-  body.model aside { display: none; }
+  body.model #stage { width: 100%; height: 50%; }
+  #arch, #labels { inset: 50% 0 0 0; }
   #c-hood { height: 90px; }
 }

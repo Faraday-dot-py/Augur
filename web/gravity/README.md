@@ -15,10 +15,13 @@ Pages root (`web/index.html`).
 
 ## Model view
 
-`Model` (key `m`) swaps the 2D cluster for a 3D diagram of one body's step, in the style of the token page
+The 2D cluster and a 3D diagram of one body's step are shown side by side (stacked on narrow screens), both live
+while the sim runs. `Model` (key `m`) hides or shows the 3D diagram (it is shown by default; the 2D view takes the
+full width when it is hidden); `Plots` (key `t`) hides or shows the side panel (hidden by default below 1100 px).
+The diagram is in the style of the token page
 (drag orbits, wheel/pinch zooms, hover shows name and value, bars are colored/sized by value). Click a body in
-the 2D view (or `Pick`, `p`) to choose it; in the model view, click a bar of a neighbour's column to follow that
-body. The diagram is the live trace of the step just computed, from `CentralNet.step(..., traceIdx)`:
+the 2D view (or `Pick`, `p`) to choose it; the diagram only follows that selection and never changes body by
+itself. In the model view, click a bar of a neighbour's column to follow that body. The diagram is the live trace of the step just computed, from `CentralNet.step(..., traceIdx)`:
 
 - input token: position and velocity of the body;
 - one column per neighbour (the 5 strongest by |force|, out of every body within `neighbor_radius`): offset,
