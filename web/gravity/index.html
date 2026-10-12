@@ -26,6 +26,7 @@ dl { margin: 0; display: grid; grid-template-columns: repeat(2, auto); gap: 6px 
 dt { color: var(--faint); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; }
 dd { margin: 0; font: 13px var(--mono); font-variant-numeric: tabular-nums; }
 aside { position: fixed; right: 16px; top: 16px; width: 280px; padding: 12px 14px; }
+aside[hidden] { display: none; }
 aside h2 { font-size: 11px; margin: 12px 0 4px; color: var(--dim); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
 aside h2:first-child { margin-top: 0; }
 aside canvas { width: 100%; height: 100px; display: block; }
@@ -47,6 +48,7 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
   header { left: 16px; right: 16px; top: 12px; max-width: none; padding: 9px 12px; }
   header p { display: none; }
   aside { left: 16px; right: 16px; top: auto; bottom: 76px; width: auto; max-height: 34%; overflow: auto; }
+  aside[hidden] { display: none; }
   aside canvas { height: 80px; }
   nav { left: 16px; right: 16px; bottom: 12px; transform: none; width: auto; max-width: none; flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; gap: 4px; padding: 6px; scrollbar-width: none; }
   nav::-webkit-scrollbar { display: none; }
@@ -59,7 +61,7 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
 <canvas id="stage" aria-label="2D view of an N-body cluster: blue bodies are the learned central-force model, orange ghosts are the softened-gravity ground truth"></canvas>
 <header class="glass">
   <h1>Augur <span>central-force model</span></h1>
-  <p>A single learned pairwise force f(log d)/(d²+1), summed over neighbours and integrated with velocity Verlet. No walls, no per-ball state &mdash; trained on 100&ndash;1000 bodies, generalizes past 10,000. <a href="../">&larr; other model</a></p>
+  <p>A single learned pairwise force f(log d)/(d²+1), summed over neighbours and integrated with velocity Verlet. No walls, no per-ball state &mdash; trained on 100&ndash;1000 bodies, generalizes past 10,000. <a href="../">&larr; other model</a> &middot; <a href="../scatter/">&larr; scatter field model</a></p>
   <dl id="stats">
     <div><dt>tick</dt><dd id="s-tick">0</dd></div>
     <div><dt>bodies</dt><dd id="s-bodies">0</dd></div>
@@ -98,8 +100,9 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
   </div>
   <span class="sep"></span>
   <div class="grp">
-    <button id="b-model" aria-pressed="false" aria-keyshortcuts="m">Model<kbd>m</kbd></button>
+    <button id="b-model" aria-pressed="true" aria-keyshortcuts="m">Model<kbd>m</kbd></button>
     <button id="b-pick" aria-keyshortcuts="p" title="select a random body">Pick<kbd>p</kbd></button>
+    <button id="b-panel" aria-pressed="true" aria-keyshortcuts="t">Plots<kbd>t</kbd></button>
   </div>
 </nav>
 <div id="err" class="glass" hidden></div>
