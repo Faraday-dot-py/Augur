@@ -18,19 +18,31 @@ from scripts import train_scatter_field as tsf
 
 EPS = ss.EPS
 OUT = "results/solar"
-STAR_M = 20.0
-RADII = (3.2, 4.5, 6.2, 8.2, 10.5, 13.0, 19.5, 23.0)
-PMASS = (0.02, 0.05, 0.10, 0.05, 0.50, 0.30, 0.40, 0.08)
-MOON_HOST, MOON_R, MOON_M = 5, 0.8, 0.01
-BELT = (15.0, 17.5)
+STAR_M = 30.0
+R0 = 2.2
+PMASS = (0.01, 0.012, 0.015, 0.02, 0.08, 0.03, 0.02, 0.012)
+GAP_AFTER, GAP_STEPS = 3, 1.4
+MOON_HOST, MOON_R, MOON_M = 5, 0.3, 0.001
 BELT_M = 0.001
+
+
+def chain(k):
+    """Radii spaced k mutual Hill radii apart (planet i+1 from i), with a wider gap (GAP_STEPS steps) after planet GAP_AFTER for the belt; returns radii and the belt range."""
+    r, belt = [R0], None
+    for i in range(len(PMASS) - 1):
+        x = k * ((PMASS[i] + PMASS[i + 1]) / (3 * STAR_M)) ** (1 / 3) / 2
+        rho = (1 + x) / (1 - x)
+        if i == GAP_AFTER:
+            belt = (r[-1] * rho ** 0.55, r[-1] * rho ** 1.15)
+        r.append(r[-1] * (rho ** GAP_STEPS if i == GAP_AFTER else rho))
+    return r, belt
 
 
 def circ_speed(r, mu):
     return math.sqrt(mu * r * r / (r * r + EPS ** 2) ** 1.5)
 
 
-def solar_scene(seed=4738, nbelt=200):
+def solar_scene(seed=4738, nbelt=200, k=3.5):
     rng = np.random.default_rng(seed)
     pos, vel, mass, kind = [np.zeros(2)], [np.zeros(2)], [STAR_M], [0]
 
@@ -38,7 +50,8 @@ def solar_scene(seed=4738, nbelt=200):
         th = rng.uniform(0, 2 * np.pi)
         return np.array([np.cos(th), np.sin(th)]), np.array([-np.sin(th), np.cos(th)])
 
-    for r, m in zip(RADII, PMASS):
+    radii, belt = chain(k)
+    for r, m in zip(radii, PMASS):
         er, et = unit()
         pos.append(r * er)
         vel.append(circ_speed(r, STAR_M) * (1 + 0.02 * rng.normal()) * et)
@@ -51,7 +64,7 @@ def solar_scene(seed=4738, nbelt=200):
     kind.append(2)
     for _ in range(nbelt):
         er, et = unit()
-        r = rng.uniform(*BELT)
+        r = rng.uniform(*belt)
         pos.append(r * er)
         vel.append(circ_speed(r, STAR_M) * (1 + 0.01 * rng.normal()) * et)
         mass.append(BELT_M)
@@ -155,15 +168,16 @@ def solar_metrics(Pm, Vm, Pt, Vt, scene, ticks):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("mode", choices=["select", "run"])
-    ap.add_argument("--cands", required=True)
+    ap.add_argument("mode", choices=["select", "run", "truthcheck"])
+    ap.add_argument("--cands", default="")
     ap.add_argument("--steps", type=int, default=2000)
     ap.add_argument("--belt", type=int, default=200)
+    ap.add_argument("--hill-k", type=float, default=3.5)
     ap.add_argument("--tag", default="solar")
     ap.add_argument("--n-scenes", type=int, default=24)
     args = ap.parse_args()
     dev = torch.device("cuda")
-    cands = parse_cands(args.cands)
+    cands = parse_cands(args.cands) if args.cands else {}
     os.makedirs(OUT, exist_ok=True)
     if args.mode == "select":
         truth = {}
@@ -178,12 +192,28 @@ def main():
             res[name] = select_one(build(spec, 0.1, dev), truth, dev)
             print(name, json.dumps(res[name]["mean"]), flush=True)
             json.dump(res, open(f"{OUT}/{args.tag}_select.json", "w"), indent=1)
+    elif args.mode == "truthcheck":
+        out = {}
+        for k in (3.25, 3.5, 3.75, 4.0):
+            scene = solar_scene(4738, args.belt, k)
+            Pt, _ = ss.nbody_truth(scene["pos"], scene["vel"], scene["mass"], args.steps, dev)
+            kind = scene["kind"]
+            rel = np.linalg.norm(Pt - Pt[:, :1], axis=-1)
+            pl = np.where(kind == 1)[0]
+            bl = np.where(kind == 3)[0]
+            mi = int(np.where(kind == 2)[0][0])
+            sep = np.linalg.norm(Pt[:, mi] - Pt[:, MOON_HOST], axis=-1)
+            out[str(k)] = {"radii": chain(k)[0], "belt": chain(k)[1], "planet_r_min_over_r0": (rel[:, pl].min(0) / rel[0, pl]).round(3).tolist(), "planet_r_max_over_r0": (rel[:, pl].max(0) / rel[0, pl]).round(3).tolist(),
+                           "belt_r_min": float(rel[:, bl].min()), "belt_r_max": float(rel[:, bl].max()), "belt_frac_outside_range": float(((rel[:, bl].min(0) < chain(k)[1][0] * 0.8) | (rel[:, bl].max(0) > chain(k)[1][1] * 1.2)).mean()),
+                           "moon_sep_max": float(sep.max()), "moon_sep_end": float(sep[-1])}
+            print(k, json.dumps(out[str(k)]), flush=True)
+        json.dump(out, open(f"{OUT}/{args.tag}_truthcheck.json", "w"), indent=1)
     else:
-        scene = solar_scene(4738, args.belt)
+        scene = solar_scene(4738, args.belt, args.hill_k)
         Pt, Vt = ss.nbody_truth(scene["pos"], scene["vel"], scene["mass"], args.steps, dev)
         ticks = [100, 300, 1000, 2000, 5000]
-        res = {"n_bodies": len(scene["mass"]), "steps": args.steps, "kind_counts": {str(k): int((scene["kind"] == k).sum()) for k in range(4)}, "ic": {"star_mass": STAR_M, "radii": RADII, "masses": PMASS,
-               "moon": [MOON_HOST, MOON_R, MOON_M], "belt": [BELT[0], BELT[1], args.belt, BELT_M], "seed": 4738}, "cands": {}}
+        res = {"n_bodies": len(scene["mass"]), "steps": args.steps, "kind_counts": {str(k): int((scene["kind"] == k).sum()) for k in range(4)}, "ic": {"star_mass": STAR_M, "radii": chain(args.hill_k)[0], "masses": PMASS, "hill_k": args.hill_k,
+               "moon": [MOON_HOST, MOON_R, MOON_M], "belt": [*chain(args.hill_k)[1], args.belt, BELT_M], "seed": 4738}, "cands": {}}
         keep = {"truth": Pt.astype(np.float32), "truth_v": Vt.astype(np.float32), "mass": scene["mass"], "kind": scene["kind"]}
         for name, spec in cands.items():
             Pm, Vm, _ = ss.model_rollout(build(spec, 0.1, dev), [scene], args.steps, dev)
