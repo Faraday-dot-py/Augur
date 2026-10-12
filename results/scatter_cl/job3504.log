@@ -1,0 +1,299 @@
+name, utilization.gpu [%], memory.used [MiB]
+NVIDIA H200 NVL, 0 %, 0 MiB
+=== relabel clreset_relabel exp E ms_kp_pot_v_g128 iters 16000 lr 0.0002 noise 0.001 mix 0.25 reset_field True
+init eval err@20 by offset {0: 0.03830611568148504, 5: 0.04791167411514245, 10: 0.06322758690943057, 20: 0.10588729507215451}
+eval it 0 stage 0 (offset 0) err@20 by offset {0: 0.0383, 5: 0.04793, 10: 0.06321, 20: 0.10585}
+/home/adamwebb/.local/lib/python3.12/site-packages/torch/autograd/graph.py:1072: UserWarning: The AccumulateGrad node's stream does not match the stream of the node that produced the incoming gradient. This may incur unnecessary synchronization and break CUDA graph capture if the AccumulateGrad node's stream is the default stream. This mismatch is caused by an AccumulateGrad node created prior to the current iteration being kept alive. This can happen if the autograd graph is still being kept alive by tensors such as the loss, or if you are using DDP, which will stash a reference to the node. To resolve the mismatch, delete all references to the autograd graph or ensure that DDP initialization is performed under the same stream as subsequent forwards. If the mismatch is intentional, you can use torch.autograd.graph.set_warn_on_accumulate_grad_stream_mismatch(False) to suppress this warning. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/input_buffer.cpp:310.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+it 0 k 4 stage 0 truth loss 0.000376 t 1s
+it 100 k 4 stage 0 truth loss 0.000105 t 7s
+it 200 k 4 stage 0 truth loss 0.000624 t 13s
+it 300 k 4 stage 0 truth loss 0.000743 t 19s
+it 400 k 4 stage 0 truth loss 0.000061 t 25s
+eval it 500 stage 0 (offset 0) err@20 by offset {0: 0.04732, 5: 0.06047, 10: 0.08015, 20: 0.13472}
+it 500 k 5 stage 0 truth loss 0.000120 t 32s
+it 600 k 5 stage 0 truth loss 0.000783 t 39s
+it 700 k 5 stage 0 truth loss 0.000094 t 46s
+it 800 k 5 stage 0 truth loss 0.000246 t 53s
+it 900 k 5 stage 0 truth loss 0.000362 t 60s
+eval it 1000 stage 0 (offset 0) err@20 by offset {0: 0.04405, 5: 0.05642, 10: 0.07601, 20: 0.12961}
+GATE it 1000: advance offset 0 -> 5 (plateau) relabel err@20 0.04405 best 0.03830 truth-IC err@20 0.04405
+it 1000 k 5 stage 1 relabel loss 0.000063 t 68s
+it 1100 k 5 stage 1 truth loss 0.000380 t 77s
+it 1200 k 5 stage 1 truth loss 0.000562 t 87s
+it 1300 k 5 stage 1 relabel loss 0.000041 t 96s
+it 1400 k 5 stage 1 relabel loss 0.000036 t 105s
+eval it 1500 stage 1 (offset 5) err@20 by offset {0: 0.03711, 5: 0.04821, 10: 0.06819, 20: 0.12155}
+it 1500 k 6 stage 1 relabel loss 0.000037 t 115s
+it 1600 k 6 stage 1 truth loss 0.000140 t 125s
+it 1700 k 6 stage 1 relabel loss 0.000023 t 135s
+it 1800 k 6 stage 1 relabel loss 0.000041 t 145s
+it 1900 k 6 stage 1 relabel loss 0.000050 t 156s
+eval it 2000 stage 1 (offset 5) err@20 by offset {0: 0.03814, 5: 0.04846, 10: 0.06717, 20: 0.12131}
+it 2000 k 6 stage 1 relabel loss 0.000046 t 167s
+it 2100 k 6 stage 1 relabel loss 0.000042 t 178s
+it 2200 k 6 stage 1 relabel loss 0.000031 t 188s
+it 2300 k 6 stage 1 relabel loss 0.000043 t 198s
+it 2400 k 6 stage 1 truth loss 0.000370 t 209s
+eval it 2500 stage 1 (offset 5) err@20 by offset {0: 0.03355, 5: 0.0444, 10: 0.06236, 20: 0.11366}
+it 2500 k 7 stage 1 truth loss 0.000539 t 220s
+it 2600 k 7 stage 1 truth loss 0.000741 t 232s
+it 2700 k 7 stage 1 truth loss 0.000649 t 243s
+it 2800 k 7 stage 1 relabel loss 0.000040 t 255s
+it 2900 k 7 stage 1 relabel loss 0.000036 t 266s
+eval it 3000 stage 1 (offset 5) err@20 by offset {0: 0.04104, 5: 0.05322, 10: 0.0745, 20: 0.13948}
+it 3000 k 7 stage 1 relabel loss 0.000138 t 279s
+it 3100 k 7 stage 1 relabel loss 0.000065 t 290s
+it 3200 k 7 stage 1 truth loss 0.000140 t 302s
+it 3300 k 7 stage 1 relabel loss 0.000124 t 313s
+it 3400 k 7 stage 1 relabel loss 0.000061 t 325s
+eval it 3500 stage 1 (offset 5) err@20 by offset {0: 0.04262, 5: 0.05212, 10: 0.06962, 20: 0.11733}
+GATE it 3500: advance offset 5 -> 10 (plateau) relabel err@20 0.05212 best 0.04440 truth-IC err@20 0.04262
+it 3500 k 8 stage 2 relabel loss 0.000198 t 337s
+it 3600 k 8 stage 2 truth loss 0.000223 t 351s
+it 3700 k 8 stage 2 relabel loss 0.000085 t 366s
+it 3800 k 8 stage 2 relabel loss 0.000705 t 380s
+it 3900 k 8 stage 2 relabel loss 0.000353 t 394s
+eval it 4000 stage 2 (offset 10) err@20 by offset {0: 0.03691, 5: 0.04785, 10: 0.06496, 20: 0.11702}
+it 4000 k 8 stage 2 relabel loss 0.000085 t 409s
+it 4100 k 8 stage 2 truth loss 0.001421 t 423s
+it 4200 k 8 stage 2 relabel loss 0.001262 t 437s
+it 4300 k 8 stage 2 relabel loss 0.000514 t 451s
+it 4400 k 8 stage 2 relabel loss 0.000932 t 465s
+eval it 4500 stage 2 (offset 10) err@20 by offset {0: 0.03319, 5: 0.04423, 10: 0.06312, 20: 0.11682}
+it 4500 k 9 stage 2 relabel loss 0.000604 t 481s
+it 4600 k 9 stage 2 relabel loss 0.000908 t 496s
+it 4700 k 9 stage 2 relabel loss 0.000386 t 512s
+it 4800 k 9 stage 2 relabel loss 0.000632 t 527s
+it 4900 k 9 stage 2 relabel loss 0.000192 t 543s
+eval it 5000 stage 2 (offset 10) err@20 by offset {0: 0.03486, 5: 0.04551, 10: 0.06316, 20: 0.11607}
+it 5000 k 9 stage 2 relabel loss 0.000996 t 560s
+it 5100 k 9 stage 2 relabel loss 0.000364 t 575s
+it 5200 k 9 stage 2 relabel loss 0.001686 t 590s
+it 5300 k 9 stage 2 relabel loss 0.000465 t 606s
+it 5400 k 9 stage 2 relabel loss 0.001068 t 621s
+eval it 5500 stage 2 (offset 10) err@20 by offset {0: 0.03396, 5: 0.0439, 10: 0.06181, 20: 0.11239}
+it 5500 k 10 stage 2 relabel loss 0.003657 t 638s
+it 5600 k 10 stage 2 relabel loss 0.000464 t 655s
+it 5700 k 10 stage 2 relabel loss 0.001838 t 671s
+it 5800 k 10 stage 2 relabel loss 0.002180 t 688s
+it 5900 k 10 stage 2 relabel loss 0.001284 t 704s
+eval it 6000 stage 2 (offset 10) err@20 by offset {0: 0.03752, 5: 0.04814, 10: 0.06551, 20: 0.1142}
+it 6000 k 10 stage 2 relabel loss 0.000178 t 721s
+it 6100 k 10 stage 2 relabel loss 0.000813 t 738s
+it 6200 k 10 stage 2 truth loss 0.002129 t 754s
+it 6300 k 10 stage 2 truth loss 0.000424 t 771s
+it 6400 k 10 stage 2 relabel loss 0.001048 t 787s
+eval it 6500 stage 2 (offset 10) err@20 by offset {0: 0.03298, 5: 0.04259, 10: 0.05997, 20: 0.11017}
+it 6500 k 11 stage 2 relabel loss 0.000205 t 805s
+it 6600 k 11 stage 2 relabel loss 0.001031 t 823s
+it 6700 k 11 stage 2 relabel loss 0.000707 t 841s
+it 6800 k 11 stage 2 relabel loss 0.000420 t 858s
+it 6900 k 11 stage 2 relabel loss 0.001318 t 876s
+eval it 7000 stage 2 (offset 10) err@20 by offset {0: 0.03283, 5: 0.04284, 10: 0.06014, 20: 0.10871}
+it 7000 k 11 stage 2 relabel loss 0.001667 t 895s
+it 7100 k 11 stage 2 relabel loss 0.001202 t 913s
+it 7200 k 11 stage 2 relabel loss 0.000535 t 931s
+it 7300 k 11 stage 2 relabel loss 0.001281 t 948s
+it 7400 k 11 stage 2 truth loss 0.000565 t 966s
+eval it 7500 stage 2 (offset 10) err@20 by offset {0: 0.0321, 5: 0.04163, 10: 0.05911, 20: 0.10694}
+GATE it 7500: advance offset 10 -> 20 (plateau) relabel err@20 0.05911 best 0.05911 truth-IC err@20 0.03210
+it 7500 k 12 stage 3 truth loss 0.000203 t 985s
+it 7600 k 12 stage 3 relabel loss 0.004179 t 1006s
+it 7700 k 12 stage 3 relabel loss 0.002288 t 1027s
+it 7800 k 12 stage 3 truth loss 0.001641 t 1048s
+it 7900 k 12 stage 3 truth loss 0.000765 t 1069s
+eval it 8000 stage 3 (offset 20) err@20 by offset {0: 0.04305, 5: 0.05371, 10: 0.07042, 20: 0.1147}
+it 8000 k 12 stage 3 relabel loss 0.003376 t 1092s
+it 8100 k 12 stage 3 relabel loss 0.001822 t 1114s
+it 8200 k 12 stage 3 relabel loss 0.003512 t 1135s
+it 8300 k 12 stage 3 truth loss 0.004553 t 1156s
+it 8400 k 12 stage 3 relabel loss 0.003315 t 1178s
+eval it 8500 stage 3 (offset 20) err@20 by offset {0: 0.04141, 5: 0.05178, 10: 0.068, 20: 0.11237}
+it 8500 k 13 stage 3 relabel loss 0.007153 t 1201s
+it 8600 k 13 stage 3 truth loss 0.004296 t 1223s
+it 8700 k 13 stage 3 relabel loss 0.002558 t 1246s
+it 8800 k 13 stage 3 relabel loss 0.005463 t 1269s
+it 8900 k 13 stage 3 truth loss 0.000794 t 1293s
+eval it 9000 stage 3 (offset 20) err@20 by offset {0: 0.04349, 5: 0.05408, 10: 0.06988, 20: 0.11187}
+it 9000 k 13 stage 3 relabel loss 0.006572 t 1317s
+it 9100 k 13 stage 3 relabel loss 0.007207 t 1340s
+it 9200 k 13 stage 3 relabel loss 0.003534 t 1362s
+it 9300 k 13 stage 3 relabel loss 0.003412 t 1385s
+it 9400 k 13 stage 3 relabel loss 0.005010 t 1409s
+eval it 9500 stage 3 (offset 20) err@20 by offset {0: 0.04252, 5: 0.05281, 10: 0.0686, 20: 0.11191}
+it 9500 k 14 stage 3 relabel loss 0.009585 t 1433s
+it 9600 k 14 stage 3 relabel loss 0.003041 t 1457s
+it 9700 k 14 stage 3 relabel loss 0.003696 t 1481s
+it 9800 k 14 stage 3 relabel loss 0.004578 t 1505s
+it 9900 k 14 stage 3 relabel loss 0.003658 t 1530s
+eval it 10000 stage 3 (offset 20) err@20 by offset {0: 0.04279, 5: 0.05304, 10: 0.06834, 20: 0.11014}
+it 10000 k 14 stage 3 relabel loss 0.003900 t 1555s
+it 10100 k 14 stage 3 relabel loss 0.005896 t 1580s
+it 10200 k 14 stage 3 relabel loss 0.003809 t 1604s
+it 10300 k 14 stage 3 relabel loss 0.004169 t 1627s
+it 10400 k 14 stage 3 relabel loss 0.004127 t 1652s
+eval it 10500 stage 3 (offset 20) err@20 by offset {0: 0.04269, 5: 0.05303, 10: 0.06867, 20: 0.11175}
+it 10500 k 15 stage 3 relabel loss 0.005802 t 1677s
+it 10600 k 15 stage 3 truth loss 0.001967 t 1702s
+it 10700 k 15 stage 3 truth loss 0.004201 t 1728s
+it 10800 k 15 stage 3 relabel loss 0.004006 t 1753s
+it 10900 k 15 stage 3 relabel loss 0.004770 t 1779s
+eval it 11000 stage 3 (offset 20) err@20 by offset {0: 0.04253, 5: 0.05314, 10: 0.06875, 20: 0.11148}
+it 11000 k 15 stage 3 truth loss 0.000885 t 1805s
+it 11100 k 15 stage 3 truth loss 0.004576 t 1830s
+it 11200 k 15 stage 3 relabel loss 0.008472 t 1856s
+it 11300 k 15 stage 3 relabel loss 0.007798 t 1882s
+it 11400 k 15 stage 3 relabel loss 0.007070 t 1907s
+eval it 11500 stage 3 (offset 20) err@20 by offset {0: 0.04316, 5: 0.05373, 10: 0.06998, 20: 0.11287}
+it 11500 k 16 stage 3 relabel loss 0.006802 t 1932s
+it 11600 k 16 stage 3 relabel loss 0.007569 t 1959s
+it 11700 k 16 stage 3 relabel loss 0.004646 t 1985s
+it 11800 k 16 stage 3 relabel loss 0.016368 t 2012s
+it 11900 k 16 stage 3 relabel loss 0.004654 t 2038s
+eval it 12000 stage 3 (offset 20) err@20 by offset {0: 0.04341, 5: 0.05358, 10: 0.06916, 20: 0.11216}
+it 12000 k 16 stage 3 truth loss 0.000924 t 2066s
+it 12100 k 16 stage 3 relabel loss 0.005665 t 2092s
+it 12200 k 16 stage 3 truth loss 0.006897 t 2118s
+it 12300 k 16 stage 3 relabel loss 0.004480 t 2145s
+it 12400 k 16 stage 3 truth loss 0.007342 t 2171s
+eval it 12500 stage 3 (offset 20) err@20 by offset {0: 0.04431, 5: 0.05486, 10: 0.07052, 20: 0.11328}
+it 12500 k 17 stage 3 relabel loss 0.006585 t 2200s
+it 12600 k 17 stage 3 relabel loss 0.014248 t 2228s
+it 12700 k 17 stage 3 relabel loss 0.010008 t 2255s
+it 12800 k 17 stage 3 relabel loss 0.006924 t 2282s
+it 12900 k 17 stage 3 truth loss 0.003255 t 2310s
+eval it 13000 stage 3 (offset 20) err@20 by offset {0: 0.04327, 5: 0.05383, 10: 0.0692, 20: 0.11164}
+it 13000 k 17 stage 3 relabel loss 0.005743 t 2338s
+it 13100 k 17 stage 3 relabel loss 0.006384 t 2366s
+it 13200 k 17 stage 3 truth loss 0.001791 t 2394s
+it 13300 k 17 stage 3 relabel loss 0.010700 t 2422s
+it 13400 k 17 stage 3 truth loss 0.001804 t 2449s
+eval it 13500 stage 3 (offset 20) err@20 by offset {0: 0.04363, 5: 0.05411, 10: 0.06971, 20: 0.11251}
+it 13500 k 18 stage 3 relabel loss 0.013005 t 2478s
+it 13600 k 18 stage 3 truth loss 0.011207 t 2507s
+it 13700 k 18 stage 3 truth loss 0.009844 t 2536s
+it 13800 k 18 stage 3 relabel loss 0.008500 t 2566s
+it 13900 k 18 stage 3 truth loss 0.003451 t 2594s
+eval it 14000 stage 3 (offset 20) err@20 by offset {0: 0.0435, 5: 0.0539, 10: 0.06909, 20: 0.11084}
+it 14000 k 18 stage 3 relabel loss 0.017447 t 2624s
+it 14100 k 18 stage 3 relabel loss 0.010951 t 2652s
+it 14200 k 18 stage 3 truth loss 0.000785 t 2681s
+it 14300 k 18 stage 3 relabel loss 0.003196 t 2710s
+it 14400 k 18 stage 3 relabel loss 0.009019 t 2739s
+eval it 14500 stage 3 (offset 20) err@20 by offset {0: 0.04337, 5: 0.05373, 10: 0.06882, 20: 0.11077}
+it 14500 k 19 stage 3 truth loss 0.001492 t 2770s
+it 14600 k 19 stage 3 relabel loss 0.013723 t 2800s
+it 14700 k 19 stage 3 relabel loss 0.013683 t 2830s
+it 14800 k 19 stage 3 truth loss 0.003232 t 2860s
+it 14900 k 19 stage 3 relabel loss 0.011699 t 2891s
+eval it 15000 stage 3 (offset 20) err@20 by offset {0: 0.04385, 5: 0.05437, 10: 0.06967, 20: 0.11148}
+it 15000 k 19 stage 3 relabel loss 0.016319 t 2922s
+it 15100 k 19 stage 3 truth loss 0.004811 t 2952s
+it 15200 k 19 stage 3 relabel loss 0.015038 t 2982s
+it 15300 k 19 stage 3 relabel loss 0.012760 t 3012s
+it 15400 k 19 stage 3 relabel loss 0.008941 t 3042s
+eval it 15500 stage 3 (offset 20) err@20 by offset {0: 0.04394, 5: 0.05439, 10: 0.06937, 20: 0.11175}
+it 15500 k 20 stage 3 truth loss 0.002593 t 3074s
+it 15600 k 20 stage 3 truth loss 0.002155 t 3106s
+it 15700 k 20 stage 3 relabel loss 0.011802 t 3137s
+it 15800 k 20 stage 3 relabel loss 0.019640 t 3168s
+it 15900 k 20 stage 3 relabel loss 0.016125 t 3200s
+trained to it 16000 in 3231s, 0 skipped, 11193 relabel batches, decisions [{'it': 1000, 'from': 0, 'to': 5, 'why': 'plateau', 'relabel_err20': 0.04405404743555935, 'best': 0.0383008719286672, 'truth_ic_err20': 0.04405404743555935}, {'it': 3500, 'from': 5, 'to': 10, 'why': 'plateau', 'relabel_err20': 0.05211662144442865, 'best': 0.04440446591403105, 'truth_ic_err20': 0.0426177695753442}, {'it': 7500, 'from': 10, 'to': 20, 'why': 'plateau', 'relabel_err20': 0.059112306495092234, 'best': 0.059112306495092234, 'truth_ic_err20': 0.03210028893092987}]
+final eval err@20 by offset {0: 0.04399901077656456, 5: 0.0544598714175463, 10: 0.0693597661706843, 20: 0.1114471137712429}
+seed 9000 err@[5, 10, 20, 30, 40, 50, 75, 100] [0.00516, 0.01388, 0.04288, 0.1035, 0.23366, 0.46824, 1.52256, 2.91283] field_rms@[5, 10, 20, 30, 40, 50, 75, 100] [6.4209, 6.5067, 6.504, 6.5074, 6.5089, 6.507, 6.5056, 6.5008] a_rms/true [0.988, 0.99, 0.995, 1.001, 0.997, 0.981, 1.042, 1.082] first nonfinite None
+seed 12000 err@[5, 10, 20, 30, 40, 50, 75, 100] [0.00549, 0.0148, 0.04511, 0.11232, 0.25829, 0.50584, 1.5544, 2.90777] field_rms@[5, 10, 20, 30, 40, 50, 75, 100] [6.3928, 6.4777, 6.4775, 6.4788, 6.4791, 6.4785, 6.4759, 6.4675] a_rms/true [0.992, 0.991, 0.992, 1.011, 1.01, 1.055, 1.123, 1.113] first nonfinite None
+relabelled err@20 by offset {'0': 0.04399296181052545, '5': 0.0544236959604435, '10': 0.06936090185920048, '20': 0.11132516832161676}
+two_body seed 9100 err@[5, 10, 20, 50, 100] [0.00073, 0.00283, 0.00921, 0.05187, 0.16271]
+two_body seed 9200 err@[5, 10, 20, 50, 100] [0.0017, 0.00514, 0.01262, 0.04785, 0.14532]
+two_body seed 9300 err@[5, 10, 20, 50, 100] [0.00081, 0.00305, 0.00863, 0.0404, 0.11684]
+two_body seed 4738 err@[5, 10, 20, 50, 100] [0.00144, 0.00362, 0.01032, 0.04175, 0.14508]
+two_body MEAN err [0.00117, 0.00366, 0.0102, 0.04547, 0.14249] dE/E 0.09967 (true 6.189e-05)
+expB seed 9100 err@[5, 10, 20, 50, 100] [0.00312, 0.00912, 0.02732, 0.18493, 1.54306]
+expB seed 9200 err@[5, 10, 20, 50, 100] [0.00346, 0.00974, 0.02866, 0.18936, 1.54814]
+expB seed 9300 err@[5, 10, 20, 50, 100] [0.00345, 0.00922, 0.02867, 0.1903, 1.54977]
+expB seed 4738 err@[5, 10, 20, 50, 100] [0.00315, 0.00885, 0.02728, 0.18557, 1.55417]
+expB MEAN err [0.0033, 0.00923, 0.02798, 0.18754, 1.54878] dE/E 0.02559 (true 0.0001092)
+bh300 seed 9100 err@[5, 10, 20, 50, 100] [0.01113, 0.02622, 0.07621, 1.03339, 4.97766]
+bh300 seed 9200 err@[5, 10, 20, 50, 100] [0.0083, 0.02267, 0.06697, 1.11043, 5.27502]
+bh300 seed 9300 err@[5, 10, 20, 50, 100] [0.00871, 0.02434, 0.0718, 0.90262, 4.7949]
+bh300 seed 4738 err@[5, 10, 20, 50, 100] [0.00982, 0.02688, 0.08414, 1.02597, 5.1717]
+bh300 MEAN err [0.00949, 0.02503, 0.07478, 1.01811, 5.05482] dE/E 0.08274 (true 0.0002488)
+cons nr100 1000t dE 0.2774 (true 4.364e-05) dL 0.01673 bound 0.910/0.970 vir 0.866/0.904 outgrid 0.120
+cons bh300 1000t dE 0.5188 (true 0.0003271) dL 3.32 bound 0.753/0.880 vir 1/0.931 outgrid 0.277
+timing two_body: 3.266 ms/tick, peak alloc 234.8 MB (reserved 3566.0, info) (batch 48, N 2)
+timing expB: 3.422 ms/tick, peak alloc 257.0 MB (reserved 3592.0, info) (batch 48, N 94)
+timing bh300: 0.703 ms/tick, peak alloc 241.0 MB (reserved 3566.0, info) (batch 1, N 300)
+timing expB_batch1_n100: 0.671 ms/tick, peak alloc 285.3 MB (reserved 3624.0, info) (batch 1, N 100)
+wrote results/scatter_cl/clreset_relabel_regress.json
+memory gate SKIPPED: definitions differ (baseline None, candidate 'absolute max_memory_allocated, reset before warm-up')
+two_body: baseline lacks bound/virial rows, skipped
+expB: baseline lacks bound/virial rows, skipped
+bh300: baseline lacks bound/virial rows, skipped
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate checkpoints/scatter_cl/clreset_relabel.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521    0.0011686     11.1  PASS
+two_body err@10                     0.0030977    0.0036614     18.2  FAIL
+two_body err@20                     0.0091024     0.010196     12.0  PASS
+expB err@5                          0.0030114    0.0032966      9.5  PASS
+expB err@10                          0.008129    0.0092328     13.6  PASS
+expB err@20                          0.023946     0.027983     16.9  FAIL
+bh300 err@5                         0.0079514    0.0094888     19.3  FAIL
+bh300 err@10                           0.0209     0.025027     19.7  FAIL
+bh300 err@20                         0.062157      0.07478     20.3  FAIL
+bh300 vmax/c (<1)                     0.92594       0.9265      nan  PASS
+bh300 dE_rel_model@100               0.039122     0.082743    111.5  FAIL
+bh300 dL_rel_model@100                0.30287     0.097984    -67.6  PASS
+bh300 dP_model@100                 4.3719e-05   8.3172e-05     90.2  PASS
+cons nr100@1000 dE                   0.017041      0.27744   1528.1  FAIL
+cons nr100@1000 dL                   0.037821      0.01673    -55.8  PASS
+cons nr100@1000 dP                 2.0085e-05   1.5098e-05    -24.8  PASS
+cons nr100@1000 bound_gap                0.08         0.06    -25.0  PASS
+cons nr100@1000 vir_gap                0.1046     0.043499    -58.4  PASS
+cons nr100@1000 outgrid                  0.16         0.12    -25.0  PASS
+cons nr100 nonfinite                        0            0      nan  PASS
+cons bh300@1000 dE                    0.48095      0.51883      7.9  PASS
+cons bh300@1000 dL                     1.4574       3.3197    127.8  FAIL
+cons bh300@1000 dP                 0.00014371    0.0003616    151.6  PASS
+cons bh300@1000 bound_gap             0.12667      0.12667      0.0  PASS
+cons bh300@1000 vir_gap              0.037173     0.072734     95.7  PASS
+cons bh300@1000 outgrid               0.27667      0.27667      0.0  PASS
+cons bh300 frac|v|>=c                       0            0      nan  PASS
+cons bh300 nonfinite                        0            0      nan  PASS
+two_body tick_ms                       4.7239       3.2659    -30.9  PASS
+expB tick_ms                           4.9509       3.4221    -30.9  PASS
+bh300 tick_ms                          2.4881      0.70262    -71.8  PASS
+expB_batch1_n100 tick_ms               2.4563      0.67115    -72.7  PASS
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 0.04547; two_body err@100 0.1308 -> 0.1425; expB err@50 0.1574 -> 0.1875; expB err@100 1.422 -> 1.549; bh300 err@50 0.9126 -> 1.018
+floors (not gated)            candidate  ref-noise  chaos1e-5    c/ref  c/chaos
+two_body err@5                 0.001169   4.14e-06    5.5e-05      282     21.3  
+two_body err@10                0.003661   6.67e-06   5.52e-05      549     66.4  
+two_body err@20                  0.0102   1.33e-05    5.7e-05      767      179  
+two_body err@50                 0.04547   3.45e-05   6.49e-05 1.32e+03      700  
+two_body err@100                 0.1425   8.31e-05   9.27e-05 1.72e+03 1.54e+03  
+two_body dE/E@100               0.09967   6.19e-05   6.19e-05 1.61e+03 1.61e+03  
+two_body dP@100               6.779e-10   1.51e-17   1.33e-17      n/a      n/a  
+two_body dL/L@100                0.2121    2.3e-14   2.32e-14      n/a      n/a  
+two_body bound gap@100                0          0          0      n/a      n/a  WITHIN
+two_body virial gap@100         0.01225   0.000172   0.000129     71.1     95.3  
+expB err@5                     0.003297   2.92e-05   0.000157      113       21  
+expB err@10                    0.009233    5.1e-05   0.000171      181       54  
+expB err@20                     0.02798   0.000106   0.000234      264      120  
+expB err@50                      0.1875   0.000584   0.000882      321      213  
+expB err@100                      1.549     0.0132     0.0188      118     82.4  
+expB dE/E@100                   0.02559   0.000109   0.000108      234      237  
+expB dP@100                   3.144e-06   3.18e-14   2.46e-14      n/a      n/a  
+expB dL/L@100                    0.4122   1.14e-13    3.8e-14      n/a      n/a  
+expB bound gap@100             0.000151   7.04e-05   7.04e-05     2.15     2.15  
+expB virial gap@100            0.006972    0.00047   0.000684     14.8     10.2  
+bh300 err@5                    0.009489   9.18e-05   0.000158      103     60.2  
+bh300 err@10                    0.02503   0.000177   0.000208      142      121  
+bh300 err@20                    0.07478   0.000544   0.000389      138      192  
+bh300 err@50                      1.018     0.0151     0.0059     67.2      173  
+bh300 dE/E@100                  0.08274   0.000249   0.000226      333      366  
+bh300 dP@100                  8.317e-05   3.82e-13   1.82e-13      n/a      n/a  
+bh300 dL/L@100                  0.09798   0.000198   0.000198      495      496  
+bh300 bound gap@100            0.003333     0.0025   0.000833     1.33        4  
+bh300 virial gap@100            0.02181     0.0109     0.0123        2     1.78  
+OVERALL FAIL
+CL DONE clreset

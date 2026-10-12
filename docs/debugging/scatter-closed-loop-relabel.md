@@ -44,3 +44,14 @@ Harness (4 seeds, err@5/10/20, gate x1.15 vs baseline_v2):
 
 Prediction check: (1) MISS - relabel did not reduce its own relabelled err@20 at offset 20 (.1057 -> .1158, control .1062). (2) MISS - relabel truth-IC err@20 +55% vs control (predicted +-15%). (3) MISS - err@50/100 worse than control (+20%/+9%); field/|a| bounded (<=1.1x truth rms), no non-finite to tick 100 (HIT). (4) control passes gate: MISS (cons rows fail, accuracy rows pass); relabel fails accuracy rows too (MISS). (5) HIT for control (nr100 dE .017->.18); relabel kept nr100 dE low (.023) but bh300 conservation collapsed (dE 1.6, bound .36 vs .88). (6) Gate timing HIT-ish (stage 0 plateau at the 1000 floor).
 Finding: same-schedule truth-window fine-tuning alone improves accuracy 15-35% (err@20 .0383->.0298, expB@20 -27%, bh300@20 -22%) at the price of 1000-tick energy; the relabel curriculum is strictly worse than that control on accuracy and on bh300 conservation, better only on nr100@1000 dE. Not validated by video review (numeric rollout only, no render made).
+
+## Ablation: zero field state at the start of the unroll (`--reset-field`, job 3504, 55 min, same schedule/hparams)
+Gate: it 1000 (0->5), 3500 (5->10), 7500 (10->20), all plateau. No rollout/video output (numeric only), so no video review.
+
+| model | err@5 | err@20 | err@50 | err@100 | closed-loop err@20 off 0/5/10/20 | field rms@100 | \|a\|rms/truth@100 | first non-finite | expB @20 | bh300 @20 | nr100@1000 dE | bh300@1000 dE | bh300 bound | gate |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| relabel (carry roll-in field) | .0055 | .0461 | .489 | 2.93 | .0461/.0562/.0715/.1158 | 4.06 | 1.10 | none | .0284 | .0761 | .0229 | 1.59 | .36 | fail (accuracy + 12 cons rows) |
+| relabel, reset field | .0053 | .0440 | .487 | 2.91 | .0440/.0544/.0694/.1113 | 6.48 | 1.10 | none | .0280 | .0748 | .277 | .519 | .75 | fail (8 rows: expB@20, bh300 err@5/10/20, two_body@10, bh300 dE@100, nr100 dE, bh300 dL) |
+| control (truth windows) | .0034 | .0298 | .407 | 2.68 | .0298/.0398/.0572/.1062 | 6.53 | 1.08 | none | .0175 | .0487 | .182 | .434 | .80 | fail (2 rows) |
+
+Reset-field is within noise of carried-field on accuracy (err@20 .0440 vs .0461; both ~50% worse than control). It avoids the bh300 conservation collapse (dE .52, bound .75 vs 1.59/.36) but loses the low nr100 dE (.277 vs .023). Conclusion: the roll-in field state is not what makes relabel underperform; the curriculum is worse than the same-schedule control on accuracy either way.
