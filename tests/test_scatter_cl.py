@@ -54,7 +54,7 @@ def test_relabel_batch_state_is_model_state_and_detached():
     P, V, M, mask = [t.float() for t in sf.to_tensors(scenes(4, 5), "cpu")]
     args = argparse.Namespace(noise=0.0, reset_field=False, dt=0.1, eps=0.5)
     pos, vel, state, Pt, Vt = cl.relabel_batch(model, P[:, 0], V[:, 0], M, mask, 3, 6, args)
-    pr, vr, m, st = pos, vel, M, model.init_field(4, "cpu")
+    pr, vr, m, st = P[:, 0], V[:, 0], M, model.init_field(4, "cpu")
     with torch.no_grad():
         for _ in range(3):
             pr, vr, m, st, _ = sf._step_m(model, pr, vr, m, mask, st)
