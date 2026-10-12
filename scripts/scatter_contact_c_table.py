@@ -5,7 +5,7 @@ import sys
 import numpy as np
 
 R = sys.argv[1] if len(sys.argv) > 1 else "results/contact"
-TAGS = [("E_zs13", "E zero-shot"), ("B2_13", "B2 (ref)"), ("A2_13", "A2 (ref)"), ("C", "C")]
+TAGS = [("E_zs13", "E zero-shot"), ("B2_13", "B2 (ref)"), ("A2_13", "A2 (ref)"), ("C", "C"), ("C40", "C (k_end 40)")]
 FAMS = ["c_id", "c_big", "c_small", "c_pos", "c_count", "c_nonconvex", "c_cont", "box15", "box_var", "post_circle", "post_rect", "disc", "post_poly"]
 D = {t: json.load(open(f"{R}/eval_{t}.json")) for t, _ in TAGS}
 

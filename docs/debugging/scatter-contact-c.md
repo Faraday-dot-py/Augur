@@ -48,3 +48,10 @@ Energy/momentum at tick 20 (dE = change of mean 0.5|v|^2 - 9x per ball): C -22 t
 
 ### Verdict
 C satisfies the user's constraints (geometry only as input channels, force from the existing potential head, no gather/MLP/reflection), has the lowest err@20 of E, B2, A2, C on all 13 families (margin over B2/A2 under 10% on several; nonconvex 3.73 vs A2 3.74 is a tie; one seed-set, differences under ~10% are within noise) and generalises across all five held-out axes at tick 20, but is unusable at 100 ticks as trained (blow-up). Follow-up (ONE, separate, after this record): C40 = identical but k_end 40 (job 3497), to test the diagnosed horizon cause.
+
+### Follow-up C40 (the single separate variant; job 3497): identical to C but k_end 40 -- FAILED, uninformative about the horizon hypothesis
+Training diverged at it ~950 (k 8-9): loss 4e4-5e7 from it 1000, 7046 of 8000 steps skipped by the non-finite/loss-cap guard, so the final weights are essentially the it-950 weights. Eval: err@5 4.0-6.2, err@10 ~5e2, err@20 1.8e3-7e5, NaN at 100 on c_id (`results/contact/eval_C40.json`, table in `scatter-contact-c-table.md`). This does not test the horizon hypothesis; it shows the recipe (lr 1e-4, loss cap 100, FMAX bound only on the geometry term) is not stable under a faster k curriculum either. C (k_end 20) trained with 0 skipped steps and the same init/data, so training stability is seed/curriculum-marginal. Not retried (one follow-up allowed).
+
+### Open items
+- The unbounded part of the force (E field net + prior) runs away; B2/A2/C all bound only the new heads. A bound on the total grid acceleration (or training with the recurrent state noised/reset) is the untested next step; it was not bundled here.
+- Radius-blindness of C untested on varied-radius scenes beyond box_var (err@20 4.27, same as others).
