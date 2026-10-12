@@ -39,8 +39,8 @@ Harness (4 seeds, err@5/10/20, gate x1.15 vs baseline_v2):
 | model | two_body @20 | expB @20 | bh300 @20 | expB @100 | bh300 @100 | nr100@1000 dE | bh300@1000 dE | bh300 bound m/t | bh300 vir_gap | gate |
 |---|---|---|---|---|---|---|---|---|---|---|
 | base | .00910 | .02395 | .0622 | 1.42 | 4.73 | .0170 | .481 | .753/.880 | .037 | ref |
-| control | .00571 | .01754 | .0487 | 1.22 | 4.87 | .182 | .434 | .797/.880 | .056 | FAIL (cons dE nr100, bh300 dL, dE_rel@100) |
-| relabel | .00873 | .02841 | .0761 | 1.55 | 5.05 | .0229 | 1.59 | .363/.880 | 1.32 | FAIL (expB/bh300 err, cons) |
+| control | .00571 | .01754 | .0487 | 1.22 | 4.87 | .182 | .434 | .797/.880 | .056 | FAIL (only 2 rows: nr100@1000 dE, bh300 dE_rel@100; all accuracy rows pass) |
+| relabel | .00873 | .02841 | .0761 | 1.55 | 5.05 | .0229 | 1.59 | .363/.880 | 1.32 | FAIL (expB@10/20, bh300 err@5/10/20, 12 cons rows) |
 
 Prediction check: (1) MISS - relabel did not reduce its own relabelled err@20 at offset 20 (.1057 -> .1158, control .1062). (2) MISS - relabel truth-IC err@20 +55% vs control (predicted +-15%). (3) MISS - err@50/100 worse than control (+20%/+9%); field/|a| bounded (<=1.1x truth rms), no non-finite to tick 100 (HIT). (4) control passes gate: MISS (cons rows fail, accuracy rows pass); relabel fails accuracy rows too (MISS). (5) HIT for control (nr100 dE .017->.18); relabel kept nr100 dE low (.023) but bh300 conservation collapsed (dE 1.6, bound .36 vs .88). (6) Gate timing HIT-ish (stage 0 plateau at the 1000 floor).
 Finding: same-schedule truth-window fine-tuning alone improves accuracy 15-35% (err@20 .0383->.0298, expB@20 -27%, bh300@20 -22%) at the price of 1000-tick energy; the relabel curriculum is strictly worse than that control on accuracy and on bh300 conservation, better only on nr100@1000 dE. Not validated by video review (numeric rollout only, no render made).
