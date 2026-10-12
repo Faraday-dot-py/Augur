@@ -351,10 +351,11 @@ class ContactScatterField(sf.ScatterField):
             a_0, _ = super()._force(pos, vel, mass, mask, f_in)
         finally:
             self.momfix, self.net.geo = mf, None
+        base = a_0
         if mf:
             mm = (mass * mask)[..., None]
-            a_0 = a_0 - (mm * a_0).sum(1, keepdim=True) / mm.sum(1, keepdim=True).clamp_min(1e-9)
-        return (a_0 + FMAX * torch.tanh((a_geo - a_0) / FMAX)) * mask[..., None], field
+            base = a_0 - (mm * a_0).sum(1, keepdim=True) / mm.sum(1, keepdim=True).clamp_min(1e-9)
+        return (base + FMAX * torch.tanh((a_geo - a_0) / FMAX)) * mask[..., None], field
 
     def _force(self, pos, vel, mass, mask, field):
         if self.obstacle == "chan" and self.geom is not None:
