@@ -17,7 +17,7 @@ const gt = new Physics(cfg.n, { dt: cfg.dt, gravity: cfg.gravity, radius: cfg.ra
 const view = new Scene($("stage"), cfg);
 
 const st = {
-  paused: false, tps: 20, selected: -1, auto: true, edges: 1, gtOn: false, gravity: true, arch: true, panel: true,
+  paused: false, tps: 20, selected: -1, auto: false, edges: 1, gtOn: false, gravity: true, arch: true, panel: true,
   trace: null, stepMs: 0, gt, gtIds: [], hoverBall: -1, sweep: -1e9, eModel: [], eTruth: [], dirty: true,
 };
 
@@ -147,7 +147,7 @@ function burst(x, y, k = 16, jitter = 2.2) {
 function reset() {
   sim.reset();
   st.selected = -1;
-  st.auto = true;
+  st.auto = false;
   st.eModel.length = st.eTruth.length = 0;
   sim.populate(+$("r-balls").value);
   countChanged();

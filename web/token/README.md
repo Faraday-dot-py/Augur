@@ -12,7 +12,7 @@ Open `index.html` through any static server (`python3 -m http.server` from the `
 - `js/scene.js`: Three.js scene: arena, token cubes, neighbour links, contact glows, ground-truth ghosts, camera presets, picking.
 - `js/arch.js`: 3D architecture diagram of one trace (cell layout, labels, flow animation) and the diverging colour map.
 - `js/plots.js`: pair/wall force curves sampled from the MLPs, energy plot.
-- `js/app.js`: UI wiring, controls, keyboard shortcuts (space, `.`, r, b, v, g, e, t, 1-4, +/-).
+- `js/app.js`: UI wiring, controls, keyboard shortcuts (space, `.`, r, b, v, g, e, t, 1-4, +/-). Selection: the page starts on one ball (most contacts) and stays on it until you click a ball or press `p` (Contact), or the ball is removed (then the busiest ball is re-picked). `st.auto` in app.js (default false) re-enables hopping to the busiest ball when the selection has no contact.
 - `weights.bin` / `weights.json`: fp32 weights + manifest/config (8708 floats, 13 tensors).
 
 ## Re-export weights
