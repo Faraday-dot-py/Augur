@@ -39,19 +39,42 @@ def chunks(n, chunk):
         yield s, min(n, s + chunk)
 
 
+def clump_params(n, args, dev):
+    g = torch.Generator(device=dev)
+    g.manual_seed(args.seed + 2)
+    cen = (torch.randn(args.k, 2, device=dev, generator=g) * args.clump_spread).clamp_(-args.clump_max, args.clump_max)
+    vb = torch.randn(args.k, 2, device=dev, generator=g) * (args.vfac * math.sqrt(n / (4 * args.field_sigma)))
+    return cen, vb
+
+
 def make_ic(n, chunk, args, pd, md, ms, dev):
     pos = torch.empty(n, 2, device=dev, dtype=pd)
     mom = torch.empty(n, 2, device=dev, dtype=md)
     vscale = args.vfac * math.sqrt(n / (4 * args.sigma))
     c = args.c
     vsum = torch.zeros(2, dtype=torch.float64, device=dev)
+    if args.ic == "clumpy":
+        cen, vb = clump_params(n, args, dev)
+        nclump = args.clump_frac * n / args.k
+        vscale_c = args.vfac * math.sqrt(nclump / (4 * args.clump_sigma))
+        vscale_f = args.vfac * math.sqrt(n / (4 * args.field_sigma))
     for pas in range(2):
         g = torch.Generator(device=dev)
         g.manual_seed(args.seed)
         vmean = vsum / n
         for s, e in chunks(n, chunk):
-            p = torch.randn(e - s, 2, device=dev, generator=g) * args.sigma
-            v = torch.randn(e - s, 2, device=dev, generator=g) * vscale
+            if args.ic == "clumpy":
+                m = e - s
+                u = torch.rand(m, device=dev, generator=g)
+                cid = torch.randint(0, args.k, (m,), device=dev, generator=g)
+                isc = (u < args.clump_frac)[:, None]
+                z = torch.randn(m, 2, device=dev, generator=g)
+                w = torch.randn(m, 2, device=dev, generator=g)
+                p = torch.where(isc, cen[cid] + z * args.clump_sigma, z * args.field_sigma)
+                v = torch.where(isc, vb[cid] + w * vscale_c, w * vscale_f)
+            else:
+                p = torch.randn(e - s, 2, device=dev, generator=g) * args.sigma
+                v = torch.randn(e - s, 2, device=dev, generator=g) * vscale
             if args.ic_resample:
                 p = torch.where(p.abs() > 29.0, torch.randn(e - s, 2, device=dev, generator=g) * args.sigma, p)
             p = p.clamp_(-29.0, 29.0)
@@ -219,12 +242,16 @@ def rollout(model, args, pd, md, ms, dev, steps, sub, hist, snaps, label, lens=N
     torch.cuda.reset_peak_memory_stats()
     sim = Sim(model, n, args.chunk, args.c, args.dt, pd, md, ms, dev)
     pos, mom = make_ic(n, args.chunk, args, pd, md, ms, dev)
+    nm = torch.zeros(2, dtype=torch.float64, device=dev)
+    for s_, e_ in chunks(n, args.chunk):
+        nm += mom[s_:e_].float().sum(0, dtype=torch.float64) * ms
+    net_mom_ic = (nm / n).tolist()
     sync()
     t0 = time.perf_counter()
     sim.init_kick(pos, mom)
     sync()
     out = {"label": label, "n": n, "pos_dtype": str(pd), "mom_dtype": str(md), "mom_scale": ms, "chunk": args.chunk,
-           "init_force_ms": (time.perf_counter() - t0) * 1e3, "ms_per_tick": [], "diag": []}
+           "init_force_ms": (time.perf_counter() - t0) * 1e3, "net_mom_ic_per_body": net_mom_ic, "ms_per_tick": [], "diag": []}
     d = diagnostics(sim, pos, mom, sub, hist)
     hists = [d.pop("hist")] if hist else []
     out["diag"].append(d)
@@ -297,6 +324,13 @@ def main():
     ap.add_argument("--c", type=float, default=10.0)
     ap.add_argument("--dt", type=float, default=0.1)
     ap.add_argument("--seed", type=int, default=4738)
+    ap.add_argument("--ic", choices=["gaussian", "clumpy"], default="gaussian", help="clumpy: k Gaussian clumps (centres N(0, clump-spread) clamped to +-clump-max, cold bulk + internal velocities) plus a broad field component, mirrors nbody_ic.clumpy")
+    ap.add_argument("--k", type=int, default=30)
+    ap.add_argument("--clump-frac", type=float, default=0.7)
+    ap.add_argument("--clump-sigma", type=float, default=1.5)
+    ap.add_argument("--clump-spread", type=float, default=10.0)
+    ap.add_argument("--clump-max", type=float, default=20.0)
+    ap.add_argument("--field-sigma", type=float, default=10.0)
     ap.add_argument("--ic-resample", action="store_true", help="redraw positions beyond +-29 instead of piling them on the clip lines (square-wall control)")
     ap.add_argument("--nsub", type=int, default=1_000_000)
     ap.add_argument("--hist", action="store_true")
@@ -316,6 +350,10 @@ def main():
     model.eval()
     ops.no_pp(model)
     res = {"gpu": torch.cuda.get_device_name(), "args": vars(args)}
+    if args.ic == "clumpy":
+        cen, vb = clump_params(args.n, args, dev)
+        res["clumpy_centres"] = cen.tolist()
+        res["clumpy_bulk_v"] = vb.tolist()
     json_path = f"results/{args.tag}{'_check' if args.mode == 'check' else ''}.json"
 
     def write():
