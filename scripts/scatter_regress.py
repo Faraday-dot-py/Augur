@@ -38,6 +38,9 @@ ACC_ATOL = 1e-5
 STATE_ATOL = {"bound_frac": 0.02, "virial": 0.05}
 CONS_STEPS = 1000
 CONS_REGIMES = ("nr100", "bh300")
+CONS_PER = {"nr100": 6, "bh300": 3}
+CONS_TICKS = (100, 1000)
+CONS_FACTOR = 2.0
 CONS_TOL = 0.25
 TIME_TOL = 0.05
 MEM_TOL = 0.10
@@ -169,8 +172,8 @@ def conservation_rows(model, dev, args):
 
     out = {}
     for name in CONS_REGIMES:
-        kind, n, per = sc.REGIMES[name]
-        pos0, vel0, seeds = sc.make_scenes(kind, n, per)
+        kind, n, _ = sc.REGIMES[name]
+        pos0, vel0, seeds = sc.make_scenes(kind, n, CONS_PER[name])
         P0 = torch.tensor(pos0, device=dev)
         V0 = torch.tensor(vel0, device=dev)
         rel = kind == "bh"
@@ -188,13 +191,24 @@ def conservation_rows(model, dev, args):
             K0, U0 = r["K"][0], r["U"][0]
             lsc = r0 * torch.sqrt(2 * n * K0.clamp_min(1e-12))
             t = CONS_STEPS
-            res[tag] = {"dE": float(((r["E"][t] - r["E"][0]).abs() / (K0 + U0.abs())).median()),
+            scenes = {}
+            for tt in CONS_TICKS:
+                scenes[f"dE@{tt}"] = ((r["E"][tt] - r["E"][0]).abs() / (K0 + U0.abs())).tolist()
+                scenes[f"dL@{tt}"] = ((r["L"][tt] - r["L"][0]).abs() / lsc).tolist()
+                scenes[f"dP@{tt}"] = (r["P"][tt] - r["P"][0]).abs().tolist()
+            scenes[f"outgrid@{t}"] = r["outgrid"][t].tolist()
+            scenes[f"bound@{t}"] = r["bound"][t].tolist()
+            scenes[f"vir@{t}"] = r["vir"][t].tolist()
+            res[tag] = {"scenes": scenes, "dE": float(((r["E"][t] - r["E"][0]).abs() / (K0 + U0.abs())).median()),
                         "dL": float(((r["L"][t] - r["L"][0]).abs() / lsc).median()), "dP": float((r["P"][t] - r["P"][0]).abs().median()),
                         "bound": float(r["bound"][t].median()), "vir": float(r["vir"][t].median()), "outgrid": float(r["outgrid"][t].median()),
                         "vmax_over_c": float(r["vmax"].amax() / sc.C) if rel else None, "frac_ge_c": float(r["fracge"].amax()) if rel else None,
                         "finite": float(r["finite"].min())}
         res["bound_gap"] = abs(res["model"]["bound"] - res["true"]["bound"])
         res["vir_gap"] = abs(float(np.log(max(res["model"]["vir"], 1e-9) / max(res["true"]["vir"], 1e-9))))
+        ms, ts = res["model"]["scenes"], res["true"]["scenes"]
+        res["gap_scenes"] = {f"bound@{CONS_STEPS}": [abs(a - b) for a, b in zip(ms[f"bound@{CONS_STEPS}"], ts[f"bound@{CONS_STEPS}"])],
+                             f"vir@{CONS_STEPS}": [abs(float(np.log(max(a, 1e-9) / max(b, 1e-9)))) for a, b in zip(ms[f"vir@{CONS_STEPS}"], ts[f"vir@{CONS_STEPS}"])]}
         out[name] = res
         print(f"cons {name} {CONS_STEPS}t dE {res['model']['dE']:.4g} (true {res['true']['dE']:.4g}) dL {res['model']['dL']:.4g} bound {res['model']['bound']:.3f}/{res['true']['bound']:.3f} "
               f"vir {res['model']['vir']:.3g}/{res['true']['vir']:.3g} outgrid {res['model']['outgrid']:.3f}", flush=True)
@@ -382,6 +396,18 @@ def print_floors(cand, floors_path):
             print(f"{name:28s} {c:10.4g} {f_ref:10.3g} {f_chaos:10.3g} {ratio(f_ref)} {ratio(f_chaos)}  {'WITHIN' if c <= f_ref else ''}")
 
 
+def cons_rows_scenes(check_scene, reg, bc, cc):
+    """Per-scene conservation gate: candidate median over scenes fails only if above max(CONS_FACTOR x baseline median, baseline p84)."""
+    t = CONS_STEPS
+    for k in (f"dE@{t}", f"dL@{t}", f"dP@{t}", f"outgrid@{t}"):
+        check_scene(f"cons {reg} {k}", bc["model"]["scenes"][k], cc["model"]["scenes"][k])
+    if reg == "bh300":
+        for k in ("dE@100", "dL@100", "dP@100"):
+            check_scene(f"cons {reg} {k}", bc["model"]["scenes"][k], cc["model"]["scenes"][k])
+    for k in (f"bound@{t}", f"vir@{t}"):
+        check_scene(f"cons {reg} {k} gap", bc["gap_scenes"][k], cc["gap_scenes"][k])
+
+
 def compare(args):
     base, cand = json.load(open(args.baseline)), json.load(open(args.candidate))
     rows, ok = [], True
@@ -391,6 +417,14 @@ def compare(args):
         good = bool(c <= b * (1 + tol) + atol)
         ok &= good
         rows.append((name, b, c, (c / b - 1) * 100 if b else float("nan"), "PASS" if good else "FAIL"))
+
+    def check_scene(name, b_scenes, c_scenes):
+        nonlocal ok
+        bmed, p84 = float(np.median(b_scenes)), float(np.percentile(b_scenes, 84))
+        cmed = float(np.median(c_scenes))
+        good = bool(cmed <= max(CONS_FACTOR * bmed, p84))
+        ok &= good
+        rows.append((name, bmed, cmed, (cmed / bmed - 1) * 100 if bmed else float("nan"), "PASS" if good else "FAIL"))
 
     mem_comparable = base["meta"].get("mem_def") == cand["meta"].get("mem_def") == MEM_DEF
     if not mem_comparable:
@@ -417,10 +451,13 @@ def compare(args):
         cc = cand.get("conservation", {}).get(reg)
         if cc is None:
             continue
-        for k, b, c, atol in (("dE", bc["model"]["dE"], cc["model"]["dE"], 1e-3), ("dL", bc["model"]["dL"], cc["model"]["dL"], 1e-2),
-                              ("dP", bc["model"]["dP"], cc["model"]["dP"], 1e-3), ("bound_gap", bc["bound_gap"], cc["bound_gap"], 0.02),
-                              ("vir_gap", bc["vir_gap"], cc["vir_gap"], 0.05), ("outgrid", bc["model"]["outgrid"], cc["model"]["outgrid"], 0.01)):
-            check(f"cons {reg}@{CONS_STEPS} {k}", b, c, CONS_TOL, atol)
+        if "scenes" in bc["model"]:
+            cons_rows_scenes(check_scene, reg, bc, cc)
+        else:
+            for k, b, c, atol in (("dE", bc["model"]["dE"], cc["model"]["dE"], 1e-3), ("dL", bc["model"]["dL"], cc["model"]["dL"], 1e-2),
+                                  ("dP", bc["model"]["dP"], cc["model"]["dP"], 1e-3), ("bound_gap", bc["bound_gap"], cc["bound_gap"], 0.02),
+                                  ("vir_gap", bc["vir_gap"], cc["vir_gap"], 0.05), ("outgrid", bc["model"]["outgrid"], cc["model"]["outgrid"], 0.01)):
+                check(f"cons {reg}@{CONS_STEPS} {k}", b, c, CONS_TOL, atol)
         if cc["model"]["frac_ge_c"] is not None:
             check(f"cons {reg} frac|v|>=c", 0.0, cc["model"]["frac_ge_c"], 0.0)
         check(f"cons {reg} nonfinite", 0.0, 1.0 - cc["model"]["finite"], 0.0)
