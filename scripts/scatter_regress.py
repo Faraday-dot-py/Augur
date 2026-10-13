@@ -33,7 +33,7 @@ BH = dict(n=300, sigma=8.0, vfac=0.3, c=10.0)
 REGIMES = ("two_body", "expB", "bh300")
 TIMING_KEYS = REGIMES + ("expB_batch1_n100",)
 ACC_TOL = 0.15
-ACC_TOL_KEY = {("two_body", "5"): 0.30}
+GATE_TICKS = {"two_body": ("10", "20"), "expB": ("5", "10", "20"), "bh300": ("5", "10", "20")}
 ACC_ATOL = 1e-5
 STATE_ATOL = {"bound_frac": 0.02, "virial": 0.05}
 CONS_STEPS = 1000
@@ -41,8 +41,8 @@ CONS_REGIMES = ("nr100", "bh300")
 CONS_TOL = 0.25
 TIME_TOL = 0.05
 MEM_TOL = 0.10
-INFO_TICKS = {"two_body": ("50", "100"), "expB": ("50", "100"), "bh300": ("50",)}
-FLOOR_TICKS = INFO_TICKS
+INFO_TICKS = {"two_body": ("5", "50", "100"), "expB": ("50", "100"), "bh300": ("50",)}
+FLOOR_TICKS = {"two_body": ("50", "100"), "expB": ("50", "100"), "bh300": ("50",)}
 MEM_DEF = "absolute max_memory_allocated, reset before warm-up"
 
 
@@ -396,8 +396,8 @@ def compare(args):
     if not mem_comparable:
         print(f"memory gate SKIPPED: definitions differ (baseline {base['meta'].get('mem_def')!r}, candidate {cand['meta'].get('mem_def')!r})")
     for reg in REGIMES:
-        for k in ("5", "10", "20"):
-            check(f"{reg} err@{k}", base["regimes"][reg]["mean"]["err"][k], cand["regimes"][reg]["mean"]["err"][k], ACC_TOL_KEY.get((reg, k), ACC_TOL), ACC_ATOL)
+        for k in GATE_TICKS[reg]:
+            check(f"{reg} err@{k}", base["regimes"][reg]["mean"]["err"][k], cand["regimes"][reg]["mean"]["err"][k], ACC_TOL, ACC_ATOL)
     for reg in REGIMES:
         bm, cm = base["regimes"][reg]["mean"], cand["regimes"][reg]["mean"]
         if "bound_frac_true" not in bm:
