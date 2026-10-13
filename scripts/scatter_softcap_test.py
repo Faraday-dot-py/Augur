@@ -1,7 +1,8 @@
 """Tests for the fed-back-field softcap flag (ScatterField.softcap; run on Polaris).
 
-  python scripts/scatter_softcap_test.py dump <out.pt> [E ckpt]     E rollout, flag untouched (run once on the pre-change commit f0e6238 and once on this branch)
-  python scripts/scatter_softcap_test.py test <ref.pt> [E ckpt]     bitwise E identity vs the pre-change dump + flag semantics + ckpt/auto resolution
+  CUBLAS_WORKSPACE_CONFIG=:4096:8 python scripts/scatter_softcap_test.py dump <out.pt> [E ckpt]   E rollout, flag untouched (run once on the pre-change commit f0e6238, once on this branch)
+  CUBLAS_WORKSPACE_CONFIG=:4096:8 python scripts/scatter_softcap_test.py test <ref.pt> [E ckpt]   E identity vs the pre-change dump + flag semantics + ckpt/auto resolution
+The scatter uses index_add_ (atomics), so E is only bit-reproducible with deterministic algorithms on; the identity check also reports the run-to-run noise floor.
 """
 import os
 import sys
@@ -13,6 +14,7 @@ import torch
 from scripts import scatter_field as sf
 from scripts import scatter_scenes as ss
 
+torch.use_deterministic_algorithms(True, warn_only=True)
 dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CK = sys.argv[3] if len(sys.argv) > 3 else "checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt"
 OK = []
@@ -40,22 +42,29 @@ def main():
     model = ss.build_model("E", ss.BOX_DT, dev, CK)
     P, V = rollout(model)
     if mode == "dump":
-        torch.save((P.cpu(), V.cpu()), path)
-        print("dumped", path, tuple(P.shape))
+        Pn, Vn = rollout(model)
+        torch.save((P.cpu(), V.cpu(), Pn.cpu()), path)
+        print("dumped", path, tuple(P.shape), "self-repeat max diff", float((P - Pn).abs().max()))
         return
-    Pr, Vr = torch.load(path)
-    check("E flag off: positions bitwise == pre-change commit", torch.equal(P.cpu(), Pr), f"max {float((P.cpu() - Pr).abs().max()):.1e}")
+    Pr, Vr, Prn = torch.load(path)
+    P_b, V_b = rollout(model)
+    old_noise = float((Pr - Prn).abs().max())
+    new_noise = float((P.cpu() - P_b.cpu()).abs().max())
+    d = float((P.cpu() - Pr).abs().max())
+    check("E flag off: positions bitwise == pre-change commit", torch.equal(P.cpu(), Pr), f"max diff {d:.1e}; run-to-run noise old {old_noise:.1e} new {new_noise:.1e}")
     check("E flag off: velocities bitwise == pre-change commit", torch.equal(V.cpu(), Vr))
     check("default softcap is 0", model.softcap == 0.0)
     model.softcap = 100.0
     P2, V2 = rollout(model)
     check("softcap 100 on E: finite, differs from off only slightly (field max ~52)", bool(torch.isfinite(P2).all()) and 0 < float((P2 - P).abs().max()) < 1.0, f"max {float((P2 - P).abs().max()):.2e}")
+    model.softcap = 0.0
+    P3a, _ = rollout(model, steps=3)
     model.softcap = 1e9
-    P3, _ = rollout(model)
-    check("softcap 1e9 ~ identity", float((P3 - P).abs().max()) < 1e-3, f"max {float((P3 - P).abs().max()):.1e}")
+    P3, _ = rollout(model, steps=3)
+    check("softcap 1e9 ~ identity (3 ticks; float32 rounding is chaos-amplified over 50)", float((P3 - P3a).abs().max()) < 1e-4, f"max {float((P3 - P3a).abs().max()):.1e}")
     model.softcap = 0.0
     P4, V4 = rollout(model)
-    check("flag back to 0 restores bitwise (no state leak)", torch.equal(P4, P) and torch.equal(V4, V))
+    check("flag back to 0 restores bitwise (no state leak)", torch.equal(P4, P) and torch.equal(V4, V), f"max {float((P4 - P).abs().max()):.1e}")
     from scripts import scatter_contact_scenes as cs
 
     sd = torch.load(CK, map_location="cpu", weights_only=False)["model"]

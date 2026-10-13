@@ -1,0 +1,21 @@
+loaded checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt: missing [] unexpected []
+dumped /home/adamwebb/softcap_E_old.pt (2, 51, 64, 2) self-repeat max diff 0.0
+loaded checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt: missing [] unexpected []
+PASS E flag off: positions bitwise == pre-change commit max diff 0.0e+00; run-to-run noise old 0.0e+00 new 0.0e+00
+PASS E flag off: velocities bitwise == pre-change commit 
+PASS default softcap is 0 
+PASS softcap 100 on E: finite, differs from off only slightly (field max ~52) max 6.34e-01
+FAIL softcap 1e9 ~ identity max 3.5e-01
+PASS flag back to 0 restores bitwise (no state leak) max 0.0e+00
+PASS auto: E ckpt without metadata -> off 
+PASS auto: option-C ckpt without metadata -> 100 
+PASS auto: B/A ckpt without metadata -> off 
+PASS auto: ckpt metadata wins 
+PASS explicit value/0 overrides 
+loaded /tmp/tmpqpd5g28n/plain.pt: missing ['gvec', 'gscale', 'net.gin.weight', 'net.gin.bias', 'cmlp.0.weight', 'cmlp.0.bias', 'cmlp.2.weight', 'cmlp.2.bias', 'cmlp.4.weight', 'cmlp.4.bias'] unexpected []
+loaded /tmp/tmpqpd5g28n/plain.pt: missing [] unexpected []
+PASS default build() is off for every model 
+loaded /tmp/tmpqpd5g28n/plain.pt: missing ['gvec', 'gscale', 'net.gin.weight', 'net.gin.bias', 'cmlp.0.weight', 'cmlp.0.bias', 'cmlp.2.weight', 'cmlp.2.bias', 'cmlp.4.weight', 'cmlp.4.bias'] unexpected []
+loaded /tmp/tmpqpd5g28n/plain.pt: missing [] unexpected []
+PASS build(softcap='auto') C on, E off 
+FAILURES 1

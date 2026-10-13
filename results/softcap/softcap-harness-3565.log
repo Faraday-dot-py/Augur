@@ -1,0 +1,585 @@
+===== results/softcap/C.json
+s=0.0    sel9400+9500 contact  n 48 run 0.50 |a|med    129.8 e20   6.94 e100 mean   1186.7 med   384.4 off100 0.87
+s=0.0    sel9400+9500 expB     n 24 run 0.79 |a|med  17028.3 e20   5.34 e100 mean    754.7 med   433.1 off100 0.80
+s=0.0    sel9400+9500 cluster  n 12 run 1.00 |a|med  29238.6 e20   8.16 e100 mean   1310.7 med  1171.3 off100 1.00
+s=0.0    heldout9600  contact  n 24 run 0.67 |a|med   2141.1 e20   5.46 e100 mean   1343.2 med  1017.0 off100 0.94
+s=0.0    heldout9600  expB     n 12 run 0.92 |a|med   8949.5 e20   5.31 e100 mean    463.0 med   436.0 off100 0.85
+s=0.0    heldout9600  cluster  n  6 run 1.00 |a|med  49355.5 e20   8.94 e100 mean   1576.0 med  1242.1 off100 1.00
+s=0.0    gravity expB: truth max|a| median 6.1 max 8.5; truth>200 in 0.00 of scenes
+      model runaway scenes 30/36: truth also >200 in 0.00; worst body nn<1 0.03, off-grid(r>=32) 0.00; |a| max median 13730 (truth 6); n bodies>200 median 53 (off-grid 36, nn<1 0); onset tick median 30; field raw max median 2337497; frac_off at worst median 0.77
+s=0.0    gravity cluster: truth max|a| median 18.9 max 60.5; truth>200 in 0.00 of scenes
+      model runaway scenes 18/18: truth also >200 in 0.00; worst body nn<1 0.00, off-grid(r>=32) 0.00; |a| max median 32327 (truth 19); n bodies>200 median 91 (off-grid 64, nn<1 1); onset tick median 21; field raw max median 5581774; frac_off at worst median 0.94
+s=70.0   sel9400+9500 contact  n 48 run 0.00 |a|med     19.3 e20   8.55 e100 mean    273.9 med   137.9 off100 0.13
+s=70.0   sel9400+9500 expB     n 24 run 0.67 |a|med    277.7 e20   3.68 e100 mean     38.7 med    39.7 off100 0.30
+s=70.0   sel9400+9500 cluster  n 12 run 1.00 |a|med    673.4 e20   6.75 e100 mean     95.5 med   103.2 off100 0.60
+s=70.0   heldout9600  contact  n 24 run 0.00 |a|med     20.7 e20   6.44 e100 mean    177.7 med     5.5 off100 0.08
+s=70.0   heldout9600  expB     n 12 run 0.58 |a|med    229.3 e20   3.38 e100 mean     39.5 med    42.2 off100 0.29
+s=70.0   heldout9600  cluster  n  6 run 1.00 |a|med    632.8 e20   6.76 e100 mean    102.8 med   104.9 off100 0.63
+s=70.0   gravity expB: truth max|a| median 6.1 max 8.5; truth>200 in 0.00 of scenes
+      model runaway scenes 23/36: truth also >200 in 0.00; worst body nn<1 0.00, off-grid(r>=32) 0.00; |a| max median 332 (truth 6); n bodies>200 median 1 (off-grid 0, nn<1 0); onset tick median 41; field raw max median 454; frac_off at worst median 0.18
+s=70.0   gravity cluster: truth max|a| median 18.9 max 60.5; truth>200 in 0.00 of scenes
+      model runaway scenes 18/18: truth also >200 in 0.00; worst body nn<1 0.11, off-grid(r>=32) 0.00; |a| max median 673 (truth 19); n bodies>200 median 2 (off-grid 0, nn<1 0); onset tick median 22; field raw max median 937; frac_off at worst median 0.19
+s=100.0  sel9400+9500 contact  n 48 run 0.00 |a|med     21.1 e20   7.77 e100 mean    190.9 med   119.6 off100 0.27
+s=100.0  sel9400+9500 expB     n 24 run 0.79 |a|med    240.2 e20   3.70 e100 mean     40.0 med    40.7 off100 0.34
+s=100.0  sel9400+9500 cluster  n 12 run 1.00 |a|med    549.2 e20   6.73 e100 mean     96.7 med   101.3 off100 0.65
+s=100.0  heldout9600  contact  n 24 run 0.00 |a|med     23.5 e20   5.71 e100 mean    121.3 med     5.4 off100 0.14
+s=100.0  heldout9600  expB     n 12 run 0.67 |a|med    226.7 e20   3.48 e100 mean     39.9 med    39.6 off100 0.35
+s=100.0  heldout9600  cluster  n  6 run 1.00 |a|med    719.9 e20   6.78 e100 mean     99.3 med    97.1 off100 0.63
+s=100.0  gravity expB: truth max|a| median 6.1 max 8.5; truth>200 in 0.00 of scenes
+      model runaway scenes 27/36: truth also >200 in 0.00; worst body nn<1 0.07, off-grid(r>=32) 0.00; |a| max median 253 (truth 6); n bodies>200 median 1 (off-grid 0, nn<1 0); onset tick median 67; field raw max median 384; frac_off at worst median 0.30
+s=100.0  gravity cluster: truth max|a| median 18.9 max 60.5; truth>200 in 0.00 of scenes
+      model runaway scenes 18/18: truth also >200 in 0.00; worst body nn<1 0.00, off-grid(r>=32) 0.00; |a| max median 614 (truth 19); n bodies>200 median 1 (off-grid 0, nn<1 0); onset tick median 24; field raw max median 960; frac_off at worst median 0.13
+s=140.0  sel9400+9500 contact  n 48 run 0.15 |a|med     24.3 e20   7.11 e100 mean    189.3 med   165.8 off100 0.44
+s=140.0  sel9400+9500 expB     n 24 run 0.58 |a|med    249.3 e20   4.06 e100 mean     39.0 med    40.4 off100 0.34
+s=140.0  sel9400+9500 cluster  n 12 run 1.00 |a|med    558.6 e20   6.79 e100 mean     93.9 med    95.1 off100 0.65
+s=140.0  heldout9600  contact  n 24 run 0.04 |a|med     55.7 e20   5.60 e100 mean    117.7 med    47.9 off100 0.41
+s=140.0  heldout9600  expB     n 12 run 0.50 |a|med    218.1 e20   3.83 e100 mean     39.7 med    43.4 off100 0.38
+s=140.0  heldout9600  cluster  n  6 run 1.00 |a|med    604.8 e20   6.82 e100 mean     96.3 med   101.1 off100 0.67
+s=140.0  gravity expB: truth max|a| median 6.1 max 8.5; truth>200 in 0.00 of scenes
+      model runaway scenes 20/36: truth also >200 in 0.00; worst body nn<1 0.05, off-grid(r>=32) 0.00; |a| max median 266 (truth 6); n bodies>200 median 1 (off-grid 0, nn<1 0); onset tick median 52; field raw max median 326; frac_off at worst median 0.26
+s=140.0  gravity cluster: truth max|a| median 18.9 max 60.5; truth>200 in 0.00 of scenes
+      model runaway scenes 18/18: truth also >200 in 0.00; worst body nn<1 0.00, off-grid(r>=32) 0.00; |a| max median 559 (truth 19); n bodies>200 median 1 (off-grid 0, nn<1 0); onset tick median 24; field raw max median 973; frac_off at worst median 0.20
+===== results/softcap/D5ctrl.json
+s=0.0    sel9400+9500 contact  n 48 run 0.00 |a|med     25.3 e20  10.75 e100 mean    172.2 med   113.2 off100 0.50
+s=0.0    sel9400+9500 expB     n 24 run 0.04 |a|med     53.6 e20   2.28 e100 mean     14.0 med    13.6 off100 0.05
+s=0.0    sel9400+9500 cluster  n 12 run 0.50 |a|med    213.5 e20   4.15 e100 mean   5194.1 med    29.2 off100 0.42
+s=0.0    heldout9600  contact  n 24 run 0.00 |a|med     29.7 e20   9.58 e100 mean    102.5 med    18.3 off100 0.35
+s=0.0    heldout9600  expB     n 12 run 0.00 |a|med     61.9 e20   2.37 e100 mean     15.4 med    15.6 off100 0.07
+s=0.0    heldout9600  cluster  n  6 run 0.50 |a|med    199.2 e20   3.76 e100 mean    372.8 med    28.6 off100 0.31
+s=0.0    gravity expB: truth max|a| median 6.1 max 8.5; truth>200 in 0.00 of scenes
+      model runaway scenes 1/36: truth also >200 in 0.00; worst body nn<1 1.00, off-grid(r>=32) 0.00; |a| max median 219 (truth 5); n bodies>200 median 1 (off-grid 0, nn<1 1); onset tick median 150; field raw max median 202; frac_off at worst median 0.05
+s=0.0    gravity cluster: truth max|a| median 18.9 max 60.5; truth>200 in 0.00 of scenes
+      model runaway scenes 9/18: truth also >200 in 0.00; worst body nn<1 0.44, off-grid(r>=32) 0.00; |a| max median 137382 (truth 30); n bodies>200 median 199 (off-grid 62, nn<1 7); onset tick median 42; field raw max median 8373407767142072320; frac_off at worst median 0.30
+s=70.0   sel9400+9500 contact  n 48 run 0.00 |a|med     22.6 e20  10.46 e100 mean    187.1 med   136.9 off100 0.48
+s=70.0   sel9400+9500 expB     n 24 run 0.00 |a|med     56.6 e20   2.30 e100 mean     14.6 med    14.0 off100 0.07
+s=70.0   sel9400+9500 cluster  n 12 run 0.25 |a|med    173.4 e20   3.79 e100 mean     31.1 med    32.0 off100 0.23
+s=70.0   heldout9600  contact  n 24 run 0.00 |a|med     23.9 e20   8.98 e100 mean    112.4 med    26.4 off100 0.37
+s=70.0   heldout9600  expB     n 12 run 0.00 |a|med     63.1 e20   2.40 e100 mean     15.3 med    13.5 off100 0.08
+s=70.0   heldout9600  cluster  n  6 run 0.17 |a|med    184.2 e20   3.84 e100 mean     32.7 med    32.7 off100 0.21
+s=70.0   gravity expB: truth max|a| median 6.1 max 8.5; truth>200 in 0.00 of scenes
+s=70.0   gravity cluster: truth max|a| median 18.9 max 60.5; truth>200 in 0.00 of scenes
+      model runaway scenes 4/18: truth also >200 in 0.00; worst body nn<1 1.00, off-grid(r>=32) 0.00; |a| max median 221 (truth 35); n bodies>200 median 1 (off-grid 0, nn<1 1); onset tick median 59; field raw max median 225; frac_off at worst median 0.08
+s=100.0  sel9400+9500 contact  n 48 run 0.00 |a|med     23.0 e20  10.63 e100 mean    186.7 med   135.5 off100 0.46
+s=100.0  sel9400+9500 expB     n 24 run 0.00 |a|med     48.4 e20   2.30 e100 mean     14.4 med    14.4 off100 0.06
+s=100.0  sel9400+9500 cluster  n 12 run 0.25 |a|med    159.2 e20   3.75 e100 mean     30.9 med    31.1 off100 0.21
+s=100.0  heldout9600  contact  n 24 run 0.00 |a|med     26.9 e20   9.29 e100 mean    110.3 med    22.6 off100 0.35
+s=100.0  heldout9600  expB     n 12 run 0.00 |a|med     61.9 e20   2.40 e100 mean     15.3 med    14.7 off100 0.08
+s=100.0  heldout9600  cluster  n  6 run 0.17 |a|med    160.5 e20   3.85 e100 mean     31.3 med    33.1 off100 0.21
+s=100.0  gravity expB: truth max|a| median 6.1 max 8.5; truth>200 in 0.00 of scenes
+s=100.0  gravity cluster: truth max|a| median 18.9 max 60.5; truth>200 in 0.00 of scenes
+      model runaway scenes 4/18: truth also >200 in 0.00; worst body nn<1 0.75, off-grid(r>=32) 0.00; |a| max median 220 (truth 40); n bodies>200 median 1 (off-grid 0, nn<1 1); onset tick median 52; field raw max median 233; frac_off at worst median 0.11
+s=140.0  sel9400+9500 contact  n 48 run 0.00 |a|med     25.3 e20  10.69 e100 mean    185.3 med   140.6 off100 0.46
+s=140.0  sel9400+9500 expB     n 24 run 0.04 |a|med     54.2 e20   2.30 e100 mean     14.4 med    14.4 off100 0.07
+s=140.0  sel9400+9500 cluster  n 12 run 0.50 |a|med    193.3 e20   3.83 e100 mean     30.6 med    29.7 off100 0.20
+s=140.0  heldout9600  contact  n 24 run 0.00 |a|med     25.9 e20   9.63 e100 mean    105.1 med    20.8 off100 0.35
+s=140.0  heldout9600  expB     n 12 run 0.00 |a|med     61.0 e20   2.38 e100 mean     15.5 med    14.6 off100 0.09
+s=140.0  heldout9600  cluster  n  6 run 0.17 |a|med    184.8 e20   3.79 e100 mean     29.7 med    30.0 off100 0.22
+s=140.0  gravity expB: truth max|a| median 6.1 max 8.5; truth>200 in 0.00 of scenes
+      model runaway scenes 1/36: truth also >200 in 0.00; worst body nn<1 1.00, off-grid(r>=32) 0.00; |a| max median 211 (truth 6); n bodies>200 median 1 (off-grid 0, nn<1 1); onset tick median 121; field raw max median 193; frac_off at worst median 0.05
+s=140.0  gravity cluster: truth max|a| median 18.9 max 60.5; truth>200 in 0.00 of scenes
+      model runaway scenes 7/18: truth also >200 in 0.00; worst body nn<1 0.57, off-grid(r>=32) 0.00; |a| max median 223 (truth 21); n bodies>200 median 1 (off-grid 0, nn<1 1); onset tick median 66; field raw max median 357; frac_off at worst median 0.07
+=== harness E_s0 softcap 0
+two_body seed 9100 err@[5, 10, 20, 50, 100] [0.00075, 0.00258, 0.0079, 0.04198, 0.14559]
+two_body seed 9200 err@[5, 10, 20, 50, 100] [0.00145, 0.00408, 0.01088, 0.04524, 0.14706]
+two_body seed 9300 err@[5, 10, 20, 50, 100] [0.00074, 0.00255, 0.00801, 0.03565, 0.10622]
+two_body seed 4738 err@[5, 10, 20, 50, 100] [0.00128, 0.00317, 0.00956, 0.04049, 0.12753]
+two_body MEAN err [0.00105, 0.00309, 0.00908, 0.04084, 0.1316] dE/E 0.1219 (true 6.189e-05)
+expB seed 9100 err@[5, 10, 20, 50, 100] [0.00291, 0.00826, 0.02392, 0.15983, 1.42867]
+expB seed 9200 err@[5, 10, 20, 50, 100] [0.00315, 0.00849, 0.02449, 0.16253, 1.43231]
+expB seed 9300 err@[5, 10, 20, 50, 100] [0.00312, 0.00809, 0.02435, 0.15844, 1.41478]
+expB seed 4738 err@[5, 10, 20, 50, 100] [0.00287, 0.00768, 0.02309, 0.14865, 1.41189]
+expB MEAN err [0.00301, 0.00813, 0.02396, 0.15736, 1.42191] dE/E 0.01071 (true 0.0001092)
+bh300 seed 9100 err@[5, 10, 20, 50, 100] [0.00922, 0.02208, 0.06554, 0.91194, 4.66705]
+bh300 seed 9200 err@[5, 10, 20, 50, 100] [0.00701, 0.01885, 0.05724, 1.01705, 4.96159]
+bh300 seed 9300 err@[5, 10, 20, 50, 100] [0.00729, 0.01994, 0.05852, 0.82747, 4.64197]
+bh300 seed 4738 err@[5, 10, 20, 50, 100] [0.00829, 0.02273, 0.06728, 0.89814, 4.91032]
+bh300 MEAN err [0.00795, 0.0209, 0.06214, 0.91365, 4.79524] dE/E 0.04097 (true 0.0002488)
+cons nr100 1000t dE 0.01442 (true 4.364e-05) dL 0.03162 bound 0.880/0.970 vir 1.06/0.904 outgrid 0.160
+cons bh300 1000t dE 0.4514 (true 0.0003271) dL 2.22 bound 0.743/0.880 vir 0.988/0.931 outgrid 0.290
+timing two_body: 3.261 ms/tick, peak alloc 234.8 MB (reserved 3566.0, info) (batch 48, N 2)
+timing expB: 3.413 ms/tick, peak alloc 257.0 MB (reserved 3592.0, info) (batch 48, N 94)
+timing bh300: 0.705 ms/tick, peak alloc 241.0 MB (reserved 3566.0, info) (batch 1, N 300)
+timing expB_batch1_n100: 0.671 ms/tick, peak alloc 285.3 MB (reserved 3624.0, info) (batch 1, N 100)
+wrote results/harness/E_s0.json
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521    0.0010534      0.1  PASS
+two_body err@10                     0.0030977    0.0030949     -0.1  PASS
+two_body err@20                     0.0091024    0.0090849     -0.2  PASS
+expB err@5                          0.0030114    0.0030123      0.0  PASS
+expB err@10                         0.0081291    0.0081317      0.0  PASS
+expB err@20                          0.023948     0.023962      0.1  PASS
+bh300 err@5                         0.0079513    0.0079525      0.0  PASS
+bh300 err@10                           0.0209     0.020901      0.0  PASS
+bh300 err@20                         0.062149     0.062144     -0.0  PASS
+two_body bound_frac gap@100         0.0052083    0.0052083      0.0  PASS
+two_body virial gap@100              0.034114     0.033807     -0.9  PASS
+expB bound_frac gap@100            0.00090101   0.00098183      9.0  PASS
+expB virial gap@100                0.00088264    0.0014372     62.8  PASS
+bh300 bound_frac gap@100            0.0066667       0.0075     12.5  PASS
+bh300 virial gap@100                 0.048255     0.030982    -35.8  PASS
+bh300 vmax/c (<1)                     0.92582      0.92589      nan  PASS
+bh300 dE_rel_model@100                0.04084     0.040973      0.3  PASS
+bh300 dL_rel_model@100                0.34118      0.24542    -28.1  PASS
+bh300 dP_model@100                 6.4409e-05   5.6119e-05    -12.9  PASS
+two_body tick_ms                       4.7331       3.2615    -31.1  PASS
+two_body peak_mem_mb                   871.37       234.85    -73.0  PASS
+expB tick_ms                           4.9602       3.4126    -31.2  PASS
+expB peak_mem_mb                       888.81       256.98    -71.1  PASS
+bh300 tick_ms                          2.4839      0.70456    -71.6  PASS
+bh300 peak_mem_mb                      87.709       241.01    174.8  FAIL
+expB_batch1_n100 tick_ms               2.4603      0.67141    -72.7  PASS
+expB_batch1_n100 peak_mem_mb           87.458       285.28    226.2  FAIL
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 0.04084; two_body err@100 0.1308 -> 0.1316; expB err@50 0.1573 -> 0.1574; expB err@100 1.422 -> 1.422; bh300 err@50 0.9123 -> 0.9136
+floors (not gated)            candidate  ref-noise  chaos1e-5    c/ref  c/chaos
+two_body err@5                 0.001053   4.14e-06    5.5e-05      254     19.2  
+two_body err@10                0.003095   6.67e-06   5.52e-05      464     56.1  
+two_body err@20                0.009085   1.33e-05    5.7e-05      683      159  
+two_body err@50                 0.04084   3.45e-05   6.49e-05 1.18e+03      629  
+two_body err@100                 0.1316   8.31e-05   9.27e-05 1.58e+03 1.42e+03  
+two_body dE/E@100                0.1219   6.19e-05   6.19e-05 1.97e+03 1.97e+03  
+two_body dP@100               1.087e-09   1.51e-17   1.33e-17      n/a      n/a  
+two_body dL/L@100                 0.689    2.3e-14   2.32e-14      n/a      n/a  
+two_body bound gap@100         0.005208          0          0      n/a      n/a  
+two_body virial gap@100         0.03381   0.000172   0.000129      196      263  
+expB err@5                     0.003012   2.92e-05   0.000157      103     19.2  
+expB err@10                    0.008132    5.1e-05   0.000171      160     47.5  
+expB err@20                     0.02396   0.000106   0.000234      226      102  
+expB err@50                      0.1574   0.000584   0.000882      269      178  
+expB err@100                      1.422     0.0132     0.0188      108     75.7  
+expB dE/E@100                   0.01071   0.000109   0.000108       98       99  
+expB dP@100                   3.379e-06   3.18e-14   2.46e-14      n/a      n/a  
+expB dL/L@100                    0.3625   1.14e-13    3.8e-14      n/a      n/a  
+expB bound gap@100            0.0009818   7.04e-05   7.04e-05     13.9     13.9  
+expB virial gap@100            0.001437    0.00047   0.000684     3.06      2.1  
+bh300 err@5                    0.007952   9.18e-05   0.000158     86.6     50.5  
+bh300 err@10                     0.0209   0.000177   0.000208      118      101  
+bh300 err@20                    0.06214   0.000544   0.000389      114      160  
+bh300 err@50                     0.9136     0.0151     0.0059     60.3      155  
+bh300 dE/E@100                  0.04097   0.000249   0.000226      165      181  
+bh300 dP@100                  5.612e-05   3.82e-13   1.82e-13      n/a      n/a  
+bh300 dL/L@100                   0.2454   0.000198   0.000198 1.24e+03 1.24e+03  
+bh300 bound gap@100              0.0075     0.0025   0.000833        3        9  
+bh300 virial gap@100            0.03098     0.0109     0.0123     2.84     2.53  
+OVERALL FAIL
+=== harness E_s100 softcap 100
+two_body seed 9100 err@[5, 10, 20, 50, 100] [0.00075, 0.00262, 0.00791, 0.04175, 0.14469]
+two_body seed 9200 err@[5, 10, 20, 50, 100] [0.00145, 0.0041, 0.01087, 0.04522, 0.14591]
+two_body seed 9300 err@[5, 10, 20, 50, 100] [0.00074, 0.00257, 0.00809, 0.03536, 0.10507]
+two_body seed 4738 err@[5, 10, 20, 50, 100] [0.00127, 0.00317, 0.0096, 0.04021, 0.12663]
+two_body MEAN err [0.00106, 0.00312, 0.00912, 0.04064, 0.13058] dE/E 0.126 (true 6.189e-05)
+expB seed 9100 err@[5, 10, 20, 50, 100] [0.00291, 0.00825, 0.0239, 0.15961, 1.42396]
+expB seed 9200 err@[5, 10, 20, 50, 100] [0.00315, 0.00848, 0.02443, 0.1624, 1.43104]
+expB seed 9300 err@[5, 10, 20, 50, 100] [0.00311, 0.00809, 0.02434, 0.15834, 1.41696]
+expB seed 4738 err@[5, 10, 20, 50, 100] [0.00286, 0.00768, 0.02307, 0.14852, 1.40954]
+expB MEAN err [0.00301, 0.00813, 0.02394, 0.15722, 1.42038] dE/E 0.0112 (true 0.0001092)
+bh300 seed 9100 err@[5, 10, 20, 50, 100] [0.00922, 0.02211, 0.06591, 0.91996, 4.61925]
+bh300 seed 9200 err@[5, 10, 20, 50, 100] [0.00701, 0.01886, 0.05736, 1.03633, 5.15755]
+bh300 seed 9300 err@[5, 10, 20, 50, 100] [0.00728, 0.01994, 0.05862, 0.84299, 4.67336]
+bh300 seed 4738 err@[5, 10, 20, 50, 100] [0.00828, 0.02272, 0.06721, 0.92037, 4.88605]
+bh300 MEAN err [0.00795, 0.02091, 0.06228, 0.92991, 4.83406] dE/E 0.06036 (true 0.0002488)
+cons nr100 1000t dE 0.02819 (true 4.364e-05) dL 0.08853 bound 0.900/0.970 vir 0.998/0.904 outgrid 0.160
+cons bh300 1000t dE 0.4192 (true 0.0003271) dL 1.615 bound 0.770/0.880 vir 0.974/0.931 outgrid 0.283
+timing two_body: 3.290 ms/tick, peak alloc 234.8 MB (reserved 3566.0, info) (batch 48, N 2)
+timing expB: 3.442 ms/tick, peak alloc 257.0 MB (reserved 3592.0, info) (batch 48, N 94)
+timing bh300: 0.710 ms/tick, peak alloc 241.0 MB (reserved 3566.0, info) (batch 1, N 300)
+timing expB_batch1_n100: 0.674 ms/tick, peak alloc 285.3 MB (reserved 3624.0, info) (batch 1, N 100)
+wrote results/harness/E_s100.json
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521    0.0010552      0.3  PASS
+two_body err@10                     0.0030977    0.0031161      0.6  PASS
+two_body err@20                     0.0091024    0.0091168      0.2  PASS
+expB err@5                          0.0030114      0.00301     -0.0  PASS
+expB err@10                         0.0081291    0.0081258     -0.0  PASS
+expB err@20                          0.023948     0.023936     -0.1  PASS
+bh300 err@5                         0.0079513    0.0079486     -0.0  PASS
+bh300 err@10                           0.0209     0.020906      0.0  PASS
+bh300 err@20                         0.062149     0.062278      0.2  PASS
+two_body bound_frac gap@100         0.0052083    0.0052083      0.0  PASS
+two_body virial gap@100              0.034114     0.034117      0.0  PASS
+expB bound_frac gap@100            0.00090101    0.0010089     12.0  PASS
+expB virial gap@100                0.00088264    0.0014179     60.6  PASS
+bh300 bound_frac gap@100            0.0066667       0.0075     12.5  PASS
+bh300 virial gap@100                 0.048255     0.042623    -11.7  PASS
+bh300 vmax/c (<1)                     0.92582      0.92632      nan  PASS
+bh300 dE_rel_model@100                0.04084     0.060356     47.8  FAIL
+bh300 dL_rel_model@100                0.34118      0.25425    -25.5  PASS
+bh300 dP_model@100                 6.4409e-05   2.3642e-05    -63.3  PASS
+two_body tick_ms                       4.7331       3.2901    -30.5  PASS
+two_body peak_mem_mb                   871.37       234.85    -73.0  PASS
+expB tick_ms                           4.9602       3.4417    -30.6  PASS
+expB peak_mem_mb                       888.81       256.98    -71.1  PASS
+bh300 tick_ms                          2.4839         0.71    -71.4  PASS
+bh300 peak_mem_mb                      87.709       241.01    174.8  FAIL
+expB_batch1_n100 tick_ms               2.4603      0.67442    -72.6  PASS
+expB_batch1_n100 peak_mem_mb           87.458       285.34    226.3  FAIL
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 0.04064; two_body err@100 0.1308 -> 0.1306; expB err@50 0.1573 -> 0.1572; expB err@100 1.422 -> 1.42; bh300 err@50 0.9123 -> 0.9299
+floors (not gated)            candidate  ref-noise  chaos1e-5    c/ref  c/chaos
+two_body err@5                 0.001055   4.14e-06    5.5e-05      255     19.2  
+two_body err@10                0.003116   6.67e-06   5.52e-05      467     56.5  
+two_body err@20                0.009117   1.33e-05    5.7e-05      686      160  
+two_body err@50                 0.04064   3.45e-05   6.49e-05 1.18e+03      626  
+two_body err@100                 0.1306   8.31e-05   9.27e-05 1.57e+03 1.41e+03  
+two_body dE/E@100                 0.126   6.19e-05   6.19e-05 2.04e+03 2.04e+03  
+two_body dP@100               4.269e-10   1.51e-17   1.33e-17      n/a      n/a  
+two_body dL/L@100                0.6434    2.3e-14   2.32e-14      n/a      n/a  
+two_body bound gap@100         0.005208          0          0      n/a      n/a  
+two_body virial gap@100         0.03412   0.000172   0.000129      198      265  
+expB err@5                      0.00301   2.92e-05   0.000157      103     19.2  
+expB err@10                    0.008126    5.1e-05   0.000171      159     47.5  
+expB err@20                     0.02394   0.000106   0.000234      226      102  
+expB err@50                      0.1572   0.000584   0.000882      269      178  
+expB err@100                       1.42     0.0132     0.0188      108     75.6  
+expB dE/E@100                    0.0112   0.000109   0.000108      103      104  
+expB dP@100                   3.346e-06   3.18e-14   2.46e-14      n/a      n/a  
+expB dL/L@100                    0.3334   1.14e-13    3.8e-14      n/a      n/a  
+expB bound gap@100             0.001009   7.04e-05   7.04e-05     14.3     14.3  
+expB virial gap@100            0.001418    0.00047   0.000684     3.02     2.07  
+bh300 err@5                    0.007949   9.18e-05   0.000158     86.6     50.4  
+bh300 err@10                    0.02091   0.000177   0.000208      118      101  
+bh300 err@20                    0.06228   0.000544   0.000389      115      160  
+bh300 err@50                     0.9299     0.0151     0.0059     61.4      158  
+bh300 dE/E@100                  0.06036   0.000249   0.000226      243      267  
+bh300 dP@100                  2.364e-05   3.82e-13   1.82e-13      n/a      n/a  
+bh300 dL/L@100                   0.2542   0.000198   0.000198 1.29e+03 1.29e+03  
+bh300 bound gap@100              0.0075     0.0025   0.000833        3        9  
+bh300 virial gap@100            0.04262     0.0109     0.0123     3.91     3.48  
+OVERALL FAIL
+=== harness C_s0 softcap 0
+two_body seed 9100 err@[5, 10, 20, 50, 100] [0.09679, 0.32812, 1.47849, 10.62199, 16.22917]
+two_body seed 9200 err@[5, 10, 20, 50, 100] [0.08274, 0.36978, 1.78483, 10.75284, 15.5065]
+two_body seed 9300 err@[5, 10, 20, 50, 100] [0.11802, 0.36111, 1.51608, 10.1877, 16.66375]
+two_body seed 4738 err@[5, 10, 20, 50, 100] [0.09109, 0.3399, 1.64171, 10.37373, 15.09253]
+two_body MEAN err [0.09716, 0.34973, 1.60528, 10.48406, 15.87299] dE/E 121.7 (true 6.189e-05)
+expB seed 9100 err@[5, 10, 20, 50, 100] [0.40939, 1.48088, 5.09755, 63.22814, 495.50723]
+expB seed 9200 err@[5, 10, 20, 50, 100] [0.41366, 1.47557, 4.95083, 68.76549, 600.68742]
+expB seed 9300 err@[5, 10, 20, 50, 100] [0.41777, 1.4849, 4.96023, 57.97879, 476.3045]
+expB seed 4738 err@[5, 10, 20, 50, 100] [0.39763, 1.42987, 4.93188, 59.70779, 566.55891]
+expB MEAN err [0.40961, 1.46781, 4.98512, 62.42005, 534.76452] dE/E 2.219e+05 (true 0.0001092)
+bh300 seed 9100 err@[5, 10, 20, 50, 100] [0.84614, 2.91483, 8.99332, 27.18455, 70.46507]
+bh300 seed 9200 err@[5, 10, 20, 50, 100] [0.79576, 2.76646, 8.75748, 26.80081, 68.97583]
+bh300 seed 9300 err@[5, 10, 20, 50, 100] [0.86207, 2.97857, 9.55351, 28.22588, 71.22601]
+bh300 seed 4738 err@[5, 10, 20, 50, 100] [0.88615, 2.97588, 8.72988, 26.43171, 71.81019]
+bh300 MEAN err [0.84753, 2.90894, 9.00855, 27.16074, 70.61928] dE/E 41.69 (true 0.0002488)
+cons nr100 1000t dE 8271 (true 4.364e-05) dL 32.01 bound 0.000/0.970 vir 3.77e+06/0.904 outgrid 1.000
+cons bh300 1000t dE 2.252e+04 (true 0.0003271) dL 4693 bound 0.000/0.880 vir 3.03e+05/0.931 outgrid 1.000
+timing two_body: 3.265 ms/tick, peak alloc 234.8 MB (reserved 3566.0, info) (batch 48, N 2)
+timing expB: 3.417 ms/tick, peak alloc 257.0 MB (reserved 3592.0, info) (batch 48, N 94)
+timing bh300: 0.706 ms/tick, peak alloc 241.0 MB (reserved 3566.0, info) (batch 1, N 300)
+timing expB_batch1_n100: 0.674 ms/tick, peak alloc 285.3 MB (reserved 3624.0, info) (batch 1, N 100)
+wrote results/harness/C_s0.json
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate checkpoints_contact/C.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521      0.09716   9135.1  FAIL
+two_body err@10                     0.0030977      0.34973  11190.0  FAIL
+two_body err@20                     0.0091024       1.6053  17535.7  FAIL
+expB err@5                          0.0030114      0.40961  13502.1  FAIL
+expB err@10                         0.0081291       1.4678  17956.3  FAIL
+expB err@20                          0.023948       4.9851  20716.1  FAIL
+bh300 err@5                         0.0079513      0.84753  10559.0  FAIL
+bh300 err@10                           0.0209       2.9089  13818.6  FAIL
+bh300 err@20                         0.062149       9.0085  14395.2  FAIL
+two_body bound_frac gap@100         0.0052083      0.68229  13000.0  FAIL
+two_body virial gap@100              0.034114       96.958 284118.6  FAIL
+expB bound_frac gap@100            0.00090101      0.92641 102719.0  FAIL
+expB virial gap@100                0.00088264   4.1376e+06 468780743877.9  FAIL
+bh300 bound_frac gap@100            0.0066667      0.92333  13750.0  FAIL
+bh300 virial gap@100                 0.048255       222.19 460339.7  FAIL
+bh300 vmax/c (<1)                     0.92582            1      nan  FAIL
+bh300 dE_rel_model@100                0.04084       41.691 101985.3  FAIL
+bh300 dL_rel_model@100                0.34118       224.56  65718.3  FAIL
+bh300 dP_model@100                 6.4409e-05        15707 24386896603.1  FAIL
+two_body tick_ms                       4.7331       3.2651    -31.0  PASS
+two_body peak_mem_mb                   871.37       234.85    -73.0  PASS
+expB tick_ms                           4.9602       3.4168    -31.1  PASS
+expB peak_mem_mb                       888.81       256.98    -71.1  PASS
+bh300 tick_ms                          2.4839      0.70628    -71.6  PASS
+bh300 peak_mem_mb                      87.709       241.01    174.8  FAIL
+expB_batch1_n100 tick_ms               2.4603      0.67439    -72.6  PASS
+expB_batch1_n100 peak_mem_mb           87.458       285.28    226.2  FAIL
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 10.48; two_body err@100 0.1308 -> 15.87; expB err@50 0.1573 -> 62.42; expB err@100 1.422 -> 534.8; bh300 err@50 0.9123 -> 27.16
+floors (not gated)            candidate  ref-noise  chaos1e-5    c/ref  c/chaos
+two_body err@5                  0.09716   4.14e-06    5.5e-05 2.34e+04 1.77e+03  
+two_body err@10                  0.3497   6.67e-06   5.52e-05 5.24e+04 6.34e+03  
+two_body err@20                   1.605   1.33e-05    5.7e-05 1.21e+05 2.82e+04  
+two_body err@50                   10.48   3.45e-05   6.49e-05 3.04e+05 1.61e+05  
+two_body err@100                  15.87   8.31e-05   9.27e-05 1.91e+05 1.71e+05  
+two_body dE/E@100                 121.7   6.19e-05   6.19e-05 1.97e+06 1.97e+06  
+two_body dP@100               4.983e-07   1.51e-17   1.33e-17      n/a      n/a  
+two_body dL/L@100                 302.6    2.3e-14   2.32e-14      n/a      n/a  
+two_body bound gap@100           0.6823          0          0      n/a      n/a  
+two_body virial gap@100           96.96   0.000172   0.000129 5.63e+05 7.54e+05  
+expB err@5                       0.4096   2.92e-05   0.000157  1.4e+04 2.61e+03  
+expB err@10                       1.468    5.1e-05   0.000171 2.88e+04 8.58e+03  
+expB err@20                       4.985   0.000106   0.000234  4.7e+04 2.13e+04  
+expB err@50                       62.42   0.000584   0.000882 1.07e+05 7.08e+04  
+expB err@100                      534.8     0.0132     0.0188 4.06e+04 2.85e+04  
+expB dE/E@100                 2.219e+05   0.000109   0.000108 2.03e+09 2.05e+09  
+expB dP@100                   0.0004474   3.18e-14   2.46e-14      n/a      n/a  
+expB dL/L@100                 3.587e+04   1.14e-13    3.8e-14      n/a      n/a  
+expB bound gap@100               0.9264   7.04e-05   7.04e-05 1.32e+04 1.32e+04  
+expB virial gap@100           4.138e+06    0.00047   0.000684  8.8e+09 6.05e+09  
+bh300 err@5                      0.8475   9.18e-05   0.000158 9.23e+03 5.38e+03  
+bh300 err@10                      2.909   0.000177   0.000208 1.65e+04  1.4e+04  
+bh300 err@20                      9.009   0.000544   0.000389 1.66e+04 2.32e+04  
+bh300 err@50                      27.16     0.0151     0.0059 1.79e+03 4.61e+03  
+bh300 dE/E@100                    41.69   0.000249   0.000226 1.68e+05 1.84e+05  
+bh300 dP@100                  1.571e+04   3.82e-13   1.82e-13      n/a      n/a  
+bh300 dL/L@100                    224.6   0.000198   0.000198 1.14e+06 1.14e+06  
+bh300 bound gap@100              0.9233     0.0025   0.000833      369 1.11e+03  
+bh300 virial gap@100              222.2     0.0109     0.0123 2.04e+04 1.81e+04  
+OVERALL FAIL
+=== harness C_s100 softcap 100
+two_body seed 9100 err@[5, 10, 20, 50, 100] [0.12441, 0.3054, 0.76249, 2.03334, 4.11015]
+two_body seed 9200 err@[5, 10, 20, 50, 100] [0.1166, 0.31961, 0.76377, 1.93978, 3.96852]
+two_body seed 9300 err@[5, 10, 20, 50, 100] [0.15198, 0.36993, 0.81687, 1.92251, 4.30185]
+two_body seed 4738 err@[5, 10, 20, 50, 100] [0.12439, 0.3192, 0.76001, 2.08865, 4.47881]
+two_body MEAN err [0.12935, 0.32853, 0.77578, 1.99607, 4.21483] dE/E 5.468 (true 6.189e-05)
+expB seed 9100 err@[5, 10, 20, 50, 100] [0.31497, 1.04354, 3.4318, 15.63019, 37.61967]
+expB seed 9200 err@[5, 10, 20, 50, 100] [0.32222, 1.06677, 3.4307, 15.31931, 36.81198]
+expB seed 9300 err@[5, 10, 20, 50, 100] [0.32371, 1.0716, 3.44475, 15.63229, 37.50379]
+expB seed 4738 err@[5, 10, 20, 50, 100] [0.30382, 1.00417, 3.26037, 15.19436, 35.83114]
+expB MEAN err [0.31618, 1.04652, 3.39191, 15.44404, 36.94165] dE/E 12.31 (true 0.0001092)
+bh300 seed 9100 err@[5, 10, 20, 50, 100] [0.80032, 2.78627, 9.0437, 31.89628, 51.70754]
+bh300 seed 9200 err@[5, 10, 20, 50, 100] [0.77826, 2.70914, 9.1134, 33.91774, 60.47234]
+bh300 seed 9300 err@[5, 10, 20, 50, 100] [0.83753, 2.88914, 9.74625, 32.33196, 57.49281]
+bh300 seed 4738 err@[5, 10, 20, 50, 100] [0.85831, 2.92912, 9.57926, 32.38934, 58.09484]
+bh300 MEAN err [0.81861, 2.82842, 9.37065, 32.63383, 56.94188] dE/E 9.885 (true 0.0002488)
+cons nr100 1000t dE 18.61 (true 4.364e-05) dL 2.345 bound 0.250/0.970 vir 199/0.904 outgrid 0.730
+cons bh300 1000t dE 11.29 (true 0.0003271) dL 6.447 bound 0.087/0.880 vir 538/0.931 outgrid 0.903
+timing two_body: 3.282 ms/tick, peak alloc 234.8 MB (reserved 3566.0, info) (batch 48, N 2)
+timing expB: 3.429 ms/tick, peak alloc 257.0 MB (reserved 3592.0, info) (batch 48, N 94)
+timing bh300: 0.712 ms/tick, peak alloc 241.0 MB (reserved 3566.0, info) (batch 1, N 300)
+timing expB_batch1_n100: 0.677 ms/tick, peak alloc 285.3 MB (reserved 3624.0, info) (batch 1, N 100)
+wrote results/harness/C_s100.json
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate checkpoints_contact/C.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521      0.12935  12194.4  FAIL
+two_body err@10                     0.0030977      0.32853  10505.8  FAIL
+two_body err@20                     0.0091024      0.77578   8422.8  FAIL
+expB err@5                          0.0030114      0.31618  10399.4  FAIL
+expB err@10                         0.0081291       1.0465  12773.8  FAIL
+expB err@20                          0.023948       3.3919  14063.4  FAIL
+bh300 err@5                         0.0079513      0.81861  10195.3  FAIL
+bh300 err@10                           0.0209       2.8284  13433.4  FAIL
+bh300 err@20                         0.062149       9.3707  14977.8  FAIL
+two_body bound_frac gap@100         0.0052083     0.046875    800.0  FAIL
+two_body virial gap@100              0.034114      0.28637    739.4  FAIL
+expB bound_frac gap@100            0.00090101      0.57891  64151.2  FAIL
+expB virial gap@100                0.00088264       31.822 3605194.2  FAIL
+bh300 bound_frac gap@100            0.0066667      0.76333  11350.0  FAIL
+bh300 virial gap@100                 0.048255       61.478 127302.2  FAIL
+bh300 vmax/c (<1)                     0.92582      0.99636      nan  PASS
+bh300 dE_rel_model@100                0.04084       9.8845  24103.3  FAIL
+bh300 dL_rel_model@100                0.34118       112.57  32895.1  FAIL
+bh300 dP_model@100                 6.4409e-05       18.882 29315765.0  FAIL
+two_body tick_ms                       4.7331       3.2817    -30.7  PASS
+two_body peak_mem_mb                   871.37       234.85    -73.0  PASS
+expB tick_ms                           4.9602        3.429    -30.9  PASS
+expB peak_mem_mb                       888.81       256.98    -71.1  PASS
+bh300 tick_ms                          2.4839      0.71246    -71.3  PASS
+bh300 peak_mem_mb                      87.709       241.01    174.8  FAIL
+expB_batch1_n100 tick_ms               2.4603      0.67672    -72.5  PASS
+expB_batch1_n100 peak_mem_mb           87.458       285.34    226.3  FAIL
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 1.996; two_body err@100 0.1308 -> 4.215; expB err@50 0.1573 -> 15.44; expB err@100 1.422 -> 36.94; bh300 err@50 0.9123 -> 32.63
+floors (not gated)            candidate  ref-noise  chaos1e-5    c/ref  c/chaos
+two_body err@5                   0.1293   4.14e-06    5.5e-05 3.12e+04 2.35e+03  
+two_body err@10                  0.3285   6.67e-06   5.52e-05 4.93e+04 5.95e+03  
+two_body err@20                  0.7758   1.33e-05    5.7e-05 5.83e+04 1.36e+04  
+two_body err@50                   1.996   3.45e-05   6.49e-05 5.78e+04 3.07e+04  
+two_body err@100                  4.215   8.31e-05   9.27e-05 5.07e+04 4.55e+04  
+two_body dE/E@100                 5.468   6.19e-05   6.19e-05 8.84e+04 8.84e+04  
+two_body dP@100               9.251e-08   1.51e-17   1.33e-17      n/a      n/a  
+two_body dL/L@100                 3.748    2.3e-14   2.32e-14      n/a      n/a  
+two_body bound gap@100          0.04688          0          0      n/a      n/a  
+two_body virial gap@100          0.2864   0.000172   0.000129 1.66e+03 2.23e+03  
+expB err@5                       0.3162   2.92e-05   0.000157 1.08e+04 2.01e+03  
+expB err@10                       1.047    5.1e-05   0.000171 2.05e+04 6.12e+03  
+expB err@20                       3.392   0.000106   0.000234  3.2e+04 1.45e+04  
+expB err@50                       15.44   0.000584   0.000882 2.64e+04 1.75e+04  
+expB err@100                      36.94     0.0132     0.0188 2.81e+03 1.97e+03  
+expB dE/E@100                     12.31   0.000109   0.000108 1.13e+05 1.14e+05  
+expB dP@100                   1.608e-05   3.18e-14   2.46e-14      n/a      n/a  
+expB dL/L@100                     503.1   1.14e-13    3.8e-14      n/a      n/a  
+expB bound gap@100               0.5789   7.04e-05   7.04e-05 8.23e+03 8.23e+03  
+expB virial gap@100               31.82    0.00047   0.000684 6.77e+04 4.65e+04  
+bh300 err@5                      0.8186   9.18e-05   0.000158 8.92e+03 5.19e+03  
+bh300 err@10                      2.828   0.000177   0.000208  1.6e+04 1.36e+04  
+bh300 err@20                      9.371   0.000544   0.000389 1.72e+04 2.41e+04  
+bh300 err@50                      32.63     0.0151     0.0059 2.16e+03 5.53e+03  
+bh300 dE/E@100                    9.885   0.000249   0.000226 3.97e+04 4.37e+04  
+bh300 dP@100                      18.88   3.82e-13   1.82e-13      n/a      n/a  
+bh300 dL/L@100                    112.6   0.000198   0.000198 5.69e+05 5.69e+05  
+bh300 bound gap@100              0.7633     0.0025   0.000833      305      916  
+bh300 virial gap@100              61.48     0.0109     0.0123 5.64e+03 5.02e+03  
+OVERALL FAIL
+=== harness D5ctrl_s0 softcap 0
+two_body seed 9100 err@[5, 10, 20, 50, 100] [0.08231, 0.24056, 0.67686, 2.15703, 3.62978]
+two_body seed 9200 err@[5, 10, 20, 50, 100] [0.09569, 0.28085, 0.76481, 2.3299, 4.20491]
+two_body seed 9300 err@[5, 10, 20, 50, 100] [0.0917, 0.27243, 0.74482, 2.37741, 4.09636]
+two_body seed 4738 err@[5, 10, 20, 50, 100] [0.07929, 0.23566, 0.70789, 2.36038, 4.40199]
+two_body MEAN err [0.08725, 0.25738, 0.72359, 2.30618, 4.08326] dE/E 16.93 (true 6.189e-05)
+expB seed 9100 err@[5, 10, 20, 50, 100] [0.27174, 0.85834, 2.34315, 6.54152, 14.1258]
+expB seed 9200 err@[5, 10, 20, 50, 100] [0.27002, 0.86268, 2.36994, 6.5764, 14.08711]
+expB seed 9300 err@[5, 10, 20, 50, 100] [0.27548, 0.85864, 2.31815, 6.37433, 14.28343]
+expB seed 4738 err@[5, 10, 20, 50, 100] [0.26875, 0.8516, 2.32039, 6.53085, 14.33352]
+expB MEAN err [0.2715, 0.85781, 2.33791, 6.50578, 14.20747] dE/E 1.754 (true 0.0001092)
+bh300 seed 9100 err@[5, 10, 20, 50, 100] [0.60178, 1.62091, 3.76043, 15.34076, 54.98138]
+bh300 seed 9200 err@[5, 10, 20, 50, 100] [0.53711, 1.59639, 3.63799, 14.3332, 53.17974]
+bh300 seed 9300 err@[5, 10, 20, 50, 100] [0.48794, 1.44196, 3.428, 18.00145, 55.15415]
+bh300 seed 4738 err@[5, 10, 20, 50, 100] [0.51842, 1.52084, 3.48439, 10.51742, 39.93622]
+bh300 MEAN err [0.53631, 1.54502, 3.5777, 14.54821, 50.81287] dE/E 40.48 (true 0.0002488)
+cons nr100 1000t dE 5.04 (true 4.364e-05) dL 0.8594 bound 0.520/0.970 vir 8.95/0.904 outgrid 0.520
+cons bh300 1000t dE 0.8951 (true 0.0003271) dL 0.03536 bound 0.000/0.880 vir 0/0.931 outgrid 0.000
+timing two_body: 3.283 ms/tick, peak alloc 234.8 MB (reserved 3566.0, info) (batch 48, N 2)
+timing expB: 3.434 ms/tick, peak alloc 257.0 MB (reserved 3592.0, info) (batch 48, N 94)
+timing bh300: 0.706 ms/tick, peak alloc 241.0 MB (reserved 3566.0, info) (batch 1, N 300)
+timing expB_batch1_n100: 0.673 ms/tick, peak alloc 285.3 MB (reserved 3624.0, info) (batch 1, N 100)
+wrote results/harness/D5ctrl_s0.json
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate checkpoints_contact/D5ctrl.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521     0.087248   8193.0  FAIL
+two_body err@10                     0.0030977      0.25738   8208.7  FAIL
+two_body err@20                     0.0091024      0.72359   7849.5  FAIL
+expB err@5                          0.0030114       0.2715   8915.6  FAIL
+expB err@10                         0.0081291      0.85781  10452.4  FAIL
+expB err@20                          0.023948       2.3379   9662.3  FAIL
+bh300 err@5                         0.0079513      0.53631   6645.0  FAIL
+bh300 err@10                           0.0209        1.545   7292.6  FAIL
+bh300 err@20                         0.062149       3.5777   5656.7  FAIL
+two_body bound_frac gap@100         0.0052083    0.0052083      0.0  PASS
+two_body virial gap@100              0.034114     0.084963    149.1  PASS
+expB bound_frac gap@100            0.00090101      0.13429  14804.5  FAIL
+expB virial gap@100                0.00088264        1.399 158397.3  FAIL
+bh300 bound_frac gap@100            0.0066667      0.92333  13750.0  FAIL
+bh300 virial gap@100                 0.048255       54.057 111923.7  FAIL
+bh300 vmax/c (<1)                     0.92582            1      nan  FAIL
+bh300 dE_rel_model@100                0.04084       40.484  99029.7  FAIL
+bh300 dL_rel_model@100                0.34118       121.49  35509.5  FAIL
+bh300 dP_model@100                 6.4409e-05        19419 30149730862.2  FAIL
+two_body tick_ms                       4.7331       3.2829    -30.6  PASS
+two_body peak_mem_mb                   871.37       234.85    -73.0  PASS
+expB tick_ms                           4.9602       3.4338    -30.8  PASS
+expB peak_mem_mb                       888.81       256.98    -71.1  PASS
+bh300 tick_ms                          2.4839      0.70604    -71.6  PASS
+bh300 peak_mem_mb                      87.709       241.01    174.8  FAIL
+expB_batch1_n100 tick_ms               2.4603      0.67335    -72.6  PASS
+expB_batch1_n100 peak_mem_mb           87.458       285.28    226.2  FAIL
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 2.306; two_body err@100 0.1308 -> 4.083; expB err@50 0.1573 -> 6.506; expB err@100 1.422 -> 14.21; bh300 err@50 0.9123 -> 14.55
+floors (not gated)            candidate  ref-noise  chaos1e-5    c/ref  c/chaos
+two_body err@5                  0.08725   4.14e-06    5.5e-05 2.11e+04 1.59e+03  
+two_body err@10                  0.2574   6.67e-06   5.52e-05 3.86e+04 4.66e+03  
+two_body err@20                  0.7236   1.33e-05    5.7e-05 5.44e+04 1.27e+04  
+two_body err@50                   2.306   3.45e-05   6.49e-05 6.68e+04 3.55e+04  
+two_body err@100                  4.083   8.31e-05   9.27e-05 4.91e+04  4.4e+04  
+two_body dE/E@100                 16.93   6.19e-05   6.19e-05 2.74e+05 2.74e+05  
+two_body dP@100                4.22e-07   1.51e-17   1.33e-17      n/a      n/a  
+two_body dL/L@100                 13.25    2.3e-14   2.32e-14      n/a      n/a  
+two_body bound gap@100         0.005208          0          0      n/a      n/a  
+two_body virial gap@100         0.08496   0.000172   0.000129      493      661  
+expB err@5                       0.2715   2.92e-05   0.000157  9.3e+03 1.73e+03  
+expB err@10                      0.8578    5.1e-05   0.000171 1.68e+04 5.01e+03  
+expB err@20                       2.338   0.000106   0.000234  2.2e+04    1e+04  
+expB err@50                       6.506   0.000584   0.000882 1.11e+04 7.37e+03  
+expB err@100                      14.21     0.0132     0.0188 1.08e+03      756  
+expB dE/E@100                     1.754   0.000109   0.000108 1.61e+04 1.62e+04  
+expB dP@100                   2.043e-05   3.18e-14   2.46e-14      n/a      n/a  
+expB dL/L@100                     98.23   1.14e-13    3.8e-14      n/a      n/a  
+expB bound gap@100               0.1343   7.04e-05   7.04e-05 1.91e+03 1.91e+03  
+expB virial gap@100               1.399    0.00047   0.000684 2.98e+03 2.04e+03  
+bh300 err@5                      0.5363   9.18e-05   0.000158 5.84e+03  3.4e+03  
+bh300 err@10                      1.545   0.000177   0.000208 8.75e+03 7.44e+03  
+bh300 err@20                      3.578   0.000544   0.000389 6.58e+03 9.21e+03  
+bh300 err@50                      14.55     0.0151     0.0059      961 2.47e+03  
+bh300 dE/E@100                    40.48   0.000249   0.000226 1.63e+05 1.79e+05  
+bh300 dP@100                  1.942e+04   3.82e-13   1.82e-13      n/a      n/a  
+bh300 dL/L@100                    121.5   0.000198   0.000198 6.14e+05 6.14e+05  
+bh300 bound gap@100              0.9233     0.0025   0.000833      369 1.11e+03  
+bh300 virial gap@100              54.06     0.0109     0.0123 4.96e+03 4.41e+03  
+OVERALL FAIL
+=== harness D5ctrl_s100 softcap 100
+two_body seed 9100 err@[5, 10, 20, 50, 100] [0.08154, 0.23541, 0.66422, 2.06599, 3.52623]
+two_body seed 9200 err@[5, 10, 20, 50, 100] [0.09538, 0.26983, 0.72974, 2.38399, 4.40129]
+two_body seed 9300 err@[5, 10, 20, 50, 100] [0.09131, 0.26896, 0.74043, 2.284, 3.88041]
+two_body seed 4738 err@[5, 10, 20, 50, 100] [0.07984, 0.22865, 0.68839, 2.21065, 4.37379]
+two_body MEAN err [0.08701, 0.25071, 0.7057, 2.23616, 4.04543] dE/E 6.707 (true 6.189e-05)
+expB seed 9100 err@[5, 10, 20, 50, 100] [0.26676, 0.84836, 2.3672, 6.5694, 14.37582]
+expB seed 9200 err@[5, 10, 20, 50, 100] [0.26424, 0.84516, 2.37182, 6.54749, 14.15514]
+expB seed 9300 err@[5, 10, 20, 50, 100] [0.26951, 0.84174, 2.33808, 6.52305, 14.65407]
+expB seed 4738 err@[5, 10, 20, 50, 100] [0.26287, 0.83506, 2.33599, 6.67689, 14.87302]
+expB MEAN err [0.26584, 0.84258, 2.35327, 6.57921, 14.51451] dE/E 2.05 (true 0.0001092)
+bh300 seed 9100 err@[5, 10, 20, 50, 100] [0.594, 1.62036, 3.76488, 12.64014, 35.18385]
+bh300 seed 9200 err@[5, 10, 20, 50, 100] [0.52388, 1.58111, 3.69716, 12.10415, 35.71602]
+bh300 seed 9300 err@[5, 10, 20, 50, 100] [0.4758, 1.4496, 3.51431, 11.919, 31.06639]
+bh300 seed 4738 err@[5, 10, 20, 50, 100] [0.50663, 1.51534, 3.50166, 10.70288, 31.60365]
+bh300 MEAN err [0.52508, 1.5416, 3.6195, 11.84154, 33.39248] dE/E 3.252 (true 0.0002488)
+cons nr100 1000t dE 4.325 (true 4.364e-05) dL 1.106 bound 0.560/0.970 vir 6.91/0.904 outgrid 0.430
+cons bh300 1000t dE 3.835 (true 0.0003271) dL 2.119 bound 0.167/0.880 vir 47.5/0.931 outgrid 0.823
+timing two_body: 3.293 ms/tick, peak alloc 234.8 MB (reserved 3566.0, info) (batch 48, N 2)
+timing expB: 3.442 ms/tick, peak alloc 257.0 MB (reserved 3592.0, info) (batch 48, N 94)
+timing bh300: 0.712 ms/tick, peak alloc 241.0 MB (reserved 3566.0, info) (batch 1, N 300)
+timing expB_batch1_n100: 0.678 ms/tick, peak alloc 285.3 MB (reserved 3624.0, info) (batch 1, N 100)
+wrote results/harness/D5ctrl_s100.json
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate checkpoints_contact/D5ctrl.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521     0.087015   8170.8  FAIL
+two_body err@10                     0.0030977      0.25071   7993.6  FAIL
+two_body err@20                     0.0091024       0.7057   7652.8  FAIL
+expB err@5                          0.0030114      0.26584   8727.9  FAIL
+expB err@10                         0.0081291      0.84258  10265.0  FAIL
+expB err@20                          0.023948       2.3533   9726.4  FAIL
+bh300 err@5                         0.0079513      0.52508   6503.7  FAIL
+bh300 err@10                           0.0209       1.5416   7276.2  FAIL
+bh300 err@20                         0.062149       3.6195   5723.9  FAIL
+two_body bound_frac gap@100         0.0052083      0.21875   4100.0  FAIL
+two_body virial gap@100              0.034114      0.65392   1816.9  FAIL
+expB bound_frac gap@100            0.00090101      0.15537  17144.3  FAIL
+expB virial gap@100                0.00088264       1.6337 184997.0  FAIL
+bh300 bound_frac gap@100            0.0066667         0.24   3500.0  FAIL
+bh300 virial gap@100                 0.048255       4.9594  10177.5  FAIL
+bh300 vmax/c (<1)                     0.92582       0.9862      nan  PASS
+bh300 dE_rel_model@100                0.04084       3.2516   7861.8  FAIL
+bh300 dL_rel_model@100                0.34118       47.622  13858.2  FAIL
+bh300 dP_model@100                 6.4409e-05   0.00035566    452.2  PASS
+two_body tick_ms                       4.7331       3.2925    -30.4  PASS
+two_body peak_mem_mb                   871.37       234.85    -73.0  PASS
+expB tick_ms                           4.9602       3.4417    -30.6  PASS
+expB peak_mem_mb                       888.81       256.98    -71.1  PASS
+bh300 tick_ms                          2.4839       0.7121    -71.3  PASS
+bh300 peak_mem_mb                      87.709       241.01    174.8  FAIL
+expB_batch1_n100 tick_ms               2.4603      0.67766    -72.5  PASS
+expB_batch1_n100 peak_mem_mb           87.458       285.34    226.3  FAIL
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 2.236; two_body err@100 0.1308 -> 4.045; expB err@50 0.1573 -> 6.579; expB err@100 1.422 -> 14.51; bh300 err@50 0.9123 -> 11.84
+floors (not gated)            candidate  ref-noise  chaos1e-5    c/ref  c/chaos
+two_body err@5                  0.08701   4.14e-06    5.5e-05  2.1e+04 1.58e+03  
+two_body err@10                  0.2507   6.67e-06   5.52e-05 3.76e+04 4.54e+03  
+two_body err@20                  0.7057   1.33e-05    5.7e-05 5.31e+04 1.24e+04  
+two_body err@50                   2.236   3.45e-05   6.49e-05 6.48e+04 3.44e+04  
+two_body err@100                  4.045   8.31e-05   9.27e-05 4.87e+04 4.36e+04  
+two_body dE/E@100                 6.707   6.19e-05   6.19e-05 1.08e+05 1.08e+05  
+two_body dP@100               3.042e-07   1.51e-17   1.33e-17      n/a      n/a  
+two_body dL/L@100                  3.21    2.3e-14   2.32e-14      n/a      n/a  
+two_body bound gap@100           0.2188          0          0      n/a      n/a  
+two_body virial gap@100          0.6539   0.000172   0.000129  3.8e+03 5.09e+03  
+expB err@5                       0.2658   2.92e-05   0.000157 9.11e+03 1.69e+03  
+expB err@10                      0.8426    5.1e-05   0.000171 1.65e+04 4.93e+03  
+expB err@20                       2.353   0.000106   0.000234 2.22e+04 1.01e+04  
+expB err@50                       6.579   0.000584   0.000882 1.13e+04 7.46e+03  
+expB err@100                      14.51     0.0132     0.0188  1.1e+03      773  
+expB dE/E@100                      2.05   0.000109   0.000108 1.88e+04  1.9e+04  
+expB dP@100                   2.015e-05   3.18e-14   2.46e-14      n/a      n/a  
+expB dL/L@100                     84.92   1.14e-13    3.8e-14      n/a      n/a  
+expB bound gap@100               0.1554   7.04e-05   7.04e-05 2.21e+03 2.21e+03  
+expB virial gap@100               1.634    0.00047   0.000684 3.48e+03 2.39e+03  
+bh300 err@5                      0.5251   9.18e-05   0.000158 5.72e+03 3.33e+03  
+bh300 err@10                      1.542   0.000177   0.000208 8.73e+03 7.42e+03  
+bh300 err@20                       3.62   0.000544   0.000389 6.66e+03 9.31e+03  
+bh300 err@50                      11.84     0.0151     0.0059      782 2.01e+03  
+bh300 dE/E@100                    3.252   0.000249   0.000226 1.31e+04 1.44e+04  
+bh300 dP@100                  0.0003557   3.82e-13   1.82e-13      n/a      n/a  
+bh300 dL/L@100                    47.62   0.000198   0.000198 2.41e+05 2.41e+05  
+bh300 bound gap@100                0.24     0.0025   0.000833       96      288  
+bh300 virial gap@100              4.959     0.0109     0.0123      455      405  
+OVERALL FAIL
+ALLDONE
