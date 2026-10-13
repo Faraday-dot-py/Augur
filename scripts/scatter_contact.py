@@ -5,10 +5,12 @@ Obstacles are SOLID regions rasterised to a signed distance field (SDF, positive
   ("hbox", lo(2), hi(2))  free space inside an axis-aligned rectangle (solid outside)
   ("hdisc", c(2), r)      free space inside a disc
   ("circle", c(2), r)     solid disc
-  ("poly", pts(E,2))      solid simple polygon
+  ("poly", pts(E,2))      solid simple polygon (convex or not)
+  ("hpoly", pts(E,2))     free space inside a simple polygon (container)
 obstacle="sdf" (option B): SDF + normal gathered at each ball, a 5-point stencil (p, p+-s n, p+-s t) and (v.n, v.t, material) go
 into an MLP whose output is a force in the (n, t) frame. obstacle="kernel" (option A): phi = K * occupancy by FFT, force = -grad phi.
-Both add the force AFTER momfix. Ball-ball contact: radius-aware pair MLP on the overlap gap r-(Ri+Rj) over k nearest neighbours (cell list for large N).
+Both add the force AFTER momfix. obstacle="chan" (option C): rasterised [occupancy, clipped sdf, normal x, normal y] enter the U-Net as 4 extra input
+channels (zero-init first-layer weights); the wall force is the geometry-induced change of the existing potential head, bounded by FMAX*tanh and exempt from momfix. Ball-ball contact: radius-aware pair MLP on the overlap gap r-(Ri+Rj) over k nearest neighbours (cell list for large N).
 All new heads are zero-initialised (gscale=1), so an untrained ContactScatterField loaded from a ScatterField checkpoint reproduces it exactly.
 """
 import math
@@ -44,6 +46,10 @@ def poly(pts):
     return dict(kind="poly", pts=[tuple(float(x) for x in p) for p in pts])
 
 
+def hpoly(pts):
+    return dict(kind="hpoly", pts=[tuple(float(x) for x in p) for p in pts])
+
+
 def regular_poly(c, r, n, rot):
     a = rot + 2 * math.pi * np.arange(n) / n
     return poly(np.stack([c[0] + r * np.cos(a), c[1] + r * np.sin(a)], 1))
@@ -72,6 +78,9 @@ def prim_terms(pr, p):
         dist = v.norm(dim=-1)
         n = v / dist.clamp(min=1e-12)[..., None]
         return [(dist - pr["r"], n)] if k == "circle" else [(pr["r"] - dist, -n)]
+    if k == "hpoly":
+        (d, n), = prim_terms(dict(kind="poly", pts=pr["pts"]), p)
+        return [(-d, -n)]
     pts = torch.tensor(pr["pts"], dtype=p.dtype, device=p.device)
     a, b = pts, torch.roll(pts, -1, 0)
     e = b - a
@@ -99,10 +108,10 @@ def scene_sdf(prims, p):
     return torch.stack([prim_sdf(pr, p) for pr in prims], 0).min(0).values
 
 
-def rasterize(prims, grid, extent, mat=0.0):
+def rasterize(prims, grid, extent, mat=0.0, dev="cpu"):
     """-> float32 [4, G, G]: sdf, d(sdf)/dx, d(sdf)/dy (per unit length), material (reserved slot)."""
     h = extent / grid
-    xs = (torch.arange(grid, dtype=torch.float64) + 0.5) * h - extent / 2
+    xs = (torch.arange(grid, dtype=torch.float64, device=dev) + 0.5) * h - extent / 2
     p = torch.stack([xs[None, :].expand(grid, grid), xs[:, None].expand(grid, grid)], -1)
     s = scene_sdf(prims, p)
     gy, gx = torch.gradient(s, spacing=h)
@@ -111,6 +120,37 @@ def rasterize(prims, grid, extent, mat=0.0):
 
 def occupancy(geom, h):
     return (0.5 - geom[:, :1] / h).clamp(0, 1)
+
+
+def chan_feats(geom, h):
+    """geom [B,4,G,G] -> [B,4,G,G] network input: occupancy, sdf/8 clipped to [-1,1], unit normal x, y."""
+    return torch.cat([occupancy(geom, h), (geom[:, :1] / 8.0).clamp(-1, 1), _unit(geom[:, 1:3].transpose(1, -1)).transpose(1, -1)], 1)
+
+
+class ChanUNet(sf.UNet):
+    """UNet whose first layer also reads geometry channels (self.geo [B,4,G,G], None = no obstacles) through zero-init extra weights,
+    i.e. conv([x, geo]) = conv_x(x) + gin(geo). Parameter names of the plain UNet are unchanged."""
+
+    def __init__(self, cin, cout, width=32, levels=4, gch=4):
+        super().__init__(cin, cout, width, levels)
+        self.gin = nn.Conv2d(gch, width, 3, padding=1)
+        nn.init.zeros_(self.gin.weight)
+        nn.init.zeros_(self.gin.bias)
+        self.geo = None
+
+    def forward(self, x):
+        h = self.inp(x)
+        if self.geo is not None:
+            h = h + self.gin(self.geo)
+        h = self.enc[0](F.gelu(h))
+        skips = [h]
+        for l in range(1, self.levels + 1):
+            h = self.enc[l](F.avg_pool2d(h, 2))
+            skips.append(h)
+        for l in reversed(range(self.levels)):
+            h = F.interpolate(h, scale_factor=2, mode="nearest")
+            h = self.dec[l](torch.cat([h, skips[l]], 1))
+        return self.out(h)
 
 
 def contact_truth(prims, pos0, vel0, rad, steps, dev, dt=0.15, sub=8, g=9.0, k=400.0):
@@ -211,7 +251,7 @@ def _win(x, rng):
 class ContactScatterField(sf.ScatterField):
     def __init__(self, *args, obstacle="sdf", pw=2.0, pc=2.0, stencil=1.0, knn=8, r0=0.75, cell=4.0, kernel_range=4.0, **kw):
         super().__init__(*args, **kw)
-        assert obstacle in ("sdf", "kernel", "none")
+        assert obstacle in ("sdf", "kernel", "chan", "none")
         self.obstacle, self.pw, self.pc, self.stencil, self.knn, self.r0, self.cell, self.kr = obstacle, pw, pc, stencil, knn, r0, cell, kernel_range
         self.gvec = nn.Parameter(torch.zeros(2))
         self.gscale = nn.Parameter(torch.ones(()))
@@ -220,6 +260,12 @@ class ContactScatterField(sf.ScatterField):
             self.wmlp = _mlp(9, 2)
         elif obstacle == "kernel":
             self.wkmlp = _mlp(2, 1)
+        elif obstacle == "chan":
+            old = self.net
+            assert isinstance(old, sf.UNet)
+            self.net = ChanUNet(old.inp.in_channels, old.out.out_channels, old.inp.out_channels, old.levels)
+            nn.init.zeros_(self.net.out.weight)
+            nn.init.zeros_(self.net.out.bias)
         self.geom = None
         self.rad = None
 
@@ -293,6 +339,27 @@ class ContactScatterField(sf.ScatterField):
             a = a + self.wall_acc_kernel(pos)
         return a * mask[..., None]
 
+    def _force_chan(self, pos, vel, mass, mask, field):
+        """a = a0 + FMAX*tanh((a_geo - a0)/FMAX) - mean(a0): a0 is the field force with no obstacle channels (Exp E, momfix applied to it only),
+        a_geo the same net with the geometry channels. The geometry-induced part is an external force, so momfix must not cancel it."""
+        mf, f_in = self.momfix, field
+        self.momfix = False
+        try:
+            self.net.geo = chan_feats(self.geom, self.h).expand(pos.shape[0], -1, -1, -1)
+            a_geo, field = super()._force(pos, vel, mass, mask, f_in)
+            self.net.geo = None
+            a_0, _ = super()._force(pos, vel, mass, mask, f_in)
+        finally:
+            self.momfix, self.net.geo = mf, None
+        base = a_0
+        if mf:
+            mm = (mass * mask)[..., None]
+            base = a_0 - (mm * a_0).sum(1, keepdim=True) / mm.sum(1, keepdim=True).clamp_min(1e-9)
+        return (base + FMAX * torch.tanh((a_geo - a_0) / FMAX)) * mask[..., None], field
+
     def _force(self, pos, vel, mass, mask, field):
-        a, field = super()._force(pos, vel, mass, mask, field)
+        if self.obstacle == "chan" and self.geom is not None:
+            a, field = self._force_chan(pos, vel, mass, mask, field)
+        else:
+            a, field = super()._force(pos, vel, mass, mask, field)
         return a * self.gscale + self.local_acc(pos, vel, mask), field
