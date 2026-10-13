@@ -19,3 +19,22 @@ Chain evals: C, D5ctrl, D2bctrl, D2b2 on c_id/c_nonconvex/c_count/box15 seeds 94
 
 ## Predictions (before attempt 3)
 - D2b2 trains without divergence (55%). Natural-rollout runaway 0% for control and D2b2 (control already 0%). Injection stress: control runs away at x1000 (|a|>200 in >50% of scenes, 60%); D2b2 recovers (<25%, 35%). err@20 within +-10% of ctrl; dE rows fail for all fine-tunes (90%).
+
+## Final results (chain job 3577, 2026-10-13): NEGATIVE
+Attempt 3 (gate bounded gmax 0.5, log hinge, gate lr x20) also diverged: 10000 it in 6309 s, 1804 rollbacks, loss 200-1800 at k=20 from it ~4400 (gn 1e13-1e19). Same-code control D2bctrl (gate 0, lam 0): ~20 rollbacks, finished. Two of two penalty runs with the log hinge diverge vs one stable control (single seed each).
+
+c_id (24 scenes x seeds 9400/9500/9600, 100 ticks), natural rollout:
+| ckpt | runaway |a|>200 t21+ | off-grid @100 | err@20 | err@100 mean | err@100 median |
+|---|---|---|---|---|---|
+| C | .58/.38/.67 | .91/.83/.94 | 6.4/7.5/5.5 | 1418/956/1343 | 657/370/1017 |
+| D5ctrl (job 3538 ckpt) | 0/0/0 | .39/.63/.34 | 9.9/11.6/9.6 | 139/207/103 | 22/260/22 |
+| D2bctrl (same code, lam 0) | 0/0/0 | .45/.58/.45 | 8.7/9.8/7.4 | 202/298/163 | 37/406/26 |
+| D2b2 (gate+penalty) | .29/.50/.46 | 1.0 | 98/109/95 | 1189/1327/1153 | 1084/1351/1091 |
+
+Large-signal injection (field x100 / x1000 at tick 25): C 96-100% runaway, off-grid ~1, fields 1e5-1e7. D5ctrl and D2bctrl, which show 0% runaway naturally, run away in 88-100% of scenes under x100 injection and field max reaches 1e17-1e21 (D5ctrl) / 1e10-1e11 (D2bctrl): the staged recipe does not make the field map contractive, it only keeps the natural trajectory out of the unstable region. D2b2 stays at 38-50% runaway under injection with field ~1.3e3 (bounded, but already runaway-level and off-grid everywhere without injection, so uninformative).
+
+Harness (geometry-free C-model harness vs E in the same harness): every fine-tune (C, D5ctrl, D2bctrl) FAILS all err@5/10/20 rows, virial/bound gap rows, nr100@1000 dE (C 1.1e4, ctrl nan), bh300@1000 dE; timing/memory rows pass. D2b2 not meaningful (diverged). E not retrained, plain ScatterField code path unchanged when gate is off (gate attribute False; not bit-tested here, harness E row ran on the modified code).
+
+Predictions vs outcome: trains without divergence (55%): wrong. Injection recovery by D2b2 (35%): not testable (model destroyed). Control runaway under x1000 injection (60%): right, 100%. err@20 within 10% of ctrl: wrong (D2b2 ~100). dE rows fail for all fine-tunes: right.
+
+Gate-only on frozen C (step 0) did nothing, and the full fine-tune is unstable: the gate gets gradient only from the penalty (penalty grads are clipped to norm 1 while main grads are 1e3-1e5, so the net barely sees the penalty; the gate group carries the whole effect and its noisy Adam updates destabilise the in-horizon loss). Not tried per coordinator (no more gate tweaks): penalty without gate, penalty weight scheduling, gradient-norm guard.
