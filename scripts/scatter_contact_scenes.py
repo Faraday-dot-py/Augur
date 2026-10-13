@@ -18,6 +18,7 @@ import numpy as np
 import torch
 
 from scripts import scatter_contact as sc
+from scripts import scatter_contact_rand as rc
 from scripts import scatter_field as sf
 from scripts import scatter_scenes as ss
 from scripts import train_scatter_field as tsf
@@ -59,6 +60,8 @@ def place(rng, prims, rad_fn, n):
 
 
 def gen_scene(rng, fam):
+    if fam in rc.SPECS:
+        return rc.gen_scene(rng, fam)
     n = int(rng.integers(2, 21 if fam == "box15" else 16))
     if fam in ("box15", "post_circle", "post_poly"):
         prims = [sc.hbox((-7, -7), (7, 7))]
@@ -100,8 +103,11 @@ def _rad_pad(scenes, n, fill=R0):
     return torch.tensor(r)
 
 
-def _geom_stack(scenes):
-    return torch.stack([with_geom(s)["geom"] for s in scenes])
+def _geom_stack(scenes, dev="cpu"):
+    out = torch.empty(len(scenes), 4, GRID, GRID, device=dev)
+    for i, s in enumerate(scenes):
+        out[i] = s["geom"] if "geom" in s else sc.rasterize(s["prims"], GRID, EXTENT, dev=dev)
+    return out
 
 
 def evalset(fam, seed, steps, dev):
@@ -120,21 +126,32 @@ def evalset(fam, seed, steps, dev):
     return es
 
 
-def train_set(num, steps, dev):
-    path = f"{OUT}/trainset_{num}_{steps}.pt"
+def train_set(num, steps, dev, fams=TRAIN_FAMS):
+    path = f"{OUT}/trainset_{num}_{steps}.pt" if fams == TRAIN_FAMS else f"{OUT}/trainset_{'_'.join(fams)}_{num}_{steps}.pt"
     if os.path.exists(path):
         return torch.load(path, weights_only=False)
     scenes, data = [], []
-    for i, fam in enumerate(TRAIN_FAMS):
+    for i, fam in enumerate(fams):
         rng = np.random.default_rng(ss.TRAIN_SEED + i)
-        for _ in range(num // len(TRAIN_FAMS)):
-            s = with_geom(gen_scene(rng, fam))
+        for _ in range(num // len(fams)):
+            s = gen_scene(rng, fam) if fam in rc.SPECS else with_geom(gen_scene(rng, fam))
             P, V = truth(s, steps, dev)
             scenes.append(s)
             data.append((P + sf.CENTER, V, s["mass"]))
     os.makedirs(OUT, exist_ok=True)
     torch.save((scenes, data), path)
     return scenes, data
+
+
+def free_space(model):
+    """Option-C model reduced to its free-space N-body part: uniform gravity vector and ball-ball contact head zeroed (they are the contact-world physics, not
+    the gravity force the harness rows measure); gscale (scale on the base force) and the U-Net are kept. Returns gscale."""
+    with torch.no_grad():
+        model.gvec.zero_()
+        model.cmlp[-1].weight.zero_()
+        model.cmlp[-1].bias.zero_()
+    model.set_scene(None, None)
+    return float(model.gscale)
 
 
 def build(name, dev, ckpt=None):
@@ -145,18 +162,21 @@ def build(name, dev, ckpt=None):
     cfg = tsf.EXPS["E"]
     kw = dict(tsf.BASE)
     kw.update(tsf.VARIANTS["ms_kp_pot_v_g128"])
-    model = sc.ContactScatterField(extent=cfg["extent"], dt=DT, in_scale=cfg["in_scale"], obstacle={"B": "sdf", "A": "kernel"}[name], **kw)
+    model = sc.ContactScatterField(extent=cfg["extent"], dt=DT, in_scale=cfg["in_scale"], obstacle={"B": "sdf", "Bf": "sdf", "Eg": "sdf", "A": "kernel", "C": "chan"}[name], frozen_geo=name in ("Bf", "Eg"), **kw)
     if ckpt and ckpt != "none":
         sd = torch.load(ckpt, map_location=dev, weights_only=False)["model"]
         r = model.load_state_dict(sd, strict=False)
         print(f"loaded {ckpt}: missing {list(r.missing_keys)} unexpected {list(r.unexpected_keys)}", flush=True)
+    if name == "Eg":
+        with torch.no_grad():
+            model.gvec.copy_(torch.tensor([ss.BOX_G / sc.OUT_SCALE, 0.0]))
     return model.to(dev).eval()
 
 
 def roll(model, scenes, steps, dev):
     if hasattr(model, "set_scene"):
         n = max(len(s["mass"]) for s in scenes)
-        model.set_scene(_geom_stack(scenes).to(dev), _rad_pad(scenes, n).to(dev))
+        model.set_scene(_geom_stack(scenes, dev), _rad_pad(scenes, n).to(dev))
     return ss.model_rollout(model, scenes, steps, dev)
 
 
@@ -200,13 +220,25 @@ def eval_family(model, fam, dev, steps=100):
         r["deep_truth"] = {str(k): float(dt_[k]) for k in (20, 50, 100)}
         r["ke_ratio"] = {str(k): float(km[k] / max(kt[k], 1e-9)) for k in (20, 50, 100)}
         r["pair_overlap_model"], r["pair_overlap_truth"] = overlap_frac(scenes, Pm, mask), overlap_frac(scenes, Pt, mask)
+        cnt = mask.sum(1)
+        axis = (np.abs(Pm - Pt) * mask[:, None, :, None]).sum(2) / cnt[:, None, None]
+        e_sc = (np.linalg.norm(Pm - Pt, axis=-1) * mask[:, None]).sum(2) / cnt[:, None]
+        r["err_median"] = {str(k): float(np.median(e_sc[:, k])) for k in (5, 10, 20, 100)}
+        r["offgrid100"] = float(((np.abs(Pm[:, 100]) > model.extent / 2).any(-1) * mask).sum() / mask.sum())
+        acc = np.linalg.norm(np.diff(Vm, axis=1), axis=-1) / DT * mask[:, None]
+        r["runaway"] = float((acc[:, 20:] > 200).any(axis=(1, 2)).mean())
+        r["err_x"], r["err_y"] = ({str(k): float(axis[:, k, a].mean()) for k in (5, 20, 100)} for a in (0, 1))
+        en = lambda P, V: ((0.5 * (V ** 2).sum(-1) - ss.BOX_G * P[..., 0]) * mask[:, None]).sum(2) / cnt[:, None]
+        em, et = en(Pm, Vm), en(Pt, Vt)
+        r["dE_model"], r["dE_truth"] = ({str(k): float((e[:, k] - e[:, 0]).mean()) for k in (20, 100)} for e in (em, et))
+        r["mom_err"] = {str(k): float((np.linalg.norm(((Vm - Vt) * mask[:, None, :, None]).sum(2), axis=-1) / cnt[:, None])[:, k].mean()) for k in (20, 100)}
         seeds[str(seed)] = r
         if seed == EVAL_SEEDS[0]:
             keep = dict(truth=Pt[:4], model=Pm[:4], mask=mask[:4], rad=_rad_pad(scenes[:4], Pt.shape[2]).numpy(), prims=json.dumps([s["prims"] for s in scenes[:4]]))
     mean = {}
-    for k in ("err", "ballistic_gravity", "floor_pert1e-5", "tunnel_model", "tunnel_truth", "deep_model", "deep_truth", "ke_ratio"):
+    for k in ("err", "ballistic_gravity", "floor_pert1e-5", "tunnel_model", "tunnel_truth", "deep_model", "deep_truth", "ke_ratio", "err_median", "err_x", "err_y", "dE_model", "dE_truth", "mom_err"):
         mean[k] = {kk: float(np.mean([seeds[s][k][kk] for s in seeds])) for kk in seeds[str(EVAL_SEEDS[0])][k]}
-    for k in ("pair_overlap_model", "pair_overlap_truth"):
+    for k in ("pair_overlap_model", "pair_overlap_truth", "offgrid100", "runaway"):
         mean[k] = float(np.mean([seeds[s][k] for s in seeds]))
     print(fam, "err", {k: round(v, 3) for k, v in mean["err"].items()}, "ballistic@20", round(mean["ballistic_gravity"]["20"], 2), "tunnel", {k: round(v, 3) for k, v in mean["tunnel_model"].items()},
           "ke", {k: round(v, 2) for k, v in mean["ke_ratio"].items()}, flush=True)
@@ -226,6 +258,9 @@ def restitution(model, dev, prims, face, speeds, steps=80):
         Pm, _, _ = roll(model, [s], steps, dev)
         res = {}
         for tag, P in (("truth", Pt[:, 0, 0]), ("model", Pm[0, :, 0, 0])):
+            vx = np.diff(P)
+            rev = np.nonzero((vx[:-1] > 0) & (vx[1:] <= 0))[0]
+            res[tag + "_rev"] = float(math.sqrt(max(wall - P[rev[0] + 1:].min(), 0.0) / max(wall - x0, 1e-9))) if len(rev) and wall - P[rev[0] + 1:].min() > 0 else None
             enter = np.nonzero(P > wall - 0.05)[0]
             back = np.nonzero(P[enter[0]:] < wall - 0.05)[0] if len(enter) else []
             if len(enter) == 0 or len(back) == 0:
@@ -237,10 +272,14 @@ def restitution(model, dev, prims, face, speeds, steps=80):
     return out
 
 
+def fams_of(args):
+    return tuple(x for x in args.fams.split(",") if x) or TRAIN_FAMS + HOLD_FAMS
+
+
 def run_eval(model, tag, args, dev):
     res = dict(model=args.model, ckpt=args.ckpt, tag=tag, families={})
     os.makedirs(OUT, exist_ok=True)
-    for fam in TRAIN_FAMS + HOLD_FAMS:
+    for fam in fams_of(args):
         r, keep = eval_family(model, fam, dev)
         res["families"][fam] = r
         np.savez_compressed(f"{OUT}/{fam}_{tag}_traj.npz", **keep)
@@ -259,17 +298,17 @@ def run_train(args, dev):
     for o in [x for x in args.opt.split(",") if x]:
         sf.apply_opt(model, o)
     t0 = time.time()
-    scenes, data = train_set(args.train, args.steps, dev)
+    scenes, data = train_set(args.train, args.steps, dev, ("c_train",) if args.model == "C" else TRAIN_FAMS)
     print(f"train set {len(scenes)} scenes ready in {time.time() - t0:.0f}s", flush=True)
     tensors = sf.to_tensors(data, dev)
     n = tensors[0].shape[2]
-    geom = _geom_stack(scenes).to(dev)
+    geom = _geom_stack(scenes, dev)
     rad = _rad_pad(scenes, n).to(dev)
     print(f"train data {len(data)} scenes, N max {n}, params {sum(p.numel() for p in model.parameters())}", flush=True)
     os.makedirs(CKPT, exist_ok=True)
     ckpt = f"{CKPT}/{args.tag}.pt"
     targs = types.SimpleNamespace(lr=args.lr, device=str(dev), seed=ss.TRAIN_SEED, opt=args.opt, time_budget=0, iters=args.iters, k_start=args.k_start, k_end=args.k_end,
-                                  steps=args.steps, batch=args.batch, log_every=args.log_every, loss_cap=args.loss_cap, batch_hook=lambda idx: model.set_scene(geom[idx], rad[idx]))
+                                  steps=args.steps, batch=args.batch, log_every=args.log_every, loss_cap=args.loss_cap, train_only=args.train_only, ema=args.ema, lr_warmup=args.lr_warmup, snap_iters=args.snap_iters, w_vel=args.w_vel, long_windows=0, batch_hook=lambda idx: model.set_scene(geom[idx], rad[idx]))
     n_it, secs = tsf.train(model, tensors, targs, ckpt, lambda s: print(s, flush=True))
     print(f"TRAIN DONE iters {n_it} secs {secs:.0f}", flush=True)
     model.set_scene(None, None)
@@ -308,6 +347,12 @@ def main():
     ap.add_argument("--lr", type=float, default=1e-4)
     ap.add_argument("--log-every", type=int, default=100)
     ap.add_argument("--loss-cap", type=float, default=100.0)
+    ap.add_argument("--train-only", default="")
+    ap.add_argument("--ema", type=float, default=0.0)
+    ap.add_argument("--lr-warmup", type=int, default=0)
+    ap.add_argument("--snap-iters", default="")
+    ap.add_argument("--w-vel", type=float, default=0.1)
+    ap.add_argument("--fams", default="", help="comma list of eval families (default the six scatter-contact.md families)")
     ap.add_argument("--eval-opt", default="kcache,fastio")
     ap.add_argument("--device", default="cuda")
     args = ap.parse_args()
@@ -317,11 +362,11 @@ def main():
         return summary()
     if args.mode == "truth":
         t0 = time.time()
-        for fam in TRAIN_FAMS + HOLD_FAMS:
+        for fam in fams_of(args):
             for seed in EVAL_SEEDS:
                 evalset(fam, seed, 100, dev)
             print(fam, f"eval truth cached t={time.time() - t0:.0f}s", flush=True)
-        train_set(args.train, args.steps, dev)
+        train_set(args.train, args.steps, dev, ("c_train",) if args.model == "C" else TRAIN_FAMS)
         print(f"train truth cached t={time.time() - t0:.0f}s", flush=True)
         return
     if args.mode == "eval":
