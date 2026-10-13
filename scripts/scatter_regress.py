@@ -431,8 +431,11 @@ def compare(args):
         ok &= good
         rows.append((name, bmed, cmed, (cmed / bmed - 1) * 100 if bmed else float("nan"), "PASS" if good else "FAIL"))
 
-    mem_comparable = base["meta"].get("mem_def") == cand["meta"].get("mem_def") == MEM_DEF
-    if not mem_comparable:
+    same_env = all(base["meta"].get(k) == cand["meta"].get(k) for k in ("opt", "gpu", "torch"))
+    if not same_env:
+        print(f"timing and memory gates SKIPPED: opt/gpu/torch differ (baseline {[base['meta'].get(k) for k in ('opt', 'gpu', 'torch')]}, candidate {[cand['meta'].get(k) for k in ('opt', 'gpu', 'torch')]})")
+    mem_comparable = same_env and base["meta"].get("mem_def") == cand["meta"].get("mem_def") == MEM_DEF
+    if same_env and not mem_comparable:
         print(f"memory gate SKIPPED: definitions differ (baseline {base['meta'].get('mem_def')!r}, candidate {cand['meta'].get('mem_def')!r})")
     for reg in REGIMES:
         for k in GATE_TICKS[reg]:
@@ -457,7 +460,7 @@ def compare(args):
                                   ("vir_gap", bc["vir_gap"], cc["vir_gap"], 0.05), ("outgrid", bc["model"]["outgrid"], cc["model"]["outgrid"], 0.01)):
                 check(f"cons {reg}@{CONS_STEPS} {k}", b, c, CONS_TOL, atol)
         check(f"cons {reg} nonfinite", 0.0, 1.0 - cc["model"]["finite"], 0.0)
-    for k in TIMING_KEYS:
+    for k in TIMING_KEYS if same_env else ():
         check(f"{k} tick_ms", base["timing"][k]["tick_ms"], cand["timing"][k]["tick_ms"], TIME_TOL)
         if mem_comparable:
             check(f"{k} peak_mem_mb", base["timing"][k]["peak_mem_mb"], cand["timing"][k]["peak_mem_mb"], MEM_TOL)
