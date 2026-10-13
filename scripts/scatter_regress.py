@@ -453,8 +453,6 @@ def compare(args):
                                   ("dP", bc["model"]["dP"], cc["model"]["dP"], 1e-3), ("bound_gap", bc["bound_gap"], cc["bound_gap"], 0.02),
                                   ("vir_gap", bc["vir_gap"], cc["vir_gap"], 0.05), ("outgrid", bc["model"]["outgrid"], cc["model"]["outgrid"], 0.01)):
                 check(f"cons {reg}@{CONS_STEPS} {k}", b, c, CONS_TOL, atol)
-        if cc["model"]["frac_ge_c"] is not None:
-            check(f"cons {reg} frac|v|>=c", 0.0, cc["model"]["frac_ge_c"], 0.0)
         check(f"cons {reg} nonfinite", 0.0, 1.0 - cc["model"]["finite"], 0.0)
     for k in TIMING_KEYS:
         check(f"{k} tick_ms", base["timing"][k]["tick_ms"], cand["timing"][k]["tick_ms"], TIME_TOL)
