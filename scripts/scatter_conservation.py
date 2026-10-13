@@ -188,7 +188,7 @@ def summarize_set(rec, ticks, sub=""):
 
 
 def build_model(args, dev):
-    model = tsf.build(tsf.EXPS["E"], "ms_kp_pot_v_g128", 0.1).to(dev)
+    model = tsf.build(tsf.EXPS["E"], args.variant, 0.1).to(dev)
     model.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
     model.eval()
     for o in [x for x in args.opt.split(",") if x]:
@@ -312,6 +312,7 @@ def main():
     for nm in ("run", "probe"):
         p = sub.add_parser(nm)
         p.add_argument("--ckpt", required=True)
+        p.add_argument("--variant", default="ms_kp_pot_v_g128")
         p.add_argument("--opt", default="kcache,fastio,cl,graph")
         p.add_argument("--out-dir", default="results/conservation")
         if nm == "run":

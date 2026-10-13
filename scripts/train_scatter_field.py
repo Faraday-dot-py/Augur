@@ -37,6 +37,7 @@ VARIANTS = {
     "ms_kp_pot_g128": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, grid=128),
     "ms_kp_pot_v": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True),
     "ms_kp_pot_v_g128": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128),
+    "ms_kp_pot_v_g128_norec": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128, recurrent=False),
     "ms_pot": dict(net="unet", potential=True),
     "ms_pot_g128": dict(net="unet", potential=True, grid=128),
     "ml_rec": dict(arch="ml"),
