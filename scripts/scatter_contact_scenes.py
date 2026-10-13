@@ -32,6 +32,7 @@ N_EVAL = 24
 R0 = ss.BOX_R
 V0 = ss.BOX_V
 DT = ss.BOX_DT
+C_SOFTCAP = 100.0
 GRID, EXTENT = 128, 64.0
 
 
@@ -143,7 +144,23 @@ def train_set(num, steps, dev, fams=TRAIN_FAMS):
     return scenes, data
 
 
-def build(name, dev, ckpt=None):
+def resolve_softcap(name, ckpt, softcap):
+    """softcap: float (explicit), or "auto" = ckpt metadata key "softcap" if present, else C_SOFTCAP for option-C ckpts, else off (0)."""
+    if softcap != "auto":
+        return float(softcap)
+    if not ckpt or ckpt == "none":
+        return 0.0
+    meta = torch.load(ckpt, map_location="cpu", weights_only=False).get("softcap")
+    return float(meta) if meta is not None else (C_SOFTCAP if name == "C" else 0.0)
+
+
+def build(name, dev, ckpt=None, softcap=0.0):
+    model = _build(name, dev, ckpt)
+    model.softcap = resolve_softcap(name, ckpt, softcap)
+    return model
+
+
+def _build(name, dev, ckpt=None):
     if name == "E":
         return ss.build_model("E", DT, dev, ckpt)
     if name == "augur1":
@@ -326,6 +343,7 @@ def main():
     ap.add_argument("--log-every", type=int, default=100)
     ap.add_argument("--loss-cap", type=float, default=100.0)
     ap.add_argument("--fams", default="", help="comma list of eval families (default the six scatter-contact.md families)")
+    ap.add_argument("--softcap", default="auto", help="eval only: tanh softcap s on the fed-back field; auto = ckpt metadata, else 100 for option C, else off; 0 = off")
     ap.add_argument("--eval-opt", default="kcache,fastio")
     ap.add_argument("--device", default="cuda")
     args = ap.parse_args()
@@ -343,7 +361,7 @@ def main():
         print(f"train truth cached t={time.time() - t0:.0f}s", flush=True)
         return
     if args.mode == "eval":
-        model = build(args.model, dev, args.ckpt)
+        model = build(args.model, dev, args.ckpt, args.softcap)
     else:
         model = run_train(args, dev)
     for o in [x for x in args.eval_opt.split(",") if x]:

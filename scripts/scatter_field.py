@@ -68,6 +68,7 @@ class ScatterField(nn.Module):
         self.verlet = verlet
         self.far, self.far_band, self.far_eps, self.substeps = 0, 0.25, 0.5, 1
         self.cu, self.epsin, self.norm = cu, epsin, norm
+        self.softcap = 0.0
         self.eps_cur = EPS0
         ncol = 2 + int(cu) + int(epsin)
         if norm == "dens":
@@ -451,6 +452,8 @@ class ScatterField(nn.Module):
             ak = self.kernel_acc(x[:, :1])
             x = torch.cat([x, ak], 1)
         if self.recurrent:
+            if self.softcap:
+                field = self.softcap * torch.tanh(field / self.softcap)
             x = torch.cat([x, field], 1)
         if self.epsin:
             x = torch.cat([x, x.new_full((x.shape[0], 1, self.grid, self.grid), math.log(self.eps_cur / EPS0))], 1)

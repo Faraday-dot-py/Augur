@@ -79,6 +79,7 @@ def build_model(args, dev):
     model = tsf.build(tsf.EXPS[args.exp], args.variant, args.dt).to(dev)
     sf.load_compat(model, torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
     model.eval()
+    model.softcap = float(args.softcap)
     sf.apply_opts(model, args.opt)
     return model
 
@@ -301,7 +302,7 @@ def run(args):
     dev = torch.device("cuda")
     model = build_model(args, dev)
     res = {"meta": {"ckpt": args.ckpt, "exp": args.exp, "variant": args.variant, "dt": args.dt, "eps": args.eps, "seeds": list(SEEDS),
-                    "opt": args.opt, "steps": STEPS, "scenes_per_seed": SCENES, "bh": BH, "timing_reps": TIMING_REPS, "mem_def": MEM_DEF, "torch": torch.__version__,
+                    "opt": args.opt, "softcap": args.softcap, "steps": STEPS, "scenes_per_seed": SCENES, "bh": BH, "timing_reps": TIMING_REPS, "mem_def": MEM_DEF, "torch": torch.__version__,
                     "gpu": torch.cuda.get_device_name(dev),
                     "git": subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip(),
                     "date": time.strftime("%Y-%m-%dT%H:%M:%S")},
@@ -447,6 +448,7 @@ def main():
     r.add_argument("--dt", type=float, default=0.1)
     r.add_argument("--eps", type=float, default=0.5)
     r.add_argument("--opt", default="default", help="default = kcache,fastio,cl,graph,auto; none = eager; -flag opts out")
+    r.add_argument("--softcap", default="0", help="tanh softcap s on the fed-back field (0 = off)")
     r.add_argument("--no-cons", action="store_true")
     r.add_argument("--battery", action="store_true")
     c = sub.add_parser("compare")
