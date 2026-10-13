@@ -2,6 +2,7 @@ import { readFileSync } from 'fs';
 import { Physics } from '../js/physics.js';
 
 const cases = JSON.parse(readFileSync(process.argv[2], 'utf8'));
+let failed = false;
 for (const c of cases) {
   const p = new Physics(c.n);
   for (const b of c.init) p.add(b.x, b.y, b.vx, b.vy);
@@ -15,6 +16,8 @@ for (const c of cases) {
         d = Math.max(d, Math.abs(b[0] - p.xs[i]), Math.abs(b[1] - p.ys[i]));
       });
       out.push(`f${f}=${d.toExponential(2)}`);
+      if (f === 1 && d > 1e-9) failed = true;
+      if (f === 20 && d > 1e-5) failed = true;
     }
   }
   console.log(c.name, out.join(' '), `${((performance.now() - t0) / 200).toFixed(4)} ms/step`);
@@ -27,3 +30,4 @@ for (const m of [12, 100]) {
   for (let i = 0; i < 500; i++) p.step();
   console.log(`bench ${m} balls: ${((performance.now() - t0) / 500).toFixed(4)} ms/step`);
 }
+if (failed) { console.error("FAIL: JS physics diverges from augur.py before the chaotic horizon (f1 > 1e-9 or f20 > 1e-5)"); process.exit(1); }
