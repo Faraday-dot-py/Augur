@@ -402,8 +402,8 @@ def compare(args):
         rows.append(("bh300 vmax/c (<1)", base["regimes"]["bh300"]["mean"].get("vmax_over_c", float("nan")), v, float("nan"), "PASS" if v < 1.0 else "FAIL"))
         ok &= v < 1.0
         for k, atol in (("dE_rel_model", 1e-4), ("dL_rel_model", 1e-3), ("dP_model", 1e-3)):
-            if k in base["regimes"][reg]["mean"] and k in cand["regimes"][reg]["mean"]:
-                check(f"{reg} {k}@100", base["regimes"][reg]["mean"][k], cand["regimes"][reg]["mean"][k], CONS_TOL, atol)
+            if k in base["regimes"]["bh300"]["mean"] and k in cand["regimes"]["bh300"]["mean"]:
+                check(f"bh300 {k}@100", base["regimes"]["bh300"]["mean"][k], cand["regimes"]["bh300"]["mean"][k], CONS_TOL, atol)
     for reg, bc in base.get("conservation", {}).items():
         cc = cand.get("conservation", {}).get(reg)
         if cc is None:
