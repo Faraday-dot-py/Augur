@@ -46,7 +46,7 @@ TIME_TOL = 0.05
 MEM_TOL = 0.10
 INFO_TICKS = {"two_body": ("5", "50", "100"), "expB": (), "bh300": ()}
 FLOOR_TICKS = {"two_body": ("50", "100"), "expB": ("50", "100"), "bh300": ("50",)}
-MEM_DEF = "absolute max_memory_allocated, reset before warm-up"
+MEM_DEF = "absolute max_memory_allocated, reset before warm-up, model._graphs cleared before each regime"
 
 
 def speed(p, c):
@@ -95,9 +95,12 @@ def build_model(args, dev):
     return model
 
 
-def timed(fn, steps, dev):
+def timed(fn, steps, dev, model=None):
     """Reset peak stats, warm up once (includes CUDA-graph capture), then median per-tick ms over TIMING_REPS runs.
-    Memory (MB) = absolute max_memory_allocated over warm-up + reps (same definition for eager and graphed); reserved is info only."""
+    Memory (MB) = absolute max_memory_allocated over warm-up + reps with the model's cached CUDA graphs dropped first, so a graphed peak does not carry pools
+    captured for earlier regimes (same definition for eager and graphed); reserved is info only."""
+    if model is not None:
+        getattr(model, "_graphs", {}).clear()
     gc.collect()
     torch.cuda.empty_cache()
     torch.cuda.reset_peak_memory_stats(dev)
@@ -348,16 +351,16 @@ def run(args):
     for reg in ("two_body", "expB"):
         P, V, M, mask = sf.to_tensors(timing_data[reg], dev)
         args_in = (P[:, 0].float(), V[:, 0].float(), M.float(), mask.float())
-        res["timing"][reg] = timed(lambda: sf.rollout(model, *args_in, STEPS), STEPS, dev)
+        res["timing"][reg] = timed(lambda: sf.rollout(model, *args_in, STEPS), STEPS, dev, model)
         res["timing"][reg].update(batch=P.shape[0], n_max=P.shape[2])
     pos0, vel0 = bh_scene(SEEDS[-1])
-    res["timing"]["bh300"] = timed(lambda: bh_rollout(model, pos0, vel0, dev, args.dt), STEPS, dev)
+    res["timing"]["bh300"] = timed(lambda: bh_rollout(model, pos0, vel0, dev, args.dt), STEPS, dev, model)
     res["timing"]["bh300"].update(batch=1, n_max=BH["n"])
     rng = np.random.default_rng(SEEDS[-1])
     p1, v1 = gs.init_bodies(100, rng, scale=True)
     P1, V1, M1, k1 = sf.to_tensors([(p1[None], v1[None])], dev)
     a1 = (P1[:, 0].float(), V1[:, 0].float(), M1.float(), k1.float())
-    res["timing"]["expB_batch1_n100"] = timed(lambda: sf.rollout(model, *a1, STEPS), STEPS, dev)
+    res["timing"]["expB_batch1_n100"] = timed(lambda: sf.rollout(model, *a1, STEPS), STEPS, dev, model)
     res["timing"]["expB_batch1_n100"].update(batch=1, n_max=100)
     if not args.no_cons:
         res["conservation"] = conservation_rows(model, dev, args)
