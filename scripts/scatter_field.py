@@ -64,6 +64,7 @@ class ScatterField(nn.Module):
         super().__init__()
         assert not prior or (kernel and pp and split)
         self.prior, self.knn, self.eps = prior, knn, eps
+        self.gate = False
         self.potential, self.kernel, self.pp, self.split, self.nonet = potential, kernel, pp, split, nonet
         self.verlet = verlet
         self.far, self.far_band, self.far_eps, self.substeps = 0, 0.25, 0.5, 1
@@ -442,6 +443,18 @@ class ScatterField(nn.Module):
         g.replay()
         return tuple(o.clone() for o in out)
 
+    def add_gate(self, bias=-6.0, gmax=1.0):
+        """Soft forget gate on the recurrent field input: keep = 1 - sigmoid(conv1x1([x, log1p|field|])). Weight 0, bias `bias`, so keep ~ 1 - 2.5e-3 at init
+        and the gradient is nonzero (sigmoid, not a clamp)."""
+        self.fgate = nn.Conv2d(3 + (2 if self.kernel else 0) + self.cf, 1, 1)
+        nn.init.zeros_(self.fgate.weight)
+        nn.init.constant_(self.fgate.bias, bias)
+        self.register_buffer("fgmax", torch.tensor(float(gmax)))
+        self.gate = True
+
+    def fgate_keep(self, x, field):
+        return 1 - self.fgmax * torch.sigmoid(self.fgate(torch.cat([x, torch.log1p(field.abs())], 1)))
+
     def _force(self, pos, vel, mass, mask, field):
         x = self.scatter(pos, vel, mass, mask)
         ns = self._nscale(x, mass, mask) if self.norm else None
@@ -451,7 +464,7 @@ class ScatterField(nn.Module):
             ak = self.kernel_acc(x[:, :1])
             x = torch.cat([x, ak], 1)
         if self.recurrent:
-            x = torch.cat([x, field], 1)
+            x = torch.cat([x, field * self.fgate_keep(x, field) if self.gate else field], 1)
         if self.epsin:
             x = torch.cat([x, x.new_full((x.shape[0], 1, self.grid, self.grid), math.log(self.eps_cur / EPS0))], 1)
         if self.nonet:
