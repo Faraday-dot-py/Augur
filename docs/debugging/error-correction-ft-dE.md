@@ -47,3 +47,10 @@ Pass bar for nr100 dE@1000 on the wide probe: <= 1.25x base + 1e-3 (~.027), err@
 
 Predictions vs result: pen_e1 dE <= .03 MISS (.045), err within +10% MISS (+33%; dE-only penalty at lam 1 already buys dE with accuracy, like lam 3/3); lr1e5 dE .04-.12 MISS (.275: 10x smaller step size, same dE, so dE is not tracking step size; displacement ~1e-2 cumulative is already enough); heads >= .1 MISS (.017: near-field heads do NOT move dE, opposite of D4 residual conv result); ema .06-.2 MISS (.26-.31).
 Mechanism read: dE@1000 is set by the U-Net weights (recurrent potential field). Any U-Net update, at any lr tried, moves nr100 dE@1000 from .02 to .25-.5; training only the pair/kernel MLPs leaves it at base (.017) with err@20 +2.4%. bh300 dE@100 harness FAIL for heads (+47%) is 4-scene noise: the 12-scene probe gives .0587 vs base .0592.
+
+## Transfer to option C (job: ftde_c1): freeze the E U-Net, train only gin (geometry input conv), cmlp (ball-ball head), gvec, gscale
+Same schedule as C (job 3494: 4000 c_train scenes x 80 ticks, 8000 it, batch 16, lr 1e-4, k 4->20, cap 100, init E, seed 4738) except `--train-only gin,cmlp,gvec,gscale`; control = original C.pt (same schedule, everything trained). Geometry-free harness rows (`scatter_regress.py run --contact`) and 24/12-scene probe for both. Predictions (before results):
+- Cfz nr100 dE@1000 harness <= 1.25x base + 1e-3 (PASS) (P .6): geometry-free force is E's U-Net plus the cmlp/gvec/gscale terms (zero-init, trained); heads-only E run stayed at base. Original C fails it by a wide margin (P .85, unmeasured before).
+- Cfz c_id err@20 <= 1.3x C (5.1 -> <= 6.6) (P .5): geometry only enters the frozen net through the first conv; capacity is limited. tunnel@20 <= 5% (P .55).
+- Cfz bh300 dE@1000 harness PASS (P .5, noisy 4-scene row); harness err rows PASS (P .8).
+- Runaway: off-grid fraction and err@100 median reported from the saved trajectories; no prediction of removal (P(runaway gone) .25), since the unstable mode lives in the U-Net recurrent path, which is frozen at E's contracting weights (that raises P to .4 if gin only drives a bounded geo term).
