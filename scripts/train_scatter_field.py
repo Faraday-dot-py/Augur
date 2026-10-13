@@ -127,7 +127,16 @@ def long_penalty(model, pos, vel, m, mk, field, args):
 def train(model, tensors, args, ckpt_path, log):
     P, V, M, mask = [t.float() for t in tensors]
     S = P.shape[0]
-    opt = torch.optim.Adam(model.parameters(), lr=args.lr)
+    train_only = getattr(args, "train_only", "")
+    if train_only:
+        keys = train_only.split(",")
+        for n, p in model.named_parameters():
+            p.requires_grad_(any(k in n for k in keys))
+        log(f"train-only {keys}: {sum(p.numel() for p in model.parameters() if p.requires_grad)} trainable params")
+    opt = torch.optim.Adam([p for p in model.parameters() if p.requires_grad], lr=args.lr)
+    ema_decay = getattr(args, "ema", 0.0)
+    ema = {k: v.detach().clone() for k, v in model.state_dict().items()} if ema_decay > 0 else None
+    snaps = {int(x) for x in getattr(args, "snap_iters", "").split(",") if x}
     start = 0
     if os.path.exists(ckpt_path):
         st = torch.load(ckpt_path, map_location=args.device, weights_only=False)
@@ -152,8 +161,12 @@ def train(model, tensors, args, ckpt_path, log):
             frac = it / max(1, args.iters - 1)
         k = int(round(args.k_start + (args.k_end - args.k_start) * frac))
         lr = args.lr * (0.05 + 0.95 * 0.5 * (1 + np.cos(np.pi * frac)))
+        if getattr(args, "lr_warmup", 0) > 0:
+            lr *= min(1.0, (it + 1) / args.lr_warmup)
         for pg in opt.param_groups:
             pg["lr"] = lr
+        if it in snaps:
+            torch.save({"model": model.state_dict(), "it": it}, f"{ckpt_path}.snap{it}")
         idx = torch.randint(S, (args.batch,), generator=g).to(args.device)
         hook = getattr(args, 'batch_hook', None)
         if hook:
@@ -172,7 +185,7 @@ def train(model, tensors, args, ckpt_path, log):
             lm = lm + (((m - M[idx]) ** 2) * mk).sum() / (mk.sum() * k)
             lp = lp + (((pos - Pw[:, s + 1]) ** 2) * w).sum() / denom
             lv = lv + (((vel - Vw[:, s + 1]) ** 2) * w).sum() / denom
-        loss = lp + 0.1 * lv + lm
+        loss = lp + getattr(args, "w_vel", 0.1) * lv + lm
         opt.zero_grad()
         loss.backward()
         if args.long_windows > 0 and torch.isfinite(loss):
@@ -181,6 +194,13 @@ def train(model, tensors, args, ckpt_path, log):
         cap = getattr(args, 'loss_cap', 0.0)
         if torch.isfinite(loss) and torch.isfinite(gn) and (cap <= 0 or loss.item() < cap):
             opt.step()
+            if ema is not None:
+                with torch.no_grad():
+                    for k, v in model.state_dict().items():
+                        if v.dtype.is_floating_point:
+                            ema[k].mul_(ema_decay).add_(v.detach(), alpha=1 - ema_decay)
+                        else:
+                            ema[k].copy_(v)
         else:
             opt.zero_grad()
             skipped += 1
@@ -194,6 +214,8 @@ def train(model, tensors, args, ckpt_path, log):
                     torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, f"{ckpt_path}.it{it}")
     if all(torch.isfinite(p).all() for p in model.parameters()):
         torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it}, ckpt_path)
+    if ema is not None:
+        torch.save({"model": ema, "it": it}, f"{ckpt_path}.ema")
     log(f"trained {it} iters in {time.time() - t_start:.0f}s")
     return it, time.time() - t_start
 
@@ -284,6 +306,11 @@ def main():
     ap.add_argument("--lam-e", type=float, default=0.1)
     ap.add_argument("--lam-l", type=float, default=0.1)
     ap.add_argument("--lr", type=float, default=1e-3)
+    ap.add_argument("--lr-warmup", type=int, default=0, help="linear lr warmup iterations")
+    ap.add_argument("--w-vel", type=float, default=0.1)
+    ap.add_argument("--ema", type=float, default=0.0, help="EMA decay of weights, saved as <ckpt>.ema")
+    ap.add_argument("--train-only", default="", help="comma-separated substrings; only matching parameters are trained")
+    ap.add_argument("--snap-iters", default="", help="comma-separated iterations at which to save <ckpt>.snap<it>")
     ap.add_argument("--dt", type=float, default=0.1)
     ap.add_argument("--eps", type=float, default=0.5)
     ap.add_argument("--log-every", type=int, default=100)
