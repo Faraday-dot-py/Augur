@@ -34,3 +34,16 @@ Pass bar for nr100 dE@1000 on the wide probe: <= 1.25x base + 1e-3 (~.027), err@
 - lr1e5 (b: lr 1e-5, 100-it warmup): dE ~ .04-.12 given dE ~ linear in step size (P .6); passes bar (P .15).
 - heads (c: only kmlp/ppmlp pair/kernel MLPs trained, U-Net frozen): dE >= .1 (P .7), as D4 residual (.020 -> .21).
 - ema (d: EMA .999 of weights, evaluated as final and .ema): .06-.2 (P .6); passes (P .1).
+
+### fix1 results (jobs 3559 train, 3570 eval; wide probe = 24 nr100 / 12 bh300 fresh scenes; harness = scatter_regress run/compare vs baseline_v2)
+| arm (one change vs ctrl) | probe nr100 dE@1000 med | probe expB err@20 | harness nr100 dE@1000 | harness bh300 dE@1000 / dE@100 | harness rows failing |
+|---|---|---|---|---|---|
+| base E | .0206 | .02415 | .0170 | .481 / .0391 | ref |
+| ctrl4738 (lr 1e-4) | .314 | .02589 | .304 FAIL | .704 FAIL / .083 FAIL | 4 (+bh300 dL) |
+| a: pen_e1 (soft dE loss lam 1, lam_L 0) | .0449 | .03211 (+33%) | .0457 FAIL | .275 / .056 FAIL | 14 (err rows +15..40%) |
+| b: lr 1e-5 + warmup 100 | .275 | .02411 | .245 FAIL | .689 FAIL / .086 FAIL | 3 |
+| c: heads only (kmlp, ppmlp; 8.8k params, U-Net frozen) | .0171 | .02474 (+2.4%) | .0218 PASS | .497 PASS / .0576 FAIL | 3 (bh300 dE@100, nr100 dL, bh300 dL) |
+| d: EMA .999 (final / .ema) | .313 / .260 | .02590 / .02507 | .321 FAIL | .681 FAIL / .083 FAIL | 4 |
+
+Predictions vs result: pen_e1 dE <= .03 MISS (.045), err within +10% MISS (+33%; dE-only penalty at lam 1 already buys dE with accuracy, like lam 3/3); lr1e5 dE .04-.12 MISS (.275: 10x smaller step size, same dE, so dE is not tracking step size; displacement ~1e-2 cumulative is already enough); heads >= .1 MISS (.017: near-field heads do NOT move dE, opposite of D4 residual conv result); ema .06-.2 MISS (.26-.31).
+Mechanism read: dE@1000 is set by the U-Net weights (recurrent potential field). Any U-Net update, at any lr tried, moves nr100 dE@1000 from .02 to .25-.5; training only the pair/kernel MLPs leaves it at base (.017) with err@20 +2.4%. bh300 dE@100 harness FAIL for heads (+47%) is 4-scene noise: the 12-scene probe gives .0587 vs base .0592.

@@ -286,7 +286,7 @@ def run_train(args, dev):
     os.makedirs(CKPT, exist_ok=True)
     ckpt = f"{CKPT}/{args.tag}.pt"
     targs = types.SimpleNamespace(lr=args.lr, device=str(dev), seed=ss.TRAIN_SEED, opt=args.opt, time_budget=0, iters=args.iters, k_start=args.k_start, k_end=args.k_end,
-                                  steps=args.steps, batch=args.batch, log_every=args.log_every, loss_cap=args.loss_cap, batch_hook=lambda idx: model.set_scene(geom[idx], rad[idx]))
+                                  steps=args.steps, batch=args.batch, log_every=args.log_every, loss_cap=args.loss_cap, train_only=args.train_only, ema=args.ema, lr_warmup=args.lr_warmup, snap_iters=args.snap_iters, w_vel=args.w_vel, long_windows=0, batch_hook=lambda idx: model.set_scene(geom[idx], rad[idx]))
     n_it, secs = tsf.train(model, tensors, targs, ckpt, lambda s: print(s, flush=True))
     print(f"TRAIN DONE iters {n_it} secs {secs:.0f}", flush=True)
     model.set_scene(None, None)
@@ -325,6 +325,11 @@ def main():
     ap.add_argument("--lr", type=float, default=1e-4)
     ap.add_argument("--log-every", type=int, default=100)
     ap.add_argument("--loss-cap", type=float, default=100.0)
+    ap.add_argument("--train-only", default="")
+    ap.add_argument("--ema", type=float, default=0.0)
+    ap.add_argument("--lr-warmup", type=int, default=0)
+    ap.add_argument("--snap-iters", default="")
+    ap.add_argument("--w-vel", type=float, default=0.1)
     ap.add_argument("--fams", default="", help="comma list of eval families (default the six scatter-contact.md families)")
     ap.add_argument("--eval-opt", default="kcache,fastio")
     ap.add_argument("--device", default="cuda")

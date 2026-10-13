@@ -74,6 +74,7 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--base", default=BASE)
     ap.add_argument("--opt", default="default")
+    ap.add_argument("--contact", action="store_true", help="specs are option-C checkpoints, evaluated with no geometry (eager)")
     ap.add_argument("--n-nr", type=int, default=24)
     ap.add_argument("--n-bh", type=int, default=12)
     ap.add_argument("--seed0", type=int, default=13000)
@@ -85,6 +86,20 @@ def main():
     res = {}
     for spec in args.specs.split(","):
         path, _, alpha = spec.partition("|")
+        if args.contact:
+            from scripts import scatter_contact_scenes as cs
+
+            model = cs.build("C", dev, path)
+            model.set_scene(None, None)
+            r = {"nr100": cons(model, "nr", 100, args.n_nr, args.seed0, 1000, dev, args.eps, args.dt),
+                 "bh300": cons(model, "bh", 300, args.n_bh, args.seed0 + 500, 1000, dev, args.eps, args.dt),
+                 "expB": err_expb(model, dev, args.eps, args.dt)}
+            res[spec] = r
+            print(f"{spec}: nr100 dE@1000 med {r['nr100']['dE@1000']['med']:.4g} [{r['nr100']['dE@1000']['p16']:.3g},{r['nr100']['dE@1000']['p84']:.3g}] "
+                  f"dE@100 {r['nr100']['dE@100']['med']:.4g} | bh300 dE@100 {r['bh300']['dE@100']['med']:.4g} dE@1000 {r['bh300']['dE@1000']['med']:.4g} | "
+                  f"expB err@5 {r['expB']['err@5']:.4g} err@20 {r['expB']['err@20']:.4g}", flush=True)
+            json.dump(res, open(args.out, "w"), indent=1)
+            continue
         state = load_state(path, dev)
         if alpha:
             a = float(alpha)
