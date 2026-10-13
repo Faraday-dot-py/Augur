@@ -10,7 +10,7 @@ from scripts import train_scatter_field as tsf
 
 
 def run(extra, tmp, tag):
-    sys.argv = ["x", "--exp", "E", "--train", "6", "--steps", "10", "--iters", "6", "--batch", "2", "--k-start", "2", "--k-end", "3", "--eval-steps", "6",
+    sys.argv = ["x", "--exp", "E", "--train", "6", "--steps", "30", "--iters", "6", "--batch", "2", "--k-start", "2", "--k-end", "3", "--eval-steps", "25",
                 "--eval-scenes", "2", "--device", "cuda", "--lr", "1e-3", "--log-every", "3", "--opt", "none",
                 "--out-dir", f"{tmp}/{tag}/res", "--ckpt-dir", f"{tmp}/{tag}/ck"] + extra
     tsf.main()
