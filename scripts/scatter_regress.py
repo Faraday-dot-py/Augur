@@ -79,8 +79,9 @@ def build_model(args, dev):
     if getattr(args, "contact", False):
         from scripts import scatter_contact_scenes as cs
 
-        model = cs.build("C", dev, args.ckpt)
+        model = cs.build(args.contact_model, dev, args.ckpt)
         model.set_scene(None, None)
+        model.dt = args.dt
         if getattr(args, "contact_free", False):
             print("contact free-space: gscale", cs.free_space(model), flush=True)
         return model
@@ -458,6 +459,7 @@ def main():
     r.add_argument("--no-cons", action="store_true")
     r.add_argument("--battery", action="store_true")
     r.add_argument("--contact", action="store_true", help="checkpoint is an option-C ContactScatterField, evaluated with no geometry")
+    r.add_argument("--contact-model", default="C")
     r.add_argument("--contact-free", action="store_true", help="with --contact: zero the gravity vector and ball-ball contact head (free-space N-body part only)")
     c = sub.add_parser("compare")
     c.add_argument("--baseline", required=True)

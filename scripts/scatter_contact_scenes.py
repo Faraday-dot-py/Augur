@@ -162,11 +162,14 @@ def build(name, dev, ckpt=None):
     cfg = tsf.EXPS["E"]
     kw = dict(tsf.BASE)
     kw.update(tsf.VARIANTS["ms_kp_pot_v_g128"])
-    model = sc.ContactScatterField(extent=cfg["extent"], dt=DT, in_scale=cfg["in_scale"], obstacle={"B": "sdf", "A": "kernel", "C": "chan"}[name], **kw)
+    model = sc.ContactScatterField(extent=cfg["extent"], dt=DT, in_scale=cfg["in_scale"], obstacle={"B": "sdf", "Bf": "sdf", "Eg": "sdf", "A": "kernel", "C": "chan"}[name], frozen_geo=name in ("Bf", "Eg"), **kw)
     if ckpt and ckpt != "none":
         sd = torch.load(ckpt, map_location=dev, weights_only=False)["model"]
         r = model.load_state_dict(sd, strict=False)
         print(f"loaded {ckpt}: missing {list(r.missing_keys)} unexpected {list(r.unexpected_keys)}", flush=True)
+    if name == "Eg":
+        with torch.no_grad():
+            model.gvec.copy_(torch.tensor([ss.BOX_G / sc.OUT_SCALE, 0.0]))
     return model.to(dev).eval()
 
 
@@ -219,6 +222,11 @@ def eval_family(model, fam, dev, steps=100):
         r["pair_overlap_model"], r["pair_overlap_truth"] = overlap_frac(scenes, Pm, mask), overlap_frac(scenes, Pt, mask)
         cnt = mask.sum(1)
         axis = (np.abs(Pm - Pt) * mask[:, None, :, None]).sum(2) / cnt[:, None, None]
+        e_sc = (np.linalg.norm(Pm - Pt, axis=-1) * mask[:, None]).sum(2) / cnt[:, None]
+        r["err_median"] = {str(k): float(np.median(e_sc[:, k])) for k in (5, 10, 20, 100)}
+        r["offgrid100"] = float(((np.abs(Pm[:, 100]) > model.extent / 2).any(-1) * mask).sum() / mask.sum())
+        acc = np.linalg.norm(np.diff(Vm, axis=1), axis=-1) / DT * mask[:, None]
+        r["runaway"] = float((acc[:, 20:] > 200).any(axis=(1, 2)).mean())
         r["err_x"], r["err_y"] = ({str(k): float(axis[:, k, a].mean()) for k in (5, 20, 100)} for a in (0, 1))
         en = lambda P, V: ((0.5 * (V ** 2).sum(-1) - ss.BOX_G * P[..., 0]) * mask[:, None]).sum(2) / cnt[:, None]
         em, et = en(Pm, Vm), en(Pt, Vt)
@@ -228,9 +236,9 @@ def eval_family(model, fam, dev, steps=100):
         if seed == EVAL_SEEDS[0]:
             keep = dict(truth=Pt[:4], model=Pm[:4], mask=mask[:4], rad=_rad_pad(scenes[:4], Pt.shape[2]).numpy(), prims=json.dumps([s["prims"] for s in scenes[:4]]))
     mean = {}
-    for k in ("err", "ballistic_gravity", "floor_pert1e-5", "tunnel_model", "tunnel_truth", "deep_model", "deep_truth", "ke_ratio", "err_x", "err_y", "dE_model", "dE_truth", "mom_err"):
+    for k in ("err", "ballistic_gravity", "floor_pert1e-5", "tunnel_model", "tunnel_truth", "deep_model", "deep_truth", "ke_ratio", "err_median", "err_x", "err_y", "dE_model", "dE_truth", "mom_err"):
         mean[k] = {kk: float(np.mean([seeds[s][k][kk] for s in seeds])) for kk in seeds[str(EVAL_SEEDS[0])][k]}
-    for k in ("pair_overlap_model", "pair_overlap_truth"):
+    for k in ("pair_overlap_model", "pair_overlap_truth", "offgrid100", "runaway"):
         mean[k] = float(np.mean([seeds[s][k] for s in seeds]))
     print(fam, "err", {k: round(v, 3) for k, v in mean["err"].items()}, "ballistic@20", round(mean["ballistic_gravity"]["20"], 2), "tunnel", {k: round(v, 3) for k, v in mean["tunnel_model"].items()},
           "ke", {k: round(v, 2) for k, v in mean["ke_ratio"].items()}, flush=True)
@@ -250,6 +258,9 @@ def restitution(model, dev, prims, face, speeds, steps=80):
         Pm, _, _ = roll(model, [s], steps, dev)
         res = {}
         for tag, P in (("truth", Pt[:, 0, 0]), ("model", Pm[0, :, 0, 0])):
+            vx = np.diff(P)
+            rev = np.nonzero((vx[:-1] > 0) & (vx[1:] <= 0))[0]
+            res[tag + "_rev"] = float(math.sqrt(max(wall - P[rev[0] + 1:].min(), 0.0) / max(wall - x0, 1e-9))) if len(rev) and wall - P[rev[0] + 1:].min() > 0 else None
             enter = np.nonzero(P > wall - 0.05)[0]
             back = np.nonzero(P[enter[0]:] < wall - 0.05)[0] if len(enter) else []
             if len(enter) == 0 or len(back) == 0:

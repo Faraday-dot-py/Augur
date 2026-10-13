@@ -11,6 +11,7 @@ obstacle="sdf" (option B): SDF + normal gathered at each ball, a 5-point stencil
 into an MLP whose output is a force in the (n, t) frame. obstacle="kernel" (option A): phi = K * occupancy by FFT, force = -grad phi.
 Both add the force AFTER momfix. obstacle="chan" (option C): rasterised [occupancy, clipped sdf, normal x, normal y] enter the U-Net as 4 extra input
 channels (zero-init first-layer weights); the wall force is the geometry-induced change of the existing potential head, bounded by FMAX*tanh and exempt from momfix. Ball-ball contact: radius-aware pair MLP on the overlap gap r-(Ri+Rj) over k nearest neighbours (cell list for large N).
+frozen_geo=True: with no scene geometry set the force is exactly the base model's (gvec, wall and pair heads skipped), so the heads form a geometry branch on a frozen base.
 All new heads are zero-initialised (gscale=1), so an untrained ContactScatterField loaded from a ScatterField checkpoint reproduces it exactly.
 """
 import math
@@ -249,8 +250,9 @@ def _win(x, rng):
 
 
 class ContactScatterField(sf.ScatterField):
-    def __init__(self, *args, obstacle="sdf", pw=2.0, pc=2.0, stencil=1.0, knn=8, r0=0.75, cell=4.0, kernel_range=4.0, **kw):
+    def __init__(self, *args, obstacle="sdf", pw=2.0, pc=2.0, stencil=1.0, knn=8, r0=0.75, cell=4.0, kernel_range=4.0, frozen_geo=False, **kw):
         super().__init__(*args, **kw)
+        self.frozen_geo = frozen_geo
         assert obstacle in ("sdf", "kernel", "chan", "none")
         self.obstacle, self.pw, self.pc, self.stencil, self.knn, self.r0, self.cell, self.kr = obstacle, pw, pc, stencil, knn, r0, cell, kernel_range
         self.gvec = nn.Parameter(torch.zeros(2))
@@ -362,4 +364,6 @@ class ContactScatterField(sf.ScatterField):
             a, field = self._force_chan(pos, vel, mass, mask, field)
         else:
             a, field = super()._force(pos, vel, mass, mask, field)
+        if self.frozen_geo and self.geom is None:
+            return a * self.gscale, field
         return a * self.gscale + self.local_acc(pos, vel, mask), field

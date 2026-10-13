@@ -76,6 +76,7 @@ def main():
     ap.add_argument("--opt", default="default")
     ap.add_argument("--contact", action="store_true", help="specs are option-C checkpoints, evaluated with no geometry (eager)")
     ap.add_argument("--contact-free", action="store_true")
+    ap.add_argument("--contact-model", default="C")
     ap.add_argument("--n-nr", type=int, default=24)
     ap.add_argument("--n-bh", type=int, default=12)
     ap.add_argument("--seed0", type=int, default=13000)
@@ -90,8 +91,9 @@ def main():
         if args.contact:
             from scripts import scatter_contact_scenes as cs
 
-            model = cs.build("C", dev, path)
+            model = cs.build(args.contact_model, dev, path)
             model.set_scene(None, None)
+            model.dt = args.dt
             if args.contact_free:
                 print("contact free-space: gscale", cs.free_space(model), flush=True)
             r = {"nr100": cons(model, "nr", 100, args.n_nr, args.seed0, 1000, dev, args.eps, args.dt),
