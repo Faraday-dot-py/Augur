@@ -12,6 +12,10 @@ from scripts import scatter_opt_bench as sb
 from scripts import train_scatter_field as tsf
 
 
+INFER_DPOS20_TOL = 1e-3
+TRAIN_GRAD_TOL = 1e-3
+
+
 def load(ckpt, dev, opts):
     m = tsf.build(tsf.EXPS["E"], "ms_kp_pot_v_g128", 0.1).to(dev)
     if ckpt:
@@ -71,6 +75,7 @@ def main():
             Pc, Vc = sf.rollout(cand, pos, vel, mass, mask, args.steps)
             d = (Pr - Pc).abs()
             print(f"INFER [{opts}] N {n}: max|dpos| t=1 {d[:, 1].max().item():.2e} t=5 {d[:, 5].max().item():.2e} t=10 {d[:, 10].max().item():.2e} t=20 {d[:, 20].max().item():.2e} t=100 {d[:, -1].max().item():.2e}", flush=True)
+            assert d[:, 20].max().item() < INFER_DPOS20_TOL, f"INFER [{opts}] N {n}: max|dpos|@20 {d[:, 20].max().item():.2e} >= {INFER_DPOS20_TOL}"
     for n in (1000, 3000, 10000):
         pos, vel, mass, mask = sb.scene(n, 1, dev)
         with torch.no_grad():
@@ -124,6 +129,7 @@ def main():
             res.append((loss.item(), [p.grad.clone() for p in m.parameters() if p.grad is not None]))
         rel = max(((a - b).abs().max() / (a.abs().max() + 1e-12)).item() for a, b in zip(res[0][1], res[1][1]))
         print(f"TRAIN [{opts}]: loss {res[0][0]:.6f} vs {res[1][0]:.6f}, max grad rel diff {rel:.3e}, nparams with grad {len(res[0][1])}/{len(res[1][1])}", flush=True)
+        assert len(res[0][1]) == len(res[1][1]) and rel < TRAIN_GRAD_TOL, f"TRAIN [{opts}]: grad rel diff {rel:.3e} >= {TRAIN_GRAD_TOL} or param count differs"
 
 
 if __name__ == "__main__":
