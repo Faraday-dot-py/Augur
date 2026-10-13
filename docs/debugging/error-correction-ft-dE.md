@@ -27,3 +27,10 @@ Wide probe `scripts/ft_de_probe.py`: nr100 24 fresh scenes (seeds 13000+), bh300
 | ctrl4738 interpolation a=.25/.5/.75 | .063 / .145 / .229 | .0027 / .0074 / .0106 | .66 / .78 / .78 | .02428 / .02464 / .02519 |
 
 Reading: P1 hit (base median .019-.021, probe repeatable; the harness .017 is a 4-scene value in the same range). **The jump happens between it 10 and it 25** (.013 -> .22 at lr 1e-4, i.e. < 25 Adam steps, per-parameter displacement <= ~2.5e-3), then wanders .08-.48 with no trend: dE@1000 is a very sensitive, non-monotone function of the weights, and nothing in the loss pulls it back (P2 hit, but not tied to the training loss decreasing). Seed 4739 reaches the same range (.17-.52): systematic (P3 hit). Interpolating back toward E is ~linear in a (.063 at a=.25, 3x base already): a=.25 of the ctrl update already fails the row (P4 MISS: no free lunch from weight averaging; dE grows ~ linearly with step size). expB err@20 is NOT improved by the fine-tune on this wide probe (.02415 -> .0259, +7%; err@5 +7%): the "accuracy gain" of ctrl on harness rows is not visible on 48 fresh scenes (P5 MISS), so this recipe buys no accuracy and costs 15x dE. bh300 dE@1000 (12 scenes) is noisy (.14-1.0) and ~base .64 -> .84; the official bh300 4-scene row mostly fails by noise.
+
+## Batch fix1 (job 3559): four single-change arms vs ctrl4738 (same schedule: 2000 it, batch 16, k 20, seed 4738), each probed wide + harness
+Pass bar for nr100 dE@1000 on the wide probe: <= 1.25x base + 1e-3 (~.027), err@20 not > +15% vs base. Predictions (before results):
+- pen_e1 (a: soft energy-drift loss, 5 x 20-tick free windows, lam_E 1, lam_L 0; ft_longpen showed lam 3/3 reaches .0044): nr100 dE@1000 <= .03 (P .6); expB err@20 within +10% of base (P .55); bh300 dE@1000 not worse than base +25% (P .4).
+- lr1e5 (b: lr 1e-5, 100-it warmup): dE ~ .04-.12 given dE ~ linear in step size (P .6); passes bar (P .15).
+- heads (c: only kmlp/ppmlp pair/kernel MLPs trained, U-Net frozen): dE >= .1 (P .7), as D4 residual (.020 -> .21).
+- ema (d: EMA .999 of weights, evaluated as final and .ema): .06-.2 (P .6); passes (P .1).
