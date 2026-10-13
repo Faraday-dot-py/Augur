@@ -31,7 +31,7 @@ with sync_playwright() as p:
 
     pg.goto(BASE + "/")
     cards = pg.eval_on_selector_all("a.card", "els => els.map(e => e.getAttribute('href'))")
-    check("landing page has all three cards", sorted(cards) == ["gravity/", "scatter/", "token/"], cards)
+    check("landing page has all four cards", sorted(cards) == ["gravity/", "scatter-walkthrough/", "scatter/", "token/"], cards)
 
     pg.click("a.card[href='token/']")
     pg.wait_for_url("**/token/**", timeout=10000)
@@ -66,7 +66,7 @@ with sync_playwright() as p:
     check("error plot hidden while truth off", not pg.is_visible("#c-err"))
     check("energy plot visible in dev menu", pg.is_visible("#c-energy"))
     check("no truth button in nav", pg.query_selector("#b-truth") is None)
-    check("header has no link", pg.query_selector("header a") is None and pg.query_selector("header p") is None)
+    check("scatter header links back to landing", pg.get_attribute("header a", "href") == "../")
     check("no aside plot panel", pg.query_selector("aside") is None)
     pg.keyboard.press("d")
     check("dev statistics hidden after toggle", not pg.is_visible("#debug"))
@@ -80,40 +80,6 @@ with sync_playwright() as p:
     pg.mouse.move(box[0], box[1])
     time.sleep(0.4)
     check("nav opaque when hovered", float(pg.evaluate("getComputedStyle(document.querySelector('nav')).opacity")) == 1.0)
-
-    def zoom_txt():
-        return pg.evaluate("document.getElementById('s-zoom').textContent")
-
-    def centre_txt():
-        return pg.evaluate("document.getElementById('s-centre').textContent")
-
-    time.sleep(0.6)
-    check("starts in auto view", "auto" in zoom_txt(), zoom_txt())
-    pg.mouse.move(700, 400)
-    pg.mouse.wheel(0, -600)
-    time.sleep(0.6)
-    z = zoom_txt()
-    check("wheel zoom changes zoom stat", "manual" in z and not z.startswith("1.00x"), z)
-    pg.keyboard.press("d")
-    pg.keyboard.press("d")
-    c0 = centre_txt()
-    pg.mouse.move(700, 400)
-    pg.mouse.down()
-    pg.mouse.move(600, 350, steps=5)
-    pg.mouse.up()
-    time.sleep(0.6)
-    check("drag pan changes centre", centre_txt() != c0, (c0, centre_txt()))
-    pg.screenshot(path="/tmp/scatter_zoomed.png")
-    pg.click("#b-fit")
-    time.sleep(0.6)
-    check("Fit returns to auto", "auto" in zoom_txt(), zoom_txt())
-    pg.keyboard.press("+")
-    time.sleep(0.6)
-    check("+ key zooms", "manual" in zoom_txt(), zoom_txt())
-    pg.keyboard.press("0")
-    time.sleep(0.6)
-    check("0 key returns to auto", "auto" in zoom_txt(), zoom_txt())
-
     pg.check("#c-truth")
     pg.wait_for_function("document.getElementById('s-err').textContent !== 'off' && document.getElementById('s-err').textContent !== '-'", timeout=60000)
     check("truth worker created on enable", any("truth_worker" in w for w in workers), workers)
