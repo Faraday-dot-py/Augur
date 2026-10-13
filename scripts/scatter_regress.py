@@ -33,7 +33,7 @@ BH = dict(n=300, sigma=8.0, vfac=0.3, c=10.0)
 REGIMES = ("two_body", "expB", "bh300")
 TIMING_KEYS = REGIMES + ("expB_batch1_n100",)
 ACC_TOL = 0.15
-GATE_TICKS = {"two_body": ("10", "20"), "expB": ("5", "10", "20"), "bh300": ("5", "10", "20")}
+GATE_TICKS = {"two_body": ("10", "20"), "expB": ("5", "10", "20", "50", "100"), "bh300": ("5", "10", "20", "50")}
 ACC_ATOL = 1e-5
 STATE_ATOL = {"bound_frac": 0.02, "virial": 0.05}
 CONS_STEPS = 1000
@@ -44,7 +44,7 @@ CONS_FACTOR = 2.0
 CONS_TOL = 0.25
 TIME_TOL = 0.05
 MEM_TOL = 0.10
-INFO_TICKS = {"two_body": ("5", "50", "100"), "expB": ("50", "100"), "bh300": ("50",)}
+INFO_TICKS = {"two_body": ("5", "50", "100"), "expB": (), "bh300": ()}
 FLOOR_TICKS = {"two_body": ("50", "100"), "expB": ("50", "100"), "bh300": ("50",)}
 MEM_DEF = "absolute max_memory_allocated, reset before warm-up"
 
@@ -469,6 +469,8 @@ def compare(args):
             print(f"  {k:42s} {'%.4g' % b['err@2'] if b else '-':>10s} -> {v['err@2']:.4g}")
         print("  geomean ratio to ref:", base.get("ood_battery_summary", {}).get("geomean_ratio_to_ref"), "->", cand["ood_battery_summary"]["geomean_ratio_to_ref"])
     info = [f"{reg} err@{k} {base['regimes'][reg]['mean']['err'][k]:.4g} -> {cand['regimes'][reg]['mean']['err'][k]:.4g}" for reg in REGIMES for k in INFO_TICKS[reg]]
+    if "scenes" in base.get("conservation", {}).get("bh300", {}).get("model", {}):
+        info.append(f"cons bh300 dE@{CONS_STEPS} median {np.median(base['conservation']['bh300']['model']['scenes'][f'dE@{CONS_STEPS}']):.4g} -> {np.median(cand['conservation']['bh300']['model']['scenes'][f'dE@{CONS_STEPS}']):.4g}")
     print("info (not gated; bh300 err@100 is at the chaos ceiling and not quoted):", "; ".join(info))
     print_floors(cand, args.floors)
     print("OVERALL", "PASS" if ok else "FAIL")
