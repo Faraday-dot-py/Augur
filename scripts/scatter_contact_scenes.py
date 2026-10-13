@@ -145,11 +145,12 @@ def train_set(num, steps, dev, fams=TRAIN_FAMS):
 
 def free_space(model):
     """Option-C model reduced to its free-space N-body part: uniform gravity vector and ball-ball contact head zeroed (they are the contact-world physics, not
-    the gravity force the harness rows measure); gscale (scale on the base force) and the U-Net are kept. Returns gscale."""
+    the gravity force the harness rows measure); gscale is pinned to 1 (a drifted gscale rescales the base force); the U-Net is kept. Returns gscale."""
     with torch.no_grad():
         model.gvec.zero_()
         model.cmlp[-1].weight.zero_()
         model.cmlp[-1].bias.zero_()
+        model.gscale.fill_(1.0)
     model.set_scene(None, None)
     return float(model.gscale)
 
