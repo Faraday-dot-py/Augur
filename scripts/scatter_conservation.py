@@ -206,6 +206,7 @@ def run(args):
     ticks = sample_ticks(steps)
     for name in args.regimes.split(","):
         kind, n, per = REGIMES[name]
+        per = args.per_seed or per
         pos0, vel0, seeds = make_scenes(kind, n, per)
         P0 = torch.tensor(pos0, device=dev)
         V0 = torch.tensor(vel0, device=dev)
@@ -319,6 +320,7 @@ def main():
         if nm == "run":
             p.add_argument("--steps", type=int, default=10000)
             p.add_argument("--regimes", default=",".join(REGIMES))
+            p.add_argument("--per-seed", type=int, default=0, help="override scenes per seed for every regime (0 = regime default)")
     args = ap.parse_args()
     os.makedirs(args.out_dir, exist_ok=True)
     run(args) if args.cmd == "run" else probe(args)
