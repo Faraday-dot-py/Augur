@@ -170,7 +170,17 @@ def train(model, tensors, args, ckpt_path, log):
         for s in range(k):
             pos, vel, m, field, _ = fns[s](pos, vel, m, mk, field) if fns else sf._step_m(model, pos, vel, m, mk, field)
             lm = lm + (((m - M[idx]) ** 2) * mk).sum() / (mk.sum() * k)
-            lp = lp + (((pos - Pw[:, s + 1]) ** 2) * w).sum() / denom
+            rl = getattr(args, "rloss", "sq")
+            if rl == "sq":
+                lp = lp + (((pos - Pw[:, s + 1]) ** 2) * w).sum() / denom
+            else:
+                d = (((pos - Pw[:, s + 1]) ** 2).sum(-1) + 1e-12).sqrt()
+                if rl == "euclid":
+                    h = d / 2 ** 0.5
+                else:
+                    dl = args.huber_delta
+                    h = torch.where(d < dl, d ** 2 / 2, dl * (d - dl / 2))
+                lp = lp + (h * mk).sum() / (mk.sum() * k)
             lv = lv + (((vel - Vw[:, s + 1]) ** 2) * w).sum() / denom
         loss = lp + 0.1 * lv + lm
         opt.zero_grad()
