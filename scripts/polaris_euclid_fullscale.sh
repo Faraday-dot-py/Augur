@@ -14,7 +14,7 @@ cd $ROOT
 if [ ! -f scripts/train_scatter_field.py ]; then tar xf $HOME/ef_code.tar; fi
 mkdir -p results checkpoints/ef
 [ -f results/scatter_baseline.json ] || cp $HOME/augur/results/scatter_baseline.json results/
-INITB=$HOME/augur-rc/checkpoints/scatter_bh/init_B_ms_kp_pot_v_g128.pt
+INITB=$HOME/augur/checkpoints/scatter_bh/init_B_ms_kp_pot_v_g128.pt
 FROZEN=$HOME/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt
 export PYTHONPATH=.
 ITERS=${ITERS:-60769}
