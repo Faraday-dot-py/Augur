@@ -96,3 +96,14 @@ Harness energy rows: option 3. Keep geometry-free dE rows (nr100@1000, bh300@100
 - Loss term weighting (2026-10-14, branch loss-weights, jobs 3622/3626, write-up loss-term-weighting.md, uncommitted), vs same-schedule Euclid ctl, warm (and scratch): A Euclid velocity term: warm ab err@20 .0065 -> .0055 (-15%; rep -18%), err@100 .746 -> .663 (rep -15%), BETTER warm only; scratch WORSE (+19% err@20); bh300 dE@1000 warm 3.3 vs 1.76. B step weights ~ Exp B per-step median error (w_1 .09, w_20 2.7): noise (+5% / +3%). C unit-slope Huber (delta .00286): noise warm (0%), worse scratch (+15% err@20, median +33%); earlier Huber failure not just scale mismatch. All arms FAIL harness dE rows; nr100 dE@1000 ranges .075-1.76 with no pattern (noise). Untried: w ~ 1/e_s (early-step upweight), A on pairfull/E-scale.
 
 - Force-anchored aux loss (2026-10-14, branch loss-force, jobs 3624 seed 4738, 3628 replication seed 4739, write-up loss-force-anchor.md, uncommitted), vs Euclid ctl: warm +exact (lambda .32 on nn<1 bodies) expB force 1.41% -> 0.85%, ab err@20 .0063 -> .0049 (-22%), err@100 .721 -> .591 (-18%); warm +anchor (frozen B) similar (.0053 / .579) but cl force worse (7.7% vs 6.2%), bh300 dE@1000 3.8. cl err@20 flat (.0346 vs .0363). Scratch +exact WORSE (ab err@20 .0125 vs .0090) despite force 1.18 vs 1.35%. Harness: all arms FAIL bh300 dE/dL@100 as every arm; nr100 dE@1000 not better (1.9 vs 1.35). Job 3628 (agent-reported, per-seed table not in doc; scratch_exact_s4739): position error down 54-81% but bh300 dE@100 .048 -> .365, dL@100 .30 -> 3.6, i.e. fails regression. Verdict: helps warm ab only; does not fix conservation or clusters. Untried: aux on cluster-scale states, lower lambda.
+
+## Write-up locations
+
+Docs cherry-picked from unmerged branches (branch in parentheses):
+- error-correction-softcap-ship.md (worktree-agent-a51e0b89567ace982)
+- error-correction-D2b-contraction.md (worktree-agent-a226cff35f933b29f)
+- error-correction-ft-dE.md (fix-finetune-dE)
+- error-correction-B-frozen.md (worktree-agent-a61e7dc4af33d7032)
+- test-audit-2026-10-13.md (test-audit-2026-10-13)
+- scatter-contact-c.md, scatter-contact-c-table.md, scatter-correction-research.md (worktree-agent-a51e0b89567ace982; identical on several other branches)
+- contact-grid-review-prompt.md (fix-finetune-dE)
