@@ -306,12 +306,44 @@ def battery(model, dev, args):
     return out
 
 
+def contact_energy_rows(args, dev):
+    """Contact-scene energy rows vs the true simulator (scatter_regress_contact.py). Built separately from the gate model: the gate model has its gravity
+    vector and contact head zeroed (--contact-free) and dt = args.dt, while contact scenes need the full model at the contact-world dt."""
+    from scripts import scatter_contact_scenes as cs
+    from scripts import scatter_regress_contact as rc
+
+    model = cs.build(args.contact_model if args.contact else "E", dev, args.ckpt)
+    for o in [x for x in args.eval_opt.split(",") if x]:
+        sf.apply_opt(model, o)
+    return rc.run_contact_energy(model, dev, model.extent)
+
+
+def print_contact_energy(base, cand, gate_ok):
+    from scripts import scatter_regress_contact as rc
+
+    if "contact_energy" not in cand:
+        return True
+    print(f"contact-energy rows vs true simulator E_true(t), absolute thresholds; counted only if the geometry-free gate passed (gate {'PASS' if gate_ok else 'FAIL'})"
+          + (f"; note: {cand['meta']['note']}" if cand["meta"].get("note") else ""))
+    bs = base.get("contact_energy", {}).get("summary", {})
+    cs_ = cand["contact_energy"]["summary"]
+    print(f"{'metric':20s} {'baseline':>10s} {'candidate':>10s} {'threshold':>10s}")
+    good = True
+    for name, v, t, verdict in rc.score(cs_):
+        good &= verdict == "PASS"
+        print(f"{name:20s} {bs[name] if name in bs else float('nan'):10.4g} {v:10.4g} {t:10.4g}  {verdict}")
+    print(f"info (not gated): e_floor@20 {cs_['e_floor@20']:.4g} e_floor@100 {cs_['e_floor@100']:.4g} rest_dev wall {cs_['rest_dev_wall']:.4g} circle {cs_['rest_dev_circle']:.4g}")
+    print("CONTACT OVERALL", ("PASS" if good else "FAIL") if gate_ok else f"NOT COUNTED (gate failed; rows would be {'PASS' if good else 'FAIL'})")
+    return good and gate_ok
+
+
 def run(args):
     dev = torch.device("cuda")
     model = build_model(args, dev)
     res = {"meta": {"ckpt": args.ckpt, "exp": args.exp, "variant": args.variant, "dt": args.dt, "eps": args.eps, "seeds": list(SEEDS),
                     "opt": args.opt, "steps": STEPS, "scenes_per_seed": SCENES, "bh": BH, "timing_reps": TIMING_REPS, "mem_def": MEM_DEF, "torch": torch.__version__,
-                    "gpu": torch.cuda.get_device_name(dev),
+                    "gpu": torch.cuda.get_device_name(dev), "contact": bool(getattr(args, "contact", False)), "contact_free": bool(getattr(args, "contact_free", False)),
+                    "contact_model": getattr(args, "contact_model", None), "note": getattr(args, "note", ""),
                     "git": subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip(),
                     "date": time.strftime("%Y-%m-%dT%H:%M:%S")},
            "regimes": {}, "timing": {}}
@@ -347,6 +379,8 @@ def run(args):
     res["timing"]["expB_batch1_n100"].update(batch=1, n_max=100)
     if not args.no_cons:
         res["conservation"] = conservation_rows(model, dev, args)
+    if getattr(args, "contact_energy", False):
+        res["contact_energy"] = contact_energy_rows(args, dev)
     for k, v in res["timing"].items():
         print(f"timing {k}: {v['tick_ms']:.3f} ms/tick, peak alloc {v['peak_mem_mb']:.1f} MB (reserved {v['peak_reserved_mb']:.1f}, info) (batch {v['batch']}, N {v['n_max']})", flush=True)
     if args.battery:
@@ -441,8 +475,11 @@ def compare(args):
     info = [f"{reg} err@{k} {base['regimes'][reg]['mean']['err'][k]:.4g} -> {cand['regimes'][reg]['mean']['err'][k]:.4g}" for reg in REGIMES for k in INFO_TICKS[reg]]
     print("info (not gated; bh300 err@100 is at the chaos ceiling and not quoted):", "; ".join(info))
     print_floors(cand, args.floors)
-    print("OVERALL", "PASS" if ok else "FAIL")
-    sys.exit(0 if ok else 1)
+    if cand["meta"].get("contact") and not cand["meta"].get("contact_free"):
+        print("WARNING: contact checkpoint run without --contact-free; gate rows include the learned gravity vector and contact head and are not geometry-free")
+    print("OVERALL", "PASS" if ok else "FAIL", "(geometry-free gate)")
+    contact_ok = print_contact_energy(base, cand, ok)
+    sys.exit(0 if (ok and (contact_ok or not args.require_contact)) else 1)
 
 
 def main():
@@ -461,10 +498,14 @@ def main():
     r.add_argument("--contact", action="store_true", help="checkpoint is an option-C ContactScatterField, evaluated with no geometry")
     r.add_argument("--contact-model", default="C")
     r.add_argument("--contact-free", action="store_true", help="with --contact: zero the gravity vector and ball-ball contact head (free-space N-body part only)")
+    r.add_argument("--contact-energy", action="store_true", help="also score contact scenes against the true simulator's energy curve (scatter_regress_contact.py)")
+    r.add_argument("--eval-opt", default="kcache,fastio", help="opts for the contact-energy model (as scatter_contact_scenes.py)")
+    r.add_argument("--note", default="", help="free text stored in meta, printed with the contact rows")
     c = sub.add_parser("compare")
     c.add_argument("--baseline", required=True)
     c.add_argument("--candidate", required=True)
     c.add_argument("--floors", default="results/chaos_floors.json")
+    c.add_argument("--require-contact", action="store_true", help="exit nonzero if the contact-energy rows fail (default: exit code is the geometry-free gate only)")
     args = ap.parse_args()
     run(args) if args.cmd == "run" else compare(args)
 
