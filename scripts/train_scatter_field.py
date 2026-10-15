@@ -152,6 +152,9 @@ def train(model, tensors, args, ckpt_path, log):
             frac = it / max(1, args.iters - 1)
         k = int(round(args.k_start + (args.k_end - args.k_start) * frac))
         lr = args.lr * (0.05 + 0.95 * 0.5 * (1 + np.cos(np.pi * frac)))
+        warm = getattr(args, "lr_warmup", 0)
+        if warm > 0:
+            lr *= min(1.0, (it + 1) / warm)
         for pg in opt.param_groups:
             pg["lr"] = lr
         idx = torch.randint(S, (args.batch,), generator=g).to(args.device)
@@ -181,6 +184,9 @@ def train(model, tensors, args, ckpt_path, log):
         cap = getattr(args, 'loss_cap', 0.0)
         if torch.isfinite(loss) and torch.isfinite(gn) and (cap <= 0 or loss.item() < cap):
             opt.step()
+            step_hook = getattr(args, "step_hook", None)
+            if step_hook:
+                step_hook(it + 1, model, opt)
         else:
             opt.zero_grad()
             skipped += 1
@@ -284,6 +290,7 @@ def main():
     ap.add_argument("--lam-e", type=float, default=0.1)
     ap.add_argument("--lam-l", type=float, default=0.1)
     ap.add_argument("--lr", type=float, default=1e-3)
+    ap.add_argument("--lr-warmup", type=int, default=0, help="linear lr warmup from 0 over this many iterations (0 = off)")
     ap.add_argument("--dt", type=float, default=0.1)
     ap.add_argument("--eps", type=float, default=0.5)
     ap.add_argument("--log-every", type=int, default=100)

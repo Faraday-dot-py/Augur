@@ -16,11 +16,13 @@ def main():
     ap.add_argument("--ckpts", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--variant", default="")
+    ap.add_argument("--expb-seed", type=int, default=9300)
+    ap.add_argument("--cluster-seed", type=int, default=9200)
     args = ap.parse_args()
     torch.manual_seed(4738)
     log = lambda s: print(s, flush=True)
     out = {}
-    fams = {"expB": (24, 9300), "cluster": (12, 9200)}
+    fams = {"expB": (24, args.expb_seed), "cluster": (12, args.cluster_seed)}
     with torch.no_grad():
         scenes = {f: make_scenes(f, n, s) for f, (n, s) in fams.items()}
         for ck in args.ckpts.split(","):
