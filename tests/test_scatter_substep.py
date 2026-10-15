@@ -1,7 +1,10 @@
 import importlib.util
 import os
 
-import pytest
+try:
+    import pytest
+except ImportError:
+    pytest = None
 import torch
 
 from scripts import scatter_field as sf
@@ -42,6 +45,9 @@ def test_force_parts_default_bit_identical():
 def test_force_default_matches_master():
     ref = os.environ.get("REF_SF")
     if not ref or not os.path.exists(ref):
+        if pytest is None:
+            print("SKIP REF_SF not given")
+            return
         pytest.skip("REF_SF (master scripts/scatter_field.py) not given")
     spec = importlib.util.spec_from_file_location("sf_master", ref)
     sfm = importlib.util.module_from_spec(spec)
@@ -98,3 +104,15 @@ def test_apply_opt_nf():
     m = _model()
     sf.apply_opt(m, "nf4@2")
     assert m.respa == 4 and m.respa_rc == 2.0
+
+
+if __name__ == "__main__":
+    for k, fn in list(globals().items()):
+        if k.startswith("test_"):
+            try:
+                fn()
+                print("PASS", k, flush=True)
+            except BaseException as e:
+                if pytest is None or not isinstance(e, pytest.skip.Exception):
+                    raise
+                print("SKIP", k, e, flush=True)
