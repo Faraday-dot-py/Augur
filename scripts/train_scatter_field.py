@@ -40,6 +40,7 @@ VARIANTS = {
     "ms_kp_pot_v_g128_prior": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128, prior=True),
     "ms_kp_pot_v_g128_pp8": dict(net="unet", kernel=True, pp=8.0, split=True, potential=True, verlet=True, grid=128, knn=48),
     "ms_kp_pot_v_g128_prior_pp8": dict(net="unet", kernel=True, pp=8.0, split=True, potential=True, verlet=True, grid=128, prior=True, knn=48),
+    "ms_kp_pot_v_g128_prior_pp8_full": dict(net="unet", kernel=True, pp=8.0, split=True, potential=True, verlet=True, grid=128, prior=True, knn=400),
     "ms_kp_pot_v_g128_cu": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128, cu=True),
     "ms_kp_pot_v_g128_eps": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128, epsin=True),
     "ms_kp_pot_v_g128_mnorm": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128, norm="mass"),

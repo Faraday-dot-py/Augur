@@ -42,9 +42,9 @@ def init_scene(kind, n, rng):
     return pos, vel
 
 
-def make_scenes(kind, n, per_seed):
+def make_scenes(kind, n, per_seed, seed_list=SEEDS):
     ps, vs, seeds = [], [], []
-    for s in SEEDS:
+    for s in seed_list:
         rng = np.random.default_rng(s)
         for _ in range(per_seed):
             p, v = init_scene(kind, n, rng)
@@ -124,12 +124,26 @@ def roll_model(model, pos0, vel0, rel, steps, rec, snap_idx, dt):
             rec(0, pos, speed(mom, C), mom, snap_idx)
             sub = getattr(model, "substeps", 1)
             h = dt / sub
+            M = getattr(model, "respa", 0)
             for t in range(1, steps + 1):
-                for _ in range(sub):
-                    mom = mom + 0.5 * h * a
-                    pos = pos + h * speed(mom, C)
-                    a, field = model.force(pos, speed(mom, C), mass, mask, field)
-                    mom = mom + 0.5 * h * a
+                if M:
+                    hm = dt / M
+                    f = model.pp_acc_sym(pos, mass, mask, model.knn, model.respa_rc)
+                    a_slow = a - f
+                    mom = mom + 0.5 * dt * a_slow
+                    for _ in range(M):
+                        mom = mom + 0.5 * hm * f
+                        pos = pos + hm * speed(mom, C)
+                        f = model.pp_acc_sym(pos, mass, mask, model.knn, model.respa_rc)
+                        mom = mom + 0.5 * hm * f
+                    a, field = model.force(pos, speed(mom + 0.5 * dt * a_slow, C), mass, mask, field)
+                    mom = mom + 0.5 * dt * (a - f)
+                else:
+                    for _ in range(sub):
+                        mom = mom + 0.5 * h * a
+                        pos = pos + h * speed(mom, C)
+                        a, field = model.force(pos, speed(mom, C), mass, mask, field)
+                        mom = mom + 0.5 * h * a
                 rec(t, pos, speed(mom, C), mom, snap_idx)
                 if t % 250 == 0 and not bool(torch.isfinite(pos).any()):
                     return t
@@ -191,7 +205,7 @@ def summarize_set(rec, ticks, sub=""):
 
 
 def build_model(args, dev):
-    model = tsf.build(tsf.EXPS["E"], "ms_kp_pot_v_g128", 0.1).to(dev)
+    model = tsf.build(tsf.EXPS["E"], getattr(args, "variant", "ms_kp_pot_v_g128"), 0.1).to(dev)
     model.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
     model.eval()
     sf.apply_opts(model, args.opt)
@@ -206,14 +220,15 @@ def run(args):
     ticks = sample_ticks(steps)
     for name in args.regimes.split(","):
         kind, n, per = REGIMES[name]
-        pos0, vel0, seeds = make_scenes(kind, n, per)
+        per = args.per_seed or per
+        pos0, vel0, seeds = make_scenes(kind, n, per, tuple(int(s) for s in args.seeds.split(",")) if args.seeds else SEEDS)
         P0 = torch.tensor(pos0, device=dev)
         V0 = torch.tensor(vel0, device=dev)
         B = len(seeds)
         rel = kind == "bh"
         com0 = P0.mean(1, keepdim=True)
         r0 = (P0 - com0).norm(dim=-1).pow(2).mean(1).sqrt()
-        snap_idx = torch.tensor(np.where(seeds == 4738)[0], device=dev)
+        snap_idx = torch.tensor(np.where(seeds == 4738)[0] if (seeds == 4738).any() else [0], device=dev)
         t0 = time.time()
         res = {"ticks": ticks, "seeds": seeds, "r0": r0.cpu().numpy()}
         rec = Recorder(rel, eps, model.extent, r0, steps, B, dev, dt)
@@ -225,6 +240,8 @@ def run(args):
         res["m_done"] = np.array(done)
         print(f"{name} model B={B} N={n} {steps} ticks (stopped {done}) {t_model:.1f}s", flush=True)
         for tag, subs in TRUTH_SUBS.items():
+            if tag not in args.truth.split(","):
+                continue
             if subs == 16 and n > 300:
                 continue
             if tag != "t4" and n > 300:
@@ -316,9 +333,13 @@ def main():
         p.add_argument("--ckpt", required=True)
         p.add_argument("--opt", default="default")
         p.add_argument("--out-dir", default="results/conservation")
+        p.add_argument("--variant", default="ms_kp_pot_v_g128")
         if nm == "run":
             p.add_argument("--steps", type=int, default=10000)
             p.add_argument("--regimes", default=",".join(REGIMES))
+            p.add_argument("--per-seed", type=int, default=0, help="override scenes per seed for every regime (0 = regime default)")
+            p.add_argument("--seeds", default="", help="comma list overriding SEEDS (e.g. 9100,9200,9300 for held-out only)")
+            p.add_argument("--truth", default=",".join(TRUTH_SUBS), help="truth substep sets to roll (subset of t4,t1,t16)")
     args = ap.parse_args()
     os.makedirs(args.out_dir, exist_ok=True)
     run(args) if args.cmd == "run" else probe(args)

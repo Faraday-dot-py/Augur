@@ -67,6 +67,7 @@ class ScatterField(nn.Module):
         self.potential, self.kernel, self.pp, self.split, self.nonet = potential, kernel, pp, split, nonet
         self.verlet = verlet
         self.far, self.far_band, self.far_eps, self.substeps = 0, 0.25, 0.5, 1
+        self.respa, self.respa_rc = 0, 0.0
         self.cu, self.epsin, self.norm = cu, epsin, norm
         self.eps_cur = EPS0
         ncol = 2 + int(cu) + int(epsin)
@@ -375,6 +376,30 @@ class ScatterField(nn.Module):
         w = self._pair_w(r, mj, ok)
         return (w[..., None] * d / r[..., None]).sum(2)
 
+    def pp_pairs_sym(self, pos, mask, knn=16):
+        """(B,N,N) pair set of the dense pair term made symmetric: (i,j) is kept if j is in i's top-knn or i in j's, both
+        within the pair radius."""
+        B, N = mask.shape
+        k = min(knn, N - 1)
+        d_all = pos[:, None, :, :] - pos[:, :, None, :]
+        r_all = torch.sqrt((d_all ** 2).sum(-1) + 1e-8)
+        bad = (1 - mask)[:, None, :] + torch.eye(N, device=pos.device, dtype=pos.dtype)[None]
+        r_sel, idx = torch.topk(r_all + 1e6 * (bad > 0).to(pos.dtype), k, dim=-1, largest=False)
+        sel = torch.zeros_like(r_all).scatter_(2, idx, ((r_sel < 1e5).to(pos.dtype) * mask[:, :, None]))
+        sel = torch.maximum(sel, sel.transpose(1, 2)) * (r_all < self.ppe()).to(pos.dtype)
+        return sel, d_all, r_all
+
+    def pp_acc_sym(self, pos, mass, mask, knn=16, rc=0.0):
+        """Pair term over the symmetric pair set (momentum-exact: both bodies of a pair get the kick). rc > 0 multiplies the
+        pair weight by (1 - (r/rc)^2)^2 for r < rc (0 beyond)."""
+        B, N = mask.shape
+        sel, d, r = self.pp_pairs_sym(pos, mask, knn)
+        if rc:
+            sel = sel * (1 - (r / rc).clamp(max=1.0) ** 2) ** 2
+        mj = (mass * mask)[:, None, :].expand(B, N, N)
+        w = self._pair_w(r, mj, sel)
+        return (w[..., None] * d / r[..., None]).sum(2)
+
     def edge_weight(self, pos):
         d = pos.abs().amax(-1) / (self.extent / 2)
         s = 1 - self.far_band
@@ -442,7 +467,8 @@ class ScatterField(nn.Module):
         g.replay()
         return tuple(o.clone() for o in out)
 
-    def _force(self, pos, vel, mass, mask, field):
+    def _force(self, pos, vel, mass, mask, field, parts=False):
+        """parts=True also returns the pair term (before momfix) as a third output; grid part = a_tok - a_pp."""
         x = self.scatter(pos, vel, mass, mask)
         ns = self._nscale(x, mass, mask) if self.norm else None
         if ns is not None:
@@ -477,14 +503,20 @@ class ScatterField(nn.Module):
         if self.far:
             w = self.edge_weight(pos)[..., None]
             a_tok = a_tok * w + self.far_acc(pos, mass, mask) * (1 - w)
+        a_pp = None
         if self.pp:
-            a_tok = a_tok + self.pp_acc(pos, mass, mask, self.knn)
+            a_pp = self.pp_acc(pos, mass, mask, self.knn)
+            a_tok = a_tok + a_pp
         if self.momfix:
             mm = (mass * mask)[..., None]
             a_tok = a_tok - (mm * a_tok).sum(1, keepdim=True) / mm.sum(1, keepdim=True).clamp_min(1e-9)
+        if parts:
+            return a_tok * mask[..., None], field, (a_pp * mask[..., None] if a_pp is not None else torch.zeros_like(a_tok))
         return a_tok * mask[..., None], field
 
     def step(self, pos, vel, mass, mask, field):
+        if self.respa:
+            return self._step_respa(pos, vel, mass, mask, field, self.dt)
         if self.substeps == 1:
             return self._step(pos, vel, mass, mask, field, self.dt)
         dvt = 0
@@ -505,6 +537,27 @@ class ScatterField(nn.Module):
         a_new, field = self.force(pos_new, vel + dt * a_prev, mass, mask, field)
         dv = 0.5 * dt * (a_prev + a_new)
         return pos_new, vel + dv, (field, a_new), dv
+
+    def _step_respa(self, pos, vel, mass, mask, state, dt):
+        """Symmetric RESPA tick: slow = full force - symmetric pair term, half-kicked at tick start and end (one full force
+        eval per tick, at the tick end, as in Verlet-1); the symmetric pair term is re-evaluated on self.respa KDK substeps.
+        With a zero pair term this is exactly _step (Verlet-1)."""
+        field, a_prev = state
+        if a_prev is None:
+            a_prev, field = self.force(pos, vel, mass, mask, field)
+        h = dt / self.respa
+        f = self.pp_acc_sym(pos, mass, mask, self.knn, self.respa_rc)
+        a_slow = a_prev - f
+        vel0 = vel
+        vel = vel + 0.5 * dt * a_slow
+        for _ in range(self.respa):
+            vel = vel + 0.5 * h * f
+            pos = pos + h * vel
+            f = self.pp_acc_sym(pos, mass, mask, self.knn, self.respa_rc)
+            vel = vel + 0.5 * h * f
+        a_new, field = self.force(pos, vel + 0.5 * dt * a_slow, mass, mask, field)
+        vel = vel + 0.5 * dt * (a_new - f)
+        return pos, vel, (field, a_new), vel - vel0
 
 
 class _StepMod(nn.Module):
@@ -1084,6 +1137,10 @@ def apply_opt(model, name):
         return
     if name.startswith("sub"):
         model.substeps = int(name[3:])
+        return
+    if name.startswith("nf"):
+        m, _, rc = name[2:].partition("@")
+        model.respa, model.respa_rc = int(m), float(rc or 0.0)
         return
     if name == "graph":
         torch.backends.cudnn.benchmark = True
