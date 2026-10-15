@@ -28,8 +28,10 @@ SCHEMES = ("v1", "u2", "u4", "nf2")
 
 
 def build(name, ckpt):
+    torch.manual_seed(4738)
     model = ts.build(CFG, VARIANT.get(name, "ms_kp_pot_v_g128"), DT).to(DEV)
-    model.load_state_dict(torch.load(ckpt, map_location=DEV, weights_only=False)["model"])
+    if ckpt != "init":
+        model.load_state_dict(torch.load(ckpt, map_location=DEV, weights_only=False)["model"])
     return model.eval()
 
 

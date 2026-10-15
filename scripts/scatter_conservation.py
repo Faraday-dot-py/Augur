@@ -205,8 +205,10 @@ def summarize_set(rec, ticks, sub=""):
 
 
 def build_model(args, dev):
+    torch.manual_seed(4738)
     model = tsf.build(tsf.EXPS["E"], getattr(args, "variant", "ms_kp_pot_v_g128"), 0.1).to(dev)
-    model.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
+    if args.ckpt != "init":
+        model.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
     model.eval()
     sf.apply_opts(model, args.opt)
     return model
