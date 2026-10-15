@@ -105,6 +105,19 @@ def conserved(pos, vel, m, mk, eps):
     return E, L, K + (K - E).abs(), r_rms * (2 * mm.sum(-1) * K).sqrt()
 
 
+def energy_scale(pos, vel, m, mk, eps):
+    """K + |U| per scene."""
+    K = 0.5 * ((m * mk) * (vel ** 2).sum(-1)).sum(-1)
+    return K + (K - sf.energy(pos, vel, m, mk, eps)).abs()
+
+
+def energy_sim(pos, vel, m, mk, Pt, Vt, Mt, eps, scale, signed=False):
+    """(E_model(t) - E_truth(t)) / scale per scene at the same tick, both from sf.energy. The target is the reference trajectory's energy at that tick,
+    not E(0): a model that tracks a drifting (dissipative / driven) truth scores 0. Mean over scenes of |.|, or of the signed value if signed."""
+    d = (sf.energy(pos, vel, m, mk, eps) - sf.energy(Pt, Vt, Mt, mk, eps)) / scale
+    return d.mean() if signed else d.abs().mean()
+
+
 def long_penalty(model, pos, vel, m, mk, field, args):
     """Soft dE / dL penalties on the model's own free rollout continued past the supervised window: args.long_windows windows of args.long_k
     ticks, state detached between windows (truncated BPTT), no truth targets (target drift 0). Backprops per window; returns mean |dE|/scale, |dL|/Lscale."""
@@ -164,9 +177,13 @@ def train(model, tensors, args, ckpt_path, log):
         m, mk = M[idx], mask[idx]
         pos, vel = Pw[:, 0], Vw[:, 0]
         field = model.init_field(args.batch, args.device)
-        lp = lv = lm = 0.0
+        lp = lv = lm = le = lb = 0.0
         w = mk[:, :, None]
         denom = mk.sum() * 2 * k
+        lam_e, lam_b = getattr(args, "lam_esim", 0.0), getattr(args, "lam_ebias", 0.0)
+        log_e = lam_e > 0 or lam_b > 0 or getattr(args, "log_esim", False)
+        if log_e:
+            esc = energy_scale(Pw[:, 0], Vw[:, 0], M[idx], mk, args.eps).clamp_min(1e-9)
         for s in range(k):
             pos, vel, m, field, _ = fns[s](pos, vel, m, mk, field) if fns else sf._step_m(model, pos, vel, m, mk, field)
             lm = lm + (((m - M[idx]) ** 2) * mk).sum() / (mk.sum() * k)
@@ -182,7 +199,12 @@ def train(model, tensors, args, ckpt_path, log):
                     h = torch.where(d < dl, d ** 2 / 2, dl * (d - dl / 2))
                 lp = lp + (h * mk).sum() / (mk.sum() * k)
             lv = lv + (((vel - Vw[:, s + 1]) ** 2) * w).sum() / denom
-        loss = lp + 0.1 * lv + lm
+            if log_e:
+                with torch.set_grad_enabled(lam_e > 0 or lam_b > 0):
+                    le = le + energy_sim(pos, vel, m.detach(), mk, Pw[:, s + 1], Vw[:, s + 1], M[idx], args.eps, esc) / k
+                    if lam_b > 0:
+                        lb = lb + energy_sim(pos, vel, m.detach(), mk, Pw[:, s + 1], Vw[:, s + 1], M[idx], args.eps, esc, signed=True) / k
+        loss = lp + 0.1 * lv + lm + lam_e * le + lam_b * abs(lb)
         opt.zero_grad()
         loss.backward()
         if args.long_windows > 0 and torch.isfinite(loss):
@@ -197,6 +219,8 @@ def train(model, tensors, args, ckpt_path, log):
             log(f"it {it} non-finite loss/grad, step skipped ({skipped} total)")
         if it % args.log_every == 0:
             extra = f" long dE {pen[0]:.4g} dL {pen[1]:.4g}" if args.long_windows > 0 and torch.isfinite(loss) else ""
+            if log_e:
+                extra += f" lp {float(lp):.4g} esim {float(le):.4g}" + (f" ebias {float(lb):.4g}" if lam_b > 0 else "")
             log(f"it {it} k {k} loss {loss.item():.6f} t {time.time() - t_start:.0f}s" + extra)
             if all(torch.isfinite(p).all() for p in model.parameters()):
                 torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, ckpt_path)

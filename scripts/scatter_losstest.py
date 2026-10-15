@@ -2,6 +2,8 @@
 Loop identical to scripts/scatter_prior_pp8.py (Exp E data: 2000 scenes x 30 ticks, seed 4738, batch 16, k 4->20, cosine lr, same iterations).
 Setups: scratch (lr 1e-3, random init seed 4738) or warm (lr 5e-4, init = Exp B checkpoint, fresh Adam: E's warm-start recipe).
 Eval seeds 9100/9200/9300 (48 scenes x 100 ticks each: first 24 = 10-200-body scale-init 'ab', last 24 clusters 'cl').
+Arms esim / ebias: euclid + energy-similarity term |E_model(t)-E_truth(t)|/(K0+|U0|) (ts.energy_sim), weight lam = 0.1 lp0/le0 at the initial model (calibrate);
+ebias adds lam |signed batch mean| on top.
 Usage: PYTHONPATH=. python scripts/scatter_losstest.py --setup warm --arm euclid --iters 4000 --init-b <B ckpt>"""
 import argparse
 import json
@@ -79,15 +81,47 @@ def evaluate(model):
                 "force": force_bins(model, P, V, M, mask),
                 "dE100": m["energy_drift_rel_model"][100], "dE100_true": m["energy_drift_rel_true"][100],
             }
+            T = Pm.shape[1]
+            Mx, Kx = M[:, None].expand(-1, T, -1).double(), mask[:, None].expand(-1, T, -1).double()
+            sc = ts.energy_scale(Pt[:, 0], Vt[:, 0], M.double(), mask.double(), EPS)
+            de = (sf.energy(Pm, Vm, Mx, Kx, EPS) - sf.energy(Pt, Vt, Mx, Kx, EPS)) / sc[:, None]
+            res[f"{tag}_{seed}"]["esim"] = {f"t{t}": {"abs_mean": float(de[:, t].abs().mean()), "abs_median": float(de[:, t].abs().median()), "signed_mean": float(de[:, t].mean())}
+                                            for t in (1, 5, 20, 50, 100)}
             r = res[f"{tag}_{seed}"]
-            print(f"{tag} {seed} err@5/10/20/50/100 {[round(x, 5) for x in r['err']]} e20 med/mean/p90/p99 {r['e20']['median']:.4f}/{r['e20']['mean']:.4f}/{r['e20']['p90']:.4f}/{r['e20']['p99']:.4f} force {r['force']}", flush=True)
+            print(f"{tag} {seed} err@5/10/20/50/100 {[round(x, 5) for x in r['err']]} e20 med/mean/p90/p99 {r['e20']['median']:.4f}/{r['e20']['mean']:.4f}/{r['e20']['p90']:.4f}/{r['e20']['p99']:.4f} force {r['force']} esim@20/100 abs {r['esim']['t20']['abs_mean']:.4g}/{r['esim']['t100']['abs_mean']:.4g} signed {r['esim']['t20']['signed_mean']:.4g}/{r['esim']['t100']['signed_mean']:.4g}", flush=True)
     return res
+
+
+@torch.no_grad()
+def calibrate(model, tensors, n=16, k=4, bs=16):
+    """Mean Euclid position term lp and energy-similarity term le of the initial model over n training batches (k-step unroll, same sampling as train,
+    own generator); lam = 0.1 lp / le makes the energy term ~10% of the position term at the start."""
+    P, V, M, mask = [t.float() for t in tensors]
+    g = torch.Generator(device="cpu").manual_seed(4738)
+    lps, les = [], []
+    for _ in range(n):
+        idx = torch.randint(P.shape[0], (bs,), generator=g).to(DEV)
+        t0 = torch.randint(0, 30 - k + 1, (bs,), generator=g).to(DEV)
+        tt = t0[:, None] + torch.arange(k + 1, device=DEV)[None]
+        Pw, Vw, m, mk = P[idx[:, None], tt], V[idx[:, None], tt], M[idx], mask[idx]
+        esc = ts.energy_scale(Pw[:, 0], Vw[:, 0], M[idx], mk, EPS).clamp_min(1e-9)
+        pos, vel, field = Pw[:, 0], Vw[:, 0], model.init_field(bs, DEV)
+        lp = le = 0.0
+        for s in range(k):
+            pos, vel, m, field, _ = sf._step_m(model, pos, vel, m, mk, field)
+            d = (((pos - Pw[:, s + 1]) ** 2).sum(-1) + 1e-12).sqrt() / 2 ** 0.5
+            lp += float((d * mk).sum() / (mk.sum() * k))
+            le += float(ts.energy_sim(pos, vel, m, mk, Pw[:, s + 1], Vw[:, s + 1], M[idx], EPS, esc)) / k
+        lps.append(lp)
+        les.append(le)
+    lp, le = float(np.mean(lps)), float(np.mean(les))
+    return {"lp0": lp, "le0": le, "lam": 0.1 * lp / le}
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--setup", choices=["scratch", "warm"], required=True)
-    ap.add_argument("--arm", choices=["sq", "euclid", "huber", "delta"], required=True)
+    ap.add_argument("--arm", choices=["sq", "euclid", "huber", "delta", "esim", "ebias"], required=True)
     ap.add_argument("--iters", type=int, default=4000)
     ap.add_argument("--init-b", default=None)
     ap.add_argument("--delta", type=float, default=None)
@@ -123,8 +157,16 @@ def main():
             model.load_state_dict(torch.load(args.init_b, map_location=DEV, weights_only=False)["model"])
         r["delta"] = args.delta
         tensors = train_tensors()
+        lam = 0.0
+        if args.arm in ("esim", "ebias"):
+            model.eval()
+            r["calib"] = calibrate(model, tensors)
+            model.train()
+            lam = r["calib"]["lam"]
+            print(key, "calibration", r["calib"], flush=True)
         targs = SimpleNamespace(lr=1e-3 if args.setup == "scratch" else 5e-4, time_budget=0.0, iters=args.iters, k_start=4, k_end=20, batch=16, steps=30,
-                                device=str(DEV), seed=args.seed, log_every=100, opt="", rloss=args.arm, huber_delta=args.delta, long_windows=0)
+                                device=str(DEV), seed=args.seed, log_every=100, opt="", rloss="euclid" if args.arm in ("esim", "ebias") else args.arm,
+                                huber_delta=args.delta, long_windows=0, eps=EPS, lam_esim=lam, lam_ebias=lam if args.arm == "ebias" else 0.0, log_esim=True)
         n_it, secs = ts.train(model, tensors, targs, f"{args.ckpt}/{key}.pt", lambda s: print(key, s, flush=True))
         r.update(train_iters=n_it, train_seconds=secs)
     model.eval()
