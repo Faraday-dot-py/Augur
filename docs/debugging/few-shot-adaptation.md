@@ -31,4 +31,4 @@ Pass: K=20 full reset reduces window err@100 by >=2x on BOTH solar and star, and
 
 ## Part 2 results
 
-(pending)
+Job 3641 failed instantly (tarball lacked the `model` package: ModuleNotFoundError). Job 3643 (smoke then full, `~/assim_job.sh`, log `~/augur-assim-3643.log`, results `~/augur-assim/results/assim/assim.json`) was PENDING (QOSMaxGRESPerUser, behind other agents) when the Polaris SSH session dropped (~2 h in); reconnect needs a Duo push. No numbers yet.
