@@ -40,3 +40,12 @@ Arm B (A + lam * |batch-mean signed error|), job 3631 (completed 21m45s, log ~/l
 - Regression harness: both FAIL bh300 dE_rel_model@100 (.178 scratch, .169 warm vs .048 baseline) and dL_rel_model@100 (2.4 / 3.0 vs .30), same as control/A. OVERALL FAIL.
 
 Verdict: B does not pass the kill criterion either. Prediction check: in-window signed error -> ~0 held for scratch, missed for warm; dE@1000 "within noise of A (0.7-2)" missed for scratch nr100 (0.16, 5x lower) but held for bh300 and warm; err@20 within +-10% of A held; kill criterion fails (held). Scratch nr100 0.16 is within the squared-control range (.125-.39) but is a single scene/seed; needs the 4-scene median and seed 4739 before it counts. Not pursued: bh300 dE/dL gate rows fail in every arm, and err@20 on ab is not better than control. Log: energy-similarity term does not fix long-horizon energy drift; B's bias term is the only variant with a hint of nr100 effect.
+
+Arm B replicate + 4-scene median, job 3636 (23m26s; seed 4738 ckpts reused from 3631, seed 4739 trained fresh, scratch + warm; summarizer rerun locally with the regress_-skip fix, which was not in le_code.tar). Cons medians are over 4 scenes (9100/9200/9300/4738) x 1000 ticks, truth dE nr100 4.5e-5 / bh300 3.6e-4.
+
+nr100 dE@1000 median (seed 4738 / 4739): scratch ctl .84/1.20, A .87/1.12, B .13/.81; warm ctl 1.24/.84, A 1.30/1.04, B .72/.12.
+bh300 dE@1000 median: scratch ctl 2.30/2.21, A 1.96/2.04, B 1.56/2.06; warm ctl 1.72/1.37, A 1.59/1.81, B 1.59/.13.
+Per-scene spread inside one B run is wide (warm 4738 nr100: .58-1.23; scratch 4739 bh300: 1.87-2.52). Rerunning the same 4738 scratch ckpt moved its 4738-scene nr100 dE@1000 from .164 (job 3631) to .218 (cons eval is not bit-reproducible).
+ab err@20 mean (seed 4739): scratch B .0107 (ctl .0095, A .0120), warm B .0081 (ctl .0064, A .0068); with seed 4738 (.0116 / .0086) B is +10-30% worse than control on ab. cl not compared. Regress harness: all four B ckpts OVERALL FAIL (bh300 dE/dL rows), accuracy/timing rows pass.
+
+Verdict: B's nr100 dE@1000 is below the Euclid control in 4/4 (setup, seed) pairs and below A in 4/4, but the size is noisy (.12-.81) and only 2/4 land in the squared-control range (.125-.39); bh300 is unchanged except one warm outlier (.13, still fails dL gate). Costs +10-30% ab err@20. Not adopted; the bias term is a weak nr100 conservation nudge, not a fix. Needs >=3 seeds and a bit-reproducible cons eval before any stronger claim.
