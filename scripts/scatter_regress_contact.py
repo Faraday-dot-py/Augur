@@ -14,6 +14,7 @@ Rows (seed-averaged; families box15 box_var post_circle post_rect disc post_poly
   gain              max over speeds of (max_t E_m - max_t E_t) / (g * drop height) on the same single-ball drops (energy gained on a bounce beyond truth)
   runaway           max over families of fraction of scenes with any ball |dv|/dt > 200 after tick 20
   offgrid           max over families of fraction of balls outside the grid at tick 100
+  gain_multi@50     REPORT ONLY (never gates, not in THRESH): median over scenes of max_{t<=50} (E_m - E_t) / max(|E_t|, K0), floored at 0, multi-ball scenes; floor = perturbed truth
 """
 import math
 
@@ -48,6 +49,12 @@ def track_err(Em, Et, K0):
     return np.where(np.isfinite(e), e, 1e6)
 
 
+def gain_multi(Em, Et, K0, tmax=50):
+    """Report-only multi-ball energy gain: per scene, max over t <= tmax of (E_m - E_t) / max(|E_t|, K0), floored at 0; non-finite counts as 1e6."""
+    d = (Em - Et)[:, : tmax + 1] / np.maximum(np.abs(Et), K0[:, None])[:, : tmax + 1]
+    return np.where(np.isfinite(d), d, 1e6).max(1).clip(min=0)
+
+
 def family_rows(model, fam, dev, extent, steps=STEPS):
     seeds = []
     for seed in cs.EVAL_SEEDS:
@@ -65,13 +72,14 @@ def family_rows(model, fam, dev, extent, steps=STEPS):
         acc = np.linalg.norm(np.diff(Vm, axis=1), axis=-1) / DT * mask[:, None]
         r = {"e_track": {str(k): float(np.median(em[:, k])) for k in TRACK_TICKS}, "e_floor": {str(k): float(np.median(ef[:, k])) for k in TRACK_TICKS},
              "E_model": {str(k): float(np.median(Em[:, k])) for k in TRACK_TICKS}, "E_true": {str(k): float(np.median(Et[:, k])) for k in TRACK_TICKS},
+             "gain_multi": float(np.median(gain_multi(Em, Et, K0))), "gain_multi_floor": float(np.median(gain_multi(Ef, Et, K0))),
              "runaway": float((acc[:, 20:] > 200).any(axis=(1, 2)).mean()),
              "offgrid": float(((np.abs(Pm[:, steps]) > extent / 2).any(-1) * mask).sum() / mask.sum())}
         seeds.append(r)
     out = {}
     for k in ("e_track", "e_floor", "E_model", "E_true"):
         out[k] = {t: float(np.mean([s[k][t] for s in seeds])) for t in seeds[0][k]}
-    for k in ("runaway", "offgrid"):
+    for k in ("runaway", "offgrid", "gain_multi", "gain_multi_floor"):
         out[k] = float(np.mean([s[k] for s in seeds]))
     print(f"contact-energy {fam} e_track {out['e_track']} floor {out['e_floor']} runaway {out['runaway']:.3f} offgrid {out['offgrid']:.3f}", flush=True)
     return out
@@ -125,7 +133,8 @@ def summarize(res):
     cd, cm = rest_summary(res["restitution_circle"])
     return {"e_track@20": mean("e_track", "20"), "e_track@100": mean("e_track", "100"), "e_floor@20": mean("e_floor", "20"), "e_floor@100": mean("e_floor", "100"),
             "rest_dev": max(wd, cd), "rest_dev_wall": wd, "rest_dev_circle": cd, "rest_miss": max(wm, cm),
-            "gain": max(r["gain"] for r in rows.values()), "runaway": max(f["runaway"] for f in fam.values()), "offgrid": max(f["offgrid"] for f in fam.values())}
+            "gain": max(r["gain"] for r in rows.values()), "runaway": max(f["runaway"] for f in fam.values()), "offgrid": max(f["offgrid"] for f in fam.values()),
+            "gain_multi@50": float(np.mean([f["gain_multi"] for f in fam.values()])), "gain_multi_floor@50": float(np.mean([f["gain_multi_floor"] for f in fam.values()]))}
 
 
 def run_contact_energy(model, dev, extent, fams=FAMS):

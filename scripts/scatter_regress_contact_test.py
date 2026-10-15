@@ -95,6 +95,27 @@ def test_score_and_gating():
     check("no contact_energy block -> no effect", sr.print_contact_energy({}, {"meta": meta}, True) is True)
 
 
+def test_replicates_and_exit_policy():
+    reps = [{"model": {"dE": 0.006, "frac_ge_c": None}, "vir_gap": 0.1}, {"model": {"dE": 0.019, "frac_ge_c": None}, "vir_gap": 0.3}, {"model": {"dE": 0.017, "frac_ge_c": None}, "vir_gap": 0.2}]
+    med, sp = sr.median_reps(reps), sr.spread_reps(reps)
+    check("median_reps takes the leaf-wise median, keeps None", abs(med["model"]["dE"] - 0.017) < 1e-12 and abs(med["vir_gap"] - 0.2) < 1e-12 and med["model"]["frac_ge_c"] is None, str(med))
+    check("spread_reps records [min, max]", sp["model"]["dE"] == [0.006, 0.019] and sp["vir_gap"] == [0.1, 0.3], str(sp))
+    ns = lambda **k: type("A", (), dict(require_contact=False, no_require_contact=False, **k))()
+    check("contact ckpt gates exit by default", sr.contact_gates_exit(ns(), {"contact": True}))
+    check("gravity-only run unaffected", not sr.contact_gates_exit(ns(), {"contact": False}) and not sr.contact_gates_exit(ns(), {}))
+    check("--no-require-contact overrides", not sr.contact_gates_exit(ns(no_require_contact=True), {"contact": True}))
+    check("--require-contact forces it on", sr.contact_gates_exit(ns(require_contact=True), {"contact": False}))
+    check("multi-ball gain is report-only (not in THRESH or score)", "gain_multi@50" not in rc.THRESH and all(r[0] in rc.THRESH for r in rc.score({**dict.fromkeys(rc.THRESH, 0.0), "gain_multi@50": 9e9})))
+    K0 = np.array([2.0, 2.0])
+    Et = np.full((2, 101), 2.0)
+    Em = Et.copy()
+    Em[0, 10] = 3.0
+    Em[1, 60] = 9.0
+    g = rc.gain_multi(Em, Et, K0)
+    check("gain_multi: gain within t<=50 counted (0.5), after 50 and losses ignored", abs(g[0] - 0.5) < 1e-12 and g[1] == 0.0, str(g))
+    check("gain_multi: non-finite model energy = 1e6", rc.gain_multi(np.full((1, 101), np.nan), np.ones((1, 101)), np.ones(1))[0] == 1e6)
+
+
 def test_baseline_compare_unchanged():
     if not os.path.exists(BASE):
         print("SKIP baseline compare (no", BASE, ")")
@@ -112,6 +133,7 @@ if __name__ == "__main__":
     test_apex()
     test_truth_vs_truth_and_frozen()
     test_score_and_gating()
+    test_replicates_and_exit_policy()
     test_baseline_compare_unchanged()
     print("ALL PASS" if all(OK) else "SOME FAILED", len(OK), "checks")
     sys.exit(0 if all(OK) else 1)

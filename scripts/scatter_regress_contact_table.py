@@ -16,14 +16,14 @@ def main():
               f"{c['nr100']['model']['dE']:.4g} | {c['nr100']['model']['dL']:.4g} | {c['bh300']['model']['dE']:.4g} | {c['bh300']['model']['dL']:.4g} | {c['nr100']['vir_gap']:.4g} | {c['bh300']['vir_gap']:.4g} |")
     print()
     names = list(rc.THRESH)
-    print("| arm | " + " | ".join(f"{k} (<= {rc.THRESH[k]})" for k in names) + " | floor@20 / @100 | rest_dev wall / circle |")
-    print("|---|" + "---|" * (len(names) + 2))
+    print("| arm | " + " | ".join(f"{k} (<= {rc.THRESH[k]})" for k in names) + " | floor@20 / @100 | rest_dev wall / circle | gain_multi@50 (report only) / floor |")
+    print("|---|" + "---|" * (len(names) + 3))
     for n, r in runs:
         if "contact_energy" not in r:
             continue
         s = r["contact_energy"]["summary"]
         cells = [f"{s[k]:.4g} {v}" for k, _, _, v in rc.score(s)]
-        print(f"| {n} | " + " | ".join(cells) + f" | {s['e_floor@20']:.3g} / {s['e_floor@100']:.3g} | {s['rest_dev_wall']:.3g} / {s['rest_dev_circle']:.3g} |")
+        print(f"| {n} | " + " | ".join(cells) + f" | {s['e_floor@20']:.3g} / {s['e_floor@100']:.3g} | {s['rest_dev_wall']:.3g} / {s['rest_dev_circle']:.3g} | {s.get('gain_multi@50', float('nan')):.3g} / {s.get('gain_multi_floor@50', float('nan')):.3g} |")
     print()
     print("restitution e_model/e_truth, wall (v: model, truth, gain) per arm")
     for n, r in runs:

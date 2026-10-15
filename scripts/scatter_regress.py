@@ -162,6 +162,27 @@ def metrics_ab(model, data, dev, eps):
     return out, (P, M, mask)
 
 
+def median_reps(reps):
+    """Leaf-wise median over replicate dicts of identical structure (None leaves kept)."""
+    if isinstance(reps[0], dict):
+        return {k: median_reps([r[k] for r in reps]) for k in reps[0]}
+    return None if reps[0] is None else float(np.median(reps))
+
+
+def spread_reps(reps):
+    """Leaf-wise [min, max] over replicate dicts (run-to-run spread; GPU nondeterminism)."""
+    if isinstance(reps[0], dict):
+        return {k: spread_reps([r[k] for r in reps]) for k in reps[0]}
+    return None if reps[0] is None else [float(min(reps)), float(max(reps))]
+
+
+def contact_gates_exit(args, meta):
+    """Contact-energy rows set the compare exit code for contact checkpoints (auto-detected from meta); gravity-only runs are unaffected."""
+    if args.no_require_contact:
+        return False
+    return bool(args.require_contact or meta.get("contact"))
+
+
 def conservation_rows(model, dev, args):
     """Standing long-horizon rows (CONS_STEPS ticks): median over scenes of |dE|/(K0+|U0|), |dL|/Lscale, |dP|, bound fraction, virial, outside-grid fraction,
     max |v|/c and fraction with |v|>=c (bh only), model and exact-sim truth (4 substeps), regimes from scatter_conservation."""
@@ -332,6 +353,7 @@ def print_contact_energy(base, cand, gate_ok):
     for name, v, t, verdict in rc.score(cs_):
         good &= verdict == "PASS"
         print(f"{name:20s} {bs[name] if name in bs else float('nan'):10.4g} {v:10.4g} {t:10.4g}  {verdict}")
+    print(f"report-only multi-ball energy gain@50: {cs_.get('gain_multi@50', float('nan')):.4g} (truth-perturbation floor {cs_.get('gain_multi_floor@50', float('nan')):.4g})")
     print(f"info (not gated): e_floor@20 {cs_['e_floor@20']:.4g} e_floor@100 {cs_['e_floor@100']:.4g} rest_dev wall {cs_['rest_dev_wall']:.4g} circle {cs_['rest_dev_circle']:.4g}")
     print("CONTACT OVERALL", ("PASS" if good else "FAIL") if gate_ok else f"NOT COUNTED (gate failed; rows would be {'PASS' if good else 'FAIL'})")
     return good and gate_ok
@@ -378,7 +400,12 @@ def run(args):
     res["timing"]["expB_batch1_n100"] = timed(lambda: sf.rollout(model, *a1, STEPS), STEPS, dev)
     res["timing"]["expB_batch1_n100"].update(batch=1, n_max=100)
     if not args.no_cons:
-        res["conservation"] = conservation_rows(model, dev, args)
+        reps = [conservation_rows(model, dev, args) for _ in range(max(1, args.replicates))]
+        res["conservation"] = median_reps(reps)
+        res["conservation_replicates"] = len(reps)
+        if len(reps) > 1:
+            res["conservation_spread"] = spread_reps(reps)
+            res["conservation_reps"] = reps
     if getattr(args, "contact_energy", False):
         res["contact_energy"] = contact_energy_rows(args, dev)
     for k, v in res["timing"].items():
@@ -477,9 +504,17 @@ def compare(args):
     print_floors(cand, args.floors)
     if cand["meta"].get("contact") and not cand["meta"].get("contact_free"):
         print("WARNING: contact checkpoint run without --contact-free; gate rows include the learned gravity vector and contact head and are not geometry-free")
+    if "conservation_spread" in cand:
+        print(f"cons rows are the median of {cand['conservation_replicates']} replicate evals; run-to-run spread [min, max] (not gated):")
+        for reg, sp in cand["conservation_spread"].items():
+            print(f"  {reg}: " + "; ".join(f"{k} {sp['model'][k][0]:.4g}..{sp['model'][k][1]:.4g}" for k in ("dE", "dL", "dP", "vir")))
     print("OVERALL", "PASS" if ok else "FAIL", "(geometry-free gate)")
     contact_ok = print_contact_energy(base, cand, ok)
-    sys.exit(0 if (ok and (contact_ok or not args.require_contact)) else 1)
+    gates = contact_gates_exit(args, cand["meta"])
+    if gates and "contact_energy" not in cand:
+        print("WARNING: contact rows gate the exit code but this candidate has no contact_energy block (run with --contact-energy); exit code is the gate only")
+    print(f"exit code: geometry-free gate{' + contact-energy rows' if gates else ' only'}")
+    sys.exit(0 if (ok and (contact_ok or not gates)) else 1)
 
 
 def main():
@@ -494,6 +529,7 @@ def main():
     r.add_argument("--eps", type=float, default=0.5)
     r.add_argument("--opt", default="default", help="default = kcache,fastio,cl,graph,auto; none = eager; -flag opts out")
     r.add_argument("--no-cons", action="store_true")
+    r.add_argument("--replicates", type=int, default=3, help="replicate evals of the long-horizon conservation (gate) rows; the median is gated, the spread recorded")
     r.add_argument("--battery", action="store_true")
     r.add_argument("--contact", action="store_true", help="checkpoint is an option-C ContactScatterField, evaluated with no geometry")
     r.add_argument("--contact-model", default="C")
@@ -505,7 +541,8 @@ def main():
     c.add_argument("--baseline", required=True)
     c.add_argument("--candidate", required=True)
     c.add_argument("--floors", default="results/chaos_floors.json")
-    c.add_argument("--require-contact", action="store_true", help="exit nonzero if the contact-energy rows fail (default: exit code is the geometry-free gate only)")
+    c.add_argument("--require-contact", action="store_true", help="contact-energy rows set the exit code (default: on for contact checkpoints, off otherwise)")
+    c.add_argument("--no-require-contact", action="store_true", help="contact-energy rows never set the exit code")
     args = ap.parse_args()
     run(args) if args.cmd == "run" else compare(args)
 
