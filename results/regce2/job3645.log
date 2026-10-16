@@ -1,0 +1,554 @@
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 3200305 Oct  3 01:40 checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 1145394 Oct 13 15:59 /home/adamwebb/augur-bfrozen/checkpoints_contact/Bf1.pt
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 1185025 Oct 13 16:13 /home/adamwebb/augur-bfrozen/checkpoints_contact/Bf2.pt
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 3310345 Oct  7 01:19 /home/adamwebb/augur-contact/checkpoints_contact/B2.pt
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 3256731 Oct 12 11:41 /home/adamwebb/augur-contact/checkpoints_contact/C.pt
+=== tests
+PASS energy = mean(0.5 v^2 - g x) [[-17.]]
+PASS model tracking a decaying truth energy scores ~0 0.00e+00
+PASS conserving model is penalised against a dissipative truth 0.632
+PASS non-finite model energy scores 1e6 
+PASS elastic bounce apex ratio ~1 1.0
+PASS no reversal -> None 
+PASS truth as model: restitution ratio exactly 1 and gain 0 {'6': {'e_model': 0.9992742406807222, 'e_truth': 0.9992742406807222, 'gain': 0.0}, '10': {'e_model': 1.0005705428887686, 'e_truth': 1.0005705428887686, 'gain': 0.0}}
+PASS rest_summary truth-vs-truth 
+PASS static (frozen-gas) model: no rebound counted as miss {'6': {'e_model': None, 'e_truth': 0.9992742406807222, 'gain': -0.027779760964172735}, '10': {'e_model': None, 'e_truth': 1.0005705428887686, 'gain': -0.017660484624495078}}
+PASS score all PASS 
+PASS score FAIL on gain and non-finite runaway 
+PASS contact rows counted when gate passes, not counted when it fails 
+PASS no contact_energy block -> no effect 
+PASS median_reps takes the leaf-wise median, keeps None {'model': {'dE': 0.017, 'frac_ge_c': None}, 'vir_gap': 0.2}
+PASS spread_reps records [min, max] {'model': {'dE': [0.006, 0.019], 'frac_ge_c': None}, 'vir_gap': [0.1, 0.3]}
+PASS contact ckpt gates exit by default 
+PASS gravity-only run unaffected 
+Traceback (most recent call last):
+  File "/home/adamwebb/augur-regce2/scripts/scatter_regress_contact_test.py", line 136, in <module>
+    test_replicates_and_exit_policy()
+  File "/home/adamwebb/augur-regce2/scripts/scatter_regress_contact_test.py", line 106, in test_replicates_and_exit_policy
+    check("--no-require-contact overrides", not sr.contact_gates_exit(ns(no_require_contact=True), {"contact": True}))
+                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/augur-regce2/scripts/scatter_regress_contact_test.py", line 103, in <lambda>
+    ns = lambda **k: type("A", (), dict(require_contact=False, no_require_contact=False, **k))()
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: dict() got multiple values for keyword argument 'no_require_contact'
+=== E (zero-shot, no geometry control)
+two_body seed 9100 err@[5, 10, 20, 50, 100] [0.00075, 0.00258, 0.0079, 0.04198, 0.14559]
+two_body seed 9200 err@[5, 10, 20, 50, 100] [0.00145, 0.00408, 0.01088, 0.04524, 0.14706]
+two_body seed 9300 err@[5, 10, 20, 50, 100] [0.00074, 0.00255, 0.00801, 0.03565, 0.10622]
+two_body seed 4738 err@[5, 10, 20, 50, 100] [0.00128, 0.00317, 0.00956, 0.04049, 0.12753]
+two_body MEAN err [0.00105, 0.00309, 0.00908, 0.04084, 0.1316] dE/E 0.1219 (true 6.189e-05)
+expB seed 9100 err@[5, 10, 20, 50, 100] [0.00291, 0.00826, 0.02391, 0.1598, 1.42834]
+expB seed 9200 err@[5, 10, 20, 50, 100] [0.00315, 0.00849, 0.02449, 0.16254, 1.43414]
+expB seed 9300 err@[5, 10, 20, 50, 100] [0.00312, 0.00809, 0.02435, 0.15844, 1.41468]
+expB seed 4738 err@[5, 10, 20, 50, 100] [0.00287, 0.00768, 0.02309, 0.14863, 1.41257]
+expB MEAN err [0.00301, 0.00813, 0.02396, 0.15735, 1.42243] dE/E 0.0107 (true 0.0001092)
+bh300 seed 9100 err@[5, 10, 20, 50, 100] [0.00922, 0.02207, 0.06551, 0.91021, 4.61867]
+bh300 seed 9200 err@[5, 10, 20, 50, 100] [0.00701, 0.01885, 0.05724, 1.01822, 4.89956]
+bh300 seed 9300 err@[5, 10, 20, 50, 100] [0.00729, 0.01994, 0.05851, 0.82769, 4.61774]
+bh300 seed 4738 err@[5, 10, 20, 50, 100] [0.00829, 0.02273, 0.06731, 0.89841, 4.9056]
+bh300 MEAN err [0.00795, 0.0209, 0.06214, 0.91363, 4.76039] dE/E 0.03482 (true 0.0002488)
+cons nr100 1000t dE 0.03873 (true 4.364e-05) dL 0.0137 bound 0.900/0.970 vir 0.935/0.904 outgrid 0.150
+cons bh300 1000t dE 0.4847 (true 0.0003271) dL 2.9 bound 0.730/0.880 vir 0.918/0.931 outgrid 0.307
+cons nr100 1000t dE 0.01149 (true 4.364e-05) dL 0.05775 bound 0.900/0.970 vir 0.98/0.904 outgrid 0.140
+cons bh300 1000t dE 0.4747 (true 0.0003271) dL 2.675 bound 0.740/0.880 vir 0.939/0.931 outgrid 0.270
+cons nr100 1000t dE 0.01409 (true 4.364e-05) dL 0.05783 bound 0.890/0.970 vir 1.05/0.904 outgrid 0.140
+cons bh300 1000t dE 0.4675 (true 0.0003271) dL 2.789 bound 0.740/0.880 vir 0.946/0.931 outgrid 0.277
+loaded checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt: missing [] unexpected []
+contact-energy box15 e_track {'5': 0.3852944921014923, '20': 1.0722436480136286, '50': 2.504988052911863, '100': 5.061755133103064} floor {'5': 3.0130554172891642e-05, '20': 0.038481697571701924, '50': 0.2753656065920526, '100': 0.6042831925511614} runaway 0.000 offgrid 0.006
+contact-energy box_var e_track {'5': 0.13355069912396703, '20': 0.4080786966795316, '50': 1.074994489975821, '100': 2.417672159280334} floor {'5': 9.598294518195605e-06, '20': 0.014380005092189342, '50': 0.08093448455095323, '100': 0.13588125582227023} runaway 0.000 offgrid 0.006
+contact-energy post_circle e_track {'5': 0.34708785521266977, '20': 1.0040320613561888, '50': 2.530494195186122, '100': 5.7700217325049765} floor {'5': 2.4528902510781027e-05, '20': 0.031562589790401115, '50': 0.32602691074391693, '100': 0.36174573682871797} runaway 0.000 offgrid 0.002
+contact-energy post_rect e_track {'5': 0.32019090407801426, '20': 0.6888503183572009, '50': 1.8365557931661642, '100': 3.443861202291007} floor {'5': 1.964835757143585e-05, '20': 0.024977709339517647, '50': 0.20433384973530586, '100': 0.2440556605873836} runaway 0.000 offgrid 0.004
+contact-energy disc e_track {'5': 0.19788171548689693, '20': 0.643525160053069, '50': 1.7702211333105142, '100': 3.4568397288389705} floor {'5': 1.555936439417996e-05, '20': 0.018271415623489773, '50': 0.1364771735248771, '100': 0.16669042208599674} runaway 0.000 offgrid 0.008
+contact-energy post_poly e_track {'5': 0.4362977501556354, '20': 0.863423391915969, '50': 2.037861789095819, '100': 4.551555440545942} floor {'5': 2.1673524507699484e-05, '20': 0.04715381353039222, '50': 0.3655217013481717, '100': 0.4279472790179864} runaway 0.000 offgrid 0.005
+contact-energy summary {'e_track@20': 0.78, 'e_track@100': 4.117, 'e_floor@20': 0.0291, 'e_floor@100': 0.3234, 'rest_dev': inf, 'rest_dev_wall': inf, 'rest_dev_circle': inf, 'rest_miss': 1.0, 'gain': -0.0117, 'runaway': 0.0, 'offgrid': 0.008, 'gain_multi@50': 2.3228, 'gain_multi_floor@50': 0.8731}
+timing two_body: 3.262 ms/tick, peak alloc 234.8 MB (reserved 3566.0, info) (batch 48, N 2)
+timing expB: 3.415 ms/tick, peak alloc 257.0 MB (reserved 3592.0, info) (batch 48, N 94)
+timing bh300: 0.709 ms/tick, peak alloc 241.0 MB (reserved 3566.0, info) (batch 1, N 300)
+timing expB_batch1_n100: 0.677 ms/tick, peak alloc 285.3 MB (reserved 3624.0, info) (batch 1, N 100)
+wrote results/regce2/E.json
+=== C
+loaded /home/adamwebb/augur-contact/checkpoints_contact/C.pt: missing [] unexpected []
+/home/adamwebb/augur-regce2/scripts/scatter_contact_scenes.py:154: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  return float(model.gscale)
+contact free-space: gscale 1.0978697538375854
+two_body seed 9100 err@[5, 10, 20, 50, 100] [0.10645, 0.36191, 1.63151, 11.34741, 15.59787]
+two_body seed 9200 err@[5, 10, 20, 50, 100] [0.08966, 0.40235, 1.94613, 11.22967, 15.26712]
+two_body seed 9300 err@[5, 10, 20, 50, 100] [0.12965, 0.3931, 1.66084, 11.04775, 15.86847]
+two_body seed 4738 err@[5, 10, 20, 50, 100] [0.09933, 0.36878, 1.79263, 10.71605, 14.74237]
+two_body MEAN err [0.10628, 0.38153, 1.75778, 11.08522, 15.36896] dE/E 170 (true 6.189e-05)
+expB seed 9100 err@[5, 10, 20, 50, 100] [0.44211, 1.59357, 5.45738, 68.5137, 670.19414]
+expB seed 9200 err@[5, 10, 20, 50, 100] [0.44603, 1.5808, 5.27078, 73.36424, 615.07545]
+expB seed 9300 err@[5, 10, 20, 50, 100] [0.45075, 1.59364, 5.30474, 64.46007, 760.97479]
+expB seed 4738 err@[5, 10, 20, 50, 100] [0.42916, 1.53395, 5.25595, 68.13523, 659.18444]
+expB MEAN err [0.44201, 1.57549, 5.32221, 68.61831, 676.3572] dE/E 1.216e+06 (true 0.0001092)
+bh300 seed 9100 err@[5, 10, 20, 50, 100] [0.90065, 3.07363, 9.41445, 25.24178, 68.16501]
+bh300 seed 9200 err@[5, 10, 20, 50, 100] [0.84774, 2.90053, 9.42264, 28.21048, 73.10193]
+bh300 seed 9300 err@[5, 10, 20, 50, 100] [0.91798, 3.14521, 9.70393, 26.1128, 69.18269]
+bh300 seed 4738 err@[5, 10, 20, 50, 100] [0.94179, 3.12038, 9.83528, 23.32466, 66.2682]
+bh300 MEAN err [0.90204, 3.05994, 9.59407, 25.72243, 69.17946] dE/E 41.68 (true 0.0002488)
+cons nr100 1000t dE 3.456e+04 (true 4.364e-05) dL 38.07 bound 0.000/0.970 vir 1.13e+07/0.904 outgrid 1.000
+cons bh300 1000t dE 1.892e+04 (true 0.0003271) dL 3494 bound 0.000/0.880 vir 3.48e+05/0.931 outgrid 1.000
+cons nr100 1000t dE 9708 (true 4.364e-05) dL 38.07 bound 0.000/0.970 vir 4.81e+06/0.904 outgrid 1.000
+cons bh300 1000t dE 1.752e+04 (true 0.0003271) dL 6307 bound 0.000/0.880 vir 3.37e+05/0.931 outgrid 1.000
+cons nr100 1000t dE 2.506e+04 (true 4.364e-05) dL 38.07 bound 0.000/0.970 vir 1.01e+07/0.904 outgrid 1.000
+cons bh300 1000t dE 1.766e+04 (true 0.0003271) dL 5948 bound 0.000/0.880 vir 4.31e+05/0.931 outgrid 1.000
+loaded /home/adamwebb/augur-contact/checkpoints_contact/C.pt: missing [] unexpected []
+contact-energy box15 e_track {'5': 0.43127468795324314, '20': 5.11031334585707, '50': 3515.3481595053877, '100': 8764.830200215894} floor {'5': 3.0130554172891642e-05, '20': 0.038481697571701924, '50': 0.2753656065920526, '100': 0.6042831925511614} runaway 1.000 offgrid 1.000
+contact-energy box_var e_track {'5': 0.11812817373224878, '20': 1.0351058921372902, '50': 1878.8340465566755, '100': 1950.121161160171} floor {'5': 9.598294518195605e-06, '20': 0.014380005092189342, '50': 0.08093448455095323, '100': 0.13588125582227023} runaway 0.972 offgrid 1.000
+contact-energy post_circle e_track {'5': 0.25664656385923484, '20': 2.9490449167028783, '50': 3911.8169056893053, '100': 4356.602766863481} floor {'5': 2.4528902510781027e-05, '20': 0.031562589790401115, '50': 0.32602691074391693, '100': 0.36174573682871797} runaway 1.000 offgrid 1.000
+contact-energy post_rect e_track {'5': 0.22278287404562036, '20': 1.9306667682686267, '50': 3303.5907477822734, '100': 3504.770150115999} floor {'5': 1.964835757143585e-05, '20': 0.024977709339517647, '50': 0.20433384973530586, '100': 0.2440556605873836} runaway 1.000 offgrid 1.000
+contact-energy disc e_track {'5': 0.15932889366790465, '20': 1.3110154424899318, '50': 2494.0069926799424, '100': 2790.014501644293} floor {'5': 1.555936439417996e-05, '20': 0.018271415623489773, '50': 0.1364771735248771, '100': 0.16669042208599674} runaway 1.000 offgrid 1.000
+contact-energy post_poly e_track {'5': 0.31480450812204835, '20': 4.509393550290226, '50': 1551.7347787340095, '100': 3389.3088350467024} floor {'5': 2.1673524507699484e-05, '20': 0.04715381353039222, '50': 0.3655217013481717, '100': 0.4279472790179864} runaway 1.000 offgrid 1.000
+contact-energy summary {'e_track@20': 2.8076, 'e_track@100': 4125.9413, 'e_floor@20': 0.0291, 'e_floor@100': 0.3234, 'rest_dev': 0.2613, 'rest_dev_wall': 0.2613, 'rest_dev_circle': 0.1657, 'rest_miss': 0.0, 'gain': 15.6121, 'runaway': 1.0, 'offgrid': 1.0, 'gain_multi@50': 5467.7483, 'gain_multi_floor@50': 0.8731}
+timing two_body: 4.876 ms/tick, peak alloc 871.4 MB (reserved 1122.0, info) (batch 48, N 2)
+timing expB: 5.161 ms/tick, peak alloc 888.8 MB (reserved 1140.0, info) (batch 48, N 94)
+timing bh300: 2.866 ms/tick, peak alloc 87.7 MB (reserved 98.0, info) (batch 1, N 300)
+timing expB_batch1_n100: 2.827 ms/tick, peak alloc 87.5 MB (reserved 98.0, info) (batch 1, N 100)
+wrote results/regce2/C.json
+=== Bf1
+loaded /home/adamwebb/augur-bfrozen/checkpoints_contact/Bf1.pt: missing [] unexpected []
+/home/adamwebb/augur-regce2/scripts/scatter_contact_scenes.py:154: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  return float(model.gscale)
+contact free-space: gscale 1.0
+two_body seed 9100 err@[5, 10, 20, 50, 100] [0.00074, 0.00258, 0.00793, 0.04202, 0.14516]
+two_body seed 9200 err@[5, 10, 20, 50, 100] [0.00145, 0.00408, 0.01085, 0.04501, 0.14525]
+two_body seed 9300 err@[5, 10, 20, 50, 100] [0.00074, 0.00256, 0.00801, 0.03566, 0.10521]
+two_body seed 4738 err@[5, 10, 20, 50, 100] [0.00127, 0.00317, 0.00961, 0.04064, 0.12748]
+two_body MEAN err [0.00105, 0.0031, 0.0091, 0.04083, 0.13077] dE/E 0.1291 (true 6.189e-05)
+expB seed 9100 err@[5, 10, 20, 50, 100] [0.00291, 0.00825, 0.0239, 0.1598, 1.43]
+expB seed 9200 err@[5, 10, 20, 50, 100] [0.00315, 0.00849, 0.02447, 0.16259, 1.43058]
+expB seed 9300 err@[5, 10, 20, 50, 100] [0.00312, 0.00809, 0.02434, 0.15844, 1.41471]
+expB seed 4738 err@[5, 10, 20, 50, 100] [0.00287, 0.00768, 0.02308, 0.14857, 1.41384]
+expB MEAN err [0.00301, 0.00813, 0.02395, 0.15735, 1.42228] dE/E 0.0107 (true 0.0001092)
+bh300 seed 9100 err@[5, 10, 20, 50, 100] [0.00923, 0.02209, 0.06752, 0.95989, 5.02257]
+bh300 seed 9200 err@[5, 10, 20, 50, 100] [0.00703, 0.01887, 0.05758, 0.98451, 5.09798]
+bh300 seed 9300 err@[5, 10, 20, 50, 100] [0.00729, 0.01999, 0.05904, 0.8202, 4.58386]
+bh300 seed 4738 err@[5, 10, 20, 50, 100] [0.0083, 0.02246, 0.06931, 0.8678, 4.84936]
+bh300 MEAN err [0.00796, 0.02085, 0.06337, 0.9081, 4.88844] dE/E 0.06905 (true 0.0002488)
+cons nr100 1000t dE 0.03725 (true 4.364e-05) dL 0.01506 bound 0.900/0.970 vir 0.943/0.904 outgrid 0.120
+cons bh300 1000t dE 0.6419 (true 0.0003271) dL 2.959 bound 0.763/0.880 vir 0.899/0.931 outgrid 0.267
+cons nr100 1000t dE 0.01928 (true 4.364e-05) dL 0.0456 bound 0.910/0.970 vir 0.976/0.904 outgrid 0.140
+cons bh300 1000t dE 0.6393 (true 0.0003271) dL 1.794 bound 0.747/0.880 vir 0.981/0.931 outgrid 0.257
+cons nr100 1000t dE 0.01168 (true 4.364e-05) dL 0.034 bound 0.900/0.970 vir 0.954/0.904 outgrid 0.140
+cons bh300 1000t dE 0.578 (true 0.0003271) dL 2.894 bound 0.743/0.880 vir 0.933/0.931 outgrid 0.243
+loaded /home/adamwebb/augur-bfrozen/checkpoints_contact/Bf1.pt: missing [] unexpected []
+contact-energy box15 e_track {'5': 0.45972839400723897, '20': 7.9181332082420015, '50': 6.057575780795498, '100': 8.407482443723296} floor {'5': 3.0130554172891642e-05, '20': 0.038481697571701924, '50': 0.2753656065920526, '100': 0.6042831925511614} runaway 0.000 offgrid 0.000
+contact-energy box_var e_track {'5': 0.11220490784183097, '20': 1.488193937265568, '50': 1.4787847211708762, '100': 1.625271811483703} floor {'5': 9.598294518195605e-06, '20': 0.014380005092189342, '50': 0.08093448455095323, '100': 0.13588125582227023} runaway 0.000 offgrid 0.000
+contact-energy post_circle e_track {'5': 0.32666859562550005, '20': 2.92467779238768, '50': 3.586308705446674, '100': 3.893254494442908} floor {'5': 2.4528902510781027e-05, '20': 0.031562589790401115, '50': 0.32602691074391693, '100': 0.36174573682871797} runaway 0.000 offgrid 0.000
+contact-energy post_rect e_track {'5': 0.3062492378066734, '20': 2.3902415222933855, '50': 2.5248303415041606, '100': 2.463871010448217} floor {'5': 1.964835757143585e-05, '20': 0.024977709339517647, '50': 0.20433384973530586, '100': 0.2440556605873836} runaway 0.000 offgrid 0.000
+contact-energy disc e_track {'5': 0.15769386122910065, '20': 2.0603861982454177, '50': 2.336366875680028, '100': 2.170561087457052} floor {'5': 1.555936439417996e-05, '20': 0.018271415623489773, '50': 0.1364771735248771, '100': 0.16669042208599674} runaway 0.000 offgrid 0.000
+contact-energy post_poly e_track {'5': 0.4135172036792351, '20': 4.899983924542357, '50': 4.435982926102152, '100': 5.5474469615254485} floor {'5': 2.1673524507699484e-05, '20': 0.04715381353039222, '50': 0.3655217013481717, '100': 0.4279472790179864} runaway 0.000 offgrid 0.000
+contact-energy summary {'e_track@20': 3.6136, 'e_track@100': 4.018, 'e_floor@20': 0.0291, 'e_floor@100': 0.3234, 'rest_dev': 0.4002, 'rest_dev_wall': 0.4002, 'rest_dev_circle': 0.2115, 'rest_miss': 0.0, 'gain': 0.6475, 'runaway': 0.0, 'offgrid': 0.0, 'gain_multi@50': 0.0503, 'gain_multi_floor@50': 0.8731}
+timing two_body: 4.730 ms/tick, peak alloc 871.4 MB (reserved 1026.0, info) (batch 48, N 2)
+timing expB: 4.916 ms/tick, peak alloc 888.8 MB (reserved 1044.0, info) (batch 48, N 94)
+timing bh300: 2.480 ms/tick, peak alloc 87.7 MB (reserved 98.0, info) (batch 1, N 300)
+timing expB_batch1_n100: 2.433 ms/tick, peak alloc 87.5 MB (reserved 98.0, info) (batch 1, N 100)
+wrote results/regce2/Bf1.json
+=== Bf2
+loaded /home/adamwebb/augur-bfrozen/checkpoints_contact/Bf2.pt: missing [] unexpected []
+/home/adamwebb/augur-regce2/scripts/scatter_contact_scenes.py:154: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  return float(model.gscale)
+contact free-space: gscale 1.0
+two_body seed 9100 err@[5, 10, 20, 50, 100] [0.00074, 0.00258, 0.00793, 0.04202, 0.14516]
+two_body seed 9200 err@[5, 10, 20, 50, 100] [0.00145, 0.00408, 0.01085, 0.04501, 0.14525]
+two_body seed 9300 err@[5, 10, 20, 50, 100] [0.00074, 0.00256, 0.00801, 0.03566, 0.10521]
+two_body seed 4738 err@[5, 10, 20, 50, 100] [0.00127, 0.00317, 0.00961, 0.04064, 0.12748]
+two_body MEAN err [0.00105, 0.0031, 0.0091, 0.04083, 0.13077] dE/E 0.1291 (true 6.189e-05)
+expB seed 9100 err@[5, 10, 20, 50, 100] [0.00291, 0.00825, 0.0239, 0.15981, 1.43065]
+expB seed 9200 err@[5, 10, 20, 50, 100] [0.00315, 0.00849, 0.02447, 0.16256, 1.42982]
+expB seed 9300 err@[5, 10, 20, 50, 100] [0.00312, 0.00809, 0.02434, 0.15845, 1.41453]
+expB seed 4738 err@[5, 10, 20, 50, 100] [0.00286, 0.00768, 0.02308, 0.14856, 1.41418]
+expB MEAN err [0.00301, 0.00813, 0.02395, 0.15734, 1.42229] dE/E 0.01079 (true 0.0001092)
+bh300 seed 9100 err@[5, 10, 20, 50, 100] [0.00923, 0.02209, 0.06753, 0.96098, 5.14312]
+bh300 seed 9200 err@[5, 10, 20, 50, 100] [0.00703, 0.01887, 0.05759, 0.98346, 4.95043]
+bh300 seed 9300 err@[5, 10, 20, 50, 100] [0.00729, 0.01999, 0.05904, 0.82156, 4.54419]
+bh300 seed 4738 err@[5, 10, 20, 50, 100] [0.0083, 0.02246, 0.06931, 0.86582, 4.92455]
+bh300 MEAN err [0.00796, 0.02085, 0.06337, 0.90796, 4.89057] dE/E 0.06449 (true 0.0002488)
+cons nr100 1000t dE 0.003966 (true 4.364e-05) dL 0.0231 bound 0.890/0.970 vir 0.95/0.904 outgrid 0.150
+cons bh300 1000t dE 0.6368 (true 0.0003271) dL 1.573 bound 0.720/0.880 vir 0.961/0.931 outgrid 0.250
+cons nr100 1000t dE 0.0259 (true 4.364e-05) dL 0.009606 bound 0.900/0.970 vir 0.964/0.904 outgrid 0.140
+cons bh300 1000t dE 0.5468 (true 0.0003271) dL 2.525 bound 0.747/0.880 vir 0.988/0.931 outgrid 0.263
+cons nr100 1000t dE 0.01571 (true 4.364e-05) dL 0.05129 bound 0.900/0.970 vir 0.933/0.904 outgrid 0.140
+cons bh300 1000t dE 0.5912 (true 0.0003271) dL 3.172 bound 0.763/0.880 vir 0.966/0.931 outgrid 0.257
+loaded /home/adamwebb/augur-bfrozen/checkpoints_contact/Bf2.pt: missing [] unexpected []
+contact-energy box15 e_track {'5': 0.5754977187228493, '20': 7.100552883726536, '50': 5.942544910395782, '100': 7.850114993040563} floor {'5': 3.0130554172891642e-05, '20': 0.038481697571701924, '50': 0.2753656065920526, '100': 0.6042831925511614} runaway 0.000 offgrid 0.000
+contact-energy box_var e_track {'5': 0.1287332665611096, '20': 1.290425697455354, '50': 1.3860989156937087, '100': 1.5020114520484713} floor {'5': 9.598294518195605e-06, '20': 0.014380005092189342, '50': 0.08093448455095323, '100': 0.13588125582227023} runaway 0.000 offgrid 0.000
+contact-energy post_circle e_track {'5': 0.3754276375378612, '20': 2.978498817048361, '50': 3.7267505668595056, '100': 4.044726839551459} floor {'5': 2.4528902510781027e-05, '20': 0.031562589790401115, '50': 0.32602691074391693, '100': 0.36174573682871797} runaway 0.000 offgrid 0.000
+contact-energy post_rect e_track {'5': 0.30767494678730595, '20': 2.203893988249297, '50': 2.315799196501307, '100': 2.560217133925891} floor {'5': 1.964835757143585e-05, '20': 0.024977709339517647, '50': 0.20433384973530586, '100': 0.2440556605873836} runaway 0.000 offgrid 0.000
+contact-energy disc e_track {'5': 0.20497598684154392, '20': 1.5296543578482362, '50': 2.0178175834529934, '100': 1.8141389742595073} floor {'5': 1.555936439417996e-05, '20': 0.018271415623489773, '50': 0.1364771735248771, '100': 0.16669042208599674} runaway 0.000 offgrid 0.000
+contact-energy post_poly e_track {'5': 0.4657993960097486, '20': 4.889547346043643, '50': 4.199803184696342, '100': 5.499255357765222} floor {'5': 2.1673524507699484e-05, '20': 0.04715381353039222, '50': 0.3655217013481717, '100': 0.4279472790179864} runaway 0.000 offgrid 0.000
+contact-energy summary {'e_track@20': 3.3321, 'e_track@100': 3.8784, 'e_floor@20': 0.0291, 'e_floor@100': 0.3234, 'rest_dev': 0.4357, 'rest_dev_wall': 0.4357, 'rest_dev_circle': 0.2254, 'rest_miss': 0.0, 'gain': 0.4311, 'runaway': 0.0, 'offgrid': 0.0, 'gain_multi@50': 0.0195, 'gain_multi_floor@50': 0.8731}
+timing two_body: 4.730 ms/tick, peak alloc 871.4 MB (reserved 1026.0, info) (batch 48, N 2)
+timing expB: 4.917 ms/tick, peak alloc 888.8 MB (reserved 1044.0, info) (batch 48, N 94)
+timing bh300: 2.523 ms/tick, peak alloc 87.7 MB (reserved 98.0, info) (batch 1, N 300)
+timing expB_batch1_n100: 2.477 ms/tick, peak alloc 87.5 MB (reserved 98.0, info) (batch 1, N 100)
+wrote results/regce2/Bf2.json
+=== B2
+loaded /home/adamwebb/augur-contact/checkpoints_contact/B2.pt: missing [] unexpected []
+/home/adamwebb/augur-regce2/scripts/scatter_contact_scenes.py:154: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  return float(model.gscale)
+contact free-space: gscale 1.041494369506836
+two_body seed 9100 err@[5, 10, 20, 50, 100] [0.11769, 0.2957, 0.89402, 3.25038, 7.84085]
+two_body seed 9200 err@[5, 10, 20, 50, 100] [0.12581, 0.34827, 0.8867, 3.87321, 7.67969]
+two_body seed 9300 err@[5, 10, 20, 50, 100] [0.13487, 0.32209, 0.88097, 3.04526, 7.91457]
+two_body seed 4738 err@[5, 10, 20, 50, 100] [0.12386, 0.32051, 0.85246, 3.2645, 6.89116]
+two_body MEAN err [0.12556, 0.32164, 0.87854, 3.35834, 7.58157] dE/E 41.95 (true 6.189e-05)
+expB seed 9100 err@[5, 10, 20, 50, 100] [0.61232, 1.92651, 5.59645, 8.35774, 7.29882]
+expB seed 9200 err@[5, 10, 20, 50, 100] [0.60389, 1.89608, 5.52264, 8.453, 7.71688]
+expB seed 9300 err@[5, 10, 20, 50, 100] [0.61146, 1.9227, 5.61182, 8.68593, 7.78788]
+expB seed 4738 err@[5, 10, 20, 50, 100] [0.60974, 1.91076, 5.51874, 8.42079, 7.59274]
+expB MEAN err [0.60935, 1.91401, 5.56241, 8.47936, 7.59908] dE/E 3.633 (true 0.0001092)
+bh300 seed 9100 err@[5, 10, 20, 50, 100] [1.78511, 4.90364, 7.91929, 6.18509, 9.69518]
+bh300 seed 9200 err@[5, 10, 20, 50, 100] [1.80258, 4.97368, 8.56895, 6.71026, 10.41042]
+bh300 seed 9300 err@[5, 10, 20, 50, 100] [1.76082, 4.99421, 8.94918, 6.48224, 10.87145]
+bh300 seed 4738 err@[5, 10, 20, 50, 100] [1.73268, 4.8681, 8.97002, 7.01148, 10.63243]
+bh300 MEAN err [1.7703, 4.93491, 8.60186, 6.59727, 10.40237] dE/E 2.971 (true 0.0002488)
+cons nr100 1000t dE 3.193 (true 4.364e-05) dL 0.01042 bound 0.870/0.970 vir 1.02/0.904 outgrid 0.000
+cons bh300 1000t dE 1.442 (true 0.0003271) dL 0.1408 bound 0.777/0.880 vir 2.32/0.931 outgrid 0.000
+cons nr100 1000t dE 1.244 (true 4.364e-05) dL 0.09082 bound 0.820/0.970 vir 2.1/0.904 outgrid 0.000
+cons bh300 1000t dE 1.447 (true 0.0003271) dL 0.1389 bound 0.780/0.880 vir 2.26/0.931 outgrid 0.000
+cons nr100 1000t dE 1.291 (true 4.364e-05) dL 0.08736 bound 0.890/0.970 vir 1.19/0.904 outgrid 0.000
+cons bh300 1000t dE 1.619 (true 0.0003271) dL 0.06301 bound 0.690/0.880 vir 2.38/0.931 outgrid 0.000
+loaded /home/adamwebb/augur-contact/checkpoints_contact/B2.pt: missing [] unexpected []
+contact-energy box15 e_track {'5': 0.3763817453416342, '20': 7.864305006968958, '50': 5.974303471785128, '100': 8.015739024598728} floor {'5': 3.0130554172891642e-05, '20': 0.038481697571701924, '50': 0.2753656065920526, '100': 0.6042831925511614} runaway 0.000 offgrid 0.000
+contact-energy box_var e_track {'5': 0.11924782553347095, '20': 1.3964790445489392, '50': 1.399699482553519, '100': 1.548659347797355} floor {'5': 9.598294518195605e-06, '20': 0.014380005092189342, '50': 0.08093448455095323, '100': 0.13588125582227023} runaway 0.000 offgrid 0.000
+contact-energy post_circle e_track {'5': 0.26808746306476144, '20': 3.1211342109154097, '50': 4.162801994621245, '100': 4.721396422323596} floor {'5': 2.4528902510781027e-05, '20': 0.031562589790401115, '50': 0.32602691074391693, '100': 0.36174573682871797} runaway 0.000 offgrid 0.000
+contact-energy post_rect e_track {'5': 0.19371180099381424, '20': 2.3179417260059747, '50': 2.7152705619520283, '100': 2.5629461136155003} floor {'5': 1.964835757143585e-05, '20': 0.024977709339517647, '50': 0.20433384973530586, '100': 0.2440556605873836} runaway 0.000 offgrid 0.000
+contact-energy disc e_track {'5': 0.1908327127089182, '20': 1.6955362851312794, '50': 1.9216535526132634, '100': 1.8467458918240949} floor {'5': 1.555936439417996e-05, '20': 0.018271415623489773, '50': 0.1364771735248771, '100': 0.16669042208599674} runaway 0.000 offgrid 0.000
+contact-energy post_poly e_track {'5': 0.26694875899762494, '20': 5.0024844944249365, '50': 4.708214763154187, '100': 6.059348458120167} floor {'5': 2.1673524507699484e-05, '20': 0.04715381353039222, '50': 0.3655217013481717, '100': 0.4279472790179864} runaway 0.000 offgrid 0.000
+contact-energy summary {'e_track@20': 3.5663, 'e_track@100': 4.1258, 'e_floor@20': 0.0291, 'e_floor@100': 0.3234, 'rest_dev': 0.4094, 'rest_dev_wall': 0.4094, 'rest_dev_circle': 0.2447, 'rest_miss': 0.0, 'gain': 0.002, 'runaway': 0.0, 'offgrid': 0.0, 'gain_multi@50': 0.1063, 'gain_multi_floor@50': 0.8731}
+timing two_body: 4.883 ms/tick, peak alloc 871.4 MB (reserved 1026.0, info) (batch 48, N 2)
+timing expB: 5.160 ms/tick, peak alloc 888.8 MB (reserved 1044.0, info) (batch 48, N 94)
+timing bh300: 2.864 ms/tick, peak alloc 87.7 MB (reserved 98.0, info) (batch 1, N 300)
+timing expB_batch1_n100: 2.823 ms/tick, peak alloc 87.5 MB (reserved 98.0, info) (batch 1, N 100)
+wrote results/regce2/B2.json
+=== compare E vs E baseline (h_E.json, job 3590)
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521    0.0010534      0.1  PASS
+two_body err@10                     0.0030977    0.0030949     -0.1  PASS
+two_body err@20                     0.0091024    0.0090849     -0.2  PASS
+expB err@5                          0.0030114    0.0030123      0.0  PASS
+expB err@10                         0.0081293    0.0081318      0.0  PASS
+expB err@20                          0.023947     0.023962      0.1  PASS
+bh300 err@5                         0.0079513    0.0079525      0.0  PASS
+bh300 err@10                         0.020899       0.0209      0.0  PASS
+bh300 err@20                         0.062163     0.062142     -0.0  PASS
+two_body bound_frac gap@100         0.0052083    0.0052083      0.0  PASS
+two_body virial gap@100              0.034114     0.033807     -0.9  PASS
+expB bound_frac gap@100             0.0010168   0.00097509     -4.1  PASS
+expB virial gap@100                0.00097126    0.0013574     39.8  PASS
+bh300 bound_frac gap@100               0.0025       0.0025     -0.0  PASS
+bh300 virial gap@100                 0.053279     0.037573    -29.5  PASS
+bh300 vmax/c (<1)                     0.92585      0.92592      nan  PASS
+bh300 dE_rel_model@100                0.03856     0.034825     -9.7  PASS
+bh300 dL_rel_model@100                0.26441      0.23215    -12.2  PASS
+bh300 dP_model@100                 5.3944e-05   8.0189e-05     48.7  PASS
+cons nr100@1000 dE                   0.017715     0.014094    -20.4  PASS
+cons nr100@1000 dL                   0.028223     0.057748    104.6  FAIL
+cons nr100@1000 dP                 1.2455e-05   1.8184e-05     46.0  PASS
+cons nr100@1000 bound_gap                0.07         0.07      0.0  PASS
+cons nr100@1000 vir_gap               0.11108     0.080626    -27.4  PASS
+cons nr100@1000 outgrid                  0.15         0.14     -6.7  PASS
+cons nr100 nonfinite                        0            0      nan  PASS
+cons bh300@1000 dE                    0.47123      0.47466      0.7  PASS
+cons bh300@1000 dL                     2.2198        2.789     25.6  FAIL
+cons bh300@1000 dP                 0.00018083   0.00010918    -39.6  PASS
+cons bh300@1000 bound_gap             0.12667         0.14     10.5  PASS
+cons bh300@1000 vir_gap              0.012241     0.014052     14.8  PASS
+cons bh300@1000 outgrid               0.27667      0.27667      0.0  PASS
+cons bh300 frac|v|>=c                       0            0      nan  PASS
+cons bh300 nonfinite                        0            0      nan  PASS
+two_body tick_ms                       4.7432       3.2618    -31.2  PASS
+two_body peak_mem_mb                   871.37       234.85    -73.0  PASS
+expB tick_ms                           4.9638       3.4149    -31.2  PASS
+expB peak_mem_mb                       888.81       256.98    -71.1  PASS
+bh300 tick_ms                          2.4627       0.7091    -71.2  PASS
+bh300 peak_mem_mb                      87.709       241.01    174.8  FAIL
+expB_batch1_n100 tick_ms               2.4329      0.67651    -72.2  PASS
+expB_batch1_n100 peak_mem_mb           87.458       285.28    226.2  FAIL
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 0.04084; two_body err@100 0.1308 -> 0.1316; expB err@50 0.1573 -> 0.1574; expB err@100 1.422 -> 1.422; bh300 err@50 0.9134 -> 0.9136
+floors: results/chaos_floors.json not found, skipped
+cons rows are the median of 3 replicate evals; run-to-run spread [min, max] (not gated):
+  nr100: dE 0.01149..0.03873; dL 0.0137..0.05783; dP 1.444e-05..2.025e-05; vir 0.9355..1.045
+  bh300: dE 0.4675..0.4847; dL 2.675..2.9; dP 0.000106..0.0003386; vir 0.9179..0.9458
+OVERALL FAIL (geometry-free gate)
+contact-energy rows vs true simulator E_true(t), absolute thresholds; counted only if the geometry-free gate passed (gate FAIL); note: Exp E zero-shot: no geometry branch, no-geometry control for contact rows
+metric                 baseline  candidate  threshold
+e_track@20                  nan       0.78        0.2  FAIL
+e_track@100                 nan      4.117        0.7  FAIL
+rest_dev                    nan        inf       0.25  FAIL
+rest_miss                   nan          1        0.2  FAIL
+gain                        nan   -0.01175        0.1  PASS
+runaway                     nan          0       0.02  PASS
+offgrid                     nan   0.007979       0.02  PASS
+report-only multi-ball energy gain@50: 2.323 (truth-perturbation floor 0.8731)
+info (not gated): e_floor@20 0.02914 e_floor@100 0.3234 rest_dev wall inf circle inf
+CONTACT OVERALL NOT COUNTED (gate failed; rows would be FAIL)
+exit code: geometry-free gate only
+exit code 1
+=== compare C vs E baseline (h_E.json, job 3590)
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate /home/adamwebb/augur-contact/checkpoints_contact/C.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521      0.10628  10001.5  FAIL
+two_body err@10                     0.0030977      0.38153  12216.8  FAIL
+two_body err@20                     0.0091024       1.7578  19211.1  FAIL
+expB err@5                          0.0030114      0.44201  14577.8  FAIL
+expB err@10                         0.0081293       1.5755  19280.3  FAIL
+expB err@20                          0.023947       5.3222  22125.0  FAIL
+bh300 err@5                         0.0079513      0.90204  11244.6  FAIL
+bh300 err@10                         0.020899       3.0599  14541.4  FAIL
+bh300 err@20                         0.062163       9.5941  15333.6  FAIL
+two_body bound_frac gap@100         0.0052083      0.69792  13300.0  FAIL
+two_body virial gap@100              0.034114       103.58 303524.5  FAIL
+expB bound_frac gap@100             0.0010168      0.92867  91237.4  FAIL
+expB virial gap@100                0.00097126   1.9581e+07 2016016717119.9  FAIL
+bh300 bound_frac gap@100               0.0025      0.92333  36833.3  FAIL
+bh300 virial gap@100                 0.053279       215.52 404416.0  FAIL
+bh300 vmax/c (<1)                     0.92585            1      nan  FAIL
+bh300 dE_rel_model@100                0.03856       41.683 107998.3  FAIL
+bh300 dL_rel_model@100                0.26441       140.02  52856.4  FAIL
+bh300 dP_model@100                 5.3944e-05        15513 28758136624.7  FAIL
+cons nr100@1000 dE                   0.017715        25057 141441428.3  FAIL
+cons nr100@1000 dL                   0.028223       38.071 134790.3  FAIL
+cons nr100@1000 dP                 1.2455e-05   0.00069414   5473.1  PASS
+cons nr100@1000 bound_gap                0.07         0.97   1285.7  FAIL
+cons nr100@1000 vir_gap               0.11108       16.229  14509.3  FAIL
+cons nr100@1000 outgrid                  0.15            1    566.7  FAIL
+cons nr100 nonfinite                        0            0      nan  PASS
+cons bh300@1000 dE                    0.47123        17663 3748081.3  FAIL
+cons bh300@1000 dL                     2.2198       5948.4 267871.8  FAIL
+cons bh300@1000 dP                 0.00018083       1.2685 701372.9  FAIL
+cons bh300@1000 bound_gap             0.12667         0.88    594.7  FAIL
+cons bh300@1000 vir_gap              0.012241       12.831 104716.7  FAIL
+cons bh300@1000 outgrid               0.27667            1    261.4  FAIL
+cons bh300 frac|v|>=c                       0      0.46667      nan  FAIL
+cons bh300 nonfinite                        0            0      nan  PASS
+two_body tick_ms                       4.7432       4.8761      2.8  PASS
+two_body peak_mem_mb                   871.37        871.4      0.0  PASS
+expB tick_ms                           4.9638       5.1606      4.0  PASS
+expB peak_mem_mb                       888.81       888.83      0.0  PASS
+bh300 tick_ms                          2.4627       2.8664     16.4  FAIL
+bh300 peak_mem_mb                      87.709       87.733      0.0  PASS
+expB_batch1_n100 tick_ms               2.4329       2.8265     16.2  FAIL
+expB_batch1_n100 peak_mem_mb           87.458       87.482      0.0  PASS
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 11.09; two_body err@100 0.1308 -> 15.37; expB err@50 0.1573 -> 68.62; expB err@100 1.422 -> 676.4; bh300 err@50 0.9134 -> 25.72
+floors: results/chaos_floors.json not found, skipped
+cons rows are the median of 3 replicate evals; run-to-run spread [min, max] (not gated):
+  nr100: dE 9708..3.456e+04; dL 38.07..38.07; dP 0.0006243..0.0007714; vir 4.809e+06..1.131e+07
+  bh300: dE 1.752e+04..1.892e+04; dL 3494..6307; dP 0.5371..7.8; vir 3.369e+05..4.311e+05
+OVERALL FAIL (geometry-free gate)
+contact-energy rows vs true simulator E_true(t), absolute thresholds; counted only if the geometry-free gate passed (gate FAIL); note: option C (chan); pair head cmlp uses knn_dense/knn_cell, non-O(N) pair search
+metric                 baseline  candidate  threshold
+e_track@20                  nan      2.808        0.2  FAIL
+e_track@100                 nan       4126        0.7  FAIL
+rest_dev                    nan     0.2613       0.25  FAIL
+rest_miss                   nan          0        0.2  PASS
+gain                        nan      15.61        0.1  FAIL
+runaway                     nan          1       0.02  FAIL
+offgrid                     nan          1       0.02  FAIL
+report-only multi-ball energy gain@50: 5468 (truth-perturbation floor 0.8731)
+info (not gated): e_floor@20 0.02914 e_floor@100 0.3234 rest_dev wall 0.2613 circle 0.1657
+CONTACT OVERALL NOT COUNTED (gate failed; rows would be FAIL)
+exit code: geometry-free gate + contact-energy rows
+exit code 1
+=== compare Bf1 vs E baseline (h_E.json, job 3590)
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate /home/adamwebb/augur-bfrozen/checkpoints_contact/Bf1.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521    0.0010521      0.0  PASS
+two_body err@10                     0.0030977    0.0030977      0.0  PASS
+two_body err@20                     0.0091024    0.0091024      0.0  PASS
+expB err@5                          0.0030114    0.0030114     -0.0  PASS
+expB err@10                         0.0081293    0.0081291     -0.0  PASS
+expB err@20                          0.023947     0.023947      0.0  PASS
+bh300 err@5                         0.0079513    0.0079624      0.1  PASS
+bh300 err@10                         0.020899     0.020852     -0.2  PASS
+bh300 err@20                         0.062163     0.063366      1.9  PASS
+two_body bound_frac gap@100         0.0052083    0.0052083      0.0  PASS
+two_body virial gap@100              0.034114     0.034114      0.0  PASS
+expB bound_frac gap@100             0.0010168    0.0010168      0.0  PASS
+expB virial gap@100                0.00097126   0.00087893     -9.5  PASS
+bh300 bound_frac gap@100               0.0025    0.0083333    233.3  PASS
+bh300 virial gap@100                 0.053279     0.015165    -71.5  PASS
+bh300 vmax/c (<1)                     0.92585      0.92375      nan  PASS
+bh300 dE_rel_model@100                0.03856     0.069046     79.1  FAIL
+bh300 dL_rel_model@100                0.26441      0.23966     -9.4  PASS
+bh300 dP_model@100                 5.3944e-05   2.7213e-05    -49.6  PASS
+cons nr100@1000 dE                   0.017715     0.019276      8.8  PASS
+cons nr100@1000 dL                   0.028223     0.033998     20.5  PASS
+cons nr100@1000 dP                 1.2455e-05   9.8499e-06    -20.9  PASS
+cons nr100@1000 bound_gap                0.07         0.07      0.0  PASS
+cons nr100@1000 vir_gap               0.11108     0.053482    -51.9  PASS
+cons nr100@1000 outgrid                  0.15         0.14     -6.7  PASS
+cons nr100 nonfinite                        0            0      nan  PASS
+cons bh300@1000 dE                    0.47123      0.63925     35.7  FAIL
+cons bh300@1000 dL                     2.2198       2.8936     30.4  FAIL
+cons bh300@1000 dP                 0.00018083   5.5233e-05    -69.5  PASS
+cons bh300@1000 bound_gap             0.12667      0.13333      5.3  PASS
+cons bh300@1000 vir_gap              0.012241     0.034938    185.4  PASS
+cons bh300@1000 outgrid               0.27667      0.25667     -7.2  PASS
+cons bh300 frac|v|>=c                       0            0      nan  PASS
+cons bh300 nonfinite                        0            0      nan  PASS
+two_body tick_ms                       4.7432       4.7296     -0.3  PASS
+two_body peak_mem_mb                   871.37       871.41      0.0  PASS
+expB tick_ms                           4.9638       4.9158     -1.0  PASS
+expB peak_mem_mb                       888.81       888.84      0.0  PASS
+bh300 tick_ms                          2.4627       2.4796      0.7  PASS
+bh300 peak_mem_mb                      87.709       87.749      0.0  PASS
+expB_batch1_n100 tick_ms               2.4329       2.4328     -0.0  PASS
+expB_batch1_n100 peak_mem_mb           87.458       87.497      0.0  PASS
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 0.04083; two_body err@100 0.1308 -> 0.1308; expB err@50 0.1573 -> 0.1573; expB err@100 1.422 -> 1.422; bh300 err@50 0.9134 -> 0.9081
+floors: results/chaos_floors.json not found, skipped
+cons rows are the median of 3 replicate evals; run-to-run spread [min, max] (not gated):
+  nr100: dE 0.01168..0.03725; dL 0.01506..0.0456; dP 6.457e-06..2.981e-05; vir 0.9432..0.9758
+  bh300: dE 0.578..0.6419; dL 1.794..2.959; dP 2.905e-05..7.145e-05; vir 0.8989..0.9811
+OVERALL FAIL (geometry-free gate)
+contact-energy rows vs true simulator E_true(t), absolute thresholds; counted only if the geometry-free gate passed (gate FAIL); note: Bf1 SDF only; pair head zero-weight but knn pair search still executed when geometry set
+metric                 baseline  candidate  threshold
+e_track@20                  nan      3.614        0.2  FAIL
+e_track@100                 nan      4.018        0.7  FAIL
+rest_dev                    nan     0.4002       0.25  FAIL
+rest_miss                   nan          0        0.2  PASS
+gain                        nan     0.6475        0.1  FAIL
+runaway                     nan          0       0.02  PASS
+offgrid                     nan          0       0.02  PASS
+report-only multi-ball energy gain@50: 0.05027 (truth-perturbation floor 0.8731)
+info (not gated): e_floor@20 0.02914 e_floor@100 0.3234 rest_dev wall 0.4002 circle 0.2115
+CONTACT OVERALL NOT COUNTED (gate failed; rows would be FAIL)
+exit code: geometry-free gate + contact-energy rows
+exit code 1
+=== compare Bf2 vs E baseline (h_E.json, job 3590)
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate /home/adamwebb/augur-bfrozen/checkpoints_contact/Bf2.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521    0.0010521      0.0  PASS
+two_body err@10                     0.0030977    0.0030977      0.0  PASS
+two_body err@20                     0.0091024    0.0091024      0.0  PASS
+expB err@5                          0.0030114    0.0030114     -0.0  PASS
+expB err@10                         0.0081293    0.0081293     -0.0  PASS
+expB err@20                          0.023947     0.023947      0.0  PASS
+bh300 err@5                         0.0079513    0.0079624      0.1  PASS
+bh300 err@10                         0.020899     0.020852     -0.2  PASS
+bh300 err@20                         0.062163     0.063367      1.9  PASS
+two_body bound_frac gap@100         0.0052083    0.0052083      0.0  PASS
+two_body virial gap@100              0.034114     0.034114      0.0  PASS
+expB bound_frac gap@100             0.0010168   0.00090101    -11.4  PASS
+expB virial gap@100                0.00097126   0.00097909      0.8  PASS
+bh300 bound_frac gap@100               0.0025    0.0083333    233.3  PASS
+bh300 virial gap@100                 0.053279      0.01376    -74.2  PASS
+bh300 vmax/c (<1)                     0.92585      0.92371      nan  PASS
+bh300 dE_rel_model@100                0.03856     0.064491     67.2  FAIL
+bh300 dL_rel_model@100                0.26441      0.13809    -47.8  PASS
+bh300 dP_model@100                 5.3944e-05   5.6339e-05      4.4  PASS
+cons nr100@1000 dE                   0.017715     0.015705    -11.3  PASS
+cons nr100@1000 dL                   0.028223     0.023097    -18.2  PASS
+cons nr100@1000 dP                 1.2455e-05   1.3717e-05     10.1  PASS
+cons nr100@1000 bound_gap                0.07         0.07      0.0  PASS
+cons nr100@1000 vir_gap               0.11108     0.049219    -55.7  PASS
+cons nr100@1000 outgrid                  0.15         0.14     -6.7  PASS
+cons nr100 nonfinite                        0            0      nan  PASS
+cons bh300@1000 dE                    0.47123      0.59117     25.5  FAIL
+cons bh300@1000 dL                     2.2198       2.5247     13.7  PASS
+cons bh300@1000 dP                 0.00018083   0.00021157     17.0  PASS
+cons bh300@1000 bound_gap             0.12667      0.13333      5.3  PASS
+cons bh300@1000 vir_gap              0.012241     0.036878    201.3  PASS
+cons bh300@1000 outgrid               0.27667      0.25667     -7.2  PASS
+cons bh300 frac|v|>=c                       0            0      nan  PASS
+cons bh300 nonfinite                        0            0      nan  PASS
+two_body tick_ms                       4.7432       4.7303     -0.3  PASS
+two_body peak_mem_mb                   871.37       871.41      0.0  PASS
+expB tick_ms                           4.9638       4.9167     -0.9  PASS
+expB peak_mem_mb                       888.81       888.84      0.0  PASS
+bh300 tick_ms                          2.4627       2.5234      2.5  PASS
+bh300 peak_mem_mb                      87.709       87.749      0.0  PASS
+expB_batch1_n100 tick_ms               2.4329       2.4766      1.8  PASS
+expB_batch1_n100 peak_mem_mb           87.458       87.497      0.0  PASS
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 0.04083; two_body err@100 0.1308 -> 0.1308; expB err@50 0.1573 -> 0.1573; expB err@100 1.422 -> 1.422; bh300 err@50 0.9134 -> 0.908
+floors: results/chaos_floors.json not found, skipped
+cons rows are the median of 3 replicate evals; run-to-run spread [min, max] (not gated):
+  nr100: dE 0.003966..0.0259; dL 0.009606..0.05129; dP 1.277e-05..1.375e-05; vir 0.9328..0.9639
+  bh300: dE 0.5468..0.6368; dL 1.573..3.172; dP 0.0001394..0.0002845; vir 0.9607..0.9875
+OVERALL FAIL (geometry-free gate)
+contact-energy rows vs true simulator E_true(t), absolute thresholds; counted only if the geometry-free gate passed (gate FAIL); note: Bf2 reference only: non-O(N) pair search
+metric                 baseline  candidate  threshold
+e_track@20                  nan      3.332        0.2  FAIL
+e_track@100                 nan      3.878        0.7  FAIL
+rest_dev                    nan     0.4357       0.25  FAIL
+rest_miss                   nan          0        0.2  PASS
+gain                        nan     0.4311        0.1  FAIL
+runaway                     nan          0       0.02  PASS
+offgrid                     nan          0       0.02  PASS
+report-only multi-ball energy gain@50: 0.01951 (truth-perturbation floor 0.8731)
+info (not gated): e_floor@20 0.02914 e_floor@100 0.3234 rest_dev wall 0.4357 circle 0.2254
+CONTACT OVERALL NOT COUNTED (gate failed; rows would be FAIL)
+exit code: geometry-free gate + contact-energy rows
+exit code 1
+=== compare B2 vs E baseline (h_E.json, job 3590)
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate /home/adamwebb/augur-contact/checkpoints_contact/B2.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521      0.12556  11834.3  FAIL
+two_body err@10                     0.0030977      0.32164  10283.4  FAIL
+two_body err@20                     0.0091024      0.87854   9551.7  FAIL
+expB err@5                          0.0030114      0.60935  20134.7  FAIL
+expB err@10                         0.0081293        1.914  23444.5  FAIL
+expB err@20                          0.023947       5.5624  23128.0  FAIL
+bh300 err@5                         0.0079513       1.7703  22164.3  FAIL
+bh300 err@10                         0.020899       4.9349  23512.8  FAIL
+bh300 err@20                         0.062163       8.6019  13737.5  FAIL
+two_body bound_frac gap@100         0.0052083      0.29687   5600.0  FAIL
+two_body virial gap@100              0.034114       18.218  53304.3  FAIL
+expB bound_frac gap@100             0.0010168     0.044248   4251.9  FAIL
+expB virial gap@100                0.00097126      0.37384  38390.1  FAIL
+bh300 bound_frac gap@100               0.0025         0.22   8700.0  FAIL
+bh300 virial gap@100                 0.053279       1.9653   3588.7  FAIL
+bh300 vmax/c (<1)                     0.92585      0.99399      nan  PASS
+bh300 dE_rel_model@100                0.03856       2.9708   7604.4  FAIL
+bh300 dL_rel_model@100                0.26441       2.0377    670.6  FAIL
+bh300 dP_model@100                 5.3944e-05       1.1107 2058863.6  FAIL
+cons nr100@1000 dE                   0.017715       1.2907   7185.9  FAIL
+cons nr100@1000 dL                   0.028223     0.087358    209.5  FAIL
+cons nr100@1000 dP                 1.2455e-05   0.00011559    828.0  PASS
+cons nr100@1000 bound_gap                0.07          0.1     42.9  PASS
+cons nr100@1000 vir_gap               0.11108      0.27231    145.1  FAIL
+cons nr100@1000 outgrid                  0.15            0   -100.0  PASS
+cons nr100 nonfinite                        0            0      nan  PASS
+cons bh300@1000 dE                    0.47123       1.4469    207.0  FAIL
+cons bh300@1000 dL                     2.2198      0.13891    -93.7  PASS
+cons bh300@1000 dP                 0.00018083   0.00040564    124.3  PASS
+cons bh300@1000 bound_gap             0.12667      0.10333    -18.4  PASS
+cons bh300@1000 vir_gap              0.012241      0.91495   7374.5  FAIL
+cons bh300@1000 outgrid               0.27667            0   -100.0  PASS
+cons bh300 frac|v|>=c                       0            0      nan  PASS
+cons bh300 nonfinite                        0            0      nan  PASS
+two_body tick_ms                       4.7432       4.8835      3.0  PASS
+two_body peak_mem_mb                   871.37       871.41      0.0  PASS
+expB tick_ms                           4.9638       5.1598      3.9  PASS
+expB peak_mem_mb                       888.81       888.84      0.0  PASS
+bh300 tick_ms                          2.4627       2.8639     16.3  FAIL
+bh300 peak_mem_mb                      87.709       87.749      0.0  PASS
+expB_batch1_n100 tick_ms               2.4329       2.8225     16.0  FAIL
+expB_batch1_n100 peak_mem_mb           87.458       87.497      0.0  PASS
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 3.358; two_body err@100 0.1308 -> 7.582; expB err@50 0.1573 -> 8.479; expB err@100 1.422 -> 7.599; bh300 err@50 0.9134 -> 6.597
+floors: results/chaos_floors.json not found, skipped
+cons rows are the median of 3 replicate evals; run-to-run spread [min, max] (not gated):
+  nr100: dE 1.244..3.193; dL 0.01042..0.09082; dP 5.551e-05..0.0003467; vir 1.02..2.1
+  bh300: dE 1.442..1.619; dL 0.06301..0.1408; dP 0.0003821..0.0005452; vir 2.263..2.378
+OVERALL FAIL (geometry-free gate)
+contact-energy rows vs true simulator E_true(t), absolute thresholds; counted only if the geometry-free gate passed (gate FAIL); note: B2 reference only: non-O(N) pair search
+metric                 baseline  candidate  threshold
+e_track@20                  nan      3.566        0.2  FAIL
+e_track@100                 nan      4.126        0.7  FAIL
+rest_dev                    nan     0.4094       0.25  FAIL
+rest_miss                   nan          0        0.2  PASS
+gain                        nan   0.001973        0.1  PASS
+runaway                     nan          0       0.02  PASS
+offgrid                     nan          0       0.02  PASS
+report-only multi-ball energy gain@50: 0.1063 (truth-perturbation floor 0.8731)
+info (not gated): e_floor@20 0.02914 e_floor@100 0.3234 rest_dev wall 0.4094 circle 0.2447
+CONTACT OVERALL NOT COUNTED (gate failed; rows would be FAIL)
+exit code: geometry-free gate + contact-energy rows
+exit code 1
+=== compare done

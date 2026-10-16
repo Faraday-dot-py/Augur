@@ -100,7 +100,7 @@ def test_replicates_and_exit_policy():
     med, sp = sr.median_reps(reps), sr.spread_reps(reps)
     check("median_reps takes the leaf-wise median, keeps None", abs(med["model"]["dE"] - 0.017) < 1e-12 and abs(med["vir_gap"] - 0.2) < 1e-12 and med["model"]["frac_ge_c"] is None, str(med))
     check("spread_reps records [min, max]", sp["model"]["dE"] == [0.006, 0.019] and sp["vir_gap"] == [0.1, 0.3], str(sp))
-    ns = lambda **k: type("A", (), dict(require_contact=False, no_require_contact=False, **k))()
+    ns = lambda **k: type("A", (), {"require_contact": False, "no_require_contact": False, **k})()
     check("contact ckpt gates exit by default", sr.contact_gates_exit(ns(), {"contact": True}))
     check("gravity-only run unaffected", not sr.contact_gates_exit(ns(), {"contact": False}) and not sr.contact_gates_exit(ns(), {}))
     check("--no-require-contact overrides", not sr.contact_gates_exit(ns(no_require_contact=True), {"contact": True}))
