@@ -47,3 +47,34 @@ Predictions (probability): bitwise OFF == E and zero-init ON == E (.9); S16 plan
 
 ### Part 3 status (2026-10-15)
 Code, unit tests (3 pass on CPU), criteria and predictions committed on branch fewshot-adapter; NOT RUN. Polaris sbatch rejected for ~4 h with QOSMaxSubmitJobPerUserLimit (per-user queue full of other agents' pending jobs, e.g. 3643, 3645, 3646 PENDING QOSMaxGRESPerUser). Ready to submit: `~/fewshot_job.sh` + `~/fewshot_code.tgz` already uploaded (job: pytest, smoke, full; ~5 h limit; results `~/augur-fewshot/results/fewshot_adapter/results.json`, rollouts npz for `scripts/render_fewshot_solar.py`).
+
+### Part 3 results (job 3663, 2026-10-16; results/fewshot_adapter/results.json, summary: `python scripts/fewshot_adapter_summary.py results/fewshot_adapter/results.json`)
+Setup as recorded above (500 iterations, batch 8, lr 2e-3, k 4 -> 20, seed 4738; 12 held-out ICs per family). Position errors on bodies that left the box are clipped at 1e3, so err@300/err@1000 of free E (950-1000) mean "everything gone", not a measured distance.
+
+Checks: E repeat == E, adapter OFF == E, zero-init ON == E, gated zero-init ON == E: all bitwise True (deterministic mode, solar 200 ticks, eager). E state_dict identical before/after every arm (e_unchanged True).
+
+Held-out solar (mean over 12 ICs; err = mean per-body position error in a 20-tick window ending at the tick; planets retained = fraction of 8):
+| arm | err@100 | err@300 | planets kept @300 | @1000 | belt kept @300 | train-IC err@100 (own n) |
+|---|---|---|---|---|---|---|
+| free E | 39.6 | 952 | 0 | 0 | 0 | 38.5 |
+| S1 | 6.79 | 30.6 | .34 | 0 | .25 | 6.2 |
+| S4 | 6.58 | 28.9 | .40 | .01 | .29 | 4.9 |
+| S16 | 6.54 | 27.9 | .41 | 0 | .32 | 6.0 |
+| M1 / M4 / M16 (trained on star family) | 7.74 / 6.57 / 6.22 | 44.5 / 31.6 / 29.3 | .24 / .27 / .34 | 0 / .01 / 0 | .12-.32 | - |
+| C16 (control, unit-mass scenes) | 41.2 | 954 | 0 | 0 | 0 | - |
+| S16g / M16g (gated) | 6.54 / 6.24 | 28.3 / 30.7 | .44 / .33 | 0 / 0 | .32 / .30 | 6.0 (S16g) |
+Held-out star family (12 scenes, 150 ticks): free E err@20 1.162, err@100 26.5; S1/S4/S16 err@20 .19/.18/.18, err@100 5.6/5.5/5.6; M1/M4/M16 err@20 .164/.155/.162, err@100 5.0/4.8/4.6; C16 1.19 / 26.9; gated S16g .21 / 6.6, M16g .19 / 5.3.
+
+In-domain rows (harness; median [min-max] of 3 where 3 evals, else single; E repeat noise: nr100 dE .0107 [.004-.020], bh300 dE .50 [.44-.53]; adapter attached OFF .0228 [.017-.028], .47 [.30-.48], same computation as E so the difference is run-to-run noise):
+| row | E x3 | OFF x3 | S16 ON x3 | M16 ON x3 | S1 ON | C16 ON | S16g ON | M16g ON |
+|---|---|---|---|---|---|---|---|---|
+| nr100 dE@1000 | .0107 | .0228 | .122 | .0193 | .199 | .0427 | .0083 | .0206 |
+| bh300 dE | .50 | .47 | .33 | .098 | .29 | .55 | .43 | .45 |
+| bh300 dL | 1.9 | 2.05 | .025 | .059 | .004 | 1.48 | 2.36 | 3.2 |
+| expB (10-100 unit-mass bodies) err@20 | .0245 | .0245 | .641 | .392 | .687 | .0246 | .0245 | .0245 |
+| expB err@100 | 1.43 | 1.43 | 9.2 | 6.5 | 9.8 | 1.43 | 1.43 | 1.43 |
+The ungated adapters change unit-mass scenes: expB err@20 x16-28, err@100 x4.5-6.8, nr100 dE up to 10x (S1/S4/S16; M16 within spread). Gated arms leave expB bitwise-equal in err and nr100/bh300 within the noise spread (the bh300 dL rows are the noisiest; M16g 3.2 is just above E's 1.5-2.75 range but all masses are 1 there so the gate is identically 0 and the function is E's).
+
+Video review (fresh unbiased subagent, held-out solar IC 0, rows truth / S4 / S16 / C16 / free, videos/fewshot_solar_s0.png and .mp4): truth keeps a compact grey ring that diffuses gradually after tick 500. S4 and S16 match truth to about tick 50, then the ring distorts and streams toward the frame edge by tick 100-300; by tick 500 only the yellow star and 0-1 blue body remain in frame, nothing but the star at tick 1000. C16 and free deform into a hook by tick 50, then only the star is visible from tick 100, and the star itself leaves the frame after tick 300. S4 ~ S16 (S16 slightly emptier at the end). Sudden break between ticks 50 and 200, gradual in truth.
+
+Verdict vs criteria: NOT a PASS, but not a KILL. err@100 gain is 5.8-6.1x at n = 1 and 4 (needed >= 2x at n <= 4): met. Planets retained @300 .34-.44 vs 0: met; @1000 0 for every arm: NOT met (so the "both ticks" condition fails and long-horizon retention is not fixed). Kill (<1.3x at n = 16 or planets not above free): not triggered. In-domain: ungated adapter FAILS the no-damage condition (expB err@100 x6, nr100 dE up to 10x), exactly the in-domain damage that sank heads-only; the gated variant keeps solar/star gains and leaves unit-mass behaviour unchanged (by construction, verified). Adaptation vs generic fit: the control (same schedule, unit-mass data) gives 0.96x, so the gain is not generic; the gain is flat in n (n = 1 ~ n = 16) and the star-trained adapter helps solar as much as the solar-trained one (and vice versa), train-IC and held-out err agree, so it learns a low-dimensional mass-contrast correction rather than memorising ICs. Predictions: bitwise (.9) hit; S16 planets@300 above free (.5) hit; S4 err@100 >= 2x (.25) hit and far exceeded (5.8x); M16 >= 2x (.3) hit; control < 1.2x (.7) hit; ungated moves nr100 dE (.35) hit (and expB much worse than expected); gated unchanged (.95) hit; overall PASS (.15) missed on the tick-1000 condition. Limits: gain along E's own force direction cannot restore long-term orbits (all planets still lost by tick 1000, star system disperses by tick 500 in the review); gated variant is a hand-written mass-contrast switch; 12 ICs, one solar structure (Hill k = 4.0), one seed; harness rows single-eval except S16/M16. Cost: 1 GPU job (3663), 5 h limit; 9 adapters trained 500 its each.
