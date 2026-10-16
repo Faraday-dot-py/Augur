@@ -107,3 +107,4 @@ Docs cherry-picked from unmerged branches (branch in parentheses):
 - test-audit-2026-10-13.md (test-audit-2026-10-13)
 - scatter-contact-c.md, scatter-contact-c-table.md, scatter-correction-research.md (worktree-agent-a51e0b89567ace982; identical on several other branches)
 - contact-grid-review-prompt.md (fix-finetune-dE)
+- Few-shot adapter on frozen E (fewshot-adapter branch): built, not yet run (queue-blocked); see few-shot-adaptation.md Part 3.
