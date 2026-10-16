@@ -31,7 +31,7 @@ post() {
   python scripts/scatter_regress.py run --ckpt $ck --out results/lrw_eval/regress_$a.json
   echo "=== compare $a"
   python scripts/scatter_regress.py compare --baseline results/scatter_baseline.json --candidate results/lrw_eval/regress_$a.json
-  python scripts/scatter_conservation.py run --ckpt $ck --opt default --steps 1000 --regimes nr100,bh300 --out-dir results/lrw_cons/$a
+  for r in 1 2 3; do python scripts/scatter_conservation.py run --ckpt $ck --opt default --steps 1000 --regimes nr100,bh300 --out-dir results/lrw_cons/${a}_r$r; done
 }
 mkdir -p results/lrw_eval
 echo "=== smoke (30 it per arm, mech on ctl)"
