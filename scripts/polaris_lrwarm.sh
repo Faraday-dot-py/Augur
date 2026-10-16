@@ -5,7 +5,7 @@
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=12:00:00
-#SBATCH --dependency=afterany:3642
+
 #SBATCH --output=lrwarm-%j.log
 set -uo pipefail
 export PYTHONUNBUFFERED=1
@@ -22,7 +22,7 @@ ITERS=${ITERS:-60769}
 V=ms_kp_pot_v_g128
 arm() {
   a=$1; n=$2; extra=${3:-}
-  python scripts/scatter_lrwarm.py --arm $a --iters $n --init-ckpt $INITB --out-dir results/lrw_$a$4 --ckpt-dir checkpoints/lrw_$a$4 $extra
+  python scripts/scatter_lrwarm.py --arm $a --iters $n --init-ckpt $INITB --out-dir results/lrw_$a${4:-} --ckpt-dir checkpoints/lrw_$a${4:-} $extra
 }
 post() {
   a=$1; ck=checkpoints/lrw_$a/E_$V.pt
