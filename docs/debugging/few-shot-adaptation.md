@@ -29,6 +29,30 @@ Metric: mean per-body error over a tick window (11-20, 81-100, 281-300, 981-1000
 Predicted outcome (one line): K<=20 full reset gives >=5x lower window err@100 on solar and star; K=20 heavy-only gives 2-4x on solar (planets are anchored, belt/moon drift); first-m only gives <1.3x (chaos plus OOD bias, not an IC problem); position-only K=10 clearly worse than full-state.
 Pass: K=20 full reset reduces window err@100 by >=2x on BOTH solar and star, and solar planets lost at tick 300 drops below the free arm. Kill (assimilation is not worth pursuing as a sparse scheme): K>=20 gives <2x err@100 reduction on solar. Heavy-only arms are exploratory, no gate.
 
-## Part 2 results
+## Part 2 results (job 3643, 5 min, frozen E, seed 4738; raw results/assim/assim.json, table results/assim/summary.txt via scripts/scatter_assim_summarize.py)
 
-Job 3641 failed instantly (tarball lacked the `model` package: ModuleNotFoundError). Job 3643 (smoke then full, `~/assim_job.sh`, log `~/augur-assim-3643.log`, results `~/augur-assim/results/assim/assim.json`) was PENDING (QOSMaxGRESPerUser, behind other agents) when the Polaris SSH session dropped (~2 h in); reconnect needs a Duo push. No numbers yet.
+Window err (mean per-body position error, ticks 81-100) and ratio vs free. Windows 11-20 are uninformative for K>=20 (first reset at tick 20). Single solar scene; star 16 scenes' worth (6,6,4 shown), nr100 4 scenes.
+
+| arm (obs/body/tick) | solar err@100 (x) | solar planets lost @300 | star err@100 (x) | nr100 err@100 / @1000 (x) |
+|---|---|---|---|---|
+| free | 41.6 | 100% | 26.5 | 1.09 / 35.7 |
+| K5 (.2) | .034 (1217x) | 0% | .050 (529x) | .0049 (222x) / .0050 (7078x) |
+| K10 (.1) | .122 (340x) | 0% | .179 (148x) | .010 (109x) / .012 (2986x) |
+| K20 (.05) | .486 (86x) | 0% | .70 (38x) | .0235 (46x) / .037 (962x) |
+| K50 (.02) | 7.9 (5x) | 50% | 7.5 (3.5x) | .157 (7x) / .379 (94x) |
+| first5 / first20 | 1.2x / 1.9x | 100% | 1.1x / 1.7x | 1.05x / 1.7x (no effect by tick 300) |
+| K10 pos-only | 8.6x | 100% (period err .71) | 6.2x | 20x / 35x |
+| K10 heavy-only (9 of 210; star: ~10%) | 1.65x err, but 0% planets lost to tick 1000, period err .001-.005 | 0% | 0.87x (worse) | 1.15x |
+| K20 heavy-only | 1.57x, 0% lost to 1000 | 0% | 0.82x | 1.1x |
+| K10 star-only (1 body) | 1.6x, 75-100% lost | 100% | 0.86x | 1.04x |
+
+dE vs truth (last 50 ticks, relative): solar free 2.6e3 vs K5 .022, K20 .25, K10 heavy-only 400; nr100 free .052 vs K20 .0039.
+
+Verdict against pre-registered criteria:
+- Pass: K=20 full reset cuts window err@100 86x on solar and 38x on star, solar planets lost at tick 300 0% vs 100%. Kill criterion (K>=20 <2x on solar) not triggered. Prediction "K<=20 >=5x": confirmed (far exceeded). "first-m only <1.3x": confirmed at err@100 for first5 (1.2x), missed for first20 (1.9x; still no effect by tick 300, planets all lost). "pos-only clearly worse than full-state": confirmed (K10 pos-only 8.6x vs 340x). "K20 heavy-only 2-4x on solar": err 1.6x (belt/moon still diverge, missed low) but the planets themselves are retained 8/8 to tick 1000 with period error .005, better than predicted.
+- Sparse observation works down to K=20 (5% of body-ticks) and degrades sharply by K=50 (solar 50% planets lost, i.e. one chaos time per window is too long).
+- Information needed is velocity as well as position, and has to be continuous: initial-condition-only observation (first-m) is worthless, confirming that the failure is accumulated force error, not a bad start.
+- Heavy-body-only observation is a real finding on solar: 9 of 210 bodies at K=10/20 (0.2-0.4% of body-ticks) keeps all planets for 1000 ticks, since planets are driven by star + mutual forces and light bodies only matter for belt/moon. It does not transfer to the mass-ratio star family (worse than free, 0.8-0.9x: the heavy star is observed but light-body errors are not fixed) or to nr100 (random 10% subset: no effect). A single star observation alone fails.
+- Caveats: one solar scene (seed 4738), 16 star scenes, 4 nr100; truth resets are an oracle observation (noise-free, exact); no noisy-observation arm; err mean for solar is dominated by belt (200 test particles) so the heavy-only err ratio understates planet retention. Resets bound dE by re-anchoring, E itself is unchanged.
+
+Net answer to the question: gradient few-shot is not viable and conditioning on a few initial frames does not help. Sparse continuous state assimilation helps enormously (including on the solar OOD failure) but is an external-observation scheme, not a model improvement; it only matters for deployments that observe the system. Next step if wanted: noisy observations (sigma ~ real sensor) and heavy-body-only on more solar ICs.
