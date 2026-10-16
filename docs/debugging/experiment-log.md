@@ -3298,3 +3298,22 @@ Single change: `--rloss euclid` vs `--rloss sq` (control, same schedule, same co
 PASS: ab err@20 improves >= 20% vs control AND nr100 dE@1000 <= .05 AND bh300 dE/dL rows no worse than control; replicate seed 4739 only if PASS.
 KILL (stop and report): nr100 dE@1000 > .05 after training, or ab err@20 gain < 10%.
 Prediction (before launch): ab err@20 gain 25-50% (P(>=20%) ~60%; full recipe has 15x more iterations so the control's tail-hedging degradation may be larger, favouring Euclid); cl err@20 gain 20-40%; nr100 dE@1000 Euclid .1-2 vs control .02-.3 (P(Euclid <= .05) ~12%); bh300 dE/dL@100 fail for both arms (P ~80%). Expected verdict: KILL on the energy criterion, accuracy win survives at scale.
+
+#### Result (jobs 3642 main 4h34m on 1 GPU, 3648 two extra conservation/regress evals; 2026-10-15) -- KILL on energy criterion; accuracy win survives at full scale
+
+Arms: A = squared-loss control, B = Euclid (per-body unsquared norm), both 60769 it from init-B, seed 4738, final checkpoints. Eval = fresh seeds 9100/9200/9300 (24 ab + 24 cl scenes each, mean of seeds). err@k = mean per-body position error in sim units; ab = 10-200-body scale-init; cl = clusters; dE/dL = relative energy / angular-momentum drift; nr100 = 100 bodies no relativity; bh300 = 300-body black-hole collapse.
+
+| metric | frozen E | A sq | B Euclid |
+|---|---|---|---|
+| ab err@5/10/20 | .0029/.0079/.0233 | .0028/.0074/.0217 | .0008/.0021/.0063 (-71% vs A) |
+| ab err@50/100 | .153/1.40 | .143/1.38 | .0505/.715 (-48% at 100) |
+| cl err@20/100 | .0606/4.38 | .0606/4.36 | .0356/4.03 (-41% / -8%) |
+| ab step-20 median body err | .0167 | .0151 | .0042 |
+| nr100 dE@1000, 3 evals, median | .0265 (1 eval) | .1054 (.105/.101/.109) | .198 (.197/.214/.198) |
+| bh300 dE@100 median of 3 | .042 (1) | .0619 | .0774 |
+| bh300 dL@100 median of 3 | .229 (1) | .0675 | 1.147 |
+| bh300 dE@1000 / dL@1000 medians | | .274 / .773 | .173 / .444 |
+
+Verdict vs pre-registered criteria: accuracy gain 71% (>= 20%) met; nr100 dE@1000 .198 > .05 -> KILL (the squared control also fails at .105: any 60k-it warm fine-tune loses the frozen E's .027); bh300 dL@100 17x worse than control (1.15 vs .068) -> fails the "no worse" clause. No replicate (only on PASS). Prediction check: accuracy P(>=20%) ~60% -> gain larger than predicted (71% vs 25-50%); nr100 dE Euclid .1-2 -> .198 in range; control .02-.3 -> .105 in range; bh300 fails both -> A passes dL, so partly wrong. Run-to-run spread of identical-code nr100 dE@1000 is ~5% here (3 evals), far smaller than the Euclid-vs-sq gap (1.9x). Full-scale Euclid is the strongest accuracy result so far (frozen E ab err@20 .0233 -> .0063, cl -41%) so it is not rejected for accuracy; it is blocked by conservation (dE x1.9 and dL x17 vs the squared-loss control). Compute: 2.24 h per arm training (8058 s sq), ~4.5 h GPU total.
+Unbiased render review (fresh subagent, arms blinded as A/B, ab scenes 0-1, truth/A/B at steps 0-100): all three rows near-identical through step 20, gradual contraction to a central blob by step 100, no stripes/jumps/escapes; at step 100 B's cluster looked slightly tighter and more regular than truth (A somewhat more spread in scene 1). Images: videos/euclid_fs_scene{0,1}.png (not representative of the dL failure, which these scenes do not cover).
+Files: scripts/polaris_euclid_fullscale.sh, scripts/scatter_losstest.py (eval runner), scripts/render_euclid_fs.py, results/euclid_fullscale/.

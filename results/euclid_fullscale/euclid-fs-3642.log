@@ -1,0 +1,1387 @@
+=== smoke (30 it per arm)
+=== frozen E reference eval
+/home/adamwebb/augur-ef/scripts/scatter_losstest.py:58: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  out = {"all": float(((E * Vd).sum() / (T * Vd).sum()).sqrt())}
+ab 9100 err@5/10/20/50/100 [0.00283, 0.00794, 0.02305, 0.15107, 1.36663] e20 med/mean/p90/p99 0.0164/0.0232/0.0506/0.0966 force {'all': 0.24436206082162057, '<0.5': 0.19462855861260428, '0.5-1': 0.2180520379647925, '>=1': 0.3417029975170936}
+cl 9100 err@5/10/20/50/100 [0.00623, 0.01619, 0.05127, 0.74675, 4.187] e20 med/mean/p90/p99 0.0387/0.0543/0.1159/0.2448 force {'all': 0.21085651865865568, '<0.5': 0.2145100326025091, '0.5-1': 0.17798118821073822, '>=1': 0.19131294015911224}
+ab 9200 err@5/10/20/50/100 [0.0031, 0.00837, 0.02441, 0.16483, 1.48759] e20 med/mean/p90/p99 0.0175/0.0243/0.0531/0.1036 force {'all': 0.22710014751333318, '<0.5': 0.18362981802903985, '0.5-1': 0.21393654573402365, '>=1': 0.3066148618810674}
+cl 9200 err@5/10/20/50/100 [0.00664, 0.01699, 0.05574, 0.75987, 4.25759] e20 med/mean/p90/p99 0.0402/0.0576/0.1276/0.2711 force {'all': 0.2062514807502998, '<0.5': 0.20877723073483767, '0.5-1': 0.188753843795256, '>=1': 0.16723549898491577}
+ab 9300 err@5/10/20/50/100 [0.00273, 0.00729, 0.02234, 0.14437, 1.33687] e20 med/mean/p90/p99 0.0163/0.0228/0.0480/0.1085 force {'all': 0.23453538580583452, '<0.5': 0.1907812133055135, '0.5-1': 0.21997270857201234, '>=1': 0.3056534884101107}
+cl 9300 err@5/10/20/50/100 [0.00763, 0.01994, 0.07489, 1.0857, 4.70388] e20 med/mean/p90/p99 0.0526/0.0836/0.1903/0.4691 force {'all': 0.18926845708152418, '<0.5': 0.19059835755898358, '0.5-1': 0.18145393257539938, '>=1': 0.1498158716434236}
+wrote results/ef_eval/warm_sq_frozenE_0_evalonly.json
+=== train control (sq)
+=== E ms_kp_pot_v_g128 params 260419 receptive field 31 cells = 15.5 units global=False
+warm start from /home/adamwebb/augur/checkpoints/scatter_bh/init_B_ms_kp_pot_v_g128.pt
+/home/adamwebb/.local/lib/python3.12/site-packages/torch/autograd/graph.py:1072: UserWarning: The AccumulateGrad node's stream does not match the stream of the node that produced the incoming gradient. This may incur unnecessary synchronization and break CUDA graph capture if the AccumulateGrad node's stream is the default stream. This mismatch is caused by an AccumulateGrad node created prior to the current iteration being kept alive. This can happen if the autograd graph is still being kept alive by tensors such as the loss, or if you are using DDP, which will stash a reference to the node. To resolve the mismatch, delete all references to the autograd graph or ensure that DDP initialization is performed under the same stream as subsequent forwards. If the mismatch is intentional, you can use torch.autograd.graph.set_warn_on_accumulate_grad_stream_mismatch(False) to suppress this warning. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/input_buffer.cpp:310.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+it 0 k 4 loss 0.008738 t 0s
+it 100 k 4 loss 0.000655 t 4s
+it 200 k 4 loss 0.000840 t 8s
+it 300 k 4 loss 0.001591 t 12s
+it 400 k 4 loss 0.001171 t 16s
+it 500 k 4 loss 0.003091 t 19s
+it 600 k 4 loss 0.001004 t 23s
+it 700 k 4 loss 0.001465 t 27s
+it 800 k 4 loss 0.000906 t 31s
+it 900 k 4 loss 0.000230 t 35s
+it 1000 k 4 loss 0.001560 t 39s
+it 1100 k 4 loss 0.000179 t 43s
+it 1200 k 5 loss 0.000431 t 47s
+it 1300 k 5 loss 0.000932 t 51s
+it 1400 k 5 loss 0.000258 t 56s
+it 1500 k 5 loss 0.001283 t 60s
+it 1600 k 5 loss 0.000399 t 65s
+it 1700 k 5 loss 0.001345 t 70s
+it 1800 k 5 loss 0.000275 t 74s
+it 1900 k 5 loss 0.001062 t 79s
+it 2000 k 5 loss 0.001358 t 83s
+it 2100 k 5 loss 0.001151 t 88s
+it 2200 k 5 loss 0.000094 t 93s
+it 2300 k 5 loss 0.000645 t 97s
+it 2400 k 5 loss 0.000783 t 102s
+it 2500 k 5 loss 0.001612 t 106s
+it 2600 k 5 loss 0.001700 t 111s
+it 2700 k 5 loss 0.000889 t 115s
+it 2800 k 5 loss 0.000210 t 120s
+it 2900 k 5 loss 0.000569 t 125s
+it 3000 k 5 loss 0.000946 t 129s
+it 3100 k 5 loss 0.000888 t 134s
+it 3200 k 5 loss 0.000288 t 138s
+it 3300 k 5 loss 0.000222 t 143s
+it 3400 k 5 loss 0.000707 t 147s
+it 3500 k 5 loss 0.000790 t 152s
+it 3600 k 6 loss 0.001679 t 157s
+it 3700 k 6 loss 0.005792 t 162s
+it 3800 k 6 loss 0.000128 t 168s
+it 3900 k 6 loss 0.000627 t 173s
+it 4000 k 6 loss 0.000512 t 178s
+it 4100 k 6 loss 0.000123 t 184s
+it 4200 k 6 loss 0.002138 t 189s
+it 4300 k 6 loss 0.001517 t 194s
+it 4400 k 6 loss 0.000198 t 200s
+it 4500 k 6 loss 0.000287 t 205s
+it 4600 k 6 loss 0.001196 t 210s
+it 4700 k 6 loss 0.000809 t 216s
+it 4800 k 6 loss 0.001034 t 221s
+it 4900 k 6 loss 0.000842 t 227s
+it 5000 k 6 loss 0.000519 t 232s
+it 5100 k 6 loss 0.000781 t 237s
+it 5200 k 6 loss 0.000369 t 243s
+it 5300 k 6 loss 0.002499 t 248s
+it 5400 k 6 loss 0.000560 t 253s
+it 5500 k 6 loss 0.002100 t 258s
+it 5600 k 6 loss 0.000255 t 264s
+it 5700 k 6 loss 0.000591 t 269s
+it 5800 k 6 loss 0.000587 t 274s
+it 5900 k 7 loss 0.001766 t 280s
+it 6000 k 7 loss 0.002776 t 286s
+it 6100 k 7 loss 0.000760 t 292s
+it 6200 k 7 loss 0.002099 t 298s
+it 6300 k 7 loss 0.000613 t 304s
+it 6400 k 7 loss 0.002299 t 310s
+it 6500 k 7 loss 0.000784 t 316s
+it 6600 k 7 loss 0.001949 t 322s
+it 6700 k 7 loss 0.001311 t 328s
+it 6800 k 7 loss 0.000173 t 334s
+it 6900 k 7 loss 0.000140 t 340s
+it 7000 k 7 loss 0.001132 t 346s
+it 7100 k 7 loss 0.001307 t 352s
+it 7200 k 7 loss 0.002188 t 358s
+it 7300 k 7 loss 0.000654 t 364s
+it 7400 k 7 loss 0.002516 t 370s
+it 7500 k 7 loss 0.001073 t 376s
+it 7600 k 7 loss 0.000543 t 382s
+it 7700 k 7 loss 0.003055 t 388s
+it 7800 k 7 loss 0.000902 t 394s
+it 7900 k 7 loss 0.002037 t 400s
+it 8000 k 7 loss 0.000933 t 406s
+it 8100 k 7 loss 0.001060 t 412s
+it 8200 k 8 loss 0.001436 t 419s
+it 8300 k 8 loss 0.000856 t 425s
+it 8400 k 8 loss 0.001871 t 432s
+it 8500 k 8 loss 0.000532 t 439s
+it 8600 k 8 loss 0.000562 t 446s
+it 8700 k 8 loss 0.000439 t 452s
+it 8800 k 8 loss 0.002235 t 459s
+it 8900 k 8 loss 0.001220 t 466s
+it 9000 k 8 loss 0.000650 t 472s
+it 9100 k 8 loss 0.001601 t 479s
+it 9200 k 8 loss 0.001694 t 486s
+it 9300 k 8 loss 0.001653 t 493s
+it 9400 k 8 loss 0.000924 t 499s
+it 9500 k 8 loss 0.000609 t 506s
+it 9600 k 8 loss 0.000468 t 513s
+it 9700 k 8 loss 0.001730 t 520s
+it 9800 k 8 loss 0.002104 t 526s
+it 9900 k 8 loss 0.001531 t 533s
+it 10000 k 8 loss 0.000463 t 540s
+it 10100 k 8 loss 0.001104 t 547s
+it 10200 k 8 loss 0.000412 t 553s
+it 10300 k 8 loss 0.000645 t 560s
+it 10400 k 8 loss 0.000940 t 567s
+it 10500 k 8 loss 0.001765 t 574s
+it 10600 k 9 loss 0.004057 t 581s
+it 10700 k 9 loss 0.001294 t 588s
+it 10800 k 9 loss 0.001469 t 596s
+it 10900 k 9 loss 0.005245 t 603s
+it 11000 k 9 loss 0.000444 t 611s
+it 11100 k 9 loss 0.002694 t 618s
+it 11200 k 9 loss 0.002619 t 626s
+it 11300 k 9 loss 0.002389 t 633s
+it 11400 k 9 loss 0.002018 t 641s
+it 11500 k 9 loss 0.001322 t 648s
+it 11600 k 9 loss 0.005029 t 656s
+it 11700 k 9 loss 0.002344 t 663s
+it 11800 k 9 loss 0.001404 t 671s
+it 11900 k 9 loss 0.001467 t 678s
+it 12000 k 9 loss 0.001291 t 686s
+it 12100 k 9 loss 0.002831 t 693s
+it 12200 k 9 loss 0.001297 t 700s
+it 12300 k 9 loss 0.000586 t 708s
+it 12400 k 9 loss 0.001366 t 715s
+it 12500 k 9 loss 0.007257 t 723s
+it 12600 k 9 loss 0.001163 t 730s
+it 12700 k 9 loss 0.000980 t 738s
+it 12800 k 9 loss 0.001458 t 745s
+it 12900 k 10 loss 0.000822 t 753s
+it 13000 k 10 loss 0.001117 t 761s
+it 13100 k 10 loss 0.001025 t 769s
+it 13200 k 10 loss 0.001052 t 778s
+it 13300 k 10 loss 0.002733 t 786s
+it 13400 k 10 loss 0.001048 t 794s
+it 13500 k 10 loss 0.001454 t 802s
+it 13600 k 10 loss 0.003164 t 810s
+it 13700 k 10 loss 0.001075 t 818s
+it 13800 k 10 loss 0.002273 t 827s
+it 13900 k 10 loss 0.000329 t 835s
+it 14000 k 10 loss 0.004084 t 843s
+it 14100 k 10 loss 0.001125 t 851s
+it 14200 k 10 loss 0.002115 t 859s
+it 14300 k 10 loss 0.004829 t 868s
+it 14400 k 10 loss 0.000913 t 876s
+it 14500 k 10 loss 0.001725 t 884s
+it 14600 k 10 loss 0.000410 t 893s
+it 14700 k 10 loss 0.000297 t 901s
+it 14800 k 10 loss 0.000451 t 909s
+it 14900 k 10 loss 0.005163 t 917s
+it 15000 k 10 loss 0.002525 t 926s
+it 15100 k 10 loss 0.000798 t 934s
+it 15200 k 11 loss 0.001335 t 942s
+it 15300 k 11 loss 0.002634 t 951s
+it 15400 k 11 loss 0.001014 t 960s
+it 15500 k 11 loss 0.002760 t 969s
+it 15600 k 11 loss 0.001334 t 978s
+it 15700 k 11 loss 0.002858 t 987s
+it 15800 k 11 loss 0.004755 t 996s
+it 15900 k 11 loss 0.000653 t 1005s
+it 16000 k 11 loss 0.000686 t 1014s
+it 16100 k 11 loss 0.003448 t 1023s
+it 16200 k 11 loss 0.000812 t 1032s
+it 16300 k 11 loss 0.000638 t 1041s
+it 16400 k 11 loss 0.001162 t 1050s
+it 16500 k 11 loss 0.004973 t 1059s
+it 16600 k 11 loss 0.000771 t 1068s
+it 16700 k 11 loss 0.001349 t 1077s
+it 16800 k 11 loss 0.001274 t 1086s
+it 16900 k 11 loss 0.003277 t 1095s
+it 17000 k 11 loss 0.005471 t 1104s
+it 17100 k 11 loss 0.005499 t 1112s
+it 17200 k 11 loss 0.000978 t 1121s
+it 17300 k 11 loss 0.003724 t 1130s
+it 17400 k 11 loss 0.006946 t 1139s
+it 17500 k 11 loss 0.005797 t 1148s
+it 17600 k 12 loss 0.006053 t 1158s
+it 17700 k 12 loss 0.001125 t 1167s
+it 17800 k 12 loss 0.005780 t 1177s
+it 17900 k 12 loss 0.003483 t 1186s
+it 18000 k 12 loss 0.004598 t 1196s
+it 18100 k 12 loss 0.001059 t 1206s
+it 18200 k 12 loss 0.002466 t 1215s
+it 18300 k 12 loss 0.003839 t 1225s
+it 18400 k 12 loss 0.004145 t 1235s
+it 18500 k 12 loss 0.004420 t 1244s
+it 18600 k 12 loss 0.006824 t 1254s
+it 18700 k 12 loss 0.004660 t 1263s
+it 18800 k 12 loss 0.002657 t 1273s
+it 18900 k 12 loss 0.004104 t 1283s
+it 19000 k 12 loss 0.001379 t 1292s
+it 19100 k 12 loss 0.002380 t 1302s
+it 19200 k 12 loss 0.004480 t 1312s
+it 19300 k 12 loss 0.002203 t 1321s
+it 19400 k 12 loss 0.000720 t 1331s
+it 19500 k 12 loss 0.006823 t 1341s
+it 19600 k 12 loss 0.000639 t 1350s
+it 19700 k 12 loss 0.001364 t 1360s
+it 19800 k 12 loss 0.001357 t 1369s
+it 19900 k 13 loss 0.003997 t 1379s
+it 20000 k 13 loss 0.002600 t 1390s
+it 20100 k 13 loss 0.003436 t 1400s
+it 20200 k 13 loss 0.009235 t 1410s
+it 20300 k 13 loss 0.009591 t 1421s
+it 20400 k 13 loss 0.005814 t 1431s
+it 20500 k 13 loss 0.002396 t 1442s
+it 20600 k 13 loss 0.001335 t 1452s
+it 20700 k 13 loss 0.003168 t 1462s
+it 20800 k 13 loss 0.001980 t 1473s
+it 20900 k 13 loss 0.003815 t 1483s
+it 21000 k 13 loss 0.001816 t 1493s
+it 21100 k 13 loss 0.004223 t 1504s
+it 21200 k 13 loss 0.001013 t 1514s
+it 21300 k 13 loss 0.001485 t 1524s
+it 21400 k 13 loss 0.004528 t 1535s
+it 21500 k 13 loss 0.005392 t 1545s
+it 21600 k 13 loss 0.008143 t 1555s
+it 21700 k 13 loss 0.002277 t 1566s
+it 21800 k 13 loss 0.003186 t 1576s
+it 21900 k 13 loss 0.004240 t 1587s
+it 22000 k 13 loss 0.004269 t 1597s
+it 22100 k 13 loss 0.004495 t 1607s
+it 22200 k 13 loss 0.003658 t 1618s
+it 22300 k 14 loss 0.002840 t 1629s
+it 22400 k 14 loss 0.002095 t 1640s
+it 22500 k 14 loss 0.007661 t 1651s
+it 22600 k 14 loss 0.005288 t 1662s
+it 22700 k 14 loss 0.015736 t 1673s
+it 22800 k 14 loss 0.005807 t 1684s
+it 22900 k 14 loss 0.001061 t 1695s
+it 23000 k 14 loss 0.005457 t 1706s
+it 23100 k 14 loss 0.003796 t 1717s
+it 23200 k 14 loss 0.005722 t 1728s
+it 23300 k 14 loss 0.005100 t 1739s
+it 23400 k 14 loss 0.000918 t 1750s
+it 23500 k 14 loss 0.004441 t 1762s
+it 23600 k 14 loss 0.003057 t 1773s
+it 23700 k 14 loss 0.008450 t 1784s
+it 23800 k 14 loss 0.002804 t 1795s
+it 23900 k 14 loss 0.001745 t 1806s
+it 24000 k 14 loss 0.001708 t 1817s
+it 24100 k 14 loss 0.005045 t 1828s
+it 24200 k 14 loss 0.007229 t 1839s
+it 24300 k 14 loss 0.004334 t 1850s
+it 24400 k 14 loss 0.002200 t 1861s
+it 24500 k 14 loss 0.003025 t 1872s
+it 24600 k 15 loss 0.006458 t 1884s
+it 24700 k 15 loss 0.005898 t 1896s
+it 24800 k 15 loss 0.002456 t 1907s
+it 24900 k 15 loss 0.008745 t 1919s
+it 25000 k 15 loss 0.013860 t 1931s
+it 25100 k 15 loss 0.006015 t 1943s
+it 25200 k 15 loss 0.007984 t 1955s
+it 25300 k 15 loss 0.002922 t 1967s
+it 25400 k 15 loss 0.015604 t 1979s
+it 25500 k 15 loss 0.001888 t 1991s
+it 25600 k 15 loss 0.002116 t 2003s
+it 25700 k 15 loss 0.003666 t 2015s
+it 25800 k 15 loss 0.011181 t 2027s
+it 25900 k 15 loss 0.013467 t 2039s
+it 26000 k 15 loss 0.003452 t 2051s
+it 26100 k 15 loss 0.002239 t 2063s
+it 26200 k 15 loss 0.002589 t 2075s
+it 26300 k 15 loss 0.005976 t 2086s
+it 26400 k 15 loss 0.005764 t 2098s
+it 26500 k 15 loss 0.003749 t 2110s
+it 26600 k 15 loss 0.005381 t 2122s
+it 26700 k 15 loss 0.005462 t 2134s
+it 26800 k 15 loss 0.006078 t 2146s
+it 26900 k 16 loss 0.004494 t 2158s
+it 27000 k 16 loss 0.009450 t 2170s
+it 27100 k 16 loss 0.007290 t 2183s
+it 27200 k 16 loss 0.006310 t 2195s
+it 27300 k 16 loss 0.006147 t 2208s
+it 27400 k 16 loss 0.005790 t 2220s
+it 27500 k 16 loss 0.001786 t 2233s
+it 27600 k 16 loss 0.001796 t 2245s
+it 27700 k 16 loss 0.007190 t 2258s
+it 27800 k 16 loss 0.012835 t 2270s
+it 27900 k 16 loss 0.004418 t 2283s
+it 28000 k 16 loss 0.009477 t 2295s
+it 28100 k 16 loss 0.003407 t 2308s
+it 28200 k 16 loss 0.005428 t 2320s
+it 28300 k 16 loss 0.011139 t 2333s
+it 28400 k 16 loss 0.002572 t 2345s
+it 28500 k 16 loss 0.004613 t 2358s
+it 28600 k 16 loss 0.011218 t 2370s
+it 28700 k 16 loss 0.003678 t 2383s
+it 28800 k 16 loss 0.004217 t 2395s
+it 28900 k 16 loss 0.009733 t 2408s
+it 29000 k 16 loss 0.015655 t 2420s
+it 29100 k 16 loss 0.002896 t 2433s
+it 29200 k 16 loss 0.002476 t 2445s
+it 29300 k 17 loss 0.006404 t 2458s
+it 29400 k 17 loss 0.003437 t 2472s
+it 29500 k 17 loss 0.004563 t 2485s
+it 29600 k 17 loss 0.002971 t 2498s
+it 29700 k 17 loss 0.008333 t 2511s
+it 29800 k 17 loss 0.001567 t 2525s
+it 29900 k 17 loss 0.005758 t 2538s
+it 30000 k 17 loss 0.003456 t 2551s
+it 30100 k 17 loss 0.006527 t 2564s
+it 30200 k 17 loss 0.010795 t 2578s
+it 30300 k 17 loss 0.008710 t 2591s
+it 30400 k 17 loss 0.011128 t 2604s
+it 30500 k 17 loss 0.007874 t 2617s
+it 30600 k 17 loss 0.005233 t 2631s
+it 30700 k 17 loss 0.006376 t 2644s
+it 30800 k 17 loss 0.010721 t 2657s
+it 30900 k 17 loss 0.005448 t 2670s
+it 31000 k 17 loss 0.010156 t 2684s
+it 31100 k 17 loss 0.017241 t 2697s
+it 31200 k 17 loss 0.003164 t 2710s
+it 31300 k 17 loss 0.005005 t 2723s
+it 31400 k 17 loss 0.004318 t 2737s
+it 31500 k 17 loss 0.002332 t 2750s
+it 31600 k 18 loss 0.012790 t 2763s
+it 31700 k 18 loss 0.001225 t 2777s
+it 31800 k 18 loss 0.007527 t 2791s
+it 31900 k 18 loss 0.004276 t 2805s
+it 32000 k 18 loss 0.018992 t 2819s
+it 32100 k 18 loss 0.016830 t 2833s
+it 32200 k 18 loss 0.011895 t 2847s
+it 32300 k 18 loss 0.006788 t 2861s
+it 32400 k 18 loss 0.005890 t 2875s
+it 32500 k 18 loss 0.007293 t 2889s
+it 32600 k 18 loss 0.003391 t 2903s
+it 32700 k 18 loss 0.006055 t 2917s
+it 32800 k 18 loss 0.006929 t 2931s
+it 32900 k 18 loss 0.015734 t 2945s
+it 33000 k 18 loss 0.005752 t 2959s
+it 33100 k 18 loss 0.011447 t 2973s
+it 33200 k 18 loss 0.005026 t 2987s
+it 33300 k 18 loss 0.017625 t 3001s
+it 33400 k 18 loss 0.009465 t 3015s
+it 33500 k 18 loss 0.001834 t 3029s
+it 33600 k 18 loss 0.003680 t 3043s
+it 33700 k 18 loss 0.007932 t 3056s
+it 33800 k 18 loss 0.011511 t 3070s
+it 33900 k 19 loss 0.009604 t 3084s
+it 34000 k 19 loss 0.016489 t 3099s
+it 34100 k 19 loss 0.007377 t 3114s
+it 34200 k 19 loss 0.002457 t 3129s
+it 34300 k 19 loss 0.009261 t 3143s
+it 34400 k 19 loss 0.014002 t 3158s
+it 34500 k 19 loss 0.011733 t 3173s
+it 34600 k 19 loss 0.003197 t 3187s
+it 34700 k 19 loss 0.015223 t 3202s
+it 34800 k 19 loss 0.005805 t 3217s
+it 34900 k 19 loss 0.002490 t 3231s
+it 35000 k 19 loss 0.002033 t 3246s
+it 35100 k 19 loss 0.001827 t 3261s
+it 35200 k 19 loss 0.007166 t 3275s
+it 35300 k 19 loss 0.008332 t 3290s
+it 35400 k 19 loss 0.013759 t 3305s
+it 35500 k 19 loss 0.016738 t 3320s
+it 35600 k 19 loss 0.006948 t 3334s
+it 35700 k 19 loss 0.016526 t 3349s
+it 35800 k 19 loss 0.007090 t 3364s
+it 35900 k 19 loss 0.007130 t 3378s
+it 36000 k 19 loss 0.012015 t 3393s
+it 36100 k 19 loss 0.013716 t 3408s
+it 36200 k 19 loss 0.023400 t 3422s
+it 36300 k 20 loss 0.012282 t 3438s
+it 36400 k 20 loss 0.011368 t 3453s
+it 36500 k 20 loss 0.001362 t 3468s
+it 36600 k 20 loss 0.006544 t 3484s
+it 36700 k 20 loss 0.007970 t 3499s
+it 36800 k 20 loss 0.022493 t 3515s
+it 36900 k 20 loss 0.003881 t 3530s
+it 37000 k 20 loss 0.022315 t 3545s
+it 37100 k 20 loss 0.005806 t 3561s
+it 37200 k 20 loss 0.011445 t 3576s
+it 37300 k 20 loss 0.021955 t 3592s
+it 37400 k 20 loss 0.008147 t 3607s
+it 37500 k 20 loss 0.012165 t 3622s
+it 37600 k 20 loss 0.003215 t 3638s
+it 37700 k 20 loss 0.011844 t 3653s
+it 37800 k 20 loss 0.014564 t 3669s
+it 37900 k 20 loss 0.031767 t 3684s
+it 38000 k 20 loss 0.003862 t 3700s
+it 38100 k 20 loss 0.006484 t 3715s
+it 38200 k 20 loss 0.018675 t 3730s
+it 38300 k 20 loss 0.004348 t 3746s
+it 38400 k 20 loss 0.008027 t 3761s
+it 38500 k 20 loss 0.020832 t 3777s
+it 38600 k 21 loss 0.029261 t 3792s
+it 38700 k 21 loss 0.005421 t 3808s
+it 38800 k 21 loss 0.016047 t 3825s
+it 38900 k 21 loss 0.003701 t 3841s
+it 39000 k 21 loss 0.008702 t 3857s
+it 39100 k 21 loss 0.026099 t 3873s
+it 39200 k 21 loss 0.034167 t 3889s
+it 39300 k 21 loss 0.003787 t 3905s
+it 39400 k 21 loss 0.006409 t 3922s
+it 39500 k 21 loss 0.018165 t 3938s
+it 39600 k 21 loss 0.011267 t 3954s
+it 39700 k 21 loss 0.009676 t 3970s
+it 39800 k 21 loss 0.006557 t 3986s
+it 39900 k 21 loss 0.020253 t 4002s
+it 40000 k 21 loss 0.006727 t 4018s
+it 40100 k 21 loss 0.022231 t 4035s
+it 40200 k 21 loss 0.005065 t 4051s
+it 40300 k 21 loss 0.003764 t 4067s
+it 40400 k 21 loss 0.003674 t 4083s
+it 40500 k 21 loss 0.015108 t 4099s
+it 40600 k 21 loss 0.007556 t 4115s
+it 40700 k 21 loss 0.029974 t 4131s
+it 40800 k 21 loss 0.006801 t 4148s
+it 40900 k 21 loss 0.013786 t 4164s
+it 41000 k 22 loss 0.020070 t 4181s
+it 41100 k 22 loss 0.012696 t 4197s
+it 41200 k 22 loss 0.017572 t 4214s
+it 41300 k 22 loss 0.006673 t 4231s
+it 41400 k 22 loss 0.006017 t 4248s
+it 41500 k 22 loss 0.020765 t 4265s
+it 41600 k 22 loss 0.009143 t 4282s
+it 41700 k 22 loss 0.008134 t 4299s
+it 41800 k 22 loss 0.007056 t 4316s
+it 41900 k 22 loss 0.005542 t 4332s
+it 42000 k 22 loss 0.003219 t 4349s
+it 42100 k 22 loss 0.028826 t 4366s
+it 42200 k 22 loss 0.006206 t 4383s
+it 42300 k 22 loss 0.005168 t 4400s
+it 42400 k 22 loss 0.002731 t 4417s
+it 42500 k 22 loss 0.026907 t 4434s
+it 42600 k 22 loss 0.038395 t 4451s
+it 42700 k 22 loss 0.007030 t 4467s
+it 42800 k 22 loss 0.012443 t 4484s
+it 42900 k 22 loss 0.003336 t 4501s
+it 43000 k 22 loss 0.007283 t 4518s
+it 43100 k 22 loss 0.010915 t 4535s
+it 43200 k 22 loss 0.019673 t 4552s
+it 43300 k 23 loss 0.006068 t 4569s
+it 43400 k 23 loss 0.016453 t 4587s
+it 43500 k 23 loss 0.032606 t 4604s
+it 43600 k 23 loss 0.020228 t 4622s
+it 43700 k 23 loss 0.023852 t 4639s
+it 43800 k 23 loss 0.010023 t 4657s
+it 43900 k 23 loss 0.006065 t 4675s
+it 44000 k 23 loss 0.017487 t 4692s
+it 44100 k 23 loss 0.033235 t 4710s
+it 44200 k 23 loss 0.004201 t 4727s
+it 44300 k 23 loss 0.005216 t 4745s
+it 44400 k 23 loss 0.003059 t 4763s
+it 44500 k 23 loss 0.006632 t 4780s
+it 44600 k 23 loss 0.031681 t 4798s
+it 44700 k 23 loss 0.018677 t 4816s
+it 44800 k 23 loss 0.023219 t 4833s
+it 44900 k 23 loss 0.036761 t 4851s
+it 45000 k 23 loss 0.004698 t 4868s
+it 45100 k 23 loss 0.002519 t 4886s
+it 45200 k 23 loss 0.012109 t 4904s
+it 45300 k 23 loss 0.009166 t 4921s
+it 45400 k 23 loss 0.003759 t 4939s
+it 45500 k 23 loss 0.004301 t 4956s
+it 45600 k 24 loss 0.010601 t 4974s
+it 45700 k 24 loss 0.006282 t 4992s
+it 45800 k 24 loss 0.010064 t 5011s
+it 45900 k 24 loss 0.008083 t 5029s
+it 46000 k 24 loss 0.018627 t 5047s
+it 46100 k 24 loss 0.002279 t 5066s
+it 46200 k 24 loss 0.004123 t 5084s
+it 46300 k 24 loss 0.056170 t 5102s
+it 46400 k 24 loss 0.020329 t 5121s
+it 46500 k 24 loss 0.017332 t 5139s
+it 46600 k 24 loss 0.023558 t 5157s
+it 46700 k 24 loss 0.004254 t 5175s
+it 46800 k 24 loss 0.025201 t 5194s
+it 46900 k 24 loss 0.006594 t 5212s
+it 47000 k 24 loss 0.017080 t 5230s
+it 47100 k 24 loss 0.005821 t 5249s
+it 47200 k 24 loss 0.004197 t 5267s
+it 47300 k 24 loss 0.021828 t 5285s
+it 47400 k 24 loss 0.014393 t 5304s
+it 47500 k 24 loss 0.035731 t 5322s
+it 47600 k 24 loss 0.006799 t 5340s
+it 47700 k 24 loss 0.009559 t 5359s
+it 47800 k 24 loss 0.012060 t 5377s
+it 47900 k 24 loss 0.007477 t 5395s
+it 48000 k 25 loss 0.004965 t 5414s
+it 48100 k 25 loss 0.016037 t 5433s
+it 48200 k 25 loss 0.010776 t 5452s
+it 48300 k 25 loss 0.036760 t 5471s
+it 48400 k 25 loss 0.011168 t 5490s
+it 48500 k 25 loss 0.009175 t 5509s
+it 48600 k 25 loss 0.003107 t 5528s
+it 48700 k 25 loss 0.003397 t 5548s
+it 48800 k 25 loss 0.016354 t 5567s
+it 48900 k 25 loss 0.030320 t 5586s
+it 49000 k 25 loss 0.014072 t 5605s
+it 49100 k 25 loss 0.011724 t 5624s
+it 49200 k 25 loss 0.004781 t 5643s
+it 49300 k 25 loss 0.019614 t 5662s
+it 49400 k 25 loss 0.016906 t 5681s
+it 49500 k 25 loss 0.023853 t 5700s
+it 49600 k 25 loss 0.030486 t 5719s
+it 49700 k 25 loss 0.008882 t 5738s
+it 49800 k 25 loss 0.018791 t 5757s
+it 49900 k 25 loss 0.015096 t 5776s
+it 50000 k 25 loss 0.022508 t 5795s
+it 50100 k 25 loss 0.006788 t 5814s
+it 50200 k 25 loss 0.030369 t 5833s
+it 50300 k 26 loss 0.004118 t 5853s
+it 50400 k 26 loss 0.004210 t 5872s
+it 50500 k 26 loss 0.060701 t 5892s
+it 50600 k 26 loss 0.008083 t 5912s
+it 50700 k 26 loss 0.019346 t 5932s
+it 50800 k 26 loss 0.015970 t 5952s
+it 50900 k 26 loss 0.005509 t 5971s
+it 51000 k 26 loss 0.008229 t 5991s
+it 51100 k 26 loss 0.022817 t 6011s
+it 51200 k 26 loss 0.017126 t 6031s
+it 51300 k 26 loss 0.077684 t 6051s
+it 51400 k 26 loss 0.019984 t 6070s
+it 51500 k 26 loss 0.019329 t 6090s
+it 51600 k 26 loss 0.006668 t 6110s
+it 51700 k 26 loss 0.008814 t 6130s
+it 51800 k 26 loss 0.023355 t 6149s
+it 51900 k 26 loss 0.035672 t 6169s
+it 52000 k 26 loss 0.008384 t 6189s
+it 52100 k 26 loss 0.007597 t 6209s
+it 52200 k 26 loss 0.003631 t 6228s
+it 52300 k 26 loss 0.028044 t 6248s
+it 52400 k 26 loss 0.005182 t 6268s
+it 52500 k 26 loss 0.005830 t 6288s
+it 52600 k 27 loss 0.020095 t 6308s
+it 52700 k 27 loss 0.031858 t 6328s
+it 52800 k 27 loss 0.007147 t 6349s
+it 52900 k 27 loss 0.005421 t 6369s
+it 53000 k 27 loss 0.042415 t 6390s
+it 53100 k 27 loss 0.010001 t 6410s
+it 53200 k 27 loss 0.030284 t 6431s
+it 53300 k 27 loss 0.052976 t 6451s
+it 53400 k 27 loss 0.037843 t 6472s
+it 53500 k 27 loss 0.002598 t 6492s
+it 53600 k 27 loss 0.034090 t 6513s
+it 53700 k 27 loss 0.027365 t 6533s
+it 53800 k 27 loss 0.010264 t 6554s
+it 53900 k 27 loss 0.005882 t 6574s
+it 54000 k 27 loss 0.014953 t 6595s
+it 54100 k 27 loss 0.032879 t 6615s
+it 54200 k 27 loss 0.019680 t 6636s
+it 54300 k 27 loss 0.010148 t 6656s
+it 54400 k 27 loss 0.111629 t 6677s
+it 54500 k 27 loss 0.031468 t 6697s
+it 54600 k 27 loss 0.010732 t 6718s
+it 54700 k 27 loss 0.009914 t 6738s
+it 54800 k 27 loss 0.008280 t 6759s
+it 54900 k 27 loss 0.011950 t 6779s
+it 55000 k 28 loss 0.032232 t 6800s
+it 55100 k 28 loss 0.041370 t 6821s
+it 55200 k 28 loss 0.035476 t 6843s
+it 55300 k 28 loss 0.028873 t 6864s
+it 55400 k 28 loss 0.010523 t 6885s
+it 55500 k 28 loss 0.039866 t 6906s
+it 55600 k 28 loss 0.005825 t 6928s
+it 55700 k 28 loss 0.010477 t 6949s
+it 55800 k 28 loss 0.024067 t 6970s
+it 55900 k 28 loss 0.010928 t 6991s
+it 56000 k 28 loss 0.011989 t 7013s
+it 56100 k 28 loss 0.051052 t 7034s
+it 56200 k 28 loss 0.068285 t 7055s
+it 56300 k 28 loss 0.033194 t 7076s
+it 56400 k 28 loss 0.028368 t 7097s
+it 56500 k 28 loss 0.062133 t 7119s
+it 56600 k 28 loss 0.039235 t 7140s
+it 56700 k 28 loss 0.014656 t 7161s
+it 56800 k 28 loss 0.014231 t 7182s
+it 56900 k 28 loss 0.053311 t 7204s
+it 57000 k 28 loss 0.042603 t 7225s
+it 57100 k 28 loss 0.060754 t 7246s
+it 57200 k 28 loss 0.024031 t 7267s
+it 57300 k 29 loss 0.004565 t 7289s
+it 57400 k 29 loss 0.030975 t 7311s
+it 57500 k 29 loss 0.027120 t 7332s
+it 57600 k 29 loss 0.006270 t 7354s
+it 57700 k 29 loss 0.037911 t 7376s
+it 57800 k 29 loss 0.035684 t 7398s
+it 57900 k 29 loss 0.025662 t 7420s
+it 58000 k 29 loss 0.008756 t 7442s
+it 58100 k 29 loss 0.021913 t 7464s
+it 58200 k 29 loss 0.023678 t 7486s
+it 58300 k 29 loss 0.123023 t 7508s
+it 58400 k 29 loss 0.005706 t 7530s
+it 58500 k 29 loss 0.002864 t 7552s
+it 58600 k 29 loss 0.015446 t 7574s
+it 58700 k 29 loss 0.026522 t 7596s
+it 58800 k 29 loss 0.064629 t 7618s
+it 58900 k 29 loss 0.012004 t 7640s
+it 59000 k 29 loss 0.047760 t 7661s
+it 59100 k 29 loss 0.087650 t 7683s
+it 59200 k 29 loss 0.038013 t 7705s
+it 59300 k 29 loss 0.005761 t 7727s
+it 59400 k 29 loss 0.037885 t 7749s
+it 59500 k 29 loss 0.004160 t 7771s
+it 59600 k 30 loss 0.013092 t 7793s
+it 59700 k 30 loss 0.007982 t 7816s
+it 59800 k 30 loss 0.021155 t 7838s
+it 59900 k 30 loss 0.102368 t 7861s
+it 60000 k 30 loss 0.051994 t 7884s
+it 60100 k 30 loss 0.019040 t 7906s
+it 60200 k 30 loss 0.020633 t 7929s
+it 60300 k 30 loss 0.034905 t 7952s
+it 60400 k 30 loss 0.016582 t 7974s
+it 60500 k 30 loss 0.063785 t 7997s
+it 60600 k 30 loss 0.004743 t 8020s
+it 60700 k 30 loss 0.009299 t 8042s
+trained 60769 iters in 8058s
+ms_kp_pot_v_g128 9000 err@5/10/20 [0.0045, 0.0116, 0.0363] constvel [0.1259, 0.4947, 1.8328]
+ms_kp_pot_v_g128 12000 err@5/10/20 [0.0047, 0.0123, 0.0385] constvel [0.1388, 0.546, 2.0719]
+ms_kp_pot_v_g128 curl/total 0.124 self-force 0.0157
+[2026-10-15T15:55:38-07:00] CONTROL TRAINED
+=== train euclid
+=== E ms_kp_pot_v_g128 params 260419 receptive field 31 cells = 15.5 units global=False
+warm start from /home/adamwebb/augur/checkpoints/scatter_bh/init_B_ms_kp_pot_v_g128.pt
+/home/adamwebb/.local/lib/python3.12/site-packages/torch/autograd/graph.py:1072: UserWarning: The AccumulateGrad node's stream does not match the stream of the node that produced the incoming gradient. This may incur unnecessary synchronization and break CUDA graph capture if the AccumulateGrad node's stream is the default stream. This mismatch is caused by an AccumulateGrad node created prior to the current iteration being kept alive. This can happen if the autograd graph is still being kept alive by tensors such as the loss, or if you are using DDP, which will stash a reference to the node. To resolve the mismatch, delete all references to the autograd graph or ensure that DDP initialization is performed under the same stream as subsequent forwards. If the mismatch is intentional, you can use torch.autograd.graph.set_warn_on_accumulate_grad_stream_mismatch(False) to suppress this warning. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/input_buffer.cpp:310.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+it 0 k 4 loss 0.019546 t 0s
+it 100 k 4 loss 0.004470 t 4s
+it 200 k 4 loss 0.006752 t 8s
+it 300 k 4 loss 0.003417 t 12s
+it 400 k 4 loss 0.004937 t 16s
+it 500 k 4 loss 0.013408 t 19s
+it 600 k 4 loss 0.005549 t 23s
+it 700 k 4 loss 0.010877 t 27s
+it 800 k 4 loss 0.005040 t 31s
+it 900 k 4 loss 0.002143 t 35s
+it 1000 k 4 loss 0.007443 t 39s
+it 1100 k 4 loss 0.002341 t 43s
+it 1200 k 5 loss 0.003817 t 47s
+it 1300 k 5 loss 0.005952 t 51s
+it 1400 k 5 loss 0.003465 t 56s
+it 1500 k 5 loss 0.007944 t 60s
+it 1600 k 5 loss 0.003600 t 65s
+it 1700 k 5 loss 0.009193 t 70s
+it 1800 k 5 loss 0.002840 t 74s
+it 1900 k 5 loss 0.007266 t 79s
+it 2000 k 5 loss 0.008449 t 83s
+it 2100 k 5 loss 0.012590 t 88s
+it 2200 k 5 loss 0.001735 t 92s
+it 2300 k 5 loss 0.004759 t 97s
+it 2400 k 5 loss 0.004821 t 102s
+it 2500 k 5 loss 0.007827 t 106s
+it 2600 k 5 loss 0.008478 t 111s
+it 2700 k 5 loss 0.006328 t 115s
+it 2800 k 5 loss 0.002602 t 120s
+it 2900 k 5 loss 0.004286 t 124s
+it 3000 k 5 loss 0.008419 t 129s
+it 3100 k 5 loss 0.007172 t 134s
+it 3200 k 5 loss 0.003208 t 138s
+it 3300 k 5 loss 0.003315 t 143s
+it 3400 k 5 loss 0.007265 t 147s
+it 3500 k 5 loss 0.006609 t 152s
+it 3600 k 6 loss 0.008747 t 157s
+it 3700 k 6 loss 0.015147 t 163s
+it 3800 k 6 loss 0.002280 t 168s
+it 3900 k 6 loss 0.005996 t 173s
+it 4000 k 6 loss 0.006751 t 179s
+it 4100 k 6 loss 0.002834 t 184s
+it 4200 k 6 loss 0.009650 t 189s
+it 4300 k 6 loss 0.008780 t 194s
+it 4400 k 6 loss 0.002567 t 200s
+it 4500 k 6 loss 0.003626 t 205s
+it 4600 k 6 loss 0.007829 t 210s
+it 4700 k 6 loss 0.004706 t 216s
+it 4800 k 6 loss 0.007181 t 221s
+it 4900 k 6 loss 0.007190 t 226s
+it 5000 k 6 loss 0.004671 t 232s
+it 5100 k 6 loss 0.007157 t 237s
+it 5200 k 6 loss 0.005074 t 242s
+it 5300 k 6 loss 0.012112 t 248s
+it 5400 k 6 loss 0.005971 t 253s
+it 5500 k 6 loss 0.012168 t 258s
+it 5600 k 6 loss 0.002999 t 263s
+it 5700 k 6 loss 0.007579 t 269s
+it 5800 k 6 loss 0.005908 t 274s
+it 5900 k 7 loss 0.013968 t 280s
+it 6000 k 7 loss 0.013246 t 286s
+it 6100 k 7 loss 0.007464 t 292s
+it 6200 k 7 loss 0.012031 t 298s
+it 6300 k 7 loss 0.006631 t 304s
+it 6400 k 7 loss 0.015827 t 310s
+it 6500 k 7 loss 0.005820 t 316s
+it 6600 k 7 loss 0.014668 t 322s
+it 6700 k 7 loss 0.007801 t 328s
+it 6800 k 7 loss 0.002168 t 334s
+it 6900 k 7 loss 0.002437 t 340s
+it 7000 k 7 loss 0.009580 t 346s
+it 7100 k 7 loss 0.010495 t 352s
+it 7200 k 7 loss 0.013499 t 358s
+it 7300 k 7 loss 0.005952 t 365s
+it 7400 k 7 loss 0.013492 t 371s
+it 7500 k 7 loss 0.010954 t 377s
+it 7600 k 7 loss 0.004927 t 383s
+it 7700 k 7 loss 0.012804 t 389s
+it 7800 k 7 loss 0.007486 t 395s
+it 7900 k 7 loss 0.011930 t 401s
+it 8000 k 7 loss 0.007232 t 407s
+it 8100 k 7 loss 0.008518 t 413s
+it 8200 k 8 loss 0.010592 t 419s
+it 8300 k 8 loss 0.006925 t 426s
+it 8400 k 8 loss 0.012998 t 433s
+it 8500 k 8 loss 0.006820 t 439s
+it 8600 k 8 loss 0.005426 t 446s
+it 8700 k 8 loss 0.005474 t 453s
+it 8800 k 8 loss 0.014016 t 460s
+it 8900 k 8 loss 0.009864 t 466s
+it 9000 k 8 loss 0.005568 t 473s
+it 9100 k 8 loss 0.011611 t 480s
+it 9200 k 8 loss 0.014771 t 487s
+it 9300 k 8 loss 0.011796 t 493s
+it 9400 k 8 loss 0.007660 t 500s
+it 9500 k 8 loss 0.003623 t 507s
+it 9600 k 8 loss 0.005357 t 514s
+it 9700 k 8 loss 0.014553 t 521s
+it 9800 k 8 loss 0.015308 t 527s
+it 9900 k 8 loss 0.012090 t 534s
+it 10000 k 8 loss 0.005809 t 541s
+it 10100 k 8 loss 0.005843 t 548s
+it 10200 k 8 loss 0.005489 t 554s
+it 10300 k 8 loss 0.008937 t 561s
+it 10400 k 8 loss 0.010477 t 568s
+it 10500 k 8 loss 0.010215 t 575s
+it 10600 k 9 loss 0.020485 t 582s
+it 10700 k 9 loss 0.010070 t 590s
+it 10800 k 9 loss 0.011048 t 597s
+it 10900 k 9 loss 0.016814 t 605s
+it 11000 k 9 loss 0.005273 t 612s
+it 11100 k 9 loss 0.012326 t 619s
+it 11200 k 9 loss 0.015487 t 627s
+it 11300 k 9 loss 0.012950 t 634s
+it 11400 k 9 loss 0.011983 t 642s
+it 11500 k 9 loss 0.009956 t 649s
+it 11600 k 9 loss 0.026251 t 657s
+it 11700 k 9 loss 0.014377 t 664s
+it 11800 k 9 loss 0.010985 t 672s
+it 11900 k 9 loss 0.010672 t 679s
+it 12000 k 9 loss 0.010897 t 687s
+it 12100 k 9 loss 0.017590 t 694s
+it 12200 k 9 loss 0.009198 t 702s
+it 12300 k 9 loss 0.005871 t 709s
+it 12400 k 9 loss 0.008866 t 717s
+it 12500 k 9 loss 0.013586 t 724s
+it 12600 k 9 loss 0.007807 t 732s
+it 12700 k 9 loss 0.006385 t 739s
+it 12800 k 9 loss 0.011312 t 747s
+it 12900 k 10 loss 0.006816 t 754s
+it 13000 k 10 loss 0.007017 t 763s
+it 13100 k 10 loss 0.010217 t 771s
+it 13200 k 10 loss 0.007819 t 779s
+it 13300 k 10 loss 0.015025 t 787s
+it 13400 k 10 loss 0.007590 t 796s
+it 13500 k 10 loss 0.015904 t 804s
+it 13600 k 10 loss 0.020243 t 812s
+it 13700 k 10 loss 0.007528 t 820s
+it 13800 k 10 loss 0.008953 t 828s
+it 13900 k 10 loss 0.004357 t 837s
+it 14000 k 10 loss 0.016496 t 845s
+it 14100 k 10 loss 0.008997 t 853s
+it 14200 k 10 loss 0.008837 t 861s
+it 14300 k 10 loss 0.018699 t 869s
+it 14400 k 10 loss 0.006714 t 878s
+it 14500 k 10 loss 0.012392 t 886s
+it 14600 k 10 loss 0.003863 t 894s
+it 14700 k 10 loss 0.004364 t 902s
+it 14800 k 10 loss 0.004789 t 910s
+it 14900 k 10 loss 0.025561 t 919s
+it 15000 k 10 loss 0.014853 t 927s
+it 15100 k 10 loss 0.006266 t 935s
+it 15200 k 11 loss 0.011889 t 943s
+it 15300 k 11 loss 0.015644 t 952s
+it 15400 k 11 loss 0.008200 t 961s
+it 15500 k 11 loss 0.013667 t 970s
+it 15600 k 11 loss 0.012862 t 979s
+it 15700 k 11 loss 0.019532 t 988s
+it 15800 k 11 loss 0.022230 t 997s
+it 15900 k 11 loss 0.006938 t 1006s
+it 16000 k 11 loss 0.009302 t 1015s
+it 16100 k 11 loss 0.017730 t 1024s
+it 16200 k 11 loss 0.005402 t 1033s
+it 16300 k 11 loss 0.005267 t 1041s
+it 16400 k 11 loss 0.011637 t 1050s
+it 16500 k 11 loss 0.019226 t 1059s
+it 16600 k 11 loss 0.005548 t 1068s
+it 16700 k 11 loss 0.011886 t 1077s
+it 16800 k 11 loss 0.009768 t 1086s
+it 16900 k 11 loss 0.015317 t 1095s
+it 17000 k 11 loss 0.021773 t 1104s
+it 17100 k 11 loss 0.022878 t 1113s
+it 17200 k 11 loss 0.006610 t 1122s
+it 17300 k 11 loss 0.017015 t 1131s
+it 17400 k 11 loss 0.028583 t 1140s
+it 17500 k 11 loss 0.025240 t 1149s
+it 17600 k 12 loss 0.023720 t 1158s
+it 17700 k 12 loss 0.010087 t 1168s
+it 17800 k 12 loss 0.025900 t 1177s
+it 17900 k 12 loss 0.022974 t 1187s
+it 18000 k 12 loss 0.024463 t 1197s
+it 18100 k 12 loss 0.007487 t 1206s
+it 18200 k 12 loss 0.013915 t 1216s
+it 18300 k 12 loss 0.023773 t 1226s
+it 18400 k 12 loss 0.024712 t 1235s
+it 18500 k 12 loss 0.015752 t 1245s
+it 18600 k 12 loss 0.020626 t 1255s
+it 18700 k 12 loss 0.020430 t 1264s
+it 18800 k 12 loss 0.012227 t 1274s
+it 18900 k 12 loss 0.021415 t 1283s
+it 19000 k 12 loss 0.010935 t 1293s
+it 19100 k 12 loss 0.014159 t 1303s
+it 19200 k 12 loss 0.015213 t 1312s
+it 19300 k 12 loss 0.011632 t 1322s
+it 19400 k 12 loss 0.006838 t 1332s
+it 19500 k 12 loss 0.031578 t 1341s
+it 19600 k 12 loss 0.005645 t 1351s
+it 19700 k 12 loss 0.009249 t 1361s
+it 19800 k 12 loss 0.009202 t 1371s
+it 19900 k 13 loss 0.026713 t 1380s
+it 20000 k 13 loss 0.020015 t 1391s
+it 20100 k 13 loss 0.016642 t 1401s
+it 20200 k 13 loss 0.025261 t 1412s
+it 20300 k 13 loss 0.016728 t 1422s
+it 20400 k 13 loss 0.022411 t 1432s
+it 20500 k 13 loss 0.015117 t 1443s
+it 20600 k 13 loss 0.011088 t 1453s
+it 20700 k 13 loss 0.014395 t 1464s
+it 20800 k 13 loss 0.013032 t 1474s
+it 20900 k 13 loss 0.018863 t 1484s
+it 21000 k 13 loss 0.008862 t 1495s
+it 21100 k 13 loss 0.021750 t 1505s
+it 21200 k 13 loss 0.009902 t 1515s
+it 21300 k 13 loss 0.009795 t 1526s
+it 21400 k 13 loss 0.021313 t 1536s
+it 21500 k 13 loss 0.020217 t 1546s
+it 21600 k 13 loss 0.027586 t 1557s
+it 21700 k 13 loss 0.011306 t 1567s
+it 21800 k 13 loss 0.020401 t 1578s
+it 21900 k 13 loss 0.021831 t 1588s
+it 22000 k 13 loss 0.017777 t 1598s
+it 22100 k 13 loss 0.022379 t 1609s
+it 22200 k 13 loss 0.018250 t 1619s
+it 22300 k 14 loss 0.016149 t 1630s
+it 22400 k 14 loss 0.014429 t 1641s
+it 22500 k 14 loss 0.031534 t 1653s
+it 22600 k 14 loss 0.020082 t 1664s
+it 22700 k 14 loss 0.043551 t 1675s
+it 22800 k 14 loss 0.020481 t 1686s
+it 22900 k 14 loss 0.008981 t 1697s
+it 23000 k 14 loss 0.024085 t 1708s
+it 23100 k 14 loss 0.017872 t 1719s
+it 23200 k 14 loss 0.024140 t 1730s
+it 23300 k 14 loss 0.017792 t 1741s
+it 23400 k 14 loss 0.004624 t 1753s
+it 23500 k 14 loss 0.026826 t 1764s
+it 23600 k 14 loss 0.017741 t 1775s
+it 23700 k 14 loss 0.032196 t 1786s
+it 23800 k 14 loss 0.013540 t 1797s
+it 23900 k 14 loss 0.010760 t 1808s
+it 24000 k 14 loss 0.010399 t 1819s
+it 24100 k 14 loss 0.022750 t 1830s
+it 24200 k 14 loss 0.033818 t 1841s
+it 24300 k 14 loss 0.023254 t 1852s
+it 24400 k 14 loss 0.011501 t 1864s
+it 24500 k 14 loss 0.016724 t 1875s
+it 24600 k 15 loss 0.023687 t 1886s
+it 24700 k 15 loss 0.023030 t 1898s
+it 24800 k 15 loss 0.015581 t 1910s
+it 24900 k 15 loss 0.030289 t 1922s
+it 25000 k 15 loss 0.035649 t 1934s
+it 25100 k 15 loss 0.027942 t 1945s
+it 25200 k 15 loss 0.030843 t 1957s
+it 25300 k 15 loss 0.015895 t 1969s
+it 25400 k 15 loss 0.035171 t 1981s
+it 25500 k 15 loss 0.012524 t 1993s
+it 25600 k 15 loss 0.015053 t 2005s
+it 25700 k 15 loss 0.014179 t 2016s
+it 25800 k 15 loss 0.026862 t 2028s
+it 25900 k 15 loss 0.039773 t 2040s
+it 26000 k 15 loss 0.020432 t 2052s
+it 26100 k 15 loss 0.012319 t 2064s
+it 26200 k 15 loss 0.012956 t 2076s
+it 26300 k 15 loss 0.024549 t 2088s
+it 26400 k 15 loss 0.022115 t 2099s
+it 26500 k 15 loss 0.020119 t 2111s
+it 26600 k 15 loss 0.025970 t 2123s
+it 26700 k 15 loss 0.032836 t 2135s
+it 26800 k 15 loss 0.018908 t 2147s
+it 26900 k 16 loss 0.018616 t 2159s
+it 27000 k 16 loss 0.043221 t 2171s
+it 27100 k 16 loss 0.028212 t 2184s
+it 27200 k 16 loss 0.027299 t 2196s
+it 27300 k 16 loss 0.021016 t 2209s
+it 27400 k 16 loss 0.020197 t 2221s
+it 27500 k 16 loss 0.017251 t 2234s
+it 27600 k 16 loss 0.011022 t 2247s
+it 27700 k 16 loss 0.031485 t 2259s
+it 27800 k 16 loss 0.044381 t 2272s
+it 27900 k 16 loss 0.021170 t 2284s
+it 28000 k 16 loss 0.036073 t 2297s
+it 28100 k 16 loss 0.017187 t 2309s
+it 28200 k 16 loss 0.028399 t 2322s
+it 28300 k 16 loss 0.030669 t 2334s
+it 28400 k 16 loss 0.015679 t 2347s
+it 28500 k 16 loss 0.024713 t 2360s
+it 28600 k 16 loss 0.039153 t 2372s
+it 28700 k 16 loss 0.019943 t 2385s
+it 28800 k 16 loss 0.023690 t 2397s
+it 28900 k 16 loss 0.032789 t 2410s
+it 29000 k 16 loss 0.046074 t 2422s
+it 29100 k 16 loss 0.016101 t 2435s
+it 29200 k 16 loss 0.014886 t 2447s
+it 29300 k 17 loss 0.025114 t 2461s
+it 29400 k 17 loss 0.014467 t 2474s
+it 29500 k 17 loss 0.019092 t 2487s
+it 29600 k 17 loss 0.014537 t 2500s
+it 29700 k 17 loss 0.031222 t 2514s
+it 29800 k 17 loss 0.010301 t 2527s
+it 29900 k 17 loss 0.028652 t 2540s
+it 30000 k 17 loss 0.015849 t 2554s
+it 30100 k 17 loss 0.026338 t 2567s
+it 30200 k 17 loss 0.037285 t 2580s
+it 30300 k 17 loss 0.039222 t 2594s
+it 30400 k 17 loss 0.034239 t 2607s
+it 30500 k 17 loss 0.029080 t 2620s
+it 30600 k 17 loss 0.022204 t 2633s
+it 30700 k 17 loss 0.027791 t 2647s
+it 30800 k 17 loss 0.033370 t 2660s
+it 30900 k 17 loss 0.029307 t 2673s
+it 31000 k 17 loss 0.035895 t 2687s
+it 31100 k 17 loss 0.050821 t 2700s
+it 31200 k 17 loss 0.016181 t 2713s
+it 31300 k 17 loss 0.016727 t 2726s
+it 31400 k 17 loss 0.021612 t 2740s
+it 31500 k 17 loss 0.014628 t 2753s
+it 31600 k 18 loss 0.039676 t 2766s
+it 31700 k 18 loss 0.006855 t 2780s
+it 31800 k 18 loss 0.023414 t 2794s
+it 31900 k 18 loss 0.023911 t 2808s
+it 32000 k 18 loss 0.052799 t 2822s
+it 32100 k 18 loss 0.037810 t 2836s
+it 32200 k 18 loss 0.042187 t 2850s
+it 32300 k 18 loss 0.024656 t 2864s
+it 32400 k 18 loss 0.024857 t 2878s
+it 32500 k 18 loss 0.025053 t 2892s
+it 32600 k 18 loss 0.015647 t 2906s
+it 32700 k 18 loss 0.028974 t 2921s
+it 32800 k 18 loss 0.028102 t 2935s
+it 32900 k 18 loss 0.043181 t 2949s
+it 33000 k 18 loss 0.024252 t 2962s
+it 33100 k 18 loss 0.032878 t 2976s
+it 33200 k 18 loss 0.023127 t 2991s
+it 33300 k 18 loss 0.044615 t 3005s
+it 33400 k 18 loss 0.037975 t 3019s
+it 33500 k 18 loss 0.011950 t 3033s
+it 33600 k 18 loss 0.016857 t 3047s
+it 33700 k 18 loss 0.030800 t 3061s
+it 33800 k 18 loss 0.039819 t 3075s
+it 33900 k 19 loss 0.028303 t 3089s
+it 34000 k 19 loss 0.054495 t 3103s
+it 34100 k 19 loss 0.029326 t 3118s
+it 34200 k 19 loss 0.013256 t 3133s
+it 34300 k 19 loss 0.032758 t 3148s
+it 34400 k 19 loss 0.036016 t 3162s
+it 34500 k 19 loss 0.040588 t 3177s
+it 34600 k 19 loss 0.013404 t 3192s
+it 34700 k 19 loss 0.049734 t 3207s
+it 34800 k 19 loss 0.022177 t 3221s
+it 34900 k 19 loss 0.012665 t 3236s
+it 35000 k 19 loss 0.015031 t 3251s
+it 35100 k 19 loss 0.007525 t 3266s
+it 35200 k 19 loss 0.027071 t 3280s
+it 35300 k 19 loss 0.030801 t 3295s
+it 35400 k 19 loss 0.035917 t 3310s
+it 35500 k 19 loss 0.049323 t 3325s
+it 35600 k 19 loss 0.028386 t 3339s
+it 35700 k 19 loss 0.050757 t 3354s
+it 35800 k 19 loss 0.027654 t 3369s
+it 35900 k 19 loss 0.026963 t 3384s
+it 36000 k 19 loss 0.045804 t 3398s
+it 36100 k 19 loss 0.041005 t 3413s
+it 36200 k 19 loss 0.058418 t 3428s
+it 36300 k 20 loss 0.039199 t 3443s
+it 36400 k 20 loss 0.034333 t 3459s
+it 36500 k 20 loss 0.007891 t 3474s
+it 36600 k 20 loss 0.027557 t 3489s
+it 36700 k 20 loss 0.027578 t 3505s
+it 36800 k 20 loss 0.049904 t 3520s
+it 36900 k 20 loss 0.018435 t 3536s
+it 37000 k 20 loss 0.053051 t 3551s
+it 37100 k 20 loss 0.026162 t 3567s
+it 37200 k 20 loss 0.037637 t 3582s
+it 37300 k 20 loss 0.056050 t 3598s
+it 37400 k 20 loss 0.030226 t 3613s
+it 37500 k 20 loss 0.039023 t 3629s
+it 37600 k 20 loss 0.014746 t 3644s
+it 37700 k 20 loss 0.032929 t 3660s
+it 37800 k 20 loss 0.043164 t 3675s
+it 37900 k 20 loss 0.080426 t 3691s
+it 38000 k 20 loss 0.020409 t 3706s
+it 38100 k 20 loss 0.024143 t 3721s
+it 38200 k 20 loss 0.056921 t 3737s
+it 38300 k 20 loss 0.019217 t 3752s
+it 38400 k 20 loss 0.026268 t 3768s
+it 38500 k 20 loss 0.053036 t 3783s
+it 38600 k 21 loss 0.057957 t 3799s
+it 38700 k 21 loss 0.019673 t 3815s
+it 38800 k 21 loss 0.046835 t 3831s
+it 38900 k 21 loss 0.015007 t 3848s
+it 39000 k 21 loss 0.027845 t 3864s
+it 39100 k 21 loss 0.073081 t 3880s
+it 39200 k 21 loss 0.058812 t 3896s
+it 39300 k 21 loss 0.017653 t 3912s
+it 39400 k 21 loss 0.026437 t 3929s
+it 39500 k 21 loss 0.058241 t 3945s
+it 39600 k 21 loss 0.038302 t 3961s
+it 39700 k 21 loss 0.031768 t 3977s
+it 39800 k 21 loss 0.025468 t 3993s
+it 39900 k 21 loss 0.048825 t 4009s
+it 40000 k 21 loss 0.029054 t 4026s
+it 40100 k 21 loss 0.050102 t 4042s
+it 40200 k 21 loss 0.019907 t 4058s
+it 40300 k 21 loss 0.015892 t 4074s
+it 40400 k 21 loss 0.018296 t 4091s
+it 40500 k 21 loss 0.045731 t 4107s
+it 40600 k 21 loss 0.027196 t 4123s
+it 40700 k 21 loss 0.065026 t 4139s
+it 40800 k 21 loss 0.030004 t 4155s
+it 40900 k 21 loss 0.035604 t 4171s
+it 41000 k 22 loss 0.055136 t 4188s
+it 41100 k 22 loss 0.038942 t 4205s
+it 41200 k 22 loss 0.046676 t 4222s
+it 41300 k 22 loss 0.022660 t 4239s
+it 41400 k 22 loss 0.021475 t 4256s
+it 41500 k 22 loss 0.059065 t 4273s
+it 41600 k 22 loss 0.037002 t 4290s
+it 41700 k 22 loss 0.031915 t 4307s
+it 41800 k 22 loss 0.025907 t 4324s
+it 41900 k 22 loss 0.020533 t 4341s
+it 42000 k 22 loss 0.016459 t 4358s
+it 42100 k 22 loss 0.063299 t 4374s
+it 42200 k 22 loss 0.024315 t 4391s
+it 42300 k 22 loss 0.020101 t 4408s
+it 42400 k 22 loss 0.014399 t 4425s
+it 42500 k 22 loss 0.058570 t 4442s
+it 42600 k 22 loss 0.078872 t 4459s
+it 42700 k 22 loss 0.021973 t 4476s
+it 42800 k 22 loss 0.040752 t 4493s
+it 42900 k 22 loss 0.013726 t 4510s
+it 43000 k 22 loss 0.029211 t 4527s
+it 43100 k 22 loss 0.029987 t 4544s
+it 43200 k 22 loss 0.048584 t 4561s
+it 43300 k 23 loss 0.020311 t 4578s
+it 43400 k 23 loss 0.048222 t 4596s
+it 43500 k 23 loss 0.078000 t 4613s
+it 43600 k 23 loss 0.062847 t 4631s
+it 43700 k 23 loss 0.061227 t 4648s
+it 43800 k 23 loss 0.030139 t 4666s
+it 43900 k 23 loss 0.025181 t 4684s
+it 44000 k 23 loss 0.044339 t 4701s
+it 44100 k 23 loss 0.078100 t 4719s
+it 44200 k 23 loss 0.021135 t 4737s
+it 44300 k 23 loss 0.022273 t 4754s
+it 44400 k 23 loss 0.013139 t 4772s
+it 44500 k 23 loss 0.022689 t 4790s
+it 44600 k 23 loss 0.079632 t 4807s
+it 44700 k 23 loss 0.057556 t 4825s
+it 44800 k 23 loss 0.070869 t 4843s
+it 44900 k 23 loss 0.066713 t 4860s
+it 45000 k 23 loss 0.020567 t 4878s
+it 45100 k 23 loss 0.014692 t 4896s
+it 45200 k 23 loss 0.039049 t 4913s
+it 45300 k 23 loss 0.025871 t 4931s
+it 45400 k 23 loss 0.017966 t 4949s
+it 45500 k 23 loss 0.019468 t 4966s
+it 45600 k 24 loss 0.033199 t 4984s
+it 45700 k 24 loss 0.022823 t 5002s
+it 45800 k 24 loss 0.031418 t 5021s
+it 45900 k 24 loss 0.025433 t 5039s
+it 46000 k 24 loss 0.047145 t 5058s
+it 46100 k 24 loss 0.011313 t 5076s
+it 46200 k 24 loss 0.014277 t 5094s
+it 46300 k 24 loss 0.097903 t 5113s
+it 46400 k 24 loss 0.043497 t 5131s
+it 46500 k 24 loss 0.038713 t 5150s
+it 46600 k 24 loss 0.059884 t 5168s
+it 46700 k 24 loss 0.016373 t 5186s
+it 46800 k 24 loss 0.060228 t 5205s
+it 46900 k 24 loss 0.023777 t 5223s
+it 47000 k 24 loss 0.050184 t 5241s
+it 47100 k 24 loss 0.023525 t 5260s
+it 47200 k 24 loss 0.018227 t 5278s
+it 47300 k 24 loss 0.047580 t 5296s
+it 47400 k 24 loss 0.038743 t 5315s
+it 47500 k 24 loss 0.069918 t 5333s
+it 47600 k 24 loss 0.025257 t 5352s
+it 47700 k 24 loss 0.029811 t 5370s
+it 47800 k 24 loss 0.039551 t 5389s
+it 47900 k 24 loss 0.028089 t 5407s
+it 48000 k 25 loss 0.017964 t 5426s
+it 48100 k 25 loss 0.041430 t 5445s
+it 48200 k 25 loss 0.033569 t 5464s
+it 48300 k 25 loss 0.081588 t 5483s
+it 48400 k 25 loss 0.032910 t 5502s
+it 48500 k 25 loss 0.029686 t 5522s
+it 48600 k 25 loss 0.016149 t 5541s
+it 48700 k 25 loss 0.015055 t 5560s
+it 48800 k 25 loss 0.042534 t 5579s
+it 48900 k 25 loss 0.064585 t 5598s
+it 49000 k 25 loss 0.040830 t 5617s
+it 49100 k 25 loss 0.032646 t 5636s
+it 49200 k 25 loss 0.018342 t 5655s
+it 49300 k 25 loss 0.049494 t 5674s
+it 49400 k 25 loss 0.045774 t 5693s
+it 49500 k 25 loss 0.056375 t 5713s
+it 49600 k 25 loss 0.070857 t 5732s
+it 49700 k 25 loss 0.026981 t 5751s
+it 49800 k 25 loss 0.050055 t 5770s
+it 49900 k 25 loss 0.037026 t 5789s
+it 50000 k 25 loss 0.059161 t 5808s
+it 50100 k 25 loss 0.023816 t 5827s
+it 50200 k 25 loss 0.060803 t 5846s
+it 50300 k 26 loss 0.015087 t 5866s
+it 50400 k 26 loss 0.016625 t 5886s
+it 50500 k 26 loss 0.101677 t 5905s
+it 50600 k 26 loss 0.026432 t 5925s
+it 50700 k 26 loss 0.049927 t 5945s
+it 50800 k 26 loss 0.042400 t 5965s
+it 50900 k 26 loss 0.018451 t 5985s
+it 51000 k 26 loss 0.030006 t 6005s
+it 51100 k 26 loss 0.050778 t 6024s
+it 51200 k 26 loss 0.040304 t 6044s
+it 51300 k 26 loss 0.116302 t 6064s
+it 51400 k 26 loss 0.049434 t 6084s
+it 51500 k 26 loss 0.037794 t 6104s
+it 51600 k 26 loss 0.021653 t 6124s
+it 51700 k 26 loss 0.031612 t 6143s
+it 51800 k 26 loss 0.046253 t 6163s
+it 51900 k 26 loss 0.060481 t 6183s
+it 52000 k 26 loss 0.026470 t 6203s
+it 52100 k 26 loss 0.024247 t 6223s
+it 52200 k 26 loss 0.012112 t 6242s
+it 52300 k 26 loss 0.061887 t 6262s
+it 52400 k 26 loss 0.018112 t 6282s
+it 52500 k 26 loss 0.019508 t 6302s
+it 52600 k 27 loss 0.046877 t 6322s
+it 52700 k 27 loss 0.060662 t 6343s
+it 52800 k 27 loss 0.021996 t 6363s
+it 52900 k 27 loss 0.019147 t 6384s
+it 53000 k 27 loss 0.078414 t 6404s
+it 53100 k 27 loss 0.030504 t 6425s
+it 53200 k 27 loss 0.069117 t 6445s
+it 53300 k 27 loss 0.088894 t 6466s
+it 53400 k 27 loss 0.071598 t 6486s
+it 53500 k 27 loss 0.010585 t 6507s
+it 53600 k 27 loss 0.069213 t 6527s
+it 53700 k 27 loss 0.060370 t 6548s
+it 53800 k 27 loss 0.032087 t 6569s
+it 53900 k 27 loss 0.021128 t 6589s
+it 54000 k 27 loss 0.034032 t 6610s
+it 54100 k 27 loss 0.069194 t 6630s
+it 54200 k 27 loss 0.059036 t 6651s
+it 54300 k 27 loss 0.029128 t 6671s
+it 54400 k 27 loss 0.156509 t 6692s
+it 54500 k 27 loss 0.058928 t 6712s
+it 54600 k 27 loss 0.030219 t 6733s
+it 54700 k 27 loss 0.029060 t 6753s
+it 54800 k 27 loss 0.027212 t 6774s
+it 54900 k 27 loss 0.035415 t 6795s
+it 55000 k 28 loss 0.066126 t 6816s
+it 55100 k 28 loss 0.083279 t 6837s
+it 55200 k 28 loss 0.078530 t 6858s
+it 55300 k 28 loss 0.061307 t 6879s
+it 55400 k 28 loss 0.034266 t 6901s
+it 55500 k 28 loss 0.090585 t 6922s
+it 55600 k 28 loss 0.020464 t 6943s
+it 55700 k 28 loss 0.031451 t 6965s
+it 55800 k 28 loss 0.045161 t 6986s
+it 55900 k 28 loss 0.029488 t 7007s
+it 56000 k 28 loss 0.035986 t 7028s
+it 56100 k 28 loss 0.095910 t 7050s
+it 56200 k 28 loss 0.095341 t 7071s
+it 56300 k 28 loss 0.067244 t 7092s
+it 56400 k 28 loss 0.068832 t 7113s
+it 56500 k 28 loss 0.106050 t 7135s
+it 56600 k 28 loss 0.080462 t 7156s
+it 56700 k 28 loss 0.034467 t 7177s
+it 56800 k 28 loss 0.041149 t 7198s
+it 56900 k 28 loss 0.095217 t 7220s
+it 57000 k 28 loss 0.077452 t 7241s
+it 57100 k 28 loss 0.088769 t 7262s
+it 57200 k 28 loss 0.053060 t 7284s
+it 57300 k 29 loss 0.015870 t 7305s
+it 57400 k 29 loss 0.057350 t 7327s
+it 57500 k 29 loss 0.050786 t 7349s
+it 57600 k 29 loss 0.019523 t 7371s
+it 57700 k 29 loss 0.069067 t 7393s
+it 57800 k 29 loss 0.075551 t 7415s
+it 57900 k 29 loss 0.059192 t 7437s
+it 58000 k 29 loss 0.026251 t 7459s
+it 58100 k 29 loss 0.052899 t 7481s
+it 58200 k 29 loss 0.052472 t 7503s
+it 58300 k 29 loss 0.160632 t 7525s
+it 58400 k 29 loss 0.019312 t 7547s
+it 58500 k 29 loss 0.012189 t 7569s
+it 58600 k 29 loss 0.041614 t 7591s
+it 58700 k 29 loss 0.053334 t 7613s
+it 58800 k 29 loss 0.089401 t 7635s
+it 58900 k 29 loss 0.031894 t 7657s
+it 59000 k 29 loss 0.089251 t 7679s
+it 59100 k 29 loss 0.159025 t 7701s
+it 59200 k 29 loss 0.074194 t 7723s
+it 59300 k 29 loss 0.025069 t 7745s
+it 59400 k 29 loss 0.077858 t 7767s
+it 59500 k 29 loss 0.015187 t 7789s
+it 59600 k 30 loss 0.036746 t 7811s
+it 59700 k 30 loss 0.030447 t 7834s
+it 59800 k 30 loss 0.050536 t 7856s
+it 59900 k 30 loss 0.129265 t 7879s
+it 60000 k 30 loss 0.099243 t 7902s
+it 60100 k 30 loss 0.043497 t 7925s
+it 60200 k 30 loss 0.048142 t 7947s
+it 60300 k 30 loss 0.070186 t 7970s
+it 60400 k 30 loss 0.039230 t 7993s
+it 60500 k 30 loss 0.112921 t 8016s
+it 60600 k 30 loss 0.017578 t 8038s
+it 60700 k 30 loss 0.024297 t 8061s
+trained 60769 iters in 8077s
+ms_kp_pot_v_g128 9000 err@5/10/20 [0.0015, 0.0041, 0.0147] constvel [0.1259, 0.4947, 1.8328]
+ms_kp_pot_v_g128 12000 err@5/10/20 [0.0017, 0.0045, 0.0177] constvel [0.1388, 0.546, 2.0719]
+ms_kp_pot_v_g128 curl/total 0.123 self-force 0.0049
+[2026-10-15T18:10:44-07:00] EUCLID TRAINED
+/home/adamwebb/augur-ef/scripts/scatter_losstest.py:58: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  out = {"all": float(((E * Vd).sum() / (T * Vd).sum()).sqrt())}
+ab 9100 err@5/10/20/50/100 [0.00277, 0.0074, 0.02127, 0.14006, 1.33752] e20 med/mean/p90/p99 0.0148/0.0214/0.0466/0.0916 force {'all': 0.2063070927713044, '<0.5': 0.15352655579201255, '0.5-1': 0.14054263339723425, '>=1': 0.3386339218274009}
+cl 9100 err@5/10/20/50/100 [0.00616, 0.01579, 0.05005, 0.73939, 4.14118] e20 med/mean/p90/p99 0.0387/0.0531/0.1140/0.2192 force {'all': 0.1728323312616723, '<0.5': 0.1743431216634571, '0.5-1': 0.13669208819947878, '>=1': 0.2416957582680237}
+ab 9200 err@5/10/20/50/100 [0.00303, 0.00801, 0.02311, 0.15579, 1.48881] e20 med/mean/p90/p99 0.0161/0.0227/0.0496/0.0994 force {'all': 0.14982445122241544, '<0.5': 0.14695638621158238, '0.5-1': 0.13854941726094946, '>=1': 0.17290440928853085}
+cl 9200 err@5/10/20/50/100 [0.00659, 0.01652, 0.05521, 0.76689, 4.2232] e20 med/mean/p90/p99 0.0402/0.0579/0.1270/0.2858 force {'all': 0.17767334074166835, '<0.5': 0.18266252836856348, '0.5-1': 0.13611029171140163, '>=1': 0.10859295216246756}
+ab 9300 err@5/10/20/50/100 [0.00269, 0.00687, 0.02063, 0.13428, 1.32289] e20 med/mean/p90/p99 0.0144/0.0212/0.0458/0.1066 force {'all': 0.1525540419083166, '<0.5': 0.14916606160513554, '0.5-1': 0.1403682645180008, '>=1': 0.17497555287145056}
+cl 9300 err@5/10/20/50/100 [0.00761, 0.02027, 0.07664, 1.13145, 4.72727] e20 med/mean/p90/p99 0.0530/0.0861/0.1936/0.5034 force {'all': 0.15977042450611487, '<0.5': 0.16297097091027743, '0.5-1': 0.13240205688277146, '>=1': 0.0942071268959282}
+wrote results/ef_eval/warm_sq_sq_0_evalonly.json
+two_body seed 9100 err@[5, 10, 20, 50, 100] [0.00078, 0.0025, 0.00633, 0.03077, 0.11759]
+two_body seed 9200 err@[5, 10, 20, 50, 100] [0.0014, 0.00367, 0.00897, 0.0378, 0.12198]
+two_body seed 9300 err@[5, 10, 20, 50, 100] [0.00073, 0.00212, 0.00627, 0.03071, 0.10319]
+two_body seed 4738 err@[5, 10, 20, 50, 100] [0.00126, 0.00274, 0.00754, 0.0277, 0.09028]
+two_body MEAN err [0.00105, 0.00276, 0.00727, 0.03174, 0.10826] dE/E 0.1053 (true 6.189e-05)
+expB seed 9100 err@[5, 10, 20, 50, 100] [0.00288, 0.00766, 0.02215, 0.15282, 1.37583]
+expB seed 9200 err@[5, 10, 20, 50, 100] [0.0031, 0.00797, 0.02299, 0.15006, 1.36649]
+expB seed 9300 err@[5, 10, 20, 50, 100] [0.00307, 0.00762, 0.02286, 0.15584, 1.39791]
+expB seed 4738 err@[5, 10, 20, 50, 100] [0.00282, 0.00739, 0.02228, 0.14632, 1.32525]
+expB MEAN err [0.00297, 0.00766, 0.02257, 0.15126, 1.36637] dE/E 0.008662 (true 0.0001092)
+bh300 seed 9100 err@[5, 10, 20, 50, 100] [0.00888, 0.02153, 0.06641, 0.98389, 5.20116]
+bh300 seed 9200 err@[5, 10, 20, 50, 100] [0.00689, 0.01947, 0.0546, 0.87086, 4.99106]
+bh300 seed 9300 err@[5, 10, 20, 50, 100] [0.00725, 0.01989, 0.06085, 0.8833, 4.68693]
+bh300 seed 4738 err@[5, 10, 20, 50, 100] [0.00772, 0.02176, 0.0697, 0.96565, 5.19151]
+bh300 MEAN err [0.00768, 0.02066, 0.06289, 0.92592, 5.01767] dE/E 0.06125 (true 0.0002488)
+cons nr100 1000t dE 0.1054 (true 4.364e-05) dL 0.0575 bound 0.960/0.970 vir 0.938/0.904 outgrid 0.080
+cons bh300 1000t dE 0.2275 (true 0.0003271) dL 0.2635 bound 0.690/0.880 vir 0.978/0.931 outgrid 0.293
+timing two_body: 3.258 ms/tick, peak alloc 234.8 MB (reserved 3566.0, info) (batch 48, N 2)
+timing expB: 3.412 ms/tick, peak alloc 257.0 MB (reserved 3592.0, info) (batch 48, N 94)
+timing bh300: 0.701 ms/tick, peak alloc 241.0 MB (reserved 3566.0, info) (batch 1, N 300)
+timing expB_batch1_n100: 0.669 ms/tick, peak alloc 285.3 MB (reserved 3624.0, info) (batch 1, N 100)
+wrote results/ef_eval/regress_sq.json
+=== compare sq
+memory gate SKIPPED: definitions differ (baseline None, candidate 'absolute max_memory_allocated, reset before warm-up')
+two_body: baseline lacks bound/virial rows, skipped
+expB: baseline lacks bound/virial rows, skipped
+bh300: baseline lacks bound/virial rows, skipped
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate checkpoints/ef_sq/E_ms_kp_pot_v_g128.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521    0.0010454     -0.6  PASS
+two_body err@10                     0.0030977    0.0027583    -11.0  PASS
+two_body err@20                     0.0091024    0.0072743    -20.1  PASS
+expB err@5                          0.0030114    0.0029662     -1.5  PASS
+expB err@10                         0.0081291    0.0076618     -5.7  PASS
+expB err@20                          0.023947      0.02257     -5.8  PASS
+bh300 err@5                         0.0079513     0.007684     -3.4  PASS
+bh300 err@10                         0.020899     0.020661     -1.1  PASS
+bh300 err@20                         0.062163     0.062893      1.2  PASS
+bh300 vmax/c (<1)                     0.92589      0.92679      nan  PASS
+bh300 dE_rel_model@100                0.04783     0.061255     28.1  FAIL
+bh300 dL_rel_model@100                0.30203      0.10988    -63.6  PASS
+bh300 dP_model@100                 5.6379e-05    5.603e-05     -0.6  PASS
+two_body tick_ms                       4.7247        3.258    -31.0  PASS
+expB tick_ms                           4.9509       3.4118    -31.1  PASS
+bh300 tick_ms                          2.4766      0.70095    -71.7  PASS
+expB_batch1_n100 tick_ms               2.4489       0.6688    -72.7  PASS
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 0.03174; two_body err@100 0.1308 -> 0.1083; expB err@50 0.1573 -> 0.1513; expB err@100 1.422 -> 1.366; bh300 err@50 0.9119 -> 0.9259
+floors: results/chaos_floors.json not found, skipped
+OVERALL FAIL
+nr100 model B=4 N=100 1000 ticks (stopped 1000) 1.8s
+nr100 truth substeps 4 0.7s
+nr100 truth substeps 1 0.6s
+nr100 truth substeps 16 1.5s
+nr100 saved
+bh300 model B=4 N=300 1000 ticks (stopped 1000) 1.3s
+bh300 truth substeps 4 0.9s
+bh300 truth substeps 1 0.6s
+bh300 truth substeps 16 1.9s
+bh300 saved
+/home/adamwebb/augur-ef/scripts/scatter_losstest.py:58: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  out = {"all": float(((E * Vd).sum() / (T * Vd).sum()).sqrt())}
+ab 9100 err@5/10/20/50/100 [0.0008, 0.00215, 0.00621, 0.05099, 0.72786] e20 med/mean/p90/p99 0.0041/0.0063/0.0141/0.0323 force {'all': 0.15628073207577478, '<0.5': 0.1495961011447054, '0.5-1': 0.15255418491802902, '>=1': 0.17259060177848518}
+cl 9100 err@5/10/20/50/100 [0.0023, 0.00608, 0.02444, 0.58858, 3.83563] e20 med/mean/p90/p99 0.0148/0.0275/0.0650/0.1835 force {'all': 0.20810867119604434, '<0.5': 0.16341822075732512, '0.5-1': 0.10692610604254484, '>=1': 0.9444836944819209}
+ab 9200 err@5/10/20/50/100 [0.00089, 0.00228, 0.00663, 0.05787, 0.80367] e20 med/mean/p90/p99 0.0045/0.0066/0.0145/0.0331 force {'all': 0.14204978768219553, '<0.5': 0.15124279126166346, '0.5-1': 0.1545417031069716, '>=1': 0.09279581460619137}
+cl 9200 err@5/10/20/50/100 [0.0025, 0.0065, 0.02859, 0.61471, 3.85619] e20 med/mean/p90/p99 0.0151/0.0308/0.0687/0.2674 force {'all': 0.1563251757810514, '<0.5': 0.16112439109501286, '0.5-1': 0.11655591274445402, '>=1': 0.08247388036302122}
+ab 9300 err@5/10/20/50/100 [0.00077, 0.00194, 0.00592, 0.04256, 0.61298] e20 med/mean/p90/p99 0.0041/0.0062/0.0132/0.0333 force {'all': 0.13725419150880314, '<0.5': 0.14668953720793712, '0.5-1': 0.15014260441130572, '>=1': 0.09389786044906628}
+cl 9300 err@5/10/20/50/100 [0.00312, 0.00897, 0.05366, 0.99793, 4.39814] e20 med/mean/p90/p99 0.0241/0.0631/0.1718/0.5000 force {'all': 0.1363156344501083, '<0.5': 0.13956797991626455, '0.5-1': 0.10769453807212127, '>=1': 0.06567468211150822}
+wrote results/ef_eval/warm_sq_euclid_0_evalonly.json
+two_body seed 9100 err@[5, 10, 20, 50, 100] [0.00016, 0.00046, 0.00116, 0.00616, 0.01932]
+two_body seed 9200 err@[5, 10, 20, 50, 100] [0.00035, 0.00074, 0.00161, 0.00582, 0.0172]
+two_body seed 9300 err@[5, 10, 20, 50, 100] [0.00015, 0.00049, 0.00119, 0.00436, 0.01738]
+two_body seed 4738 err@[5, 10, 20, 50, 100] [0.00038, 0.00064, 0.00157, 0.00617, 0.02086]
+two_body MEAN err [0.00026, 0.00058, 0.00138, 0.00563, 0.01869] dE/E 0.02095 (true 6.189e-05)
+expB seed 9100 err@[5, 10, 20, 50, 100] [0.00081, 0.00222, 0.00622, 0.0449, 0.65368]
+expB seed 9200 err@[5, 10, 20, 50, 100] [0.00086, 0.0022, 0.00644, 0.04305, 0.66258]
+expB seed 9300 err@[5, 10, 20, 50, 100] [0.00085, 0.00215, 0.00622, 0.04534, 0.66052]
+expB seed 4738 err@[5, 10, 20, 50, 100] [0.00082, 0.00204, 0.00606, 0.04179, 0.62399]
+expB MEAN err [0.00084, 0.00215, 0.00624, 0.04377, 0.65019] dE/E 0.009841 (true 0.0001092)
+bh300 seed 9100 err@[5, 10, 20, 50, 100] [0.00329, 0.00842, 0.03017, 0.76431, 4.54098]
+bh300 seed 9200 err@[5, 10, 20, 50, 100] [0.00267, 0.00771, 0.02493, 0.62878, 4.41985]
+bh300 seed 9300 err@[5, 10, 20, 50, 100] [0.0027, 0.00712, 0.02481, 0.5544, 4.33176]
+bh300 seed 4738 err@[5, 10, 20, 50, 100] [0.00292, 0.00778, 0.02309, 0.61102, 4.53037]
+bh300 MEAN err [0.00289, 0.00776, 0.02575, 0.63962, 4.45574] dE/E 0.08192 (true 0.0002488)
+cons nr100 1000t dE 0.1974 (true 4.364e-05) dL 0.01994 bound 0.920/0.970 vir 1.36/0.904 outgrid 0.060
+cons bh300 1000t dE 0.1732 (true 0.0003271) dL 0.4441 bound 0.740/0.880 vir 1.54/0.931 outgrid 0.250
+timing two_body: 3.250 ms/tick, peak alloc 234.8 MB (reserved 3566.0, info) (batch 48, N 2)
+timing expB: 3.408 ms/tick, peak alloc 257.0 MB (reserved 3592.0, info) (batch 48, N 94)
+timing bh300: 0.706 ms/tick, peak alloc 241.0 MB (reserved 3566.0, info) (batch 1, N 300)
+timing expB_batch1_n100: 0.675 ms/tick, peak alloc 285.3 MB (reserved 3624.0, info) (batch 1, N 100)
+wrote results/ef_eval/regress_euclid.json
+=== compare euclid
+memory gate SKIPPED: definitions differ (baseline None, candidate 'absolute max_memory_allocated, reset before warm-up')
+two_body: baseline lacks bound/virial rows, skipped
+expB: baseline lacks bound/virial rows, skipped
+bh300: baseline lacks bound/virial rows, skipped
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate checkpoints/ef_euclid/E_ms_kp_pot_v_g128.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521   0.00026285    -75.0  PASS
+two_body err@10                     0.0030977    0.0005837    -81.2  PASS
+two_body err@20                     0.0091024    0.0013826    -84.8  PASS
+expB err@5                          0.0030114    0.0008365    -72.2  PASS
+expB err@10                         0.0081291    0.0021517    -73.5  PASS
+expB err@20                          0.023947    0.0062378    -74.0  PASS
+bh300 err@5                         0.0079513    0.0028945    -63.6  PASS
+bh300 err@10                         0.020899    0.0077558    -62.9  PASS
+bh300 err@20                         0.062163     0.025749    -58.6  PASS
+bh300 vmax/c (<1)                     0.92589      0.92684      nan  PASS
+bh300 dE_rel_model@100                0.04783     0.081923     71.3  FAIL
+bh300 dL_rel_model@100                0.30203       1.0989    263.8  FAIL
+bh300 dP_model@100                 5.6379e-05   5.0283e-05    -10.8  PASS
+two_body tick_ms                       4.7247       3.2502    -31.2  PASS
+expB tick_ms                           4.9509       3.4077    -31.2  PASS
+bh300 tick_ms                          2.4766       0.7064    -71.5  PASS
+expB_batch1_n100 tick_ms               2.4489      0.67524    -72.4  PASS
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 0.005628; two_body err@100 0.1308 -> 0.01869; expB err@50 0.1573 -> 0.04377; expB err@100 1.422 -> 0.6502; bh300 err@50 0.9119 -> 0.6396
+floors: results/chaos_floors.json not found, skipped
+OVERALL FAIL
+nr100 model B=4 N=100 1000 ticks (stopped 1000) 1.7s
+nr100 truth substeps 4 0.7s
+nr100 truth substeps 1 0.5s
+nr100 truth substeps 16 1.5s
+nr100 saved
+bh300 model B=4 N=300 1000 ticks (stopped 1000) 1.3s
+bh300 truth substeps 4 0.9s
+bh300 truth substeps 1 0.6s
+bh300 truth substeps 16 1.9s
+bh300 saved
+[2026-10-15T18:12:22-07:00] PRIMARY DONE

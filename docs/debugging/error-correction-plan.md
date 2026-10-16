@@ -78,6 +78,8 @@ Closed-loop relabel curriculum (negative), thermostat/L-rescale, parareal, Kalma
 
 - Substep theory oracle (2026-10-14, jobs 3614/3615 CPU, exact force only, write-up substep-theory.md, script scatter_substep_theory.py, uncommitted): Verlet-1 floor = ~0.7% (expB) / ~2% (cluster) iid force noise; integrator is 0.8% of E's squared err@20 on expB (no gain possible), 27% cluster. Per-body adaptive substeps and frozen-far/one-sided-kick variants are WORSE than Verlet-1; Yoshida4 and jerk-extrapolated drift worse too. Symmetric RESPA (grid once/tick half-kicked, pair term within rc on M substeps, all bodies) works: err@20 expB/cluster rc4 M4 .00027/.0028, rc8 M4 .0001/.0014 vs Verlet-1 .0023/.035 and KDK2 .00045/.0052. Next: inference sub2/sub4 on pairfull0 (kill if cluster @20 improves <20%).
 
+- Euclid rollout loss at full Exp E recipe (2026-10-15, branch loss-euclid-fullscale, jobs 3642/3648, log in experiment-log.md): 60769 it warm-from-B, seed 4738, single change vs same-schedule squared control. ab err@20 .0217 -> .0063 (-71%), err@100 1.38 -> .715, cl err@20 -41% (err@100 -8%): accuracy win survives at full scale. Conservation fails: nr100 dE@1000 median of 3 .198 vs control .105 (frozen E .027; gate .05), bh300 dL@100 1.15 vs .068. Verdict KILL on pre-registered energy criterion; no replicate. Open: Euclid + anything that restores nr100/bh300 conservation (all prior energy add-ons failed, see E1/energy-sim); the squared control itself also fails nr100 dE.
+
 ## Batch 2 dispatched (2026-10-13)
 Three agents, each in its own worktree, sharing the one-GPU-job-at-a-time Polaris queue:
 - E1: fix fine-tune dE regression (follow-up #6): energy soft loss / lower lr / frozen base / EMA, vs frozen C + same-schedule control
