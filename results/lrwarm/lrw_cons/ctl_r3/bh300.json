@@ -1,0 +1,1 @@
+{"regime": "bh300", "kind": "bh", "n": 300, "per_seed": 1, "steps": 1000, "ckpt": "checkpoints/lrw_ctl/E_ms_kp_pot_v_g128.pt", "opt": "default", "B": 4, "model_seconds": 1.3373889923095703, "torch": "2.14.0+cu130", "gpu": "NVIDIA H200 NVL"}

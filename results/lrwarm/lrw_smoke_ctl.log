@@ -1,0 +1,25 @@
+force @0 {'all': 0.007716934178479978, 'nn<1': 0.0070753798851851185, 'nn>=1': 0.010102639564653978}
+/home/adamwebb/.local/lib/python3.12/site-packages/torch/autograd/graph.py:1072: UserWarning: The AccumulateGrad node's stream does not match the stream of the node that produced the incoming gradient. This may incur unnecessary synchronization and break CUDA graph capture if the AccumulateGrad node's stream is the default stream. This mismatch is caused by an AccumulateGrad node created prior to the current iteration being kept alive. This can happen if the autograd graph is still being kept alive by tensors such as the loss, or if you are using DDP, which will stash a reference to the node. To resolve the mismatch, delete all references to the autograd graph or ensure that DDP initialization is performed under the same stream as subsequent forwards. If the mismatch is intentional, you can use torch.autograd.graph.set_warn_on_accumulate_grad_stream_mismatch(False) to suppress this warning. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/input_buffer.cpp:310.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+attribution step1 update of kmlp.0 only: nn<1 force err 0.007844646555161417
+attribution step1 update of kmlp.2 only: nn<1 force err 0.014109749357429405
+attribution step1 update of kmlp.4 only: nn<1 force err 0.012429476714627661
+attribution step1 update of net.dec only: nn<1 force err 0.009708284962372431
+attribution step1 update of net.enc only: nn<1 force err 0.01167210413624148
+attribution step1 update of net.inp only: nn<1 force err 0.007791765890991342
+attribution step1 update of net.out only: nn<1 force err 0.008534589700085131
+attribution step1 update of ppmlp.0 only: nn<1 force err 0.0077764699583870575
+attribution step1 update of ppmlp.2 only: nn<1 force err 0.013056231007043234
+attribution step1 update of ppmlp.4 only: nn<1 force err 0.01313923662064962
+counterfactual first Adam step lr 5e-4 eps 1e-08: nn<1 force err 0.048597850398399936
+counterfactual first Adam step lr 5e-4 eps 1e-06: nn<1 force err 0.04859048327878666
+counterfactual first Adam step lr 5e-4 eps 0.0001: nn<1 force err 0.04275720880055487
+counterfactual first Adam step lr 5e-4 eps 0.001: nn<1 force err 0.030553747774910853
+counterfactual first Adam step lr 5e-4 eps 0.01: nn<1 force err 0.016790300244932402
+force @1 lr 5.00e-04 {'all': 0.05500580284135378, 'nn<1': 0.04859794359192414, 'nn>=1': 0.07745698089235616}
+it 0 k 4 loss 0.008738 t 26s
+force @2 lr 4.99e-04 {'all': 0.09461640178306559, 'nn<1': 0.08919004067636399, 'nn>=1': 0.11584589836688805}
+force @5 lr 4.78e-04 {'all': 0.09952980504155844, 'nn<1': 0.08978287978971397, 'nn>=1': 0.13480399169918825}
+force @10 lr 3.96e-04 {'all': 0.03999771979404032, 'nn<1': 0.033258104847806357, 'nn>=1': 0.061737308515978556}
+trained 30 iters in 35s
+wrote results/lrw_ctl_smoke/lrwarm_ctl_s4738.json
