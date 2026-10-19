@@ -440,7 +440,9 @@ def main():
     if args.replay_frac > 0:
         rs = args.seed + 31000
         nr = sf.to_tensors(gs.make_dataset(args.replay_nr100, (100, 100), args.steps, rs, scale=True, device=dd, dt=args.dt, eps=args.eps), dev)
-        REPLAY.update({"nr100": [t.float() for t in nr], "bh300": make_bh_replay(args.replay_bh300, args.steps, rs + 1, dev, dt=args.dt, eps=args.eps)})
+        nb = tensors[0].shape[2]
+        pad = lambda t: torch.nn.functional.pad(t.float(), (0, 0, 0, nb - t.shape[2])) if t.dim() == 4 else torch.nn.functional.pad(t.float(), (0, nb - t.shape[1]))
+        REPLAY.update({"nr100": [pad(t) for t in nr], "bh300": make_bh_replay(args.replay_bh300, args.steps, rs + 1, dev, dt=args.dt, eps=args.eps)})
     names = cfg["variants"] if args.variant == "all" else args.variant.split(",")
     eval_sets = {seed: make_data(cfg, args.eval_scenes, args.eval_steps, seed, dd, args.dt, args.eps) for seed in EVAL_SEEDS}
     for name in names:
