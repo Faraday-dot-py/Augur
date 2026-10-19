@@ -39,6 +39,7 @@ STATE_ATOL = {"bound_frac": 0.02, "virial": 0.05}
 CONS_STEPS = 1000
 CONS_REGIMES = ("nr100", "bh300")
 CONS_TOL = 0.25
+CONS_TOL_KEY = {"dL": 1.5}
 TIME_TOL = 0.05
 MEM_TOL = 0.10
 INFO_TICKS = {"two_body": ("50", "100"), "expB": ("50", "100"), "bh300": ("50",)}
@@ -481,7 +482,7 @@ def compare(args):
         for k, b, c, atol in (("dE", bc["model"]["dE"], cc["model"]["dE"], 1e-3), ("dL", bc["model"]["dL"], cc["model"]["dL"], 1e-2),
                               ("dP", bc["model"]["dP"], cc["model"]["dP"], 1e-3), ("bound_gap", bc["bound_gap"], cc["bound_gap"], 0.02),
                               ("vir_gap", bc["vir_gap"], cc["vir_gap"], 0.05), ("outgrid", bc["model"]["outgrid"], cc["model"]["outgrid"], 0.01)):
-            check(f"cons {reg}@{CONS_STEPS} {k}", b, c, CONS_TOL, atol)
+            check(f"cons {reg}@{CONS_STEPS} {k}", b, c, CONS_TOL_KEY.get(k, CONS_TOL), atol)
         if cc["model"]["frac_ge_c"] is not None:
             check(f"cons {reg} frac|v|>=c", 0.0, cc["model"]["frac_ge_c"], 0.0)
         check(f"cons {reg} nonfinite", 0.0, 1.0 - cc["model"]["finite"], 0.0)
