@@ -5,6 +5,7 @@ scripts/train_gravity_dynamics.py (train seed 4738, held-out eval seeds 9000/120
 import argparse
 import json
 import os
+import signal
 import time
 
 import numpy as np
@@ -124,10 +125,60 @@ def long_penalty(model, pos, vel, m, mk, field, args):
     return de_tot, dl_tot
 
 
+REPLAY = {}
+
+
+def save_atomic(obj, path):
+    torch.save(obj, path + ".tmp")
+    os.replace(path + ".tmp", path)
+
+
+def make_bh_replay(num, steps, seed, device, subs=4, dt=0.1, eps=0.5):
+    """bh300 harness-regime scenes (300 unit-mass bodies, relativistic speed cap c=10): truth positions and momenta (fp64, `subs` leapfrog substeps per tick)."""
+    from scripts import scatter_conservation as sc
+
+    rng = np.random.default_rng(seed)
+    ps, vs = zip(*[sc.init_scene("bh", 300, rng) for _ in range(num)])
+    pos = torch.tensor(np.stack(ps), device=device).double()
+    mom = sc.to_mom(torch.tensor(np.stack(vs), device=device).double(), sc.C)
+    h = dt / subs
+
+    def acc(p):
+        d = p[:, None] - p[:, :, None]
+        inv = ((d ** 2).sum(-1) + eps ** 2) ** -1.5
+        inv.diagonal(dim1=1, dim2=2).zero_()
+        return (d * inv[..., None]).sum(2)
+
+    P, MOM = [pos.clone()], [mom.clone()]
+    with torch.no_grad():
+        a = acc(pos)
+        for _ in range(steps):
+            for _ in range(subs):
+                mom = mom + 0.5 * h * a
+                pos = pos + h * sc.speed(mom, sc.C)
+                a = acc(pos)
+                mom = mom + 0.5 * h * a
+            P.append(pos.clone())
+            MOM.append(mom.clone())
+    return torch.stack(P, 1).float(), torch.stack(MOM, 1).float()
+
+
 def train(model, tensors, args, ckpt_path, log):
     P, V, M, mask = [t.float() for t in tensors]
     S = P.shape[0]
-    opt = torch.optim.Adam(model.parameters(), lr=args.lr)
+    train_only = getattr(args, "train_only", "")
+    if train_only:
+        keys = train_only.split(",")
+        for n, p in model.named_parameters():
+            p.requires_grad_(any(k in n for k in keys))
+        log(f"train-only {keys}: {sum(p.numel() for p in model.parameters() if p.requires_grad)} trainable params")
+    train_params = [p for p in model.parameters() if p.requires_grad]
+    l2sp = getattr(args, "l2sp", 0.0)
+    anchor = [p.detach().clone() for p in train_params] if l2sp > 0 else None
+    replay = REPLAY or None
+    stop = []
+    signal.signal(signal.SIGTERM, lambda *a: stop.append(1))
+    opt = torch.optim.Adam(train_params, lr=args.lr)
     start = 0
     if os.path.exists(ckpt_path):
         st = torch.load(ckpt_path, map_location=args.device, weights_only=False)
@@ -142,6 +193,10 @@ def train(model, tensors, args, ckpt_path, log):
     it = start - 1
     while True:
         it += 1
+        if stop:
+            save_atomic({"model": model.state_dict(), "opt": opt.state_dict(), "it": it}, ckpt_path)
+            log(f"SIGTERM at it {it}, checkpoint saved")
+            raise SystemExit(0)
         if args.time_budget > 0:
             frac = (time.time() - t_start) / args.time_budget
             if frac >= 1.0:
@@ -154,40 +209,77 @@ def train(model, tensors, args, ckpt_path, log):
         lr = args.lr * (0.05 + 0.95 * 0.5 * (1 + np.cos(np.pi * frac)))
         for pg in opt.param_groups:
             pg["lr"] = lr
-        idx = torch.randint(S, (args.batch,), generator=g).to(args.device)
-        hook = getattr(args, 'batch_hook', None)
-        if hook:
-            hook(idx)
-        t0 = torch.randint(0, args.steps - k + 1, (args.batch,), generator=g).to(args.device)
-        tt = t0[:, None] + torch.arange(k + 1, device=args.device)[None]
-        Pw, Vw = P[idx[:, None], tt], V[idx[:, None], tt]
-        m, mk = M[idx], mask[idx]
-        pos, vel = Pw[:, 0], Vw[:, 0]
-        field = model.init_field(args.batch, args.device)
-        lp = lv = lm = 0.0
-        w = mk[:, :, None]
-        denom = mk.sum() * 2 * k
-        for s in range(k):
-            pos, vel, m, field, _ = fns[s](pos, vel, m, mk, field) if fns else sf._step_m(model, pos, vel, m, mk, field)
-            lm = lm + (((m - M[idx]) ** 2) * mk).sum() / (mk.sum() * k)
-            rl = getattr(args, "rloss", "sq")
-            if rl == "sq":
-                lp = lp + (((pos - Pw[:, s + 1]) ** 2) * w).sum() / denom
-            else:
+        kind = "base"
+        if replay is not None:
+            r = torch.rand(1, generator=g).item()
+            if r < args.replay_frac:
+                kind = "nr100" if r < args.replay_frac / 2 else "bh300"
+        if kind == "bh300":
+            Pb, Mb = replay["bh300"]
+            bs = args.batch // 2
+            idx = torch.randint(Pb.shape[0], (bs,), generator=g).to(args.device)
+            t0 = torch.randint(0, Pb.shape[1] - k, (bs,), generator=g).to(args.device)
+            tt = t0[:, None] + torch.arange(k + 1, device=args.device)[None]
+            Pw, Mw = Pb[idx[:, None], tt], Mb[idx[:, None], tt]
+            pos, mom = Pw[:, 0], Mw[:, 0]
+            from scripts import scatter_conservation as sc
+            ones = torch.ones(bs, Pb.shape[2], device=args.device)
+            field = model.init_field(bs, args.device)[0]
+            sub = getattr(model, "substeps", 1)
+            h = args.dt / sub
+            a, field = model.force(pos, sc.speed(mom, sc.C), ones, ones, field)
+            lp = 0.0
+            for s in range(k):
+                for _ in range(sub):
+                    mom = mom + 0.5 * h * a
+                    pos = pos + h * sc.speed(mom, sc.C)
+                    a, field = model.force(pos, sc.speed(mom, sc.C), ones, ones, field)
+                    mom = mom + 0.5 * h * a
                 d = (((pos - Pw[:, s + 1]) ** 2).sum(-1) + 1e-12).sqrt()
-                if rl == "euclid":
-                    h = d / 2 ** 0.5
+                lp = lp + d.mean() / (2 ** 0.5 * k)
+            loss = lp
+        else:
+            if kind == "nr100":
+                Ps, Vs, Ms, mks = replay["nr100"]
+            else:
+                Ps, Vs, Ms, mks = P, V, M, mask
+            idx = torch.randint(Ps.shape[0], (args.batch,), generator=g).to(args.device)
+            hook = getattr(args, 'batch_hook', None)
+            if hook:
+                hook(idx)
+            t0 = torch.randint(0, args.steps - k + 1, (args.batch,), generator=g).to(args.device)
+            tt = t0[:, None] + torch.arange(k + 1, device=args.device)[None]
+            Pw, Vw = Ps[idx[:, None], tt], Vs[idx[:, None], tt]
+            m, mk = Ms[idx], mks[idx]
+            pos, vel = Pw[:, 0], Vw[:, 0]
+            field = model.init_field(args.batch, args.device)
+            lp = lv = lm = 0.0
+            w = mk[:, :, None]
+            denom = mk.sum() * 2 * k
+            for s in range(k):
+                pos, vel, m, field, _ = fns[s](pos, vel, m, mk, field) if fns else sf._step_m(model, pos, vel, m, mk, field)
+                lm = lm + (((m - Ms[idx]) ** 2) * mk).sum() / (mk.sum() * k)
+                rl = getattr(args, "rloss", "sq")
+                if rl == "sq":
+                    lp = lp + (((pos - Pw[:, s + 1]) ** 2) * w).sum() / denom
                 else:
-                    dl = args.huber_delta
-                    h = torch.where(d < dl, d ** 2 / 2, dl * (d - dl / 2))
-                lp = lp + (h * mk).sum() / (mk.sum() * k)
-            lv = lv + (((vel - Vw[:, s + 1]) ** 2) * w).sum() / denom
-        loss = lp + 0.1 * lv + lm
+                    d = (((pos - Pw[:, s + 1]) ** 2).sum(-1) + 1e-12).sqrt()
+                    if rl == "euclid":
+                        h = d / 2 ** 0.5
+                    else:
+                        dl = args.huber_delta
+                        h = torch.where(d < dl, d ** 2 / 2, dl * (d - dl / 2))
+                    lp = lp + (h * mk).sum() / (mk.sum() * k)
+                lv = lv + (((vel - Vw[:, s + 1]) ** 2) * w).sum() / denom
+            loss = lp + 0.1 * lv + lm
+        if anchor is not None:
+            l2 = l2sp * sum(((p - a0) ** 2).sum() for p, a0 in zip(train_params, anchor))
+            loss = loss + l2
         opt.zero_grad()
         loss.backward()
         if args.long_windows > 0 and torch.isfinite(loss):
             pen = long_penalty(model, pos, vel, m, mk, field, args)
-        gn =torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        gn = torch.nn.utils.clip_grad_norm_(train_params, 1.0)
         cap = getattr(args, 'loss_cap', 0.0)
         if torch.isfinite(loss) and torch.isfinite(gn) and (cap <= 0 or loss.item() < cap):
             opt.step()
@@ -197,9 +289,11 @@ def train(model, tensors, args, ckpt_path, log):
             log(f"it {it} non-finite loss/grad, step skipped ({skipped} total)")
         if it % args.log_every == 0:
             extra = f" long dE {pen[0]:.4g} dL {pen[1]:.4g}" if args.long_windows > 0 and torch.isfinite(loss) else ""
-            log(f"it {it} k {k} loss {loss.item():.6f} t {time.time() - t_start:.0f}s" + extra)
+            if anchor is not None:
+                extra += f" l2sp {l2.item():.4g}"
+            log(f"it {it} k {k} {kind} loss {loss.item():.6f} gn {float(gn):.3g} nparam {sum(p.numel() for p in train_params)} t {time.time() - t_start:.0f}s" + extra)
             if all(torch.isfinite(p).all() for p in model.parameters()):
-                torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, ckpt_path)
+                save_atomic({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, ckpt_path)
                 if it % 5000 == 0:
                     torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, f"{ckpt_path}.it{it}")
     if all(torch.isfinite(p).all() for p in model.parameters()):
@@ -294,6 +388,11 @@ def main():
     ap.add_argument("--lam-e", type=float, default=0.1)
     ap.add_argument("--lam-l", type=float, default=0.1)
     ap.add_argument("--rloss", choices=["sq", "euclid"], default="sq", help="rollout position loss: squared (default) or per-body Euclid norm")
+    ap.add_argument("--train-only", default="", help="comma-separated substrings; only matching parameters are trained")
+    ap.add_argument("--l2sp", type=float, default=0.0, help="L2-SP weight: lambda * sum (theta - theta_init)^2 over trainable params")
+    ap.add_argument("--replay-nr100", type=int, default=0, help="nr100 replay scenes (harness regime, 100 bodies)")
+    ap.add_argument("--replay-bh300", type=int, default=0, help="bh300 replay scenes (harness regime, relativistic 300 bodies)")
+    ap.add_argument("--replay-frac", type=float, default=0.0, help="fraction of iterations drawn from replay (split evenly nr100/bh300)")
     ap.add_argument("--lr", type=float, default=1e-3)
     ap.add_argument("--dt", type=float, default=0.1)
     ap.add_argument("--eps", type=float, default=0.5)
@@ -338,6 +437,10 @@ def main():
         k = int(args.train * args.orbit_mix)
         train_data = train_data[k:] + sf.make_orbit_dataset(k, args.steps, args.seed, dd, dt=args.dt, eps=args.eps)
     tensors = sf.to_tensors(train_data, dev)
+    if args.replay_frac > 0:
+        rs = args.seed + 31000
+        nr = sf.to_tensors(gs.make_dataset(args.replay_nr100, (100, 100), args.steps, rs, scale=True, device=dd, dt=args.dt, eps=args.eps), dev)
+        REPLAY.update({"nr100": [t.float() for t in nr], "bh300": make_bh_replay(args.replay_bh300, args.steps, rs + 1, dev, dt=args.dt, eps=args.eps)})
     names = cfg["variants"] if args.variant == "all" else args.variant.split(",")
     eval_sets = {seed: make_data(cfg, args.eval_scenes, args.eval_steps, seed, dd, args.dt, args.eps) for seed in EVAL_SEEDS}
     for name in names:
