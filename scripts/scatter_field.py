@@ -300,7 +300,7 @@ class ScatterField(nn.Module):
 
     def pp_acc(self, pos, mass, mask, knn=16, qmask=None):
         B, N = mask.shape
-        if "adapt" in self.opt and N > 512:
+        if "adapt" in self.opt and N > getattr(self, "adapt_min", 512):
             return self.pp_acc_adapt(pos, mass, mask, knn, lmax=getattr(self, "adapt_lmax", 8), qmask=qmask)
         if "cell" in self.opt and N > 512:
             return self.pp_acc_cell(pos, mass, mask, knn)

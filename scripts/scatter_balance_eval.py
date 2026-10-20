@@ -131,11 +131,13 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--ns", default="20000,60000")
     ap.add_argument("--seeds", default="4738,9000")
+    ap.add_argument("--adapt-min", type=int, default=6000)
     a = ap.parse_args()
     dev = torch.device("cuda")
     torch.manual_seed(4738)
     model = load(a.ckpt, dev)
     sf.apply_opt(model, "adapt")
+    model.adapt_min = a.adapt_min
     phase(model, dev, a.out, [int(x) for x in a.ns.split(",")], [int(x) for x in a.seeds.split(",")])
 
 
