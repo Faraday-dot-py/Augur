@@ -178,6 +178,99 @@ def phase_roll(model, dev, out, variants, steps=20):
     json.dump(res, open(out, "w"))
 
 
+@torch.no_grad()
+def phase_big(model, dev, out, steps=20):
+    """16 tiles of 64 (extent 256) vs one single grid (G=512), constant-density J scene; no tiling-free truth claim: the single grid itself has a wrong far field here."""
+    L, n, sigma = 256.0, 4800, 32.0
+    names = {"g16_fx": (4, 64, 16, True, True, False), "g16_fx_far": (4, 64, 16, True, True, True)}
+    rows = []
+    for seed in (4738, 9000, 12000):
+        p0, v0 = make_scene(n, sigma, 1.0, L, seed, 0)
+        Pt, Vt = ops.exact_rollout(torch.tensor(p0, device=dev), torch.tensor(v0, device=dev), steps, DT, SUB, EPS)
+        pos = torch.tensor(p0, dtype=torch.float32, device=dev)
+        vel = torch.tensor(v0, dtype=torch.float32, device=dev)
+        mass = torch.ones(n, device=dev)
+        msk = torch.ones(1, n, device=dev)
+        ops.retarget(model, 512, L)
+        st = (model.init_field(1, dev)[0], None)
+        p, v = pos[None], vel[None]
+        Ps, states = [p[0]], {}
+        for t in range(steps):
+            if t in (0, 10):
+                states[t] = (p[0].clone(), v[0].clone(), st[0].clone(), None if st[1] is None else st[1][0].clone())
+            p, v, st, _ = model.step(p, v, mass[None], msk, st)
+            Ps.append(p[0])
+        Ps = torch.stack(Ps).double()
+        row = {"seed": seed, "single_err": {str(k): pos_err(Ps, Pt, k) for k in (5, 10, 20)}, "dP_single": float((v[0].sum(0).norm() - vel.sum(0).norm()).abs())}
+        for name, spec in names.items():
+            T = make_tiled(model, spec)
+            r = {}
+            for t, (pos_t, vel_t, f_t, ap_t) in states.items():
+                ops.retarget(model, 512, L)
+                ps, _, (_, a_s), _ = model.step(pos_t[None], vel_t[None], mass[None], msk, (f_t, None if ap_t is None else ap_t[None]))
+                pt, _, (_, a_t) = T.step(pos_t, vel_t, mass, (T.slice_field(f_t[0]), ap_t))
+                ds, dout = T.seam_dist(ps[0])
+                r[f"force_tick{t}"] = rel_by_class(a_t, a_s[0], class_masks(ds, dout))
+            ts = (T.init_field(dev), None)
+            p, v = pos, vel
+            Pl = [p]
+            for _ in range(steps):
+                p, v, ts = T.step(p, v, mass, ts)
+                Pl.append(p)
+            P = torch.stack(Pl).double()
+            r["err"] = {str(k): pos_err(P, Pt, k) for k in (5, 10, 20)}
+            r["diff_single"] = {str(k): float((P[k] - Ps[k]).norm(dim=-1).mean()) for k in (5, 10, 20)}
+            r["dP"] = float((v.sum(0).norm() - vel.sum(0).norm()).abs())
+            r["stats"] = dict(T.stats)
+            row[name] = r
+        rows.append(row)
+        print("big", seed, {k: (v["err"]["20"], v["diff_single"]["20"]) for k, v in row.items() if isinstance(v, dict) and "err" in v}, row["single_err"], flush=True)
+    json.dump(rows, open(out, "w"))
+
+
+@torch.no_grad()
+def phase_snaps(model, dev, out, steps=100):
+    """Long rollouts (warm1200 and cold300, seed 4738) saved for the frame review; err@50/100 vs truth and vs single recorded."""
+    keep = (0, 5, 10, 20, 50, 100)
+    names = ["naive", "g16_fx", "g16_fx_far", "t32_g16_fx_far"]
+    summ = {}
+    for fam in ("warm1200", "cold300"):
+        n, sigma, vfac = FAMILIES[fam]
+        p0, v0 = make_scene(n, sigma, vfac, 128.0, 4738, 0)
+        Pt, _ = ops.exact_rollout(torch.tensor(p0, device=dev), torch.tensor(v0, device=dev), steps, DT, SUB, EPS)
+        pos = torch.tensor(p0, dtype=torch.float32, device=dev)
+        vel = torch.tensor(v0, dtype=torch.float32, device=dev)
+        mass = torch.ones(n, device=dev)
+        single_setup(model)
+        msk = torch.ones(1, n, device=dev)
+        st = (model.init_field(1, dev)[0], None)
+        p, v = pos[None], vel[None]
+        runs = {}
+        Pl = [p[0]]
+        for _ in range(steps):
+            p, v, st, _ = model.step(p, v, mass[None], msk, st)
+            Pl.append(p[0])
+        runs["single"] = torch.stack(Pl)
+        for name in names:
+            T = make_tiled(model, VARIANTS[name])
+            ts = (T.init_field(dev), None)
+            p, v = pos, vel
+            Pl = [p]
+            for _ in range(steps):
+                p, v, ts = T.step(p, v, mass, ts)
+                Pl.append(p)
+            runs[name] = torch.stack(Pl)
+        single_setup(model)
+        allr = {"exact": Pt.float(), **runs}
+        for name, P in allr.items():
+            np.savez(out.replace(".json", f"_{fam}_{name}.npz"), pos=P[list(keep)].cpu().numpy(), steps=np.array(keep))
+        summ[fam] = {name: {"err": {str(k): pos_err(P, Pt, k) for k in (20, 50, 100)},
+                            "diff_single": {str(k): float((P[k].double() - runs["single"][k].double()).norm(dim=-1).mean()) for k in (20, 50, 100)}}
+                     for name, P in runs.items()}
+        print("snaps", fam, summ[fam], flush=True)
+    json.dump(summ, open(out, "w"))
+
+
 def tmed(fn, reps=15, warm=3):
     for _ in range(warm):
         fn()
@@ -249,7 +342,7 @@ def phase_scale(model, dev, out):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ckpt", required=True)
-    ap.add_argument("--phase", choices=["force", "roll", "scale"], required=True)
+    ap.add_argument("--phase", choices=["force", "roll", "scale", "big", "snaps"], required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--variants", default="naive,g16,g16_fx,g16_fx_far,g8_fx,g8_fx_far,g32_fx,t32_naive,t32_g16_fx,t32_g16_fx_far")
     a = ap.parse_args()
@@ -260,6 +353,10 @@ def main():
         phase_force(model, dev, a.out)
     elif a.phase == "roll":
         phase_roll(model, dev, a.out, a.variants.split(","))
+    elif a.phase == "big":
+        phase_big(model, dev, a.out)
+    elif a.phase == "snaps":
+        phase_snaps(model, dev, a.out)
     else:
         phase_scale(model, dev, a.out)
 

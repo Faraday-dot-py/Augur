@@ -31,3 +31,54 @@ Scenes: Gaussian cluster at the domain centre (all four tiles meet at its centre
 4. + far: interior error down 2-3x; seam/interior ratio 1-1.5. Pass uncertain at 1.1.
 5. Halo 8 worse than 16 without far; with far the halo matters less. Halo 32 marginal over 16.
 6. Cost: per-tile ms/tick and memory independent of tile count (launch-bound; halo overhead (G_ext/G_tile)^2 = 2.25 in cells at halo 16); far adds one coarse FFT (+ ~0.5 ms).
+
+## Results (Polaris jobs 3767 force/roll/scale, 3768 big/snaps; raw `results/scatter_tiling_*.json`, summary `results/scatter_tiling_summary.txt` from `scripts/summarize_scatter_tiling.py`)
+
+Metrics: force error = sum|a_tiled - a_single| / sum|a_single| (acceleration-weighted relative), one step from shared single-grid states at ticks 0/5/10/20, held-out seeds 9000/12000 x 3 reps. err@k = mean per-body position error vs exact fp64 all-pairs (sim units). "seam" = within 8 units of an internal tile boundary, "interior" = >=8 from every seam, both >=8 from the outer domain edge.
+
+### Force error vs single grid, seam / interior (held out, tick-averaged)
+| scene | naive | halo16 (g16) | halo16 + field exchange | halo16 + far | halo8 + far | halo32 |
+|---|---|---|---|---|---|---|
+| cold N300 sigma8 | 1.08 / 0.55 | .0046 / .0063 | .0046 / .0063 | .0007 / .0013 | .0029 / .0026 | .0007 / .0012 |
+| warm N300 sigma8 | 1.26 / 0.43 | .0078 / .0092 | .0078 / .0092 | .0009 / .0014 | .0040 / .0028 | .0009 / .0013 |
+| warm N1200 sigma16 | 0.93 / 0.41 | .104 / .075 | .104 / .075 | .0094 / .0115 | .0154 / .0126 | .0142 / .0146 |
+Naive seam<2 units: 1.7 / 2.2 / 1.4 (error larger than the force). Single grid vs exact fp64 for the same bodies is 0.06-0.075 (seam) / 0.04-0.065 (interior), i.e. tiling-with-far error is 5-50x below the model's own error.
+Seam/interior ratio (interior floored 1e-3): naive 2.0-2.9 (KILL region); halo16 0.73 / 0.85 / 1.39; halo16+far 0.54 / 0.66 / 0.82; halo8+far 1.12 / 1.41 / 1.23; halo32 0.54 / 0.65 / 0.97; G=128 copies (4x4 tiles of 32, halo 16) +far 0.57 / 0.70 / 1.06. Bodies within 8 units of the OUTER domain edge (warm N1200 only): error 0.75 even with far (single grid's own edge artifact is not reproduced by tiles whose margin is empty); not a seam issue.
+
+### Rollouts (held out, err@20 vs truth; ratio to single grid)
+| scene | single | naive | halo16 | halo16 + fx | halo16 + far | halo8 + far | halo32 | 4x4x32 + far |
+|---|---|---|---|---|---|---|---|---|
+| cold N300 | .0646 | 3.88 (60x) | .0725 (1.12) | .0725 (1.12) | .0645 (1.00) | .0674 (1.04) | .0646 (1.00) | .0645 (1.00) |
+| warm N300 | .0705 | 3.51 (50x) | .0781 (1.11) | .0781 (1.11) | .0705 (1.00) | .0730 (1.04) | .0705 (1.00) | .0705 (1.00) |
+| warm N1200 | .1129 | 2.60 (23x) | .4246 (3.76) | .4246 (3.76) | .1077 (0.95) | .1124 (1.00) | .1111 (0.98) | .1074 (0.95) |
+err@5 and err@10 show the same ratios (cold: .0079/.0205 single vs .0079/.0205 halo16+far). Dev seed 4738 agrees. Mean position difference tiled vs single at tick 20: 0.0014 (halo16+far, cold/warm300), 0.014 (N1200). Momentum drift ||sum v| change| after 20 ticks: 5-9e-6 (N300) and 2-3e-5 (N1200) for every variant including single (fp32 round-off; global momentum fix); halo16+far / single = 1.1 / 0.8 / 1.2-1.3 (not distinguishable from single across 9 scenes, but not strictly "not worse" on N1200).
+Long horizon (seed 4738): err@100 single 6.8 / 5.7 (N1200 / cold), halo16+far 5.2 / 5.4, naive 37 / 21; tiled-vs-single difference at 100 ticks 2-3.5 (chaos amplifies fp32 summation differences; single-vs-single reruns do this too, see scatter-scaling.md self-noise).
+
+### 16 tiles (4x4 tiles of 64, extent 256, N=4800 sigma 32, warm; vs one G=512 grid; job 3768)
+Single grid is itself poor here (err@20 3.4-3.7, far-field kernel out of training range, scatter-scaling.md). Force error vs single, seam / interior: halo16 .66 / .71 (fails), halo16+far .0129 / .0178. Tiled-vs-single position difference at 20: 3.0 vs 0.07. err@20 vs truth: halo16 1.2 (better than single because it drops the wrong far field), halo16+far 3.4-3.6 (= single, as designed). Momentum drift 2.7e-5 (far) vs 4.2e-5 (single).
+
+### Cost and communication (job 3767, scale phase, constant density N=300 per 64x64 tile, sigma = L/8, H200)
+| tiles | N | single-grid ms/tick (G) | tile copy ms per force (G, halo16) | tile peak MB | single peak MB | ghost bodies / own bodies per tile | halo cells / tile | batched-emulation ms/tick |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 300 | 2.4 (128) | 2.85 (128, no halo) | 33 | 33 | 0 / 300 | 0 | 2.9 |
+| 4 | 1200 | 2.5 (256) | 2.98 (192) | 74 | 132 | 554 / 300 | 20480 | 4.0 (4.7 with far) |
+| 16 | 4800 | 5.1 (512) | 3.10 (192; busy centre tile 1088 own + 1143 ghost) | 116 | 539 | 1143 / 1088 | 20480 | 13.6 (14.3 with far) |
+Per-tile cost and memory are flat in tile count (tile copy time is launch-bound ~3 ms; per owned body 9.5 / 9.9 / 2.9 us). The batched emulation rises at 16 tiles only because it pads every tile to the busiest tile (Nmax 2258) in the dense pair term: load imbalance of a Gaussian scene (central tiles hold 3.6x the mean), not a per-tile cost rise. Far term adds ~0.7 ms (one coarse FFT over the whole domain: 1024 coarse cells per tile, 16 tiles = 128x128); it is global (all-gather of coarse density, T x 1024 floats), so its per-tile cost grows with T (redundant FFT) or needs a distributed FFT; fine to hundreds of tiles, untested beyond 16. Halo overhead: (192/128)^2 = 2.25x cells at halo 16 for 64-wide tiles; ghost bodies = 1.9x (4 tiles) own bodies for N300 sigma 16 scene (halo 16 is 25% of tile side).
+
+### Frame review (fresh unbiased subagent, `videos/scatter_tiling_{warm1200,cold300}.png`, prompt `rollout-frame-review-prompt.md`)
+Exact, single, halo16, halo16+far and 4x4x32+far rows look nearly identical at every step (diffuse cloud -> central clump by step 50-100; small differences in clump tightness, slightly looser clumps for the +far rows at step 50 in N1200). Naive: matches to step 20 in N1200 then stays diffuse and ragged ring-like at step 100; in cold300 a gap along the vertical and horizontal midlines appears at step 10 and the cloud sits as four separate clumps (one per tile) with an empty cross to step 100. No grid or stripe pattern in any other row.
+
+## Prediction vs measured
+1. naive: seam<2 error >>1 and interior degraded: confirmed (1.4-2.2 and 0.41-0.55); err@20 >=3x: confirmed (23-60x), far worse than predicted; visible four-clump split.
+2. halo16 without far: predicted seam .1-.2, err@20 ~1.3x: compact scenes far better than predicted (seam .005-.008, err@20 1.11-1.12x, just over the 1.1 bar); wide scene as bad as predicted or worse (seam .10, err@20 3.8x).
+3. field exchange: predicted a small rollout gain: WRONG, no measurable effect (identical to 3-4 digits; the recurrent halo field is not what limits the match). Drop it unless a different scene shows otherwise (not tested: much longer horizons, scenes with fast bulk flow across seams).
+4. + far: predicted interior 2-3x better, ratio 1-1.5: interior 5-7x better and ratio .54-.82 at halo 16. Better than predicted.
+5. halo 8 worse than 16, 32 marginal: confirmed without far (halo8 err@20 5-7x single on compact scenes); with far halo 8 is already within 1.04-1.05x; halo 32 without far matches single on compact scenes (1.00) but not on N1200 (0.98 err, force .014).
+6. cost: confirmed flat per tile; halo overhead as computed.
+
+## Verdict
+Criteria (at halo 16, held out): halo16 + far PASS on all three scenes at 2x2 and at 4x4x32 (G=128 copies): seam/interior force ratio .54-1.06 (<=1.1), err@5/10/20 ratio .95-1.00, momentum drift at fp32 round-off of the single grid (1.1 / 0.8 / 1.2-1.3x). Halo-only (token ghosts, with or without field exchange) FAILS: err@20 1.11-1.12x on compact scenes, 3.8x on N1200, force seam error .10 and 16 tiles .66. Naive FAILS (seam/interior 2.0-2.9, 23-60x err). KILL not triggered (seam <= 2x interior at halo 16 with far; per-tile cost flat).
+Minimal mechanism set: ghost bodies (halo) + coarse global far-field coupling. Field-state exchange not needed. No learned seam module needed; no retraining. Caveat: far reproduces the single grid's far field, which is wrong beyond ~16-32 units (16-tile scene: both far-matched and single err@20 ~3.5; halo-only is closer to truth 1.2 because it drops the bad far kernel). Matching the single grid and matching physics diverge there; fixing `kmlp` at large r is a separate item.
+
+## Not tested
+Real multi-device run (emulated on one GPU; exchange is array copies); distributed coarse FFT; far_c other than 4 and tile counts above 16; bodies crossing the outer domain edge; cell-list pair term with tiles (dense N^2 pp used; fine at <=2.3k bodies per tile); non-Gaussian / uniformly dense scenes; speeds large enough that bodies cross more than the halo in one tick (halo 16 vs speed*dt ~ 1); load balancing (centre tile 3.6x mean in Gaussian scenes); 100-tick tiled-vs-single agreement (chaos-limited, diff 2-3.5 at tick 100).
