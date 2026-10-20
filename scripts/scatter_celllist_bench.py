@@ -180,6 +180,12 @@ def phase_density(ckpt, dev, out):
         else:
             r["cell_ms"] = None
             r["cell_skipped_candidates"] = n * 9 * M
+        if sigma <= 0.25:
+            adapt.adapt_lmax = 14
+            r["adapt_lmax14_ms"] = tmed(lambda: adapt.pp_acc(pos, mass, mk))
+            r["adapt_lmax14_vs_cell"] = cmp(adapt.pp_acc(pos, mass, mk), cell.pp_acc(pos, mass, mk))
+            r["adapt_lmax14_stats"] = {"levels": adapt.adapt_stats["levels"], "fallback": adapt.adapt_stats["fallback"]}
+            adapt.adapt_lmax = 8
         res[f"sigma{sigma:g}"] = r
         print(r, flush=True)
         json.dump(res, open(out, "w"))
