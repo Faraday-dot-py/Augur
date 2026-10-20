@@ -1,0 +1,1039 @@
+=== frozen E reference (3 regress runs, same code)
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  out = {"all": float(((E * Vd).sum() / (T * Vd).sum()).sqrt())}
+ab 9100 err@5/10/20/50/100 [0.00283, 0.00794, 0.02305, 0.15102, 1.36644] e20 med/mean/p90/p99 0.0164/0.0232/0.0506/0.0966 force {'all': 0.24436206082162057, '<0.5': 0.19462855861260428, '0.5-1': 0.2180520379647925, '>=1': 0.3417029975170936}
+cl 9100 err@5/10/20/50/100 [0.00623, 0.01619, 0.05127, 0.74716, 4.17998] e20 med/mean/p90/p99 0.0388/0.0543/0.1159/0.2448 force {'all': 0.2108567363967958, '<0.5': 0.21451022594140842, '0.5-1': 0.17798093518148062, '>=1': 0.19131632202768784}
+ab 9200 err@5/10/20/50/100 [0.0031, 0.00837, 0.02441, 0.16485, 1.48732] e20 med/mean/p90/p99 0.0175/0.0243/0.0530/0.1036 force {'all': 0.22710136945285822, '<0.5': 0.18362988301765293, '0.5-1': 0.21393764621384945, '>=1': 0.3066175622066756}
+cl 9200 err@5/10/20/50/100 [0.00664, 0.01699, 0.05575, 0.76011, 4.25745] e20 med/mean/p90/p99 0.0403/0.0576/0.1276/0.2703 force {'all': 0.2062502060662484, '<0.5': 0.20877574388812115, '0.5-1': 0.18875488203990087, '>=1': 0.16723405469091288}
+ab 9300 err@5/10/20/50/100 [0.00273, 0.00729, 0.02234, 0.14439, 1.33634] e20 med/mean/p90/p99 0.0163/0.0228/0.0480/0.1082 force {'all': 0.2345357402907655, '<0.5': 0.1907814494748423, '0.5-1': 0.21997280394804253, '>=1': 0.30565427726514915}
+cl 9300 err@5/10/20/50/100 [0.00763, 0.01994, 0.07483, 1.08707, 4.71577] e20 med/mean/p90/p99 0.0523/0.0835/0.1894/0.4612 force {'all': 0.18926813523029887, '<0.5': 0.19059800227376886, '0.5-1': 0.18145390289479194, '>=1': 0.14981609730203763}
+wrote results/el_eval/warm_sq_frozenE_0_evalonly.json
+two_body MEAN err [0.00105, 0.00309, 0.00908, 0.04084, 0.1316] dE/E 0.1219 (true 6.189e-05)
+expB MEAN err [0.00301, 0.00813, 0.02396, 0.15736, 1.4226] dE/E 0.01076 (true 0.0001092)
+bh300 MEAN err [0.00795, 0.0209, 0.06216, 0.91314, 4.80063] dE/E 0.03829 (true 0.0002488)
+cons nr100 1000t dE 0.009409 (true 4.364e-05) dL 0.01408 bound 0.890/0.970 vir 0.983/0.904 outgrid 0.150
+cons bh300 1000t dE 0.4295 (true 0.0003271) dL 2.846 bound 0.743/0.880 vir 0.957/0.931 outgrid 0.283
+two_body MEAN err [0.00105, 0.00309, 0.00908, 0.04084, 0.1316] dE/E 0.1219 (true 6.189e-05)
+expB MEAN err [0.00301, 0.00813, 0.02396, 0.15736, 1.42234] dE/E 0.01074 (true 0.0001092)
+bh300 MEAN err [0.00795, 0.0209, 0.06215, 0.91092, 4.72134] dE/E 0.04625 (true 0.0002488)
+cons nr100 1000t dE 0.01779 (true 4.364e-05) dL 0.01649 bound 0.890/0.970 vir 0.975/0.904 outgrid 0.140
+cons bh300 1000t dE 0.5183 (true 0.0003271) dL 1.652 bound 0.760/0.880 vir 0.982/0.931 outgrid 0.283
+two_body MEAN err [0.00105, 0.00309, 0.00908, 0.04084, 0.1316] dE/E 0.1219 (true 6.189e-05)
+expB MEAN err [0.00301, 0.00813, 0.02396, 0.15736, 1.42245] dE/E 0.01071 (true 0.0001092)
+bh300 MEAN err [0.00795, 0.0209, 0.06214, 0.91117, 4.71229] dE/E 0.03806 (true 0.0002488)
+cons nr100 1000t dE 0.007437 (true 4.364e-05) dL 0.01286 bound 0.890/0.970 vir 0.979/0.904 outgrid 0.170
+cons bh300 1000t dE 0.5102 (true 0.0003271) dL 1.653 bound 0.757/0.880 vir 0.957/0.931 outgrid 0.270
+=== compare frozenE (r1 vs scatter_baseline)
+memory gate SKIPPED: definitions differ (baseline None, candidate 'absolute max_memory_allocated, reset before warm-up')
+two_body: baseline lacks bound/virial rows, skipped
+expB: baseline lacks bound/virial rows, skipped
+bh300: baseline lacks bound/virial rows, skipped
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate /home/adamwebb/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521    0.0010534      0.1  PASS
+two_body err@10                     0.0030977    0.0030949     -0.1  PASS
+two_body err@20                     0.0091024    0.0090849     -0.2  PASS
+expB err@5                          0.0030114    0.0030123      0.0  PASS
+expB err@10                         0.0081291    0.0081315      0.0  PASS
+expB err@20                          0.023947     0.023961      0.1  PASS
+bh300 err@5                         0.0079513    0.0079534      0.0  PASS
+bh300 err@10                         0.020899       0.0209      0.0  PASS
+bh300 err@20                         0.062163     0.062157     -0.0  PASS
+bh300 vmax/c (<1)                     0.92589      0.92593      nan  PASS
+bh300 dE_rel_model@100                0.04783     0.038295    -19.9  PASS
+bh300 dL_rel_model@100                0.30203      0.25851    -14.4  PASS
+bh300 dP_model@100                 5.6379e-05   7.3138e-05     29.7  PASS
+two_body tick_ms                       4.7247       3.2701    -30.8  PASS
+expB tick_ms                           4.9509       3.4298    -30.7  PASS
+bh300 tick_ms                          2.4766      0.70229    -71.6  PASS
+expB_batch1_n100 tick_ms               2.4489      0.67113    -72.6  PASS
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 0.04084; two_body err@100 0.1308 -> 0.1316; expB err@50 0.1573 -> 0.1574; expB err@100 1.422 -> 1.423; bh300 err@50 0.9119 -> 0.9131
+floors: results/chaos_floors.json not found, skipped
+OVERALL PASS
+=== Run 1: heads-only (kmlp,ppmlp), Euclid loss
+[2026-10-19T15:23:25-07:00] train r1_s4738
+=== E ms_kp_pot_v_g128 params 260419 receptive field 31 cells = 15.5 units global=False
+warm start from /home/adamwebb/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt
+train-only ['kmlp', 'ppmlp']: 8834 trainable params
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+it 0 k 20 base loss 0.032964 gn 0.583 nparam 8834 t 0s
+it 100 k 20 base loss 0.014091 gn 0.507 nparam 8834 t 11s
+it 200 k 20 base loss 0.042753 gn 0.36 nparam 8834 t 21s
+it 300 k 20 base loss 0.027047 gn 0.457 nparam 8834 t 32s
+it 400 k 20 base loss 0.029305 gn 0.608 nparam 8834 t 43s
+it 500 k 20 base loss 0.051933 gn 0.778 nparam 8834 t 53s
+it 600 k 20 base loss 0.036573 gn 0.419 nparam 8834 t 64s
+it 700 k 20 base loss 0.046933 gn 0.284 nparam 8834 t 74s
+it 800 k 20 base loss 0.047603 gn 0.266 nparam 8834 t 85s
+it 900 k 20 base loss 0.019678 gn 0.232 nparam 8834 t 96s
+it 1000 k 20 base loss 0.035656 gn 0.41 nparam 8834 t 106s
+it 1100 k 20 base loss 0.029248 gn 0.374 nparam 8834 t 117s
+it 1200 k 20 base loss 0.024621 gn 0.21 nparam 8834 t 127s
+it 1300 k 20 base loss 0.031852 gn 0.345 nparam 8834 t 138s
+it 1400 k 20 base loss 0.011441 gn 0.155 nparam 8834 t 148s
+it 1500 k 20 base loss 0.040950 gn 0.29 nparam 8834 t 159s
+it 1600 k 20 base loss 0.024714 gn 0.481 nparam 8834 t 170s
+it 1700 k 20 base loss 0.054134 gn 2.16 nparam 8834 t 180s
+it 1800 k 20 base loss 0.020228 gn 0.734 nparam 8834 t 191s
+it 1900 k 20 base loss 0.029112 gn 0.356 nparam 8834 t 202s
+it 2000 k 20 base loss 0.020264 gn 0.253 nparam 8834 t 212s
+it 2100 k 20 base loss 0.032582 gn 0.479 nparam 8834 t 223s
+it 2200 k 20 base loss 0.016003 gn 0.204 nparam 8834 t 233s
+it 2300 k 20 base loss 0.031666 gn 0.386 nparam 8834 t 244s
+it 2400 k 20 base loss 0.025051 gn 0.146 nparam 8834 t 254s
+it 2500 k 20 base loss 0.039466 gn 0.304 nparam 8834 t 265s
+it 2600 k 20 base loss 0.055131 gn 1.22 nparam 8834 t 276s
+it 2700 k 20 base loss 0.035620 gn 0.431 nparam 8834 t 286s
+it 2800 k 20 base loss 0.022488 gn 0.352 nparam 8834 t 297s
+it 2900 k 20 base loss 0.028513 gn 0.342 nparam 8834 t 307s
+it 3000 k 20 base loss 0.035528 gn 0.47 nparam 8834 t 318s
+it 3100 k 20 base loss 0.035610 gn 0.269 nparam 8834 t 329s
+it 3200 k 20 base loss 0.035410 gn 0.674 nparam 8834 t 339s
+it 3300 k 20 base loss 0.050678 gn 0.288 nparam 8834 t 350s
+it 3400 k 20 base loss 0.012999 gn 0.131 nparam 8834 t 360s
+it 3500 k 20 base loss 0.033468 gn 0.464 nparam 8834 t 371s
+it 3600 k 20 base loss 0.034976 gn 0.335 nparam 8834 t 381s
+it 3700 k 20 base loss 0.035365 gn 0.328 nparam 8834 t 392s
+it 3800 k 20 base loss 0.025144 gn 0.391 nparam 8834 t 403s
+it 3900 k 20 base loss 0.028668 gn 0.155 nparam 8834 t 413s
+it 4000 k 20 base loss 0.035320 gn 0.438 nparam 8834 t 424s
+it 4100 k 20 base loss 0.015030 gn 0.445 nparam 8834 t 434s
+it 4200 k 20 base loss 0.032316 gn 0.191 nparam 8834 t 445s
+it 4300 k 20 base loss 0.060825 gn 0.87 nparam 8834 t 456s
+it 4400 k 20 base loss 0.013475 gn 0.143 nparam 8834 t 466s
+it 4500 k 20 base loss 0.020073 gn 0.163 nparam 8834 t 477s
+it 4600 k 20 base loss 0.029197 gn 0.407 nparam 8834 t 487s
+it 4700 k 20 base loss 0.016954 gn 0.228 nparam 8834 t 498s
+it 4800 k 20 base loss 0.020708 gn 0.174 nparam 8834 t 509s
+it 4900 k 20 base loss 0.033630 gn 0.34 nparam 8834 t 519s
+it 5000 k 20 base loss 0.031591 gn 0.601 nparam 8834 t 530s
+it 5100 k 20 base loss 0.046490 gn 2.28 nparam 8834 t 540s
+it 5200 k 20 base loss 0.026442 gn 0.523 nparam 8834 t 551s
+it 5300 k 20 base loss 0.037883 gn 0.92 nparam 8834 t 562s
+it 5400 k 20 base loss 0.018609 gn 0.0529 nparam 8834 t 572s
+it 5500 k 20 base loss 0.052586 gn 0.481 nparam 8834 t 583s
+it 5600 k 20 base loss 0.031496 gn 0.4 nparam 8834 t 593s
+it 5700 k 20 base loss 0.046215 gn 0.342 nparam 8834 t 604s
+it 5800 k 20 base loss 0.026983 gn 0.231 nparam 8834 t 614s
+it 5900 k 20 base loss 0.032707 gn 0.597 nparam 8834 t 625s
+it 6000 k 20 base loss 0.026570 gn 0.519 nparam 8834 t 636s
+it 6100 k 20 base loss 0.044345 gn 0.654 nparam 8834 t 646s
+it 6200 k 20 base loss 0.033949 gn 0.474 nparam 8834 t 657s
+it 6300 k 20 base loss 0.018062 gn 0.184 nparam 8834 t 667s
+it 6400 k 20 base loss 0.041187 gn 0.296 nparam 8834 t 678s
+it 6500 k 20 base loss 0.034299 gn 0.522 nparam 8834 t 688s
+it 6600 k 20 base loss 0.035851 gn 0.708 nparam 8834 t 699s
+it 6700 k 20 base loss 0.032637 gn 0.439 nparam 8834 t 710s
+it 6800 k 20 base loss 0.017096 gn 0.553 nparam 8834 t 720s
+it 6900 k 20 base loss 0.010550 gn 0.193 nparam 8834 t 731s
+it 7000 k 20 base loss 0.031277 gn 0.317 nparam 8834 t 741s
+it 7100 k 20 base loss 0.038626 gn 0.502 nparam 8834 t 752s
+it 7200 k 20 base loss 0.047487 gn 0.672 nparam 8834 t 763s
+it 7300 k 20 base loss 0.037989 gn 1.35 nparam 8834 t 773s
+it 7400 k 20 base loss 0.055439 gn 0.302 nparam 8834 t 784s
+it 7500 k 20 base loss 0.037263 gn 0.426 nparam 8834 t 794s
+it 7600 k 20 base loss 0.022132 gn 0.0941 nparam 8834 t 805s
+it 7700 k 20 base loss 0.051212 gn 1.94 nparam 8834 t 816s
+it 7800 k 20 base loss 0.042627 gn 0.296 nparam 8834 t 826s
+it 7900 k 20 base loss 0.029935 gn 0.495 nparam 8834 t 837s
+it 8000 k 20 base loss 0.046042 gn 0.675 nparam 8834 t 847s
+it 8100 k 20 base loss 0.037477 gn 0.117 nparam 8834 t 858s
+it 8200 k 20 base loss 0.022389 gn 0.0702 nparam 8834 t 869s
+it 8300 k 20 base loss 0.013295 gn 0.0522 nparam 8834 t 879s
+it 8400 k 20 base loss 0.033495 gn 0.199 nparam 8834 t 890s
+it 8500 k 20 base loss 0.023906 gn 0.226 nparam 8834 t 900s
+it 8600 k 20 base loss 0.012029 gn 0.138 nparam 8834 t 911s
+it 8700 k 20 base loss 0.014575 gn 0.142 nparam 8834 t 921s
+it 8800 k 20 base loss 0.028004 gn 0.953 nparam 8834 t 932s
+it 8900 k 20 base loss 0.019825 gn 0.203 nparam 8834 t 943s
+it 9000 k 20 base loss 0.017778 gn 0.177 nparam 8834 t 953s
+it 9100 k 20 base loss 0.037333 gn 0.194 nparam 8834 t 964s
+it 9200 k 20 base loss 0.043534 gn 1.06 nparam 8834 t 974s
+it 9300 k 20 base loss 0.028748 gn 0.124 nparam 8834 t 985s
+it 9400 k 20 base loss 0.034902 gn 0.153 nparam 8834 t 996s
+it 9500 k 20 base loss 0.032859 gn 0.341 nparam 8834 t 1006s
+it 9600 k 20 base loss 0.032459 gn 0.144 nparam 8834 t 1017s
+it 9700 k 20 base loss 0.039372 gn 0.421 nparam 8834 t 1027s
+it 9800 k 20 base loss 0.034889 gn 0.187 nparam 8834 t 1038s
+it 9900 k 20 base loss 0.018465 gn 0.141 nparam 8834 t 1048s
+trained 10000 iters in 1059s
+ms_kp_pot_v_g128 9000 err@5/10/20 [0.004, 0.0109, 0.0345] constvel [0.1259, 0.4947, 1.8328]
+ms_kp_pot_v_g128 12000 err@5/10/20 [0.0043, 0.0114, 0.0368] constvel [0.1388, 0.546, 2.0719]
+ms_kp_pot_v_g128 curl/total 0.126 self-force 0.0397
+[2026-10-19T15:41:36-07:00] trained r1_s4738
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  out = {"all": float(((E * Vd).sum() / (T * Vd).sum()).sqrt())}
+ab 9100 err@5/10/20/50/100 [0.00263, 0.00734, 0.02149, 0.14369, 1.33436] e20 med/mean/p90/p99 0.0153/0.0215/0.0458/0.0907 force {'all': 0.24140015543528714, '<0.5': 0.17297229867095754, '0.5-1': 0.22434586202461265, '>=1': 0.3433878213365262}
+cl 9100 err@5/10/20/50/100 [0.00553, 0.01454, 0.04777, 0.73127, 4.19463] e20 med/mean/p90/p99 0.0361/0.0507/0.1105/0.2204 force {'all': 0.20806442883209322, '<0.5': 0.21121003060874344, '0.5-1': 0.1798114829982734, '>=1': 0.19266798088486142}
+ab 9200 err@5/10/20/50/100 [0.00281, 0.00749, 0.02249, 0.15419, 1.46964] e20 med/mean/p90/p99 0.0160/0.0224/0.0477/0.0965 force {'all': 0.22362858345431222, '<0.5': 0.16275692051538285, '0.5-1': 0.22019148640782035, '>=1': 0.30781071826793877}
+cl 9200 err@5/10/20/50/100 [0.00589, 0.01535, 0.05252, 0.74777, 4.20708] e20 med/mean/p90/p99 0.0378/0.0544/0.1208/0.2686 force {'all': 0.20322934105455584, '<0.5': 0.2052596116806016, '0.5-1': 0.1902991217234988, '>=1': 0.16764840542537596}
+ab 9300 err@5/10/20/50/100 [0.00249, 0.00676, 0.02061, 0.13577, 1.31149] e20 med/mean/p90/p99 0.0152/0.0209/0.0431/0.0936 force {'all': 0.2311558490243989, '<0.5': 0.16914772224529415, '0.5-1': 0.22623429608203321, '>=1': 0.3064937920545222}
+cl 9300 err@5/10/20/50/100 [0.00675, 0.01798, 0.07146, 1.0934, 4.7513] e20 med/mean/p90/p99 0.0485/0.0801/0.1878/0.4602 force {'all': 0.18671379023381454, '<0.5': 0.18766882462305706, '0.5-1': 0.18268355477890022, '>=1': 0.14998042462677483}
+wrote results/el_eval/warm_sq_r1_s4738_0_evalonly.json
+two_body MEAN err [0.00096, 0.00279, 0.00841, 0.03853, 0.1256] dE/E 0.1079 (true 6.189e-05)
+expB MEAN err [0.00273, 0.0074, 0.02214, 0.14871, 1.37212] dE/E 0.01008 (true 0.0001092)
+bh300 MEAN err [0.00692, 0.0186, 0.05661, 0.88949, 4.84782] dE/E 0.06125 (true 0.0002488)
+cons nr100 1000t dE 0.005499 (true 4.364e-05) dL 0.02913 bound 0.880/0.970 vir 1.05/0.904 outgrid 0.150
+cons bh300 1000t dE 0.3632 (true 0.0003271) dL 1.821 bound 0.753/0.880 vir 0.985/0.931 outgrid 0.283
+two_body MEAN err [0.00096, 0.00279, 0.00841, 0.03853, 0.1256] dE/E 0.1079 (true 6.189e-05)
+expB MEAN err [0.00273, 0.0074, 0.02214, 0.14873, 1.37162] dE/E 0.01003 (true 0.0001092)
+bh300 MEAN err [0.00692, 0.01861, 0.05662, 0.89081, 4.8248] dE/E 0.06057 (true 0.0002488)
+cons nr100 1000t dE 0.005165 (true 4.364e-05) dL 0.02762 bound 0.920/0.970 vir 0.988/0.904 outgrid 0.120
+cons bh300 1000t dE 0.4125 (true 0.0003271) dL 2.876 bound 0.750/0.880 vir 1.03/0.931 outgrid 0.293
+two_body MEAN err [0.00096, 0.00279, 0.00841, 0.03853, 0.1256] dE/E 0.1079 (true 6.189e-05)
+expB MEAN err [0.00273, 0.0074, 0.02214, 0.1487, 1.37187] dE/E 0.01001 (true 0.0001092)
+bh300 MEAN err [0.00692, 0.01861, 0.05663, 0.8928, 4.85702] dE/E 0.0528 (true 0.0002488)
+cons nr100 1000t dE 0.02294 (true 4.364e-05) dL 0.008438 bound 0.900/0.970 vir 1.06/0.904 outgrid 0.140
+cons bh300 1000t dE 0.4999 (true 0.0003271) dL 1.512 bound 0.757/0.880 vir 0.964/0.931 outgrid 0.253
+=== compare r1_s4738 (r1 vs scatter_baseline)
+memory gate SKIPPED: definitions differ (baseline None, candidate 'absolute max_memory_allocated, reset before warm-up')
+two_body: baseline lacks bound/virial rows, skipped
+expB: baseline lacks bound/virial rows, skipped
+bh300: baseline lacks bound/virial rows, skipped
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate checkpoints/el_r1_s4738/E_ms_kp_pot_v_g128.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521   0.00096187     -8.6  PASS
+two_body err@10                     0.0030977    0.0027904     -9.9  PASS
+two_body err@20                     0.0091024    0.0084122     -7.6  PASS
+expB err@5                          0.0030114    0.0027325     -9.3  PASS
+expB err@10                         0.0081291    0.0074008     -9.0  PASS
+expB err@20                          0.023947     0.022137     -7.6  PASS
+bh300 err@5                         0.0079513     0.006919    -13.0  PASS
+bh300 err@10                         0.020899     0.018603    -11.0  PASS
+bh300 err@20                         0.062163     0.056614     -8.9  PASS
+bh300 vmax/c (<1)                     0.92589      0.92753      nan  PASS
+bh300 dE_rel_model@100                0.04783     0.061255     28.1  FAIL
+bh300 dL_rel_model@100                0.30203      0.12593    -58.3  PASS
+bh300 dP_model@100                 5.6379e-05   3.8453e-05    -31.8  PASS
+two_body tick_ms                       4.7247       3.2608    -31.0  PASS
+expB tick_ms                           4.9509       3.4112    -31.1  PASS
+bh300 tick_ms                          2.4766      0.70088    -71.7  PASS
+expB_batch1_n100 tick_ms               2.4489      0.67065    -72.6  PASS
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 0.03853; two_body err@100 0.1308 -> 0.1256; expB err@50 0.1573 -> 0.1487; expB err@100 1.422 -> 1.372; bh300 err@50 0.9119 -> 0.8895
+floors: results/chaos_floors.json not found, skipped
+OVERALL FAIL
+[2026-10-19T15:43:08-07:00] train r1_s4739
+=== E ms_kp_pot_v_g128 params 260419 receptive field 31 cells = 15.5 units global=False
+warm start from /home/adamwebb/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt
+train-only ['kmlp', 'ppmlp']: 8834 trainable params
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+it 0 k 20 base loss 0.043738 gn 0.883 nparam 8834 t 0s
+it 100 k 20 base loss 0.052985 gn 1.45 nparam 8834 t 11s
+it 200 k 20 base loss 0.067201 gn 1.32 nparam 8834 t 21s
+it 300 k 20 base loss 0.023434 gn 0.78 nparam 8834 t 32s
+it 400 k 20 base loss 0.049203 gn 1.15 nparam 8834 t 43s
+it 500 k 20 base loss 0.060515 gn 1.55 nparam 8834 t 53s
+it 600 k 20 base loss 0.028023 gn 0.368 nparam 8834 t 64s
+it 700 k 20 base loss 0.063552 gn 0.654 nparam 8834 t 74s
+it 800 k 20 base loss 0.014122 gn 0.282 nparam 8834 t 85s
+it 900 k 20 base loss 0.040993 gn 0.881 nparam 8834 t 95s
+it 1000 k 20 base loss 0.041947 gn 2.49 nparam 8834 t 106s
+it 1100 k 20 base loss 0.054641 gn 0.448 nparam 8834 t 117s
+it 1200 k 20 base loss 0.016723 gn 0.475 nparam 8834 t 127s
+it 1300 k 20 base loss 0.084385 gn 0.624 nparam 8834 t 138s
+it 1400 k 20 base loss 0.013396 gn 0.188 nparam 8834 t 148s
+it 1500 k 20 base loss 0.019155 gn 0.196 nparam 8834 t 159s
+it 1600 k 20 base loss 0.061849 gn 0.349 nparam 8834 t 170s
+it 1700 k 20 base loss 0.051651 gn 1.19 nparam 8834 t 180s
+it 1800 k 20 base loss 0.035318 gn 0.939 nparam 8834 t 191s
+it 1900 k 20 base loss 0.054429 gn 0.903 nparam 8834 t 201s
+it 2000 k 20 base loss 0.041772 gn 0.64 nparam 8834 t 212s
+it 2100 k 20 base loss 0.026751 gn 0.287 nparam 8834 t 222s
+it 2200 k 20 base loss 0.033574 gn 0.949 nparam 8834 t 233s
+it 2300 k 20 base loss 0.023475 gn 0.415 nparam 8834 t 244s
+it 2400 k 20 base loss 0.016552 gn 0.283 nparam 8834 t 254s
+it 2500 k 20 base loss 0.025360 gn 0.426 nparam 8834 t 265s
+it 2600 k 20 base loss 0.019058 gn 0.414 nparam 8834 t 275s
+it 2700 k 20 base loss 0.051858 gn 0.923 nparam 8834 t 286s
+it 2800 k 20 base loss 0.032151 gn 0.551 nparam 8834 t 297s
+it 2900 k 20 base loss 0.023719 gn 0.575 nparam 8834 t 307s
+it 3000 k 20 base loss 0.025360 gn 0.446 nparam 8834 t 318s
+it 3100 k 20 base loss 0.023487 gn 0.73 nparam 8834 t 328s
+it 3200 k 20 base loss 0.028802 gn 0.493 nparam 8834 t 339s
+it 3300 k 20 base loss 0.037237 gn 0.161 nparam 8834 t 350s
+it 3400 k 20 base loss 0.058790 gn 1.29 nparam 8834 t 360s
+it 3500 k 20 base loss 0.035516 gn 0.618 nparam 8834 t 371s
+it 3600 k 20 base loss 0.022043 gn 0.425 nparam 8834 t 381s
+it 3700 k 20 base loss 0.059231 gn 0.836 nparam 8834 t 392s
+it 3800 k 20 base loss 0.033172 gn 0.452 nparam 8834 t 403s
+it 3900 k 20 base loss 0.056040 gn 0.251 nparam 8834 t 413s
+it 4000 k 20 base loss 0.021004 gn 0.456 nparam 8834 t 424s
+it 4100 k 20 base loss 0.037821 gn 0.499 nparam 8834 t 434s
+it 4200 k 20 base loss 0.017520 gn 0.34 nparam 8834 t 445s
+it 4300 k 20 base loss 0.028792 gn 0.616 nparam 8834 t 455s
+it 4400 k 20 base loss 0.044025 gn 0.303 nparam 8834 t 466s
+it 4500 k 20 base loss 0.038810 gn 0.33 nparam 8834 t 477s
+it 4600 k 20 base loss 0.069564 gn 0.348 nparam 8834 t 487s
+it 4700 k 20 base loss 0.034304 gn 0.676 nparam 8834 t 498s
+it 4800 k 20 base loss 0.038165 gn 0.298 nparam 8834 t 508s
+it 4900 k 20 base loss 0.020206 gn 0.287 nparam 8834 t 519s
+it 5000 k 20 base loss 0.047027 gn 0.332 nparam 8834 t 530s
+it 5100 k 20 base loss 0.013578 gn 0.348 nparam 8834 t 540s
+it 5200 k 20 base loss 0.047527 gn 0.333 nparam 8834 t 551s
+it 5300 k 20 base loss 0.054860 gn 0.324 nparam 8834 t 561s
+it 5400 k 20 base loss 0.052615 gn 0.675 nparam 8834 t 572s
+it 5500 k 20 base loss 0.036636 gn 0.253 nparam 8834 t 582s
+it 5600 k 20 base loss 0.018195 gn 0.254 nparam 8834 t 593s
+it 5700 k 20 base loss 0.037007 gn 0.364 nparam 8834 t 604s
+it 5800 k 20 base loss 0.059772 gn 0.209 nparam 8834 t 614s
+it 5900 k 20 base loss 0.040871 gn 0.523 nparam 8834 t 625s
+it 6000 k 20 base loss 0.055491 gn 0.114 nparam 8834 t 635s
+it 6100 k 20 base loss 0.063840 gn 0.788 nparam 8834 t 646s
+it 6200 k 20 base loss 0.029188 gn 0.187 nparam 8834 t 657s
+it 6300 k 20 base loss 0.015091 gn 0.239 nparam 8834 t 667s
+it 6400 k 20 base loss 0.048816 gn 0.41 nparam 8834 t 678s
+it 6500 k 20 base loss 0.083229 gn 0.482 nparam 8834 t 688s
+it 6600 k 20 base loss 0.034758 gn 0.17 nparam 8834 t 699s
+it 6700 k 20 base loss 0.018362 gn 0.425 nparam 8834 t 709s
+it 6800 k 20 base loss 0.027113 gn 0.274 nparam 8834 t 720s
+it 6900 k 20 base loss 0.058840 gn 0.707 nparam 8834 t 731s
+it 7000 k 20 base loss 0.028126 gn 0.516 nparam 8834 t 741s
+it 7100 k 20 base loss 0.058798 gn 0.204 nparam 8834 t 752s
+it 7200 k 20 base loss 0.029828 gn 0.205 nparam 8834 t 762s
+it 7300 k 20 base loss 0.059859 gn 0.588 nparam 8834 t 773s
+it 7400 k 20 base loss 0.026829 gn 0.182 nparam 8834 t 783s
+it 7500 k 20 base loss 0.016453 gn 0.0755 nparam 8834 t 794s
+it 7600 k 20 base loss 0.049808 gn 0.212 nparam 8834 t 805s
+it 7700 k 20 base loss 0.042633 gn 0.324 nparam 8834 t 815s
+it 7800 k 20 base loss 0.069461 gn 0.302 nparam 8834 t 826s
+it 7900 k 20 base loss 0.050798 gn 1.8 nparam 8834 t 836s
+it 8000 k 20 base loss 0.049110 gn 0.468 nparam 8834 t 847s
+it 8100 k 20 base loss 0.031615 gn 0.478 nparam 8834 t 857s
+it 8200 k 20 base loss 0.057167 gn 1.11 nparam 8834 t 868s
+it 8300 k 20 base loss 0.018460 gn 0.292 nparam 8834 t 879s
+it 8400 k 20 base loss 0.042387 gn 0.341 nparam 8834 t 889s
+it 8500 k 20 base loss 0.064618 gn 0.46 nparam 8834 t 900s
+it 8600 k 20 base loss 0.048893 gn 0.28 nparam 8834 t 910s
+it 8700 k 20 base loss 0.015323 gn 0.146 nparam 8834 t 921s
+it 8800 k 20 base loss 0.021910 gn 0.161 nparam 8834 t 932s
+it 8900 k 20 base loss 0.031116 gn 0.0724 nparam 8834 t 942s
+it 9000 k 20 base loss 0.024634 gn 0.164 nparam 8834 t 953s
+it 9100 k 20 base loss 0.056644 gn 1.48 nparam 8834 t 963s
+it 9200 k 20 base loss 0.029351 gn 0.656 nparam 8834 t 974s
+it 9300 k 20 base loss 0.076363 gn 0.351 nparam 8834 t 984s
+it 9400 k 20 base loss 0.056617 gn 1.45 nparam 8834 t 995s
+it 9500 k 20 base loss 0.047150 gn 0.141 nparam 8834 t 1006s
+it 9600 k 20 base loss 0.026858 gn 0.202 nparam 8834 t 1016s
+it 9700 k 20 base loss 0.014426 gn 0.132 nparam 8834 t 1027s
+it 9800 k 20 base loss 0.041662 gn 0.421 nparam 8834 t 1037s
+it 9900 k 20 base loss 0.073601 gn 0.597 nparam 8834 t 1048s
+trained 10000 iters in 1058s
+ms_kp_pot_v_g128 9000 err@5/10/20 [0.0041, 0.011, 0.0347] constvel [0.1259, 0.4947, 1.8328]
+ms_kp_pot_v_g128 12000 err@5/10/20 [0.0044, 0.0116, 0.037] constvel [0.1388, 0.546, 2.0719]
+ms_kp_pot_v_g128 curl/total 0.126 self-force 0.0393
+[2026-10-19T16:01:18-07:00] trained r1_s4739
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  out = {"all": float(((E * Vd).sum() / (T * Vd).sum()).sqrt())}
+ab 9100 err@5/10/20/50/100 [0.00266, 0.00741, 0.02161, 0.14376, 1.32924] e20 med/mean/p90/p99 0.0154/0.0216/0.0464/0.0896 force {'all': 0.24451872467133778, '<0.5': 0.1763502349816677, '0.5-1': 0.2245842593209432, '>=1': 0.3500757345233943}
+cl 9100 err@5/10/20/50/100 [0.00563, 0.01474, 0.04801, 0.73232, 4.20976] e20 med/mean/p90/p99 0.0361/0.0509/0.1108/0.2218 force {'all': 0.20883761189691127, '<0.5': 0.21182444164912984, '0.5-1': 0.1804881456404502, '>=1': 0.2011138078099714}
+ab 9200 err@5/10/20/50/100 [0.00285, 0.00759, 0.02262, 0.15479, 1.46926] e20 med/mean/p90/p99 0.0163/0.0225/0.0476/0.0961 force {'all': 0.22498596691941303, '<0.5': 0.16613494473702048, '0.5-1': 0.22042767613520056, '>=1': 0.3088391372253105}
+cl 9200 err@5/10/20/50/100 [0.006, 0.01555, 0.0527, 0.75154, 4.27509] e20 med/mean/p90/p99 0.0377/0.0546/0.1215/0.2735 force {'all': 0.20389896665297177, '<0.5': 0.20597008425132718, '0.5-1': 0.1906322424125114, '>=1': 0.16787186990009242}
+ab 9300 err@5/10/20/50/100 [0.00252, 0.00681, 0.0207, 0.13649, 1.31666] e20 med/mean/p90/p99 0.0152/0.0210/0.0436/0.0961 force {'all': 0.2322588066599934, '<0.5': 0.17254652633141468, '0.5-1': 0.22648056030342834, '>=1': 0.30681779542275067}
+cl 9300 err@5/10/20/50/100 [0.00687, 0.01821, 0.07157, 1.09785, 4.75589] e20 med/mean/p90/p99 0.0491/0.0802/0.1872/0.4492 force {'all': 0.18736785116302465, '<0.5': 0.18835522471021426, '0.5-1': 0.18304767602217542, '>=1': 0.1502037760731074}
+wrote results/el_eval/warm_sq_r1_s4739_0_evalonly.json
+two_body MEAN err [0.00097, 0.00281, 0.00842, 0.0382, 0.12368] dE/E 0.1062 (true 6.189e-05)
+expB MEAN err [0.00278, 0.00748, 0.02223, 0.14924, 1.37493] dE/E 0.00932 (true 0.0001092)
+bh300 MEAN err [0.00706, 0.01888, 0.05685, 0.89358, 4.83695] dE/E 0.05209 (true 0.0002488)
+cons nr100 1000t dE 0.02742 (true 4.364e-05) dL 0.03927 bound 0.900/0.970 vir 0.995/0.904 outgrid 0.160
+cons bh300 1000t dE 0.3798 (true 0.0003271) dL 1.678 bound 0.713/0.880 vir 1.01/0.931 outgrid 0.293
+two_body MEAN err [0.00097, 0.00281, 0.00842, 0.0382, 0.12368] dE/E 0.1062 (true 6.189e-05)
+expB MEAN err [0.00278, 0.00748, 0.02223, 0.14923, 1.37489] dE/E 0.009417 (true 0.0001092)
+bh300 MEAN err [0.00706, 0.01888, 0.05684, 0.89379, 4.83171] dE/E 0.05629 (true 0.0002488)
+cons nr100 1000t dE 0.009272 (true 4.364e-05) dL 0.03144 bound 0.900/0.970 vir 0.963/0.904 outgrid 0.170
+cons bh300 1000t dE 0.4568 (true 0.0003271) dL 1.787 bound 0.720/0.880 vir 1.03/0.931 outgrid 0.257
+two_body MEAN err [0.00097, 0.00281, 0.00842, 0.0382, 0.12368] dE/E 0.1062 (true 6.189e-05)
+expB MEAN err [0.00278, 0.00748, 0.02223, 0.14924, 1.37488] dE/E 0.009461 (true 0.0001092)
+bh300 MEAN err [0.00706, 0.01888, 0.05685, 0.89481, 4.83947] dE/E 0.0567 (true 0.0002488)
+cons nr100 1000t dE 0.01735 (true 4.364e-05) dL 0.05757 bound 0.890/0.970 vir 0.93/0.904 outgrid 0.160
+cons bh300 1000t dE 0.4818 (true 0.0003271) dL 1.161 bound 0.757/0.880 vir 1.01/0.931 outgrid 0.270
+=== compare r1_s4739 (r1 vs scatter_baseline)
+memory gate SKIPPED: definitions differ (baseline None, candidate 'absolute max_memory_allocated, reset before warm-up')
+two_body: baseline lacks bound/virial rows, skipped
+expB: baseline lacks bound/virial rows, skipped
+bh300: baseline lacks bound/virial rows, skipped
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate checkpoints/el_r1_s4739/E_ms_kp_pot_v_g128.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521   0.00097098     -7.7  PASS
+two_body err@10                     0.0030977    0.0028092     -9.3  PASS
+two_body err@20                     0.0091024    0.0084165     -7.5  PASS
+expB err@5                          0.0030114    0.0027767     -7.8  PASS
+expB err@10                         0.0081291    0.0074834     -7.9  PASS
+expB err@20                          0.023947     0.022229     -7.2  PASS
+bh300 err@5                         0.0079513    0.0070639    -11.2  PASS
+bh300 err@10                         0.020899     0.018882     -9.7  PASS
+bh300 err@20                         0.062163     0.056847     -8.6  PASS
+bh300 vmax/c (<1)                     0.92589      0.92753      nan  PASS
+bh300 dE_rel_model@100                0.04783     0.052086      8.9  PASS
+bh300 dL_rel_model@100                0.30203      0.12028    -60.2  PASS
+bh300 dP_model@100                 5.6379e-05    5.471e-05     -3.0  PASS
+two_body tick_ms                       4.7247       3.2744    -30.7  PASS
+expB tick_ms                           4.9509       3.4249    -30.8  PASS
+bh300 tick_ms                          2.4766      0.70222    -71.6  PASS
+expB_batch1_n100 tick_ms               2.4489      0.67275    -72.5  PASS
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 0.0382; two_body err@100 0.1308 -> 0.1237; expB err@50 0.1573 -> 0.1492; expB err@100 1.422 -> 1.375; bh300 err@50 0.9119 -> 0.8936
+floors: results/chaos_floors.json not found, skipped
+OVERALL PASS
+| tag | ab20 | ab100 | cl20 | cl100 | expB20 | nr100_dE1000 | nr100_dL1000 | bh300_dE100 | bh300_dL100 | bh300_dE1000 | bh300_dL1000 | pass | nr100 dE@1000 x3 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| r1_s4738 | 0.02153 | 1.372 | 0.05725 | 4.384 | 0.02214 | 0.005499 | 0.02762 | 0.06057 | 0.1259 | 0.4125 | 1.821 | False | [0.0055, 0.0052, 0.0229] |
+| r1_s4739 | 0.02164 | 1.372 | 0.05743 | 4.414 | 0.02223 | 0.01735 | 0.03927 | 0.05629 | 0.1235 | 0.4568 | 1.678 | False | [0.0274, 0.0093, 0.0173] |
+=== Run 2: full fine-tune + L2-SP lambda 5
+[2026-10-19T16:02:49-07:00] train r2_s4738
+=== E ms_kp_pot_v_g128 params 260419 receptive field 31 cells = 15.5 units global=False
+warm start from /home/adamwebb/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+it 0 k 20 base loss 0.032954 gn 0.868 nparam 260419 t 0s l2sp 0
+it 100 k 20 base loss 0.014535 gn 0.181 nparam 260419 t 16s l2sp 0.0003647
+it 200 k 20 base loss 0.042891 gn 0.304 nparam 260419 t 31s l2sp 0.0003811
+it 300 k 20 base loss 0.027438 gn 0.772 nparam 260419 t 47s l2sp 0.0004341
+it 400 k 20 base loss 0.029777 gn 1.05 nparam 260419 t 63s l2sp 0.0003285
+it 500 k 20 base loss 0.053502 gn 1.8 nparam 260419 t 78s l2sp 0.0004927
+it 600 k 20 base loss 0.036308 gn 0.501 nparam 260419 t 94s l2sp 0.0003329
+it 700 k 20 base loss 0.047111 gn 0.743 nparam 260419 t 109s l2sp 0.0004407
+it 800 k 20 base loss 0.048288 gn 1.07 nparam 260419 t 125s l2sp 0.000341
+it 900 k 20 base loss 0.020097 gn 0.47 nparam 260419 t 141s l2sp 0.0003308
+it 1000 k 20 base loss 0.036006 gn 0.371 nparam 260419 t 156s l2sp 0.0004183
+it 1100 k 20 base loss 0.030218 gn 0.611 nparam 260419 t 172s l2sp 0.0003216
+it 1200 k 20 base loss 0.025255 gn 0.291 nparam 260419 t 187s l2sp 0.0004915
+it 1300 k 20 base loss 0.032262 gn 0.702 nparam 260419 t 203s l2sp 0.0003944
+it 1400 k 20 base loss 0.012300 gn 0.152 nparam 260419 t 218s l2sp 0.0003677
+it 1500 k 20 base loss 0.041120 gn 0.297 nparam 260419 t 234s l2sp 0.0003984
+it 1600 k 20 base loss 0.024620 gn 0.525 nparam 260419 t 250s l2sp 0.0003827
+it 1700 k 20 base loss 0.055729 gn 3.41 nparam 260419 t 265s l2sp 0.0005817
+it 1800 k 20 base loss 0.020906 gn 0.595 nparam 260419 t 281s l2sp 0.0006246
+it 1900 k 20 base loss 0.029374 gn 0.207 nparam 260419 t 296s l2sp 0.0003527
+it 2000 k 20 base loss 0.021222 gn 0.43 nparam 260419 t 312s l2sp 0.0005357
+it 2100 k 20 base loss 0.032543 gn 0.37 nparam 260419 t 328s l2sp 0.0004318
+it 2200 k 20 base loss 0.016807 gn 0.501 nparam 260419 t 343s l2sp 0.0005766
+it 2300 k 20 base loss 0.031762 gn 0.383 nparam 260419 t 359s l2sp 0.0002831
+it 2400 k 20 base loss 0.025650 gn 0.367 nparam 260419 t 374s l2sp 0.0003232
+it 2500 k 20 base loss 0.039960 gn 0.59 nparam 260419 t 390s l2sp 0.0003627
+it 2600 k 20 base loss 0.054977 gn 1.95 nparam 260419 t 406s l2sp 0.000348
+it 2700 k 20 base loss 0.035720 gn 0.415 nparam 260419 t 421s l2sp 0.0003103
+it 2800 k 20 base loss 0.022829 gn 0.454 nparam 260419 t 437s l2sp 0.0004445
+it 2900 k 20 base loss 0.029175 gn 0.781 nparam 260419 t 452s l2sp 0.0002607
+it 3000 k 20 base loss 0.035819 gn 0.348 nparam 260419 t 468s l2sp 0.0003406
+it 3100 k 20 base loss 0.035698 gn 0.309 nparam 260419 t 484s l2sp 0.0004135
+it 3200 k 20 base loss 0.035575 gn 0.411 nparam 260419 t 499s l2sp 0.0004098
+it 3300 k 20 base loss 0.051318 gn 0.369 nparam 260419 t 515s l2sp 0.0003364
+it 3400 k 20 base loss 0.013805 gn 0.156 nparam 260419 t 530s l2sp 0.0003833
+it 3500 k 20 base loss 0.034538 gn 0.837 nparam 260419 t 546s l2sp 0.0006231
+it 3600 k 20 base loss 0.035226 gn 0.33 nparam 260419 t 561s l2sp 0.0002802
+it 3700 k 20 base loss 0.035939 gn 0.468 nparam 260419 t 577s l2sp 0.0003061
+it 3800 k 20 base loss 0.024998 gn 0.428 nparam 260419 t 593s l2sp 0.0003334
+it 3900 k 20 base loss 0.029221 gn 0.368 nparam 260419 t 608s l2sp 0.0003248
+it 4000 k 20 base loss 0.034936 gn 0.257 nparam 260419 t 624s l2sp 0.00035
+it 4100 k 20 base loss 0.015878 gn 0.249 nparam 260419 t 639s l2sp 0.0003667
+it 4200 k 20 base loss 0.033371 gn 0.493 nparam 260419 t 655s l2sp 0.000415
+it 4300 k 20 base loss 0.060924 gn 0.921 nparam 260419 t 671s l2sp 0.0003263
+it 4400 k 20 base loss 0.014084 gn 0.336 nparam 260419 t 686s l2sp 0.0003867
+it 4500 k 20 base loss 0.020705 gn 0.276 nparam 260419 t 702s l2sp 0.0002841
+it 4600 k 20 base loss 0.030342 gn 0.547 nparam 260419 t 717s l2sp 0.0003935
+it 4700 k 20 base loss 0.017481 gn 0.286 nparam 260419 t 733s l2sp 0.0002724
+it 4800 k 20 base loss 0.021290 gn 0.359 nparam 260419 t 748s l2sp 0.0003035
+it 4900 k 20 base loss 0.034143 gn 0.333 nparam 260419 t 764s l2sp 0.0002801
+it 5000 k 20 base loss 0.031622 gn 0.374 nparam 260419 t 780s l2sp 0.0003733
+it 5100 k 20 base loss 0.046975 gn 3.68 nparam 260419 t 795s l2sp 0.000387
+it 5200 k 20 base loss 0.026783 gn 0.313 nparam 260419 t 811s l2sp 0.0004384
+it 5300 k 20 base loss 0.038343 gn 1.75 nparam 260419 t 826s l2sp 0.000241
+it 5400 k 20 base loss 0.018988 gn 0.273 nparam 260419 t 842s l2sp 0.0002761
+it 5500 k 20 base loss 0.052294 gn 0.42 nparam 260419 t 858s l2sp 0.0002922
+it 5600 k 20 base loss 0.031569 gn 0.42 nparam 260419 t 873s l2sp 0.0002459
+it 5700 k 20 base loss 0.046452 gn 0.359 nparam 260419 t 889s l2sp 0.0003089
+it 5800 k 20 base loss 0.027317 gn 0.372 nparam 260419 t 904s l2sp 0.0002469
+it 5900 k 20 base loss 0.032621 gn 0.466 nparam 260419 t 920s l2sp 0.0002249
+it 6000 k 20 base loss 0.027107 gn 0.516 nparam 260419 t 936s l2sp 0.0002799
+it 6100 k 20 base loss 0.043395 gn 0.559 nparam 260419 t 951s l2sp 0.0001977
+it 6200 k 20 base loss 0.034543 gn 0.657 nparam 260419 t 967s l2sp 0.0002327
+it 6300 k 20 base loss 0.018597 gn 0.302 nparam 260419 t 982s l2sp 0.00024
+it 6400 k 20 base loss 0.041348 gn 0.742 nparam 260419 t 998s l2sp 0.0002258
+it 6500 k 20 base loss 0.034490 gn 0.974 nparam 260419 t 1013s l2sp 0.0002507
+it 6600 k 20 base loss 0.036161 gn 0.653 nparam 260419 t 1029s l2sp 0.0002977
+it 6700 k 20 base loss 0.032202 gn 0.463 nparam 260419 t 1045s l2sp 0.0002404
+it 6800 k 20 base loss 0.017661 gn 0.203 nparam 260419 t 1060s l2sp 0.0002394
+it 6900 k 20 base loss 0.011136 gn 0.122 nparam 260419 t 1076s l2sp 0.000192
+it 7000 k 20 base loss 0.031467 gn 0.398 nparam 260419 t 1091s l2sp 0.0002192
+it 7100 k 20 base loss 0.038502 gn 0.614 nparam 260419 t 1107s l2sp 0.000209
+it 7200 k 20 base loss 0.047509 gn 0.724 nparam 260419 t 1123s l2sp 0.0001901
+it 7300 k 20 base loss 0.037748 gn 2.02 nparam 260419 t 1138s l2sp 0.0002116
+it 7400 k 20 base loss 0.055162 gn 1.95 nparam 260419 t 1154s l2sp 0.0002262
+it 7500 k 20 base loss 0.036821 gn 0.585 nparam 260419 t 1169s l2sp 0.0001855
+it 7600 k 20 base loss 0.022359 gn 0.226 nparam 260419 t 1185s l2sp 0.0001823
+it 7700 k 20 base loss 0.051343 gn 2.15 nparam 260419 t 1200s l2sp 0.0001994
+it 7800 k 20 base loss 0.042914 gn 0.44 nparam 260419 t 1216s l2sp 0.0001817
+it 7900 k 20 base loss 0.030692 gn 0.626 nparam 260419 t 1232s l2sp 0.0001884
+it 8000 k 20 base loss 0.045913 gn 0.898 nparam 260419 t 1247s l2sp 0.0001774
+it 8100 k 20 base loss 0.037875 gn 0.219 nparam 260419 t 1263s l2sp 0.0001911
+it 8200 k 20 base loss 0.022972 gn 0.18 nparam 260419 t 1278s l2sp 0.0001671
+it 8300 k 20 base loss 0.013747 gn 0.154 nparam 260419 t 1294s l2sp 0.0001877
+it 8400 k 20 base loss 0.033338 gn 0.214 nparam 260419 t 1309s l2sp 0.0001748
+it 8500 k 20 base loss 0.024380 gn 0.196 nparam 260419 t 1325s l2sp 0.0001979
+it 8600 k 20 base loss 0.012673 gn 0.11 nparam 260419 t 1341s l2sp 0.000154
+it 8700 k 20 base loss 0.015192 gn 0.116 nparam 260419 t 1356s l2sp 0.0001745
+it 8800 k 20 base loss 0.028473 gn 1 nparam 260419 t 1372s l2sp 0.0001581
+it 8900 k 20 base loss 0.020108 gn 0.165 nparam 260419 t 1387s l2sp 0.0001728
+it 9000 k 20 base loss 0.018170 gn 0.139 nparam 260419 t 1403s l2sp 0.0001664
+it 9100 k 20 base loss 0.037518 gn 0.303 nparam 260419 t 1419s l2sp 0.0001721
+it 9200 k 20 base loss 0.043101 gn 1.14 nparam 260419 t 1434s l2sp 0.0001748
+it 9300 k 20 base loss 0.029002 gn 0.215 nparam 260419 t 1450s l2sp 0.0001562
+it 9400 k 20 base loss 0.034716 gn 0.285 nparam 260419 t 1465s l2sp 0.0001668
+it 9500 k 20 base loss 0.033227 gn 0.445 nparam 260419 t 1481s l2sp 0.0001661
+it 9600 k 20 base loss 0.032672 gn 0.193 nparam 260419 t 1496s l2sp 0.0001578
+it 9700 k 20 base loss 0.039157 gn 0.434 nparam 260419 t 1512s l2sp 0.0001597
+it 9800 k 20 base loss 0.034939 gn 0.213 nparam 260419 t 1528s l2sp 0.0001618
+it 9900 k 20 base loss 0.019108 gn 0.144 nparam 260419 t 1543s l2sp 0.000155
+trained 10000 iters in 1559s
+ms_kp_pot_v_g128 9000 err@5/10/20 [0.0043, 0.0113, 0.0352] constvel [0.1259, 0.4947, 1.8328]
+ms_kp_pot_v_g128 12000 err@5/10/20 [0.0045, 0.0119, 0.0374] constvel [0.1388, 0.546, 2.0719]
+ms_kp_pot_v_g128 curl/total 0.130 self-force 0.0322
+[2026-10-19T16:29:20-07:00] trained r2_s4738
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  out = {"all": float(((E * Vd).sum() / (T * Vd).sum()).sqrt())}
+ab 9100 err@5/10/20/50/100 [0.00264, 0.00736, 0.02149, 0.14465, 1.32895] e20 med/mean/p90/p99 0.0146/0.0215/0.0483/0.0937 force {'all': 0.24191306188903478, '<0.5': 0.1902770480458473, '0.5-1': 0.21691284524551033, '>=1': 0.33920512963066646}
+cl 9100 err@5/10/20/50/100 [0.00598, 0.01542, 0.049, 0.73775, 4.14269] e20 med/mean/p90/p99 0.0369/0.0521/0.1135/0.2371 force {'all': 0.2092653905726232, '<0.5': 0.21284993479364464, '0.5-1': 0.17710201594820488, '>=1': 0.1898755573625225}
+ab 9200 err@5/10/20/50/100 [0.00291, 0.00776, 0.02263, 0.15799, 1.47481] e20 med/mean/p90/p99 0.0157/0.0224/0.0505/0.1000 force {'all': 0.2245707406431477, '<0.5': 0.1795278987632143, '0.5-1': 0.2127835676949477, '>=1': 0.3038143680189976}
+cl 9200 err@5/10/20/50/100 [0.00639, 0.01628, 0.05376, 0.7535, 4.22243] e20 med/mean/p90/p99 0.0383/0.0557/0.1237/0.2689 force {'all': 0.20493673531863904, '<0.5': 0.20739169890757736, '0.5-1': 0.1881299199181205, '>=1': 0.16621955251107004}
+ab 9300 err@5/10/20/50/100 [0.00253, 0.00667, 0.0205, 0.13704, 1.33073] e20 med/mean/p90/p99 0.0138/0.0209/0.0456/0.1053 force {'all': 0.23188603798524413, '<0.5': 0.18641299232968542, '0.5-1': 0.21878943736378748, '>=1': 0.3027043043931445}
+cl 9300 err@5/10/20/50/100 [0.00736, 0.01921, 0.0729, 1.09178, 4.77687] e20 med/mean/p90/p99 0.0506/0.0816/0.1900/0.4642 force {'all': 0.18794688303350127, '<0.5': 0.18920938847956825, '0.5-1': 0.18077526777210243, '>=1': 0.1492297686437207}
+wrote results/el_eval/warm_sq_r2_s4738_0_evalonly.json
+two_body MEAN err [0.00099, 0.00284, 0.00813, 0.03519, 0.11284] dE/E 0.06738 (true 6.189e-05)
+expB MEAN err [0.00283, 0.00757, 0.0223, 0.14921, 1.38661] dE/E 0.01545 (true 0.0001092)
+bh300 MEAN err [0.00764, 0.02008, 0.06056, 0.9043, 4.88958] dE/E 0.07356 (true 0.0002488)
+cons nr100 1000t dE 0.1597 (true 4.364e-05) dL 0.03006 bound 0.940/0.970 vir 0.916/0.904 outgrid 0.110
+cons bh300 1000t dE 0.6032 (true 0.0003271) dL 2.102 bound 0.773/0.880 vir 0.987/0.931 outgrid 0.247
+two_body MEAN err [0.00099, 0.00284, 0.00813, 0.03519, 0.11284] dE/E 0.06738 (true 6.189e-05)
+expB MEAN err [0.00283, 0.00757, 0.02231, 0.14923, 1.38687] dE/E 0.01544 (true 0.0001092)
+bh300 MEAN err [0.00764, 0.02008, 0.06055, 0.90437, 4.79586] dE/E 0.07243 (true 0.0002488)
+cons nr100 1000t dE 0.1599 (true 4.364e-05) dL 0.03541 bound 0.920/0.970 vir 0.965/0.904 outgrid 0.130
+cons bh300 1000t dE 0.6672 (true 0.0003271) dL 1.068 bound 0.770/0.880 vir 0.983/0.931 outgrid 0.243
+two_body MEAN err [0.00099, 0.00284, 0.00813, 0.03519, 0.11284] dE/E 0.06738 (true 6.189e-05)
+expB MEAN err [0.00283, 0.00757, 0.0223, 0.14922, 1.38688] dE/E 0.01531 (true 0.0001092)
+bh300 MEAN err [0.00764, 0.02008, 0.06054, 0.90483, 4.87927] dE/E 0.07381 (true 0.0002488)
+cons nr100 1000t dE 0.1765 (true 4.364e-05) dL 0.01596 bound 0.940/0.970 vir 0.912/0.904 outgrid 0.100
+cons bh300 1000t dE 0.6358 (true 0.0003271) dL 1.272 bound 0.797/0.880 vir 0.98/0.931 outgrid 0.230
+=== compare r2_s4738 (r1 vs scatter_baseline)
+memory gate SKIPPED: definitions differ (baseline None, candidate 'absolute max_memory_allocated, reset before warm-up')
+two_body: baseline lacks bound/virial rows, skipped
+expB: baseline lacks bound/virial rows, skipped
+bh300: baseline lacks bound/virial rows, skipped
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate checkpoints/el_r2_s4738/E_ms_kp_pot_v_g128.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521   0.00098546     -6.3  PASS
+two_body err@10                     0.0030977    0.0028385     -8.4  PASS
+two_body err@20                     0.0091024    0.0081343    -10.6  PASS
+expB err@5                          0.0030114    0.0028307     -6.0  PASS
+expB err@10                         0.0081291    0.0075697     -6.9  PASS
+expB err@20                          0.023947     0.022304     -6.9  PASS
+bh300 err@5                         0.0079513    0.0076376     -3.9  PASS
+bh300 err@10                         0.020899     0.020081     -3.9  PASS
+bh300 err@20                         0.062163     0.060561     -2.6  PASS
+bh300 vmax/c (<1)                     0.92589      0.92592      nan  PASS
+bh300 dE_rel_model@100                0.04783     0.073564     53.8  FAIL
+bh300 dL_rel_model@100                0.30203      0.15871    -47.5  PASS
+bh300 dP_model@100                 5.6379e-05   7.2629e-05     28.8  PASS
+two_body tick_ms                       4.7247       3.2724    -30.7  PASS
+expB tick_ms                           4.9509       3.4283    -30.8  PASS
+bh300 tick_ms                          2.4766      0.69907    -71.8  PASS
+expB_batch1_n100 tick_ms               2.4489      0.66978    -72.7  PASS
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 0.03519; two_body err@100 0.1308 -> 0.1128; expB err@50 0.1573 -> 0.1492; expB err@100 1.422 -> 1.387; bh300 err@50 0.9119 -> 0.9043
+floors: results/chaos_floors.json not found, skipped
+OVERALL FAIL
+[2026-10-19T16:30:50-07:00] train r2_s4739
+=== E ms_kp_pot_v_g128 params 260419 receptive field 31 cells = 15.5 units global=False
+warm start from /home/adamwebb/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+it 0 k 20 base loss 0.043725 gn 0.981 nparam 260419 t 0s l2sp 0
+it 100 k 20 base loss 0.052740 gn 1.88 nparam 260419 t 16s l2sp 0.0005576
+it 200 k 20 base loss 0.067569 gn 1.16 nparam 260419 t 31s l2sp 0.0004838
+it 300 k 20 base loss 0.023971 gn 1.11 nparam 260419 t 47s l2sp 0.0004161
+it 400 k 20 base loss 0.049161 gn 0.726 nparam 260419 t 63s l2sp 0.0005668
+it 500 k 20 base loss 0.059958 gn 0.756 nparam 260419 t 78s l2sp 0.0003824
+it 600 k 20 base loss 0.028372 gn 0.353 nparam 260419 t 94s l2sp 0.0004046
+it 700 k 20 base loss 0.063350 gn 1.48 nparam 260419 t 109s l2sp 0.0004351
+it 800 k 20 base loss 0.015046 gn 0.348 nparam 260419 t 125s l2sp 0.0005152
+it 900 k 20 base loss 0.041551 gn 1.08 nparam 260419 t 141s l2sp 0.0005097
+it 1000 k 20 base loss 0.042236 gn 2.52 nparam 260419 t 156s l2sp 0.0004449
+it 1100 k 20 base loss 0.054647 gn 0.582 nparam 260419 t 172s l2sp 0.0004562
+it 1200 k 20 base loss 0.017233 gn 0.458 nparam 260419 t 187s l2sp 0.0003579
+it 1300 k 20 base loss 0.082793 gn 0.875 nparam 260419 t 203s l2sp 0.0004417
+it 1400 k 20 base loss 0.014318 gn 0.498 nparam 260419 t 219s l2sp 0.0003472
+it 1500 k 20 base loss 0.019456 gn 0.716 nparam 260419 t 234s l2sp 0.000318
+it 1600 k 20 base loss 0.061733 gn 0.606 nparam 260419 t 250s l2sp 0.0005459
+it 1700 k 20 base loss 0.050595 gn 0.799 nparam 260419 t 265s l2sp 0.0005282
+it 1800 k 20 base loss 0.035163 gn 0.527 nparam 260419 t 281s l2sp 0.000363
+it 1900 k 20 base loss 0.054861 gn 1.5 nparam 260419 t 297s l2sp 0.0003426
+it 2000 k 20 base loss 0.041869 gn 0.545 nparam 260419 t 312s l2sp 0.0005457
+it 2100 k 20 base loss 0.027501 gn 0.267 nparam 260419 t 328s l2sp 0.0003651
+it 2200 k 20 base loss 0.033640 gn 1.07 nparam 260419 t 343s l2sp 0.0003671
+it 2300 k 20 base loss 0.024410 gn 0.384 nparam 260419 t 359s l2sp 0.0005209
+it 2400 k 20 base loss 0.017366 gn 0.6 nparam 260419 t 375s l2sp 0.0003987
+it 2500 k 20 base loss 0.025737 gn 0.348 nparam 260419 t 390s l2sp 0.0004128
+it 2600 k 20 base loss 0.020065 gn 0.416 nparam 260419 t 406s l2sp 0.0005275
+it 2700 k 20 base loss 0.051775 gn 1.13 nparam 260419 t 421s l2sp 0.0003376
+it 2800 k 20 base loss 0.032192 gn 0.321 nparam 260419 t 437s l2sp 0.000422
+it 2900 k 20 base loss 0.024381 gn 0.601 nparam 260419 t 452s l2sp 0.000417
+it 3000 k 20 base loss 0.026158 gn 0.612 nparam 260419 t 468s l2sp 0.0003999
+it 3100 k 20 base loss 0.024261 gn 0.284 nparam 260419 t 484s l2sp 0.0005055
+it 3200 k 20 base loss 0.028831 gn 0.35 nparam 260419 t 499s l2sp 0.0004447
+it 3300 k 20 base loss 0.037097 gn 0.275 nparam 260419 t 515s l2sp 0.0002481
+it 3400 k 20 base loss 0.059850 gn 2.77 nparam 260419 t 530s l2sp 0.0005835
+it 3500 k 20 base loss 0.035581 gn 0.865 nparam 260419 t 546s l2sp 0.0003805
+it 3600 k 20 base loss 0.022504 gn 0.32 nparam 260419 t 562s l2sp 0.0004167
+it 3700 k 20 base loss 0.058514 gn 0.964 nparam 260419 t 577s l2sp 0.0002696
+it 3800 k 20 base loss 0.033719 gn 0.655 nparam 260419 t 593s l2sp 0.0004496
+it 3900 k 20 base loss 0.055992 gn 0.37 nparam 260419 t 608s l2sp 0.000299
+it 4000 k 20 base loss 0.021309 gn 0.209 nparam 260419 t 624s l2sp 0.0003089
+it 4100 k 20 base loss 0.037715 gn 0.65 nparam 260419 t 640s l2sp 0.000254
+it 4200 k 20 base loss 0.018107 gn 0.168 nparam 260419 t 655s l2sp 0.0003398
+it 4300 k 20 base loss 0.028980 gn 0.455 nparam 260419 t 671s l2sp 0.0003711
+it 4400 k 20 base loss 0.044148 gn 0.638 nparam 260419 t 686s l2sp 0.0003342
+it 4500 k 20 base loss 0.039093 gn 0.657 nparam 260419 t 702s l2sp 0.0003031
+it 4600 k 20 base loss 0.068708 gn 0.753 nparam 260419 t 718s l2sp 0.0004851
+it 4700 k 20 base loss 0.033973 gn 0.669 nparam 260419 t 733s l2sp 0.0003249
+it 4800 k 20 base loss 0.038170 gn 0.67 nparam 260419 t 749s l2sp 0.0002679
+it 4900 k 20 base loss 0.020921 gn 0.495 nparam 260419 t 764s l2sp 0.0003327
+it 5000 k 20 base loss 0.046257 gn 0.673 nparam 260419 t 780s l2sp 0.0002844
+it 5100 k 20 base loss 0.014542 gn 0.302 nparam 260419 t 796s l2sp 0.0002786
+it 5200 k 20 base loss 0.046800 gn 0.337 nparam 260419 t 811s l2sp 0.0002808
+it 5300 k 20 base loss 0.054649 gn 0.339 nparam 260419 t 827s l2sp 0.0002603
+it 5400 k 20 base loss 0.053015 gn 1.41 nparam 260419 t 842s l2sp 0.0003882
+it 5500 k 20 base loss 0.036434 gn 0.363 nparam 260419 t 858s l2sp 0.0002835
+it 5600 k 20 base loss 0.018410 gn 0.246 nparam 260419 t 873s l2sp 0.0002659
+it 5700 k 20 base loss 0.037072 gn 0.295 nparam 260419 t 889s l2sp 0.0002854
+it 5800 k 20 base loss 0.059427 gn 0.494 nparam 260419 t 905s l2sp 0.0002461
+it 5900 k 20 base loss 0.041233 gn 0.785 nparam 260419 t 920s l2sp 0.0003956
+it 6000 k 20 base loss 0.055353 gn 0.41 nparam 260419 t 936s l2sp 0.0002489
+it 6100 k 20 base loss 0.063898 gn 0.711 nparam 260419 t 951s l2sp 0.0003003
+it 6200 k 20 base loss 0.029835 gn 0.326 nparam 260419 t 967s l2sp 0.0002607
+it 6300 k 20 base loss 0.015865 gn 0.148 nparam 260419 t 983s l2sp 0.0001853
+it 6400 k 20 base loss 0.048590 gn 0.508 nparam 260419 t 998s l2sp 0.0002405
+it 6500 k 20 base loss 0.082830 gn 2.24 nparam 260419 t 1014s l2sp 0.000195
+it 6600 k 20 base loss 0.034634 gn 0.23 nparam 260419 t 1029s l2sp 0.0002412
+it 6700 k 20 base loss 0.019252 gn 0.602 nparam 260419 t 1045s l2sp 0.0002718
+it 6800 k 20 base loss 0.027734 gn 0.451 nparam 260419 t 1061s l2sp 0.000288
+it 6900 k 20 base loss 0.058385 gn 0.896 nparam 260419 t 1076s l2sp 0.0002347
+it 7000 k 20 base loss 0.028685 gn 0.482 nparam 260419 t 1092s l2sp 0.0001797
+it 7100 k 20 base loss 0.058595 gn 0.27 nparam 260419 t 1107s l2sp 0.0002002
+it 7200 k 20 base loss 0.029856 gn 0.386 nparam 260419 t 1123s l2sp 0.0002633
+it 7300 k 20 base loss 0.059195 gn 0.888 nparam 260419 t 1139s l2sp 0.0002597
+it 7400 k 20 base loss 0.027134 gn 0.265 nparam 260419 t 1154s l2sp 0.0002046
+it 7500 k 20 base loss 0.017177 gn 0.222 nparam 260419 t 1170s l2sp 0.0002258
+it 7600 k 20 base loss 0.049363 gn 0.439 nparam 260419 t 1185s l2sp 0.0002561
+it 7700 k 20 base loss 0.042904 gn 0.972 nparam 260419 t 1201s l2sp 0.0001937
+it 7800 k 20 base loss 0.068985 gn 0.378 nparam 260419 t 1217s l2sp 0.000226
+it 7900 k 20 base loss 0.050152 gn 1.88 nparam 260419 t 1232s l2sp 0.000189
+it 8000 k 20 base loss 0.049133 gn 0.593 nparam 260419 t 1248s l2sp 0.000164
+it 8100 k 20 base loss 0.031192 gn 0.468 nparam 260419 t 1263s l2sp 0.0001802
+it 8200 k 20 base loss 0.056878 gn 1.4 nparam 260419 t 1279s l2sp 0.000172
+it 8300 k 20 base loss 0.018992 gn 0.227 nparam 260419 t 1295s l2sp 0.0001625
+it 8400 k 20 base loss 0.042019 gn 0.322 nparam 260419 t 1310s l2sp 0.0001822
+it 8500 k 20 base loss 0.064773 gn 0.607 nparam 260419 t 1326s l2sp 0.000212
+it 8600 k 20 base loss 0.048659 gn 0.397 nparam 260419 t 1341s l2sp 0.0001719
+it 8700 k 20 base loss 0.015987 gn 0.222 nparam 260419 t 1357s l2sp 0.000169
+it 8800 k 20 base loss 0.022348 gn 0.183 nparam 260419 t 1372s l2sp 0.0001505
+it 8900 k 20 base loss 0.031072 gn 0.297 nparam 260419 t 1388s l2sp 0.0001693
+it 9000 k 20 base loss 0.024882 gn 0.27 nparam 260419 t 1404s l2sp 0.0001449
+it 9100 k 20 base loss 0.057303 gn 1.99 nparam 260419 t 1419s l2sp 0.0001557
+it 9200 k 20 base loss 0.029385 gn 0.794 nparam 260419 t 1435s l2sp 0.0001548
+it 9300 k 20 base loss 0.075687 gn 0.667 nparam 260419 t 1451s l2sp 0.0001494
+it 9400 k 20 base loss 0.056224 gn 1.62 nparam 260419 t 1466s l2sp 0.0001668
+it 9500 k 20 base loss 0.047347 gn 0.53 nparam 260419 t 1482s l2sp 0.0001624
+it 9600 k 20 base loss 0.027129 gn 0.214 nparam 260419 t 1497s l2sp 0.0001583
+it 9700 k 20 base loss 0.015045 gn 0.162 nparam 260419 t 1513s l2sp 0.0001692
+it 9800 k 20 base loss 0.041535 gn 0.521 nparam 260419 t 1528s l2sp 0.0001622
+it 9900 k 20 base loss 0.073279 gn 1.77 nparam 260419 t 1544s l2sp 0.0001368
+trained 10000 iters in 1560s
+ms_kp_pot_v_g128 9000 err@5/10/20 [0.0043, 0.0113, 0.0352] constvel [0.1259, 0.4947, 1.8328]
+ms_kp_pot_v_g128 12000 err@5/10/20 [0.0046, 0.012, 0.0375] constvel [0.1388, 0.546, 2.0719]
+ms_kp_pot_v_g128 curl/total 0.130 self-force 0.0324
+[2026-10-19T16:57:21-07:00] trained r2_s4739
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  out = {"all": float(((E * Vd).sum() / (T * Vd).sum()).sqrt())}
+ab 9100 err@5/10/20/50/100 [0.00264, 0.00735, 0.02152, 0.14508, 1.3346] e20 med/mean/p90/p99 0.0145/0.0215/0.0484/0.0929 force {'all': 0.24234794756004302, '<0.5': 0.19125057458079986, '0.5-1': 0.21739424644892996, '>=1': 0.3391431493752368}
+cl 9100 err@5/10/20/50/100 [0.006, 0.01545, 0.04905, 0.73613, 4.16651] e20 med/mean/p90/p99 0.0371/0.0522/0.1132/0.2342 force {'all': 0.20924226911950136, '<0.5': 0.2128462585397615, '0.5-1': 0.17692773095588948, '>=1': 0.18956609788399617}
+ab 9200 err@5/10/20/50/100 [0.00291, 0.00776, 0.02267, 0.15828, 1.47383] e20 med/mean/p90/p99 0.0156/0.0225/0.0504/0.0992 force {'all': 0.22500084912864127, '<0.5': 0.18048555171921649, '0.5-1': 0.21322728265873672, '>=1': 0.30370111613566403}
+cl 9200 err@5/10/20/50/100 [0.00642, 0.01632, 0.05378, 0.75155, 4.20599] e20 med/mean/p90/p99 0.0385/0.0557/0.1234/0.2709 force {'all': 0.20497422391510642, '<0.5': 0.20745209821501567, '0.5-1': 0.18797010181610238, '>=1': 0.16601350976398602}
+ab 9300 err@5/10/20/50/100 [0.00253, 0.00667, 0.02052, 0.13727, 1.33224] e20 med/mean/p90/p99 0.0137/0.0210/0.0457/0.1061 force {'all': 0.23230611745678392, '<0.5': 0.18737219581380757, '0.5-1': 0.21925477208777583, '>=1': 0.30260173009056285}
+cl 9300 err@5/10/20/50/100 [0.00738, 0.01926, 0.07315, 1.09414, 4.72005] e20 med/mean/p90/p99 0.0506/0.0819/0.1891/0.4650 force {'all': 0.18792464994621824, '<0.5': 0.1892067075298741, '0.5-1': 0.18056234138412242, '>=1': 0.14900818144188563}
+wrote results/el_eval/warm_sq_r2_s4739_0_evalonly.json
+two_body MEAN err [0.00099, 0.00285, 0.00816, 0.03543, 0.11356] dE/E 0.07928 (true 6.189e-05)
+expB MEAN err [0.00283, 0.00757, 0.02232, 0.14961, 1.38938] dE/E 0.0165 (true 0.0001092)
+bh300 MEAN err [0.00766, 0.02012, 0.06055, 0.9105, 4.86449] dE/E 0.07383 (true 0.0002488)
+cons nr100 1000t dE 0.1544 (true 4.364e-05) dL 0.02531 bound 0.930/0.970 vir 0.937/0.904 outgrid 0.120
+cons bh300 1000t dE 0.6521 (true 0.0003271) dL 1.488 bound 0.770/0.880 vir 0.996/0.931 outgrid 0.263
+two_body MEAN err [0.00099, 0.00285, 0.00816, 0.03543, 0.11356] dE/E 0.07928 (true 6.189e-05)
+expB MEAN err [0.00283, 0.00757, 0.02232, 0.14961, 1.38922] dE/E 0.01643 (true 0.0001092)
+bh300 MEAN err [0.00766, 0.02012, 0.06057, 0.91136, 4.90575] dE/E 0.08182 (true 0.0002488)
+cons nr100 1000t dE 0.1855 (true 4.364e-05) dL 0.005254 bound 0.910/0.970 vir 0.915/0.904 outgrid 0.130
+cons bh300 1000t dE 0.6407 (true 0.0003271) dL 0.4798 bound 0.783/0.880 vir 0.958/0.931 outgrid 0.253
+two_body MEAN err [0.00099, 0.00285, 0.00816, 0.03543, 0.11356] dE/E 0.07928 (true 6.189e-05)
+expB MEAN err [0.00283, 0.00757, 0.02232, 0.1496, 1.3887] dE/E 0.01633 (true 0.0001092)
+bh300 MEAN err [0.00766, 0.02012, 0.06055, 0.91317, 4.93637] dE/E 0.07526 (true 0.0002488)
+cons nr100 1000t dE 0.1991 (true 4.364e-05) dL 0.04297 bound 0.940/0.970 vir 0.934/0.904 outgrid 0.100
+cons bh300 1000t dE 0.6674 (true 0.0003271) dL 0.5784 bound 0.777/0.880 vir 0.956/0.931 outgrid 0.257
+=== compare r2_s4739 (r1 vs scatter_baseline)
+memory gate SKIPPED: definitions differ (baseline None, candidate 'absolute max_memory_allocated, reset before warm-up')
+two_body: baseline lacks bound/virial rows, skipped
+expB: baseline lacks bound/virial rows, skipped
+bh300: baseline lacks bound/virial rows, skipped
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate checkpoints/el_r2_s4739/E_ms_kp_pot_v_g128.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521   0.00098949     -5.9  PASS
+two_body err@10                     0.0030977    0.0028474     -8.1  PASS
+two_body err@20                     0.0091024    0.0081583    -10.4  PASS
+expB err@5                          0.0030114    0.0028344     -5.9  PASS
+expB err@10                         0.0081291    0.0075742     -6.8  PASS
+expB err@20                          0.023947     0.022322     -6.8  PASS
+bh300 err@5                         0.0079513    0.0076616     -3.6  PASS
+bh300 err@10                         0.020899     0.020117     -3.7  PASS
+bh300 err@20                         0.062163      0.06055     -2.6  PASS
+bh300 vmax/c (<1)                     0.92589      0.92597      nan  PASS
+bh300 dE_rel_model@100                0.04783     0.073829     54.4  FAIL
+bh300 dL_rel_model@100                0.30203     0.075494    -75.0  PASS
+bh300 dP_model@100                 5.6379e-05   6.6219e-05     17.5  PASS
+two_body tick_ms                       4.7247        3.256    -31.1  PASS
+expB tick_ms                           4.9509       3.4107    -31.1  PASS
+bh300 tick_ms                          2.4766      0.70354    -71.6  PASS
+expB_batch1_n100 tick_ms               2.4489      0.67246    -72.5  PASS
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 0.03543; two_body err@100 0.1308 -> 0.1136; expB err@50 0.1573 -> 0.1496; expB err@100 1.422 -> 1.389; bh300 err@50 0.9119 -> 0.9105
+floors: results/chaos_floors.json not found, skipped
+OVERALL FAIL
+| tag | ab20 | ab100 | cl20 | cl100 | expB20 | nr100_dE1000 | nr100_dL1000 | bh300_dE100 | bh300_dL100 | bh300_dE1000 | bh300_dL1000 | pass | nr100 dE@1000 x3 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| r2_s4738 | 0.02154 | 1.378 | 0.05855 | 4.381 | 0.0223 | 0.1599 | 0.03006 | 0.07356 | 0.1621 | 0.6358 | 1.272 | False | [0.1597, 0.1599, 0.1765] |
+| r2_s4739 | 0.02157 | 1.38 | 0.05866 | 4.364 | 0.02232 | 0.1855 | 0.02531 | 0.07526 | 0.09333 | 0.6521 | 0.5784 | False | [0.1544, 0.1855, 0.1991] |
+=== Run 3: Run 2 + nr100/bh300 replay (25% of iterations)
+[2026-10-19T16:58:54-07:00] train r3_s4738
+=== E ms_kp_pot_v_g128 params 260419 receptive field 31 cells = 15.5 units global=False
+warm start from /home/adamwebb/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+it 0 k 20 base loss 0.033089 gn 0.905 nparam 260419 t 0s l2sp 0
+it 100 k 20 base loss 0.050735 gn 0.559 nparam 260419 t 16s l2sp 0.0004202
+it 200 k 20 base loss 0.020672 gn 0.336 nparam 260419 t 31s l2sp 0.0004708
+it 300 k 20 nr100 loss 0.008965 gn 0.213 nparam 260419 t 47s l2sp 0.0007412
+it 400 k 20 nr100 loss 0.008621 gn 0.217 nparam 260419 t 62s l2sp 0.0005804
+it 500 k 20 base loss 0.041076 gn 0.439 nparam 260419 t 78s l2sp 0.0003483
+it 600 k 20 base loss 0.032724 gn 1.43 nparam 260419 t 93s l2sp 0.0005996
+it 700 k 20 nr100 loss 0.008668 gn 0.18 nparam 260419 t 109s l2sp 0.000492
+it 800 k 20 base loss 0.021949 gn 0.467 nparam 260419 t 124s l2sp 0.00054
+it 900 k 20 base loss 0.072908 gn 1.14 nparam 260419 t 140s l2sp 0.0004027
+it 1000 k 20 base loss 0.032488 gn 0.414 nparam 260419 t 156s l2sp 0.000325
+it 1100 k 20 base loss 0.029472 gn 0.651 nparam 260419 t 171s l2sp 0.0003549
+it 1200 k 20 nr100 loss 0.009538 gn 0.608 nparam 260419 t 187s l2sp 0.001265
+it 1300 k 20 base loss 0.038625 gn 0.274 nparam 260419 t 202s l2sp 0.000488
+it 1400 k 20 base loss 0.065760 gn 0.568 nparam 260419 t 218s l2sp 0.0005838
+it 1500 k 20 base loss 0.018962 gn 0.634 nparam 260419 t 233s l2sp 0.0005165
+it 1600 k 20 base loss 0.014652 gn 0.5 nparam 260419 t 249s l2sp 0.0004897
+it 1700 k 20 base loss 0.034052 gn 0.476 nparam 260419 t 264s l2sp 0.0003377
+it 1800 k 20 base loss 0.048451 gn 0.435 nparam 260419 t 280s l2sp 0.0004075
+it 1900 k 20 nr100 loss 0.008679 gn 0.184 nparam 260419 t 295s l2sp 0.0005349
+it 2000 k 20 bh300 loss 0.065158 gn 3.75 nparam 260419 t 311s l2sp 0.0004892
+it 2100 k 20 base loss 0.047322 gn 0.975 nparam 260419 t 326s l2sp 0.0006838
+it 2200 k 20 nr100 loss 0.007936 gn 0.244 nparam 260419 t 342s l2sp 0.0003983
+it 2300 k 20 base loss 0.041860 gn 0.789 nparam 260419 t 357s l2sp 0.0003512
+it 2400 k 20 base loss 0.035472 gn 0.563 nparam 260419 t 373s l2sp 0.0003951
+it 2500 k 20 nr100 loss 0.008347 gn 0.172 nparam 260419 t 388s l2sp 0.0003385
+it 2600 k 20 base loss 0.019082 gn 0.304 nparam 260419 t 404s l2sp 0.0003305
+it 2700 k 20 base loss 0.014074 gn 0.382 nparam 260419 t 419s l2sp 0.0004909
+it 2800 k 20 nr100 loss 0.009185 gn 0.253 nparam 260419 t 435s l2sp 0.000638
+it 2900 k 20 base loss 0.065527 gn 1.67 nparam 260419 t 450s l2sp 0.000507
+it 3000 k 20 base loss 0.029971 gn 0.45 nparam 260419 t 466s l2sp 0.0004185
+it 3100 k 20 base loss 0.041949 gn 0.551 nparam 260419 t 481s l2sp 0.0003862
+it 3200 k 20 base loss 0.029216 gn 0.728 nparam 260419 t 497s l2sp 0.0004374
+it 3300 k 20 base loss 0.054643 gn 1.67 nparam 260419 t 512s l2sp 0.0005245
+it 3400 k 20 base loss 0.036356 gn 0.804 nparam 260419 t 528s l2sp 0.0003663
+it 3500 k 20 base loss 0.025273 gn 0.401 nparam 260419 t 543s l2sp 0.0004289
+it 3600 k 20 base loss 0.038690 gn 0.492 nparam 260419 t 559s l2sp 0.0003465
+it 3700 k 20 base loss 0.030065 gn 0.83 nparam 260419 t 574s l2sp 0.0003144
+it 3800 k 20 base loss 0.015828 gn 0.195 nparam 260419 t 590s l2sp 0.0003345
+it 3900 k 20 base loss 0.033190 gn 0.692 nparam 260419 t 605s l2sp 0.0007016
+it 4000 k 20 base loss 0.019306 gn 0.452 nparam 260419 t 621s l2sp 0.0003763
+it 4100 k 20 nr100 loss 0.008861 gn 0.102 nparam 260419 t 636s l2sp 0.0002933
+it 4200 k 20 base loss 0.032342 gn 0.688 nparam 260419 t 652s l2sp 0.0004533
+it 4300 k 20 base loss 0.016429 gn 0.195 nparam 260419 t 667s l2sp 0.0003146
+it 4400 k 20 base loss 0.015541 gn 0.387 nparam 260419 t 683s l2sp 0.0003701
+it 4500 k 20 nr100 loss 0.008214 gn 0.139 nparam 260419 t 698s l2sp 0.0002902
+it 4600 k 20 base loss 0.045404 gn 0.328 nparam 260419 t 714s l2sp 0.0002921
+it 4700 k 20 base loss 0.037006 gn 0.457 nparam 260419 t 729s l2sp 0.0003297
+it 4800 k 20 base loss 0.070141 gn 2.32 nparam 260419 t 745s l2sp 0.0002853
+it 4900 k 20 base loss 0.024758 gn 0.287 nparam 260419 t 760s l2sp 0.0003528
+it 5000 k 20 base loss 0.033542 gn 0.828 nparam 260419 t 776s l2sp 0.0002883
+it 5100 k 20 base loss 0.023010 gn 0.131 nparam 260419 t 792s l2sp 0.0002693
+it 5200 k 20 base loss 0.047513 gn 0.313 nparam 260419 t 807s l2sp 0.0002624
+it 5300 k 20 base loss 0.025049 gn 0.246 nparam 260419 t 823s l2sp 0.0002869
+it 5400 k 20 base loss 0.024937 gn 0.523 nparam 260419 t 838s l2sp 0.0003107
+it 5500 k 20 base loss 0.020185 gn 0.141 nparam 260419 t 854s l2sp 0.0002146
+it 5600 k 20 base loss 0.027383 gn 0.29 nparam 260419 t 869s l2sp 0.0002367
+it 5700 k 20 base loss 0.020474 gn 0.281 nparam 260419 t 884s l2sp 0.0002744
+it 5800 k 20 base loss 0.018297 gn 0.496 nparam 260419 t 900s l2sp 0.0003373
+it 5900 k 20 base loss 0.020980 gn 0.264 nparam 260419 t 916s l2sp 0.0002746
+it 6000 k 20 bh300 loss 0.031140 gn 1.37 nparam 260419 t 931s l2sp 0.0003223
+it 6100 k 20 bh300 loss 0.030830 gn 1.27 nparam 260419 t 947s l2sp 0.0002549
+it 6200 k 20 base loss 0.019907 gn 0.258 nparam 260419 t 962s l2sp 0.0003517
+it 6300 k 20 base loss 0.023191 gn 0.218 nparam 260419 t 977s l2sp 0.0002165
+it 6400 k 20 base loss 0.029639 gn 0.554 nparam 260419 t 993s l2sp 0.0003575
+it 6500 k 20 bh300 loss 0.060333 gn 2.83 nparam 260419 t 1008s l2sp 0.000193
+it 6600 k 20 base loss 0.049540 gn 0.325 nparam 260419 t 1024s l2sp 0.0002833
+it 6700 k 20 nr100 loss 0.008164 gn 0.0912 nparam 260419 t 1039s l2sp 0.0003043
+it 6800 k 20 bh300 loss 0.035395 gn 1.61 nparam 260419 t 1055s l2sp 0.0002169
+it 6900 k 20 nr100 loss 0.007705 gn 0.173 nparam 260419 t 1070s l2sp 0.0002133
+it 7000 k 20 base loss 0.036396 gn 0.423 nparam 260419 t 1086s l2sp 0.0002072
+it 7100 k 20 base loss 0.022656 gn 0.141 nparam 260419 t 1101s l2sp 0.000173
+it 7200 k 20 base loss 0.085113 gn 0.875 nparam 260419 t 1117s l2sp 0.0002059
+it 7300 k 20 base loss 0.041814 gn 0.54 nparam 260419 t 1132s l2sp 0.0001838
+it 7400 k 20 base loss 0.026907 gn 0.308 nparam 260419 t 1148s l2sp 0.0001973
+it 7500 k 20 nr100 loss 0.008255 gn 0.0976 nparam 260419 t 1163s l2sp 0.000226
+it 7600 k 20 nr100 loss 0.008507 gn 0.13 nparam 260419 t 1179s l2sp 0.000352
+it 7700 k 20 base loss 0.031350 gn 0.542 nparam 260419 t 1194s l2sp 0.0001953
+it 7800 k 20 base loss 0.029181 gn 0.454 nparam 260419 t 1210s l2sp 0.000235
+it 7900 k 20 base loss 0.035407 gn 0.569 nparam 260419 t 1225s l2sp 0.0001908
+it 8000 k 20 base loss 0.026685 gn 0.266 nparam 260419 t 1241s l2sp 0.0001984
+it 8100 k 20 base loss 0.038211 gn 0.669 nparam 260419 t 1257s l2sp 0.0002154
+it 8200 k 20 base loss 0.025586 gn 0.243 nparam 260419 t 1272s l2sp 0.0001886
+it 8300 k 20 base loss 0.041041 gn 0.407 nparam 260419 t 1288s l2sp 0.0001806
+it 8400 k 20 base loss 0.037203 gn 0.183 nparam 260419 t 1303s l2sp 0.000199
+it 8500 k 20 base loss 0.044166 gn 0.256 nparam 260419 t 1319s l2sp 0.00018
+it 8600 k 20 base loss 0.030875 gn 0.262 nparam 260419 t 1334s l2sp 0.0001983
+it 8700 k 20 base loss 0.034068 gn 0.908 nparam 260419 t 1350s l2sp 0.0001939
+it 8800 k 20 base loss 0.027175 gn 1.18 nparam 260419 t 1365s l2sp 0.0001884
+it 8900 k 20 base loss 0.032320 gn 0.237 nparam 260419 t 1381s l2sp 0.0002106
+it 9000 k 20 base loss 0.024020 gn 0.562 nparam 260419 t 1396s l2sp 0.0001708
+it 9100 k 20 nr100 loss 0.007710 gn 0.18 nparam 260419 t 1412s l2sp 0.0001762
+it 9200 k 20 base loss 0.029707 gn 0.358 nparam 260419 t 1427s l2sp 0.0001826
+it 9300 k 20 base loss 0.045728 gn 0.393 nparam 260419 t 1443s l2sp 0.0001699
+it 9400 k 20 base loss 0.074864 gn 1.8 nparam 260419 t 1458s l2sp 0.0001792
+it 9500 k 20 base loss 0.035609 gn 0.295 nparam 260419 t 1474s l2sp 0.00017
+it 9600 k 20 base loss 0.028915 gn 0.875 nparam 260419 t 1489s l2sp 0.0001868
+it 9700 k 20 nr100 loss 0.007935 gn 0.107 nparam 260419 t 1505s l2sp 0.0001877
+it 9800 k 20 base loss 0.043793 gn 0.161 nparam 260419 t 1520s l2sp 0.000175
+it 9900 k 20 base loss 0.035952 gn 0.346 nparam 260419 t 1536s l2sp 0.0001608
+trained 10000 iters in 1551s
+ms_kp_pot_v_g128 9000 err@5/10/20 [0.0043, 0.0113, 0.035] constvel [0.1259, 0.4947, 1.8328]
+ms_kp_pot_v_g128 12000 err@5/10/20 [0.0045, 0.0119, 0.0374] constvel [0.1388, 0.546, 2.0719]
+ms_kp_pot_v_g128 curl/total 0.131 self-force 0.0323
+[2026-10-19T17:25:19-07:00] trained r3_s4738
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  out = {"all": float(((E * Vd).sum() / (T * Vd).sum()).sqrt())}
+ab 9100 err@5/10/20/50/100 [0.00263, 0.00732, 0.02141, 0.14491, 1.33624] e20 med/mean/p90/p99 0.0145/0.0215/0.0485/0.0935 force {'all': 0.24163674491218118, '<0.5': 0.18946337351984086, '0.5-1': 0.21667433701950983, '>=1': 0.3393368752393375}
+cl 9100 err@5/10/20/50/100 [0.00597, 0.01539, 0.04888, 0.73664, 4.14797] e20 med/mean/p90/p99 0.0372/0.0520/0.1131/0.2345 force {'all': 0.20925209521405888, '<0.5': 0.2128464754502663, '0.5-1': 0.17703550045412755, '>=1': 0.18961895659247646}
+ab 9200 err@5/10/20/50/100 [0.0029, 0.00774, 0.02258, 0.1582, 1.47882] e20 med/mean/p90/p99 0.0155/0.0224/0.0501/0.1004 force {'all': 0.22428424507356998, '<0.5': 0.17867645245444608, '0.5-1': 0.21243334301370828, '>=1': 0.30418137593493505}
+cl 9200 err@5/10/20/50/100 [0.00638, 0.01624, 0.05366, 0.75275, 4.22333] e20 med/mean/p90/p99 0.0385/0.0556/0.1234/0.2692 force {'all': 0.20493184576542448, '<0.5': 0.20738787625909355, '0.5-1': 0.18809479618511976, '>=1': 0.16630759082060803}
+ab 9300 err@5/10/20/50/100 [0.00253, 0.00667, 0.02045, 0.13725, 1.33157] e20 med/mean/p90/p99 0.0138/0.0209/0.0452/0.1040 force {'all': 0.2316843996403707, '<0.5': 0.18557149985556917, '0.5-1': 0.21855691242816477, '>=1': 0.30310988939347483}
+cl 9300 err@5/10/20/50/100 [0.00735, 0.0192, 0.07289, 1.09257, 4.73375] e20 med/mean/p90/p99 0.0504/0.0816/0.1907/0.4721 force {'all': 0.18795739369828346, '<0.5': 0.18922068540373635, '0.5-1': 0.18078139753084096, '>=1': 0.14921210917778274}
+wrote results/el_eval/warm_sq_r3_s4738_0_evalonly.json
+two_body MEAN err [0.00098, 0.00281, 0.00803, 0.03507, 0.11291] dE/E 0.0776 (true 6.189e-05)
+expB MEAN err [0.00283, 0.00755, 0.02224, 0.14924, 1.38493] dE/E 0.01655 (true 0.0001092)
+bh300 MEAN err [0.00762, 0.02003, 0.06035, 0.90591, 4.90972] dE/E 0.08388 (true 0.0002488)
+cons nr100 1000t dE 0.1758 (true 4.364e-05) dL 0.01177 bound 0.910/0.970 vir 0.977/0.904 outgrid 0.120
+cons bh300 1000t dE 0.5474 (true 0.0003271) dL 0.7248 bound 0.757/0.880 vir 0.962/0.931 outgrid 0.247
+two_body MEAN err [0.00098, 0.00281, 0.00803, 0.03507, 0.11291] dE/E 0.0776 (true 6.189e-05)
+expB MEAN err [0.00283, 0.00755, 0.02224, 0.14929, 1.38518] dE/E 0.01661 (true 0.0001092)
+bh300 MEAN err [0.00762, 0.02003, 0.06033, 0.90777, 4.95797] dE/E 0.0813 (true 0.0002488)
+cons nr100 1000t dE 0.1982 (true 4.364e-05) dL 0.03647 bound 0.930/0.970 vir 0.847/0.904 outgrid 0.100
+cons bh300 1000t dE 0.6828 (true 0.0003271) dL 0.5799 bound 0.790/0.880 vir 0.948/0.931 outgrid 0.217
+two_body MEAN err [0.00098, 0.00281, 0.00803, 0.03507, 0.11291] dE/E 0.0776 (true 6.189e-05)
+expB MEAN err [0.00283, 0.00755, 0.02224, 0.14928, 1.38516] dE/E 0.01672 (true 0.0001092)
+bh300 MEAN err [0.00762, 0.02003, 0.06034, 0.90744, 4.93159] dE/E 0.07062 (true 0.0002488)
+cons nr100 1000t dE 0.1747 (true 4.364e-05) dL 0.01763 bound 0.920/0.970 vir 0.989/0.904 outgrid 0.120
+cons bh300 1000t dE 0.4553 (true 0.0003271) dL 1.019 bound 0.697/0.880 vir 1.05/0.931 outgrid 0.293
+=== compare r3_s4738 (r1 vs scatter_baseline)
+memory gate SKIPPED: definitions differ (baseline None, candidate 'absolute max_memory_allocated, reset before warm-up')
+two_body: baseline lacks bound/virial rows, skipped
+expB: baseline lacks bound/virial rows, skipped
+bh300: baseline lacks bound/virial rows, skipped
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate checkpoints/el_r3_s4738/E_ms_kp_pot_v_g128.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521    0.0009845     -6.4  PASS
+two_body err@10                     0.0030977    0.0028071     -9.4  PASS
+two_body err@20                     0.0091024     0.008032    -11.8  PASS
+expB err@5                          0.0030114     0.002828     -6.1  PASS
+expB err@10                         0.0081291    0.0075521     -7.1  PASS
+expB err@20                          0.023947     0.022236     -7.1  PASS
+bh300 err@5                         0.0079513    0.0076168     -4.2  PASS
+bh300 err@10                         0.020899     0.020026     -4.2  PASS
+bh300 err@20                         0.062163     0.060351     -2.9  PASS
+bh300 vmax/c (<1)                     0.92589      0.92586      nan  PASS
+bh300 dE_rel_model@100                0.04783     0.083877     75.4  FAIL
+bh300 dL_rel_model@100                0.30203      0.17218    -43.0  PASS
+bh300 dP_model@100                 5.6379e-05   8.9967e-05     59.6  PASS
+two_body tick_ms                       4.7247       3.2577    -31.1  PASS
+expB tick_ms                           4.9509        3.414    -31.0  PASS
+bh300 tick_ms                          2.4766      0.70323    -71.6  PASS
+expB_batch1_n100 tick_ms               2.4489      0.67274    -72.5  PASS
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 0.03507; two_body err@100 0.1308 -> 0.1129; expB err@50 0.1573 -> 0.1492; expB err@100 1.422 -> 1.385; bh300 err@50 0.9119 -> 0.9059
+floors: results/chaos_floors.json not found, skipped
+OVERALL FAIL
+[2026-10-19T17:26:50-07:00] train r3_s4739
+=== E ms_kp_pot_v_g128 params 260419 receptive field 31 cells = 15.5 units global=False
+warm start from /home/adamwebb/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+it 0 k 20 base loss 0.043538 gn 0.981 nparam 260419 t 0s l2sp 0
+it 100 k 20 base loss 0.049407 gn 0.777 nparam 260419 t 16s l2sp 0.0005031
+it 200 k 20 base loss 0.068476 gn 0.546 nparam 260419 t 31s l2sp 0.0004732
+it 300 k 20 base loss 0.036274 gn 0.839 nparam 260419 t 47s l2sp 0.0004499
+it 400 k 20 base loss 0.063102 gn 2.32 nparam 260419 t 62s l2sp 0.0006474
+it 500 k 20 nr100 loss 0.008962 gn 0.188 nparam 260419 t 78s l2sp 0.0004538
+it 600 k 20 base loss 0.036877 gn 0.847 nparam 260419 t 93s l2sp 0.0003417
+it 700 k 20 base loss 0.043818 gn 1.02 nparam 260419 t 109s l2sp 0.0003734
+it 800 k 20 nr100 loss 0.008410 gn 0.366 nparam 260419 t 124s l2sp 0.000452
+it 900 k 20 base loss 0.022185 gn 0.598 nparam 260419 t 140s l2sp 0.0003951
+it 1000 k 20 bh300 loss 0.042197 gn 1.98 nparam 260419 t 155s l2sp 0.0003508
+it 1100 k 20 base loss 0.035705 gn 0.448 nparam 260419 t 171s l2sp 0.0004513
+it 1200 k 20 base loss 0.047885 gn 0.651 nparam 260419 t 186s l2sp 0.0005293
+it 1300 k 20 bh300 loss 0.079488 gn 5.48 nparam 260419 t 202s l2sp 0.0004922
+it 1400 k 20 base loss 0.061971 gn 0.391 nparam 260419 t 217s l2sp 0.0005114
+it 1500 k 20 base loss 0.041339 gn 0.435 nparam 260419 t 233s l2sp 0.0004872
+it 1600 k 20 base loss 0.062586 gn 2.7 nparam 260419 t 248s l2sp 0.0008418
+it 1700 k 20 base loss 0.044153 gn 1.16 nparam 260419 t 264s l2sp 0.0008982
+it 1800 k 20 base loss 0.032671 gn 0.505 nparam 260419 t 279s l2sp 0.0004332
+it 1900 k 20 base loss 0.046017 gn 1.26 nparam 260419 t 295s l2sp 0.00082
+it 2000 k 20 base loss 0.032466 gn 0.687 nparam 260419 t 311s l2sp 0.0003956
+it 2100 k 20 bh300 loss 0.045251 gn 2.9 nparam 260419 t 326s l2sp 0.0003434
+it 2200 k 20 base loss 0.040241 gn 0.449 nparam 260419 t 342s l2sp 0.000356
+it 2300 k 20 base loss 0.027934 gn 0.482 nparam 260419 t 357s l2sp 0.0003038
+it 2400 k 20 base loss 0.043644 gn 0.71 nparam 260419 t 373s l2sp 0.0004439
+it 2500 k 20 base loss 0.043824 gn 0.45 nparam 260419 t 388s l2sp 0.0004312
+it 2600 k 20 nr100 loss 0.009011 gn 0.21 nparam 260419 t 404s l2sp 0.0006473
+it 2700 k 20 base loss 0.032282 gn 0.68 nparam 260419 t 419s l2sp 0.0003114
+it 2800 k 20 base loss 0.028026 gn 0.912 nparam 260419 t 435s l2sp 0.0003515
+it 2900 k 20 base loss 0.032236 gn 0.63 nparam 260419 t 450s l2sp 0.0005136
+it 3000 k 20 bh300 loss 0.034656 gn 1.3 nparam 260419 t 466s l2sp 0.0004352
+it 3100 k 20 base loss 0.022369 gn 0.237 nparam 260419 t 481s l2sp 0.000368
+it 3200 k 20 base loss 0.056414 gn 2.45 nparam 260419 t 497s l2sp 0.0003996
+it 3300 k 20 bh300 loss 0.030894 gn 1.04 nparam 260419 t 512s l2sp 0.0004999
+it 3400 k 20 base loss 0.042518 gn 0.785 nparam 260419 t 528s l2sp 0.0005202
+it 3500 k 20 base loss 0.027503 gn 0.365 nparam 260419 t 543s l2sp 0.0005904
+it 3600 k 20 base loss 0.024099 gn 0.43 nparam 260419 t 559s l2sp 0.0003605
+it 3700 k 20 base loss 0.047498 gn 0.254 nparam 260419 t 574s l2sp 0.0004628
+it 3800 k 20 base loss 0.013571 gn 0.49 nparam 260419 t 590s l2sp 0.0003257
+it 3900 k 20 base loss 0.049990 gn 0.557 nparam 260419 t 605s l2sp 0.0003426
+it 4000 k 20 base loss 0.025255 gn 0.609 nparam 260419 t 621s l2sp 0.0005375
+it 4100 k 20 base loss 0.036763 gn 0.219 nparam 260419 t 636s l2sp 0.0002589
+it 4200 k 20 nr100 loss 0.008491 gn 0.108 nparam 260419 t 652s l2sp 0.000405
+it 4300 k 20 base loss 0.045336 gn 0.94 nparam 260419 t 667s l2sp 0.0003799
+it 4400 k 20 base loss 0.053624 gn 1.33 nparam 260419 t 683s l2sp 0.0003163
+it 4500 k 20 base loss 0.035389 gn 0.368 nparam 260419 t 698s l2sp 0.000371
+it 4600 k 20 base loss 0.053674 gn 0.703 nparam 260419 t 714s l2sp 0.0003722
+it 4700 k 20 base loss 0.032802 gn 0.496 nparam 260419 t 729s l2sp 0.0002648
+it 4800 k 20 base loss 0.049029 gn 0.304 nparam 260419 t 745s l2sp 0.0003124
+it 4900 k 20 base loss 0.075433 gn 0.788 nparam 260419 t 760s l2sp 0.0003036
+it 5000 k 20 nr100 loss 0.008276 gn 0.151 nparam 260419 t 776s l2sp 0.0004241
+it 5100 k 20 base loss 0.032606 gn 0.309 nparam 260419 t 791s l2sp 0.0003338
+it 5200 k 20 base loss 0.019625 gn 0.163 nparam 260419 t 807s l2sp 0.0002909
+it 5300 k 20 base loss 0.032256 gn 0.26 nparam 260419 t 822s l2sp 0.0003049
+it 5400 k 20 base loss 0.059237 gn 0.963 nparam 260419 t 838s l2sp 0.0003871
+it 5500 k 20 base loss 0.035083 gn 1.86 nparam 260419 t 853s l2sp 0.0004085
+it 5600 k 20 base loss 0.033546 gn 0.391 nparam 260419 t 869s l2sp 0.0002786
+it 5700 k 20 bh300 loss 0.050023 gn 2.9 nparam 260419 t 884s l2sp 0.0003664
+it 5800 k 20 base loss 0.029172 gn 0.32 nparam 260419 t 900s l2sp 0.0002802
+it 5900 k 20 bh300 loss 0.023163 gn 0.574 nparam 260419 t 915s l2sp 0.0002322
+it 6000 k 20 bh300 loss 0.049594 gn 2.92 nparam 260419 t 931s l2sp 0.0002511
+it 6100 k 20 nr100 loss 0.008646 gn 0.174 nparam 260419 t 946s l2sp 0.0002437
+it 6200 k 20 base loss 0.031373 gn 0.252 nparam 260419 t 962s l2sp 0.000284
+it 6300 k 20 base loss 0.036189 gn 0.898 nparam 260419 t 977s l2sp 0.0002421
+it 6400 k 20 nr100 loss 0.007942 gn 0.143 nparam 260419 t 993s l2sp 0.0003551
+it 6500 k 20 base loss 0.042762 gn 0.413 nparam 260419 t 1008s l2sp 0.0002797
+it 6600 k 20 base loss 0.040658 gn 1.02 nparam 260419 t 1024s l2sp 0.0002381
+it 6700 k 20 base loss 0.049728 gn 3.09 nparam 260419 t 1039s l2sp 0.0002832
+it 6800 k 20 base loss 0.049740 gn 1.83 nparam 260419 t 1055s l2sp 0.0002351
+it 6900 k 20 base loss 0.027120 gn 0.163 nparam 260419 t 1070s l2sp 0.0002049
+it 7000 k 20 base loss 0.062066 gn 0.546 nparam 260419 t 1086s l2sp 0.0002238
+it 7100 k 20 bh300 loss 0.037951 gn 1.33 nparam 260419 t 1101s l2sp 0.0001802
+it 7200 k 20 base loss 0.024078 gn 0.206 nparam 260419 t 1117s l2sp 0.0002814
+it 7300 k 20 base loss 0.032589 gn 0.806 nparam 260419 t 1132s l2sp 0.0002214
+it 7400 k 20 base loss 0.036640 gn 0.703 nparam 260419 t 1148s l2sp 0.0002034
+it 7500 k 20 base loss 0.037599 gn 1.05 nparam 260419 t 1163s l2sp 0.0003289
+it 7600 k 20 base loss 0.032798 gn 0.32 nparam 260419 t 1179s l2sp 0.0002956
+it 7700 k 20 base loss 0.041248 gn 0.793 nparam 260419 t 1194s l2sp 0.0002164
+it 7800 k 20 nr100 loss 0.008053 gn 0.0916 nparam 260419 t 1210s l2sp 0.0002312
+it 7900 k 20 base loss 0.053139 gn 0.447 nparam 260419 t 1226s l2sp 0.0002128
+it 8000 k 20 base loss 0.037827 gn 0.465 nparam 260419 t 1241s l2sp 0.0002169
+it 8100 k 20 bh300 loss 0.041813 gn 2.01 nparam 260419 t 1257s l2sp 0.0001835
+it 8200 k 20 base loss 0.034992 gn 0.291 nparam 260419 t 1272s l2sp 0.0001904
+it 8300 k 20 base loss 0.033359 gn 0.366 nparam 260419 t 1288s l2sp 0.0002123
+it 8400 k 20 bh300 loss 0.031482 gn 1.27 nparam 260419 t 1303s l2sp 0.0001862
+it 8500 k 20 base loss 0.063065 gn 2.42 nparam 260419 t 1319s l2sp 0.0001942
+it 8600 k 20 base loss 0.035107 gn 0.571 nparam 260419 t 1334s l2sp 0.0002119
+it 8700 k 20 base loss 0.018126 gn 0.308 nparam 260419 t 1350s l2sp 0.0001856
+it 8800 k 20 base loss 0.032900 gn 0.734 nparam 260419 t 1365s l2sp 0.0001913
+it 8900 k 20 base loss 0.031895 gn 0.343 nparam 260419 t 1381s l2sp 0.0001611
+it 9000 k 20 base loss 0.012826 gn 0.233 nparam 260419 t 1396s l2sp 0.0001765
+it 9100 k 20 base loss 0.054388 gn 1.95 nparam 260419 t 1412s l2sp 0.0001555
+it 9200 k 20 bh300 loss 0.064841 gn 3.86 nparam 260419 t 1427s l2sp 0.0001708
+it 9300 k 20 base loss 0.043526 gn 0.681 nparam 260419 t 1443s l2sp 0.000178
+it 9400 k 20 base loss 0.049426 gn 1.45 nparam 260419 t 1458s l2sp 0.0001643
+it 9500 k 20 base loss 0.035045 gn 0.34 nparam 260419 t 1474s l2sp 0.0001624
+it 9600 k 20 base loss 0.045682 gn 0.498 nparam 260419 t 1489s l2sp 0.0001632
+it 9700 k 20 base loss 0.023348 gn 0.214 nparam 260419 t 1505s l2sp 0.0001881
+it 9800 k 20 base loss 0.036759 gn 0.469 nparam 260419 t 1520s l2sp 0.000161
+it 9900 k 20 bh300 loss 0.052236 gn 3.23 nparam 260419 t 1536s l2sp 0.0001624
+trained 10000 iters in 1551s
+ms_kp_pot_v_g128 9000 err@5/10/20 [0.0043, 0.0113, 0.035] constvel [0.1259, 0.4947, 1.8328]
+ms_kp_pot_v_g128 12000 err@5/10/20 [0.0046, 0.012, 0.0373] constvel [0.1388, 0.546, 2.0719]
+ms_kp_pot_v_g128 curl/total 0.131 self-force 0.0319
+[2026-10-19T17:53:15-07:00] trained r3_s4739
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  out = {"all": float(((E * Vd).sum() / (T * Vd).sum()).sqrt())}
+ab 9100 err@5/10/20/50/100 [0.00266, 0.00737, 0.0214, 0.14411, 1.33252] e20 med/mean/p90/p99 0.0147/0.0214/0.0479/0.0987 force {'all': 0.24250867631310508, '<0.5': 0.19121241823533827, '0.5-1': 0.21801458328253698, '>=1': 0.33895366096767676}
+cl 9100 err@5/10/20/50/100 [0.00602, 0.01545, 0.0488, 0.73465, 4.16087] e20 med/mean/p90/p99 0.0371/0.0519/0.1124/0.2321 force {'all': 0.20982923199911332, '<0.5': 0.21347307044459107, '0.5-1': 0.17727242198253435, '>=1': 0.18932254407723936}
+ab 9200 err@5/10/20/50/100 [0.00293, 0.00778, 0.02264, 0.15756, 1.46795] e20 med/mean/p90/p99 0.0157/0.0224/0.0502/0.0980 force {'all': 0.22541971215158313, '<0.5': 0.1804679076603763, '0.5-1': 0.21386072746142498, '>=1': 0.3043379913527352}
+cl 9200 err@5/10/20/50/100 [0.00643, 0.01631, 0.05378, 0.7506, 4.23189] e20 med/mean/p90/p99 0.0389/0.0558/0.1240/0.2704 force {'all': 0.2055626316008494, '<0.5': 0.20807152314887847, '0.5-1': 0.18830949918226378, '>=1': 0.1662044648686016}
+ab 9300 err@5/10/20/50/100 [0.00255, 0.00668, 0.02044, 0.1369, 1.33851] e20 med/mean/p90/p99 0.0136/0.0209/0.0458/0.1068 force {'all': 0.23268882738835978, '<0.5': 0.1872499866740301, '0.5-1': 0.21981835137233616, '>=1': 0.3032561685264939}
+cl 9300 err@5/10/20/50/100 [0.0074, 0.01925, 0.07315, 1.096, 4.73278] e20 med/mean/p90/p99 0.0508/0.0819/0.1924/0.4660 force {'all': 0.18851352672094304, '<0.5': 0.18982315136496053, '0.5-1': 0.18092207030597068, '>=1': 0.14908586007183355}
+wrote results/el_eval/warm_sq_r3_s4739_0_evalonly.json
+two_body MEAN err [0.001, 0.00286, 0.00814, 0.03511, 0.1121] dE/E 0.0714 (true 6.189e-05)
+expB MEAN err [0.00285, 0.00757, 0.02222, 0.1488, 1.3835] dE/E 0.01493 (true 0.0001092)
+bh300 MEAN err [0.00766, 0.02002, 0.06, 0.89704, 4.81863] dE/E 0.07904 (true 0.0002488)
+cons nr100 1000t dE 0.1654 (true 4.364e-05) dL 0.02144 bound 0.910/0.970 vir 0.856/0.904 outgrid 0.120
+cons bh300 1000t dE 0.5499 (true 0.0003271) dL 0.6892 bound 0.757/0.880 vir 0.926/0.931 outgrid 0.263
+two_body MEAN err [0.001, 0.00286, 0.00814, 0.03511, 0.1121] dE/E 0.0714 (true 6.189e-05)
+expB MEAN err [0.00285, 0.00757, 0.02222, 0.1488, 1.38347] dE/E 0.01484 (true 0.0001092)
+bh300 MEAN err [0.00766, 0.02002, 0.05999, 0.89659, 4.89702] dE/E 0.06353 (true 0.0002488)
+cons nr100 1000t dE 0.1546 (true 4.364e-05) dL 0.01676 bound 0.920/0.970 vir 0.91/0.904 outgrid 0.110
+cons bh300 1000t dE 0.4699 (true 0.0003271) dL 0.927 bound 0.737/0.880 vir 0.951/0.931 outgrid 0.263
+two_body MEAN err [0.001, 0.00286, 0.00814, 0.03511, 0.1121] dE/E 0.0714 (true 6.189e-05)
+expB MEAN err [0.00285, 0.00757, 0.02222, 0.14879, 1.38373] dE/E 0.01495 (true 0.0001092)
+bh300 MEAN err [0.00766, 0.02002, 0.06001, 0.89651, 4.88244] dE/E 0.07266 (true 0.0002488)
+cons nr100 1000t dE 0.155 (true 4.364e-05) dL 0.01073 bound 0.920/0.970 vir 0.904/0.904 outgrid 0.110
+cons bh300 1000t dE 0.7074 (true 0.0003271) dL 0.766 bound 0.803/0.880 vir 0.956/0.931 outgrid 0.233
+=== compare r3_s4739 (r1 vs scatter_baseline)
+memory gate SKIPPED: definitions differ (baseline None, candidate 'absolute max_memory_allocated, reset before warm-up')
+two_body: baseline lacks bound/virial rows, skipped
+expB: baseline lacks bound/virial rows, skipped
+bh300: baseline lacks bound/virial rows, skipped
+baseline checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt @   candidate checkpoints/el_r3_s4739/E_ms_kp_pot_v_g128.pt @ 
+metric                               baseline    candidate   delta%
+two_body err@5                      0.0010521    0.0010046     -4.5  PASS
+two_body err@10                     0.0030977     0.002864     -7.5  PASS
+two_body err@20                     0.0091024    0.0081421    -10.6  PASS
+expB err@5                          0.0030114    0.0028496     -5.4  PASS
+expB err@10                         0.0081291    0.0075737     -6.8  PASS
+expB err@20                          0.023947      0.02222     -7.2  PASS
+bh300 err@5                         0.0079513    0.0076597     -3.7  PASS
+bh300 err@10                         0.020899     0.020019     -4.2  PASS
+bh300 err@20                         0.062163     0.060001     -3.5  PASS
+bh300 vmax/c (<1)                     0.92589      0.92554      nan  PASS
+bh300 dE_rel_model@100                0.04783     0.079036     65.2  FAIL
+bh300 dL_rel_model@100                0.30203     0.082531    -72.7  PASS
+bh300 dP_model@100                 5.6379e-05    9.699e-05     72.0  PASS
+two_body tick_ms                       4.7247       3.2553    -31.1  PASS
+expB tick_ms                           4.9509       3.4099    -31.1  PASS
+bh300 tick_ms                          2.4766      0.70108    -71.7  PASS
+expB_batch1_n100 tick_ms               2.4489      0.67098    -72.6  PASS
+info (not gated; bh300 err@100 is at the chaos ceiling and not quoted): two_body err@50 0.04083 -> 0.03511; two_body err@100 0.1308 -> 0.1121; expB err@50 0.1573 -> 0.1488; expB err@100 1.422 -> 1.384; bh300 err@50 0.9119 -> 0.897
+floors: results/chaos_floors.json not found, skipped
+OVERALL FAIL
+| tag | ab20 | ab100 | cl20 | cl100 | expB20 | nr100_dE1000 | nr100_dL1000 | bh300_dE100 | bh300_dL100 | bh300_dE1000 | bh300_dL1000 | pass | nr100 dE@1000 x3 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| r3_s4738 | 0.02148 | 1.382 | 0.05847 | 4.368 | 0.02224 | 0.1758 | 0.01763 | 0.0813 | 0.1448 | 0.5474 | 0.7248 | False | [0.1758, 0.1982, 0.1747] |
+| r3_s4739 | 0.02149 | 1.38 | 0.05857 | 4.375 | 0.02222 | 0.155 | 0.01676 | 0.07266 | 0.1016 | 0.5499 | 0.766 | False | [0.1654, 0.1546, 0.155] |
+| tag | ab20 | ab100 | cl20 | cl100 | expB20 | nr100_dE1000 | nr100_dL1000 | bh300_dE100 | bh300_dL100 | bh300_dE1000 | bh300_dL1000 | pass | nr100 dE@1000 x3 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| frozenE | 0.02327 | 1.397 | 0.06062 | 4.384 | 0.02396 | 0.009409 | 0.01408 | 0.03829 | 0.3104 | 0.5102 | 1.653 | False | [0.0094, 0.0178, 0.0074] |
+| r1_s4738 | 0.02153 | 1.372 | 0.05725 | 4.384 | 0.02214 | 0.005499 | 0.02762 | 0.06057 | 0.1259 | 0.4125 | 1.821 | False | [0.0055, 0.0052, 0.0229] |
+| r1_s4739 | 0.02164 | 1.372 | 0.05743 | 4.414 | 0.02223 | 0.01735 | 0.03927 | 0.05629 | 0.1235 | 0.4568 | 1.678 | False | [0.0274, 0.0093, 0.0173] |
+| r2_s4738 | 0.02154 | 1.378 | 0.05855 | 4.381 | 0.0223 | 0.1599 | 0.03006 | 0.07356 | 0.1621 | 0.6358 | 1.272 | False | [0.1597, 0.1599, 0.1765] |
+| r2_s4739 | 0.02157 | 1.38 | 0.05866 | 4.364 | 0.02232 | 0.1855 | 0.02531 | 0.07526 | 0.09333 | 0.6521 | 0.5784 | False | [0.1544, 0.1855, 0.1991] |
+| r3_s4738 | 0.02148 | 1.382 | 0.05847 | 4.368 | 0.02224 | 0.1758 | 0.01763 | 0.0813 | 0.1448 | 0.5474 | 0.7248 | False | [0.1758, 0.1982, 0.1747] |
+| r3_s4739 | 0.02149 | 1.38 | 0.05857 | 4.375 | 0.02222 | 0.155 | 0.01676 | 0.07266 | 0.1016 | 0.5499 | 0.766 | False | [0.1654, 0.1546, 0.155] |
+[2026-10-19T17:54:48-07:00] LADDER DONE

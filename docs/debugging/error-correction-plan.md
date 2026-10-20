@@ -109,3 +109,4 @@ Docs cherry-picked from unmerged branches (branch in parentheses):
 - test-audit-2026-10-13.md (test-audit-2026-10-13)
 - scatter-contact-c.md, scatter-contact-c-table.md, scatter-correction-research.md (worktree-agent-a51e0b89567ace982; identical on several other branches)
 - contact-grid-review-prompt.md (fix-finetune-dE)
+- Euclid-loss energy-fix ladder (2026-10-19, branch euclid-energy-ladder, job 3752, log in experiment-log.md): from frozen E, Euclid loss, 10k it lr 1e-4 k 20, seeds 4738/4739. Run 1 heads-only: ab err@20 .0233 -> .0216 (-7.5%, gate <= .0076 FAIL), nr100 dE@1000 .0055/.0174 PASS. Run 2 full + L2-SP lam 5: same accuracy, nr100 dE .16/.19 FAIL (dE hypersensitive to ~1e-5 rms weight shifts). Run 3 = Run 2 + nr100/bh300 replay: nr100 dE .18/.16 FAIL, bh300 dL@1000 improved. No arm passes; all arms reach the same accuracy, so the short schedule is the limit. Untried: heads-only at the full 60k-it lr 5e-4 schedule; larger lam.
