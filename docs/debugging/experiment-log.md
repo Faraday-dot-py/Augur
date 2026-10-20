@@ -3294,3 +3294,10 @@ Fixes the mass-ratio OOD blind spot left open by `symlog_densershape` (seed-1200
 ### Solar 1e7 disc (job 3740, 2026-10-19) -- abandoned by user, branch `solar10m` deleted
 
 Rotating-disc IC with 3 placed protoplanets, 1000 ticks. Kernel-only PM (no learned weights) kept 3/3 bound, drift <=.21; orbit_ft2 0/3, E 2/3 (net heats the disc, seeds thrown to e>0.9); no spontaneous fragmentation in truth. User: experiment of low interest, not pursued. Earlier solar/clumpy-1e9 commits remain on `worktree-agent-abd021892286ed5f9`.
+
+### Learned leapfrog / symplectic integrator, research (2026-10-20, jobs 3763 + 3764 CPU, no GPU) -- KILL
+
+Write-up: `docs/debugging/learned-integrator-research.md`; script `scripts/scatter_integrator_noise.py`; raw `results/integrator_noise*.json`.
+Tried: literature + code review of five candidates (learned splitting coefficients, learned drift/kick correction, learned Hamiltonian, learned/adaptive substeps, neural symplectic maps) and an exact-force + injected-force-noise oracle with M = 1/2/4 force evaluations per tick.
+Key numbers (sigma .08 noise reproducing E, noise smooth within a tick): err@20 expB .0247 -> .0243 (-1.8%) at M=2; cluster .1016 -> .0904 (-11%). nr100 dE@1000 exact Verlet-1 |median| .0135 vs KDK-2 .0004. E code check: force is velocity dependent, momfix, not a gradient of one scalar, so no Hamiltonian for a symplectic integrator to preserve.
+Verdict: KILL on err@20 (integrator <= 2% expB / 11% cluster, gate 20%); dE@1000 not provable and needs >= 2 force evaluations (job 3629: E dE x50 without retraining). iid-noise variant (job 3763) is confounded by noise averaging (-30..-54%), do not cite it as integrator gain. Prediction for cluster (<= 7%) was slightly low (11%).
