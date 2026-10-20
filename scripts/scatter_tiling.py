@@ -146,7 +146,8 @@ class TiledScatter:
             xin = torch.cat([x, ak, field[tiles]], 1)
             f = x.new_zeros(len(tiles), m.cf, self.G, self.G) if m.nonet else m.net(xin)
             acc = m.neg_grad(f[:, :1]) + ak
-            a = m.gather(acc, P) * INS[..., None] + m.pp_acc(P, M, K)
+            kw = {"qmask": OWN} if "adapt" in m.opt else {}
+            a = m.gather(acc, P) * INS[..., None] + m.pp_acc(P, M, K, **kw)
             a = a * K[..., None]
         finally:
             self._restore(old)
