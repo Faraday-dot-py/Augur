@@ -15,6 +15,9 @@ ap.add_argument("--n", type=int, default=1200)
 ap.add_argument("--sigma", type=float, default=16.0)
 ap.add_argument("--steps", type=int, default=150)
 ap.add_argument("--seed", type=int, default=4738)
+ap.add_argument("--nt", type=int, default=2)
+ap.add_argument("--tile", type=float, default=64.0)
+ap.add_argument("--halo", type=float, default=16.0)
 a = ap.parse_args()
 
 dev = "cuda"
@@ -35,7 +38,7 @@ with torch.no_grad():
         p, v, st, _ = model.step(p, v, mass[None], msk, st)
         Ps.append(p[0])
     single_setup(model)
-    T = TiledScatter(model, 2, 64, 16, ghosts=True, field_x=True, far=True)
+    T = TiledScatter(model, a.nt, a.tile, a.halo, ghosts=True, field_x=True, far=True)
     ts = (T.init_field(dev), None)
     p, v = pos, vel
     Pl, own = [p], []
@@ -45,5 +48,5 @@ with torch.no_grad():
     single_setup(model)
 
 np.savez(a.out, exact=Pt.float().cpu().numpy(), single=torch.stack(Ps).cpu().numpy(), tiled=torch.stack(Pl).cpu().numpy(),
-         nt=2, tile=64.0, halo=16.0, seed=a.seed)
+         nt=a.nt, tile=a.tile, halo=a.halo, seed=a.seed)
 print("done", a.out, flush=True)
