@@ -326,7 +326,7 @@ class ScatterField(nn.Module):
         r = r_sel.clamp(max=1e5)
         return (self._pair_w(r, mj, ok)[..., None] * ds / r[..., None]).sum(1)
 
-    def pp_acc_adapt(self, pos, mass, mask, knn=16, cap=48, lmax=8, budget=2 ** 25):
+    def pp_acc_adapt(self, pos, mass, mask, knn=16, cap=48, lmax=8, budget=2 ** 25, qmask=None):
         """Exact top-knn pair term with an adaptive multilevel cell list: level l has cells pp/2^l; a query is resolved at the
         coarsest level whose window (3x3 cells at l=0, 5x5 after) holds few enough candidates, and for l>=2 only if its knn-th
         neighbour lies inside the window's guaranteed radius (else it goes finer, then to chunked all-pairs)."""
@@ -338,8 +338,13 @@ class ScatterField(nn.Module):
         pa, ma = pf[act], mm[act]
         ba = (act // N)
         k = min(knn, n - 1)
-        done = torch.zeros(n, dtype=torch.bool, device=dev)
+        if k <= 0:
+            return torch.zeros(B, N, 2, device=dev, dtype=pos.dtype)
+        corner = pa.min(0).values
+        span = float((pa.max(0).values - corner).max())
+        done = torch.zeros(n, dtype=torch.bool, device=dev) if qmask is None else ~(qmask.reshape(-1)[act] > 0)
         qs, accs = [], []
+        self.adapt_stats = {"levels": [], "fallback": 0}
         for l in range(lmax + 1):
             rem = (~done).nonzero()[:, 0]
             if rem.numel() == 0:
@@ -348,8 +353,8 @@ class ScatterField(nn.Module):
             R = 1 if l == 0 else 2
             W = (2 * R + 1) ** 2
             cover = R * s
-            C = int(math.ceil(self.extent / s))
-            cc = ((pa + self.extent / 2) / s).floor().clamp(0, C - 1).long().detach()
+            C = int(span / s) + 2
+            cc = ((pa - corner) / s).floor().long().detach()
             skey, order = torch.sort(ba * C * C + cc[:, 1] * C + cc[:, 0])
             qc, qb = cc[rem], ba[rem]
             sh = torch.arange(-R, R + 1, device=dev)
@@ -386,7 +391,9 @@ class ScatterField(nn.Module):
                         qs.append(qq[okq])
                         accs.append(self._pp_force(ds, r_sel[okq], mj))
                         done[qq[okq]] = True
+            self.adapt_stats["levels"].append((l, int(rem.numel()) - int((~done[rem]).sum())))
         rem = (~done).nonzero()[:, 0]
+        self.adapt_stats["fallback"] = int(rem.numel())
         if rem.numel():
             Q = max(1, budget // n)
             for c0 in range(0, rem.numel(), Q):
@@ -398,14 +405,16 @@ class ScatterField(nn.Module):
                 ds = torch.gather(d, 1, i[..., None].expand(-1, -1, 2))
                 qs.append(qq)
                 accs.append(self._pp_force(ds, r_sel, ma[i]))
+        if not qs:
+            return torch.zeros(B, N, 2, device=dev, dtype=pos.dtype)
         a_act = torch.zeros(n, 2, device=dev, dtype=pos.dtype).index_copy(0, torch.cat(qs), torch.cat(accs))
         return torch.zeros(B * N, 2, device=dev, dtype=pos.dtype).index_copy(0, act, a_act).reshape(B, N, 2)
 
-    def pp_acc(self, pos, mass, mask, knn=16):
+    def pp_acc(self, pos, mass, mask, knn=16, qmask=None):
         B, N = mask.shape
         mode = self.pp_mode(N)
         if mode == "adapt":
-            return self.pp_acc_adapt(pos, mass, mask, knn)
+            return self.pp_acc_adapt(pos, mass, mask, knn, lmax=getattr(self, "adapt_lmax", 8), qmask=qmask)
         if mode == "cell":
             static = "graph" in self.opt and not torch.is_grad_enabled()
             return self.pp_acc_cell(pos, mass, mask, knn, cap=(self._cap_now or self.cell_cap_min) if static else None)
