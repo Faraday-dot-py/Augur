@@ -209,7 +209,7 @@ def phase_farerr(m, dev, specs, fars, out, seeds=SEEDS):
                 ef = exact_far_field(T, pos, mass)
                 old = T._scope()
                 try:
-                    P, V, M, K, OWN, INS, idx = T._pack(pos, vel, mass, list(range(16)))
+                    P, V, M, K, OWN, INS, idx = T._pack(pos, vel, mass, list(range(NT * NT)))
                     x = m.scatter(P, V, M, K * INS)
                     far = T._far_acc(x[:, :1])
                     a_far = m.gather(far, P)
@@ -240,10 +240,47 @@ def phase_farerr(m, dev, specs, fars, out, seeds=SEEDS):
         json.dump(rows, open(out, "w"))
 
 
+@torch.no_grad()
+def phase_time(m, dev, specs, out):
+    from scripts.scatter_tiling_eval import tmed
+    p0, v0 = scene(9000)
+    pos = torch.tensor(p0, dtype=torch.float32, device=dev)
+    vel = torch.tensor(v0, dtype=torch.float32, device=dev)
+    mass = torch.ones(N, device=dev)
+    msk = torch.ones(1, N, device=dev)
+    rows = []
+    for spec in specs:
+        sfar.install_spec(m, spec)
+        ops.retarget(m, round(L / 0.5), L)
+        r = {"spec": spec}
+        st = [(m.init_field(1, dev)[0], None)]
+
+        def sstep():
+            st[0] = m.step(pos[None], vel[None], mass[None], msk, st[0])[2]
+        sstep()
+        r["single_ms"] = tmed(sstep)
+        for name, far in (("far", True), ("halo", False)):
+            T = TiledScatter(m, NT, 64, 16, ghosts=True, field_x=True, far=far, far_c=4)
+            ts = [(T.init_field(dev), None)]
+
+            def tstep():
+                ts[0] = T.step(pos, vel, mass, ts[0])[2]
+            tstep()
+            torch.cuda.reset_peak_memory_stats()
+            base = torch.cuda.memory_allocated()
+            r[name + "_ms"] = tmed(tstep)
+            r[name + "_peak_mb"] = (torch.cuda.max_memory_allocated() - base) / 2 ** 20
+        r["far_term_ms"] = r["far_ms"] - r["halo_ms"]
+        rows.append(r)
+        print(json.dumps(r), flush=True)
+        sfar.install(m, None)
+    json.dump(rows, open(out, "w"))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ckpt", required=True)
-    ap.add_argument("--phase", choices=["table", "wide", "farerr"], required=True)
+    ap.add_argument("--phase", choices=["table", "wide", "farerr", "time"], required=True)
     ap.add_argument("--kernels", default="old")
     ap.add_argument("--far-c", default="4")
     ap.add_argument("--variants", default="far")
@@ -266,6 +303,8 @@ def main():
         phase_table(m, dev, specs, a.out)
     elif a.phase == "wide":
         phase_wide(m, dev, specs, fars, a.out, a.variants.split(","), seeds, a.steps)
+    elif a.phase == "time":
+        phase_time(m, dev, specs, a.out)
     else:
         phase_farerr(m, dev, specs, fars, a.out, seeds)
 

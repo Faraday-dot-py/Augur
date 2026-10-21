@@ -163,27 +163,37 @@ def kfun_from_spec(m, spec):
     raise ValueError(spec)
 
 
-def install(model, kfun):
-    """Swap the model's FFT kernel for K = kfun(r). kfun None restores the shipped one."""
+def install(model, kfun, cache=False):
+    """Swap the model's FFT kernel for K = kfun(r). kfun None restores the shipped one.
+    cache=True keeps the kernel FFT per (grid, cell size) while grad is disabled (inference; the kernel is static)."""
     if not hasattr(model, "_kernel_fft_orig"):
         model._kernel_fft_orig = model._kernel_fft
     if kfun is None:
         model._kernel_fft = model._kernel_fft_orig
         return model
+    store = {}
 
     def kfft(self, rho):
         G = self.grid
+        key = (G, round(float(self.h), 6), rho.dtype, rho.device)
+        if cache and not torch.is_grad_enabled() and key in store:
+            return store[key]
         idx = torch.arange(2 * G, device=rho.device, dtype=rho.dtype)
         d = torch.minimum(idx, 2 * G - idx) * self.h
         r = torch.sqrt(d[:, None] ** 2 + d[None, :] ** 2)
         K = kfun(r)
-        return torch.fft.rfft2(K)
+        Kf = torch.fft.rfft2(K)
+        if cache and not torch.is_grad_enabled():
+            store[key] = Kf
+        return Kf
     model._kernel_fft = types.MethodType(kfft, model)
     return model
 
 
 def install_spec(model, spec):
-    install(model, kfun_from_spec(model, spec))
+    cache = spec.endswith("+cache")
+    spec = spec[:-6] if cache else spec
+    install(model, kfun_from_spec(model, spec), cache=cache)
     return model
 
 
