@@ -41,6 +41,7 @@ ARMS = {
     "T8w": dict(kind="tile", nt=8, tile=64, halo=16, kern=R1B),
     "T16": dict(kind="tile", nt=16, tile=32, halo=16, kern=R1B),
     "S1in": dict(kind="single", kern=R1B, mf="in"),
+    "S1un": dict(kind="single", kern=R1B, mf="un"),
     "T4in": dict(kind="tile", nt=4, tile=32, halo=16, kern=R1B, mf="in"),
     "T8in": dict(kind="tile", nt=8, tile=32, halo=16, kern=R1B, mf="in"),
     "T8nf": dict(kind="tile", nt=8, tile=32, halo=16, kern=R1B, far=False),
@@ -102,6 +103,7 @@ class Arm:
             sfar.install_spec(m, spec["kern"])
         mf = spec.get("mf", True)
         self.mfin = mf == "in"
+        self.mfun = mf == "un"
         mf = mf is True
         self.m, self.dev = m, dev
         if self.kind == "single":
@@ -116,8 +118,14 @@ class Arm:
 
     def force(self, pos, v, M, f):
         if self.kind == "single":
-            a, f = self.m.force(pos[None], v[None], M[None], torch.ones_like(M)[None], f)
+            a, fn = self.m._force(pos[None], v[None], M[None], torch.ones_like(M)[None], f) if self.mfun else self.m.force(pos[None], v[None], M[None], torch.ones_like(M)[None], f)
             a = a[0]
+            if self.mfun:
+                _, an, _, _, _ = self.parts(pos, v, M, f)
+                ins = (pos.abs().amax(-1) < self.half) & (M > 0)
+                w = (M * ins)[:, None]
+                a = a - ins[:, None] * (w * an).sum(0, keepdim=True) / w.sum().clamp_min(1e-9)
+            f = fn
         else:
             a, f = self.T.force(pos, v, M, f)
         if self.mfin:
@@ -127,6 +135,9 @@ class Arm:
         return a, f
 
     def set_momfix(self, on):
+        if self.mfun:
+            old, self.mfun = self.mfun, on
+            return old
         if self.mfin:
             old, self.mfin = self.mfin, on
             return old
