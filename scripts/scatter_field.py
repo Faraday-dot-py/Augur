@@ -60,7 +60,7 @@ class ScatterField(nn.Module):
 
     def __init__(self, grid=64, extent=64.0, net="local", recurrent=True, hidden_ch=0, dt=0.1, width=32, layers=8,
                  levels=5, momfix=True, in_scale=1.0, potential=False, kernel=False, pp=0.0, split=False, nonet=False, verlet=False,
-                 prior=False, knn=16, eps=0.5, cu=False, epsin=False, norm=""):
+                 prior=False, knn=16, eps=0.5, cu=False, epsin=False, norm="", ghost=False):
         super().__init__()
         assert not prior or (kernel and pp and split)
         self.prior, self.knn, self.eps = prior, knn, eps
@@ -68,6 +68,10 @@ class ScatterField(nn.Module):
         self.verlet = verlet
         self.far, self.far_band, self.far_eps, self.substeps = 0, 0.25, 0.5, 1
         self.cu, self.epsin, self.norm = cu, epsin, norm
+        self.kpad, self.npad = ("ghost" if ghost else "zero"), "zero"
+        if ghost:
+            self.gpad = nn.Conv2d(1, 1, (3, 3), padding=(1, 0), bias=False)
+            nn.init.zeros_(self.gpad.weight)
         self.eps_cur = EPS0
         ncol = 2 + int(cu) + int(epsin)
         if norm == "dens":
@@ -202,8 +206,29 @@ class ScatterField(nn.Module):
         else:
             Kf = self._kernel_fft(rho)
         rf = torch.fft.rfft2(rho, s=(2 * G, 2 * G))
-        phi = torch.fft.irfft2(rf * Kf, s=(2 * G, 2 * G))[..., :G, :G] * self.h ** 2
-        return self.neg_grad(phi)
+        full = torch.fft.irfft2(rf * Kf, s=(2 * G, 2 * G)) * self.h ** 2
+        if self.kpad == "ext":
+            idx = torch.tensor([2 * G - 1] + list(range(G + 1)), device=rho.device)
+            return self.neg_grad(full[..., idx, :][..., idx], "none")
+        if self.kpad == "ghost":
+            return self.neg_grad(self._ghost_pad(full[..., :G, :G]), "none")
+        return self.neg_grad(full[..., :G, :G], self.kpad)
+
+    def _ghost_pad(self, phi):
+        """Learned ghost cells for the kernel potential: one cell beyond each side, a linear 3x3 stencil (3 cells deep, 3 along the edge, weights shared by the
+        four sides) of the outermost cells; zero weights = zero padding."""
+        G = phi.shape[-1]
+        r = self.gpad(phi[..., G - 3:])[..., 0]
+        l = self.gpad(phi[..., :3].flip(-1))[..., 0]
+        t = self.gpad(phi[..., G - 3:, :].transpose(-1, -2))[..., 0]
+        b = self.gpad(phi[..., :3, :].flip(-2).transpose(-1, -2))[..., 0]
+        p = F.pad(phi, (1, 1, 1, 1))
+        p = p.clone()
+        p[..., 1:-1, G + 1] = r
+        p[..., 1:-1, 0] = l
+        p[..., G + 1, 1:-1] = t
+        p[..., 0, 1:-1] = b
+        return p
 
     def _pair_w(self, r, mj, ok):
         g = self.ppmlp(self._feat(r, "p"))[..., 0]
@@ -402,8 +427,11 @@ class ScatterField(nn.Module):
             a = a + aq
         return a * mask[..., None]
 
-    def neg_grad(self, phi):
-        p = F.pad(phi, (1, 1, 1, 1))
+    def neg_grad(self, phi, pad="zero"):
+        if pad == "none":
+            p = phi
+        else:
+            p = F.pad(phi, (1, 1, 1, 1), mode="replicate" if pad == "rep" else "constant")
         gx = (p[:, :, 1:-1, 2:] - p[:, :, 1:-1, :-2]) / (2 * self.h)
         gy = (p[:, :, 2:, 1:-1] - p[:, :, :-2, 1:-1]) / (2 * self.h)
         return -torch.cat([gx, gy], 1)
@@ -468,7 +496,7 @@ class ScatterField(nn.Module):
                 field = field.float()
             else:
                 field = self.net(x)
-        acc = self.neg_grad(field[:, :1]) if self.potential else field[:, :2]
+        acc = self.neg_grad(field[:, :1], self.npad) if self.potential else field[:, :2]
         if self.kernel:
             acc = acc + ak
         a_tok = self.gather(acc, pos)
@@ -1076,6 +1104,12 @@ def _opt_ok(model, name):
 def apply_opt(model, name):
     """Besides speed flags: far[@band] / farquad[@band] (far-field multipole outside/at the grid edge), subN (N force evals per tick)."""
     model.opt.add(name)
+    if name in ("kext", "krep"):
+        model.kpad = name[1:]
+        return
+    if name == "nrep":
+        model.npad = "rep"
+        return
     if name.startswith("far"):
         base, _, band = name.partition("@")
         model.far = 2 if base == "farquad" else 1
