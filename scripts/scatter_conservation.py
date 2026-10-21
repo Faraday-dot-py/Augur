@@ -195,6 +195,9 @@ def build_model(args, dev):
     model.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
     model.eval()
     sf.apply_opts(model, args.opt)
+    if getattr(args, "kernel", "old") != "old":
+        from scripts import scatter_far
+        scatter_far.install_spec(model, args.kernel)
     return model
 
 
@@ -206,7 +209,7 @@ def run(args):
     ticks = sample_ticks(steps)
     for name in args.regimes.split(","):
         kind, n, per = REGIMES[name]
-        pos0, vel0, seeds = make_scenes(kind, n, per)
+        pos0, vel0, seeds = make_scenes(kind, n, per * getattr(args, "per_mult", 1))
         P0 = torch.tensor(pos0, device=dev)
         V0 = torch.tensor(vel0, device=dev)
         B = len(seeds)
@@ -316,9 +319,11 @@ def main():
         p.add_argument("--ckpt", required=True)
         p.add_argument("--opt", default="default")
         p.add_argument("--out-dir", default="results/conservation")
+        p.add_argument("--kernel", default="old", help="scatter_far kernel spec (old = shipped kmlp)")
         if nm == "run":
             p.add_argument("--steps", type=int, default=10000)
             p.add_argument("--regimes", default=",".join(REGIMES))
+            p.add_argument("--per-mult", type=int, default=1, help="multiply scenes per seed (more scenes for tighter medians)")
     args = ap.parse_args()
     os.makedirs(args.out_dir, exist_ok=True)
     run(args) if args.cmd == "run" else probe(args)

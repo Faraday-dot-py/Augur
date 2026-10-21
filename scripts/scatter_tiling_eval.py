@@ -345,10 +345,14 @@ def main():
     ap.add_argument("--phase", choices=["force", "roll", "scale", "big", "snaps"], required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--variants", default="naive,g16,g16_fx,g16_fx_far,g8_fx,g8_fx_far,g32_fx,t32_naive,t32_g16_fx,t32_g16_fx_far")
+    ap.add_argument("--kernel", default="old", help="scatter_far kernel spec (old = shipped kmlp)")
     a = ap.parse_args()
     dev = torch.device("cuda")
     torch.manual_seed(4738)
     model = load(a.ckpt, dev)
+    if a.kernel != "old":
+        from scripts import scatter_far
+        scatter_far.install_spec(model, a.kernel)
     if a.phase == "force":
         phase_force(model, dev, a.out)
     elif a.phase == "roll":
