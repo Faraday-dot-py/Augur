@@ -1,0 +1,347 @@
+=== small-N truth check
+seed 4738 old: err@20/50/100/200 [1.311, 7.008, 17.263, 40.323] dE_vs_truth@200 0.9364 nonfinite 0 n_v>=c 0 band_max 0.0443 (truth 0.0417) outside_end 0.198 (truth 0.191)
+seed 4738 far: err@20/50/100/200 [1.309, 7.021, 17.262, 40.054] dE_vs_truth@200 0.9353 nonfinite 0 n_v>=c 0 band_max 0.0437 (truth 0.0417) outside_end 0.197 (truth 0.191)
+seed 4738 edge: err@20/50/100/200 [1.286, 7.127, 18.489, 44.957] dE_vs_truth@200 0.7178 nonfinite 0 n_v>=c 0 band_max 0.0428 (truth 0.0417) outside_end 0.239 (truth 0.191)
+seed 4738 new: err@20/50/100/200 [1.286, 7.12, 18.473, 44.684] dE_vs_truth@200 0.7071 nonfinite 0 n_v>=c 0 band_max 0.0433 (truth 0.0417) outside_end 0.239 (truth 0.191)
+seed 9000 old: err@20/50/100/200 [1.228, 6.884, 16.231, 36.669] dE_vs_truth@200 0.9017 nonfinite 0 n_v>=c 0 band_max 0.0432 (truth 0.0403) outside_end 0.194 (truth 0.175)
+seed 9000 far: err@20/50/100/200 [1.228, 6.887, 16.281, 36.91] dE_vs_truth@200 0.9031 nonfinite 0 n_v>=c 0 band_max 0.0441 (truth 0.0403) outside_end 0.193 (truth 0.175)
+seed 9000 edge: err@20/50/100/200 [1.206, 6.956, 17.48, 41.459] dE_vs_truth@200 0.6877 nonfinite 0 n_v>=c 0 band_max 0.0437 (truth 0.0403) outside_end 0.233 (truth 0.175)
+seed 9000 new: err@20/50/100/200 [1.207, 6.95, 17.492, 41.481] dE_vs_truth@200 0.6916 nonfinite 0 n_v>=c 0 band_max 0.0440 (truth 0.0403) outside_end 0.234 (truth 0.175)
+DONE
+=== BH 1e6 old/new
+/home/adamwebb/augur-p1e8/scripts/scatter_bh_1b.py:282: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  err = float((a - ref[0]).abs().max() / ref[0].abs().max())
+selftest: max|a_chunked - model.force| / max|a| = 3.05e-04
+[bh1e6_old] init force 4 ms, peak 0.2 GB
+[bh1e6_old] tick 1 3 ms out 0.000 vmax/c 1.0000 pmax 3.89e+03 core 8.312 nonfinite 0 peak 0.2 GB wall 0 s
+[bh1e6_old] tick 6 3 ms out 0.000 vmax/c 1.0000 pmax 3.14e+04 core 3.483 nonfinite 0 peak 0.3 GB wall 0 s
+[bh1e6_old] tick 11 3 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 0.3 GB wall 0 s
+[bh1e6_old] tick 16 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 0.4 GB wall 0 s
+[bh1e6_old] tick 21 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 0.5 GB wall 0 s
+[bh1e6_old] tick 26 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 0.6 GB wall 0 s
+[bh1e6_old] tick 31 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 0.6 GB wall 0 s
+[bh1e6_old] tick 36 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 0.7 GB wall 0 s
+[bh1e6_old] tick 41 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 0.8 GB wall 1 s
+[bh1e6_old] tick 46 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 0.9 GB wall 1 s
+[bh1e6_old] tick 51 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 0.9 GB wall 1 s
+[bh1e6_old] tick 56 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.0 GB wall 1 s
+[bh1e6_old] tick 61 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.1 GB wall 1 s
+[bh1e6_old] tick 66 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.1 GB wall 1 s
+[bh1e6_old] tick 71 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.2 GB wall 1 s
+[bh1e6_old] tick 76 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.3 GB wall 1 s
+[bh1e6_old] tick 81 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.4 GB wall 1 s
+[bh1e6_old] tick 86 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.4 GB wall 1 s
+[bh1e6_old] tick 91 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.5 GB wall 1 s
+[bh1e6_old] tick 96 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.6 GB wall 1 s
+[bh1e6_old] tick 101 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.7 GB wall 1 s
+[bh1e6_old] tick 106 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.7 GB wall 1 s
+[bh1e6_old] tick 111 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.8 GB wall 2 s
+[bh1e6_old] tick 116 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.9 GB wall 2 s
+[bh1e6_old] tick 121 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.0 GB wall 2 s
+[bh1e6_old] tick 126 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.0 GB wall 2 s
+[bh1e6_old] tick 131 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.1 GB wall 2 s
+[bh1e6_old] tick 136 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.2 GB wall 2 s
+[bh1e6_old] tick 141 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.3 GB wall 2 s
+[bh1e6_old] tick 146 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.3 GB wall 2 s
+[bh1e6_old] tick 151 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.4 GB wall 2 s
+[bh1e6_old] tick 156 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.5 GB wall 2 s
+[bh1e6_old] tick 161 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.6 GB wall 2 s
+[bh1e6_old] tick 166 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.6 GB wall 2 s
+[bh1e6_old] tick 171 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.7 GB wall 2 s
+[bh1e6_old] tick 176 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.8 GB wall 3 s
+[bh1e6_old] tick 181 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.8 GB wall 3 s
+[bh1e6_old] tick 186 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.9 GB wall 3 s
+[bh1e6_old] tick 191 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 3.0 GB wall 3 s
+[bh1e6_old] tick 196 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 3.1 GB wall 3 s
+[bh1e6_old] tick 200 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 3.1 GB wall 3 s
+n 1000000: first 3 ms median 10 ms ticks 1.9 s loop 2.9 s peak 3.1 GB 10.07 ns/body/tick
+hist saved
+snaps saved
+/home/adamwebb/augur-p1e8/scripts/scatter_bh_1b.py:282: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  err = float((a - ref[0]).abs().max() / ref[0].abs().max())
+selftest: max|a_chunked - model.force| / max|a| = 1.21e-04
+[bh1e6_new] init force 4 ms, peak 0.2 GB
+[bh1e6_new] tick 1 4 ms out 0.000 vmax/c 1.0000 pmax 2.75e+03 core 8.313 nonfinite 0 peak 0.2 GB wall 0 s
+[bh1e6_new] tick 6 3 ms out 0.000 vmax/c 1.0000 pmax 3.14e+04 core 3.483 nonfinite 0 peak 0.3 GB wall 0 s
+[bh1e6_new] tick 11 3 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 0.3 GB wall 0 s
+[bh1e6_new] tick 16 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 0.4 GB wall 0 s
+[bh1e6_new] tick 21 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 0.5 GB wall 0 s
+[bh1e6_new] tick 26 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 0.6 GB wall 0 s
+[bh1e6_new] tick 31 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 0.6 GB wall 0 s
+[bh1e6_new] tick 36 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 0.7 GB wall 0 s
+[bh1e6_new] tick 41 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 0.8 GB wall 1 s
+[bh1e6_new] tick 46 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 0.9 GB wall 1 s
+[bh1e6_new] tick 51 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 0.9 GB wall 1 s
+[bh1e6_new] tick 56 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.0 GB wall 1 s
+[bh1e6_new] tick 61 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.1 GB wall 1 s
+[bh1e6_new] tick 66 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.1 GB wall 1 s
+[bh1e6_new] tick 71 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.2 GB wall 1 s
+[bh1e6_new] tick 76 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.3 GB wall 1 s
+[bh1e6_new] tick 81 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.4 GB wall 1 s
+[bh1e6_new] tick 86 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.4 GB wall 1 s
+[bh1e6_new] tick 91 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.5 GB wall 1 s
+[bh1e6_new] tick 96 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.6 GB wall 1 s
+[bh1e6_new] tick 101 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.7 GB wall 1 s
+[bh1e6_new] tick 106 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.7 GB wall 1 s
+[bh1e6_new] tick 111 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.8 GB wall 2 s
+[bh1e6_new] tick 116 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 1.9 GB wall 2 s
+[bh1e6_new] tick 121 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.0 GB wall 2 s
+[bh1e6_new] tick 126 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.0 GB wall 2 s
+[bh1e6_new] tick 131 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.1 GB wall 2 s
+[bh1e6_new] tick 136 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.2 GB wall 2 s
+[bh1e6_new] tick 141 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.3 GB wall 2 s
+[bh1e6_new] tick 146 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.3 GB wall 2 s
+[bh1e6_new] tick 151 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.4 GB wall 2 s
+[bh1e6_new] tick 156 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.5 GB wall 2 s
+[bh1e6_new] tick 161 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.6 GB wall 2 s
+[bh1e6_new] tick 166 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.6 GB wall 2 s
+[bh1e6_new] tick 171 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.7 GB wall 2 s
+[bh1e6_new] tick 176 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.8 GB wall 3 s
+[bh1e6_new] tick 181 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.8 GB wall 3 s
+[bh1e6_new] tick 186 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 2.9 GB wall 3 s
+[bh1e6_new] tick 191 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 3.0 GB wall 3 s
+[bh1e6_new] tick 196 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 3.1 GB wall 3 s
+[bh1e6_new] tick 200 10 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 1000000 peak 3.1 GB wall 3 s
+n 1000000: first 4 ms median 10 ms ticks 1.9 s loop 2.9 s peak 3.1 GB 9.98 ns/body/tick
+hist saved
+snaps saved
+=== disc 1e6 old/new
+{"tick": 0, "nonfinite": 0, "vmax": 9.927286148071289, "frac_outside": 0.0, "core_in2": 0.8892973065376282, "core_r50": 0.9032190442085266, "r50": 8.468646049499512, "r90": 12.853574752807617, "centre": [0.006561088375747204, -0.04555245861411095], "wall": 0.3447491640690714}
+{"tick": 50, "nonfinite": 0, "vmax": 9.922730445861816, "frac_outside": 0.0007179971435107291, "core_in2": 0.8421728610992432, "core_r50": 0.7639743685722351, "r50": 8.458066940307617, "r90": 12.8138427734375, "centre": [0.03090788424015045, -0.01742703840136528], "wall": 1.0595523051451892}
+{"tick": 100, "nonfinite": 0, "vmax": 9.922886848449707, "frac_outside": 0.01144095417112112, "core_in2": 0.8447917699813843, "core_r50": 0.7595840096473694, "r50": 8.72668170928955, "r90": 12.80420970916748, "centre": [0.030474288389086723, 0.012606607750058174], "wall": 1.8414408569224179}
+{"tick": 150, "nonfinite": 0, "vmax": 9.923008918762207, "frac_outside": 0.01570293679833412, "core_in2": 0.844869077205658, "core_r50": 0.7615094184875488, "r50": 8.78936767578125, "r90": 13.889603614807129, "centre": [-0.021008148789405823, 0.07194772362709045], "wall": 2.580571728060022}
+{"tick": 200, "nonfinite": 0, "vmax": 9.923121452331543, "frac_outside": 0.01577293686568737, "core_in2": 0.8430756330490112, "core_r50": 0.7694159150123596, "r50": 8.348718643188477, "r90": 15.370133399963379, "centre": [-0.039061062037944794, 0.04526139050722122], "wall": 3.2644531179685146}
+{"tick": 250, "nonfinite": 0, "vmax": 9.923172950744629, "frac_outside": 0.01577293686568737, "core_in2": 0.8419979810714722, "core_r50": 0.7743681073188782, "r50": 8.386953353881836, "r90": 16.804794311523438, "centre": [-0.03993375971913338, 0.06700026988983154], "wall": 3.992342612007633}
+{"tick": 300, "nonfinite": 0, "vmax": 9.923210144042969, "frac_outside": 0.01577293686568737, "core_in2": 0.8422379493713379, "core_r50": 0.7819400429725647, "r50": 8.740250587463379, "r90": 17.35075569152832, "centre": [-0.018330788239836693, 0.08991656452417374], "wall": 4.676584312925115}
+{"tick": 350, "nonfinite": 0, "vmax": 9.923237800598145, "frac_outside": 0.015778936445713043, "core_in2": 0.841461181640625, "core_r50": 0.7923421859741211, "r50": 8.702006340026855, "r90": 16.995380401611328, "centre": [-0.053001079708337784, 0.09461799263954163], "wall": 5.434376894962043}
+{"tick": 400, "nonfinite": 0, "vmax": 9.923347473144531, "frac_outside": 0.016220934689044952, "core_in2": 0.839842677116394, "core_r50": 0.8028068542480469, "r50": 8.281953811645508, "r90": 15.778861045837402, "centre": [-0.0006284392438828945, 0.09869444370269775], "wall": 6.225747659103945}
+{"tick": 450, "nonfinite": 0, "vmax": 9.92351245880127, "frac_outside": 0.016644934192299843, "core_in2": 0.8374270796775818, "core_r50": 0.8248414397239685, "r50": 8.544841766357422, "r90": 14.927545547485352, "centre": [0.002095366595312953, 0.1537940353155136], "wall": 6.977350411005318}
+{"tick": 500, "nonfinite": 0, "vmax": 9.923660278320312, "frac_outside": 0.01686193235218525, "core_in2": 0.8347918391227722, "core_r50": 0.8521807193756104, "r50": 8.43433952331543, "r90": 15.053807258605957, "centre": [-0.007783145643770695, 0.21251197159290314], "wall": 7.764859521063045}
+tick 500 median 3 ms peak 0.2 GB
+{"tick": 550, "nonfinite": 0, "vmax": 9.9238862991333, "frac_outside": 0.016963932663202286, "core_in2": 0.831497848033905, "core_r50": 0.8869130611419678, "r50": 8.19006633758545, "r90": 16.842235565185547, "centre": [-0.04806269705295563, 0.22215412557125092], "wall": 9.22373209008947}
+{"tick": 600, "nonfinite": 0, "vmax": 9.924206733703613, "frac_outside": 0.01705293171107769, "core_in2": 0.8258614540100098, "core_r50": 0.9391245245933533, "r50": 9.38086223602295, "r90": 20.068880081176758, "centre": [-0.02591574378311634, 0.2624737620353699], "wall": 9.967426816001534}
+{"tick": 650, "nonfinite": 0, "vmax": 9.924415588378906, "frac_outside": 0.01712893135845661, "core_in2": 0.8188790082931519, "core_r50": 0.9943749308586121, "r50": 11.7127046585083, "r90": 23.195222854614258, "centre": [-0.05303309112787247, 0.31411224603652954], "wall": 10.680293251061812}
+{"tick": 700, "nonfinite": 0, "vmax": 9.924489974975586, "frac_outside": 0.017305931076407433, "core_in2": 0.8097453117370605, "core_r50": 1.0643056631088257, "r50": 12.25085735321045, "r90": 25.327056884765625, "centre": [-0.0433788038790226, 0.32946187257766724], "wall": 11.49453555000946}
+{"tick": 750, "nonfinite": 0, "vmax": 9.924606323242188, "frac_outside": 0.01751592941582203, "core_in2": 0.8005139827728271, "core_r50": 1.1380585432052612, "r50": 11.640874862670898, "r90": 27.359909057617188, "centre": [-0.03756667301058769, 0.28084275126457214], "wall": 12.263410549145192}
+{"tick": 800, "nonfinite": 0, "vmax": 9.924860000610352, "frac_outside": 0.017759928479790688, "core_in2": 0.7858170866966248, "core_r50": 1.2383413314819336, "r50": 11.683975219726562, "r90": 27.769527435302734, "centre": [0.07723510265350342, 0.229363352060318], "wall": 12.962607848923653}
+{"tick": 850, "nonfinite": 0, "vmax": 9.924992561340332, "frac_outside": 0.017965927720069885, "core_in2": 0.7658334970474243, "core_r50": 1.340109944343567, "r50": 11.851642608642578, "r90": 26.65926170349121, "centre": [0.11531174182891846, 0.16115321218967438], "wall": 13.642742845928296}
+{"tick": 900, "nonfinite": 0, "vmax": 9.925253868103027, "frac_outside": 0.01811392791569233, "core_in2": 0.7325560450553894, "core_r50": 1.4695607423782349, "r50": 12.699583053588867, "r90": 25.37173843383789, "centre": [0.18989768624305725, 0.10359470546245575], "wall": 14.353829065104946}
+{"tick": 950, "nonfinite": 0, "vmax": 9.925457000732422, "frac_outside": 0.018240926787257195, "core_in2": 0.6907466650009155, "core_r50": 1.607061743736267, "r50": 14.10240650177002, "r90": 25.85720443725586, "centre": [0.21818503737449646, 0.06727983057498932], "wall": 15.026181804947555}
+{"tick": 1000, "nonfinite": 0, "vmax": 9.92565631866455, "frac_outside": 0.01835692673921585, "core_in2": 0.6301453113555908, "core_r50": 1.7597488164901733, "r50": 14.459075927734375, "r90": 28.21109390258789, "centre": [0.29429471492767334, -0.01353108324110508], "wall": 15.723306172061712}
+tick 1000 median 3 ms peak 0.2 GB
+{"tick": 1050, "nonfinite": 0, "vmax": 9.92595386505127, "frac_outside": 0.018473926931619644, "core_in2": 0.5396499037742615, "core_r50": 1.9407191276550293, "r50": 14.71066665649414, "r90": 30.8414306640625, "centre": [0.32689744234085083, -0.04881935194134712], "wall": 17.498322061961517}
+{"tick": 1100, "nonfinite": 0, "vmax": 9.926149368286133, "frac_outside": 0.018591925501823425, "core_in2": 0.4024529755115509, "core_r50": 2.129786968231201, "r50": 14.855520248413086, "r90": 31.966625213623047, "centre": [0.32951411604881287, -0.02525373175740242], "wall": 18.230579666094854}
+{"tick": 1150, "nonfinite": 0, "vmax": 9.92638111114502, "frac_outside": 0.018686925992369652, "core_in2": 0.25762295722961426, "core_r50": 2.3347280025482178, "r50": 14.976661682128906, "r90": 32.73118209838867, "centre": [0.3050701916217804, -0.018707644194364548], "wall": 18.91290315706283}
+{"tick": 1200, "nonfinite": 0, "vmax": 9.926444053649902, "frac_outside": 0.018754925578832626, "core_in2": 0.17453700304031372, "core_r50": 2.539226531982422, "r50": 14.45816421508789, "r90": 32.540061950683594, "centre": [0.2856062352657318, -0.021489901468157768], "wall": 19.610541234957054}
+{"tick": 1250, "nonfinite": 0, "vmax": 9.92657470703125, "frac_outside": 0.018835924565792084, "core_in2": 0.11716049164533615, "core_r50": 2.759263038635254, "r50": 14.09531021118164, "r90": 31.264602661132812, "centre": [0.32004743814468384, 0.01428302749991417], "wall": 20.304457372054458}
+{"tick": 1300, "nonfinite": 0, "vmax": 9.926652908325195, "frac_outside": 0.018893925473093987, "core_in2": 0.07985294610261917, "core_r50": 2.9803264141082764, "r50": 13.539709091186523, "r90": 30.00403594970703, "centre": [0.2725653052330017, -0.036543238908052444], "wall": 21.03575401310809}
+{"tick": 1350, "nonfinite": 0, "vmax": 9.9267578125, "frac_outside": 0.01893492415547371, "core_in2": 0.055595315992832184, "core_r50": 3.2019174098968506, "r50": 13.271129608154297, "r90": 28.90703010559082, "centre": [0.3121803402900696, -0.02048424817621708], "wall": 21.769937593024224}
+{"tick": 1400, "nonfinite": 0, "vmax": 9.926892280578613, "frac_outside": 0.018970925360918045, "core_in2": 0.03945067524909973, "core_r50": 3.435016393661499, "r50": 12.77730941772461, "r90": 27.790483474731445, "centre": [0.29102084040641785, -0.03309044986963272], "wall": 22.501663715112954}
+{"tick": 1450, "nonfinite": 0, "vmax": 9.926987648010254, "frac_outside": 0.019009923562407494, "core_in2": 0.027275091037154198, "core_r50": 3.671605110168457, "r50": 13.14653491973877, "r90": 27.385814666748047, "centre": [0.27974361181259155, -0.026232602074742317], "wall": 23.203198855975643}
+{"tick": 1500, "nonfinite": 0, "vmax": 9.927160263061523, "frac_outside": 0.01902092434465885, "core_in2": 0.018499238416552544, "core_r50": 3.920590877532959, "r50": 13.431608200073242, "r90": 27.52884864807129, "centre": [0.2545626759529114, 0.010035902261734009], "wall": 23.908441317034885}
+tick 1500 median 4 ms peak 0.2 GB
+{"tick": 1550, "nonfinite": 0, "vmax": 9.927286148071289, "frac_outside": 0.019043924286961555, "core_in2": 0.013428112491965294, "core_r50": 4.192619323730469, "r50": 13.484683990478516, "r90": 27.240341186523438, "centre": [0.29576486349105835, 0.0053721023723483086], "wall": 26.16030338895507}
+{"tick": 1600, "nonfinite": 0, "vmax": 9.927411079406738, "frac_outside": 0.01908092387020588, "core_in2": 0.00993485189974308, "core_r50": 4.468015193939209, "r50": 12.991628646850586, "r90": 27.16446876525879, "centre": [0.2882876694202423, 0.02955380082130432], "wall": 26.867453115992248}
+{"tick": 1650, "nonfinite": 0, "vmax": 9.92747974395752, "frac_outside": 0.01911592297255993, "core_in2": 0.007023122627288103, "core_r50": 4.758346080780029, "r50": 12.256194114685059, "r90": 27.346118927001953, "centre": [0.3542747497558594, 0.024800768122076988], "wall": 27.634777137078345}
+{"tick": 1700, "nonfinite": 0, "vmax": 9.92751407623291, "frac_outside": 0.019158923998475075, "core_in2": 0.005302925128489733, "core_r50": 5.044468402862549, "r50": 11.895278930664062, "r90": 27.36252212524414, "centre": [0.3823889195919037, 0.0248542632907629], "wall": 28.41917618107982}
+{"tick": 1750, "nonfinite": 0, "vmax": 9.927619934082031, "frac_outside": 0.019192922860383987, "core_in2": 0.003989393822848797, "core_r50": 5.33411979675293, "r50": 12.910881042480469, "r90": 27.397050857543945, "centre": [0.4119279980659485, 0.00313871493563056], "wall": 29.17112461500801}
+{"tick": 1800, "nonfinite": 0, "vmax": 9.927720069885254, "frac_outside": 0.01924092322587967, "core_in2": 0.002932062139734626, "core_r50": 5.6306843757629395, "r50": 13.921442031860352, "r90": 27.60808753967285, "centre": [0.3986218571662903, 0.04974038898944855], "wall": 29.967455656034872}
+{"tick": 1850, "nonfinite": 0, "vmax": 9.92786693572998, "frac_outside": 0.019294923171401024, "core_in2": 0.002484729513525963, "core_r50": 5.937803745269775, "r50": 14.727822303771973, "r90": 28.43526268005371, "centre": [0.4467741847038269, 0.0465770959854126], "wall": 30.739462272031233}
+{"tick": 1900, "nonfinite": 0, "vmax": 9.9280424118042, "frac_outside": 0.019315922632813454, "core_in2": 0.0020902634132653475, "core_r50": 6.266387462615967, "r50": 15.531412124633789, "r90": 29.031726837158203, "centre": [0.5201706886291504, 0.014255656860768795], "wall": 31.425116474041715}
+{"tick": 1950, "nonfinite": 0, "vmax": 9.928215980529785, "frac_outside": 0.01934192329645157, "core_in2": 0.001801530597731471, "core_r50": 6.603551387786865, "r50": 15.096055030822754, "r90": 29.51312828063965, "centre": [0.6184576153755188, 0.01441361103206873], "wall": 32.2546517259907}
+{"tick": 2000, "nonfinite": 0, "vmax": 9.928382873535156, "frac_outside": 0.019366923719644547, "core_in2": 0.0014070644974708557, "core_r50": 6.948296070098877, "r50": 14.309002876281738, "r90": 30.01801109313965, "centre": [0.705529510974884, 0.01848982460796833], "wall": 33.0175941050984}
+tick 2000 median 4 ms peak 0.2 GB
+{"tick": 2050, "nonfinite": 0, "vmax": 9.928507804870605, "frac_outside": 0.019423922523856163, "core_in2": 0.0011549316113814712, "core_r50": 7.30656623840332, "r50": 14.033050537109375, "r90": 30.42344856262207, "centre": [0.8180485367774963, -0.0007575394702143967], "wall": 35.72004352812655}
+{"tick": 2100, "nonfinite": 0, "vmax": 9.928597450256348, "frac_outside": 0.01949792169034481, "core_in2": 0.0008621320012025535, "core_r50": 7.656760215759277, "r50": 14.670194625854492, "r90": 30.557279586791992, "centre": [0.8376458883285522, 0.0401577427983284], "wall": 36.47828593105078}
+{"tick": 2150, "nonfinite": 0, "vmax": 9.928688049316406, "frac_outside": 0.019555922597646713, "core_in2": 0.0007238655816763639, "core_r50": 8.015156745910645, "r50": 15.743415832519531, "r90": 30.134708404541016, "centre": [0.8866415619850159, 0.05163983255624771], "wall": 37.3069425211288}
+{"tick": 2200, "nonfinite": 0, "vmax": 9.928817749023438, "frac_outside": 0.019586922600865364, "core_in2": 0.0006709989975206554, "core_r50": 8.37071418762207, "r50": 16.07000160217285, "r90": 30.113096237182617, "centre": [0.8704468607902527, 0.07346608489751816], "wall": 38.1019899379462}
+{"tick": 2250, "nonfinite": 0, "vmax": 9.92891788482666, "frac_outside": 0.019621921703219414, "core_in2": 0.0005937324604019523, "core_r50": 8.732815742492676, "r50": 16.310302734375, "r90": 30.083127975463867, "centre": [0.8475816249847412, 0.09929364919662476], "wall": 38.83505668514408}
+{"tick": 2300, "nonfinite": 0, "vmax": 9.928997993469238, "frac_outside": 0.01963992230594158, "core_in2": 0.0005977990804240108, "core_r50": 9.100987434387207, "r50": 15.9984130859375, "r90": 29.821144104003906, "centre": [0.8436519503593445, 0.11573382467031479], "wall": 39.521492769010365}
+{"tick": 2350, "nonfinite": 0, "vmax": 9.929052352905273, "frac_outside": 0.01964792236685753, "core_in2": 0.0005042658885940909, "core_r50": 9.4798583984375, "r50": 15.731513977050781, "r90": 29.592138290405273, "centre": [0.9261665344238281, 0.08876150846481323], "wall": 40.20432998100296}
+{"tick": 2400, "nonfinite": 0, "vmax": 9.92911148071289, "frac_outside": 0.019659921526908875, "core_in2": 0.000471732608275488, "core_r50": 9.862650871276855, "r50": 15.956249237060547, "r90": 29.34360694885254, "centre": [0.9659576416015625, 0.07553274184465408], "wall": 40.90743410610594}
+{"tick": 2450, "nonfinite": 0, "vmax": 9.929153442382812, "frac_outside": 0.019673921167850494, "core_in2": 0.00040259939851239324, "core_r50": 10.248137474060059, "r50": 15.842939376831055, "r90": 29.47089385986328, "centre": [0.9782079458236694, 0.0752250924706459], "wall": 41.71467778994702}
+{"tick": 2500, "nonfinite": 0, "vmax": 9.92924690246582, "frac_outside": 0.019698921591043472, "core_in2": 0.00035379946348257363, "core_r50": 10.645262718200684, "r50": 15.816993713378906, "r90": 29.656137466430664, "centre": [1.036681056022644, 0.1257781982421875], "wall": 42.52297257701866}
+tick 2500 median 4 ms peak 0.2 GB
+tick  n_clumps masses
+0 3 [0.105, 0.102, 0.1] 0
+50 4 [0.136, 0.115, 0.109, 0.102] 0
+100 3 [0.121, 0.106, 0.101] 0
+150 4 [0.136, 0.111, 0.108, 0.101] 0
+200 3 [0.111, 0.106, 0.101] 0
+250 4 [0.128, 0.124, 0.105, 0.101] 0
+300 2 [0.113, 0.106] 
+350 3 [0.134, 0.11, 0.108] 0
+400 2 [0.122, 0.109] 
+450 3 [0.14, 0.12, 0.107] 0
+500 3 [0.134, 0.107, 0.106] 0
+550 1 [0.115] 
+600 1 [0.125] 
+650 1 [0.108] 
+700 2 [0.11, 0.107] 
+750 2 [0.117, 0.103] 
+800 4 [0.13, 0.112, 0.112, 0.11] 0
+850 2 [0.104, 0.102] 
+900 3 [0.115, 0.107, 0.103] 0
+950 1 [0.107] 
+1000 0 [] 
+1050 2 [0.125, 0.104] 
+1100 2 [0.138, 0.104] 
+1150 0 [] 
+1200 2 [0.108, 0.103] 
+1250 2 [0.117, 0.105] 
+1300 3 [0.114, 0.109, 0.102] 1
+1350 2 [0.103, 0.101] 
+1400 3 [0.129, 0.114, 0.104] 0
+1450 3 [0.13, 0.128, 0.102] 0
+1500 2 [0.122, 0.101] 
+1550 1 [0.114] 
+1600 0 [] 
+1650 2 [0.133, 0.112] 
+1700 2 [0.141, 0.102] 
+1750 2 [0.254, 0.104] 
+1800 2 [0.166, 0.123] 
+1850 2 [0.105, 0.103] 
+1900 3 [0.126, 0.108, 0.102] 0
+1950 2 [0.115, 0.102] 
+2000 1 [0.102] 
+2050 2 [0.113, 0.103] 
+2100 1 [0.102] 
+2150 3 [0.128, 0.12, 0.103] 1
+2200 4 [0.137, 0.117, 0.101, 0.101] 1
+2250 2 [0.143, 0.101] 
+2300 2 [0.113, 0.102] 
+2350 2 [0.151, 0.123] 
+2400 1 [0.113] 
+2450 1 [0.115] 
+2500 2 [0.107, 0.101] 
+formation tick 0 horizon end 1000 full_horizon True n_pass 0
+{'mass': 0.105, 'a0': np.float64(5.945), 'a_end': inf, 'e0': np.float64(0.081), 'e_end': np.float64(0.988), 'r0': np.float64(6.203), 'r_end': np.float64(3.99), 'bound_all': False, 'max_drift': inf, 'min_frac_in': 0.956, 'passes': False, 'distinct': True}
+{'mass': 0.102, 'a0': np.float64(11.152), 'a_end': 23.454, 'e0': np.float64(0.051), 'e_end': np.float64(0.985), 'r0': np.float64(9.997), 'r_end': np.float64(26.734), 'bound_all': True, 'max_drift': 1.103, 'min_frac_in': 0.984, 'passes': False, 'distinct': False}
+{'mass': 0.1, 'a0': np.float64(16.636), 'a_end': 14.442, 'e0': np.float64(0.032), 'e_end': np.float64(0.986), 'r0': np.float64(16.001), 'r_end': np.float64(25.626), 'bound_all': False, 'max_drift': inf, 'min_frac_in': 1.0, 'passes': False, 'distinct': False}
+{"tick": 0, "nonfinite": 0, "vmax": 9.927286148071289, "frac_outside": 0.0, "core_in2": 0.8892973065376282, "core_r50": 0.9032190442085266, "r50": 8.468646049499512, "r90": 12.853574752807617, "centre": [0.006561088375747204, -0.04555245861411095], "wall": 0.32920096488669515}
+{"tick": 50, "nonfinite": 0, "vmax": 9.922467231750488, "frac_outside": 0.0007179971435107291, "core_in2": 0.8421809673309326, "core_r50": 0.7639887928962708, "r50": 8.461677551269531, "r90": 12.82017707824707, "centre": [0.030925994738936424, -0.017434008419513702], "wall": 1.037603256991133}
+{"tick": 100, "nonfinite": 0, "vmax": 9.922622680664062, "frac_outside": 0.011091955937445164, "core_in2": 0.8449503779411316, "core_r50": 0.75943922996521, "r50": 8.73388385772705, "r90": 12.815923690795898, "centre": [0.030587337911128998, 0.01256182137876749], "wall": 1.723382294876501}
+{"tick": 150, "nonfinite": 0, "vmax": 9.922746658325195, "frac_outside": 0.011900953017175198, "core_in2": 0.8445436954498291, "core_r50": 0.7612338066101074, "r50": 8.800280570983887, "r90": 13.916573524475098, "centre": [-0.021048858761787415, 0.07183615118265152], "wall": 2.435403446899727}
+{"tick": 200, "nonfinite": 0, "vmax": 9.922865867614746, "frac_outside": 0.011897952295839787, "core_in2": 0.8432016968727112, "core_r50": 0.7679219245910645, "r50": 8.361294746398926, "r90": 15.427648544311523, "centre": [-0.039530131965875626, 0.045761704444885254], "wall": 3.090997189981863}
+{"tick": 250, "nonfinite": 0, "vmax": 9.922934532165527, "frac_outside": 0.011897952295839787, "core_in2": 0.8423314690589905, "core_r50": 0.7726187109947205, "r50": 8.365991592407227, "r90": 16.943174362182617, "centre": [-0.04127015918493271, 0.06923212856054306], "wall": 3.7752101719379425}
+{"tick": 300, "nonfinite": 0, "vmax": 9.922986030578613, "frac_outside": 0.01190695259720087, "core_in2": 0.8414530754089355, "core_r50": 0.7757840156555176, "r50": 8.73646068572998, "r90": 17.610851287841797, "centre": [-0.02259022742509842, 0.09395292401313782], "wall": 4.470415415940806}
+{"tick": 350, "nonfinite": 0, "vmax": 9.923017501831055, "frac_outside": 0.01253995019942522, "core_in2": 0.8417946696281433, "core_r50": 0.7829320430755615, "r50": 8.72341251373291, "r90": 17.325023651123047, "centre": [-0.058562032878398895, 0.10017962753772736], "wall": 5.194370332872495}
+{"tick": 400, "nonfinite": 0, "vmax": 9.923115730285645, "frac_outside": 0.012882948853075504, "core_in2": 0.8394278883934021, "core_r50": 0.7920764684677124, "r50": 8.334783554077148, "r90": 16.21954345703125, "centre": [-0.008878708817064762, 0.10697882622480392], "wall": 5.8991849748417735}
+{"tick": 450, "nonfinite": 0, "vmax": 9.923286437988281, "frac_outside": 0.01300594862550497, "core_in2": 0.8387771844863892, "core_r50": 0.8078364729881287, "r50": 8.518272399902344, "r90": 15.12745475769043, "centre": [-0.010777166113257408, 0.16126428544521332], "wall": 6.579876248026267}
+{"tick": 500, "nonfinite": 0, "vmax": 9.923425674438477, "frac_outside": 0.013017947785556316, "core_in2": 0.8369431495666504, "core_r50": 0.8282538056373596, "r50": 8.460382461547852, "r90": 15.160473823547363, "centre": [-0.024060674011707306, 0.2162960022687912], "wall": 7.277383708860725}
+tick 500 median 3 ms peak 0.2 GB
+{"tick": 550, "nonfinite": 0, "vmax": 9.923567771911621, "frac_outside": 0.013087947852909565, "core_in2": 0.8351863026618958, "core_r50": 0.8539124727249146, "r50": 8.071560859680176, "r90": 16.440155029296875, "centre": [-0.0659283921122551, 0.21915796399116516], "wall": 8.696304109878838}
+{"tick": 600, "nonfinite": 0, "vmax": 9.923776626586914, "frac_outside": 0.01330694742500782, "core_in2": 0.8316971659660339, "core_r50": 0.8862003087997437, "r50": 9.06700325012207, "r90": 19.372304916381836, "centre": [-0.0530925914645195, 0.2510052025318146], "wall": 9.38702621194534}
+{"tick": 650, "nonfinite": 0, "vmax": 9.924116134643555, "frac_outside": 0.013510946184396744, "core_in2": 0.8267480134963989, "core_r50": 0.9298475384712219, "r50": 11.139193534851074, "r90": 22.461219787597656, "centre": [-0.08940574526786804, 0.29676640033721924], "wall": 10.22057753894478}
+{"tick": 700, "nonfinite": 0, "vmax": 9.924399375915527, "frac_outside": 0.013650945387780666, "core_in2": 0.8208025693893433, "core_r50": 0.9811313152313232, "r50": 12.335681915283203, "r90": 25.23923110961914, "centre": [-0.09591598808765411, 0.32953470945358276], "wall": 10.947483833879232}
+{"tick": 750, "nonfinite": 0, "vmax": 9.924541473388672, "frac_outside": 0.01376794558018446, "core_in2": 0.8136696219444275, "core_r50": 1.035278558731079, "r50": 11.99453067779541, "r90": 26.972736358642578, "centre": [-0.09291868656873703, 0.2827478349208832], "wall": 11.712462777039036}
+{"tick": 800, "nonfinite": 0, "vmax": 9.924702644348145, "frac_outside": 0.013931944966316223, "core_in2": 0.8041455149650574, "core_r50": 1.1114217042922974, "r50": 11.39841365814209, "r90": 27.364416122436523, "centre": [0.020915357396006584, 0.26142004132270813], "wall": 12.508901549037546}
+{"tick": 850, "nonfinite": 0, "vmax": 9.9249849319458, "frac_outside": 0.014150943607091904, "core_in2": 0.7922667860984802, "core_r50": 1.1972326040267944, "r50": 11.51694107055664, "r90": 26.22011375427246, "centre": [0.10280444473028183, 0.22850750386714935], "wall": 13.208134355023503}
+{"tick": 900, "nonfinite": 0, "vmax": 9.925146102905273, "frac_outside": 0.014364942908287048, "core_in2": 0.7740644216537476, "core_r50": 1.289664626121521, "r50": 12.89220905303955, "r90": 24.772293090820312, "centre": [0.20068314671516418, 0.1663741022348404], "wall": 13.952748549869284}
+{"tick": 950, "nonfinite": 0, "vmax": 9.925394058227539, "frac_outside": 0.014515941962599754, "core_in2": 0.7518970370292664, "core_r50": 1.3974621295928955, "r50": 13.896415710449219, "r90": 24.8038330078125, "centre": [0.19810707867145538, 0.11958601325750351], "wall": 14.637092964025214}
+{"tick": 1000, "nonfinite": 0, "vmax": 9.92565631866455, "frac_outside": 0.01461294200271368, "core_in2": 0.7204943299293518, "core_r50": 1.5207687616348267, "r50": 14.252144813537598, "r90": 27.818906784057617, "centre": [0.27558809518814087, 0.06621897965669632], "wall": 15.391280656913295}
+tick 1000 median 3 ms peak 0.2 GB
+{"tick": 1050, "nonfinite": 0, "vmax": 9.925799369812012, "frac_outside": 0.014692941680550575, "core_in2": 0.679660975933075, "core_r50": 1.6396832466125488, "r50": 14.84260082244873, "r90": 30.503334045410156, "centre": [0.26646360754966736, 0.04038870707154274], "wall": 17.217519433936104}
+{"tick": 1100, "nonfinite": 0, "vmax": 9.926013946533203, "frac_outside": 0.014773941598832607, "core_in2": 0.6210237741470337, "core_r50": 1.7829397916793823, "r50": 15.246996879577637, "r90": 31.14019775390625, "centre": [0.24398855865001678, 0.056462254375219345], "wall": 17.902656340040267}
+{"tick": 1150, "nonfinite": 0, "vmax": 9.926252365112305, "frac_outside": 0.014854940585792065, "core_in2": 0.5357378125190735, "core_r50": 1.9458965063095093, "r50": 15.407960891723633, "r90": 31.31772232055664, "centre": [0.2267773151397705, 0.05496518313884735], "wall": 18.61385815986432}
+{"tick": 1200, "nonfinite": 0, "vmax": 9.926329612731934, "frac_outside": 0.01492794044315815, "core_in2": 0.42422181367874146, "core_r50": 2.0987093448638916, "r50": 15.136431694030762, "r90": 31.15851402282715, "centre": [0.1793292909860611, 0.027901576831936836], "wall": 19.313990266993642}
+{"tick": 1250, "nonfinite": 0, "vmax": 9.92642879486084, "frac_outside": 0.01497993990778923, "core_in2": 0.2951175570487976, "core_r50": 2.263314723968506, "r50": 14.78117847442627, "r90": 30.344179153442383, "centre": [0.21593628823757172, 0.010408056899905205], "wall": 20.047647690866143}
+{"tick": 1300, "nonfinite": 0, "vmax": 9.926566123962402, "frac_outside": 0.015039940364658833, "core_in2": 0.20897755026817322, "core_r50": 2.44309139251709, "r50": 14.305401802062988, "r90": 29.36064338684082, "centre": [0.27477842569351196, -0.03811536729335785], "wall": 20.837370324879885}
+{"tick": 1350, "nonfinite": 0, "vmax": 9.926634788513184, "frac_outside": 0.015096940100193024, "core_in2": 0.14855511486530304, "core_r50": 2.6295082569122314, "r50": 13.507813453674316, "r90": 28.358633041381836, "centre": [0.28390195965766907, -0.08047839254140854], "wall": 21.574173806933686}
+{"tick": 1400, "nonfinite": 0, "vmax": 9.926810264587402, "frac_outside": 0.015134939923882484, "core_in2": 0.09975111484527588, "core_r50": 2.8410305976867676, "r50": 13.184001922607422, "r90": 28.700225830078125, "centre": [0.34546467661857605, -0.08234962075948715], "wall": 22.286646900931373}
+{"tick": 1450, "nonfinite": 0, "vmax": 9.92688274383545, "frac_outside": 0.015185939148068428, "core_in2": 0.07118282467126846, "core_r50": 3.0545177459716797, "r50": 13.510659217834473, "r90": 28.603775024414062, "centre": [0.3443544805049896, -0.12629151344299316], "wall": 22.98316442896612}
+{"tick": 1500, "nonfinite": 0, "vmax": 9.927061080932617, "frac_outside": 0.015239939093589783, "core_in2": 0.05004839226603508, "core_r50": 3.284979820251465, "r50": 14.057876586914062, "r90": 28.99997901916504, "centre": [0.4061063230037689, -0.13502757251262665], "wall": 23.742834186879918}
+tick 1500 median 3 ms peak 0.2 GB
+{"tick": 1550, "nonfinite": 0, "vmax": 9.927152633666992, "frac_outside": 0.01528593897819519, "core_in2": 0.035225413739681244, "core_r50": 3.5154812335968018, "r50": 13.94179630279541, "r90": 28.67032241821289, "centre": [0.4112592041492462, -0.14596012234687805], "wall": 26.11201179586351}
+{"tick": 1600, "nonfinite": 0, "vmax": 9.927278518676758, "frac_outside": 0.015325939282774925, "core_in2": 0.024465030059218407, "core_r50": 3.7592036724090576, "r50": 14.113953590393066, "r90": 28.588333129882812, "centre": [0.39314207434654236, -0.13289420306682587], "wall": 26.854911976028234}
+{"tick": 1650, "nonfinite": 0, "vmax": 9.927359580993652, "frac_outside": 0.01537493895739317, "core_in2": 0.0173565074801445, "core_r50": 4.0057172775268555, "r50": 14.098443984985352, "r90": 28.597482681274414, "centre": [0.4016176462173462, -0.15319064259529114], "wall": 27.598514328012243}
+{"tick": 1700, "nonfinite": 0, "vmax": 9.927475929260254, "frac_outside": 0.015413939021527767, "core_in2": 0.012147114612162113, "core_r50": 4.256242752075195, "r50": 13.905950546264648, "r90": 28.490114212036133, "centre": [0.40965941548347473, -0.16320276260375977], "wall": 28.29671864095144}
+{"tick": 1750, "nonfinite": 0, "vmax": 9.927560806274414, "frac_outside": 0.015437938272953033, "core_in2": 0.00984945148229599, "core_r50": 4.51271390914917, "r50": 13.915940284729004, "r90": 28.734947204589844, "centre": [0.42449674010276794, -0.08603125810623169], "wall": 29.002021834952757}
+{"tick": 1800, "nonfinite": 0, "vmax": 9.92767333984375, "frac_outside": 0.0154579384252429, "core_in2": 0.006657123100012541, "core_r50": 4.764995574951172, "r50": 13.386519432067871, "r90": 28.94832992553711, "centre": [0.5069634914398193, -0.0009051690576598048], "wall": 29.71891675097868}
+{"tick": 1850, "nonfinite": 0, "vmax": 9.927842140197754, "frac_outside": 0.015473938547074795, "core_in2": 0.005306991748511791, "core_r50": 5.030969142913818, "r50": 13.49854850769043, "r90": 28.817047119140625, "centre": [0.5369980931282043, 0.07434821873903275], "wall": 30.45228404388763}
+{"tick": 1900, "nonfinite": 0, "vmax": 9.927895545959473, "frac_outside": 0.015485938638448715, "core_in2": 0.00398126058280468, "core_r50": 5.29623556137085, "r50": 14.026418685913086, "r90": 28.732755661010742, "centre": [0.532858669757843, 0.12422270327806473], "wall": 31.156748245004565}
+{"tick": 1950, "nonfinite": 0, "vmax": 9.927966117858887, "frac_outside": 0.015514938160777092, "core_in2": 0.0033224616199731827, "core_r50": 5.571872234344482, "r50": 14.275567054748535, "r90": 29.073328018188477, "centre": [0.5805135369300842, 0.12816491723060608], "wall": 31.983386972919106}
+{"tick": 2000, "nonfinite": 0, "vmax": 9.928047180175781, "frac_outside": 0.015533938072621822, "core_in2": 0.0027490626089274883, "core_r50": 5.861199378967285, "r50": 14.574830055236816, "r90": 29.12465476989746, "centre": [0.6333494186401367, 0.11750293523073196], "wall": 32.690859562018886}
+tick 2000 median 3 ms peak 0.2 GB
+{"tick": 2050, "nonfinite": 0, "vmax": 9.928069114685059, "frac_outside": 0.015551937744021416, "core_in2": 0.0021837966050952673, "core_r50": 6.139224529266357, "r50": 14.375624656677246, "r90": 29.204378128051758, "centre": [0.6274333000183105, 0.11433606594800949], "wall": 35.32895754603669}
+{"tick": 2100, "nonfinite": 0, "vmax": 9.928133010864258, "frac_outside": 0.01557493768632412, "core_in2": 0.001724264002405107, "core_r50": 6.443830966949463, "r50": 14.624604225158691, "r90": 29.238359451293945, "centre": [0.6809661388397217, 0.08679959177970886], "wall": 36.031009029829875}
+{"tick": 2150, "nonfinite": 0, "vmax": 9.928242683410645, "frac_outside": 0.015610937960445881, "core_in2": 0.0016266641905531287, "core_r50": 6.767575740814209, "r50": 15.109259605407715, "r90": 29.38811683654785, "centre": [0.7709160447120667, 0.0418776199221611], "wall": 36.80039145494811}
+{"tick": 2200, "nonfinite": 0, "vmax": 9.928309440612793, "frac_outside": 0.015635937452316284, "core_in2": 0.0012972647091373801, "core_r50": 7.078741073608398, "r50": 15.19505786895752, "r90": 29.56366729736328, "centre": [0.8160722851753235, 0.04607052728533745], "wall": 37.540137456031516}
+{"tick": 2250, "nonfinite": 0, "vmax": 9.928359031677246, "frac_outside": 0.015658937394618988, "core_in2": 0.0011101983254775405, "core_r50": 7.397137641906738, "r50": 15.111722946166992, "r90": 29.707080841064453, "centre": [0.8534126877784729, 0.03341516852378845], "wall": 38.236829234985635}
+{"tick": 2300, "nonfinite": 0, "vmax": 9.928479194641113, "frac_outside": 0.01567893847823143, "core_in2": 0.0010979983489960432, "core_r50": 7.728911876678467, "r50": 15.149840354919434, "r90": 29.92628288269043, "centre": [0.9275447726249695, -0.010180963203310966], "wall": 38.94401063397527}
+{"tick": 2350, "nonfinite": 0, "vmax": 9.928568840026855, "frac_outside": 0.01569693721830845, "core_in2": 0.0008499320247210562, "core_r50": 8.05810546875, "r50": 15.114144325256348, "r90": 29.819181442260742, "centre": [1.0111145973205566, -0.02085762657225132], "wall": 39.663405746920034}
+{"tick": 2400, "nonfinite": 0, "vmax": 9.928638458251953, "frac_outside": 0.01570993661880493, "core_in2": 0.0006547323428094387, "core_r50": 8.385669708251953, "r50": 15.455924034118652, "r90": 29.71277618408203, "centre": [1.0222488641738892, 0.011351753026247025], "wall": 40.46081449184567}
+{"tick": 2450, "nonfinite": 0, "vmax": 9.928690910339355, "frac_outside": 0.015725936740636826, "core_in2": 0.0006628656410612166, "core_r50": 8.711767196655273, "r50": 15.151077270507812, "r90": 29.845783233642578, "centre": [1.0434839725494385, 0.033351052552461624], "wall": 41.257519765989855}
+{"tick": 2500, "nonfinite": 0, "vmax": 9.928732872009277, "frac_outside": 0.01573793776333332, "core_in2": 0.0006994656287133694, "core_r50": 9.047174453735352, "r50": 15.342534065246582, "r90": 30.00841522216797, "centre": [1.0906633138656616, 0.053291205316782], "wall": 41.96971139893867}
+tick 2500 median 3 ms peak 0.2 GB
+tick  n_clumps masses
+0 3 [0.105, 0.102, 0.1] 0
+50 4 [0.136, 0.115, 0.11, 0.102] 0
+100 3 [0.121, 0.106, 0.101] 0
+150 4 [0.136, 0.11, 0.108, 0.101] 0
+200 3 [0.111, 0.106, 0.101] 0
+250 3 [0.129, 0.127, 0.105] 0
+300 2 [0.113, 0.106] 
+350 3 [0.128, 0.11, 0.108] 0
+400 2 [0.122, 0.109] 
+450 3 [0.139, 0.122, 0.107] 0
+500 3 [0.137, 0.108, 0.105] 0
+550 2 [0.113, 0.105] 
+600 1 [0.128] 
+650 1 [0.111] 
+700 2 [0.114, 0.107] 
+750 2 [0.111, 0.11] 
+800 3 [0.12, 0.113, 0.112] 0
+850 3 [0.108, 0.105, 0.104] 1
+900 3 [0.114, 0.104, 0.103] 0
+950 2 [0.112, 0.101] 
+1000 1 [0.106] 
+1050 2 [0.129, 0.103] 
+1100 1 [0.103] 
+1150 1 [0.102] 
+1200 4 [0.159, 0.108, 0.103, 0.103] 0
+1250 3 [0.13, 0.111, 0.106] 0
+1300 3 [0.112, 0.11, 0.103] 0
+1350 2 [0.115, 0.102] 
+1400 2 [0.123, 0.11] 
+1450 1 [0.106] 
+1500 1 [0.132] 
+1550 2 [0.13, 0.103] 
+1600 1 [0.104] 
+1650 1 [0.131] 
+1700 2 [0.104, 0.102] 
+1750 3 [0.141, 0.14, 0.102] 0
+1800 4 [0.153, 0.104, 0.103, 0.102] 0
+1850 2 [0.161, 0.112] 
+1900 2 [0.107, 0.103] 
+1950 3 [0.144, 0.104, 0.101] 0
+2000 0 [] 
+2050 1 [0.106] 
+2100 1 [0.103] 
+2150 1 [0.11] 
+2200 1 [0.122] 
+2250 2 [0.103, 0.101] 
+2300 3 [0.157, 0.105, 0.102] 0
+2350 2 [0.151, 0.102] 
+2400 3 [0.103, 0.102, 0.102] 3
+2450 2 [0.105, 0.102] 
+2500 3 [0.151, 0.118, 0.105] 3
+formation tick 0 horizon end 1000 full_horizon True n_pass 0
+{'mass': 0.105, 'a0': np.float64(5.947), 'a_end': inf, 'e0': np.float64(0.081), 'e_end': np.float64(0.966), 'r0': np.float64(6.203), 'r_end': np.float64(7.634), 'bound_all': False, 'max_drift': inf, 'min_frac_in': 0.956, 'passes': False, 'distinct': True}
+{'mass': 0.102, 'a0': np.float64(11.155), 'a_end': 58.532, 'e0': np.float64(0.051), 'e_end': np.float64(0.992), 'r0': np.float64(9.997), 'r_end': np.float64(31.253), 'bound_all': True, 'max_drift': 4.247, 'min_frac_in': 0.982, 'passes': False, 'distinct': True}
+{'mass': 0.1, 'a0': np.float64(16.644), 'a_end': 15.843, 'e0': np.float64(0.032), 'e_end': np.float64(0.866), 'r0': np.float64(16.001), 'r_end': np.float64(18.452), 'bound_all': True, 'max_drift': 0.33, 'min_frac_in': 1.0, 'passes': False, 'distinct': True}
+=== 1e8 memory/time pilots
+/home/adamwebb/augur-p1e8/scripts/scatter_bh_1b.py:282: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  err = float((a - ref[0]).abs().max() / ref[0].abs().max())
+selftest: max|a_chunked - model.force| / max|a| = 8.13e-05
+[pilot_bh1e8] init force 101 ms, peak 6.8 GB
+[pilot_bh1e8] tick 1 104 ms out 0.000 vmax/c nan pmax inf core 7.756 nonfinite 86633702 peak 6.8 GB wall 0 s
+[pilot_bh1e8] tick 5 884 ms out 0.000 vmax/c nan pmax nan core nan nonfinite 100000000 peak 6.8 GB wall 3 s
+n 100000000: first 104 ms median 884 ms ticks 3.0 s loop 3.1 s peak 6.8 GB 8.84 ns/body/tick
+{"tick": 0, "nonfinite": 0, "vmax": 9.939898490905762, "frac_outside": 0.0, "core_in2": 0.8888794779777527, "core_r50": 0.9046382904052734, "r50": 8.496480941772461, "r90": 12.899641990661621, "centre": [0.04451955482363701, 0.050126612186431885], "wall": 0.5056241599377245}
+name, memory.total [MiB]
+NVIDIA H200 NVL, 143771 MiB
+DONE

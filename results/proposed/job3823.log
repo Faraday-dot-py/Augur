@@ -1,0 +1,288 @@
+=== validated-regime truth check N=300, 2000
+seed 4738 old: err@20/50/100/200 [0.287, 1.716, 6.291, 14.22] dE_vs_truth@200 0.1858 nonfinite 0 n_v>=c 0 band_max 0.0567 (truth 0.0633) outside_end 0.190 (truth 0.157)
+seed 4738 far: err@20/50/100/200 [0.288, 1.717, 6.257, 14.082] dE_vs_truth@200 0.1627 nonfinite 0 n_v>=c 0 band_max 0.0567 (truth 0.0633) outside_end 0.183 (truth 0.157)
+seed 4738 edge: err@20/50/100/200 [0.286, 1.713, 6.241, 14.008] dE_vs_truth@200 0.2448 nonfinite 0 n_v>=c 0 band_max 0.0733 (truth 0.0633) outside_end 0.103 (truth 0.157)
+seed 4738 new: err@20/50/100/200 [0.287, 1.713, 6.248, 14.038] dE_vs_truth@200 0.2143 nonfinite 0 n_v>=c 0 band_max 0.0733 (truth 0.0633) outside_end 0.113 (truth 0.157)
+seed 9000 old: err@20/50/100/200 [0.248, 1.395, 5.959, 11.646] dE_vs_truth@200 0.1449 nonfinite 0 n_v>=c 0 band_max 0.0400 (truth 0.0367) outside_end 0.120 (truth 0.120)
+seed 9000 far: err@20/50/100/200 [0.248, 1.396, 5.949, 11.783] dE_vs_truth@200 0.1461 nonfinite 0 n_v>=c 0 band_max 0.0400 (truth 0.0367) outside_end 0.113 (truth 0.120)
+seed 9000 edge: err@20/50/100/200 [0.248, 1.396, 5.925, 12.46] dE_vs_truth@200 0.2001 nonfinite 0 n_v>=c 0 band_max 0.0533 (truth 0.0367) outside_end 0.057 (truth 0.120)
+seed 9000 new: err@20/50/100/200 [0.248, 1.396, 5.944, 12.154] dE_vs_truth@200 0.1833 nonfinite 0 n_v>=c 0 band_max 0.0533 (truth 0.0367) outside_end 0.053 (truth 0.120)
+DONE
+seed 4738 old: err@20/50/100/200 [0.841, 5.582, 12.539, 26.962] dE_vs_truth@200 0.3418 nonfinite 0 n_v>=c 0 band_max 0.0480 (truth 0.0490) outside_end 0.145 (truth 0.167)
+seed 4738 far: err@20/50/100/200 [0.841, 5.593, 12.698, 27.327] dE_vs_truth@200 0.3475 nonfinite 0 n_v>=c 0 band_max 0.0475 (truth 0.0490) outside_end 0.143 (truth 0.167)
+seed 4738 edge: err@20/50/100/200 [0.835, 5.573, 12.54, 27.775] dE_vs_truth@200 0.2854 nonfinite 0 n_v>=c 0 band_max 0.0475 (truth 0.0490) outside_end 0.167 (truth 0.167)
+seed 4738 new: err@20/50/100/200 [0.835, 5.584, 12.677, 28.139] dE_vs_truth@200 0.3032 nonfinite 0 n_v>=c 0 band_max 0.0470 (truth 0.0490) outside_end 0.171 (truth 0.167)
+seed 9000 old: err@20/50/100/200 [0.69, 5.467, 12.812, 25.954] dE_vs_truth@200 0.2879 nonfinite 0 n_v>=c 0 band_max 0.0515 (truth 0.0645) outside_end 0.137 (truth 0.189)
+seed 9000 far: err@20/50/100/200 [0.69, 5.483, 12.77, 26.273] dE_vs_truth@200 0.2955 nonfinite 0 n_v>=c 0 band_max 0.0495 (truth 0.0645) outside_end 0.139 (truth 0.189)
+seed 9000 edge: err@20/50/100/200 [0.687, 5.462, 12.333, 27.843] dE_vs_truth@200 0.2492 nonfinite 0 n_v>=c 0 band_max 0.0515 (truth 0.0645) outside_end 0.177 (truth 0.189)
+seed 9000 new: err@20/50/100/200 [0.687, 5.461, 12.271, 27.923] dE_vs_truth@200 0.2629 nonfinite 0 n_v>=c 0 band_max 0.0520 (truth 0.0645) outside_end 0.177 (truth 0.189)
+DONE
+=== BH 1e6 old/new (fp16 state, mom-scale 16384)
+/home/adamwebb/augur-p1e8/scripts/scatter_bh_1b.py:282: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  err = float((a - ref[0]).abs().max() / ref[0].abs().max())
+selftest: max|a_chunked - model.force| / max|a| = 1.62e-04
+[bh1e6_old] init force 4 ms, peak 0.2 GB
+[bh1e6_old] tick 1 3 ms out 0.000 vmax/c 1.0000 pmax 3.89e+03 core 8.312 nonfinite 0 peak 0.2 GB wall 0 s
+[bh1e6_old] tick 6 3 ms out 0.000 vmax/c 1.0000 pmax 3.14e+04 core 3.483 nonfinite 0 peak 0.3 GB wall 0 s
+[bh1e6_old] tick 11 3 ms out 0.000 vmax/c 1.0000 pmax 7.5e+04 core 1.183 nonfinite 0 peak 0.3 GB wall 0 s
+[bh1e6_old] tick 16 3 ms out 0.000 vmax/c 1.0000 pmax 8.74e+04 core 1.151 nonfinite 0 peak 0.4 GB wall 0 s
+[bh1e6_old] tick 21 3 ms out 0.000 vmax/c 1.0000 pmax 7.67e+04 core 1.606 nonfinite 0 peak 0.5 GB wall 0 s
+[bh1e6_old] tick 26 3 ms out 0.001 vmax/c 1.0000 pmax 6.5e+04 core 2.215 nonfinite 0 peak 0.6 GB wall 0 s
+[bh1e6_old] tick 31 3 ms out 0.001 vmax/c 1.0000 pmax 5.79e+04 core 2.136 nonfinite 0 peak 0.6 GB wall 0 s
+[bh1e6_old] tick 36 3 ms out 0.001 vmax/c 1.0000 pmax 6.52e+04 core 1.837 nonfinite 0 peak 0.7 GB wall 0 s
+[bh1e6_old] tick 41 3 ms out 0.001 vmax/c 1.0000 pmax 6.09e+04 core 1.964 nonfinite 0 peak 0.8 GB wall 0 s
+[bh1e6_old] tick 46 3 ms out 0.001 vmax/c 1.0000 pmax 5.83e+04 core 1.873 nonfinite 0 peak 0.9 GB wall 0 s
+[bh1e6_old] tick 51 3 ms out 0.011 vmax/c 1.0000 pmax 5.8e+04 core 1.805 nonfinite 0 peak 0.9 GB wall 0 s
+[bh1e6_old] tick 56 3 ms out 0.056 vmax/c 1.0000 pmax 5.53e+04 core 1.999 nonfinite 0 peak 1.0 GB wall 0 s
+[bh1e6_old] tick 61 3 ms out 0.093 vmax/c 1.0000 pmax 5.43e+04 core 2.002 nonfinite 0 peak 1.1 GB wall 0 s
+[bh1e6_old] tick 66 3 ms out 0.120 vmax/c 1.0000 pmax 5.65e+04 core 1.923 nonfinite 0 peak 1.1 GB wall 0 s
+[bh1e6_old] tick 71 3 ms out 0.127 vmax/c 1.0000 pmax 5.5e+04 core 2.000 nonfinite 0 peak 1.2 GB wall 0 s
+[bh1e6_old] tick 76 3 ms out 0.130 vmax/c 1.0000 pmax 5.91e+04 core 1.956 nonfinite 0 peak 1.3 GB wall 0 s
+[bh1e6_old] tick 81 3 ms out 0.131 vmax/c 1.0000 pmax 5.81e+04 core 2.034 nonfinite 0 peak 1.4 GB wall 0 s
+[bh1e6_old] tick 86 3 ms out 0.133 vmax/c 1.0000 pmax 5.83e+04 core 1.955 nonfinite 0 peak 1.4 GB wall 1 s
+[bh1e6_old] tick 91 3 ms out 0.136 vmax/c 1.0000 pmax 6.45e+04 core 2.022 nonfinite 0 peak 1.5 GB wall 1 s
+[bh1e6_old] tick 96 3 ms out 0.138 vmax/c 1.0000 pmax 7.63e+04 core 1.972 nonfinite 0 peak 1.6 GB wall 1 s
+[bh1e6_old] tick 101 3 ms out 0.139 vmax/c 1.0000 pmax 8.03e+04 core 2.034 nonfinite 0 peak 1.7 GB wall 1 s
+[bh1e6_old] tick 106 3 ms out 0.140 vmax/c 1.0000 pmax 7.47e+04 core 2.003 nonfinite 0 peak 1.7 GB wall 1 s
+[bh1e6_old] tick 111 3 ms out 0.140 vmax/c 1.0000 pmax 6.64e+04 core 2.074 nonfinite 0 peak 1.8 GB wall 1 s
+[bh1e6_old] tick 116 3 ms out 0.142 vmax/c 1.0000 pmax 6.43e+04 core 2.038 nonfinite 0 peak 1.9 GB wall 1 s
+[bh1e6_old] tick 121 3 ms out 0.143 vmax/c 1.0000 pmax 6.41e+04 core 2.108 nonfinite 0 peak 2.0 GB wall 1 s
+[bh1e6_old] tick 126 3 ms out 0.144 vmax/c 1.0000 pmax 6.41e+04 core 2.070 nonfinite 0 peak 2.0 GB wall 1 s
+[bh1e6_old] tick 131 3 ms out 0.145 vmax/c 1.0000 pmax 6.41e+04 core 2.126 nonfinite 0 peak 2.1 GB wall 1 s
+[bh1e6_old] tick 136 3 ms out 0.147 vmax/c 1.0000 pmax 6.41e+04 core 2.059 nonfinite 0 peak 2.2 GB wall 1 s
+[bh1e6_old] tick 141 3 ms out 0.148 vmax/c 1.0000 pmax 6.41e+04 core 2.141 nonfinite 0 peak 2.3 GB wall 1 s
+[bh1e6_old] tick 146 3 ms out 0.150 vmax/c 1.0000 pmax 6.41e+04 core 2.100 nonfinite 0 peak 2.3 GB wall 1 s
+[bh1e6_old] tick 150 3 ms out 0.151 vmax/c 1.0000 pmax 6.42e+04 core 2.089 nonfinite 0 peak 2.4 GB wall 1 s
+n 1000000: first 3 ms median 3 ms ticks 0.4 s loop 0.9 s peak 2.4 GB 2.61 ns/body/tick
+hist saved
+snaps saved
+/home/adamwebb/augur-p1e8/scripts/scatter_bh_1b.py:282: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  err = float((a - ref[0]).abs().max() / ref[0].abs().max())
+selftest: max|a_chunked - model.force| / max|a| = 9.31e-05
+[bh1e6_new] init force 4 ms, peak 0.2 GB
+[bh1e6_new] tick 1 3 ms out 0.000 vmax/c 1.0000 pmax 2.75e+03 core 8.313 nonfinite 0 peak 0.2 GB wall 0 s
+[bh1e6_new] tick 6 3 ms out 0.000 vmax/c 1.0000 pmax 3.14e+04 core 3.483 nonfinite 0 peak 0.3 GB wall 0 s
+[bh1e6_new] tick 11 3 ms out 0.000 vmax/c 1.0000 pmax 7.49e+04 core 1.183 nonfinite 0 peak 0.3 GB wall 0 s
+[bh1e6_new] tick 16 3 ms out 0.000 vmax/c 1.0000 pmax 8.74e+04 core 1.151 nonfinite 0 peak 0.4 GB wall 0 s
+[bh1e6_new] tick 21 3 ms out 0.001 vmax/c 1.0000 pmax 7.66e+04 core 1.606 nonfinite 0 peak 0.5 GB wall 0 s
+[bh1e6_new] tick 26 3 ms out 0.001 vmax/c 1.0000 pmax 6.53e+04 core 2.206 nonfinite 0 peak 0.6 GB wall 0 s
+[bh1e6_new] tick 31 2 ms out 0.002 vmax/c 1.0000 pmax 5.71e+04 core 2.135 nonfinite 0 peak 0.6 GB wall 0 s
+[bh1e6_new] tick 36 3 ms out 0.002 vmax/c 1.0000 pmax 6.41e+04 core 1.836 nonfinite 0 peak 0.7 GB wall 0 s
+[bh1e6_new] tick 41 3 ms out 0.002 vmax/c 1.0000 pmax 5.83e+04 core 1.966 nonfinite 0 peak 0.8 GB wall 0 s
+[bh1e6_new] tick 46 3 ms out 0.002 vmax/c 1.0000 pmax 5.66e+04 core 1.882 nonfinite 0 peak 0.9 GB wall 0 s
+[bh1e6_new] tick 51 3 ms out 0.016 vmax/c 1.0000 pmax 5.8e+04 core 1.795 nonfinite 0 peak 0.9 GB wall 0 s
+[bh1e6_new] tick 56 3 ms out 0.064 vmax/c 1.0000 pmax 5.5e+04 core 2.005 nonfinite 0 peak 1.0 GB wall 0 s
+[bh1e6_new] tick 61 2 ms out 0.106 vmax/c 1.0000 pmax 5.39e+04 core 2.009 nonfinite 0 peak 1.1 GB wall 0 s
+[bh1e6_new] tick 66 3 ms out 0.136 vmax/c 1.0000 pmax 5.6e+04 core 1.945 nonfinite 0 peak 1.1 GB wall 0 s
+[bh1e6_new] tick 71 3 ms out 0.144 vmax/c 1.0000 pmax 5.49e+04 core 1.986 nonfinite 0 peak 1.2 GB wall 0 s
+[bh1e6_new] tick 76 3 ms out 0.146 vmax/c 1.0000 pmax 5.56e+04 core 1.947 nonfinite 0 peak 1.3 GB wall 0 s
+[bh1e6_new] tick 81 3 ms out 0.148 vmax/c 1.0000 pmax 5.37e+04 core 2.033 nonfinite 0 peak 1.4 GB wall 0 s
+[bh1e6_new] tick 86 3 ms out 0.150 vmax/c 1.0000 pmax 5.52e+04 core 1.972 nonfinite 0 peak 1.4 GB wall 1 s
+[bh1e6_new] tick 91 2 ms out 0.155 vmax/c 1.0000 pmax 5.4e+04 core 2.039 nonfinite 0 peak 1.5 GB wall 1 s
+[bh1e6_new] tick 96 3 ms out 0.157 vmax/c 1.0000 pmax 5.55e+04 core 2.000 nonfinite 0 peak 1.6 GB wall 1 s
+[bh1e6_new] tick 101 2 ms out 0.159 vmax/c 1.0000 pmax 5.34e+04 core 2.064 nonfinite 0 peak 1.7 GB wall 1 s
+[bh1e6_new] tick 106 3 ms out 0.161 vmax/c 1.0000 pmax 5.38e+04 core 2.028 nonfinite 0 peak 1.7 GB wall 1 s
+[bh1e6_new] tick 111 3 ms out 0.162 vmax/c 1.0000 pmax 5.25e+04 core 2.089 nonfinite 0 peak 1.8 GB wall 1 s
+[bh1e6_new] tick 116 3 ms out 0.164 vmax/c 1.0000 pmax 5.27e+04 core 2.053 nonfinite 0 peak 1.9 GB wall 1 s
+[bh1e6_new] tick 121 2 ms out 0.165 vmax/c 1.0000 pmax 5.23e+04 core 2.111 nonfinite 0 peak 2.0 GB wall 1 s
+[bh1e6_new] tick 126 3 ms out 0.166 vmax/c 1.0000 pmax 5.3e+04 core 2.085 nonfinite 0 peak 2.0 GB wall 1 s
+[bh1e6_new] tick 131 2 ms out 0.168 vmax/c 1.0000 pmax 5.2e+04 core 2.134 nonfinite 0 peak 2.1 GB wall 1 s
+[bh1e6_new] tick 136 2 ms out 0.169 vmax/c 1.0000 pmax 5.32e+04 core 2.072 nonfinite 0 peak 2.2 GB wall 1 s
+[bh1e6_new] tick 141 2 ms out 0.170 vmax/c 1.0000 pmax 5.23e+04 core 2.150 nonfinite 0 peak 2.3 GB wall 1 s
+[bh1e6_new] tick 146 3 ms out 0.171 vmax/c 1.0000 pmax 5.27e+04 core 2.098 nonfinite 0 peak 2.3 GB wall 1 s
+[bh1e6_new] tick 150 3 ms out 0.172 vmax/c 1.0000 pmax 5.26e+04 core 2.101 nonfinite 0 peak 2.4 GB wall 1 s
+n 1000000: first 3 ms median 3 ms ticks 0.4 s loop 0.9 s peak 2.4 GB 2.51 ns/body/tick
+hist saved
+snaps saved
+=== BH 1e8 new: density/hist
+/home/adamwebb/augur-p1e8/scripts/scatter_bh_1b.py:282: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  err = float((a - ref[0]).abs().max() / ref[0].abs().max())
+selftest: max|a_chunked - model.force| / max|a| = 7.99e-05
+[bh1e8_new] init force 101 ms, peak 6.8 GB
+[bh1e8_new] tick 1 104 ms out 0.000 vmax/c 1.0000 pmax 1.63e+05 core 7.768 nonfinite 0 peak 6.9 GB wall 0 s
+[bh1e8_new] tick 6 164 ms out 0.000 vmax/c 1.0000 pmax 3.87e+06 core 2.780 nonfinite 0 peak 6.9 GB wall 2 s
+[bh1e8_new] tick 11 175 ms out 0.000 vmax/c 1.0000 pmax 7.56e+06 core 1.154 nonfinite 0 peak 7.0 GB wall 3 s
+[bh1e8_new] tick 16 165 ms out 0.000 vmax/c 1.0000 pmax 8.85e+06 core 1.250 nonfinite 0 peak 7.1 GB wall 4 s
+[bh1e8_new] tick 21 140 ms out 0.000 vmax/c 1.0000 pmax 7.14e+06 core 1.726 nonfinite 0 peak 7.2 GB wall 6 s
+[bh1e8_new] tick 26 138 ms out 0.000 vmax/c 1.0000 pmax 6.69e+06 core 1.945 nonfinite 0 peak 7.2 GB wall 7 s
+[bh1e8_new] tick 31 128 ms out 0.000 vmax/c 1.0000 pmax 5.65e+06 core 2.369 nonfinite 0 peak 7.3 GB wall 8 s
+[bh1e8_new] tick 36 141 ms out 0.000 vmax/c 1.0000 pmax 5.86e+06 core 1.850 nonfinite 0 peak 7.4 GB wall 10 s
+[bh1e8_new] tick 41 135 ms out 0.000 vmax/c 1.0000 pmax 5.4e+06 core 1.849 nonfinite 0 peak 7.5 GB wall 11 s
+[bh1e8_new] tick 46 139 ms out 0.000 vmax/c 1.0000 pmax 5.67e+06 core 1.828 nonfinite 0 peak 7.5 GB wall 12 s
+[bh1e8_new] tick 51 134 ms out 0.018 vmax/c 1.0000 pmax 5.4e+06 core 1.970 nonfinite 0 peak 7.6 GB wall 14 s
+[bh1e8_new] tick 56 138 ms out 0.063 vmax/c 1.0000 pmax 5.69e+06 core 1.831 nonfinite 0 peak 7.7 GB wall 15 s
+[bh1e8_new] tick 61 134 ms out 0.109 vmax/c 1.0000 pmax 5.71e+06 core 1.858 nonfinite 0 peak 7.8 GB wall 16 s
+[bh1e8_new] tick 66 134 ms out 0.136 vmax/c 1.0000 pmax 5.81e+06 core 1.886 nonfinite 0 peak 7.8 GB wall 18 s
+[bh1e8_new] tick 71 132 ms out 0.145 vmax/c 1.0000 pmax 5.63e+06 core 1.948 nonfinite 0 peak 7.9 GB wall 19 s
+[bh1e8_new] tick 76 132 ms out 0.148 vmax/c 1.0000 pmax 5.64e+06 core 1.946 nonfinite 0 peak 8.0 GB wall 20 s
+[bh1e8_new] tick 81 131 ms out 0.152 vmax/c 1.0000 pmax 5.5e+06 core 1.979 nonfinite 0 peak 8.1 GB wall 22 s
+[bh1e8_new] tick 86 132 ms out 0.155 vmax/c 1.0000 pmax 5.51e+06 core 1.986 nonfinite 0 peak 8.1 GB wall 23 s
+[bh1e8_new] tick 91 131 ms out 0.158 vmax/c 1.0000 pmax 5.47e+06 core 1.985 nonfinite 0 peak 8.2 GB wall 24 s
+[bh1e8_new] tick 96 133 ms out 0.160 vmax/c 1.0000 pmax 5.57e+06 core 1.948 nonfinite 0 peak 8.3 GB wall 26 s
+[bh1e8_new] tick 101 129 ms out 0.162 vmax/c 1.0000 pmax 5.38e+06 core 2.046 nonfinite 0 peak 8.4 GB wall 27 s
+[bh1e8_new] tick 106 132 ms out 0.163 vmax/c 1.0000 pmax 5.47e+06 core 2.015 nonfinite 0 peak 8.4 GB wall 28 s
+[bh1e8_new] tick 111 131 ms out 0.165 vmax/c 1.0000 pmax 5.39e+06 core 2.050 nonfinite 0 peak 8.5 GB wall 30 s
+[bh1e8_new] tick 116 131 ms out 0.166 vmax/c 1.0000 pmax 5.47e+06 core 1.998 nonfinite 0 peak 8.6 GB wall 31 s
+[bh1e8_new] tick 121 132 ms out 0.167 vmax/c 1.0000 pmax 5.38e+06 core 2.082 nonfinite 0 peak 8.7 GB wall 33 s
+[bh1e8_new] tick 126 132 ms out 0.168 vmax/c 1.0000 pmax 5.36e+06 core 2.043 nonfinite 0 peak 8.7 GB wall 34 s
+[bh1e8_new] tick 131 133 ms out 0.169 vmax/c 1.0000 pmax 5.39e+06 core 2.089 nonfinite 0 peak 8.8 GB wall 35 s
+[bh1e8_new] tick 136 132 ms out 0.170 vmax/c 1.0000 pmax 5.38e+06 core 2.057 nonfinite 0 peak 8.9 GB wall 37 s
+[bh1e8_new] tick 141 129 ms out 0.171 vmax/c 1.0000 pmax 5.32e+06 core 2.128 nonfinite 0 peak 9.0 GB wall 38 s
+[bh1e8_new] tick 146 131 ms out 0.171 vmax/c 1.0000 pmax 5.32e+06 core 2.088 nonfinite 0 peak 9.0 GB wall 39 s
+[bh1e8_new] tick 150 130 ms out 0.172 vmax/c 1.0000 pmax 5.36e+06 core 2.089 nonfinite 0 peak 9.1 GB wall 40 s
+n 100000000: first 104 ms median 132 ms ticks 20.4 s loop 40.4 s peak 9.1 GB 1.32 ns/body/tick
+hist saved
+snaps saved
+=== BH 1e8 new: lens two-pass
+/home/adamwebb/augur-p1e8/scripts/scatter_bh_1b.py:282: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  err = float((a - ref[0]).abs().max() / ref[0].abs().max())
+selftest: max|a_chunked - model.force| / max|a| = 7.24e-05
+[bh1e8_new_lens_pass1] init force 101 ms, peak 6.8 GB
+[bh1e8_new_lens_pass1] tick 1 104 ms out 0.000 vmax/c 1.0000 pmax 1.63e+05 core 7.756 nonfinite 0 peak 6.8 GB wall 0 s
+[bh1e8_new_lens_pass1] tick 6 164 ms out 0.000 vmax/c 1.0000 pmax 3.87e+06 core 2.770 nonfinite 0 peak 6.8 GB wall 1 s
+[bh1e8_new_lens_pass1] tick 11 175 ms out 0.000 vmax/c 1.0000 pmax 7.56e+06 core 1.153 nonfinite 0 peak 6.8 GB wall 2 s
+[bh1e8_new_lens_pass1] tick 16 165 ms out 0.000 vmax/c 1.0000 pmax 8.85e+06 core 1.247 nonfinite 0 peak 6.8 GB wall 3 s
+[bh1e8_new_lens_pass1] tick 21 140 ms out 0.000 vmax/c 1.0000 pmax 7.14e+06 core 1.723 nonfinite 0 peak 6.8 GB wall 4 s
+[bh1e8_new_lens_pass1] tick 26 138 ms out 0.000 vmax/c 1.0000 pmax 6.69e+06 core 1.944 nonfinite 0 peak 6.8 GB wall 5 s
+[bh1e8_new_lens_pass1] tick 31 128 ms out 0.000 vmax/c 1.0000 pmax 5.65e+06 core 2.372 nonfinite 0 peak 6.8 GB wall 5 s
+[bh1e8_new_lens_pass1] tick 36 141 ms out 0.000 vmax/c 1.0000 pmax 5.86e+06 core 1.848 nonfinite 0 peak 6.8 GB wall 6 s
+[bh1e8_new_lens_pass1] tick 41 135 ms out 0.000 vmax/c 1.0000 pmax 5.4e+06 core 1.850 nonfinite 0 peak 6.8 GB wall 7 s
+[bh1e8_new_lens_pass1] tick 46 139 ms out 0.000 vmax/c 1.0000 pmax 5.67e+06 core 1.826 nonfinite 0 peak 6.8 GB wall 8 s
+[bh1e8_new_lens_pass1] tick 51 134 ms out 0.018 vmax/c 1.0000 pmax 5.39e+06 core 1.969 nonfinite 0 peak 6.8 GB wall 8 s
+[bh1e8_new_lens_pass1] tick 56 138 ms out 0.063 vmax/c 1.0000 pmax 5.69e+06 core 1.830 nonfinite 0 peak 6.8 GB wall 9 s
+[bh1e8_new_lens_pass1] tick 61 134 ms out 0.109 vmax/c 1.0000 pmax 5.72e+06 core 1.862 nonfinite 0 peak 6.8 GB wall 10 s
+[bh1e8_new_lens_pass1] tick 66 134 ms out 0.136 vmax/c 1.0000 pmax 5.8e+06 core 1.889 nonfinite 0 peak 6.8 GB wall 11 s
+[bh1e8_new_lens_pass1] tick 71 132 ms out 0.145 vmax/c 1.0000 pmax 5.63e+06 core 1.947 nonfinite 0 peak 6.8 GB wall 12 s
+[bh1e8_new_lens_pass1] tick 76 132 ms out 0.148 vmax/c 1.0000 pmax 5.63e+06 core 1.941 nonfinite 0 peak 6.8 GB wall 12 s
+[bh1e8_new_lens_pass1] tick 81 131 ms out 0.152 vmax/c 1.0000 pmax 5.51e+06 core 1.977 nonfinite 0 peak 6.8 GB wall 13 s
+[bh1e8_new_lens_pass1] tick 86 132 ms out 0.155 vmax/c 1.0000 pmax 5.51e+06 core 1.982 nonfinite 0 peak 6.8 GB wall 14 s
+[bh1e8_new_lens_pass1] tick 91 131 ms out 0.158 vmax/c 1.0000 pmax 5.49e+06 core 1.989 nonfinite 0 peak 6.8 GB wall 15 s
+[bh1e8_new_lens_pass1] tick 96 133 ms out 0.160 vmax/c 1.0000 pmax 5.58e+06 core 1.952 nonfinite 0 peak 6.8 GB wall 15 s
+[bh1e8_new_lens_pass1] tick 101 129 ms out 0.162 vmax/c 1.0000 pmax 5.38e+06 core 2.045 nonfinite 0 peak 6.8 GB wall 16 s
+[bh1e8_new_lens_pass1] tick 106 132 ms out 0.163 vmax/c 1.0000 pmax 5.46e+06 core 2.006 nonfinite 0 peak 6.8 GB wall 17 s
+[bh1e8_new_lens_pass1] tick 111 131 ms out 0.164 vmax/c 1.0000 pmax 5.4e+06 core 2.050 nonfinite 0 peak 6.8 GB wall 18 s
+[bh1e8_new_lens_pass1] tick 116 131 ms out 0.166 vmax/c 1.0000 pmax 5.45e+06 core 1.996 nonfinite 0 peak 6.8 GB wall 18 s
+[bh1e8_new_lens_pass1] tick 121 132 ms out 0.167 vmax/c 1.0000 pmax 5.38e+06 core 2.076 nonfinite 0 peak 6.8 GB wall 19 s
+[bh1e8_new_lens_pass1] tick 126 132 ms out 0.168 vmax/c 1.0000 pmax 5.36e+06 core 2.039 nonfinite 0 peak 6.8 GB wall 20 s
+[bh1e8_new_lens_pass1] tick 131 133 ms out 0.169 vmax/c 1.0000 pmax 5.38e+06 core 2.083 nonfinite 0 peak 6.8 GB wall 21 s
+[bh1e8_new_lens_pass1] tick 136 132 ms out 0.170 vmax/c 1.0000 pmax 5.37e+06 core 2.051 nonfinite 0 peak 6.8 GB wall 22 s
+[bh1e8_new_lens_pass1] tick 141 129 ms out 0.171 vmax/c 1.0000 pmax 5.33e+06 core 2.125 nonfinite 0 peak 6.8 GB wall 22 s
+[bh1e8_new_lens_pass1] tick 146 131 ms out 0.171 vmax/c 1.0000 pmax 5.33e+06 core 2.083 nonfinite 0 peak 6.8 GB wall 23 s
+[bh1e8_new_lens_pass1] tick 150 130 ms out 0.172 vmax/c 1.0000 pmax 5.34e+06 core 2.084 nonfinite 0 peak 6.8 GB wall 24 s
+[bh1e8_new_lens_pass2] init force 101 ms, peak 6.8 GB
+[bh1e8_new_lens_pass2] tick 1 104 ms out 0.000 vmax/c 1.0000 pmax 1.63e+05 core 7.756 nonfinite 0 peak 6.8 GB wall 0 s
+[bh1e8_new_lens_pass2] tick 6 164 ms out 0.000 vmax/c 1.0000 pmax 3.87e+06 core 2.770 nonfinite 0 peak 6.8 GB wall 1 s
+[bh1e8_new_lens_pass2] tick 11 175 ms out 0.000 vmax/c 1.0000 pmax 7.56e+06 core 1.153 nonfinite 0 peak 6.8 GB wall 3 s
+[bh1e8_new_lens_pass2] tick 16 164 ms out 0.000 vmax/c 1.0000 pmax 8.85e+06 core 1.247 nonfinite 0 peak 6.8 GB wall 4 s
+[bh1e8_new_lens_pass2] tick 21 139 ms out 0.000 vmax/c 1.0000 pmax 7.14e+06 core 1.723 nonfinite 0 peak 6.8 GB wall 6 s
+[bh1e8_new_lens_pass2] tick 26 138 ms out 0.000 vmax/c 1.0000 pmax 6.69e+06 core 1.944 nonfinite 0 peak 6.8 GB wall 7 s
+[bh1e8_new_lens_pass2] tick 31 128 ms out 0.000 vmax/c 1.0000 pmax 5.65e+06 core 2.372 nonfinite 0 peak 6.8 GB wall 8 s
+[bh1e8_new_lens_pass2] tick 36 141 ms out 0.000 vmax/c 1.0000 pmax 5.86e+06 core 1.849 nonfinite 0 peak 6.8 GB wall 9 s
+[bh1e8_new_lens_pass2] tick 41 135 ms out 0.000 vmax/c 1.0000 pmax 5.39e+06 core 1.850 nonfinite 0 peak 6.8 GB wall 11 s
+[bh1e8_new_lens_pass2] tick 46 139 ms out 0.000 vmax/c 1.0000 pmax 5.67e+06 core 1.827 nonfinite 0 peak 6.8 GB wall 12 s
+[bh1e8_new_lens_pass2] tick 51 134 ms out 0.018 vmax/c 1.0000 pmax 5.38e+06 core 1.968 nonfinite 0 peak 6.8 GB wall 13 s
+[bh1e8_new_lens_pass2] tick 56 138 ms out 0.063 vmax/c 1.0000 pmax 5.7e+06 core 1.831 nonfinite 0 peak 6.8 GB wall 15 s
+[bh1e8_new_lens_pass2] tick 61 134 ms out 0.109 vmax/c 1.0000 pmax 5.72e+06 core 1.860 nonfinite 0 peak 6.8 GB wall 16 s
+[bh1e8_new_lens_pass2] tick 66 134 ms out 0.136 vmax/c 1.0000 pmax 5.8e+06 core 1.888 nonfinite 0 peak 6.8 GB wall 17 s
+[bh1e8_new_lens_pass2] tick 71 132 ms out 0.145 vmax/c 1.0000 pmax 5.62e+06 core 1.948 nonfinite 0 peak 6.8 GB wall 19 s
+[bh1e8_new_lens_pass2] tick 76 132 ms out 0.148 vmax/c 1.0000 pmax 5.63e+06 core 1.940 nonfinite 0 peak 6.8 GB wall 20 s
+[bh1e8_new_lens_pass2] tick 81 131 ms out 0.152 vmax/c 1.0000 pmax 5.5e+06 core 1.978 nonfinite 0 peak 6.8 GB wall 21 s
+[bh1e8_new_lens_pass2] tick 86 132 ms out 0.155 vmax/c 1.0000 pmax 5.52e+06 core 1.982 nonfinite 0 peak 6.8 GB wall 22 s
+[bh1e8_new_lens_pass2] tick 91 131 ms out 0.158 vmax/c 1.0000 pmax 5.47e+06 core 1.987 nonfinite 0 peak 6.8 GB wall 24 s
+[bh1e8_new_lens_pass2] tick 96 132 ms out 0.160 vmax/c 1.0000 pmax 5.58e+06 core 1.951 nonfinite 0 peak 6.8 GB wall 25 s
+[bh1e8_new_lens_pass2] tick 101 130 ms out 0.162 vmax/c 1.0000 pmax 5.37e+06 core 2.048 nonfinite 0 peak 6.8 GB wall 26 s
+[bh1e8_new_lens_pass2] tick 106 132 ms out 0.163 vmax/c 1.0000 pmax 5.46e+06 core 2.008 nonfinite 0 peak 6.8 GB wall 28 s
+[bh1e8_new_lens_pass2] tick 111 131 ms out 0.165 vmax/c 1.0000 pmax 5.41e+06 core 2.049 nonfinite 0 peak 6.8 GB wall 29 s
+[bh1e8_new_lens_pass2] tick 116 132 ms out 0.166 vmax/c 1.0000 pmax 5.46e+06 core 1.999 nonfinite 0 peak 6.8 GB wall 30 s
+[bh1e8_new_lens_pass2] tick 121 132 ms out 0.167 vmax/c 1.0000 pmax 5.36e+06 core 2.076 nonfinite 0 peak 6.8 GB wall 31 s
+[bh1e8_new_lens_pass2] tick 126 133 ms out 0.168 vmax/c 1.0000 pmax 5.37e+06 core 2.042 nonfinite 0 peak 6.8 GB wall 33 s
+[bh1e8_new_lens_pass2] tick 131 132 ms out 0.169 vmax/c 1.0000 pmax 5.39e+06 core 2.080 nonfinite 0 peak 6.8 GB wall 34 s
+[bh1e8_new_lens_pass2] tick 136 130 ms out 0.170 vmax/c 1.0000 pmax 5.37e+06 core 2.053 nonfinite 0 peak 6.8 GB wall 35 s
+[bh1e8_new_lens_pass2] tick 141 128 ms out 0.171 vmax/c 1.0000 pmax 5.33e+06 core 2.129 nonfinite 0 peak 6.8 GB wall 37 s
+[bh1e8_new_lens_pass2] tick 146 129 ms out 0.171 vmax/c 1.0000 pmax 5.34e+06 core 2.085 nonfinite 0 peak 6.8 GB wall 38 s
+[bh1e8_new_lens_pass2] tick 150 130 ms out 0.172 vmax/c 1.0000 pmax 5.35e+06 core 2.090 nonfinite 0 peak 6.8 GB wall 39 s
+n 100000000: pass2 median 132 ms peak 6.8 GB
+=== disc analysis 1e6
+d1e6_old
+formation tick 0 horizon end 1000 full_horizon True n_pass 0
+{'mass': 0.105, 'a0': 5.945, 'a_end': inf, 'e0': 0.081, 'e_end': 0.988, 'r0': 6.203, 'r_end': 3.99, 'bound_all': False, 'max_drift': inf, 'min_frac_in': 0.956, 'passes': False, 'distinct': True}
+{'mass': 0.102, 'a0': 11.152, 'a_end': 23.454, 'e0': 0.051, 'e_end': 0.985, 'r0': 9.997, 'r_end': 26.734, 'bound_all': True, 'max_drift': 1.103, 'min_frac_in': 0.984, 'passes': False, 'distinct': False}
+{'mass': 0.1, 'a0': 16.636, 'a_end': 14.442, 'e0': 0.032, 'e_end': 0.986, 'r0': 16.001, 'r_end': 25.626, 'bound_all': False, 'max_drift': inf, 'min_frac_in': 1.0, 'passes': False, 'distinct': False}
+d1e6_new
+formation tick 0 horizon end 1000 full_horizon True n_pass 0
+{'mass': 0.105, 'a0': 5.947, 'a_end': inf, 'e0': 0.081, 'e_end': 0.966, 'r0': 6.203, 'r_end': 7.634, 'bound_all': False, 'max_drift': inf, 'min_frac_in': 0.956, 'passes': False, 'distinct': True}
+{'mass': 0.102, 'a0': 11.155, 'a_end': 58.532, 'e0': 0.051, 'e_end': 0.992, 'r0': 9.997, 'r_end': 31.253, 'bound_all': True, 'max_drift': 4.247, 'min_frac_in': 0.982, 'passes': False, 'distinct': True}
+{'mass': 0.1, 'a0': 16.644, 'a_end': 15.843, 'e0': 0.032, 'e_end': 0.866, 'r0': 16.001, 'r_end': 18.452, 'bound_all': True, 'max_drift': 0.33, 'min_frac_in': 1.0, 'passes': False, 'distinct': True}
+=== disc 1e8 new
+{"tick": 0, "nonfinite": 0, "vmax": 9.939898490905762, "frac_outside": 0.0, "core_in2": 0.8888794779777527, "core_r50": 0.9046382904052734, "r50": 8.496480941772461, "r90": 12.899641990661621, "centre": [0.04451955482363701, 0.050126612186431885], "wall": 0.5165592061821371}
+{"tick": 50, "nonfinite": 0, "vmax": 9.936806678771973, "frac_outside": 0.0007652699714526534, "core_in2": 0.8386071920394897, "core_r50": 0.772916316986084, "r50": 8.600549697875977, "r90": 12.90186882019043, "centre": [0.024905987083911896, 0.08772991597652435], "wall": 13.535129194147885}
+{"tick": 100, "nonfinite": 0, "vmax": 9.937030792236328, "frac_outside": 0.012034219689667225, "core_in2": 0.8414998054504395, "core_r50": 0.7771892547607422, "r50": 9.191041946411133, "r90": 13.464319229125977, "centre": [-0.10677268356084824, 0.07229426503181458], "wall": 26.111700791167095}
+{"tick": 150, "nonfinite": 0, "vmax": 9.93713665008545, "frac_outside": 0.01290689967572689, "core_in2": 0.8407623171806335, "core_r50": 0.7792148590087891, "r50": 9.145895004272461, "r90": 15.614354133605957, "centre": [-0.16046713292598724, 0.024366937577724457], "wall": 38.16796508105472}
+{"tick": 200, "nonfinite": 0, "vmax": 9.93714427947998, "frac_outside": 0.01289995014667511, "core_in2": 0.8406397104263306, "core_r50": 0.7887629866600037, "r50": 8.644044876098633, "r90": 17.885395050048828, "centre": [-0.20584844052791595, -0.022709453478455544], "wall": 50.754297845065594}
+{"tick": 250, "nonfinite": 0, "vmax": 9.937104225158691, "frac_outside": 0.012895849533379078, "core_in2": 0.8398771286010742, "core_r50": 0.7929301857948303, "r50": 8.89591121673584, "r90": 19.359086990356445, "centre": [-0.25242599844932556, 0.01110628992319107], "wall": 63.19100963417441}
+tick 250 median 232 ms peak 14.8 GB
+{"tick": 300, "nonfinite": 0, "vmax": 9.937023162841797, "frac_outside": 0.012973709963262081, "core_in2": 0.8389066457748413, "core_r50": 0.800571858882904, "r50": 8.92536449432373, "r90": 19.663450241088867, "centre": [-0.284028023481369, -0.04446004703640938], "wall": 79.01899165404029}
+{"tick": 350, "nonfinite": 0, "vmax": 9.936956405639648, "frac_outside": 0.014068669639527798, "core_in2": 0.838079571723938, "core_r50": 0.8071804046630859, "r50": 8.737110137939453, "r90": 18.900955200195312, "centre": [-0.27117079496383667, -0.04079778864979744], "wall": 91.17151975701563}
+{"tick": 400, "nonfinite": 0, "vmax": 9.936897277832031, "frac_outside": 0.014504339545965195, "core_in2": 0.8364749550819397, "core_r50": 0.8161925077438354, "r50": 9.046791076660156, "r90": 18.013887405395508, "centre": [-0.21428604423999786, -0.017259538173675537], "wall": 102.83335192408413}
+{"tick": 450, "nonfinite": 0, "vmax": 9.936850547790527, "frac_outside": 0.014666879549622536, "core_in2": 0.8356831073760986, "core_r50": 0.8212026357650757, "r50": 9.33779525756836, "r90": 17.608400344848633, "centre": [-0.22670307755470276, -0.01232390757650137], "wall": 113.95367389614694}
+{"tick": 500, "nonfinite": 0, "vmax": 9.936819076538086, "frac_outside": 0.014673239551484585, "core_in2": 0.8349652886390686, "core_r50": 0.8284282088279724, "r50": 9.2708740234375, "r90": 17.645986557006836, "centre": [-0.18660114705562592, 0.0027202237397432327], "wall": 124.98802120611072}
+tick 500 median 227 ms peak 14.8 GB
+{"tick": 550, "nonfinite": 0, "vmax": 9.936789512634277, "frac_outside": 0.014716359786689281, "core_in2": 0.834455132484436, "core_r50": 0.831413209438324, "r50": 9.019546508789062, "r90": 18.624055862426758, "centre": [-0.1559182107448578, -0.018047163262963295], "wall": 139.87717742403038}
+{"tick": 600, "nonfinite": 0, "vmax": 9.936788558959961, "frac_outside": 0.014918900094926357, "core_in2": 0.8334125876426697, "core_r50": 0.8358060717582703, "r50": 8.941394805908203, "r90": 19.677480697631836, "centre": [-0.16622687876224518, 0.052161455154418945], "wall": 151.4954355971422}
+{"tick": 650, "nonfinite": 0, "vmax": 9.936737060546875, "frac_outside": 0.01506465021520853, "core_in2": 0.8333740830421448, "core_r50": 0.8365946412086487, "r50": 9.54262638092041, "r90": 20.45854377746582, "centre": [-0.17982256412506104, 0.007616042625159025], "wall": 163.2418031510897}
+{"tick": 700, "nonfinite": 0, "vmax": 9.936710357666016, "frac_outside": 0.015151189640164375, "core_in2": 0.8329960107803345, "core_r50": 0.840277373790741, "r50": 9.743956565856934, "r90": 21.406505584716797, "centre": [-0.17735816538333893, -0.0232372023165226], "wall": 174.6511506862007}
+{"tick": 750, "nonfinite": 0, "vmax": 9.936697959899902, "frac_outside": 0.015184859745204449, "core_in2": 0.8319892287254333, "core_r50": 0.847240686416626, "r50": 9.628952980041504, "r90": 22.2573184967041, "centre": [-0.14454397559165955, 0.0003307658189442009], "wall": 185.86579532921314}
+tick 750 median 217 ms peak 14.8 GB
+{"tick": 800, "nonfinite": 0, "vmax": 9.936678886413574, "frac_outside": 0.015237179584801197, "core_in2": 0.8316069841384888, "core_r50": 0.850041389465332, "r50": 9.811749458312988, "r90": 23.261383056640625, "centre": [-0.1619046926498413, -0.048824623227119446], "wall": 201.95904896804132}
+{"tick": 850, "nonfinite": 0, "vmax": 9.93664836883545, "frac_outside": 0.015337489545345306, "core_in2": 0.831504225730896, "core_r50": 0.8550876975059509, "r50": 10.167037963867188, "r90": 24.191619873046875, "centre": [-0.15363779664039612, -0.08803006261587143], "wall": 212.97239747922868}
+{"tick": 900, "nonfinite": 0, "vmax": 9.93663501739502, "frac_outside": 0.015438229776918888, "core_in2": 0.8303741216659546, "core_r50": 0.8608249425888062, "r50": 10.2073335647583, "r90": 24.920259475708008, "centre": [-0.08713269233703613, -0.1006581261754036], "wall": 223.93940607411787}
+{"tick": 950, "nonfinite": 0, "vmax": 9.936673164367676, "frac_outside": 0.01549724955111742, "core_in2": 0.8299964666366577, "core_r50": 0.8615304231643677, "r50": 9.91292953491211, "r90": 25.373979568481445, "centre": [-0.06705165654420853, -0.09904191642999649], "wall": 235.10337946214713}
+{"tick": 1000, "nonfinite": 0, "vmax": 9.936717987060547, "frac_outside": 0.015527780167758465, "core_in2": 0.8302645087242126, "core_r50": 0.8571905493736267, "r50": 9.725473403930664, "r90": 23.109539031982422, "centre": [-0.09997005015611649, -0.08023124933242798], "wall": 246.43807855714113}
+tick 1000 median 211 ms peak 14.8 GB
+{"tick": 1050, "nonfinite": 0, "vmax": 9.936723709106445, "frac_outside": 0.015563310123980045, "core_in2": 0.8304312229156494, "core_r50": 0.8564130663871765, "r50": 9.386296272277832, "r90": 21.72783088684082, "centre": [-0.06884856522083282, -0.11570090800523758], "wall": 263.3549998330418}
+{"tick": 1100, "nonfinite": 0, "vmax": 9.93678092956543, "frac_outside": 0.015606369823217392, "core_in2": 0.830427885055542, "core_r50": 0.8550648093223572, "r50": 9.177642822265625, "r90": 20.453691482543945, "centre": [-0.04388566315174103, -0.13451308012008667], "wall": 274.947292560013}
+{"tick": 1150, "nonfinite": 0, "vmax": 9.936880111694336, "frac_outside": 0.015648530796170235, "core_in2": 0.8302937746047974, "core_r50": 0.8543544411659241, "r50": 9.286003112792969, "r90": 19.260528564453125, "centre": [-0.02810092084109783, -0.10265732556581497], "wall": 286.5169466121588}
+{"tick": 1200, "nonfinite": 0, "vmax": 9.93693733215332, "frac_outside": 0.015678100287914276, "core_in2": 0.8297600746154785, "core_r50": 0.8547905683517456, "r50": 9.889389991760254, "r90": 19.357412338256836, "centre": [-0.030288299545645714, -0.08538818359375], "wall": 298.083134933142}
+{"tick": 1250, "nonfinite": 0, "vmax": 9.936978340148926, "frac_outside": 0.015698259696364403, "core_in2": 0.8301823139190674, "core_r50": 0.8561559915542603, "r50": 10.39184284210205, "r90": 19.21316146850586, "centre": [-0.004820099100470543, -0.13203303515911102], "wall": 309.6991854731459}
+tick 1250 median 212 ms peak 14.8 GB
+{"tick": 1300, "nonfinite": 0, "vmax": 9.937029838562012, "frac_outside": 0.01572410948574543, "core_in2": 0.82978755235672, "core_r50": 0.8576357960700989, "r50": 10.334758758544922, "r90": 19.574647903442383, "centre": [0.005765501409769058, -0.11865205317735672], "wall": 327.906471015187}
+{"tick": 1350, "nonfinite": 0, "vmax": 9.937056541442871, "frac_outside": 0.015758799389004707, "core_in2": 0.8289902210235596, "core_r50": 0.8594332337379456, "r50": 9.90913200378418, "r90": 20.3673038482666, "centre": [-0.006935983430594206, -0.06235630810260773], "wall": 339.60859969607554}
+{"tick": 1400, "nonfinite": 0, "vmax": 9.937058448791504, "frac_outside": 0.015799839049577713, "core_in2": 0.8289408683776855, "core_r50": 0.8598052263259888, "r50": 10.033346176147461, "r90": 21.023256301879883, "centre": [-0.04931715875864029, -0.09877476096153259], "wall": 351.71619537612423}
+{"tick": 1450, "nonfinite": 0, "vmax": 9.93709659576416, "frac_outside": 0.015838339924812317, "core_in2": 0.8286054730415344, "core_r50": 0.8641933798789978, "r50": 10.26076602935791, "r90": 21.540334701538086, "centre": [-0.03310929983854294, -0.1328291893005371], "wall": 363.3592397910543}
+{"tick": 1500, "nonfinite": 0, "vmax": 9.937116622924805, "frac_outside": 0.015875840559601784, "core_in2": 0.8282296061515808, "core_r50": 0.867636501789093, "r50": 10.055511474609375, "r90": 21.893325805664062, "centre": [-0.0526827909052372, -0.11502810567617416], "wall": 374.9198908400722}
+tick 1500 median 212 ms peak 14.8 GB
+{"tick": 1550, "nonfinite": 0, "vmax": 9.937087059020996, "frac_outside": 0.01591848023235798, "core_in2": 0.827513575553894, "core_r50": 0.8712537288665771, "r50": 10.072986602783203, "r90": 22.062814712524414, "centre": [-0.06440151482820511, -0.12073888629674911], "wall": 392.95081818522885}
+{"tick": 1600, "nonfinite": 0, "vmax": 9.937047958374023, "frac_outside": 0.01596694067120552, "core_in2": 0.8266995549201965, "core_r50": 0.8744300007820129, "r50": 9.99608325958252, "r90": 22.08775520324707, "centre": [-0.03456267714500427, -0.07453294098377228], "wall": 404.49909121519886}
+{"tick": 1650, "nonfinite": 0, "vmax": 9.936989784240723, "frac_outside": 0.016007540747523308, "core_in2": 0.8262763619422913, "core_r50": 0.8746927380561829, "r50": 9.916961669921875, "r90": 22.131235122680664, "centre": [-0.05157342925667763, -0.02784992940723896], "wall": 415.727533856174}
+{"tick": 1700, "nonfinite": 0, "vmax": 9.936906814575195, "frac_outside": 0.01604056917130947, "core_in2": 0.8265132904052734, "core_r50": 0.870596706867218, "r50": 9.860239028930664, "r90": 22.219938278198242, "centre": [-0.061901722103357315, -0.05859530717134476], "wall": 427.2041569191497}
+{"tick": 1750, "nonfinite": 0, "vmax": 9.936829566955566, "frac_outside": 0.016073230654001236, "core_in2": 0.8265732526779175, "core_r50": 0.8682201504707336, "r50": 9.913041114807129, "r90": 22.069110870361328, "centre": [-0.06289440393447876, -0.038522034883499146], "wall": 438.7479652480688}
+tick 1750 median 212 ms peak 14.8 GB
+{"tick": 1800, "nonfinite": 0, "vmax": 9.936756134033203, "frac_outside": 0.01610890030860901, "core_in2": 0.8262582421302795, "core_r50": 0.8674043416976929, "r50": 9.967747688293457, "r90": 21.588241577148438, "centre": [-0.10606742650270462, -0.02358795329928398], "wall": 457.6443024671171}
+{"tick": 1850, "nonfinite": 0, "vmax": 9.936690330505371, "frac_outside": 0.016148660331964493, "core_in2": 0.8265177011489868, "core_r50": 0.8671420216560364, "r50": 10.112234115600586, "r90": 21.26198959350586, "centre": [-0.08025460690259933, -0.013209149241447449], "wall": 469.2458689932246}
+{"tick": 1900, "nonfinite": 0, "vmax": 9.936647415161133, "frac_outside": 0.016186539083719254, "core_in2": 0.8262062668800354, "core_r50": 0.8690783381462097, "r50": 10.197848320007324, "r90": 21.17853355407715, "centre": [-0.07657338678836823, 0.040974248200654984], "wall": 480.42080894415267}
+{"tick": 1950, "nonfinite": 0, "vmax": 9.936602592468262, "frac_outside": 0.01621432974934578, "core_in2": 0.826132595539093, "core_r50": 0.8686193823814392, "r50": 10.047524452209473, "r90": 21.187427520751953, "centre": [-0.07626139372587204, 0.03437638282775879], "wall": 491.5227224221453}
+{"tick": 2000, "nonfinite": 0, "vmax": 9.936578750610352, "frac_outside": 0.0162351094186306, "core_in2": 0.8258249163627625, "core_r50": 0.8693466186523438, "r50": 9.937772750854492, "r90": 21.11210823059082, "centre": [-0.0542520135641098, 0.06604499369859695], "wall": 502.43313947715797}
+tick 2000 median 212 ms peak 14.8 GB
+{"tick": 2050, "nonfinite": 0, "vmax": 9.936539649963379, "frac_outside": 0.016252020373940468, "core_in2": 0.8254259824752808, "core_r50": 0.8679941892623901, "r50": 9.737299919128418, "r90": 20.866973876953125, "centre": [-0.1026032418012619, 0.07227195799350739], "wall": 521.0495039471425}
+{"tick": 2100, "nonfinite": 0, "vmax": 9.936479568481445, "frac_outside": 0.01626715064048767, "core_in2": 0.8258167505264282, "core_r50": 0.8657476305961609, "r50": 9.83219051361084, "r90": 20.486753463745117, "centre": [-0.10918746888637543, 0.05711548775434494], "wall": 532.1717078010552}
+{"tick": 2150, "nonfinite": 0, "vmax": 9.936412811279297, "frac_outside": 0.016283290460705757, "core_in2": 0.8257400989532471, "core_r50": 0.8643450140953064, "r50": 10.116276741027832, "r90": 20.20164680480957, "centre": [-0.13958871364593506, 0.061643317341804504], "wall": 543.5174414271023}
+{"tick": 2200, "nonfinite": 0, "vmax": 9.936327934265137, "frac_outside": 0.016303010284900665, "core_in2": 0.8263554573059082, "core_r50": 0.8586211800575256, "r50": 10.332158088684082, "r90": 20.656557083129883, "centre": [-0.12588322162628174, 0.01575484126806259], "wall": 555.2143775930163}
+{"tick": 2250, "nonfinite": 0, "vmax": 9.936295509338379, "frac_outside": 0.016326390206813812, "core_in2": 0.8260833024978638, "core_r50": 0.8567962050437927, "r50": 10.520286560058594, "r90": 21.304893493652344, "centre": [-0.07714036852121353, 0.03284440189599991], "wall": 566.7260264242068}
+tick 2250 median 211 ms peak 14.8 GB
+{"tick": 2300, "nonfinite": 0, "vmax": 9.93631649017334, "frac_outside": 0.016352400183677673, "core_in2": 0.8261426687240601, "core_r50": 0.855303943157196, "r50": 10.350386619567871, "r90": 22.015037536621094, "centre": [-0.05031115934252739, 0.022364551201462746], "wall": 586.3104775620159}
+{"tick": 2350, "nonfinite": 0, "vmax": 9.936399459838867, "frac_outside": 0.01637386903166771, "core_in2": 0.8259313106536865, "core_r50": 0.8573307991027832, "r50": 10.349480628967285, "r90": 22.504283905029297, "centre": [0.01158833783119917, 0.04790987819433212], "wall": 597.7583370611537}
+{"tick": 2400, "nonfinite": 0, "vmax": 9.936440467834473, "frac_outside": 0.01638765074312687, "core_in2": 0.8257462382316589, "core_r50": 0.8571779131889343, "r50": 10.085057258605957, "r90": 22.63235092163086, "centre": [-0.011856933124363422, 0.09048839658498764], "wall": 608.9210737340618}
+{"tick": 2450, "nonfinite": 0, "vmax": 9.93648910522461, "frac_outside": 0.016398999840021133, "core_in2": 0.8259598612785339, "core_r50": 0.8572977185249329, "r50": 10.005241394042969, "r90": 22.46987533569336, "centre": [-0.009216506965458393, 0.10504505038261414], "wall": 619.9855624721386}
+{"tick": 2500, "nonfinite": 0, "vmax": 9.936518669128418, "frac_outside": 0.01640962064266205, "core_in2": 0.8257693648338318, "core_r50": 0.8578594923019409, "r50": 9.945659637451172, "r90": 21.936031341552734, "centre": [-0.05934770405292511, 0.15026211738586426], "wall": 630.7066435301676}
+tick 2500 median 210 ms peak 14.8 GB
+formation tick 0 horizon end 1000 full_horizon True n_pass 1
+{'mass': 0.103, 'a0': 6.167, 'a_end': 6.166, 'e0': 0.081, 'e_end': 0.208, 'r0': 6.2, 'r_end': 4.264, 'bound_all': True, 'max_drift': 0.153, 'min_frac_in': 0.972, 'passes': True, 'distinct': True}
+{'mass': 0.103, 'a0': 13.171, 'a_end': 19.117, 'e0': 0.051, 'e_end': 0.502, 'r0': 9.997, 'r_end': 27.519, 'bound_all': True, 'max_drift': 0.459, 'min_frac_in': 0.977, 'passes': False, 'distinct': True}
+{'mass': 0.1, 'a0': 23.592, 'a_end': 18.155, 'e0': 0.033, 'e_end': 0.364, 'r0': 15.999, 'r_end': 27.176, 'bound_all': True, 'max_drift': 0.536, 'min_frac_in': 1.0, 'passes': False, 'distinct': True}
+d1e8_new [(0, 0.889, 8.5, 12.9, 0.0), (250, 0.84, 8.9, 19.36, 0.013), (500, 0.835, 9.27, 17.65, 0.015), (750, 0.832, 9.63, 22.26, 0.015), (1000, 0.83, 9.73, 23.11, 0.016), (1250, 0.83, 10.39, 19.21, 0.016), (1500, 0.828, 10.06, 21.89, 0.016), (1750, 0.827, 9.91, 22.07, 0.016), (2000, 0.826, 9.94, 21.11, 0.016), (2250, 0.826, 10.52, 21.3, 0.016), (2500, 0.826, 9.95, 21.94, 0.016)]
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 6779612978 Oct 20 23:57 ../p1e8_main_results.tgz
+ALLDONE

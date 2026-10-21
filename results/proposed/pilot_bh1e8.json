@@ -1,0 +1,147 @@
+{
+ "gpu": "NVIDIA H200 NVL",
+ "args": {
+  "ckpt": "/home/adamwebb/edge_ck/ghost_lsq.pt",
+  "mode": "run",
+  "n": 100000000,
+  "steps": 5,
+  "pos_dtype": "fp16",
+  "mom_dtype": "fp16",
+  "mom_scale": 1.0,
+  "chunk": 50000000,
+  "sigma": 8.0,
+  "vfac": 0.3,
+  "c": 10.0,
+  "dt": 0.1,
+  "seed": 4738,
+  "ic_resample": false,
+  "nsub": 1000000,
+  "hist": false,
+  "snaps": false,
+  "lens_out": null,
+  "lens_res": 1080,
+  "lens_min_half": 3.0,
+  "tag": "pilot_bh1e8",
+  "force_probe": [],
+  "grid_dump": false,
+  "probe_targets": 20000,
+  "variant": "ms_kp_pot_v_g128_ghost",
+  "kernel": "file:results/far_kernels/r1b_mlp.pt+cache",
+  "opt": "",
+  "check_variants": "fp32:fp32,fp16:fp16"
+ },
+ "selftest_rel_err": 8.132653601933271e-05,
+ "run": {
+  "label": "pilot_bh1e8",
+  "n": 100000000,
+  "pos_dtype": "torch.float16",
+  "mom_dtype": "torch.float16",
+  "mom_scale": 1.0,
+  "chunk": 50000000,
+  "init_force_ms": 101.43688903190196,
+  "ms_per_tick": [
+   104.13213609717786,
+   233.79987617954612,
+   883.9415370021015,
+   883.9357059914619,
+   883.9222057722509
+  ],
+  "diag": [
+   {
+    "frac_outside": 0.0,
+    "vmax_over_c": 1.0,
+    "pmax": 49919.0703125,
+    "mean_ke": 249135.5892193054,
+    "nonfinite": 0,
+    "n_v_ge_c": 0,
+    "core_r45": 8.746955871582031,
+    "r90": 17.15802574157715,
+    "centre": [
+     -0.00650787353515625,
+     0.00228118896484375
+    ]
+   },
+   {
+    "frac_outside": 0.0,
+    "vmax_over_c": NaN,
+    "pmax": Infinity,
+    "mean_ke": Infinity,
+    "nonfinite": 86633702,
+    "n_v_ge_c": 0,
+    "core_r45": 7.755711078643799,
+    "r90": 16.174604415893555,
+    "centre": [
+     0.0200347900390625,
+     0.0301666259765625
+    ],
+    "peak_gb": 6.849344
+   },
+   {
+    "frac_outside": 0.0,
+    "vmax_over_c": NaN,
+    "pmax": NaN,
+    "mean_ke": NaN,
+    "nonfinite": 100000000,
+    "n_v_ge_c": 0,
+    "core_r45": NaN,
+    "r90": NaN,
+    "centre": [
+     NaN,
+     NaN
+    ],
+    "peak_gb": 6.849344
+   },
+   {
+    "frac_outside": 0.0,
+    "vmax_over_c": NaN,
+    "pmax": NaN,
+    "mean_ke": NaN,
+    "nonfinite": 100000000,
+    "n_v_ge_c": 0,
+    "core_r45": NaN,
+    "r90": NaN,
+    "centre": [
+     NaN,
+     NaN
+    ],
+    "peak_gb": 6.849344
+   },
+   {
+    "frac_outside": 0.0,
+    "vmax_over_c": NaN,
+    "pmax": NaN,
+    "mean_ke": NaN,
+    "nonfinite": 100000000,
+    "n_v_ge_c": 0,
+    "core_r45": NaN,
+    "r90": NaN,
+    "centre": [
+     NaN,
+     NaN
+    ],
+    "peak_gb": 6.849344
+   },
+   {
+    "frac_outside": 0.0,
+    "vmax_over_c": NaN,
+    "pmax": NaN,
+    "mean_ke": NaN,
+    "nonfinite": 100000000,
+    "n_v_ge_c": 0,
+    "core_r45": NaN,
+    "r90": NaN,
+    "centre": [
+     NaN,
+     NaN
+    ],
+    "peak_gb": 6.849344
+   }
+  ],
+  "first_tick_ms": 104.13213609717786,
+  "median_ms": 883.9222057722509,
+  "total_tick_s": 2.9897314610425383,
+  "wall_loop_s": 3.099947544047609,
+  "peak_gb": 6.849344,
+  "ns_per_body_per_tick": 8.839222057722509
+ }
+}
