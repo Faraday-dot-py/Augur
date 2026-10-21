@@ -1,0 +1,139 @@
+data closed (1500, 51, 300, 2) in 22s; frac body-ticks |c|>29.5 0.0005
+arm ctrl_full: trainable params 260419 of 260419
+it 0 k 4 loss 0.000579 t 0s
+it 100 k 5 loss 0.000266 t 4s
+it 200 k 6 loss 0.001418 t 9s
+it 300 k 6 loss 0.000271 t 14s
+it 400 k 7 loss 0.001370 t 20s
+it 500 k 8 loss 0.002390 t 27s
+it 600 k 9 loss 0.001354 t 34s
+it 700 k 10 loss 0.001728 t 41s
+it 800 k 10 loss 0.001408 t 50s
+it 900 k 11 loss 0.000933 t 58s
+it 1000 k 12 loss 0.003134 t 68s
+it 1100 k 13 loss 0.003177 t 78s
+it 1200 k 14 loss 0.000700 t 88s
+it 1300 k 14 loss 0.003165 t 99s
+it 1400 k 15 loss 0.000712 t 111s
+it 1500 k 16 loss 0.008688 t 123s
+it 1600 k 17 loss 0.001314 t 136s
+it 1700 k 18 loss 0.018553 t 150s
+it 1800 k 18 loss 0.001802 t 164s
+it 1900 k 19 loss 0.003444 t 178s
+TRAINED ctrl_full 2000 it in 193s skipped 0
+data open (1500, 51, 340, 2) in 22s; frac body-ticks |c|>29.5 0.2641
+arm open_full: trainable params 260419 of 260419
+it 0 k 4 loss 0.010832 t 0s
+it 100 k 5 loss 0.013222 t 4s
+it 200 k 6 loss 0.134793 t 9s
+it 300 k 6 loss 0.033333 t 14s
+it 400 k 7 loss 0.011535 t 20s
+it 500 k 8 loss 0.200921 t 27s
+it 600 k 9 loss 0.141211 t 34s
+it 700 k 10 loss 0.097919 t 41s
+it 800 k 10 loss 0.169913 t 50s
+it 900 k 11 loss 0.338019 t 59s
+it 1000 k 12 loss 0.136568 t 68s
+it 1100 k 13 loss 0.047448 t 78s
+it 1200 k 14 loss 0.058522 t 89s
+it 1300 k 14 loss 0.261169 t 100s
+it 1400 k 15 loss 0.711230 t 112s
+it 1500 k 16 loss 0.604728 t 124s
+it 1600 k 17 loss 0.533031 t 137s
+it 1700 k 18 loss 0.153308 t 151s
+it 1800 k 18 loss 0.274933 t 165s
+it 1900 k 19 loss 1.073131 t 180s
+TRAINED open_full 2000 it in 195s skipped 0
+data closed (1500, 51, 300, 2) in 22s; frac body-ticks |c|>29.5 0.0005
+arm trans_full: trainable params 260419 of 260419
+it 0 k 4 loss 0.001857 t 0s
+it 100 k 5 loss 0.001066 t 4s
+it 200 k 6 loss 0.001440 t 9s
+it 300 k 6 loss 0.001523 t 14s
+it 400 k 7 loss 0.001081 t 20s
+it 500 k 8 loss 0.001955 t 27s
+it 600 k 9 loss 0.003531 t 34s
+it 700 k 10 loss 0.003260 t 41s
+it 800 k 10 loss 0.004098 t 49s
+it 900 k 11 loss 0.003609 t 58s
+it 1000 k 12 loss 0.011626 t 68s
+it 1100 k 13 loss 0.006977 t 77s
+it 1200 k 14 loss 0.008887 t 88s
+it 1300 k 14 loss 0.023837 t 99s
+it 1400 k 15 loss 0.010740 t 111s
+it 1500 k 16 loss 0.030783 t 123s
+it 1600 k 17 loss 0.027639 t 136s
+it 1700 k 18 loss 0.011621 t 149s
+it 1800 k 18 loss 0.032808 t 163s
+it 1900 k 19 loss 0.011989 t 178s
+TRAINED trans_full 2000 it in 193s skipped 0
+data closed (1500, 51, 300, 2) in 22s; frac body-ticks |c|>29.5 0.0005
+arm ctrl_inout: trainable params 2049 of 260419
+it 0 k 4 loss 0.000579 t 0s
+it 100 k 5 loss 0.000277 t 3s
+it 200 k 6 loss 0.001434 t 6s
+it 300 k 6 loss 0.000413 t 10s
+it 400 k 7 loss 0.001388 t 14s
+it 500 k 8 loss 0.002440 t 18s
+it 600 k 9 loss 0.001367 t 23s
+it 700 k 10 loss 0.001662 t 28s
+it 800 k 10 loss 0.001447 t 33s
+it 900 k 11 loss 0.000941 t 39s
+it 1000 k 12 loss 0.003155 t 46s
+it 1100 k 13 loss 0.003163 t 53s
+it 1200 k 14 loss 0.000678 t 60s
+it 1300 k 14 loss 0.003131 t 67s
+it 1400 k 15 loss 0.000673 t 75s
+it 1500 k 16 loss 0.008497 t 84s
+it 1600 k 17 loss 0.001230 t 92s
+it 1700 k 18 loss 0.019237 t 101s
+it 1800 k 18 loss 0.001884 t 111s
+it 1900 k 19 loss 0.003473 t 121s
+TRAINED ctrl_inout 2000 it in 131s skipped 0
+data open (1500, 51, 340, 2) in 22s; frac body-ticks |c|>29.5 0.2641
+arm open_inout: trainable params 2049 of 260419
+it 0 k 4 loss 0.010832 t 0s
+it 100 k 5 loss 0.016219 t 3s
+it 200 k 6 loss 0.160635 t 6s
+it 300 k 6 loss 0.041611 t 10s
+it 400 k 7 loss 0.013312 t 14s
+it 500 k 8 loss 0.284557 t 18s
+it 600 k 9 loss 0.208346 t 23s
+it 700 k 10 loss 0.150316 t 28s
+it 800 k 10 loss 0.200893 t 34s
+it 900 k 11 loss 0.504025 t 40s
+it 1000 k 12 loss 0.197262 t 46s
+it 1100 k 13 loss 0.027794 t 53s
+it 1200 k 14 loss 0.054444 t 60s
+it 1300 k 14 loss 0.288253 t 68s
+it 1400 k 15 loss 1.253836 t 76s
+it 1500 k 16 loss 1.274423 t 84s
+it 1600 k 17 loss 0.999736 t 93s
+it 1700 k 18 loss 0.244192 t 102s
+it 1800 k 18 loss 0.395136 t 112s
+it 1900 k 19 loss 1.913580 t 122s
+TRAINED open_inout 2000 it in 132s skipped 0
+data closed (1500, 51, 300, 2) in 22s; frac body-ticks |c|>29.5 0.0005
+arm trans_inout: trainable params 2049 of 260419
+it 0 k 4 loss 0.001857 t 0s
+it 100 k 5 loss 0.001432 t 3s
+it 200 k 6 loss 0.002645 t 6s
+it 300 k 6 loss 0.002778 t 10s
+it 400 k 7 loss 0.001638 t 14s
+it 500 k 8 loss 0.004424 t 18s
+it 600 k 9 loss 0.006022 t 23s
+it 700 k 10 loss 0.006112 t 28s
+it 800 k 10 loss 0.006478 t 34s
+it 900 k 11 loss 0.007492 t 40s
+it 1000 k 12 loss 0.015042 t 46s
+it 1100 k 13 loss 0.012290 t 53s
+it 1200 k 14 loss 0.013927 t 60s
+it 1300 k 14 loss 0.027277 t 67s
+it 1400 k 15 loss 0.017097 t 75s
+it 1500 k 16 loss 0.038903 t 84s
+it 1600 k 17 loss 0.034668 t 92s
+it 1700 k 18 loss 0.024278 t 102s
+it 1800 k 18 loss 0.041278 t 111s
+it 1900 k 19 loss 0.020164 t 121s
+TRAINED trans_inout 2000 it in 131s skipped 0
+[2026-10-20T18:56:04-07:00] ALL DONE

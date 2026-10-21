@@ -208,7 +208,9 @@ class ScatterField(nn.Module):
         rf = torch.fft.rfft2(rho, s=(2 * G, 2 * G))
         full = torch.fft.irfft2(rf * Kf, s=(2 * G, 2 * G)) * self.h ** 2
         if self.kpad == "ext":
-            idx = torch.tensor([2 * G - 1] + list(range(G + 1)), device=rho.device)
+            if getattr(self, "_kidx", None) is None or self._kidx.shape[0] != G + 2 or self._kidx.device != rho.device:
+                self._kidx = torch.tensor([2 * G - 1] + list(range(G + 1)), device=rho.device)
+            idx = self._kidx
             return self.neg_grad(full[..., idx, :][..., idx], "none")
         if self.kpad == "ghost":
             return self.neg_grad(self._ghost_pad(full[..., :G, :G]), "none")

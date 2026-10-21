@@ -22,6 +22,13 @@ EDGE_W = 3.0
 EDGE_FROM = 27.0
 
 
+def exact_acc_batch(pos, mk, eps):
+    d = pos[:, None, :, :] - pos[:, :, None, :]
+    inv = ((d ** 2).sum(-1) + eps ** 2) ** -1.5 * mk[:, None, :]
+    inv = inv * (1 - torch.eye(pos.shape[1], device=pos.device, dtype=pos.dtype))
+    return (d * inv[..., None]).sum(2) * mk[..., None]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--arm", required=True)
@@ -29,6 +36,7 @@ def main():
     ap.add_argument("--data", choices=["closed", "open"], default="closed")
     ap.add_argument("--translate", type=float, default=0.0, help="max |shift| per axis of a random per-scene translation of the closed scenes (resampled every iteration)")
     ap.add_argument("--train-only", default="", help="comma list of parameter-name prefixes to train; empty = all")
+    ap.add_argument("--loss", choices=["traj", "force"], default="traj", help="force: match exact all-pairs acceleration (all bodies incl. outside the box) of cold-field single evaluations at random states, inside-box bodies, edge-weighted")
     ap.add_argument("--opt", default="default")
     ap.add_argument("--init-ckpt", required=True)
     ap.add_argument("--train", type=int, default=1500)
@@ -88,7 +96,7 @@ def main():
     signal.signal(signal.SIGTERM, on_term)
     g = torch.Generator(device="cpu").manual_seed(args.seed + start)
     S, N = P.shape[0], P.shape[2]
-    fns = sf.make_step_fns(model, args.batch, N, args.k_end, dev) if "graphtrain" in getattr(model, "opt", ()) else None
+    fns = sf.make_step_fns(model, args.batch, N, args.k_end, dev) if "graphtrain" in getattr(model, "opt", ()) and args.loss == "traj" else None
     box = model.extent / 2
     t_start = time.time()
     skipped = 0
@@ -111,6 +119,23 @@ def main():
         pos, vel = Pw[:, 0], Vw[:, 0]
         field = model.init_field(args.batch, dev)
         lp = lv = 0.0
+        if args.loss == "force":
+            c = pos.abs().amax(-1)
+            ax = exact_acc_batch(pos.double(), mk.double(), 0.5).float()
+            a, _ = model.force(pos, vel, m, mk, field[0] if isinstance(field, tuple) else field)
+            w = mk * (c < box).float() * (1 + EDGE_W * (c > EDGE_FROM).float())
+            err = (a - ax).norm(dim=-1) / (ax.norm(dim=-1) + 1.0)
+            loss = (err ** 2 * w).sum() / w.sum().clamp_min(1.0)
+            opt.zero_grad()
+            loss.backward()
+            gn = torch.nn.utils.clip_grad_norm_(params, 1.0)
+            if torch.isfinite(loss) and torch.isfinite(gn):
+                opt.step()
+            if it % args.log_every == 0:
+                print(f"it {it} force loss {loss.item():.6f} t {time.time() - t_start:.0f}s", flush=True)
+                hist.append((it, float(loss)))
+                save()
+            continue
         for s in range(k):
             pos, vel, m, field, _ = fns[s](pos, vel, m, mk, field) if fns else sf._step_m(model, pos, vel, m, mk, field)
             c = Pw[:, s + 1].abs().amax(-1)

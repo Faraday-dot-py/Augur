@@ -1,0 +1,30 @@
+SCAN base outside a mean model(momfix) -0.0403 model(no momfix) 0.0000 exact -0.1622
+SCAN base star+light {"light_rel_err_momfix": 4.291563512901546, "light_rel_err_nomomfix": 0.27312610891685346, "star_self_accel_momfix": 0.03948456817306578, "star_self_accel_nomomfix": 0.6377813393870989}
+SCAN base field {"t": 0, "field_ring3": 4855.80517578125, "field_band4_8": 3885.095703125, "field_interior": 84.96062469482422, "max_acc_tracer": 60.43267059326172, "max_acc_cluster": 143.68563842773438}
+SCAN base field {"t": 10, "field_ring3": 5153.76953125, "field_band4_8": 2869.43603515625, "field_interior": 2308.755126953125, "max_acc_tracer": 1536.8157958984375, "max_acc_cluster": 3118.39697265625}
+SCAN base field {"t": 20, "field_ring3": 4619.53564453125, "field_band4_8": 2869.8212890625, "field_interior": 2315.866943359375, "max_acc_tracer": 904.3070068359375, "max_acc_cluster": 3383.6064453125}
+SCAN base field {"t": 30, "field_ring3": 4471.1025390625, "field_band4_8": 2859.521484375, "field_interior": 1466.4375, "max_acc_tracer": 742.1668090820312, "max_acc_cluster": 2502.018310546875}
+SCAN base field {"t": 40, "field_ring3": 4530.03662109375, "field_band4_8": 2855.021240234375, "field_interior": 1443.769775390625, "max_acc_tracer": 2344.20654296875, "max_acc_cluster": 3287.20556640625}
+SCAN base field {"t": 50, "field_ring3": 4385.2568359375, "field_band4_8": 2844.580810546875, "field_interior": 1437.989501953125, "max_acc_tracer": 2244.086669921875, "max_acc_cluster": 2311.635498046875}
+SCAN base field {"t": 60, "field_ring3": 4389.79541015625, "field_band4_8": 2759.920654296875, "field_interior": 1255.199951171875, "max_acc_tracer": 1907.489013671875, "max_acc_cluster": 4100.82275390625}
+SCAN base field {"t": 70, "field_ring3": 4210.63232421875, "field_band4_8": 2582.388916015625, "field_interior": 1279.32763671875, "max_acc_tracer": 2966.816162109375, "max_acc_cluster": 2569.1787109375}
+SCAN base field {"t": 80, "field_ring3": 4026.67041015625, "field_band4_8": 2494.10693359375, "field_interior": 1348.0172119140625, "max_acc_tracer": 2360.2822265625, "max_acc_cluster": 2772.31298828125}
+SCAN base field {"t": 90, "field_ring3": 4059.72216796875, "field_band4_8": 2453.706298828125, "field_interior": 1101.1773681640625, "max_acc_tracer": 2781.595947265625, "max_acc_cluster": 2952.14013671875}
+SCAN base field {"t": 100, "field_ring3": 4016.133544921875, "field_band4_8": 2431.5654296875, "field_interior": 1257.5093994140625, "max_acc_tracer": 2964.4345703125, "max_acc_cluster": 2685.217041015625}
+SCAN base fp16 {"max_abs_diff_band": 0.15234375, "max_abs_diff_interior": 0.591156005859375, "max_abs_a32_band": 12124.1650390625, "position_quantum_16_32": 0.015625}
+SCAN kext outside a mean model(momfix) -0.0402 model(no momfix) 0.0000 exact -0.1622
+SCAN kext star+light {"light_rel_err_momfix": 4.290381234140683, "light_rel_err_nomomfix": 0.27214291800424745, "star_self_accel_momfix": 0.039489641902036965, "star_self_accel_nomomfix": 0.6377813393870989}
+SCAN kext field {"t": 0, "field_ring3": 15.188852310180664, "field_band4_8": 16.86419677734375, "field_interior": 84.91378784179688, "max_acc_tracer": 59.0609016418457, "max_acc_cluster": 143.5018768310547}
+SCAN kext field {"t": 10, "field_ring3": 10.896500587463379, "field_band4_8": 8.142057418823242, "field_interior": 2308.693359375, "max_acc_tracer": 36.02851867675781, "max_acc_cluster": 3114.036376953125}
+SCAN kext field {"t": 20, "field_ring3": 14.587684631347656, "field_band4_8": 8.798688888549805, "field_interior": 2316.381103515625, "max_acc_tracer": 101.6973876953125, "max_acc_cluster": 3392.97607421875}
+SCAN kext field {"t": 30, "field_ring3": 12.737298965454102, "field_band4_8": 8.048121452331543, "field_interior": 1452.444580078125, "max_acc_tracer": 447.2657470703125, "max_acc_cluster": 2459.202392578125}
+SCAN kext field {"t": 40, "field_ring3": 11.212379455566406, "field_band4_8": 8.412131309509277, "field_interior": 1454.73486328125, "max_acc_tracer": 2288.5166015625, "max_acc_cluster": 2373.2900390625}
+SCAN kext field {"t": 50, "field_ring3": 12.46779727935791, "field_band4_8": 11.099441528320312, "field_interior": 1484.7935791015625, "max_acc_tracer": 2160.0908203125, "max_acc_cluster": 2262.19140625}
+SCAN kext field {"t": 60, "field_ring3": 21.88692283630371, "field_band4_8": 14.965279579162598, "field_interior": 1247.8681640625, "max_acc_tracer": 1887.8096923828125, "max_acc_cluster": 1941.307373046875}
+SCAN kext field {"t": 70, "field_ring3": 13.722434997558594, "field_band4_8": 10.305583000183105, "field_interior": 1382.7432861328125, "max_acc_tracer": 1950.5748291015625, "max_acc_cluster": 2144.0546875}
+SCAN kext field {"t": 80, "field_ring3": 13.214752197265625, "field_band4_8": 9.454923629760742, "field_interior": 1279.9669189453125, "max_acc_tracer": 1816.20556640625, "max_acc_cluster": 1958.7255859375}
+SCAN kext field {"t": 90, "field_ring3": 12.890822410583496, "field_band4_8": 9.673639297485352, "field_interior": 1166.97021484375, "max_acc_tracer": 1760.2269287109375, "max_acc_cluster": 1873.8929443359375}
+SCAN kext field {"t": 100, "field_ring3": 11.9028959274292, "field_band4_8": 8.9352445602417, "field_interior": 1164.6224365234375, "max_acc_tracer": 1773.983154296875, "max_acc_cluster": 1872.6702880859375}
+SCAN kext fp16 {"max_abs_diff_band": 0.0055694580078125, "max_abs_diff_interior": 0.602874755859375, "max_abs_a32_band": 143.11314392089844, "position_quantum_16_32": 0.015625}
+DONE
+[2026-10-20T20:01:11-07:00] ALL DONE

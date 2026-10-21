@@ -1,0 +1,70 @@
+data closed (1500, 51, 300, 2) in 23s; frac body-ticks |c|>29.5 0.0005
+arm ghost_ctrl: trainable params 9 of 260428
+it 0 k 4 loss 0.000579 t 0s
+it 100 k 5 loss 0.000291 t 3s
+it 200 k 6 loss 0.001555 t 6s
+it 300 k 6 loss 0.000335 t 9s
+it 400 k 7 loss 0.001526 t 13s
+it 500 k 8 loss 0.002608 t 18s
+it 600 k 9 loss 0.001461 t 22s
+it 700 k 10 loss 0.001793 t 27s
+it 800 k 10 loss 0.001549 t 32s
+it 900 k 11 loss 0.000961 t 38s
+it 1000 k 12 loss 0.003202 t 44s
+it 1100 k 13 loss 0.003108 t 51s
+it 1200 k 14 loss 0.000658 t 58s
+it 1300 k 14 loss 0.003223 t 65s
+it 1400 k 15 loss 0.000692 t 73s
+it 1500 k 16 loss 0.008455 t 81s
+it 1600 k 17 loss 0.001225 t 89s
+it 1700 k 18 loss 0.019734 t 98s
+it 1800 k 18 loss 0.001827 t 107s
+it 1900 k 19 loss 0.003390 t 117s
+TRAINED ghost_ctrl 2000 it in 127s skipped 0
+data open (1500, 51, 340, 2) in 23s; frac body-ticks |c|>29.5 0.2641
+arm ghost_open: trainable params 9 of 260428
+it 0 k 4 loss 0.010832 t 0s
+it 100 k 5 loss 0.016827 t 3s
+it 200 k 6 loss 0.130193 t 6s
+it 300 k 6 loss 0.045253 t 9s
+it 400 k 7 loss 0.022929 t 13s
+it 500 k 8 loss 0.260469 t 18s
+it 600 k 9 loss 0.217958 t 22s
+it 700 k 10 loss 0.151313 t 27s
+it 800 k 10 loss 0.210151 t 33s
+it 900 k 11 loss 0.515633 t 38s
+it 1000 k 12 loss 0.207187 t 45s
+it 1100 k 13 loss 0.030479 t 51s
+it 1200 k 14 loss 0.052303 t 58s
+it 1300 k 14 loss 0.235895 t 66s
+it 1400 k 15 loss 1.158823 t 73s
+it 1500 k 16 loss 1.255882 t 82s
+it 1600 k 17 loss 1.008261 t 90s
+it 1700 k 18 loss 0.259189 t 99s
+it 1800 k 18 loss 0.409000 t 108s
+it 1900 k 19 loss 1.929689 t 118s
+TRAINED ghost_open 2000 it in 128s skipped 0
+data closed (1500, 51, 300, 2) in 22s; frac body-ticks |c|>29.5 0.0005
+arm ghost_trans: trainable params 9 of 260428
+it 0 k 4 loss 0.001857 t 0s
+it 100 k 5 loss 0.001929 t 3s
+it 200 k 6 loss 0.004140 t 6s
+it 300 k 6 loss 0.004406 t 9s
+it 400 k 7 loss 0.002465 t 13s
+it 500 k 8 loss 0.004780 t 18s
+it 600 k 9 loss 0.009369 t 22s
+it 700 k 10 loss 0.012520 t 27s
+it 800 k 10 loss 0.009007 t 32s
+it 900 k 11 loss 0.011415 t 38s
+it 1000 k 12 loss 0.021705 t 44s
+it 1100 k 13 loss 0.018964 t 51s
+it 1200 k 14 loss 0.020990 t 58s
+it 1300 k 14 loss 0.036155 t 65s
+it 1400 k 15 loss 0.036034 t 73s
+it 1500 k 16 loss 0.042544 t 81s
+it 1600 k 17 loss 0.033541 t 89s
+it 1700 k 18 loss 0.040217 t 98s
+it 1800 k 18 loss 0.056482 t 107s
+it 1900 k 19 loss 0.036491 t 117s
+TRAINED ghost_trans 2000 it in 127s skipped 0
+[2026-10-20T18:44:54-07:00] ALL DONE

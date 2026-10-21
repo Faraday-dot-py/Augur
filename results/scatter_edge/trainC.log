@@ -1,0 +1,127 @@
+data closed (1500, 51, 300, 2) in 22s; frac body-ticks |c|>29.5 0.0005
+arm gf_ctrl: trainable params 9 of 260428
+it 0 force loss 0.022449 t 0s
+it 100 force loss 0.016576 t 1s
+it 200 force loss 0.039121 t 2s
+it 300 force loss 0.016230 t 2s
+it 400 force loss 0.019488 t 3s
+it 500 force loss 0.021533 t 4s
+it 600 force loss 0.016478 t 4s
+it 700 force loss 0.018294 t 5s
+it 800 force loss 0.023187 t 6s
+it 900 force loss 0.014329 t 6s
+it 1000 force loss 0.019261 t 7s
+it 1100 force loss 0.013276 t 8s
+it 1200 force loss 0.015575 t 8s
+it 1300 force loss 0.019397 t 9s
+it 1400 force loss 0.015285 t 10s
+TRAINED gf_ctrl 1500 it in 11s skipped 0
+data open (1500, 51, 340, 2) in 22s; frac body-ticks |c|>29.5 0.2641
+arm gf_open: trainable params 9 of 260428
+it 0 force loss 0.201485 t 0s
+it 100 force loss 0.208861 t 1s
+it 200 force loss 0.308239 t 2s
+it 300 force loss 0.248505 t 2s
+it 400 force loss 0.536962 t 3s
+it 500 force loss 0.210811 t 3s
+it 600 force loss 0.458447 t 4s
+it 700 force loss 0.245471 t 5s
+it 800 force loss 0.286357 t 5s
+it 900 force loss 0.235481 t 6s
+it 1000 force loss 0.211194 t 7s
+it 1100 force loss 0.277788 t 7s
+it 1200 force loss 0.292064 t 8s
+it 1300 force loss 0.137569 t 9s
+it 1400 force loss 0.369920 t 9s
+TRAINED gf_open 1500 it in 10s skipped 0
+data closed (1500, 51, 300, 2) in 22s; frac body-ticks |c|>29.5 0.0005
+arm gf_trans: trainable params 9 of 260428
+it 0 force loss 0.276928 t 0s
+it 100 force loss 0.235029 t 1s
+it 200 force loss 0.340605 t 2s
+it 300 force loss 0.311622 t 2s
+it 400 force loss 0.124090 t 3s
+it 500 force loss 0.253786 t 4s
+it 600 force loss 0.295372 t 4s
+it 700 force loss 0.390049 t 5s
+it 800 force loss 0.220663 t 5s
+it 900 force loss 0.495789 t 6s
+it 1000 force loss 0.230232 t 7s
+it 1100 force loss 0.375266 t 7s
+it 1200 force loss 0.261772 t 8s
+it 1300 force loss 0.287723 t 9s
+it 1400 force loss 0.358102 t 9s
+TRAINED gf_trans 1500 it in 10s skipped 0
+data closed (1500, 51, 300, 2) in 22s; frac body-ticks |c|>29.5 0.0005
+arm if_ctrl: trainable params 2049 of 260419
+it 0 force loss 0.022448 t 0s
+it 100 force loss 0.007179 t 1s
+it 200 force loss 0.027998 t 2s
+it 300 force loss 0.006606 t 2s
+it 400 force loss 0.004489 t 3s
+it 500 force loss 0.006090 t 4s
+it 600 force loss 0.003949 t 4s
+it 700 force loss 0.004136 t 5s
+it 800 force loss 0.006508 t 5s
+it 900 force loss 0.002919 t 6s
+it 1000 force loss 0.003885 t 7s
+it 1100 force loss 0.003184 t 7s
+it 1200 force loss 0.004135 t 8s
+it 1300 force loss 0.003848 t 9s
+it 1400 force loss 0.002991 t 9s
+TRAINED if_ctrl 1500 it in 10s skipped 0
+data open (1500, 51, 340, 2) in 22s; frac body-ticks |c|>29.5 0.2641
+arm if_open: trainable params 2049 of 260419
+it 0 force loss 0.201486 t 0s
+it 100 force loss 0.115750 t 1s
+it 200 force loss 0.257904 t 2s
+it 300 force loss 0.167845 t 2s
+it 400 force loss 0.204633 t 3s
+it 500 force loss 0.128059 t 3s
+it 600 force loss 0.220487 t 4s
+it 700 force loss 0.091952 t 5s
+it 800 force loss 0.133944 t 5s
+it 900 force loss 0.112356 t 6s
+it 1000 force loss 0.055736 t 7s
+it 1100 force loss 0.078518 t 7s
+it 1200 force loss 0.071540 t 8s
+it 1300 force loss 0.075418 t 9s
+it 1400 force loss 0.183726 t 9s
+TRAINED if_open 1500 it in 10s skipped 0
+data closed (1500, 51, 300, 2) in 22s; frac body-ticks |c|>29.5 0.0005
+arm ff_ctrl: trainable params 260419 of 260419
+it 0 force loss 0.022449 t 0s
+it 100 force loss 0.001860 t 1s
+it 200 force loss 0.006238 t 2s
+it 300 force loss 0.001231 t 3s
+it 400 force loss 0.001153 t 4s
+it 500 force loss 0.001816 t 5s
+it 600 force loss 0.001122 t 6s
+it 700 force loss 0.000957 t 7s
+it 800 force loss 0.001349 t 8s
+it 900 force loss 0.000460 t 9s
+it 1000 force loss 0.000961 t 10s
+it 1100 force loss 0.000477 t 11s
+it 1200 force loss 0.000509 t 12s
+it 1300 force loss 0.001129 t 13s
+it 1400 force loss 0.000483 t 14s
+TRAINED ff_ctrl 1500 it in 15s skipped 0
+data open (1500, 51, 340, 2) in 22s; frac body-ticks |c|>29.5 0.2641
+arm ff_open: trainable params 260419 of 260419
+it 0 force loss 0.201485 t 0s
+it 100 force loss 0.056930 t 1s
+it 200 force loss 0.143397 t 2s
+it 300 force loss 0.101955 t 3s
+it 400 force loss 0.123335 t 4s
+it 500 force loss 0.079057 t 5s
+it 600 force loss 0.101491 t 6s
+it 700 force loss 0.047314 t 7s
+it 800 force loss 0.066768 t 8s
+it 900 force loss 0.040904 t 9s
+it 1000 force loss 0.023200 t 10s
+it 1100 force loss 0.031329 t 11s
+it 1200 force loss 0.021199 t 12s
+it 1300 force loss 0.039733 t 13s
+it 1400 force loss 0.090795 t 14s
+TRAINED ff_open 1500 it in 15s skipped 0
+[2026-10-20T19:59:19-07:00] ALL DONE
