@@ -1,0 +1,91 @@
+arms: ['E_det1', 'E_det2', 'E_nd1', 'E_nd2', 'E_nd3', 'G_det1', 'G_det2', 'G_nd1', 'G_nd2', 'G_nd3']; scenes per arm: 512
+
+== bh300 ==
+| arm | dE@100 med [95% CI] | dE@1e3 med [95% CI] | outgrid@100 | outgrid@1e3 | bound@1e3 | vir@1e3 | nonfinite scenes |
+|---|---|---|---|---|---|---|---|
+| E_det1 | 0.05754 [0.05584, 0.05976] | 0.5942 [0.584, 0.6075] | 0.020 | 0.253 | 0.787 | 0.956 | 0 |
+| E_det2 | 0.05754 [0.05578, 0.05987] | 0.5942 [0.5835, 0.6077] | 0.020 | 0.253 | 0.787 | 0.956 | 0 |
+| E_nd1 | 0.05825 [0.05672, 0.06044] | 0.5902 [0.5777, 0.6008] | 0.020 | 0.253 | 0.787 | 0.96 | 0 |
+| E_nd2 | 0.05741 [0.05597, 0.06003] | 0.6 [0.5902, 0.608] | 0.020 | 0.253 | 0.787 | 0.961 | 0 |
+| E_nd3 | 0.05788 [0.05567, 0.05976] | 0.5971 [0.5851, 0.6099] | 0.023 | 0.253 | 0.787 | 0.962 | 0 |
+| G_det1 | 0.06753 [0.06578, 0.06925] | 0.7405 [0.7354, 0.7477] | 0.020 | 0.160 | 0.867 | 0.925 | 0 |
+| G_det2 | 0.06753 [0.06578, 0.06922] | 0.7405 [0.7354, 0.7482] | 0.020 | 0.160 | 0.867 | 0.925 | 0 |
+| G_nd1 | 0.06768 [0.06591, 0.06964] | 0.7365 [0.7275, 0.7463] | 0.020 | 0.158 | 0.870 | 0.925 | 0 |
+| G_nd2 | 0.06785 [0.06649, 0.06932] | 0.7421 [0.7329, 0.7482] | 0.020 | 0.157 | 0.870 | 0.924 | 0 |
+| G_nd3 | 0.06893 [0.06698, 0.0704] | 0.7429 [0.7349, 0.7512] | 0.020 | 0.160 | 0.870 | 0.925 | 0 |
+
+determinism: E det1 == det2 bitwise on E(t): True; G det1 == det2: True
+
+| pairing B/A | what | t | ratio of medians [paired 95% CI] | median of per-scene ratios | frac scenes B<A | vs 1.15 gate |
+|---|---|---|---|---|---|---|
+| G_det1/E_det1 | ghost vs E, deterministic | 100 | 1.174 [1.128, 1.210] | 1.163 | 0.27 | INCONCLUSIVE |
+| G_det1/E_det1 | ghost vs E, deterministic | 1000 | 1.246 [1.220, 1.270] | 1.242 | 0.07 | KILL |
+| G_nd1/E_nd1 | ghost vs E, nondeterministic | 100 | 1.162 [1.120, 1.193] | 1.151 | 0.23 | INCONCLUSIVE |
+| G_nd1/E_nd1 | ghost vs E, nondeterministic | 1000 | 1.248 [1.225, 1.277] | 1.251 | 0.10 | KILL |
+| G_det2/E_det2 | ghost vs E, deterministic | 100 | 1.174 [1.130, 1.211] | 1.163 | 0.27 | INCONCLUSIVE |
+| G_det2/E_det2 | ghost vs E, deterministic | 1000 | 1.246 [1.221, 1.270] | 1.242 | 0.07 | KILL |
+| G_nd2/E_nd2 | ghost vs E, nondeterministic | 100 | 1.182 [1.140, 1.215] | 1.172 | 0.25 | INCONCLUSIVE |
+| G_nd2/E_nd2 | ghost vs E, nondeterministic | 1000 | 1.237 [1.215, 1.259] | 1.252 | 0.09 | KILL |
+| G_nd3/E_nd3 | ghost vs E, nondeterministic | 100 | 1.191 [1.156, 1.227] | 1.195 | 0.23 | KILL |
+| G_nd3/E_nd3 | ghost vs E, nondeterministic | 1000 | 1.244 [1.218, 1.273] | 1.235 | 0.09 | KILL |
+| E_nd2/E_nd1 | noise floor E-vs-E | 100 | 0.986 [0.951, 1.022] | 0.985 | 0.52 |  |
+| E_nd2/E_nd1 | noise floor E-vs-E | 1000 | 1.017 [0.997, 1.038] | 0.999 | 0.50 |  |
+| E_nd3/E_nd1 | noise floor E-vs-E | 100 | 0.994 [0.954, 1.022] | 0.982 | 0.53 |  |
+| E_nd3/E_nd1 | noise floor E-vs-E | 1000 | 1.012 [0.989, 1.037] | 1.005 | 0.49 |  |
+| E_det2/E_det1 | noise floor E-vs-E det | 100 | 1.000 [1.000, 1.000] | 1.000 | 0.00 |  |
+| E_det2/E_det1 | noise floor E-vs-E det | 1000 | 1.000 [1.000, 1.000] | 1.000 | 0.00 |  |
+| G_nd2/G_nd1 | noise floor G-vs-G | 100 | 1.003 [0.978, 1.029] | 1.005 | 0.50 |  |
+| G_nd2/G_nd1 | noise floor G-vs-G | 1000 | 1.008 [0.992, 1.022] | 0.999 | 0.50 |  |
+| G_nd3/G_nd1 | noise floor G-vs-G | 100 | 1.018 [0.991, 1.043] | 1.001 | 0.50 |  |
+| G_nd3/G_nd1 | noise floor G-vs-G | 1000 | 1.009 [0.992, 1.024] | 1.009 | 0.48 |  |
+| E_det1/E_nd1 | det vs nd, same model | 100 | 0.988 [0.952, 1.024] | 1.001 | 0.50 |  |
+| E_det1/E_nd1 | det vs nd, same model | 1000 | 1.007 [0.985, 1.033] | 1.017 | 0.46 |  |
+| G_det1/G_nd1 | det vs nd, same model | 100 | 0.998 [0.970, 1.025] | 0.995 | 0.51 |  |
+| G_det1/G_nd1 | det vs nd, same model | 1000 | 1.006 [0.992, 1.020] | 1.006 | 0.48 |  |
+| mean of 3 nd reps G / mean of 3 nd reps E | pooled nondeterministic | 100 | 1.160 [1.136, 1.190] | 1.174 | 0.14 | INCONCLUSIVE |
+| mean of 3 nd reps G / mean of 3 nd reps E | pooled nondeterministic | 1000 | 1.244 [1.227, 1.258] | 1.243 | 0.02 | KILL |
+
+== nr100 ==
+| arm | dE@100 med [95% CI] | dE@1e3 med [95% CI] | outgrid@100 | outgrid@1e3 | bound@1e3 | vir@1e3 | nonfinite scenes |
+|---|---|---|---|---|---|---|---|
+| E_det1 | 0.00429 [0.004044, 0.004646] | 0.01858 [0.01659, 0.02069] | 0.000 | 0.150 | 0.900 | 1 | 0 |
+| E_det2 | 0.00429 [0.004038, 0.004633] | 0.01858 [0.01659, 0.02063] | 0.000 | 0.150 | 0.900 | 1 | 0 |
+| E_nd1 | 0.004183 [0.003899, 0.004565] | 0.02067 [0.01861, 0.02295] | 0.000 | 0.150 | 0.900 | 0.999 | 0 |
+| E_nd2 | 0.004308 [0.003954, 0.004668] | 0.02014 [0.01799, 0.02228] | 0.000 | 0.150 | 0.900 | 1 | 0 |
+| E_nd3 | 0.004197 [0.003797, 0.004638] | 0.02061 [0.01835, 0.02286] | 0.000 | 0.150 | 0.900 | 1 | 0 |
+| G_det1 | 0.004072 [0.003773, 0.00445] | 0.03084 [0.02771, 0.03391] | 0.000 | 0.010 | 0.960 | 1.01 | 0 |
+| G_det2 | 0.004072 [0.003775, 0.004454] | 0.03084 [0.02774, 0.03394] | 0.000 | 0.010 | 0.960 | 1.01 | 0 |
+| G_nd1 | 0.00415 [0.003869, 0.004499] | 0.03067 [0.0277, 0.03324] | 0.000 | 0.010 | 0.960 | 1.02 | 0 |
+| G_nd2 | 0.004204 [0.003833, 0.004456] | 0.03026 [0.02713, 0.03234] | 0.000 | 0.010 | 0.960 | 1.01 | 0 |
+| G_nd3 | 0.004233 [0.003926, 0.004558] | 0.03019 [0.0282, 0.03255] | 0.000 | 0.020 | 0.960 | 1.01 | 0 |
+
+determinism: E det1 == det2 bitwise on E(t): True; G det1 == det2: True
+
+| pairing B/A | what | t | ratio of medians [paired 95% CI] | median of per-scene ratios | frac scenes B<A | vs 1.15 gate |
+|---|---|---|---|---|---|---|
+| G_det1/E_det1 | ghost vs E, deterministic | 100 | 0.949 [0.894, 1.016] | 0.978 | 0.53 | PASS |
+| G_det1/E_det1 | ghost vs E, deterministic | 1000 | 1.660 [1.404, 1.946] | 1.678 | 0.35 | KILL |
+| G_nd1/E_nd1 | ghost vs E, nondeterministic | 100 | 0.992 [0.918, 1.055] | 0.980 | 0.53 | PASS |
+| G_nd1/E_nd1 | ghost vs E, nondeterministic | 1000 | 1.484 [1.278, 1.699] | 1.502 | 0.37 | KILL |
+| G_det2/E_det2 | ghost vs E, deterministic | 100 | 0.949 [0.895, 1.015] | 0.978 | 0.53 | PASS |
+| G_det2/E_det2 | ghost vs E, deterministic | 1000 | 1.660 [1.409, 1.961] | 1.678 | 0.35 | KILL |
+| G_nd2/E_nd2 | ghost vs E, nondeterministic | 100 | 0.976 [0.909, 1.032] | 0.997 | 0.50 | PASS |
+| G_nd2/E_nd2 | ghost vs E, nondeterministic | 1000 | 1.502 [1.255, 1.726] | 1.482 | 0.40 | KILL |
+| G_nd3/E_nd3 | ghost vs E, nondeterministic | 100 | 1.008 [0.937, 1.092] | 1.015 | 0.49 | PASS |
+| G_nd3/E_nd3 | ghost vs E, nondeterministic | 1000 | 1.465 [1.292, 1.707] | 1.536 | 0.37 | KILL |
+| E_nd2/E_nd1 | noise floor E-vs-E | 100 | 1.030 [0.977, 1.074] | 1.000 | 0.50 |  |
+| E_nd2/E_nd1 | noise floor E-vs-E | 1000 | 0.975 [0.846, 1.135] | 1.015 | 0.50 |  |
+| E_nd3/E_nd1 | noise floor E-vs-E | 100 | 1.003 [0.955, 1.054] | 0.996 | 0.54 |  |
+| E_nd3/E_nd1 | noise floor E-vs-E | 1000 | 0.997 [0.865, 1.137] | 0.946 | 0.52 |  |
+| E_det2/E_det1 | noise floor E-vs-E det | 100 | 1.000 [1.000, 1.000] | 1.000 | 0.00 |  |
+| E_det2/E_det1 | noise floor E-vs-E det | 1000 | 1.000 [1.000, 1.000] | 1.000 | 0.00 |  |
+| G_nd2/G_nd1 | noise floor G-vs-G | 100 | 1.013 [0.967, 1.048] | 1.000 | 0.49 |  |
+| G_nd2/G_nd1 | noise floor G-vs-G | 1000 | 0.987 [0.866, 1.107] | 0.988 | 0.51 |  |
+| G_nd3/G_nd1 | noise floor G-vs-G | 100 | 1.020 [0.988, 1.068] | 1.000 | 0.50 |  |
+| G_nd3/G_nd1 | noise floor G-vs-G | 1000 | 0.984 [0.906, 1.114] | 0.988 | 0.51 |  |
+| E_det1/E_nd1 | det vs nd, same model | 100 | 1.026 [0.950, 1.088] | 0.999 | 0.51 |  |
+| E_det1/E_nd1 | det vs nd, same model | 1000 | 0.899 [0.781, 1.033] | 0.955 | 0.52 |  |
+| G_det1/G_nd1 | det vs nd, same model | 100 | 0.981 [0.929, 1.054] | 0.990 | 0.51 |  |
+| G_det1/G_nd1 | det vs nd, same model | 1000 | 1.005 [0.889, 1.149] | 1.000 | 0.50 |  |
+| mean of 3 nd reps G / mean of 3 nd reps E | pooled nondeterministic | 100 | 0.980 [0.920, 1.060] | 0.994 | 0.51 | PASS |
+| mean of 3 nd reps G / mean of 3 nd reps E | pooled nondeterministic | 1000 | 1.424 [1.306, 1.567] | 1.502 | 0.33 | KILL |

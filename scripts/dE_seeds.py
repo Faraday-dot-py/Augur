@@ -38,6 +38,16 @@ def make_scenes(kind, n, seeds):
     return np.stack(ps), np.stack(vs)
 
 
+class Rec(sc.Recorder):
+    def __call__(self, *a, **k):
+        det = torch.are_deterministic_algorithms_enabled()
+        torch.use_deterministic_algorithms(False)
+        try:
+            return super().__call__(*a, **k)
+        finally:
+            torch.use_deterministic_algorithms(det)
+
+
 def build(arm, args, dev):
     det = "_det" in arm
     torch.use_deterministic_algorithms(det, warn_only=False)
@@ -60,7 +70,7 @@ def run_arm(arm, args, dev, seeds):
         P0, V0 = torch.tensor(pos0, device=dev), torch.tensor(vel0, device=dev)
         rel = kind == "bh"
         r0 = (P0 - P0.mean(1, keepdim=True)).norm(dim=-1).pow(2).mean(1).sqrt()
-        rec = sc.Recorder(rel, EPS, model.extent, r0, args.steps, len(seeds), dev, DT)
+        rec = Rec(rel, EPS, model.extent, r0, args.steps, len(seeds), dev, DT)
         t0 = time.time()
         done = sc.roll_model(model, P0, V0, rel, args.steps, rec, None, DT)
         torch.cuda.synchronize()
