@@ -11,6 +11,7 @@ Modes:
 import argparse
 import json
 import math
+import os
 import time
 
 import numpy as np
@@ -58,6 +59,8 @@ def theta_of(law, scale=1.0):
 def force_t(r, law, scale=1.0):
     a1, p1, a2, p2, il, eps, _ = law
     r = r.double()
+    if eps == 0.0:
+        r = r.clamp_min(1.0)
     d = r * r + eps * eps
     F = a1 * scale * r / d ** ((p1 + 1) / 2) + (a2 * scale * r / d ** ((p2 + 1) / 2) if a2 != 0 else 0.0)
     return F * torch.exp(-r * il)
@@ -87,10 +90,12 @@ def force_net(mod, r, c=None):
 
 
 def rel_loss(F, Ft, fl, r):
-    far = r >= 2.0
-    e = ((F - Ft) / (Ft.abs() + fl + 1e-30)).clamp(-5, 5)
-    hinge = torch.relu(-torch.sign(Ft) * F / (Ft.abs() + fl + 1e-30))
-    return (e[far] ** 2).mean() + (hinge[r >= 4.0]).mean()
+    far = (r >= 2.0).to(F.dtype)
+    h = (r >= 4.0).to(F.dtype)
+    den = Ft.abs() + fl + 1e-30
+    e = torch.asinh((F - Ft) / den)
+    hinge = torch.relu(-torch.sign(Ft) * F / den).clamp(max=5)
+    return ((e ** 2 * far).sum(-1) / far.sum(-1) + (hinge * h).sum(-1) / h.sum(-1)).mean()
 
 
 def sample_r(n, dev, rmax=1500.0, near=1 / 4):
@@ -125,6 +130,8 @@ def train_base(a):
     torch.manual_seed(a.seed)
     m = load(a.ckpt, dev)
     for name in a.laws.split(","):
+        if os.path.exists(f"{a.outdir}/base_{name}.pt"):
+            continue
         law = LAWS[name]
         mod = sfar.MLPKernel(pp=m.pp, split=m.split).to(dev)
         mod.net.load_state_dict(m.kmlp.state_dict())
@@ -147,7 +154,7 @@ def train_base(a):
                 _, Fv = force_net(mod, val_r)
                 mt = zone_metrics(Fv.detach().double(), name, 1.0, val_r.double())
                 score = mt["dev"] + mt.get("tail", 0.0) + (0 if mt["sign_ok"] == 1.0 else 10)
-                print(f"{name} it {it} loss {float(loss):.3e} dev {mt['dev']:.3f} tail {mt.get('tail', 0):.3f} sign {mt['sign_ok']:.3f} t {time.time() - t0:.0f}s", flush=True)
+                print(f"{name} it {it} loss {float(loss.detach()):.3e} dev {mt['dev']:.3f} tail {mt.get('tail', 0):.3f} sign {mt['sign_ok']:.3f} t {time.time() - t0:.0f}s", flush=True)
                 if score < best[0]:
                     best = (score, {k: v.detach().clone() for k, v in mod.state_dict().items()}, it)
         torch.save({"arch": "mlp", "kw": {"pp": m.pp, "split": m.split}, "state": best[1], "meta": {"law": name, "best_it": best[2], "score": best[0]}},
@@ -179,22 +186,23 @@ def train_cond(a):
         Ft = torch.stack([force_t(r[i], l, s) for i, (l, s) in enumerate(laws)]).float()
         fl = torch.stack([floor_of(r[i], l, s) for i, (l, s) in enumerate(laws)]).float()
         K, F = force_net(mod, r, cs)
-        loss = torch.stack([rel_loss(F[i], Ft[i], fl[i], r[i]) for i in range(B)]).mean()
+        loss = rel_loss(F[:B], Ft[:B], fl[:B], r[:B])
         rg = r[B:]
         Fo = sfar.force_of(old, rg.reshape(-1)).reshape(rg.shape)
         w = sfar.smoothstep((rg - 28.0) / 20.0) if hasattr(sfar, "smoothstep") else ((rg - 28.0) / 20.0).clamp(0, 1)
         Fg = (1 - w) * Fo + w * sfar.f_true(rg)
         rg_far = rg >= 4
-        rel = ((F[B:] - Fg) / Fg.clamp_min(1e-12)).clamp(-5, 5)
+        rel = torch.asinh((F[B:] - Fg) / Fg.clamp_min(1e-12))
         l_g = (rel[rg_far] ** 2).mean() + ((F[B:] - Fg)[~rg_far] ** 2).mean()
         near = rg <= 28.0
         l_k = ((K[B:] - old(rg).detach())[near] ** 2).mean()
         loss = loss + l_g + 100.0 * l_k
         opt.zero_grad()
         loss.backward()
+        torch.nn.utils.clip_grad_norm_(mod.parameters(), 1.0)
         opt.step()
         if it % 2000 == 0:
-            print(f"it {it} loss {float(loss):.3e} grav-rel {float(l_g):.3e} k {float(l_k):.3e} t {time.time() - t0:.0f}s", flush=True)
+            print(f"it {it} loss {float(loss.detach()):.3e} grav-rel {float(l_g.detach()):.3e} k {float(l_k.detach()):.3e} t {time.time() - t0:.0f}s", flush=True)
         if it % 10000 == 0 and it:
             torch.save({"arch": "cond", "kw": {"dc": dc, "hidden": a.hidden, "pp": m.pp, "split": m.split}, "state": mod.state_dict(), "meta": {"args": vars(a), "it": it}},
                        f"{a.outdir}/{a.mode}_s{a.seed}.pt")
