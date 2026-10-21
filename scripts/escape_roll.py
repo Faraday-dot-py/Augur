@@ -41,6 +41,8 @@ ARMS = {
     "T8w": dict(kind="tile", nt=8, tile=64, halo=16, kern=R1B),
     "T16": dict(kind="tile", nt=16, tile=32, halo=16, kern=R1B),
     "S1in": dict(kind="single", kern=R1B, mf="in"),
+    "S1nn": dict(kind="single", kern=R1B, nonet=True),
+    "T8nn": dict(kind="tile", nt=8, tile=32, halo=16, kern=R1B, nonet=True),
     "S1un": dict(kind="single", kern=R1B, mf="un"),
     "T4in": dict(kind="tile", nt=4, tile=32, halo=16, kern=R1B, mf="in"),
     "T8in": dict(kind="tile", nt=8, tile=32, halo=16, kern=R1B, mf="in"),
@@ -99,6 +101,7 @@ class Arm:
         m.eval()
         sf.apply_opts(m, ("default" if spec.get("graph") else "kcache,fastio,cl,adapt") if self.kind == "single" else "kcache,adapt")
         m.adapt_lmax = adapt_lmax
+        m.nonet = bool(spec.get("nonet", False))
         if spec["kern"] != "old":
             sfar.install_spec(m, spec["kern"])
         mf = spec.get("mf", True)
@@ -356,11 +359,17 @@ def main():
     ap.add_argument("--nsnap", type=int, default=30000)
     ap.add_argument("--ckpt-every", type=int, default=250)
     ap.add_argument("--resume", action="store_true")
+    ap.add_argument("--rot", type=int, default=0, help="rotate the initial condition by this many quarter turns")
+    ap.add_argument("--shift", default="", help="dx,dy added to initial positions")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
     dev = torch.device("cuda")
     os.makedirs(args.out, exist_ok=True)
     pos0, vel0, mass0 = make_ic(args.n, args.seed, args.nt)
+    for _ in range(args.rot % 4):
+        pos0, vel0 = pos0 @ np.array([[0.0, 1.0], [-1.0, 0.0]]), vel0 @ np.array([[0.0, 1.0], [-1.0, 0.0]])
+    if args.shift:
+        pos0 = pos0 + np.array([float(x) for x in args.shift.split(",")])
     shared = {}
     cp = f"{args.out}/core_ids.npy"
     if os.path.exists(cp):

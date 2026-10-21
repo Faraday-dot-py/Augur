@@ -1,0 +1,56 @@
+S1un t 100 frac_out32 0.701 outdom 0.701 r99 95.8 n_r70 150 out/rev 31/0 0.05s/tick
+RESULT S1un band out 10913 rev 66 frac 0.0060 final frac_out32 0.701 outdom 0.701 r99 95.8 n_r70 150/2000 5s
+DONE
+S1un t 100 frac_out32 0.206 outdom 0.206 r99 107.6 n_r70 2183 out/rev 122/1 0.04s/tick
+S1un t 200 frac_out32 0.235 outdom 0.235 r99 203.8 n_r70 4518 out/rev 25/0 0.03s/tick
+S1un t 300 frac_out32 0.254 outdom 0.254 r99 300.8 n_r70 4863 out/rev 60/1 0.03s/tick
+S1un t 400 frac_out32 0.360 outdom 0.360 r99 398.3 n_r70 5582 out/rev 2311/494 0.03s/tick
+S1un t 500 frac_out32 0.839 outdom 0.839 r99 496.3 n_r70 14121 out/rev 451/1 0.03s/tick
+S1un t 600 frac_out32 0.985 outdom 0.985 r99 595.1 n_r70 18825 out/rev 55/0 0.02s/tick
+S1un t 700 frac_out32 0.993 outdom 0.993 r99 694.5 n_r70 19748 out/rev 14/0 0.02s/tick
+S1un t 800 frac_out32 0.995 outdom 0.995 r99 793.8 n_r70 19843 out/rev 8/0 0.02s/tick
+S1un t 900 frac_out32 0.996 outdom 0.996 r99 893.4 n_r70 19879 out/rev 8/0 0.02s/tick
+S1un t 1000 frac_out32 0.996 outdom 0.996 r99 992.9 n_r70 19899 out/rev 5/0 0.02s/tick
+RESULT S1un band out 241324 rev 20841 frac 0.0864 final frac_out32 0.996 outdom 0.996 r99 992.9 n_r70 19899/20000 18s
+DONE
+S1un t 100 frac_out32 0.536 outdom 0.536 r99 97.2 n_r70 170 out/rev 7/0 0.05s/tick
+RESULT S1un band out 9360 rev 68 frac 0.0073 final frac_out32 0.536 outdom 0.536 r99 97.2 n_r70 170/2000 5s
+DONE
+S1un t 100 frac_out32 0.200 outdom 0.200 r99 106.8 n_r70 2060 out/rev 112/0 0.04s/tick
+S1un t 200 frac_out32 0.234 outdom 0.234 r99 202.7 n_r70 4434 out/rev 40/0 0.03s/tick
+S1un t 300 frac_out32 0.252 outdom 0.252 r99 300.2 n_r70 4841 out/rev 40/2 0.03s/tick
+S1un t 400 frac_out32 0.377 outdom 0.377 r99 398.7 n_r70 5578 out/rev 3207/668 0.03s/tick
+S1un t 500 frac_out32 0.815 outdom 0.815 r99 497.3 n_r70 14282 out/rev 497/3 0.03s/tick
+S1un t 600 frac_out32 0.985 outdom 0.985 r99 596.5 n_r70 18748 out/rev 45/0 0.03s/tick
+S1un t 700 frac_out32 0.993 outdom 0.993 r99 696.0 n_r70 19766 out/rev 7/0 0.02s/tick
+S1un t 800 frac_out32 0.995 outdom 0.995 r99 795.6 n_r70 19846 out/rev 7/0 0.02s/tick
+S1un t 900 frac_out32 0.995 outdom 0.995 r99 895.2 n_r70 19876 out/rev 14/0 0.02s/tick
+S1un t 1000 frac_out32 0.995 outdom 0.995 r99 994.8 n_r70 19887 out/rev 8/0 0.02s/tick
+RESULT S1un band out 252405 rev 22425 frac 0.0888 final frac_out32 0.995 outdom 0.995 r99 994.8 n_r70 19887/20000 19s
+DONE
+S1un t 100 frac_out32 0.733 outdom 0.733 r99 96.7 n_r70 185 out/rev 8/0 0.05s/tick
+RESULT S1un band out 11279 rev 64 frac 0.0057 final frac_out32 0.733 outdom 0.733 r99 96.7 n_r70 185/2000 5s
+DONE
+S1un t 100 frac_out32 0.213 outdom 0.213 r99 107.3 n_r70 2289 out/rev 89/0 0.04s/tick
+S1un t 200 frac_out32 0.243 outdom 0.243 r99 202.5 n_r70 4601 out/rev 27/0 0.03s/tick
+S1un t 300 frac_out32 0.256 outdom 0.256 r99 299.5 n_r70 4961 out/rev 32/0 0.03s/tick
+S1un t 400 frac_out32 0.305 outdom 0.305 r99 397.0 n_r70 5353 out/rev 580/101 0.03s/tick
+S1un t 500 frac_out32 0.778 outdom 0.778 r99 495.6 n_r70 12100 out/rev 586/1 0.03s/tick
+S1un t 600 frac_out32 0.977 outdom 0.977 r99 595.0 n_r70 18074 out/rev 86/0 0.03s/tick
+S1un t 700 frac_out32 0.993 outdom 0.993 r99 694.1 n_r70 19704 out/rev 11/0 0.02s/tick
+S1un t 800 frac_out32 0.996 outdom 0.996 r99 793.6 n_r70 19854 out/rev 8/0 0.02s/tick
+S1un t 900 frac_out32 0.997 outdom 0.997 r99 893.1 n_r70 19904 out/rev 8/0 0.02s/tick
+S1un t 1000 frac_out32 0.997 outdom 0.997 r99 992.7 n_r70 19922 out/rev 10/0 0.02s/tick
+RESULT S1un band out 241322 rev 21698 frac 0.0899 final frac_out32 0.997 outdom 0.997 r99 992.7 n_r70 19922/20000 18s
+DONE
+S1in t0 inward ratio med (momfix on / off) by r: 20:0.98/0.98 25:0.98/0.98 30:0.98/0.98 35:-0.00/-0.00 40:-0.00/-0.00 50:-0.00/-0.00 60:-0.00/-0.00 80:-0.00/-0.00 100:-0.00/-0.00 150:-0.00/-0.00
+S1in t20 inward ratio med (momfix on / off) by r: 20:0.95/0.99 25:0.97/0.99 30:0.93/0.99 35:-0.08/0.04 40:-0.10/-0.00 50:-0.16/-0.00 60:-0.24/-0.00 80:-0.43/-0.00 100:-0.68/-0.00 150:-1.52/-0.00
+S1in t100 inward ratio med (momfix on / off) by r: 20:0.93/1.00 25:0.87/1.00 30:0.83/1.01 35:0.17/0.00 40:-0.32/-0.00 50:-0.59/-0.00 60:-0.73/0.00 80:-0.57/-0.00 100:-1.23/-0.00 150:-3.10/-0.00
+T8in t0 inward ratio med (momfix on / off) by r: 20:0.98/0.98 25:0.98/0.98 30:0.98/0.98 35:0.99/0.99 40:0.99/0.99 50:0.99/0.99 60:0.98/0.99 80:0.97/0.99 100:0.96/0.99 150:-0.00/-0.00
+T8in t20 inward ratio med (momfix on / off) by r: 20:0.88/0.99 25:0.87/0.99 30:0.82/0.98 35:0.78/1.01 40:0.71/1.00 50:0.53/1.00 60:0.31/0.99 80:-0.21/1.00 100:-0.90/1.00 150:-4.27/-0.00
+T8in t100 inward ratio med (momfix on / off) by r: 20:0.87/1.00 25:0.84/0.99 30:0.76/0.98 35:0.66/1.00 40:0.66/1.00 50:0.46/1.00 60:1.79/0.98 80:-0.02/1.00 100:-0.92/1.00 150:-4.44/-0.00
+S1un t0 inward ratio med (momfix on / off) by r: 20:0.98/0.98 25:0.98/0.98 30:0.98/0.98 35:-0.00/-0.00 40:-0.00/-0.00 50:-0.00/-0.00 60:-0.00/-0.00 80:-0.00/-0.00 100:-0.00/-0.00 150:-0.00/-0.00
+S1un t20 inward ratio med (momfix on / off) by r: 20:0.96/0.99 25:0.98/0.99 30:0.94/0.99 35:-0.07/0.04 40:-0.08/-0.00 50:-0.13/-0.00 60:-0.19/-0.00 80:-0.34/-0.00 100:-0.54/-0.00 150:-1.22/-0.00
+S1un t100 inward ratio med (momfix on / off) by r: 20:0.91/1.00 25:0.95/1.00 30:0.97/1.00 35:-0.05/0.00 40:-0.11/-0.00 50:-0.15/-0.00 60:-0.22/-0.00 80:-0.22/-0.00 100:-0.49/-0.00 150:-1.15/-0.00
+DONE
+DONE
