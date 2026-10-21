@@ -191,7 +191,17 @@ class CoreTiled(TiledScatter):
             f = x.new_zeros(len(tiles), m.cf, self.G, self.G) if m.nonet else m.net(xin)
             acc = m.neg_grad(f[:, :1]) + ak
             kw = {"qmask": OWN} if "adapt" in m.opt else {}
-            a = m.gather(acc, P) * INS[..., None] + m.pp_acc(P, M, self._pairmask if self.prune_pair else K, **kw)
+            if self.prune_pair:
+                KP = self._pairmask
+                order = torch.argsort(KP, dim=1, descending=True, stable=True)[:, :max(2, int(KP.sum(1).max()))]
+                o2 = order[..., None].expand(-1, -1, 2)
+                if "adapt" in m.opt:
+                    kw = {"qmask": torch.gather(OWN, 1, order)}
+                pp = m.pp_acc(torch.gather(P, 1, o2), torch.gather(M, 1, order), torch.gather(KP, 1, order), **kw)
+                pair = torch.zeros_like(P).scatter(1, o2, pp)
+            else:
+                pair = m.pp_acc(P, M, K, **kw)
+            a = m.gather(acc, P) * INS[..., None] + pair
             a = a * K[..., None]
         finally:
             self._restore(old)
