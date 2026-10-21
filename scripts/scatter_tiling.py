@@ -18,7 +18,7 @@ import torch.nn.functional as F
 
 
 class TiledScatter:
-    def __init__(self, model, nt, tile, halo, ghosts=True, field_x=True, far=False, far_c=4):
+    def __init__(self, model, nt, tile, halo, ghosts=True, field_x=True, far=False, far_c=4, momfix=True, skip_outside=False):
         self.m = model
         self.nt, self.Lt, self.H = nt, float(tile), float(halo)
         self.h = float(model.h)
@@ -29,6 +29,7 @@ class TiledScatter:
         assert self.G % 32 == 0, "extended grid must be a multiple of 32 cells"
         self.X0 = -nt * self.Lt / 2
         self.ghosts, self.field_x, self.far, self.c = ghosts, field_x, far, far_c
+        self.momfix, self.skip_outside = momfix, skip_outside
         if far:
             assert self.gt % far_c == 0 and self.hg % far_c == 0
         self.stats = {}
@@ -72,7 +73,7 @@ class TiledScatter:
         idx, nown = [], []
         for k in tiles:
             tx, ty = divmod(k, n)
-            own = (tid == k).nonzero()[:, 0]
+            own = ((tid == k) & inside).nonzero()[:, 0] if self.skip_outside else (tid == k).nonzero()[:, 0]
             if self.ghosts and self.H > 0:
                 lo = torch.tensor([self.X0 + tx * self.Lt - self.H, self.X0 + ty * self.Lt - self.H], device=pos.device)
                 hi = lo + self.E
@@ -155,8 +156,9 @@ class TiledScatter:
         for j, i in enumerate(idx):
             no = int(OWN[j].sum())
             out[i[:no]] = a[j, :no]
-        mm = mass[:, None]
-        out = out - (mm * out).sum(0, keepdim=True) / mm.sum()
+        if self.momfix:
+            mm = mass[:, None]
+            out = out - (mm * out).sum(0, keepdim=True) / mm.sum()
         newf = field.clone()
         newf[tiles] = f
         if self.field_x and self.H > 0 and len(tiles) == T:
