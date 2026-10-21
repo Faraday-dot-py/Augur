@@ -36,8 +36,8 @@ def tmed(fn, reps=5, warm=2):
     return float(np.median(ts))
 
 
-def schemes(pos, n):
-    out = {"uniform": (uniform_cores(), False), "uniform_prune": (uniform_cores(), True)}
+def schemes(pos, n, dense=False):
+    out = {"uniform_prune": (uniform_cores(), True)} if dense else {"uniform": (uniform_cores(), False), "uniform_prune": (uniform_cores(), True)}
     for kk in (1, 2, 4):
         out[f"split_k{kk}_prune"] = (split_cores(uniform_cores(), pos, n / (kk * WORKERS)), True)
     return out
@@ -54,11 +54,11 @@ def eval_state(model, pos, vel, mass, f1, n):
     ok = dout_u >= 8
     ref_masks = {"all_in": ok, "useam<8": (dsu < 8) & ok, "uint": (dsu >= 8) & ok}
     a_u = None
-    for name, (cores, prune) in schemes(pos, n).items():
+    for name, (cores, prune) in schemes(pos, n, dense=model.adapt_min >= 10 ** 6).items():
         T = CoreTiled(model, cores, far=True, prune_pair=prune)
         fld = T.slice_fields(f1[0])
         a_t, _ = T.force(pos, vel, mass, fld)
-        if name == "uniform":
+        if a_u is None:
             a_u = a_t
         stats = dict(T.stats)
         ds, dout = T.seam_dist(pos)

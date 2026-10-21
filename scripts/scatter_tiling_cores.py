@@ -134,6 +134,7 @@ class CoreTiled(TiledScatter):
             dx = (x0 - q[:, 0]).clamp(min=0) + (q[:, 0] - x1).clamp(min=0)
             dy = (y0 - q[:, 1]).clamp(min=0) + (q[:, 1] - y1).clamp(min=0)
             KP[j, :len(i)] = ((dx * dx + dy * dy) < pp * pp).to(pos.dtype)
+            KP[j, :nown[j]] = 1.0
             P[j, :len(i)] = pos[i] - c
             V[j, :len(i)] = vel[i]
             M[j, :len(i)] = mass[i]

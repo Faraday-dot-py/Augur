@@ -94,6 +94,7 @@ def test_split_cores_far_reduces_error():
 def test_pair_pruning_is_exact():
     m = make(nonet=True)
     pos, vel, mass = scene(500, sigma=6.0)
+    pos[:20] = 45.0 + 0.3 * torch.randn(20, 2, dtype=pos.dtype, device=DEV)
     cores = split_cores(uniform_cores(2, 32.0), pos, 80, dom=64.0)
     a = []
     for prune in (False, True):
