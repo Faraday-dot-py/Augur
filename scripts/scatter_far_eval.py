@@ -9,6 +9,7 @@ Usage: PYTHONPATH=. python scripts/scatter_far_eval.py --ckpt checkpoints/scatte
 """
 import argparse
 import json
+import time
 import types
 
 import torch
@@ -20,8 +21,32 @@ from scripts.scatter_tiling import TiledScatter
 from scripts.scatter_tiling_eval import DT, EPS, SUB, load
 
 L, N, SIGMA = 256.0, 4800, 32.0
+NT, KIND = 4, "gauss"
 SEEDS = (4738, 9000, 12000)
 HELD = (9000, 12000)
+
+
+def set_scene(nt, n, sigma, kind):
+    global L, N, SIGMA, NT, KIND
+    NT, N, SIGMA, KIND, L = nt, n, sigma, kind, 64.0 * nt
+
+
+def scene(seed):
+    if KIND == "gauss":
+        return make_scene(N, SIGMA, 1.0, L, seed, 0)
+    if KIND == "two":
+        a = make_scene(N // 2, SIGMA, 1.0, L, seed, 0)
+        b = make_scene(N - N // 2, SIGMA, 1.0, L, seed, 1)
+        p = torch.cat([torch.tensor(a[0]) + torch.tensor([-L / 4, 0.0]), torch.tensor(b[0]) + torch.tensor([L / 4, 0.0])]).numpy()
+        v = torch.cat([torch.tensor(a[1]), torch.tensor(b[1])])
+        return p, (v - v.mean(0)).numpy()
+    if KIND == "uniform":
+        import numpy as np
+        rng = np.random.default_rng([seed, N, 7])
+        p = rng.uniform(-0.45 * L, 0.45 * L, (N, 2))
+        v = rng.normal(0.0, np.sqrt(N / (4 * 0.25 * L)), (N, 2))
+        return p, v - v.mean(0)
+    raise ValueError(KIND)
 
 
 def rel(a, ref):
@@ -30,7 +55,7 @@ def rel(a, ref):
 
 @torch.no_grad()
 def run_single(m, pos, vel, mass, steps):
-    ops.retarget(m, 512, L)
+    ops.retarget(m, round(L / 0.5), L)
     msk = torch.ones(1, pos.shape[0], device=pos.device)
     st = (m.init_field(1, pos.device)[0], None)
     a0, _ = m.force(pos[None], vel[None], mass[None], msk, st[0])
@@ -94,22 +119,29 @@ def make_exactfar(T):
 @torch.no_grad()
 def phase_table(m, dev, specs, out):
     old = sfar.old_fn(m)
-    rs = torch.tensor([1, 2, 4, 8, 16, 32, 40, 48, 64, 80, 100, 150, 200, 256, 300, 400, 512, 640], device=dev, dtype=torch.float32)
+    rs = torch.tensor([1, 2, 4, 8, 16, 32, 40, 48, 64, 80, 100, 150, 200, 256, 300, 400, 512, 640, 800, 1000, 1500], device=dev, dtype=torch.float32)
     res = {}
     for spec in specs:
         kf = sfar.kfun_from_spec(m, spec) or sfar.old_fn(m)
-        r = torch.logspace(0, 2.8062, 4000, device=dev)
+        r = torch.logspace(0, 3.2, 6000, device=dev)
         F = sfar.force_of(kf, r)
         Fo = sfar.force_of(old, r)
         ratio = F / sfar.f_true(r)
         sel = (r >= 4) & (r <= 512)
+        selw = (r >= 4) & (r <= 1500)
         sel32 = (r >= 4) & (r <= 32)
         sel_far = r >= 32
         dec = F[sel_far][1:] - F[sel_far][:-1]
+        relinc = (dec / F[sel_far][:-1].abs().clamp_min(1e-12))
+        wi = int(relinc.argmax())
+        mid = r[sel_far][1:] <= 512
+        mono512 = bool((dec[mid] <= 1e-12).all())
         row = {"ratio_at": {str(int(x)): float(sfar.force_of(kf, x[None])[0] / sfar.f_true(x)) for x in rs},
                "ratio_min_4_512": float(ratio[sel].min()), "ratio_max_4_512": float(ratio[sel].max()),
                "max_abs_dev_4_512": float((ratio[sel] - 1).abs().max()),
+               "ratio_min_4_1500": float(ratio[selw].min()), "ratio_max_4_1500": float(ratio[selw].max()),
                "min_force_ge_4": float(F[r >= 4].min()), "monotone_decay_ge32": bool((dec <= 1e-12).all()),
+               "monotone_decay_32_512": mono512, "worst_force_increase_rel_per_step": float(relinc.max()), "worst_increase_at_r": float(r[sel_far][wi]),
                "max_rel_dev_vs_old_4_32": float(((F[sel32] - Fo[sel32]).abs() / Fo[sel32].abs()).max()),
                "max_rel_dev_vs_old_1_32": float(((F[r <= 32] - Fo[r <= 32]).abs() / Fo[r <= 32].abs().clamp_min(1e-3)).max())}
         res[spec] = row
@@ -119,8 +151,9 @@ def phase_table(m, dev, specs, out):
 
 def phase_wide(m, dev, specs, fars, out, variants, seeds=SEEDS, steps=20):
     rows = []
+    ks = [k for k in (5, 10, 20, 50, 100) if k <= steps]
     for seed in seeds:
-        p0, v0 = make_scene(N, SIGMA, 1.0, L, seed, 0)
+        p0, v0 = scene(seed)
         Pt, _ = ops.exact_rollout(torch.tensor(p0, device=dev), torch.tensor(v0, device=dev), steps, DT, SUB, EPS)
         pos = torch.tensor(p0, dtype=torch.float32, device=dev)
         vel = torch.tensor(v0, dtype=torch.float32, device=dev)
@@ -131,18 +164,27 @@ def phase_wide(m, dev, specs, fars, out, variants, seeds=SEEDS, steps=20):
             a_s, P_s, v_s = run_single(m, pos, vel, mass, steps)
             base = {"seed": seed, "spec": spec}
             r = {**base, "variant": "single", "far_c": None, "force_vs_exact": rel(a_s, ax),
-                 "err": {str(k): float((P_s[k] - Pt[k]).norm(dim=-1).mean()) for k in (5, 10, 20)}}
+                 "err": {str(k): float((P_s[k] - Pt[k]).norm(dim=-1).mean()) for k in ks}}
             rows.append(r)
             print(json.dumps(r), flush=True)
             for var in variants:
                 for c in (fars if var != "halo" else [None]):
-                    T = TiledScatter(m, 4, 64, 16, ghosts=True, field_x=True, far=var != "halo", far_c=c or 4)
+                    T = TiledScatter(m, NT, 64, 16, ghosts=True, field_x=True, far=var != "halo", far_c=c or 4)
                     if var == "exactfar":
                         make_exactfar(T)
                     a_t, P_t, v_t = run_tiled(T, pos, vel, mass, steps)
-                    r = {**base, "variant": var, "far_c": c, "force_vs_exact": rel(a_t, ax), "force_vs_single": rel(a_t, a_s),
-                         "err": {str(k): float((P_t[k] - Pt[k]).norm(dim=-1).mean()) for k in (5, 10, 20)},
-                         "diff_single20": float((P_t[20] - P_s[20]).norm(dim=-1).mean()),
+                    ts = (T.init_field(dev), None)
+                    for _ in range(2):
+                        T.step(pos, vel, mass, ts)
+                    torch.cuda.synchronize()
+                    t0 = time.perf_counter()
+                    for _ in range(5):
+                        T.step(pos, vel, mass, ts)
+                    torch.cuda.synchronize()
+                    ms = (time.perf_counter() - t0) * 200
+                    r = {**base, "ms_tick": ms, "variant": var, "far_c": c, "force_vs_exact": rel(a_t, ax), "force_vs_single": rel(a_t, a_s),
+                         "err": {str(k): float((P_t[k] - Pt[k]).norm(dim=-1).mean()) for k in ks},
+                         "diff_single20": float((P_t[ks[2]] - P_s[ks[2]]).norm(dim=-1).mean()),
                          "dP": float((v_t.sum(0).norm() - vel.sum(0).norm()).abs()), "finite": bool(torch.isfinite(P_t).all())}
                     rows.append(r)
                     print(json.dumps(r), flush=True)
@@ -154,16 +196,16 @@ def phase_wide(m, dev, specs, fars, out, variants, seeds=SEEDS, steps=20):
 def phase_farerr(m, dev, specs, fars, out, seeds=SEEDS):
     rows = []
     for seed in seeds:
-        p0, v0 = make_scene(N, SIGMA, 1.0, L, seed, 0)
+        p0, v0 = scene(seed)
         pos = torch.tensor(p0, dtype=torch.float32, device=dev)
         vel = torch.tensor(v0, dtype=torch.float32, device=dev)
         mass = torch.ones(N, device=dev)
         a_tot = ops.exact_acc(pos.double(), EPS).float()
-        ops.retarget(m, 512, L)
+        ops.retarget(m, round(L / 0.5), L)
         for spec in specs:
             sfar.install_spec(m, spec)
             for c in fars:
-                T = TiledScatter(m, 4, 64, 16, ghosts=True, field_x=True, far=True, far_c=c)
+                T = TiledScatter(m, NT, 64, 16, ghosts=True, field_x=True, far=True, far_c=c)
                 ef = exact_far_field(T, pos, mass)
                 old = T._scope()
                 try:
@@ -207,7 +249,13 @@ def main():
     ap.add_argument("--variants", default="far")
     ap.add_argument("--seeds", default=",".join(map(str, SEEDS)))
     ap.add_argument("--out", required=True)
+    ap.add_argument("--nt", type=int, default=4, help="tiles per side (domain = 64 * nt)")
+    ap.add_argument("--n", type=int, default=4800)
+    ap.add_argument("--sigma", type=float, default=32.0)
+    ap.add_argument("--kind", default="gauss", choices=["gauss", "two", "uniform"])
+    ap.add_argument("--steps", type=int, default=20)
     a = ap.parse_args()
+    set_scene(a.nt, a.n, a.sigma, a.kind)
     dev = torch.device("cuda")
     torch.manual_seed(4738)
     m = load(a.ckpt, dev)
@@ -217,7 +265,7 @@ def main():
     if a.phase == "table":
         phase_table(m, dev, specs, a.out)
     elif a.phase == "wide":
-        phase_wide(m, dev, specs, fars, a.out, a.variants.split(","), seeds)
+        phase_wide(m, dev, specs, fars, a.out, a.variants.split(","), seeds, a.steps)
     else:
         phase_farerr(m, dev, specs, fars, a.out, seeds)
 

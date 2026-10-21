@@ -207,7 +207,7 @@ def run(args):
     ticks = sample_ticks(steps)
     for name in args.regimes.split(","):
         kind, n, per = REGIMES[name]
-        pos0, vel0, seeds = make_scenes(kind, n, per)
+        pos0, vel0, seeds = make_scenes(kind, n, per * getattr(args, "per_mult", 1))
         P0 = torch.tensor(pos0, device=dev)
         V0 = torch.tensor(vel0, device=dev)
         B = len(seeds)
@@ -321,6 +321,7 @@ def main():
         if nm == "run":
             p.add_argument("--steps", type=int, default=10000)
             p.add_argument("--regimes", default=",".join(REGIMES))
+            p.add_argument("--per-mult", type=int, default=1, help="multiply scenes per seed (more scenes for tighter medians)")
     args = ap.parse_args()
     os.makedirs(args.out_dir, exist_ok=True)
     run(args) if args.cmd == "run" else probe(args)

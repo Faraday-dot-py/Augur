@@ -55,6 +55,24 @@ def main():
     torch.manual_seed(a.seed)
     m = load(a.ckpt, dev)
     old = sfar.old_fn(m)
+    if a.arch == "tail":
+        mod = sfar.TailKernel(pp=m.pp, split=m.split, r0=a.lo).to(dev)
+        mod.old.load_state_dict(m.kmlp.state_dict())
+        opt = torch.optim.Adam(mod.g.parameters(), lr=a.lr)
+        span = math.log(mod.smax / mod.r0)
+        for it in range(a.steps + 1):
+            for g in opt.param_groups:
+                g["lr"] = a.lr * (0.02 + 0.98 * 0.5 * (1 + math.cos(math.pi * it / a.steps)))
+            s = mod.r0 * torch.exp(torch.rand(8192, device=dev) * span)
+            loss = ((mod.logF(s) - torch.log(sfar.f_true(s))) ** 2).mean()
+            opt.zero_grad()
+            loss.backward()
+            opt.step()
+            if it % 1000 == 0:
+                print(f"it {it} logF mse {float(loss):.3e}", flush=True)
+        torch.save({"arch": "tail", "kw": {"pp": m.pp, "split": m.split, "r0": a.lo}, "state": {k: v.detach().clone() for k, v in mod.state_dict().items()},
+                    "meta": {"args": vars(a)}}, a.out)
+        return
     mod = sfar.ARCHS[a.arch](pp=m.pp, split=m.split).to(dev)
     if a.arch == "mlp":
         mod.net.load_state_dict(m.kmlp.state_dict())

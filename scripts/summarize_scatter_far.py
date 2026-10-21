@@ -11,6 +11,13 @@ HELD = (9000, 12000)
 def rows_of(paths):
     wide, far, table = [], [], {}
     for p in paths:
+        if p.endswith(".json"):
+            d = json.load(open(p))
+            for r in (d if isinstance(d, list) else []):
+                (wide if "variant" in r else far).append(r)
+            if isinstance(d, dict):
+                table.update(d)
+            continue
         for line in open(p):
             line = line.strip()
             if line.startswith("{"):
@@ -39,8 +46,8 @@ def main():
         for k, v in table.items():
             ra = v["ratio_at"]
             print(f"{k}: ratio r=4 {ra['4']:.2f} 16 {ra['16']:.2f} 32 {ra['32']:.2f} 40 {ra['40']:.2f} 48 {ra['48']:.2f} 64 {ra['64']:.2f} 80 {ra['80']:.2f} 100 {ra['100']:.2f} "
-                  f"200 {ra['200']:.2f} 300 {ra['300']:.2f} 512 {ra['512']:.2f} | min/max[4,512] {v['ratio_min_4_512']:.3f}/{v['ratio_max_4_512']:.3f} minF {v['min_force_ge_4']:.2e} "
-                  f"mono {v['monotone_decay_ge32']} dev-vs-old[4,32] {v['max_rel_dev_vs_old_4_32']:.4f} [1,32] {v['max_rel_dev_vs_old_1_32']:.4f}")
+                  f"200 {ra['200']:.2f} 300 {ra['300']:.2f} 512 {ra['512']:.2f} 1000 {ra.get('1000', float('nan')):.2f} 1500 {ra.get('1500', float('nan')):.2f} | min/max[4,512] {v['ratio_min_4_512']:.3f}/{v['ratio_max_4_512']:.3f} minF {v['min_force_ge_4']:.2e} "
+                  f"mono(32..) {v['monotone_decay_ge32']} mono(32..512) {v.get('monotone_decay_32_512')} worst inc {v.get('worst_force_increase_rel_per_step', float('nan')):.2e}@{v.get('worst_increase_at_r', float('nan')):.0f} dev-vs-old[4,32] {v['max_rel_dev_vs_old_4_32']:.4f} [1,32] {v['max_rel_dev_vs_old_1_32']:.4f}")
     if wide:
         print("## wide scene (held-out mean of 9000/12000; dev 4738)  err@5/10/20, diff_single20, force_vs_exact, dP")
         g = defaultdict(list)
@@ -53,10 +60,12 @@ def main():
             def f(ds):
                 if not ds:
                     return "-"
-                e = [mean([d["err"][t] for d in ds]) for t in ("5", "10", "20")]
-                s = f"err {e[0]:.3f}/{e[1]:.3f}/{e[2]:.3f}"
+                keys = list(ds[0]["err"])
+                s = "err " + "/".join(f"{mean([d['err'][t] for d in ds]):.3f}" for t in keys) + f" (@{'/'.join(keys)})"
                 if "diff_single20" in ds[0]:
                     s += f" diff1g {mean([d['diff_single20'] for d in ds]):.3f} dP {mean([d['dP'] for d in ds]):.1e}"
+                if "ms_tick" in ds[0]:
+                    s += f" {mean([d['ms_tick'] for d in ds]):.1f}ms/tick"
                 return s + f" force {mean([d['force_vs_exact'] for d in ds]):.3f}"
             print(f"{k[0]:14s} {k[1]:9s} c={k[2]}: held {f(h)} | dev {f(dv)}")
     if far:

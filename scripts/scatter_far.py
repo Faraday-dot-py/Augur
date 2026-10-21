@@ -96,6 +96,46 @@ class MLPKernel(nn.Module):
         return K
 
 
+class TailKernel(nn.Module):
+    """R2b: shipped kmlp (frozen copy, incl. split factor) for r <= r0; beyond r0 the FORCE is learned in log space,
+    F(r) = exp(g(log(r / r0))) (positive by construction, no assumed decay law), and K(r) = K(r0) + int_{r0}^r F by a cumulative
+    trapezoid on a log-spaced table (n nodes up to smax) with linear interpolation. Interior (r <= r0) is bit-identical to the shipped kernel."""
+
+    def __init__(self, pp=2.0, split=True, r0=32.0, smax=4096.0, n=2048):
+        super().__init__()
+        self.old = nn.Sequential(nn.Linear(2, 64), nn.GELU(), nn.Linear(64, 64), nn.GELU(), nn.Linear(64, 1))
+        for p in self.old.parameters():
+            p.requires_grad_(False)
+        self.g = nn.Sequential(nn.Linear(1, 64), nn.GELU(), nn.Linear(64, 64), nn.GELU(), nn.Linear(64, 1))
+        nn.init.zeros_(self.g[-1].weight)
+        with torch.no_grad():
+            self.g[-1].bias.fill_(float(torch.log(f_true(torch.tensor(r0)))))
+        self.pp, self.split, self.r0, self.smax, self.n = pp, split, r0, smax, n
+
+    def logF(self, s):
+        return self.g(torch.log(s / self.r0)[..., None])[..., 0]
+
+    def table(self, dev, dtype):
+        u = torch.linspace(0, float(torch.log(torch.tensor(self.smax / self.r0))), self.n, device=dev, dtype=dtype)
+        s = self.r0 * torch.exp(u)
+        F = torch.exp(self.logF(s))
+        cum = torch.cat([torch.zeros(1, device=dev, dtype=dtype), torch.cumsum(0.5 * (F[1:] + F[:-1]) * (s[1:] - s[:-1]), 0)])
+        return s, cum
+
+    def forward(self, r):
+        K_old = self.old(feat(r))[..., 0]
+        if self.split:
+            K_old = K_old * (1 - (1 - (r / self.pp).clamp(max=1.0) ** 2) ** 2)
+        s, cum = self.table(r.device, r.dtype)
+        rc = r.clamp(self.r0, self.smax)
+        i = torch.searchsorted(s, rc.detach().contiguous().reshape(-1)).reshape(r.shape).clamp(1, self.n - 1)
+        s0, s1, c0, c1 = s[i - 1], s[i], cum[i - 1], cum[i]
+        tail = c0 + (c1 - c0) * (rc - s0) / (s1 - s0)
+        r0 = torch.full((1,), self.r0, device=r.device, dtype=r.dtype)
+        K0 = self.old(feat(r0))[..., 0]
+        return torch.where(r > self.r0, K0 + tail, K_old)
+
+
 def load_kernel(path, dev):
     st = torch.load(path, map_location=dev, weights_only=False)
     arch = st.get("arch", "mlp")
@@ -104,7 +144,7 @@ def load_kernel(path, dev):
     return mod.eval()
 
 
-ARCHS = {"mlp": MLPKernel}
+ARCHS = {"mlp": MLPKernel, "tail": TailKernel}
 
 
 def kfun_from_spec(m, spec):
