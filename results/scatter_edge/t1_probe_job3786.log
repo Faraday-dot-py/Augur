@@ -1,0 +1,51 @@
+POP {"scenes": 300, "body_ticks": 2223396.0, "frac_body_ticks_coord_gt_20.0": 0.049447781681715715, "frac_body_ticks_coord_gt_26.0": 0.003357926343305466, "frac_body_ticks_coord_gt_28.0": 0.001141047298816765, "frac_body_ticks_coord_gt_29.5": 0.0004254752639655734, "frac_body_ticks_coord_gt_31.0": 0.00017540734983781565, "frac_body_ticks_coord_gt_32.0": 9.130177440276046e-05, "frac_scenes_touch_gt_29.5": 0.13, "frac_scenes_touch_gt_26": 0.39, "frac_scenes_any_outside_32": 0.06666666666666667, "n_bodies_mean": 145.32000000000002, "n_bodies_max": 300.0}
+VAR zero static seed 9000 band max model 15860 exact 139 ratio 114.0 signmatch 0.58 changes 3.2 interior_err 0.049
+VAR zero static seed 12000 band max model 15858 exact 140 ratio 113.1 signmatch 0.58 changes 3.2 interior_err 0.050
+VAR zero roll seed 9000 model beyond70/400 25.4 rev 0.1599 | truth 0.0 rev 0.0058
+VAR zero roll seed 12000 model beyond70/400 27.6 rev 0.1513 | truth 0.0 rev 0.0050
+VAR kext static seed 9000 band max model 141 exact 139 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.027
+VAR kext static seed 12000 band max model 142 exact 140 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.028
+VAR kext roll seed 9000 model beyond70/400 149.8 rev 0.0252 | truth 0.0 rev 0.0058
+VAR kext roll seed 12000 model beyond70/400 148.0 rev 0.0119 | truth 0.0 rev 0.0050
+VAR krep static seed 9000 band max model 138 exact 139 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.027
+VAR krep static seed 12000 band max model 139 exact 140 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.029
+VAR krep roll seed 9000 model beyond70/400 154.4 rev 0.0254 | truth 0.0 rev 0.0058
+VAR krep roll seed 12000 model beyond70/400 152.2 rev 0.0123 | truth 0.0 rev 0.0050
+VAR nrep static seed 9000 band max model 15971 exact 139 ratio 114.8 signmatch 0.58 changes 3.2 interior_err 0.049
+VAR nrep static seed 12000 band max model 15970 exact 140 ratio 113.9 signmatch 0.58 changes 3.2 interior_err 0.050
+VAR nrep roll seed 9000 model beyond70/400 21.0 rev 0.1785 | truth 0.0 rev 0.0058
+VAR nrep roll seed 12000 model beyond70/400 23.8 rev 0.1670 | truth 0.0 rev 0.0050
+VAR krep+nrep static seed 9000 band max model 138 exact 139 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.027
+VAR krep+nrep static seed 12000 band max model 139 exact 140 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.029
+VAR krep+nrep roll seed 9000 model beyond70/400 157.2 rev 0.0253 | truth 0.0 rev 0.0058
+VAR krep+nrep roll seed 12000 model beyond70/400 155.2 rev 0.0121 | truth 0.0 rev 0.0050
+VAR unetrep static seed 9000 band max model 6278 exact 139 ratio 45.1 signmatch 0.10 changes 1.0 interior_err 0.176
+VAR unetrep static seed 12000 band max model 6276 exact 140 ratio 44.8 signmatch 0.10 changes 1.0 interior_err 0.179
+VAR unetrep roll seed 9000 model beyond70/400 171.2 rev 0.0421 | truth 0.0 rev 0.0058
+VAR unetrep roll seed 12000 model beyond70/400 169.8 rev 0.0423 | truth 0.0 rev 0.0050
+VAR kext+nrep static seed 9000 band max model 139 exact 139 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.027
+VAR kext+nrep static seed 12000 band max model 140 exact 140 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.028
+VAR kext+nrep roll seed 9000 model beyond70/400 151.4 rev 0.0252 | truth 0.0 rev 0.0058
+VAR kext+nrep roll seed 12000 model beyond70/400 149.4 rev 0.0118 | truth 0.0 rev 0.0050
+VAR kext+unetrep static seed 9000 band max model 140 exact 139 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.027
+VAR kext+unetrep static seed 12000 band max model 141 exact 140 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.028
+VAR kext+unetrep roll seed 9000 model beyond70/400 150.2 rev 0.0253 | truth 0.0 rev 0.0058
+VAR kext+unetrep roll seed 12000 model beyond70/400 148.0 rev 0.0120 | truth 0.0 rev 0.0050
+VAR kext+nrep+unetrep static seed 9000 band max model 140 exact 139 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.027
+VAR kext+nrep+unetrep static seed 12000 band max model 141 exact 140 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.028
+VAR kext+nrep+unetrep roll seed 9000 model beyond70/400 152.6 rev 0.0249 | truth 0.0 rev 0.0058
+VAR kext+nrep+unetrep roll seed 12000 model beyond70/400 150.2 rev 0.0119 | truth 0.0 rev 0.0050
+VAR far0.05 static seed 9000 band max model 14048 exact 139 ratio 101.0 signmatch 0.58 changes 3.2 interior_err 0.049
+VAR far0.05 static seed 12000 band max model 14046 exact 140 ratio 100.2 signmatch 0.58 changes 3.2 interior_err 0.050
+VAR far0.05 roll seed 9000 model beyond70/400 23.6 rev 0.1543 | truth 0.0 rev 0.0058
+VAR far0.05 roll seed 12000 model beyond70/400 27.8 rev 0.1435 | truth 0.0 rev 0.0050
+VAR far0.25 static seed 9000 band max model 851 exact 139 ratio 6.1 signmatch 0.67 changes 3.0 interior_err 0.045
+VAR far0.25 static seed 12000 band max model 851 exact 140 ratio 6.1 signmatch 0.67 changes 3.0 interior_err 0.046
+VAR far0.25 roll seed 9000 model beyond70/400 84.2 rev 0.0549 | truth 0.0 rev 0.0058
+VAR far0.25 roll seed 12000 model beyond70/400 94.0 rev 0.0425 | truth 0.0 rev 0.0050
+VAR far0.05+kext static seed 9000 band max model 139 exact 139 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.027
+VAR far0.05+kext static seed 12000 band max model 140 exact 140 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.028
+VAR far0.05+kext roll seed 9000 model beyond70/400 72.4 rev 0.0241 | truth 0.0 rev 0.0058
+VAR far0.05+kext roll seed 12000 model beyond70/400 80.8 rev 0.0112 | truth 0.0 rev 0.0050
+DONE
+[2026-10-20T18:31:31-07:00] ALL DONE
