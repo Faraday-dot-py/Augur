@@ -37,9 +37,9 @@ def tmed(fn, reps=5, warm=2):
 
 
 def schemes(pos, n):
-    out = {"uniform": uniform_cores()}
-    for kk in (1, 2, 4, 8):
-        out[f"split_k{kk}"] = split_cores(uniform_cores(), pos, n / (kk * WORKERS))
+    out = {"uniform": (uniform_cores(), False), "uniform_prune": (uniform_cores(), True)}
+    for kk in (1, 2, 4):
+        out[f"split_k{kk}_prune"] = (split_cores(uniform_cores(), pos, n / (kk * WORKERS)), True)
     return out
 
 
@@ -49,31 +49,44 @@ def eval_state(model, pos, vel, mass, f1, n):
     model.grid, model.extent, model.h = 256, L, 0.5
     a_s = model.force(pos[None], vel[None], mass[None], msk, f1)[0][0]
     res = {}
-    for name, cores in schemes(pos, n).items():
-        T = CoreTiled(model, cores, far=True)
+    Tu = CoreTiled(model, uniform_cores(), far=True)
+    dsu, dout_u = Tu.seam_dist(pos)
+    ok = dout_u >= 8
+    ref_masks = {"all_in": ok, "useam<8": (dsu < 8) & ok, "uint": (dsu >= 8) & ok}
+    a_u = None
+    for name, (cores, prune) in schemes(pos, n).items():
+        T = CoreTiled(model, cores, far=True, prune_pair=prune)
         fld = T.slice_fields(f1[0])
         a_t, _ = T.force(pos, vel, mass, fld)
+        if name == "uniform":
+            a_u = a_t
         stats = dict(T.stats)
         ds, dout = T.seam_dist(pos)
         rel = rel_by_class(a_t, a_s, class_masks(ds, dout))
+        rel_ref = rel_by_class(a_t, a_s, ref_masks)
+        diff_uniform = float((a_t - a_u).abs().max()) if a_u is not None else None
         ms = [tmed(lambda k=k: T.force(pos, vel, mass, fld, tiles=[k])) for k in range(T.T)]
         batched = tmed(lambda: T.force(pos, vel, mass, fld), reps=3)
         T.far = False
         batched_nofar = tmed(lambda: T.force(pos, vel, mass, fld), reps=3)
         T.far = True
-        bins = [list(range(T.T))] if False else lpt_assign(ms, WORKERS)
-        wt = [sum(ms[k] for k in b) for b in bins]
+        bins = lpt_assign(ms, WORKERS)
+        wt_solo = [sum(ms[k] for k in b) for b in bins]
+        wt = [tmed(lambda b=b: T.force(pos, vel, mass, fld, tiles=b), reps=3) if b else 0.0 for b in bins]
         own = stats["own"]
-        res[name] = {"tiles": T.T, "own": own, "ghost": stats["ghost"], "tile_ms": ms, "worker_ms": wt,
-                     "worker_max_over_mean": max(wt) / (sum(wt) / WORKERS), "tile_max_over_mean": max(ms) / (sum(ms) / T.T),
-                     "own_max_over_mean": max(own) / (sum(own) / T.T), "makespan_ms": max(wt), "total_work_ms": sum(ms),
-                     "batched_ms": batched, "batched_nofar_ms": batched_nofar, "force_vs_single": rel,
-                     "cores": [list(c) for c in cores]}
+        res[name] = {"tiles": T.T, "own": own, "ghost": stats["ghost"], "pair_cand": stats["pair_cand"], "tile_ms": ms, "worker_solo_sum_ms": wt_solo,
+                     "worker_ms": wt, "worker_tiles": [len(b) for b in bins],
+                     "worker_max_over_mean": max(wt) / (sum(wt) / WORKERS), "worker_solo_max_over_mean": max(wt_solo) / (sum(wt_solo) / WORKERS),
+                     "tile_max_over_mean": max(ms) / (sum(ms) / T.T), "own_max_over_mean": max(own) / (sum(own) / T.T),
+                     "makespan_ms": max(wt), "total_work_ms": sum(wt), "total_solo_ms": sum(ms),
+                     "batched_ms": batched, "batched_nofar_ms": batched_nofar, "force_vs_single": rel, "force_vs_single_ref_classes": rel_ref,
+                     "max_force_diff_vs_uniform": diff_uniform, "cores": [list(c) for c in cores]}
         s = rel["seam<8"]["rel"]
         i = rel["interior"]["rel"]
         res[name]["seam_over_interior"] = (s / max(i, 1e-3)) if s is not None and i is not None else None
-        print(name, {k: v for k, v in res[name].items() if k in ("tiles", "worker_max_over_mean", "tile_max_over_mean", "own_max_over_mean", "makespan_ms",
-                                                                  "total_work_ms", "batched_ms", "seam_over_interior")}, flush=True)
+        print(name, {k: v for k, v in res[name].items() if k in ("tiles", "worker_max_over_mean", "worker_solo_max_over_mean", "tile_max_over_mean",
+                                                                  "own_max_over_mean", "makespan_ms", "total_work_ms", "total_solo_ms", "batched_ms",
+                                                                  "seam_over_interior", "max_force_diff_vs_uniform")}, flush=True)
     return res
 
 
@@ -110,7 +123,7 @@ def phase(model, dev, out, ns, seeds):
                 Ps = torch.stack(Ps).double()
                 roll = {"single": float((Ps[20] - Pt[20]).norm(dim=-1).mean()), "const_vel": float((Pt[0] + torch.tensor(v0, device=dev) * DT * 20 - Pt[20]).norm(dim=-1).mean())}
                 for name, k in (("uniform", None), ("split_k4", 4)):
-                    T = CoreTiled(model, uniform_cores(), far=True)
+                    T = CoreTiled(model, uniform_cores(), far=True, prune_pair=True)
                     ts = (T.init_field(dev), None)
                     p, v = pos, vel
                     for tick in range(20):

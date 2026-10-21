@@ -91,6 +91,19 @@ def test_split_cores_far_reduces_error():
     assert errs[True] < 0.5 * errs[False]
 
 
+def test_pair_pruning_is_exact():
+    m = make(nonet=True)
+    pos, vel, mass = scene(500, sigma=6.0)
+    cores = split_cores(uniform_cores(2, 32.0), pos, 80, dom=64.0)
+    a = []
+    for prune in (False, True):
+        c = CoreTiled(m, cores, domain=64.0, far=True, prune_pair=prune)
+        a.append(c.force(pos, vel, mass, c.init_field(pos.device, pos.dtype))[0])
+        if prune:
+            assert sum(c.stats["pair_cand"]) < sum(o + g for o, g in zip(c.stats["own"], c.stats["ghost"]))
+    assert torch.allclose(a[0], a[1], atol=1e-9)
+
+
 def test_retile_field_roundtrip():
     m = make(nonet=True)
     pos, _, _ = scene(400, sigma=5.0)

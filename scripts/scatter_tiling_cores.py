@@ -46,7 +46,8 @@ def lpt_assign(costs, workers):
 
 
 class CoreTiled(TiledScatter):
-    def __init__(self, model, cores, domain=128.0, E=64.0, far=True, far_c=4):
+    def __init__(self, model, cores, domain=128.0, E=64.0, far=True, far_c=4, prune_pair=False):
+        self.prune_pair = prune_pair
         self.m = model
         self.h = float(model.h)
         self.E, self.G, self.D, self.X0 = float(E), round(E / self.h), float(domain), -domain / 2
@@ -123,17 +124,25 @@ class CoreTiled(TiledScatter):
         T, dev = len(tiles), pos.device
         P = torch.zeros(T, Nmax, 2, device=dev, dtype=pos.dtype)
         V = torch.zeros_like(P)
-        M, K, OWN, INS = [torch.zeros(T, Nmax, device=dev, dtype=pos.dtype) for _ in range(4)]
+        M, K, OWN, INS, KP = [torch.zeros(T, Nmax, device=dev, dtype=pos.dtype) for _ in range(5)]
+        pp = float(self.m.pp) + 1e-3
         for j, k in enumerate(tiles):
             c = self.w0_dev[k].to(pos.dtype) + self.E / 2
             i = idx[j]
+            x0, x1, y0, y1 = self.cores[k]
+            q = pos[i]
+            dx = (x0 - q[:, 0]).clamp(min=0) + (q[:, 0] - x1).clamp(min=0)
+            dy = (y0 - q[:, 1]).clamp(min=0) + (q[:, 1] - y1).clamp(min=0)
+            KP[j, :len(i)] = ((dx * dx + dy * dy) < pp * pp).to(pos.dtype)
             P[j, :len(i)] = pos[i] - c
             V[j, :len(i)] = vel[i]
             M[j, :len(i)] = mass[i]
             K[j, :len(i)] = 1.0
             OWN[j, :nown[j]] = 1.0
             INS[j, :len(i)] = inside[i].to(pos.dtype)
-        self.stats = {"own": nown, "ghost": [len(i) - o for i, o in zip(idx, nown)], "nmax": Nmax}
+        self.stats = {"own": nown, "ghost": [len(i) - o for i, o in zip(idx, nown)], "nmax": Nmax,
+                      "pair_cand": [int(v) for v in KP.sum(1)]}
+        self._pairmask = KP
         return P, V, M, K, OWN, INS, idx
 
     def _far_acc(self, rho):
@@ -181,7 +190,7 @@ class CoreTiled(TiledScatter):
             f = x.new_zeros(len(tiles), m.cf, self.G, self.G) if m.nonet else m.net(xin)
             acc = m.neg_grad(f[:, :1]) + ak
             kw = {"qmask": OWN} if "adapt" in m.opt else {}
-            a = m.gather(acc, P) * INS[..., None] + m.pp_acc(P, M, K, **kw)
+            a = m.gather(acc, P) * INS[..., None] + m.pp_acc(P, M, self._pairmask if self.prune_pair else K, **kw)
             a = a * K[..., None]
         finally:
             self._restore(old)
