@@ -1,0 +1,84 @@
+EVAL gf_ctrl [base] err@5/10/20 expB_9000:0.0032/0.0086/0.0250 cluster_9000:0.0064/0.0170/0.0536 open_9000:0.0288/0.1110/0.5930 expB_12000:0.0029/0.0078/0.0234 cluster_12000:0.0073/0.0187/0.0636 open_12000:0.0250/0.0972/0.5015
+PROBE gf_ctrl [base] static seed 9000 ratio 64.7 signmatch 0.62 changes 3.0 interior_err 0.040
+PROBE gf_ctrl [base] static seed 12000 ratio 64.2 signmatch 0.62 changes 3.0 interior_err 0.041
+PROBE gf_ctrl [base] roll seed 9000 beyond70/400 35.4 rev 0.1339 (truth 0.0 / 0.0058)
+PROBE gf_ctrl [base] roll seed 12000 beyond70/400 40.2 rev 0.1242 (truth 0.0 / 0.0050)
+EVAL gf_ctrl [far05] err@5/10/20 expB_9000:0.0032/0.0086/0.0250 cluster_9000:0.0064/0.0170/0.0536 open_9000:0.0353/0.1444/0.6059 expB_12000:0.0029/0.0078/0.0234 cluster_12000:0.0073/0.0187/0.0636 open_12000:0.0349/0.1268/0.5721
+PROBE gf_ctrl [far05] static seed 9000 ratio 57.3 signmatch 0.65 changes 3.0 interior_err 0.040
+PROBE gf_ctrl [far05] static seed 12000 ratio 56.8 signmatch 0.65 changes 3.0 interior_err 0.041
+PROBE gf_ctrl [far05] roll seed 9000 beyond70/400 33.8 rev 0.1283 (truth 0.0 / 0.0058)
+PROBE gf_ctrl [far05] roll seed 12000 beyond70/400 40.0 rev 0.1183 (truth 0.0 / 0.0050)
+EVAL gf_open [base] err@5/10/20 expB_9000:0.0032/0.0086/0.0250 cluster_9000:0.0064/0.0170/0.0536 open_9000:0.0280/0.1099/0.5908 expB_12000:0.0029/0.0078/0.0234 cluster_12000:0.0073/0.0187/0.0636 open_12000:0.0237/0.0932/0.4901
+PROBE gf_open [base] static seed 9000 ratio 76.8 signmatch 0.60 changes 3.2 interior_err 0.042
+PROBE gf_open [base] static seed 12000 ratio 76.3 signmatch 0.60 changes 3.2 interior_err 0.043
+PROBE gf_open [base] roll seed 9000 beyond70/400 36.8 rev 0.1333 (truth 0.0 / 0.0058)
+PROBE gf_open [base] roll seed 12000 beyond70/400 39.6 rev 0.1237 (truth 0.0 / 0.0050)
+EVAL gf_open [far05] err@5/10/20 expB_9000:0.0032/0.0086/0.0250 cluster_9000:0.0064/0.0170/0.0536 open_9000:0.0348/0.1417/0.5907 expB_12000:0.0029/0.0078/0.0234 cluster_12000:0.0073/0.0187/0.0636 open_12000:0.0342/0.1226/0.5647
+PROBE gf_open [far05] static seed 9000 ratio 68.0 signmatch 0.62 changes 3.2 interior_err 0.042
+PROBE gf_open [far05] static seed 12000 ratio 67.5 signmatch 0.60 changes 3.2 interior_err 0.043
+PROBE gf_open [far05] roll seed 9000 beyond70/400 36.6 rev 0.1267 (truth 0.0 / 0.0058)
+PROBE gf_open [far05] roll seed 12000 beyond70/400 37.0 rev 0.1167 (truth 0.0 / 0.0050)
+EVAL gf_trans [base] err@5/10/20 expB_9000:0.0032/0.0086/0.0250 cluster_9000:0.0064/0.0170/0.0537 open_9000:0.0285/0.1112/0.6007 expB_12000:0.0029/0.0078/0.0234 cluster_12000:0.0073/0.0187/0.0637 open_12000:0.0248/0.0975/0.5049
+PROBE gf_trans [base] static seed 9000 ratio 114.2 signmatch 0.58 changes 3.2 interior_err 0.049
+PROBE gf_trans [base] static seed 12000 ratio 113.3 signmatch 0.58 changes 3.2 interior_err 0.050
+PROBE gf_trans [base] roll seed 9000 beyond70/400 23.0 rev 0.1628 (truth 0.0 / 0.0058)
+PROBE gf_trans [base] roll seed 12000 beyond70/400 26.8 rev 0.1519 (truth 0.0 / 0.0050)
+EVAL gf_trans [far05] err@5/10/20 expB_9000:0.0032/0.0086/0.0250 cluster_9000:0.0064/0.0170/0.0537 open_9000:0.0350/0.1423/0.6106 expB_12000:0.0029/0.0078/0.0234 cluster_12000:0.0073/0.0187/0.0637 open_12000:0.0350/0.1273/0.5761
+PROBE gf_trans [far05] static seed 9000 ratio 101.1 signmatch 0.58 changes 3.2 interior_err 0.049
+PROBE gf_trans [far05] static seed 12000 ratio 100.4 signmatch 0.58 changes 3.2 interior_err 0.050
+PROBE gf_trans [far05] roll seed 9000 beyond70/400 20.2 rev 0.1553 (truth 0.0 / 0.0058)
+PROBE gf_trans [far05] roll seed 12000 beyond70/400 27.0 rev 0.1419 (truth 0.0 / 0.0050)
+DONE
+EVAL E [kext] err@5/10/20 expB_9000:0.0032/0.0086/0.0250 cluster_9000:0.0064/0.0170/0.0539 open_9000:0.0323/0.1208/0.6227 expB_12000:0.0029/0.0078/0.0234 cluster_12000:0.0073/0.0187/0.0638 open_12000:0.0277/0.1062/0.5303
+PROBE E [kext] static seed 9000 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.027
+PROBE E [kext] static seed 12000 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.028
+PROBE E [kext] roll seed 9000 beyond70/400 149.8 rev 0.0255 (truth 0.0 / 0.0058)
+PROBE E [kext] roll seed 12000 beyond70/400 147.6 rev 0.0119 (truth 0.0 / 0.0050)
+EVAL E [kext_far05] err@5/10/20 expB_9000:0.0032/0.0086/0.0250 cluster_9000:0.0064/0.0170/0.0537 open_9000:0.0368/0.1504/0.6324 expB_12000:0.0029/0.0078/0.0234 cluster_12000:0.0073/0.0187/0.0637 open_12000:0.0360/0.1316/0.5975
+PROBE E [kext_far05] static seed 9000 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.027
+PROBE E [kext_far05] static seed 12000 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.028
+PROBE E [kext_far05] roll seed 9000 beyond70/400 71.8 rev 0.0242 (truth 0.0 / 0.0058)
+PROBE E [kext_far05] roll seed 12000 beyond70/400 80.4 rev 0.0110 (truth 0.0 / 0.0050)
+DONE
+EVAL if_ctrl [base] err@5/10/20 expB_9000:0.0045/0.0162/0.0588 cluster_9000:0.0090/0.0313/0.1379 open_9000:0.0306/0.1256/0.6757 expB_12000:0.0044/0.0158/0.0583 cluster_12000:0.0100/0.0349/0.1625 open_12000:0.0269/0.1105/0.5725
+PROBE if_ctrl [base] static seed 9000 ratio 96.4 signmatch 0.62 changes 3.2 interior_err 0.048
+PROBE if_ctrl [base] static seed 12000 ratio 95.6 signmatch 0.62 changes 3.2 interior_err 0.047
+PROBE if_ctrl [base] roll seed 9000 beyond70/400 148.4 rev 0.0923 (truth 0.0 / 0.0058)
+PROBE if_ctrl [base] roll seed 12000 beyond70/400 189.0 rev 0.0814 (truth 0.0 / 0.0050)
+EVAL if_ctrl [far05] err@5/10/20 expB_9000:0.0045/0.0162/0.0588 cluster_9000:0.0090/0.0313/0.1379 open_9000:0.0362/0.1518/0.6555 expB_12000:0.0044/0.0158/0.0583 cluster_12000:0.0100/0.0349/0.1624 open_12000:0.0360/0.1324/0.6106
+PROBE if_ctrl [far05] static seed 9000 ratio 85.3 signmatch 0.62 changes 3.2 interior_err 0.048
+PROBE if_ctrl [far05] static seed 12000 ratio 84.7 signmatch 0.62 changes 3.2 interior_err 0.047
+PROBE if_ctrl [far05] roll seed 9000 beyond70/400 152.8 rev 0.0900 (truth 0.0 / 0.0058)
+PROBE if_ctrl [far05] roll seed 12000 beyond70/400 186.8 rev 0.0797 (truth 0.0 / 0.0050)
+EVAL if_open [base] err@5/10/20 expB_9000:0.0104/0.0369/0.1315 cluster_9000:0.0160/0.0595/0.2539 open_9000:0.0374/0.1550/0.7834 expB_12000:0.0103/0.0366/0.1324 cluster_12000:0.0177/0.0658/0.2748 open_12000:0.0325/0.1374/0.6736
+PROBE if_open [base] static seed 9000 ratio 107.8 signmatch 0.60 changes 3.2 interior_err 0.047
+PROBE if_open [base] static seed 12000 ratio 107.0 signmatch 0.60 changes 3.2 interior_err 0.047
+PROBE if_open [base] roll seed 9000 beyond70/400 87.0 rev 0.1221 (truth 0.0 / 0.0058)
+PROBE if_open [base] roll seed 12000 beyond70/400 125.2 rev 0.0999 (truth 0.0 / 0.0050)
+EVAL if_open [far05] err@5/10/20 expB_9000:0.0104/0.0369/0.1315 cluster_9000:0.0160/0.0595/0.2538 open_9000:0.0413/0.1716/0.7145 expB_12000:0.0103/0.0366/0.1324 cluster_12000:0.0177/0.0658/0.2749 open_12000:0.0411/0.1534/0.7033
+PROBE if_open [far05] static seed 9000 ratio 95.4 signmatch 0.62 changes 3.0 interior_err 0.047
+PROBE if_open [far05] static seed 12000 ratio 94.8 signmatch 0.62 changes 3.0 interior_err 0.047
+PROBE if_open [far05] roll seed 9000 beyond70/400 77.6 rev 0.1217 (truth 0.0 / 0.0058)
+PROBE if_open [far05] roll seed 12000 beyond70/400 118.0 rev 0.0982 (truth 0.0 / 0.0050)
+EVAL ff_ctrl [base] err@5/10/20 expB_9000:0.0037/0.0142/0.0525 cluster_9000:0.0072/0.0277/0.1210 open_9000:0.0331/0.1323/0.6917 expB_12000:0.0038/0.0145/0.0520 cluster_12000:0.0081/0.0317/0.1471 open_12000:0.0299/0.1201/0.5845
+PROBE ff_ctrl [base] static seed 9000 ratio 27.8 signmatch 0.62 changes 3.2 interior_err 0.020
+PROBE ff_ctrl [base] static seed 12000 ratio 27.6 signmatch 0.62 changes 3.2 interior_err 0.019
+PROBE ff_ctrl [base] roll seed 9000 beyond70/400 210.2 rev 0.0593 (truth 0.0 / 0.0058)
+PROBE ff_ctrl [base] roll seed 12000 beyond70/400 232.8 rev 0.0445 (truth 0.0 / 0.0050)
+EVAL ff_ctrl [far05] err@5/10/20 expB_9000:0.0037/0.0142/0.0525 cluster_9000:0.0072/0.0277/0.1210 open_9000:0.0379/0.1641/0.6994 expB_12000:0.0038/0.0145/0.0520 cluster_12000:0.0081/0.0317/0.1471 open_12000:0.0366/0.1395/0.6334
+PROBE ff_ctrl [far05] static seed 9000 ratio 24.6 signmatch 0.67 changes 3.0 interior_err 0.020
+PROBE ff_ctrl [far05] static seed 12000 ratio 24.4 signmatch 0.67 changes 3.0 interior_err 0.019
+PROBE ff_ctrl [far05] roll seed 9000 beyond70/400 207.4 rev 0.0569 (truth 0.0 / 0.0058)
+PROBE ff_ctrl [far05] roll seed 12000 beyond70/400 228.4 rev 0.0432 (truth 0.0 / 0.0050)
+EVAL ff_open [base] err@5/10/20 expB_9000:0.0337/0.1626/0.6696 cluster_9000:0.0449/0.2362/1.0420 open_9000:0.0616/0.3132/1.4779 expB_12000:0.0338/0.1604/0.6422 cluster_12000:0.0465/0.2502/1.1174 open_12000:0.0584/0.3063/1.3661
+PROBE ff_open [base] static seed 9000 ratio 47.3 signmatch 0.50 changes 3.2 interior_err 0.451
+PROBE ff_open [base] static seed 12000 ratio 46.9 signmatch 0.50 changes 3.2 interior_err 0.452
+PROBE ff_open [base] roll seed 9000 beyond70/400 304.4 rev 0.0417 (truth 0.0 / 0.0058)
+PROBE ff_open [base] roll seed 12000 beyond70/400 295.6 rev 0.0430 (truth 0.0 / 0.0050)
+EVAL ff_open [far05] err@5/10/20 expB_9000:0.0337/0.1626/0.6696 cluster_9000:0.0449/0.2362/1.0418 open_9000:0.0680/0.3368/1.4126 expB_12000:0.0338/0.1604/0.6422 cluster_12000:0.0465/0.2502/1.1173 open_12000:0.0687/0.3285/1.4099
+PROBE ff_open [far05] static seed 9000 ratio 41.8 signmatch 0.56 changes 3.5 interior_err 0.451
+PROBE ff_open [far05] static seed 12000 ratio 41.5 signmatch 0.56 changes 3.5 interior_err 0.452
+PROBE ff_open [far05] roll seed 9000 beyond70/400 281.4 rev 0.0385 (truth 0.0 / 0.0058)
+PROBE ff_open [far05] roll seed 12000 beyond70/400 276.8 rev 0.0397 (truth 0.0 / 0.0050)
+DONE
+two_body seed 9100 err@[5, 10, 20, 50, 100] [0.00075, 0.00258, 0.0079, 0.04198, 0.14559]

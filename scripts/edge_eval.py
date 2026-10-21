@@ -77,7 +77,7 @@ def main():
                           f"interior_err {st['interior_rel_err']:.3f}", flush=True)
                 for ro in r["rollout"]:
                     print(f"PROBE {name} [{cname}] roll seed {ro['seed']} beyond70/400 {ro['model']['beyond70_per400']:.1f} rev {ro['model']['reversal_frac']:.4f} "
-                          f"(truth {ro['truth']['beyond70_per400']:.1f} / {ro['truth']['reversal_frac']:.4f})", flush=True)
+                          f"(truth {ro['truth']['beyond70_per400']:.1f} / {ro['truth']['reversal_frac']:.4f}) median_r {ro['model']['median_r']:.1f} p99_r {ro['model']['p99_r']:.1f} truth {ro['truth']['median_r']:.1f}/{ro['truth']['p99_r']:.1f}", flush=True)
             res[name][cname] = r
             json.dump(res, open(args.out, "w"))
     print("DONE", flush=True)
