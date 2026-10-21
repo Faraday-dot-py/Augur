@@ -103,6 +103,8 @@ def static_probe(model, dev, n, seed, exact_cache):
                sign_match=sm / cnt, sign_changes_per_dir=sc / 4, interior_rel_err=float(np.mean(
                    [np.abs(am[i * L:(i + 1) * L, 0 if dirs[i][0] else 1] * (dirs[i][0] + dirs[i][1]) - ex[i * L:(i + 1) * L, 0 if dirs[i][0] else 1] * (dirs[i][0] + dirs[i][1]))[(XS >= 18) & (XS <= 27)].mean()
                     / np.abs(ex[i * L:(i + 1) * L, 0 if dirs[i][0] else 1])[(XS >= 18) & (XS <= 27)].mean() for i in range(4)])))
+    outs = (XS >= 34) & (XS <= 46)
+    out["outside_ratio"] = float(np.mean([(am[i * L:(i + 1) * L, 0 if dirs[i][0] else 1] * (dirs[i][0] + dirs[i][1]))[outs].mean() / (ex[i * L:(i + 1) * L, 0 if dirs[i][0] else 1] * (dirs[i][0] + dirs[i][1]))[outs].mean() for i in range(4)]))
     out["profile"] = prof
     out["xs"] = XS.tolist()
     return out
@@ -131,19 +133,42 @@ def truth_rollout(pos0, vel0, mass, steps, dev):
     return np.stack(traj)
 
 
+def tracer_exact(pos, n, thresh):
+    """exact softened acceleration on the massless tracers (rows n:) from the n massive bodies, used only where max-norm coordinate > thresh."""
+    src = pos[0, :n].double()
+    tr = pos[0, n:].double()
+    out = torch.zeros_like(tr)
+    for s in range(0, tr.shape[0], 250):
+        d = src[None] - tr[s:s + 250, None]
+        inv = ((d ** 2).sum(-1) + EPS ** 2) ** -1.5
+        out[s:s + 250] = (d * inv[..., None]).sum(1)
+    sel = (tr.abs().amax(-1) > thresh)[:, None]
+    return out.float() * sel
+
+
 @torch.no_grad()
-def model_rollout(model, pos0, vel0, mass, steps, dev):
+def model_rollout(model, pos0, vel0, mass, steps, dev, hybrid=None):
     pos = torch.tensor(pos0, dtype=torch.float32, device=dev)[None]
     mom = mom_of(torch.tensor(vel0, dtype=torch.float32, device=dev)[None])
     M = torch.tensor(mass, dtype=torch.float32, device=dev)[None]
     mk = torch.ones_like(M)
     f = model.init_field(1, dev)[0]
     traj = [pos[0].cpu().numpy()]
-    a, f = model.force(pos, sb.speed(mom, C), M, mk, f)
+    n = int((mass > 0).sum())
+
+    def force(pos, mom, f):
+        a, f = model.force(pos, sb.speed(mom, C), M, mk, f)
+        if hybrid is not None:
+            ae = tracer_exact(pos, n, hybrid)
+            sel = (ae != 0).any(-1)
+            a[0, n:][sel] = ae[sel]
+        return a, f
+
+    a, f = force(pos, mom, f)
     for _ in range(steps):
         mom = mom + 0.5 * DT * a
         pos = pos + DT * sb.speed(mom, C)
-        a, f = model.force(pos, sb.speed(mom, C), M, mk, f)
+        a, f = force(pos, mom, f)
         mom = mom + 0.5 * DT * a
         traj.append(pos[0].cpu().numpy())
     return np.stack(traj)
@@ -165,7 +190,7 @@ def tracer_metrics(traj, n, nt, lo=28.0, hi=32.0):
             "outgoing_samples": out_s, "median_r": float(np.median(rmax_end)), "p99_r": float(np.percentile(rmax_end, 99))}
 
 
-def rollout_probe(model, dev, n, nt, steps, seed, truth_cache):
+def rollout_probe(model, dev, n, nt, steps, seed, truth_cache, hybrid=None):
     p0 = scene(n, seed)
     rng = np.random.default_rng(seed + 1)
     v0 = rng.normal(0.0, 0.3 * np.sqrt(n / 32.0), (n, 2))
@@ -179,7 +204,7 @@ def rollout_probe(model, dev, n, nt, steps, seed, truth_cache):
     key = (n, nt, steps, seed)
     if key not in truth_cache:
         truth_cache[key] = truth_rollout(pos0, vel0, mass, steps, dev)
-    tm = tracer_metrics(model_rollout(model, pos0, vel0, mass, steps, dev), n, nt)
+    tm = tracer_metrics(model_rollout(model, pos0, vel0, mass, steps, dev, hybrid), n, nt)
     tt = tracer_metrics(truth_cache[key], n, nt)
     return {"model": tm, "truth": tt, "seed": seed, "n": n, "nt": nt, "steps": steps}
 

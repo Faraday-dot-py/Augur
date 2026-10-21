@@ -1,0 +1,17 @@
+BAND lsq coord 22-26 n 22885 rel_err 0.816 mean_model_rad -29.45 max|a| model 162 exact 58
+BAND lsq coord 26-28 n 10935 rel_err 1.014 mean_model_rad -23.09 max|a| model 155 exact 39
+BAND lsq coord 28-30 n 9050 rel_err 1.306 mean_model_rad -18.25 max|a| model 151 exact 33
+BAND lsq coord 30-31 n 3384 rel_err 1.620 mean_model_rad -14.98 max|a| model 146 exact 30
+BAND lsq coord 31-32 n 2729 rel_err 1.931 mean_model_rad -14.54 max|a| model 151 exact 26
+BAND lsq_nrep coord 22-26 n 23011 rel_err 0.805 mean_model_rad -29.35 max|a| model 162 exact 58
+BAND lsq_nrep coord 26-28 n 10892 rel_err 1.009 mean_model_rad -23.15 max|a| model 155 exact 39
+BAND lsq_nrep coord 28-30 n 8895 rel_err 1.298 mean_model_rad -18.38 max|a| model 151 exact 33
+BAND lsq_nrep coord 30-31 n 3387 rel_err 1.596 mean_model_rad -14.83 max|a| model 148 exact 29
+BAND lsq_nrep coord 31-32 n 2771 rel_err 1.905 mean_model_rad -13.36 max|a| model 149 exact 26
+BAND lsq_kfar coord 22-26 n 25402 rel_err 0.823 mean_model_rad -28.54 max|a| model 162 exact 58
+BAND lsq_kfar coord 26-28 n 12365 rel_err 1.034 mean_model_rad -22.40 max|a| model 155 exact 38
+BAND lsq_kfar coord 28-30 n 10228 rel_err 1.315 mean_model_rad -18.10 max|a| model 151 exact 32
+BAND lsq_kfar coord 30-31 n 4093 rel_err 1.589 mean_model_rad -14.95 max|a| model 148 exact 29
+BAND lsq_kfar coord 31-32 n 3516 rel_err 1.836 mean_model_rad -13.24 max|a| model 135 exact 27
+DONE
+[2026-10-20T20:20:19-07:00] ALL DONE

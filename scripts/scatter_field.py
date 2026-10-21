@@ -184,17 +184,36 @@ class ScatterField(nn.Module):
             out = out + fl[flat] * w[..., None]
         return out
 
-    def _kernel_fft(self, rho):
-        G = self.grid
-        idx = torch.arange(2 * G, device=rho.device, dtype=rho.dtype)
-        d = torch.minimum(idx, 2 * G - idx) * self.h
-        r = torch.sqrt(d[:, None] ** 2 + d[None, :] ** 2)
+    def kval(self, r):
         K = self.kmlp(self._feat(r, "k"))[..., 0]
         if self.prior:
             K = -(1 + K) / torch.sqrt(r ** 2 + self.eps ** 2)
         if self.split:
             K = K * (1 - (1 - (r / self.ppe()).clamp(max=1.0) ** 2) ** 2)
-        return torch.fft.rfft2(K)
+        return K
+
+    def _kernel_fft(self, rho):
+        G = self.grid
+        idx = torch.arange(2 * G, device=rho.device, dtype=rho.dtype)
+        d = torch.minimum(idx, 2 * G - idx) * self.h
+        r = torch.sqrt(d[:, None] ** 2 + d[None, :] ** 2)
+        return torch.fft.rfft2(self.kval(r))
+
+    def kfar_acc(self, pos, rho, c=4):
+        """Acceleration at tokens (any position, also outside the grid) from the learned kernel summed directly over a coarse (c x c fine cells) copy of the grid
+        density: a(x) = sum_c m_c K'(|x - x_c|) (x_c - x)/|x - x_c|, K' by a central difference of width h. pos (B,S,2), rho (B,1,G,G)."""
+        B, S = pos.shape[:2]
+        if S > 256:
+            return torch.cat([self.kfar_acc(pos[:, i:i + 256], rho, c) for i in range(0, S, 256)], 1)
+        G, h = self.grid, self.h
+        m = F.avg_pool2d(rho, c)[:, 0] * c * c * h * h
+        g = G // c
+        ctr = (torch.arange(g, device=pos.device, dtype=pos.dtype) + 0.5) * c * h - self.extent / 2
+        cx = torch.stack([ctr[None, :].expand(g, g), ctr[:, None].expand(g, g)], -1).reshape(1, 1, g * g, 2)
+        d = cx - pos[:, :, None, :]
+        r = d.norm(dim=-1).clamp_min(1e-6)
+        kp = (self.kval(r + h) - self.kval((r - h).abs())) / (2 * h)
+        return ((m.reshape(B, 1, g * g) * kp / r)[..., None] * d).sum(2)
 
     def kernel_acc(self, rho):
         G = self.grid
@@ -506,7 +525,18 @@ class ScatterField(nn.Module):
             a_tok = a_tok * ns.view(-1, 1, 1)
         if self.far:
             w = self.edge_weight(pos)[..., None]
-            a_tok = a_tok * w + self.far_acc(pos, mass, mask) * (1 - w)
+            if getattr(self, "kfar", False):
+                af = torch.zeros_like(a_tok)
+                sel = w[..., 0] < 1.0
+                for bi in range(pos.shape[0]):
+                    i = sel[bi].nonzero()[:, 0]
+                    if i.numel():
+                        af[bi, i] = self.kfar_acc(pos[bi:bi + 1, i], x[bi:bi + 1, :1])[0]
+                if ns is not None:
+                    af = af * ns.view(-1, 1, 1)
+                a_tok = a_tok * w + af * (1 - w)
+            else:
+                a_tok = a_tok * w + self.far_acc(pos, mass, mask) * (1 - w)
         if self.pp:
             a_tok = a_tok + self.pp_acc(pos, mass, mask, self.knn)
         if self.momfix:
@@ -1112,9 +1142,10 @@ def apply_opt(model, name):
     if name == "nrep":
         model.npad = "rep"
         return
-    if name.startswith("far"):
+    if name.startswith("far") or name.startswith("kfar"):
         base, _, band = name.partition("@")
         model.far = 2 if base == "farquad" else 1
+        model.kfar = base == "kfar"
         if band:
             model.far_band = float(band)
         return

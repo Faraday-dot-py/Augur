@@ -1,0 +1,37 @@
+EVAL ghost_lsq [base] err@5/10/20 expB_9000:0.0032/0.0086/0.0250 cluster_9000:0.0064/0.0170/0.0539 open_9000:0.0323/0.1208/0.6230 expB_12000:0.0029/0.0078/0.0234 cluster_12000:0.0073/0.0187/0.0638 open_12000:0.0278/0.1063/0.5312
+PROBE ghost_lsq [base] static seed 9000 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.027 outside_ratio 0.00
+PROBE ghost_lsq [base] static seed 12000 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.028 outside_ratio -0.00
+PROBE ghost_lsq [base] roll seed 9000 beyond70/400 149.8 rev 0.0253 (truth 0.0 / 0.0058) median_r 53.1 p99_r 122.1 truth 48.8/61.0
+PROBE ghost_lsq [base] roll seed 12000 beyond70/400 148.2 rev 0.0117 (truth 0.0 / 0.0050) median_r 56.4 p99_r 121.6 truth 47.3/61.4
+EVAL ghost_lsq [nrep] err@5/10/20 expB_9000:0.0032/0.0086/0.0250 cluster_9000:0.0064/0.0170/0.0538 open_9000:0.0300/0.1151/0.6065 expB_12000:0.0029/0.0078/0.0234 cluster_12000:0.0073/0.0187/0.0637 open_12000:0.0260/0.1014/0.5162
+PROBE ghost_lsq [nrep] static seed 9000 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.027 outside_ratio 0.00
+PROBE ghost_lsq [nrep] static seed 12000 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.028 outside_ratio -0.00
+PROBE ghost_lsq [nrep] roll seed 9000 beyond70/400 151.6 rev 0.0253 (truth 0.0 / 0.0058) median_r 53.6 p99_r 122.2 truth 48.8/61.0
+PROBE ghost_lsq [nrep] roll seed 12000 beyond70/400 149.4 rev 0.0118 (truth 0.0 / 0.0050) median_r 56.6 p99_r 121.7 truth 47.3/61.4
+EVAL ghost_lsq [far05_nrep] err@5/10/20 expB_9000:0.0032/0.0086/0.0250 cluster_9000:0.0064/0.0170/0.0537 open_9000:0.0364/0.1490/0.6277 expB_12000:0.0029/0.0078/0.0234 cluster_12000:0.0073/0.0187/0.0637 open_12000:0.0357/0.1298/0.5942
+PROBE ghost_lsq [far05_nrep] static seed 9000 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.027 outside_ratio 0.93
+PROBE ghost_lsq [far05_nrep] static seed 12000 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.028 outside_ratio 0.93
+PROBE ghost_lsq [far05_nrep] roll seed 9000 beyond70/400 73.6 rev 0.0246 (truth 0.0 / 0.0058) median_r 35.4 p99_r 116.2 truth 48.8/61.0
+PROBE ghost_lsq [far05_nrep] roll seed 12000 beyond70/400 82.6 rev 0.0112 (truth 0.0 / 0.0050) median_r 46.6 p99_r 115.8 truth 47.3/61.4
+EVAL ghost_lsq [kfar05] err@5/10/20 expB_9000:0.0032/0.0086/0.0250 cluster_9000:0.0064/0.0170/0.0538 open_9000:0.0238/0.0889/0.4155 expB_12000:0.0029/0.0078/0.0234 cluster_12000:0.0073/0.0187/0.0637 open_12000:0.0212/0.0774/0.3609
+PROBE ghost_lsq [kfar05] static seed 9000 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.027 outside_ratio 1.01
+PROBE ghost_lsq [kfar05] static seed 12000 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.028 outside_ratio 1.01
+PROBE ghost_lsq [kfar05] roll seed 9000 beyond70/400 73.2 rev 0.0243 (truth 0.0 / 0.0058) median_r 36.0 p99_r 118.6 truth 48.8/61.0
+PROBE ghost_lsq [kfar05] roll seed 12000 beyond70/400 80.6 rev 0.0113 (truth 0.0 / 0.0050) median_r 45.1 p99_r 119.1 truth 47.3/61.4
+EVAL ghost_lsq [kfar05_nrep] err@5/10/20 expB_9000:0.0032/0.0086/0.0250 cluster_9000:0.0064/0.0170/0.0537 open_9000:0.0236/0.0881/0.4118 expB_12000:0.0029/0.0078/0.0234 cluster_12000:0.0073/0.0187/0.0637 open_12000:0.0211/0.0768/0.3584
+PROBE ghost_lsq [kfar05_nrep] static seed 9000 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.027 outside_ratio 1.01
+PROBE ghost_lsq [kfar05_nrep] static seed 12000 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.028 outside_ratio 1.01
+PROBE ghost_lsq [kfar05_nrep] roll seed 9000 beyond70/400 73.2 rev 0.0246 (truth 0.0 / 0.0058) median_r 35.3 p99_r 118.6 truth 48.8/61.0
+PROBE ghost_lsq [kfar05_nrep] roll seed 12000 beyond70/400 81.8 rev 0.0112 (truth 0.0 / 0.0050) median_r 44.8 p99_r 119.1 truth 47.3/61.4
+EVAL ghost_lsq [kfar10] err@5/10/20 expB_9000:0.0032/0.0086/0.0250 cluster_9000:0.0064/0.0170/0.0537 open_9000:0.0251/0.0910/0.4078 expB_12000:0.0029/0.0078/0.0234 cluster_12000:0.0073/0.0187/0.0636 open_12000:0.0216/0.0767/0.3419
+PROBE ghost_lsq [kfar10] static seed 9000 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.027 outside_ratio 1.01
+PROBE ghost_lsq [kfar10] static seed 12000 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.028 outside_ratio 1.01
+PROBE ghost_lsq [kfar10] roll seed 9000 beyond70/400 72.2 rev 0.0242 (truth 0.0 / 0.0058) median_r 35.9 p99_r 118.6 truth 48.8/61.0
+PROBE ghost_lsq [kfar10] roll seed 12000 beyond70/400 81.0 rev 0.0114 (truth 0.0 / 0.0050) median_r 44.7 p99_r 119.1 truth 47.3/61.4
+EVAL ghost_lsq [kfar25] err@5/10/20 expB_9000:0.0032/0.0086/0.0250 cluster_9000:0.0065/0.0173/0.0546 open_9000:0.0359/0.1228/0.4586 expB_12000:0.0029/0.0078/0.0234 cluster_12000:0.0073/0.0189/0.0644 open_12000:0.0303/0.1022/0.3982
+PROBE ghost_lsq [kfar25] static seed 9000 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.027 outside_ratio 1.01
+PROBE ghost_lsq [kfar25] static seed 12000 ratio 1.0 signmatch 1.00 changes 0.0 interior_err 0.028 outside_ratio 1.01
+PROBE ghost_lsq [kfar25] roll seed 9000 beyond70/400 73.4 rev 0.0240 (truth 0.0 / 0.0058) median_r 35.5 p99_r 118.6 truth 48.8/61.0
+PROBE ghost_lsq [kfar25] roll seed 12000 beyond70/400 80.6 rev 0.0117 (truth 0.0 / 0.0050) median_r 44.6 p99_r 119.1 truth 47.3/61.4
+DONE
+[2026-10-20T20:18:52-07:00] ALL DONE
