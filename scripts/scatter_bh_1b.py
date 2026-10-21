@@ -115,6 +115,7 @@ def diagnostics(sim, pos, mom, sub, hist):
     vmax = torch.zeros((), device=sim.dev)
     ke = torch.zeros((), dtype=torch.float64, device=sim.dev)
     bad = torch.zeros((), dtype=torch.float64, device=sim.dev)
+    nvc = torch.zeros((), dtype=torch.float64, device=sim.dev)
     pmax = torch.zeros((), device=sim.dev)
     sp = pos[sub].float()
     cen = sp.median(0).values
@@ -131,6 +132,7 @@ def diagnostics(sim, pos, mom, sub, hist):
         p2 = (m ** 2).sum(-1)
         pmax = torch.maximum(pmax, p2.max().sqrt())
         vmax = torch.maximum(vmax, (p2 / (1 + p2 / c ** 2)).max().sqrt())
+        nvc += (p2 / (1 + p2 / c ** 2) > c ** 2 * (1 + 1e-6)).sum()
         ke += (c ** 2 * ((1 + p2 / c ** 2).sqrt() - 1)).sum(dtype=torch.float64)
         if hist:
             for h, ctr, hw in ((hf, None, 32.0), (hz4, cen, 4.0), (hz1, cen, 1.0)):
@@ -140,7 +142,7 @@ def diagnostics(sim, pos, mom, sub, hist):
                 flat = torch.where(ok, ij[:, 1] * HB + ij[:, 0], HB * HB)
                 h += torch.bincount(flat, minlength=HB * HB + 1)
     r = (sp - cen).norm(dim=-1)
-    res.update(frac_outside=float(out_cnt) / sim.n, vmax_over_c=float(vmax) / c, pmax=float(pmax), mean_ke=float(ke) / sim.n, nonfinite=int(bad),
+    res.update(frac_outside=float(out_cnt) / sim.n, vmax_over_c=float(vmax) / c, pmax=float(pmax), mean_ke=float(ke) / sim.n, nonfinite=int(bad), n_v_ge_c=int(nvc),
                core_r45=float(r.quantile(0.45)), r90=float(r.quantile(0.9)), centre=[float(cen[0]), float(cen[1])])
     if hist:
         res["hist"] = [h[:-1].view(HB, HB).int() for h in (hf, hz4, hz1)]
@@ -308,13 +310,21 @@ def main():
     ap.add_argument("--force-probe", type=lambda v: [int(i) for i in v.split(",") if i], default=[], help="ticks at which to compare grid force with exact pairwise force on the subsample")
     ap.add_argument("--grid-dump", action="store_true", help="save per-tick 128x128 maps (density, |a|, far-field potential, net potential) to results/<tag>_grids.npy")
     ap.add_argument("--probe-targets", type=int, default=20000)
+    ap.add_argument("--variant", default="ms_kp_pot_v_g128", help="ms_kp_pot_v_g128_ghost for the learned ghost-cell closure (scatter-edge-fix)")
+    ap.add_argument("--kernel", default="old", help="scatter_far kernel spec, e.g. file:results/far_kernels/r1b_mlp.pt+cache (scatter-far-kernel-fix); old = shipped")
+    ap.add_argument("--opt", default="", help="comma list of scatter_field opts, e.g. kext, krep, nrep")
     ap.add_argument("--check-variants", default="fp32:fp32,fp16:fp16")
     args = ap.parse_args()
     dev = torch.device("cuda")
-    model = tsf.build(tsf.EXPS["E"], "ms_kp_pot_v_g128", args.dt).to(dev)
+    model = tsf.build(tsf.EXPS["E"], args.variant, args.dt).to(dev)
     model.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
     model.eval()
     ops.no_pp(model)
+    for o in filter(None, args.opt.split(",")):
+        sf.apply_opt(model, o)
+    if args.kernel != "old":
+        from scripts import scatter_far
+        scatter_far.install_spec(model, args.kernel)
     res = {"gpu": torch.cuda.get_device_name(), "args": vars(args)}
     json_path = f"results/{args.tag}{'_check' if args.mode == 'check' else ''}.json"
 
