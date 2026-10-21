@@ -193,6 +193,9 @@ def build_model(args, dev):
     model.eval()
     for o in [x for x in args.opt.split(",") if x]:
         sf.apply_opt(model, o)
+    if getattr(args, "kernel", "old") != "old":
+        from scripts import scatter_far
+        scatter_far.install_spec(model, args.kernel)
     return model
 
 
@@ -314,6 +317,7 @@ def main():
         p.add_argument("--ckpt", required=True)
         p.add_argument("--opt", default="kcache,fastio,cl,graph")
         p.add_argument("--out-dir", default="results/conservation")
+        p.add_argument("--kernel", default="old", help="scatter_far kernel spec (old = shipped kmlp)")
         if nm == "run":
             p.add_argument("--steps", type=int, default=10000)
             p.add_argument("--regimes", default=",".join(REGIMES))
