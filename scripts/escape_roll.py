@@ -40,6 +40,11 @@ ARMS = {
     "T8nm": dict(kind="tile", nt=8, tile=32, halo=16, kern=R1B, mf=False),
     "T8w": dict(kind="tile", nt=8, tile=64, halo=16, kern=R1B),
     "T16": dict(kind="tile", nt=16, tile=32, halo=16, kern=R1B),
+    "S1in": dict(kind="single", kern=R1B, mf="in"),
+    "T4in": dict(kind="tile", nt=4, tile=32, halo=16, kern=R1B, mf="in"),
+    "T8in": dict(kind="tile", nt=8, tile=32, halo=16, kern=R1B, mf="in"),
+    "T8nf": dict(kind="tile", nt=8, tile=32, halo=16, kern=R1B, far=False),
+    "T8old": dict(kind="tile", nt=8, tile=32, halo=16, kern="old"),
 }
 
 
@@ -96,12 +101,14 @@ class Arm:
         if spec["kern"] != "old":
             sfar.install_spec(m, spec["kern"])
         mf = spec.get("mf", True)
+        self.mfin = mf == "in"
+        mf = mf is True
         self.m, self.dev = m, dev
         if self.kind == "single":
             m.momfix = mf
             self.half = m.extent / 2
         else:
-            self.T = TiledScatter(m, spec["nt"], spec["tile"], spec["halo"], ghosts=True, field_x=False, far=True, momfix=mf, skip_outside=True)
+            self.T = TiledScatter(m, spec["nt"], spec["tile"], spec["halo"], ghosts=True, field_x=False, far=spec.get("far", True), momfix=mf, skip_outside=True)
             self.half = spec["nt"] * spec["tile"] / 2
 
     def init_field(self):
@@ -110,10 +117,19 @@ class Arm:
     def force(self, pos, v, M, f):
         if self.kind == "single":
             a, f = self.m.force(pos[None], v[None], M[None], torch.ones_like(M)[None], f)
-            return a[0], f
-        return self.T.force(pos, v, M, f)
+            a = a[0]
+        else:
+            a, f = self.T.force(pos, v, M, f)
+        if self.mfin:
+            ins = (pos.abs().amax(-1) < self.half)
+            w = (M * ins)[:, None]
+            a = a - ins[:, None] * (w * a).sum(0, keepdim=True) / w.sum().clamp_min(1e-9)
+        return a, f
 
     def set_momfix(self, on):
+        if self.mfin:
+            old, self.mfin = self.mfin, on
+            return old
         if self.kind == "single":
             old, self.m.momfix = self.m.momfix, on
         else:
