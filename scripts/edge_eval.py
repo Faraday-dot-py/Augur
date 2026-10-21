@@ -58,7 +58,7 @@ def main():
             model = tsf.build(tsf.EXPS["E"], vmap.get(name, "ms_kp_pot_v_g128"), DT).to(dev)
             sf.load_compat(model, torch.load(ck, map_location=dev, weights_only=False)["model"])
             model.eval()
-            sf.apply_opts(model, opts)
+            sf.apply_opts(model, opts + (",-graph" if "kfar" in opts else ""))
             r = {"err": {}}
             for (kind, sd), data in sets.items():
                 r["err"][f"{kind}_{sd}"] = err_curve(model, data, dev, box_mask=(kind == "open"))
@@ -74,7 +74,7 @@ def main():
                 r["rollout"] = [ep.rollout_probe(pm, dev, 20000, 2000, 100, s, tc) for s in SEEDS]
                 for st in r["static"]:
                     print(f"PROBE {name} [{cname}] static seed {st['seed']} ratio {st['band_ratio']:.1f} signmatch {st['sign_match']:.2f} changes {st['sign_changes_per_dir']:.1f} "
-                          f"interior_err {st['interior_rel_err']:.3f}", flush=True)
+                          f"interior_err {st['interior_rel_err']:.3f} outside_ratio {st['outside_ratio']:.2f}", flush=True)
                 for ro in r["rollout"]:
                     print(f"PROBE {name} [{cname}] roll seed {ro['seed']} beyond70/400 {ro['model']['beyond70_per400']:.1f} rev {ro['model']['reversal_frac']:.4f} "
                           f"(truth {ro['truth']['beyond70_per400']:.1f} / {ro['truth']['reversal_frac']:.4f}) median_r {ro['model']['median_r']:.1f} p99_r {ro['model']['p99_r']:.1f} truth {ro['truth']['median_r']:.1f}/{ro['truth']['p99_r']:.1f}", flush=True)

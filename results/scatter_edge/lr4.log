@@ -1,0 +1,36 @@
+truth t 0 frac_out 0.000 r99 24.3 out/rev(last100) 0/0 0.19s/tick
+truth t 100 frac_out 0.186 r99 79.5 out/rev(last100) 22546/2 0.10s/tick
+truth t 200 frac_out 0.191 r99 176.3 out/rev(last100) 6257/0 0.10s/tick
+truth t 300 frac_out 0.194 r99 274.4 out/rev(last100) 5989/0 0.10s/tick
+truth t 400 frac_out 0.197 r99 372.8 out/rev(last100) 5785/0 0.10s/tick
+truth t 500 frac_out 0.199 r99 471.3 out/rev(last100) 5938/0 0.10s/tick
+truth t 600 frac_out 0.200 r99 570.1 out/rev(last100) 5756/0 0.10s/tick
+truth t 700 frac_out 0.204 r99 668.7 out/rev(last100) 6119/0 0.10s/tick
+truth t 800 frac_out 0.207 r99 767.9 out/rev(last100) 6034/0 0.10s/tick
+truth t 900 frac_out 0.209 r99 866.6 out/rev(last100) 5717/0 0.10s/tick
+RESULT truth outgoing-in-band samples 76070 reversals 2 frac 0.0000 final frac_out 0.213 r99 955.7
+E t 0 frac_out 0.000 r99 24.3 out/rev(last100) 0/0 2.21s/tick
+E t 100 frac_out 0.160 r99 100.5 out/rev(last100) 21692/1370 0.03s/tick
+E t 200 frac_out 0.196 r99 197.5 out/rev(last100) 6833/728 0.02s/tick
+E t 300 frac_out 0.220 r99 295.3 out/rev(last100) 4830/541 0.02s/tick
+E t 400 frac_out 0.272 r99 392.3 out/rev(last100) 10089/1005 0.01s/tick
+E t 500 frac_out 0.574 r99 489.4 out/rev(last100) 163185/27621 0.01s/tick
+E t 600 frac_out 0.787 r99 587.8 out/rev(last100) 59557/5072 0.01s/tick
+E t 700 frac_out 0.984 r99 687.0 out/rev(last100) 31561/698 0.01s/tick
+E t 800 frac_out 0.999 r99 786.3 out/rev(last100) 1926/0 0.01s/tick
+E t 900 frac_out 0.999 r99 885.7 out/rev(last100) 201/0 0.01s/tick
+RESULT E outgoing-in-band samples 300030 reversals 37035 frac 0.1234 final frac_out 0.999 r99 975.3
+DONE
+lsq t 0 frac_out 0.000 r99 24.3 out/rev(last100) 0/0 1.24s/tick
+lsq t 100 frac_out 0.206 r99 108.7 out/rev(last100) 23145/54 0.02s/tick
+lsq t 200 frac_out 0.238 r99 205.3 out/rev(last100) 4602/11 0.02s/tick
+lsq t 300 frac_out 0.254 r99 302.8 out/rev(last100) 3313/44 0.01s/tick
+lsq t 400 frac_out 0.356 r99 401.5 out/rev(last100) 42798/7904 0.01s/tick
+lsq t 500 frac_out 0.834 r99 499.6 out/rev(last100) 141267/13154 0.01s/tick
+lsq t 600 frac_out 0.985 r99 599.1 out/rev(last100) 23152/16 0.01s/tick
+lsq t 700 frac_out 0.993 r99 698.2 out/rev(last100) 2228/0 0.01s/tick
+lsq t 800 frac_out 0.994 r99 797.6 out/rev(last100) 909/0 0.01s/tick
+lsq t 900 frac_out 0.995 r99 897.4 out/rev(last100) 928/0 0.01s/tick
+RESULT lsq outgoing-in-band samples 243231 reversals 21183 frac 0.0871 final frac_out 0.995 r99 987.1
+DONE
+[2026-10-20T21:01:20-07:00] ALL DONE

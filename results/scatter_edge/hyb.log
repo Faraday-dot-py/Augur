@@ -1,0 +1,18 @@
+HYB kext hybrid>None seed 9000 beyond70/400 149.8 median_r 53.7 p99_r 122.1 rev 0.0252 (truth 0.0 48.8 0.0058)
+HYB kext hybrid>None seed 12000 beyond70/400 148.0 median_r 56.5 p99_r 121.6 rev 0.0118 (truth 0.0 47.3 0.0050)
+HYB kext hybrid>0.0 seed 9000 beyond70/400 0.0 median_r 40.5 p99_r 58.3 rev 0.0066 (truth 0.0 48.8 0.0058)
+HYB kext hybrid>0.0 seed 12000 beyond70/400 0.0 median_r 46.7 p99_r 58.4 rev 0.0045 (truth 0.0 47.3 0.0050)
+HYB kext hybrid>28.0 seed 9000 beyond70/400 0.0 median_r 39.2 p99_r 61.9 rev 0.0050 (truth 0.0 48.8 0.0058)
+HYB kext hybrid>28.0 seed 12000 beyond70/400 0.0 median_r 30.1 p99_r 62.2 rev 0.0055 (truth 0.0 47.3 0.0050)
+HYB kext hybrid>32.0 seed 9000 beyond70/400 0.0 median_r 24.5 p99_r 62.0 rev 0.0249 (truth 0.0 48.8 0.0058)
+HYB kext hybrid>32.0 seed 12000 beyond70/400 0.0 median_r 27.5 p99_r 62.2 rev 0.0114 (truth 0.0 47.3 0.0050)
+HYB kext,far@0.05 hybrid>None seed 9000 beyond70/400 73.4 median_r 36.6 p99_r 116.2 rev 0.0241 (truth 0.0 48.8 0.0058)
+HYB kext,far@0.05 hybrid>None seed 12000 beyond70/400 81.0 median_r 45.4 p99_r 115.4 rev 0.0111 (truth 0.0 47.3 0.0050)
+HYB kext,far@0.05 hybrid>0.0 seed 9000 beyond70/400 0.0 median_r 40.9 p99_r 56.8 rev 0.0066 (truth 0.0 48.8 0.0058)
+HYB kext,far@0.05 hybrid>0.0 seed 12000 beyond70/400 0.0 median_r 46.7 p99_r 58.1 rev 0.0045 (truth 0.0 47.3 0.0050)
+HYB kext,far@0.05 hybrid>28.0 seed 9000 beyond70/400 0.0 median_r 39.6 p99_r 62.0 rev 0.0048 (truth 0.0 48.8 0.0058)
+HYB kext,far@0.05 hybrid>28.0 seed 12000 beyond70/400 0.0 median_r 31.0 p99_r 62.1 rev 0.0055 (truth 0.0 47.3 0.0050)
+HYB kext,far@0.05 hybrid>32.0 seed 9000 beyond70/400 0.0 median_r 24.7 p99_r 62.0 rev 0.0249 (truth 0.0 48.8 0.0058)
+HYB kext,far@0.05 hybrid>32.0 seed 12000 beyond70/400 0.0 median_r 28.1 p99_r 62.1 rev 0.0112 (truth 0.0 47.3 0.0050)
+DONE
+[2026-10-20T20:15:21-07:00] ALL DONE
