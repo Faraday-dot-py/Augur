@@ -114,9 +114,11 @@ def main():
             ps = ""
             if pa:
                 ps = f" parts k={np.round(pa['kernel_mean'], 2).tolist()} u={np.round(pa['unet_mean'], 2).tolist()} p={np.round(pa['pair_mean'], 2).tolist()} ex={np.round(pa['exact_mean'], 2).tolist()}"
+            cm = (p.get("cls_momfix") or {}).get("core15")
+            mfs = f" | after momfix: core bias {cm['bias_norm']:.3g} {np.round(cm['bias'], 2).tolist()} rel {cm['rms_rel']:.3f}" if cm else ""
             print(f"  t{p['t']} n{c['n']} bias {c['bias_norm']:.3g} ex {np.round(c['exact_mean'], 3).tolist()} mod {np.round(c['model_mean'], 3).tolist()} rel {c['rms_rel']:.3f} "
                   f"tan {c['tan_rms_err']:.3g} rad {c['rad_rms_err']:.3g} | inbox net mod {np.round(p['net_raw_model_inbox'], 1).tolist()} ex {np.round(p['net_exact_inbox'], 1).tolist()} "
-                  f"nin {p['n_inbox']} | abar {np.round(p['abar_raw'], 4).tolist()}{ps}")
+                  f"nin {p['n_inbox']} | abar {np.round(p['abar_raw'], 4).tolist()}{mfs}{ps}")
     json.dump(out, open(f"{d}/summary.json", "w"))
 
 

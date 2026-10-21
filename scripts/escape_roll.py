@@ -195,6 +195,7 @@ def probe(arm, pos, mom, M, f, t, half):
     return res
 
 
+@torch.no_grad()
 def run_arm(arm, pos0, vel0, mass0, steps, dev, outdir, args, shared, truth=False, probe_ticks=()):
     name = "truth" if truth else arm.name
     ck = f"{outdir}/{name}_state.pt"
