@@ -144,7 +144,34 @@ def load_kernel(path, dev):
     return mod.eval()
 
 
-ARCHS = {"mlp": MLPKernel, "tail": TailKernel}
+class CondKernel(nn.Module):
+    """Plain MLP kernel with a conditioning vector c appended to (r, log(r + 0.5)): c = interaction parameters (b) or force samples at
+    r in [16, 32] (c). Same pp split factor as MLPKernel. forward(r) uses the stored buffer c; forward_c(r, c) takes c of shape (B, dc)
+    broadcast over the trailing dims of r (B, n)."""
+
+    def __init__(self, dc=5, hidden=128, pp=2.0, split=True):
+        super().__init__()
+        self.net = nn.Sequential(nn.Linear(2 + dc, hidden), nn.GELU(), nn.Linear(hidden, hidden), nn.GELU(), nn.Linear(hidden, hidden), nn.GELU(),
+                                 nn.Linear(hidden, 1))
+        self.register_buffer("c", torch.zeros(dc))
+        self.pp, self.split = pp, split
+
+    def forward_c(self, r, c):
+        cc = c[:, None, :].expand(r.shape + (c.shape[-1],))
+        K = self.net(torch.cat([feat(r), cc], -1))[..., 0]
+        if self.split:
+            K = K * (1 - (1 - (r / self.pp).clamp(max=1.0) ** 2) ** 2)
+        return K
+
+    def forward(self, r):
+        cc = self.c.expand(r.shape + (self.c.shape[-1],))
+        K = self.net(torch.cat([feat(r), cc], -1))[..., 0]
+        if self.split:
+            K = K * (1 - (1 - (r / self.pp).clamp(max=1.0) ** 2) ** 2)
+        return K
+
+
+ARCHS = {"mlp": MLPKernel, "tail": TailKernel, "cond": CondKernel}
 
 
 def kfun_from_spec(m, spec):
