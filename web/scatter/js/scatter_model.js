@@ -162,7 +162,7 @@ function fft1(re, im, off, stride, n, inverse, tw) {
   }
 }
 
-function fft2(re, im, n, inverse, tw) {
+export function fft2(re, im, n, inverse, tw) {
   for (let r = 0; r < n; r++) fft1(re, im, r * n, 1, n, inverse, tw);
   for (let c = 0; c < n; c++) fft1(re, im, c, n, n, inverse, tw);
   if (inverse) {
@@ -171,7 +171,7 @@ function fft2(re, im, n, inverse, tw) {
   }
 }
 
-class Mlp2 {
+export class Mlp2 {
   // Linear(2,64) GELU Linear(64,64) GELU Linear(64,1)
   constructor(w, p) {
     this.W0 = w[p + ".0.weight"]; this.b0 = w[p + ".0.bias"];

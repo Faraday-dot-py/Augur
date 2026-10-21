@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark">
-<meta name="description" content="Three learned physics models running live in the browser: a per-ball token model, a pairwise central-force model and a grid scatter-field model.">
+<meta name="description" content="Four learned physics models running live in the browser: a per-ball token model, a pairwise central-force model, a grid scatter-field model and its tiled version.">
 <title>Augur</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%2306080c'/%3E%3Ccircle cx='8' cy='8' r='4' fill='%236fc3ff'/%3E%3C/svg%3E">
 <style>
@@ -34,8 +34,13 @@ footer a { color: var(--dim); }
 <body>
 <main>
   <h1>Augur</h1>
-  <p class="lede">The scatter-field model, plus two earlier models, running live in the browser as plain JavaScript ports of their PyTorch checkpoints.</p>
+  <p class="lede">The scatter-field model and its tiled version, plus two earlier models, running live in the browser as plain JavaScript ports of their PyTorch checkpoints.</p>
   <div class="cards">
+    <a class="card" href="scatter-tiled/">
+      <h2><i style="background:var(--scatter)"></i>Tiled scatter-field model</h2>
+      <p>The same grid model run as 2x2 or 4x4 copies of one network, with ghost bodies, halo exchange and a coarse far-field term, shown in 3D next to the exact simulation. Switch each mechanism off to see what it contributes.</p>
+      <div class="go">open &rarr;</div>
+    </a>
     <a class="card" href="scatter/">
       <h2><i style="background:var(--scatter)"></i>Scatter-field model</h2>
       <p>A grid architecture: bodies are scattered onto a field, a learned kernel and UNet produce a potential, and bodies gather their acceleration from it. Explore the model's 3D structure with the tensors of a running simulation drawn on it.</p>

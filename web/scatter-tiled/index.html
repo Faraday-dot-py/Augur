@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="The tiled scatter-field gravity model in 3D: copies of one learned grid network on a 2x2 or 4x4 tiling, exchanging ghost bodies, halo potential and a coarse global far term, run next to the exact simulation.">
+<title>Augur Tiled Scatter-Field Model</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%2306080c'/%3E%3Crect x='3' y='3' width='4.5' height='4.5' fill='%2362d6a4'/%3E%3Crect x='8.5' y='3' width='4.5' height='4.5' fill='%2362d6a4'/%3E%3Crect x='3' y='8.5' width='4.5' height='4.5' fill='%2362d6a4'/%3E%3Crect x='8.5' y='8.5' width='4.5' height='4.5' fill='%236fc3ff'/%3E%3C/svg%3E">
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+<style>
+:root {
+  --bg: #06080c; --glass: rgba(12, 16, 24, 0.78); --line: #1c2535; --line2: #2a3850; --fg: #e4eaf5; --dim: #8390a8; --faint: #56627a;
+  --accent: #6fc3ff; --truth: #ff9a3c; --scatter: #62d6a4; --gold: #ffd36e; --cyan: #6fe0ff; --violet: #c79bff;
+  --mono: ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); font: 13px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; overflow: hidden; -webkit-font-smoothing: antialiased; }
+#stage3d { position: fixed; inset: 0; display: block; width: 100%; height: 100%; touch-action: none; }
+#labels { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+.lab { position: absolute; left: 0; top: 0; font: 11px var(--mono); color: var(--fg); background: rgba(6, 8, 12, 0.7); border: 1px solid var(--line2); border-radius: 5px; padding: 1px 6px; white-space: nowrap; }
+.lab.exact { color: var(--truth); border-color: #7a4a1c; }
+.lab.learned { color: var(--accent); border-color: #2c5a80; }
+.lab.k1 { color: #a79ccd; }
+.lab.k2 { color: #ff8b8b; }
+.lab.dim { opacity: 0.5; }
+.glass { background: var(--glass); border: 1px solid var(--line); border-radius: 10px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+header { position: fixed; left: 16px; top: 16px; padding: 12px 14px; width: 290px; }
+h1 { font-size: 15px; margin: 0; font-weight: 650; letter-spacing: 0.01em; }
+h1 span { color: var(--scatter); font-weight: 500; }
+a.back { display: block; margin-top: 4px; font-size: 11px; color: var(--accent); text-decoration: none; }
+a.back:hover { text-decoration: underline; }
+dl { margin: 8px 0 0; display: grid; grid-template-columns: repeat(2, auto); gap: 6px 16px; }
+dt { color: var(--faint); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; }
+dd { margin: 0; font: 13px var(--mono); font-variant-numeric: tabular-nums; }
+dd.s { font-size: 11px; }
+#stats { position: fixed; left: 16px; top: 182px; width: 290px; padding: 10px 14px; max-height: calc(100% - 270px); overflow-y: auto; }
+#stats[hidden] { display: none; }
+#stats h2 { font-size: 11px; margin: 10px 0 4px; color: var(--dim); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+#stats h2:first-child { margin-top: 0; }
+#stats canvas { width: 100%; height: 80px; display: block; }
+#mview { position: fixed; right: 16px; top: 16px; width: 310px; max-height: calc(100% - 100px); overflow-y: auto; padding: 10px 14px; font-size: 12px; color: var(--dim); scrollbar-width: thin; }
+#mview summary { cursor: pointer; color: var(--fg); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; }
+#mview ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px; }
+#mview li { display: flex; align-items: baseline; gap: 8px; }
+#mview i { display: inline-block; flex: none; width: 26px; height: 3px; border-radius: 2px; transform: translateY(-3px); }
+#mview i.bx { height: 8px; transform: translateY(-1px); }
+#mview p { margin: 8px 0 0; line-height: 1.5; }
+#mview b { color: var(--fg); font-weight: 600; }
+#mview .ex { color: var(--truth); }
+#mview .le { color: var(--accent); }
+#mstat { font: 11px var(--mono); color: var(--faint); }
+#tip { position: fixed; pointer-events: none; padding: 5px 8px; font: 11px var(--mono); max-width: 330px; z-index: 5; }
+#tip[hidden] { display: none; }
+nav.glass { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); width: max-content; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: center; padding: 8px; max-width: calc(100% - 32px); opacity: 0.3; transition: opacity 200ms ease;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.03) 60%, rgba(111, 195, 255, 0.05)); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 14px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 10px 40px rgba(0, 0, 0, 0.45); backdrop-filter: blur(16px) saturate(1.4); -webkit-backdrop-filter: blur(16px) saturate(1.4); }
+@media (hover: hover) { nav.glass:hover, nav.glass:focus-within { opacity: 1; } }
+nav.glass.active { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { nav.glass { transition: none; } }
+nav .grp { display: flex; gap: 4px; align-items: center; }
+nav .sep { width: 1px; height: 24px; background: rgba(255, 255, 255, 0.16); margin: 0 2px; }
+button, select { background: rgba(255, 255, 255, 0.07); color: var(--fg); border: 1px solid var(--line2); border-radius: 7px; padding: 0 10px; height: 32px; font: 500 12px system-ui, sans-serif; cursor: pointer; white-space: nowrap; }
+select { padding: 0 6px; }
+button:hover { background: rgba(255, 255, 255, 0.13); border-color: #3a4d6c; }
+button[aria-pressed="true"] { background: rgba(17, 72, 120, 0.7); border-color: var(--accent); color: #fff; }
+button.gold[aria-pressed="true"] { background: rgba(110, 86, 20, 0.7); border-color: var(--gold); }
+button.cy[aria-pressed="true"] { background: rgba(14, 84, 100, 0.7); border-color: var(--cyan); }
+button.or[aria-pressed="true"] { background: rgba(110, 60, 14, 0.7); border-color: var(--truth); }
+button kbd { font: 10px var(--mono); color: var(--faint); margin-left: 5px; }
+label.sl { display: flex; align-items: center; gap: 6px; color: var(--dim); font-size: 11px; height: 32px; padding: 0 4px; }
+label.sl output { font: 12px var(--mono); color: var(--fg); min-width: 26px; text-align: right; }
+input[type=range] { width: 88px; accent-color: var(--accent); }
+#err { position: fixed; inset: 0; display: grid; place-items: center; color: var(--dim); padding: 16px; text-align: center; }
+#err[hidden] { display: none; }
+@media (max-width: 760px) {
+  header { left: 12px; right: 12px; top: 12px; width: auto; padding: 9px 12px; }
+  #stats { left: 12px; right: 12px; top: 150px; width: auto; max-height: 35%; }
+  #mview { left: 12px; right: 12px; top: 74px; width: auto; max-height: 40%; padding: 8px 12px; }
+  nav.glass { left: 12px; right: 12px; bottom: 12px; transform: none; width: auto; max-width: none; flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; gap: 4px; padding: 6px; scrollbar-width: none; }
+  nav::-webkit-scrollbar { display: none; }
+  nav > * { flex: none; }
+  nav .row { display: contents; }
+  button kbd { display: none; }
+}
+</style>
+</head>
+<body>
+<canvas id="stage3d" aria-label="3D view of the tiled scatter-field model next to the exact simulation: the two body fields side by side, the grid of tiles with their halos and the flows between them, the coarse global far-field term, and one tile's U-Net. Drag to orbit, scroll or pinch to zoom, hover a cell or body for its value, click a tile to inspect its U-Net."></canvas>
+<div id="labels" aria-hidden="true"></div>
+<header class="glass">
+  <h1>Augur <span>tiled scatter-field model</span></h1>
+  <a class="back" href="../">&larr; other models</a>
+  <a class="back" href="../scatter/">single-grid scatter-field model &rarr;</a>
+  <dl>
+    <div><dt>tick</dt><dd id="s-tick">-</dd></div>
+    <div><dt>mean err vs sim</dt><dd id="s-err">-</dd></div>
+    <div><dt>err seam / inner</dt><dd id="s-seam">-</dd></div>
+    <div><dt>bodies seam / inner</dt><dd id="s-seamn">-</dd></div>
+  </dl>
+</header>
+<section id="stats" class="glass" hidden aria-label="statistics">
+  <h2>Mean position error vs the exact sim</h2>
+  <canvas id="c-err" aria-label="mean position error of the model against the exact simulation over the last 200 ticks"></canvas>
+  <dl>
+    <div><dt>ghost bodies</dt><dd class="s" id="s-gh">-</dd></div>
+    <div><dt>frame compute</dt><dd class="s" id="s-ms">-</dd></div>
+    <div><dt>this frame</dt><dd class="s" id="s-fl">-</dd></div>
+    <div><dt>weights</dt><dd class="s" id="s-ckpt">-</dd></div>
+  </dl>
+</section>
+<details id="mview" class="glass" aria-label="how to read the view">
+  <summary>How to read this</summary>
+  <p id="mcap"></p>
+  <ul>
+    <li><i class="bx" style="background:var(--truth)"></i><span><b class="ex">SIM</b> (left panel): exact softened gravity, every pair summed, leapfrog. This is the ground truth, not a model.</span></li>
+    <li><i class="bx" style="background:var(--accent)"></i><span><b class="le">MODEL</b> (middle panel): bodies from the tiled network, in lockstep with the sim. Faint orange = where the sim has that body; the grey link is the error. The surface is the tiles' potential joined at the cores.</span></li>
+    <li><i class="bx" style="background:var(--gold)"></i><span><b>Ghost bodies</b>: a neighbour's bodies inside a tile's 16-unit halo are copied in (rings, tinted by the receiving tile; gold arrows between tiles). Key <b>g</b>.</span></li>
+    <li><i class="bx" style="background:var(--cyan)"></i><span><b>Halo potential</b>: each tile's recurrent potential halo is overwritten by its neighbours' interiors (cyan). Key <b>x</b>.</span></li>
+    <li><i class="bx" style="background:var(--truth)"></i><span><b>Far term</b>: the coarse global grid (cell 2) holds all mass; its learned-kernel potential minus the tile's own box is added to the tile's kernel input and output (orange arcs). Key <b>f</b>.</span></li>
+    <li><i class="bx" style="background:var(--violet)"></i><span><b>U-Net</b> of the inspected tile, one set of weights shared by all tiles. Click a tile to inspect it. Slider: channel, -1 overlays all 32.</span></li>
+  </ul>
+  <p><b class="ex">Exact operations</b> (no learned parameters): CIC scatter and gather, FFT convolution, finite-difference gradient, avg-pool and bilinear resampling for the far term, ghost and halo bookkeeping, momentum re-centring, Verlet. <b class="le">Learned</b>: the U-Net, the kernel K(r) (2-64-64-1 MLP, 4,417 parameters, retrained to the exact softened law out to r = 1500 and then frozen) and the short-range pair MLP. A tile slab stacks, front to back: potential, far term, local-kernel potential, density; keys 1-5 isolate one.</p>
+  <p>Toggling a mechanism restarts the model from the tick on screen with that mechanism changed (the exact sim is unaffected), so the error plot shows what it contributed. The model is not conservative: its error against the sim grows with time (chaotic N-body dynamics amplifies any difference).</p>
+  <p id="mstat">loading weights</p>
+</details>
+<div id="tip" class="glass" hidden></div>
+<nav class="glass" aria-label="controls">
+  <div class="grp">
+    <button id="b-pause" aria-pressed="false" aria-keyshortcuts="Space">Pause<kbd>space</kbd></button>
+    <button id="b-step" aria-keyshortcuts=".">Step<kbd>.</kbd></button>
+    <button id="b-reset" aria-keyshortcuts="r">Reset<kbd>r</kbd></button>
+  </div>
+  <span class="sep"></span>
+  <div class="grp">
+    <button id="b-nt2" aria-pressed="false" title="2x2 tiles of 32 (domain 64)">2x2</button>
+    <button id="b-nt4" aria-pressed="true" title="4x4 tiles of 32 (domain 128)">4x4</button>
+    <select id="sel-scene" aria-label="scene">
+      <option value="collapse">Cold collapse</option>
+      <option value="warm">Warm cluster</option>
+      <option value="cross">Two clusters crossing</option>
+    </select>
+  </div>
+  <label class="sl">bodies <input type="range" id="r-bodies" min="60" max="600" step="10" value="300" aria-label="body count"><output id="o-bodies">300</output></label>
+  <button id="b-mode" aria-pressed="true" title="Fixed seed: every run starts from seed 4738. Random: a random start.">Fixed seed</button>
+  <span class="sep"></span>
+  <div class="grp">
+    <button id="b-ghost" class="gold" aria-pressed="true" aria-keyshortcuts="g" title="Ghost bodies from neighbouring tiles">Halo bodies<kbd>g</kbd></button>
+    <button id="b-fx" class="cy" aria-pressed="true" aria-keyshortcuts="x" title="Neighbours' potential copied into each tile's halo">Halo field<kbd>x</kbd></button>
+    <button id="b-far" class="or" aria-pressed="true" aria-keyshortcuts="f" title="Coarse global far-field term">Far term<kbd>f</kbd></button>
+  </div>
+  <span class="sep"></span>
+  <label class="sl" id="l-tick">tick <input type="range" id="r-tick" min="0" max="0" value="0" aria-label="tick"><output id="o-tick">0</output></label>
+  <label class="sl">channel <input type="range" id="r-ch" min="-1" max="31" value="0" aria-label="U-Net channel, -1 overlays all channels"><output id="o-ch">0</output></label>
+  <span class="sep"></span>
+  <div class="grp" role="group" aria-label="tile layer">
+    <button data-layer="-1" aria-pressed="true" title="all layers (1)">layers</button>
+    <button data-layer="0" aria-pressed="false" title="potential (2)">&phi;</button>
+    <button data-layer="1" aria-pressed="false" title="far term (3)">far</button>
+    <button data-layer="2" aria-pressed="false" title="local kernel potential (4)">&phi;K</button>
+    <button data-layer="3" aria-pressed="false" title="density (5)">&rho;</button>
+  </div>
+  <span class="sep"></span>
+  <div class="grp">
+    <button id="b-links" aria-pressed="true" aria-keyshortcuts="e" title="grey links from each model body to the sim's position">Error<kbd>e</kbd></button>
+    <button id="b-overlay" aria-pressed="true" aria-keyshortcuts="o" title="sim bodies drawn on the model panel">Overlay<kbd>o</kbd></button>
+    <button id="b-arrows" aria-pressed="false" aria-keyshortcuts="a" title="acceleration arrows, model (blue) and sim (orange)">Accel<kbd>a</kbd></button>
+    <button id="b-stats" aria-pressed="false" aria-keyshortcuts="d">Stats<kbd>d</kbd></button>
+  </div>
+  <span class="sep"></span>
+  <div class="grp" role="group" aria-label="camera">
+    <button data-focus="overview">All</button>
+    <button data-focus="sim">Sim | Model</button>
+    <button data-focus="tiles">Tiles</button>
+    <button data-focus="far">Far term</button>
+    <button data-focus="unet">U-Net</button>
+  </div>
+</nav>
+<div id="err" class="glass" hidden></div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
