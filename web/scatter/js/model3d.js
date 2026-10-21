@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { Stage } from "../../scatter-walkthrough/js/stage.js";
-import { buildLayout, buildCharts, paintTrace, paintKernel, paintWeights, hoverMarks, tipText } from "../../scatter-walkthrough/js/layout.js";
-import { css } from "../../scatter-walkthrough/js/colors.js";
+import { Stage } from "./stage.js";
+import { buildLayout, buildCharts, paintTrace, paintKernel, paintWeights, hoverMarks, tipText } from "./layout.js";
+import { css } from "./colors.js";
 import { loadWeights } from "./scatter_model.js";
 
 const FOV = 40;
