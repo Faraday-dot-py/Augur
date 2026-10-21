@@ -30,11 +30,13 @@ h1 { font-size: 15px; margin: 0; font-weight: 650; letter-spacing: 0.01em; }
 h1 span { color: var(--scatter); font-weight: 500; }
 a.back { display: block; margin-top: 4px; font-size: 11px; color: var(--accent); text-decoration: none; }
 a.back:hover { text-decoration: underline; }
+.key { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 10px; color: var(--dim); margin-top: 8px; }
+.key i { display: inline-block; width: 10px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 4px; }
 dl { margin: 8px 0 0; display: grid; grid-template-columns: repeat(2, auto); gap: 6px 16px; }
 dt { color: var(--faint); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; }
 dd { margin: 0; font: 13px var(--mono); font-variant-numeric: tabular-nums; }
 dd.s { font-size: 11px; }
-#stats { position: fixed; left: 16px; top: 182px; width: 290px; padding: 10px 14px; max-height: calc(100% - 270px); overflow-y: auto; }
+#stats { position: fixed; left: 16px; top: 206px; width: 290px; padding: 10px 14px; max-height: calc(100% - 270px); overflow-y: auto; }
 #stats[hidden] { display: none; }
 #stats h2 { font-size: 11px; margin: 10px 0 4px; color: var(--dim); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
 #stats h2:first-child { margin-top: 0; }
@@ -75,8 +77,12 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
 #err[hidden] { display: none; }
 @media (max-width: 760px) {
   header { left: 12px; right: 12px; top: 12px; width: auto; padding: 9px 12px; }
-  #stats { left: 12px; right: 12px; top: 150px; width: auto; max-height: 35%; }
-  #mview { left: 12px; right: 12px; top: 74px; width: auto; max-height: 40%; padding: 8px 12px; }
+  header a.back { display: inline-block; margin-right: 12px; }
+  header dl { grid-template-columns: repeat(4, auto); gap: 4px 10px; margin-top: 6px; }
+  header dl dd { font-size: 12px; }
+  header dl div:nth-child(4), header .key { display: none; }
+  #stats { left: 12px; right: 12px; top: 148px; width: auto; max-height: 35%; }
+  #mview { left: 12px; right: 12px; top: 104px; width: auto; max-height: 50%; padding: 8px 12px; }
   nav.glass { left: 12px; right: 12px; bottom: 12px; transform: none; width: auto; max-width: none; flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; gap: 4px; padding: 6px; scrollbar-width: none; }
   nav::-webkit-scrollbar { display: none; }
   nav > * { flex: none; }
@@ -92,6 +98,7 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
   <h1>Augur <span>tiled scatter-field model</span></h1>
   <a class="back" href="../">&larr; other models</a>
   <a class="back" href="../scatter/">single-grid scatter-field model &rarr;</a>
+  <div class="key"><span><i style="background:var(--accent)"></i>model body</span><span><i style="background:var(--truth)"></i>sim body</span><span><i style="background:var(--gold)"></i>ghost bodies</span><span><i style="background:var(--cyan)"></i>halo potential</span><span><i style="background:var(--truth);opacity:.6"></i>far term</span></div>
   <dl>
     <div><dt>tick</dt><dd id="s-tick">-</dd></div>
     <div><dt>mean err vs sim</dt><dd id="s-err">-</dd></div>

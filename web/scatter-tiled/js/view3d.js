@@ -6,7 +6,7 @@ import { lut, fmt } from "../../scatter/js/colors.js";
 THREE.ColorManagement.enabled = false;
 
 const FOV = 40, BG = 0x06080c, THICK = 2.2, GAP = 4, DOM = 26, TILE = 32, HALO = 16;
-const SIM_C = [-44, 24], MOD_C = [-13, 24], ARR_C = [-28, -17], FAR_C0 = [24, 29], FAR_C1 = [66, 29], KBASE = [36.5, 29];
+const SIM_C = [-44, 24], MOD_C = [-13, 24], ARR_C = [-28, -17], FAR_C0 = [24, 29], FAR_C1 = [70, 29], KBASE = [36.5, 29];
 const LAYER_NAMES = ["potential (U-Net output)", "far term (coarse global, learned K)", "local kernel potential (learned K)", "density (CIC scatter)"];
 const LAYER_KEYS = ["phi", "far", "phiK", "rho"];
 const GOLD = 0xffd36e, CYAN = 0x6fe0ff, ORANGE = 0xff9a3c, VIOLET = 0xc79bff, BLUE = 0x6fc3ff, GREEN = 0x62d6a4;
@@ -104,7 +104,10 @@ export async function createView({ canvas, labelsEl, tip, handlers }) {
   const notes = new Map();
   const state = { nt: 0, layer: -1, channel: 0, inspect: 0, flags: { ghosts: true, fx: true, far: true }, links: true, arrows: false, overlay: true, frame: null, sim: null, out: null, tick: -1 };
 
+  const NARROW_KEEP = new Set(["simT", "modT", "tarr", "farT"]);
+
   function note(key, text, p, cls = "", alpha = 1) {
+    if (innerWidth <= 760 && !NARROW_KEEP.has(key)) alpha = 0;
     let n = notes.get(key);
     if (!n) {
       const el = document.createElement("div");
@@ -125,7 +128,7 @@ export async function createView({ canvas, labelsEl, tip, handlers }) {
     camera.updateProjectionMatrix();
     dirty = true;
   }
-  addEventListener("resize", () => { resize(); if (active && !W.userMoved) focus("overview"); });
+  addEventListener("resize", () => { resize(); if (active && !W.userMoved) focus(innerWidth <= 760 ? "sim" : "overview"); });
   controls.addEventListener("change", () => { dirty = true; });
   controls.addEventListener("start", () => { if (W) W.userMoved = true; });
 
@@ -270,14 +273,15 @@ export async function createView({ canvas, labelsEl, tip, handlers }) {
   function focus(name) {
     const nt = W.nt, aspect = innerWidth / innerHeight, t = Math.tan(FOV / 2 * Math.PI / 180);
     const R = {
-      overview: [13, -1, 152, 84],
+      overview: [13, -1, 150, 84],
       sim: [-28.5, 24, 64, 32],
       tiles: [ARR_C[0], ARR_C[1], nt === 4 ? 42 : 40, nt === 4 ? 42 : 40],
-      far: [46, 28, 74, 24],
+      far: [48, 26, 80, 28],
       unet: [46, -21, 88, 42],
-    }[name] || [13, -1, 152, 84];
-    const wide = innerWidth > 760, bot = wide ? 100 : 64, hpx = innerHeight - bot, k = wide ? 1.1 : 1.04;
-    const d = Math.max(R[3] / 2 / t * innerHeight / hpx, R[2] / 2 / (t * aspect)) * k, cy = R[1] - bot / 2 * 2 * d * t / innerHeight;
+    }[name] || [13, -1, 150, 84];
+    const wide = innerWidth > 760, bot = wide ? 100 : 64, padL = wide ? 310 : 0, hpx = innerHeight - bot, wpx = innerWidth - padL, k = wide ? 1.08 : 1.04;
+    const d = Math.max(R[3] / 2 / t * innerHeight / hpx, R[2] / 2 / (t * aspect) * innerWidth / wpx) * k, upp = 2 * d * t / innerHeight, cy = R[1] - bot / 2 * upp;
+    R[0] -= padL / 2 * upp;
     controls.target.set(R[0], cy, 0);
     camera.position.set(R[0] + 0.1 * d, cy + 0.05 * d, d);
     controls.update();
@@ -470,7 +474,7 @@ export async function createView({ canvas, labelsEl, tip, handlers }) {
         const q = W.quad(V(bx + half * 0.8, by + half, -3 * W.gap), V(rx - blocks.get("crho").size / 2, ry - blocks.get("crho").size / 2, 0), 6 + k % 4 * 1.2, 18);
         for (let i = 0; i < q.length - 1; i++) W.flowRho.add(q[i].x, q[i].y, q[i].z, q[i + 1].x, q[i + 1].y, q[i + 1].z);
       }
-      W.flowFar.end(0.28); W.flowRho.end(0.28);
+      W.flowFar.end(0.2); W.flowRho.end(0.2);
     } else { W.flowFar.end(0); W.flowRho.end(0); }
     {
       const [bx, by] = W.tileXY(state.inspect), h0 = W.unet.h0, g = W.gap;
@@ -484,11 +488,11 @@ export async function createView({ canvas, labelsEl, tip, handlers }) {
 
     // labels
     const exact = "exact", learned = "learned";
-    note("simT", "SIM &middot; exact softened gravity, all pairs", V(SIM_C[0], SIM_C[1] + DOM / 2 + 0.6), exact);
-    note("modT", `MODEL &middot; ${nt}x${nt} tiled scatter-field`, V(MOD_C[0], MOD_C[1] + DOM / 2 + 0.6), learned);
+    note("simT", "SIM &middot; exact, all pairs", V(SIM_C[0], SIM_C[1] + DOM / 2 + 0.6), exact);
+    note("modT", `MODEL &middot; ${nt}x${nt} tiled`, V(MOD_C[0], MOD_C[1] + DOM / 2 + 0.6), learned);
     if (fr) {
       note("simK", "tick " + fr.tick, V(SIM_C[0], SIM_C[1] - DOM / 2 - 0.4), "");
-      note("modK", "tick " + fr.tick + " &middot; potential colouring shows the tiles' cores joined", V(MOD_C[0], MOD_C[1] - DOM / 2 - 0.4), "");
+      note("modK", "tick " + fr.tick + " &middot; outline: inspected tile", V(MOD_C[0], MOD_C[1] - DOM / 2 - 0.4), "");
     }
     for (let k = 0; k < T; k++) {
       const [bx, by] = W.tileXY(k), tx = Math.floor(k / nt), ty = k % nt;
@@ -500,25 +504,29 @@ export async function createView({ canvas, labelsEl, tip, handlers }) {
       const [bx, by] = W.tileXY(0), h = W.tsize / 2;
       LAYER_NAMES.forEach((nm, i) => {
         const cls = i === 3 ? exact : learned;
-        note("ly" + i, nm + (i === 3 ? " &middot; exact op" : ""), V(bx - h - 1.2, by - h + 0.2 + i * 1.7, -i * W.gap), cls + " left", 0.9);
+        note("ly" + i, nm + (i === 3 ? " &middot; exact op" : ""), V(bx - h - 2.6, by - h + 0.2 + i * 1.7, -i * W.gap), cls + " left", 0.9);
       });
     }
     note("tarr", `${W.T} tiles &middot; core 32 + halo 16 &middot; one 128x128 U-Net, identical weights in every tile`, V(ARR_C[0], ARR_C[1] + (nt - 1) / 2 * W.pitch + W.tsize / 2 + 2.2), learned);
-    note("crt", "coarse density (cell 2) &middot; exact avg-pool of tile cores", V(FAR_C0[0], FAR_C0[1] + blocks.get("crho").size / 2 + 0.5), exact, fl.far ? 1 : 0.4);
-    note("cpt", "coarse potential &middot; global convolution", V(FAR_C1[0], FAR_C1[1] + blocks.get("cphi").size / 2 + 0.5), learned, fl.far ? 1 : 0.4);
-    note("kt", "far kernel force F(r), log scale 1e-6..1 (R1b, learned)", V(KBASE[0] + 9, KBASE[1] + 8.2), learned, fl.far ? 1 : 0.5);
+    note("crt", "coarse density, cell 2 (exact)", V(FAR_C0[0], FAR_C0[1] + blocks.get("crho").size / 2 + 0.5), exact, fl.far ? 1 : 0.4);
+    note("cpt", "coarse potential (learned K)", V(FAR_C1[0], FAR_C1[1] + blocks.get("cphi").size / 2 + 0.5), learned, fl.far ? 1 : 0.4);
+    note("kt", "far kernel force F(r), log scale (learned)", V(KBASE[0] + 9, KBASE[1] + 9.2), learned, fl.far ? 1 : 0.5);
     note("kr", "r = 100", V(KBASE[0] + 18, KBASE[1] - 0.2), "", 0.7);
-    if (W.chart) note("k64", "r = 64: edge of the shipped kernel's training", V(W.chart.x64 - 1, KBASE[1] - 7.6), "k2", 0.9);
-    note("ke", "exact softened law (not used)", V(KBASE[0] + 12, KBASE[1] + 5.0), "", 0.7);
-    note("ks", "shipped kmlp (wrong beyond r=64)", V(KBASE[0] + 13.5, KBASE[1] - 4.8), "k1", 0.8);
+    note("k0", "r = 0", V(KBASE[0] + 1.2, KBASE[1] - 0.2), "", 0.7);
+    note("kp", "F = +1 (attractive)", V(KBASE[0] - 3.5, KBASE[1] + 7.6), "", 0.7);
+    note("km", "F = -1 (repulsive)", V(KBASE[0] - 3.5, KBASE[1] - 6.4), "", 0.7);
+    if (W.chart) note("k64", "r = 64", V(W.chart.x64, KBASE[1] - 7.6), "k2", 0.9);
+    note("kl", "blue: learned R1b kernel", V(KBASE[0] + 9, KBASE[1] - 9.0), "learned", fl.far ? 1 : 0.5);
+    note("ke", "white: exact softened law (reference, not used)", V(KBASE[0] + 9, KBASE[1] - 10.6), "", 0.85);
+    note("ks", "violet: shipped kmlp, repulsive beyond r = 64", V(KBASE[0] + 9, KBASE[1] - 12.2), "k1", 0.9);
     note("farT", "far term: mass outside a tile's box, via the coarse grid (orange arcs)", V((FAR_C0[0] + FAR_C1[0]) / 2, FAR_C0[1] + 11.5), fl.far ? "" : "dim", 0.95);
     const unetTile = fr && fr.unet ? fr.unet.tile : state.inspect, ux = unetTile;
-    note("ut", `U-Net, inspected tile ${Math.floor(ux / nt)},${ux % nt} &middot; the same weights run in all ${T} tiles (click a tile to inspect it)`, V(46, 3.6), learned);
+    note("ut", `U-Net of tile ${Math.floor(ux / nt)},${ux % nt} &middot; same weights in all ${T} tiles (click a tile) &middot; e = encoder, d = decoder`, V(46, 3.6), learned);
     for (const [id, b] of [["h0", U.h0], ...U.enc.map((b, l) => ["enc" + l, b]), ...U.dec.map((b, l) => ["dec" + l, b])]) {
       if (!b) continue;
-      note("b" + id, id === "h0" ? "input conv &middot; 128&sup2;" : (id.startsWith("enc") ? "enc " : "dec ") + id.slice(3) + " &middot; " + b.H + "&sup2;", V(b.group.position.x, -b.group.position.z + b.sizeY / 2 + 0.4, b.group.position.y), "", narrow ? 0 : 0.9);
+      note("b" + id, id === "h0" ? "in conv &middot; 128&sup2;" : (id.startsWith("enc") ? "e" : "d") + id.slice(3) + " &middot; " + b.H + "&sup2;", V(b.group.position.x, -b.group.position.z + b.sizeY / 2 + 0.4, b.group.position.y), "", narrow ? 0 : 0.9);
     }
-    note("inl", "input stack: density, momentum x2, kernel accel x2, previous potential", V(W.unet.h0.group.position.x + 14, -9 - 6.2), "", 0.7);
+    note("inl", "in: density, momentum x2, kernel accel x2, previous potential", V(W.unet.h0.group.position.x + 11, -9 - 6.4), "", 0.8);
     for (const n of notes.values()) if (!n.used) n.alpha = 0;
     for (const n of notes.values()) n.used = false;
     dirty = true;
@@ -643,7 +651,7 @@ export async function createView({ canvas, labelsEl, tip, handlers }) {
       canvas.hidden = labelsEl.hidden = !on;
       if (!on) { cancelAnimationFrame(raf); tip.hidden = true; return; }
       resize();
-      focus("overview");
+      focus(innerWidth <= 760 ? "sim" : "overview");
       W.needCompose = true;
       raf = requestAnimationFrame(loop);
     },

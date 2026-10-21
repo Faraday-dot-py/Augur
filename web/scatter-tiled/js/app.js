@@ -86,6 +86,14 @@ function show(k) {
   $("s-seam").textContent = `${f(e.seam)} / ${f(e.inner)}`;
   $("s-seamn").textContent = `${e.seam[1]} / ${e.inner[1]}`;
   $("s-ms").textContent = fr.ms.toFixed(0) + " ms";
+  if (!state.chTouched && fr.unet && state.autoCh !== state.runEpoch) {
+    state.autoCh = state.runEpoch;
+    const a = out.unet.dec[0], n = 128 * 128;
+    let best = 0, bv = -1;
+    for (let ch = 0; ch < 32; ch++) { let sum = 0; for (let j = 0; j < n; j += 7) sum += Math.abs(a[ch * n + j]); if (sum > bv) { bv = sum; best = ch; } }
+    $("r-ch").value = best;
+    $("r-ch").dispatchEvent(new Event("input"));
+  }
   const fl = fr.flags;
   $("s-fl").textContent = `${fl.ghosts ? "ghosts" : "no ghosts"} · ${fl.fx ? "field exch" : "no field exch"} · ${fl.far ? "far" : "no far"}`;
   let gh = 0;
@@ -224,6 +232,7 @@ $("r-tick").addEventListener("input", (e) => {
   if (state.running) setRunning(false);
   if (frames.has(k) && sims.has(k)) show(k); else syncRange();
 });
+$("r-ch").addEventListener("pointerdown", () => { state.chTouched = true; });
 $("r-ch").addEventListener("input", (e) => {
   $("o-ch").textContent = +e.target.value < 0 ? "all" : e.target.value;
   if (view) view.setChannel(+e.target.value);
@@ -246,7 +255,7 @@ $("b-stats").addEventListener("click", () => { $("stats").hidden = !$("stats").h
 window.addEventListener("keydown", (e) => {
   if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
   const k = e.key;
-  if (k === "[" || k === "]") { const r = $("r-ch"); r.value = Math.min(31, Math.max(-1, +r.value + (k === "]" ? 1 : -1))); r.dispatchEvent(new Event("input")); }
+  if (k === "[" || k === "]") { state.chTouched = true; const r = $("r-ch"); r.value = Math.min(31, Math.max(-1, +r.value + (k === "]" ? 1 : -1))); r.dispatchEvent(new Event("input")); }
   else if (k === " ") { e.preventDefault(); $("b-pause").click(); }
   else if (k === ".") $("b-step").click();
   else if (k === "r") $("b-reset").click();
