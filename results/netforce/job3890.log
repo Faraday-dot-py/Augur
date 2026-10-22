@@ -1,0 +1,137 @@
+name, memory.used [MiB]
+NVIDIA H200 NVL, 0 MiB
+==> results/netforce/trainB.log <==
+it 2900 k 19 dense nmax 20000 traj 0.000000 netratio 0.0479 distill 0.05852 loss 0.063309 t 583s
+it 2950 k 20 dense nmax 4000 traj 0.000000 netratio 0.0318 distill 0.00816 loss 0.011341 t 592s
+TRAINED B 3000 it in 600s skipped 0
+
+==> results/netforce/trainC.log <==
+it 2850 k 19 closed nmax 234 traj 0.000922 netratio 0.0088 distill 0.00000 loss 0.000922 t 336s
+it 2900 k 19 closed nmax 274 traj 0.003224 netratio 0.0107 distill 0.00000 loss 0.003224 t 346s
+TRAINED C 3000 it in 363s skipped 0
+S1 t 100 frac_out32 0.159 outdom 0.159 r99 100.2 n_r70 1728 out/rev 120/12 0.03s/tick
+S1 t 200 frac_out32 0.199 outdom 0.199 r99 196.8 n_r70 3705 out/rev 59/2 0.02s/tick
+S1 t 300 frac_out32 0.222 outdom 0.222 r99 293.6 n_r70 4239 out/rev 48/4 0.02s/tick
+S1 t 400 frac_out32 0.266 outdom 0.266 r99 391.1 n_r70 4770 out/rev 184/16 0.02s/tick
+RESULT S1 band out 41390 rev 3330 frac 0.0805 final frac_out32 0.266 outdom 0.266 r99 391.1 n_r70 4770/20000 10s
+DONE
+S1 t 100 frac_out32 0.169 outdom 0.169 r99 107.0 n_r70 1858 out/rev 95/8 0.02s/tick
+S1 t 200 frac_out32 0.203 outdom 0.203 r99 204.5 n_r70 3842 out/rev 47/9 0.02s/tick
+S1 t 300 frac_out32 0.221 outdom 0.221 r99 303.3 n_r70 4275 out/rev 38/6 0.03s/tick
+S1 t 400 frac_out32 0.255 outdom 0.255 r99 401.7 n_r70 4724 out/rev 106/14 0.02s/tick
+RESULT S1 band out 38244 rev 3224 frac 0.0843 final frac_out32 0.255 outdom 0.255 r99 401.7 n_r70 4724/20000 10s
+DONE
+S1 t 100 frac_out32 0.161 outdom 0.161 r99 103.9 n_r70 1647 out/rev 99/7 0.03s/tick
+S1 t 200 frac_out32 0.211 outdom 0.211 r99 201.0 n_r70 3903 out/rev 46/3 0.02s/tick
+S1 t 300 frac_out32 0.235 outdom 0.235 r99 298.9 n_r70 4530 out/rev 38/3 0.03s/tick
+S1 t 400 frac_out32 0.257 outdom 0.257 r99 397.5 n_r70 4953 out/rev 46/4 0.03s/tick
+RESULT S1 band out 37078 rev 2971 frac 0.0801 final frac_out32 0.257 outdom 0.257 r99 397.5 n_r70 4953/20000 10s
+DONE
+| run | centre@100 | centre@300 | drift/tick 100-300 | core15 raw bias@100 | core15 U-Net mean@100 | in-box net model/exact@100 |
+|---|---|---|---|---|---|---|
+| E | [-1.1, 1.1] | [-6.4, 12.7] | 0.0639 | 39.45 | [6.15, 38.87] | 6.13e+05 / 3.15e+03 |
+| B | [-0.5, 1.3] | [-3.9, 12.0] | 0.0563 | 20.18 | [10.89, 16.91] | 3.06e+05 / 2.67e+03 |
+| C | [-0.6, 0.7] | [-6.7, 7.3] | 0.0446 | 6.49 | [0.85, 6.38] | 1.01e+05 / 2.18e+03 |
+S1 t 100 frac_out32 0.156 outdom 0.156 r99 104.4 n_r70 1642 out/rev 120/11 0.03s/tick
+S1 t 200 frac_out32 0.195 outdom 0.195 r99 202.1 n_r70 3587 out/rev 50/3 0.03s/tick
+S1 t 300 frac_out32 0.220 outdom 0.220 r99 299.3 n_r70 4162 out/rev 50/2 0.03s/tick
+S1 t 400 frac_out32 0.279 outdom 0.279 r99 395.5 n_r70 4840 out/rev 300/31 0.03s/tick
+RESULT S1 band out 44403 rev 3710 frac 0.0836 final frac_out32 0.279 outdom 0.279 r99 395.5 n_r70 4840/20000 10s
+DONE
+S1 t 100 frac_out32 0.162 outdom 0.162 r99 105.9 n_r70 1715 out/rev 116/8 0.03s/tick
+S1 t 200 frac_out32 0.200 outdom 0.200 r99 204.4 n_r70 3736 out/rev 46/7 0.03s/tick
+S1 t 300 frac_out32 0.218 outdom 0.218 r99 302.3 n_r70 4211 out/rev 30/5 0.03s/tick
+S1 t 400 frac_out32 0.234 outdom 0.234 r99 399.8 n_r70 4522 out/rev 27/2 0.03s/tick
+RESULT S1 band out 34959 rev 3118 frac 0.0892 final frac_out32 0.234 outdom 0.234 r99 399.8 n_r70 4522/20000 10s
+DONE
+S1 t 100 frac_out32 0.166 outdom 0.166 r99 102.2 n_r70 1691 out/rev 91/5 0.03s/tick
+S1 t 200 frac_out32 0.210 outdom 0.210 r99 199.4 n_r70 3899 out/rev 53/3 0.02s/tick
+S1 t 300 frac_out32 0.233 outdom 0.233 r99 297.1 n_r70 4517 out/rev 25/2 0.02s/tick
+S1 t 400 frac_out32 0.250 outdom 0.250 r99 394.4 n_r70 4867 out/rev 43/2 0.02s/tick
+RESULT S1 band out 35734 rev 2637 frac 0.0738 final frac_out32 0.250 outdom 0.250 r99 394.4 n_r70 4867/20000 10s
+DONE
+| run | centre@100 | centre@300 | drift/tick 100-300 | core15 raw bias@100 | core15 U-Net mean@100 | in-box net model/exact@100 |
+|---|---|---|---|---|---|---|
+| E | [-0.5, 1.4] | [-3.9, 13.8] | 0.0642 | 43.12 | [-5.03, 42.74] | 6.7e+05 / 1.93e+03 |
+| B | [-0.3, 0.4] | [-2.2, 6.7] | 0.0332 | 18.24 | [4.69, 17.6] | 2.82e+05 / 1.15e+03 |
+| C | [-0.6, 0.1] | [-4.9, 4.3] | 0.0302 | 16.13 | [5.99, 15.03] | 2.47e+05 / 1.7e+03 |
+S1 t 100 frac_out32 0.160 outdom 0.160 r99 101.0 n_r70 1730 out/rev 122/12 0.03s/tick
+S1 t 200 frac_out32 0.208 outdom 0.208 r99 198.3 n_r70 3858 out/rev 44/3 0.02s/tick
+S1 t 300 frac_out32 0.228 outdom 0.228 r99 296.3 n_r70 4389 out/rev 50/8 0.03s/tick
+S1 t 400 frac_out32 0.268 outdom 0.268 r99 394.9 n_r70 4883 out/rev 161/20 0.02s/tick
+RESULT S1 band out 41379 rev 3386 frac 0.0818 final frac_out32 0.268 outdom 0.268 r99 394.9 n_r70 4883/20000 10s
+DONE
+S1 t 100 frac_out32 0.166 outdom 0.166 r99 102.7 n_r70 1961 out/rev 84/6 0.03s/tick
+S1 t 200 frac_out32 0.203 outdom 0.203 r99 200.1 n_r70 3809 out/rev 39/8 0.02s/tick
+S1 t 300 frac_out32 0.220 outdom 0.220 r99 298.5 n_r70 4286 out/rev 23/2 0.03s/tick
+S1 t 400 frac_out32 0.236 outdom 0.236 r99 397.1 n_r70 4568 out/rev 40/10 0.02s/tick
+RESULT S1 band out 35265 rev 3184 frac 0.0903 final frac_out32 0.236 outdom 0.236 r99 397.1 n_r70 4568/20000 10s
+DONE
+S1 t 100 frac_out32 0.164 outdom 0.164 r99 101.2 n_r70 1897 out/rev 112/3 0.03s/tick
+S1 t 200 frac_out32 0.214 outdom 0.214 r99 198.6 n_r70 3971 out/rev 52/6 0.02s/tick
+S1 t 300 frac_out32 0.238 outdom 0.238 r99 294.1 n_r70 4592 out/rev 29/5 0.03s/tick
+S1 t 400 frac_out32 0.253 outdom 0.253 r99 390.7 n_r70 4944 out/rev 30/2 0.03s/tick
+RESULT S1 band out 36096 rev 2793 frac 0.0774 final frac_out32 0.253 outdom 0.253 r99 390.7 n_r70 4944/20000 10s
+DONE
+| run | centre@100 | centre@300 | drift/tick 100-300 | core15 raw bias@100 | core15 U-Net mean@100 | in-box net model/exact@100 |
+|---|---|---|---|---|---|---|
+| E | [-0.9, 1.6] | [-7.8, 12.2] | 0.0633 | 26.25 | [-26.09, -0.35] | 4.03e+05 / 2.76e+03 |
+| B | [-0.5, 1.3] | [-3.8, 8.1] | 0.0375 | 21.71 | [10.08, 19.26] | 3.35e+05 / 977 |
+| C | [-0.4, 0.6] | [-4.8, 3.8] | 0.0268 | 17.17 | [6.15, 16.1] | 2.66e+05 / 1.76e+03 |
+EVAL E [base] err@5/10/20 expB_9000:0.0032/0.0086/0.0250 cluster_9000:0.0064/0.0170/0.0537 open_9000:0.0287/0.1115/0.6003 expB_12000:0.0029/0.0078/0.0234 cluster_12000:0.0073/0.0187/0.0637 open_12000:0.0256/0.0999/0.5113
+EVAL B [base] err@5/10/20 expB_9000:0.0030/0.0081/0.0245 cluster_9000:0.0063/0.0167/0.0538 open_9000:0.0286/0.1118/0.6044 expB_12000:0.0027/0.0072/0.0226 cluster_12000:0.0071/0.0183/0.0632 open_12000:0.0253/0.0997/0.5138
+EVAL C [base] err@5/10/20 expB_9000:0.0031/0.0083/0.0243 cluster_9000:0.0063/0.0164/0.0519 open_9000:0.0285/0.1116/0.6033 expB_12000:0.0028/0.0075/0.0224 cluster_12000:0.0071/0.0182/0.0619 open_12000:0.0254/0.1001/0.5129
+DONE
+2.14.0+cu130 NVIDIA H200 NVL
+E_nd1 nr100 B=512 done=1000 31.4s
+E_nd1 bh300 B=512 done=1000 38.9s
+saved results/netforce/dE/E_nd1.npz
+E_nd2 nr100 B=512 done=1000 30.6s
+E_nd2 bh300 B=512 done=1000 38.9s
+saved results/netforce/dE/E_nd2.npz
+B_nd1 nr100 B=512 done=1000 30.7s
+B_nd1 bh300 B=512 done=1000 38.8s
+saved results/netforce/dE/B_nd1.npz
+C_nd1 nr100 B=512 done=1000 30.6s
+C_nd1 bh300 B=512 done=1000 38.9s
+saved results/netforce/dE/C_nd1.npz
+arms: ['B_nd1', 'C_nd1', 'E_nd1', 'E_nd2']; scenes per arm: 512
+
+== bh300 ==
+| arm | dE@100 med [95% CI] | dE@1e3 med [95% CI] | outgrid@100 | outgrid@1e3 | bound@1e3 | vir@1e3 | nonfinite scenes |
+|---|---|---|---|---|---|---|---|
+| B_nd1 | 0.08039 [0.078, 0.08251] | 0.7641 [0.7526, 0.7761] | 0.020 | 0.237 | 0.800 | 0.947 | 0 |
+| C_nd1 | 0.08416 [0.08223, 0.08628] | 0.7733 [0.7634, 0.7897] | 0.020 | 0.230 | 0.803 | 0.957 | 0 |
+| E_nd1 | 0.05829 [0.05674, 0.06006] | 0.596 [0.5874, 0.6079] | 0.020 | 0.253 | 0.787 | 0.96 | 0 |
+| E_nd2 | 0.05743 [0.05637, 0.0595] | 0.5903 [0.576, 0.6022] | 0.022 | 0.253 | 0.787 | 0.961 | 0 |
+
+| pairing B/A | what | t | ratio of medians [paired 95% CI] | median of per-scene ratios | frac scenes B<A | vs 1.15 gate |
+|---|---|---|---|---|---|---|
+| E_nd2/E_nd1 | noise floor E-vs-E | 100 | 0.985 [0.961, 1.017] | 1.007 | 0.49 |  |
+| E_nd2/E_nd1 | noise floor E-vs-E | 1000 | 0.990 [0.962, 1.013] | 0.992 | 0.51 |  |
+| B_nd1/E_nd1 | penalty arm vs E | 100 | 1.379 [1.335, 1.421] | 1.352 | 0.10 | KILL |
+| B_nd1/E_nd1 | penalty arm vs E | 1000 | 1.282 [1.253, 1.306] | 1.280 | 0.09 | KILL |
+| C_nd1/E_nd1 | control vs E | 100 | 1.444 [1.398, 1.489] | 1.426 | 0.06 | KILL |
+| C_nd1/E_nd1 | control vs E | 1000 | 1.298 [1.269, 1.327] | 1.297 | 0.09 | KILL |
+| B_nd1/C_nd1 | penalty vs control | 100 | 0.955 [0.927, 0.982] | 0.940 | 0.59 | PASS |
+| B_nd1/C_nd1 | penalty vs control | 1000 | 0.988 [0.967, 1.006] | 0.982 | 0.55 | PASS |
+
+== nr100 ==
+| arm | dE@100 med [95% CI] | dE@1e3 med [95% CI] | outgrid@100 | outgrid@1e3 | bound@1e3 | vir@1e3 | nonfinite scenes |
+|---|---|---|---|---|---|---|---|
+| B_nd1 | 0.01307 [0.01247, 0.01369] | 0.2424 [0.2385, 0.2479] | 0.000 | 0.120 | 0.920 | 0.936 | 0 |
+| C_nd1 | 0.01703 [0.01649, 0.01752] | 0.3646 [0.3619, 0.369] | 0.000 | 0.100 | 0.930 | 0.919 | 0 |
+| E_nd1 | 0.004179 [0.003902, 0.004648] | 0.01857 [0.01649, 0.02079] | 0.000 | 0.150 | 0.900 | 1.01 | 0 |
+| E_nd2 | 0.004329 [0.003941, 0.004669] | 0.0205 [0.01869, 0.02225] | 0.000 | 0.150 | 0.900 | 1 | 0 |
+
+| pairing B/A | what | t | ratio of medians [paired 95% CI] | median of per-scene ratios | frac scenes B<A | vs 1.15 gate |
+|---|---|---|---|---|---|---|
+| E_nd2/E_nd1 | noise floor E-vs-E | 100 | 1.036 [0.978, 1.071] | 1.001 | 0.49 |  |
+| E_nd2/E_nd1 | noise floor E-vs-E | 1000 | 1.104 [0.962, 1.259] | 1.032 | 0.48 |  |
+| B_nd1/E_nd1 | penalty arm vs E | 100 | 3.126 [2.774, 3.438] | 3.127 | 0.05 | KILL |
+| B_nd1/E_nd1 | penalty arm vs E | 1000 | 13.052 [11.632, 14.842] | 13.061 | 0.00 | KILL |
+| C_nd1/E_nd1 | control vs E | 100 | 4.076 [3.648, 4.444] | 4.140 | 0.01 | KILL |
+| C_nd1/E_nd1 | control vs E | 1000 | 19.627 [17.610, 22.167] | 19.276 | 0.00 | KILL |
+| B_nd1/C_nd1 | penalty vs control | 100 | 0.767 [0.735, 0.801] | 0.766 | 0.82 | PASS |
+| B_nd1/C_nd1 | penalty vs control | 1000 | 0.665 [0.653, 0.681] | 0.669 | 1.00 | PASS |
+NF DONE
