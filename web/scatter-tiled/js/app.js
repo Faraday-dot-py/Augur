@@ -1,6 +1,6 @@
 import { makeScene, SCENES } from "./tiled_model.js";
 import { makeOut, dequantFrame, framePhi, toCompact, frameBytes, GG } from "./tframes.js";
-import { DEFAULT, decodeAsset, decodeState, gunzip } from "./precomputed.js";
+import { DEFAULT, decodeAsset, decodeState, fetchProgress, gunzip } from "./precomputed.js";
 import { drawSeries } from "../../scatter/js/plots.js";
 import { createView } from "./view3d.js";
 
@@ -41,15 +41,25 @@ function loadState() {
   return stateFile;
 }
 
+function setLoad(f) {
+  const p = $("p-load");
+  if (f === null) p.removeAttribute("value"); else p.value = f;
+  $("t-load").textContent = f === null ? "loading shipped ticks" : `loading shipped ticks ${Math.round(100 * f)}%`;
+}
+
+let loadingPre = false;
+
 async function loadPre() {
+  loadingPre = true;
   try {
     const meta = await fetch(`precomputed/${DEFAULT.name}.json`).then((r) => r.json());
-    const buf = await fetch(`precomputed/${DEFAULT.name}.bin.gz`).then(gunzip);
+    const buf = await gunzip(await fetchProgress(`precomputed/${DEFAULT.name}.bin.gz`, setLoad));
     state.pre = { meta, ...decodeAsset(meta, buf) };
   } catch (e) {
     console.warn("no shipped ticks, computing live", e);
     state.pre = null;
   }
+  loadingPre = false;
 }
 
 function rate(list) {
@@ -62,6 +72,8 @@ const ahead = () => AHEAD[state.nt];
 
 function status() {
   const el = $("mstat");
+  $("loading").hidden = state.tick >= 0;
+  if (state.tick < 0 && !state.fromPre && !state.pre && !loadingPre) { $("p-load").removeAttribute("value"); $("t-load").textContent = state.ready ? "computing tick 0" : "loading weights"; }
   if (state.tick < 0) { el.textContent = state.fromPre ? "loading shipped ticks" : state.ready ? "computing tick 0 (" + Math.min(state.nt * state.nt, state.wanted || 1) + " tile workers)" : "loading weights"; return; }
   if (state.fromPre && !producer) { el.textContent = `tick ${state.tick} · shipped ticks 0-${preLast()} played from the file, no model code running · U-Net activations only in computed ticks`; moreUi(); return; }
   moreUi();

@@ -61,6 +61,9 @@ dd.s { font-size: 11px; }
 #more .mrow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 8px; }
 #more progress { width: 140px; accent-color: var(--gold); }
 #m-stat { font: 11px var(--mono); color: var(--faint); }
+#loading { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 14px 18px; display: flex; flex-direction: column; gap: 8px; align-items: center; font: 12px var(--mono); z-index: 6; }
+#loading[hidden] { display: none; }
+#loading progress { width: min(260px, 70vw); accent-color: var(--gold); }
 #tip { position: fixed; pointer-events: none; padding: 5px 8px; font: 11px var(--mono); max-width: 330px; z-index: 5; }
 #tip[hidden] { display: none; }
 nav.glass { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); width: max-content; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: center; padding: 8px; max-width: calc(100% - 32px); opacity: 0.3; transition: opacity 200ms ease;
@@ -105,6 +108,7 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
 </head>
 <body>
 <canvas id="stage3d" aria-label="3D view of the tiled scatter-field model next to the exact simulation: the two body fields side by side, the grid of tiles with their halos and the flows between them, the coarse global far-field term, and one tile's U-Net. Drag to orbit, scroll or pinch to zoom, hover a cell or body for its value, click a tile to inspect its U-Net."></canvas>
+<div id="loading" class="glass" role="status"><span id="t-load">loading</span><progress id="p-load" max="1"></progress></div>
 <div id="labels" aria-hidden="true"></div>
 <header class="glass">
   <h1>Augur <span>tiled scatter-field model</span></h1>
