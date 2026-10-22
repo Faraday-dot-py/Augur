@@ -41,10 +41,17 @@ function loadState() {
   return stateFile;
 }
 
-function setLoad(f) {
-  const p = $("p-load");
-  if (f === null) p.removeAttribute("value"); else p.value = f;
-  $("t-load").textContent = f === null ? "loading shipped ticks" : `loading shipped ticks ${Math.round(100 * f)}%`;
+let loadT0 = 0;
+
+// the file is planar (all ticks of one field together), so ticks only exist once it is all in: the tick count is the byte fraction of the 101 ticks
+function setLoad(f, got, total) {
+  const p = $("p-load"), t = $("t-load");
+  if (f === null) { p.removeAttribute("value"); t.textContent = "loading shipped ticks"; return; }
+  if (!loadT0) loadT0 = performance.now();
+  const el = (performance.now() - loadT0) / 1000, K = 101;
+  const eta = f >= 1 ? "unpacking" : el > 0.3 && f > 0.02 ? "~" + Math.max(1, Math.ceil(el * (1 - f) / f)) + " s left" : "estimating";
+  p.value = f;
+  t.textContent = `loading shipped ticks ${Math.round(100 * f)}% · ${(got / 1e6).toFixed(1)} of ${(total / 1e6).toFixed(1)} MB · ~${Math.floor(f * K)} of ${K} ticks · ${eta}`;
 }
 
 let loadingPre = false;

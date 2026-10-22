@@ -80,16 +80,16 @@ export async function gunzip(res) {
   return new Response(new Blob([raw]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer();
 }
 
-// fetch with byte progress (onProgress(fraction) or null when the length is unknown); the result is handed to gunzip like a Response
+// fetch with byte progress (onProgress(fraction, bytesGot, bytesTotal); fraction null when the length is unknown); the result is handed to gunzip like a Response
 export async function fetchProgress(url, onProgress) {
   const res = await fetch(url), total = +res.headers.get("content-length") || 0;
-  if (!res.body || !total) { onProgress(null); return res; }
+  if (!res.body || !total) { onProgress(null, 0, 0); return res; }
   const reader = res.body.getReader(), parts = [];
   let got = 0;
   for (;;) {
     const { done, value } = await reader.read();
     if (done) break;
-    parts.push(value); got += value.length; onProgress(Math.min(1, got / total));
+    parts.push(value); got += value.length; onProgress(Math.min(1, got / total), got, total);
   }
   return new Response(new Blob(parts), { headers: res.headers });
 }
