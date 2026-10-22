@@ -37,7 +37,7 @@ evalall() {
 }
 if [ ! -f results/el_$tag/E_ms_kp_pot_v_g128.json ]; then
   echo "[$(date -Iseconds)] train $tag iters $ITERS"
-  python scripts/train_scatter_field.py --exp E --variant ms_kp_pot_v_g128 --mode train --init-ckpt $E --train 1500 --steps 50 --iters $ITERS --batch 16 --k-start 20 --k-end 20 --lr 5e-4 --device cuda --seed $SEED --rloss euclid --train-only kmlp,ppmlp --log-every $LOGEVERY --out-dir results/el_$tag --ckpt-dir checkpoints/el_$tag 2>&1 | grep -v Warning &
+  python scripts/train_scatter_field.py --exp E --variant ms_kp_pot_v_g128 --mode train --init-ckpt $E --train 1500 --steps 50 --iters $ITERS --batch 16 --k-start 20 --k-end 20 --lr 5e-4 --device cuda --seed $SEED --rloss euclid --train-only kmlp,ppmlp --log-every $LOGEVERY --out-dir results/el_$tag --ckpt-dir checkpoints/el_$tag 2>&1 | grep --line-buffered -v Warning &
   wait $!
   [ -f results/el_$tag/E_ms_kp_pot_v_g128.json ] || { echo "TRAIN FAILED/INTERRUPTED $tag"; exit 1; }
   echo "[$(date -Iseconds)] trained $tag"

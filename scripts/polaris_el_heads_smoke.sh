@@ -9,9 +9,9 @@
 #SBATCH --mem=16G
 #SBATCH --time=00:30:00
 #SBATCH --output=el-hfsmoke-%j.log
-# Resume smoke: run polaris_el_heads_full.sh (uploaded as ~/el_hf_wrapper.sh) with 400 it, ckpt every 20 it, SIGTERM it at it 100, rerun, expect "resumed from it".
+# Resume smoke: run polaris_el_heads_full.sh (uploaded as ~/el_hf_wrapper.sh) with 3000 it, ckpt every 20 it, SIGTERM it at it 100, rerun, expect "resumed from it".
 export PYTHONUNBUFFERED=1
-export NAME=hfsmoke SEED=4738 ITERS=400 LOGEVERY=20 EVAL=0
+export NAME=hfsmoke SEED=4738 ITERS=3000 LOGEVERY=20 EVAL=0
 rm -rf $HOME/augur-el-hfsmoke-4738
 bash $HOME/el_hf_wrapper.sh > $HOME/hfsmoke_run1.log 2>&1 &
 W=$!
