@@ -167,10 +167,11 @@ function moreUi() {
   const box = $("more"), pre = state.fromPre, k = state.tick, last = state.pre ? preLast() : 0;
   const open = pre && (state.moreOpen || state.computing || k >= last || newest > last);
   box.hidden = !open;
+  box.style.setProperty("--navh", document.querySelector("nav").offsetHeight + 28 + "px");
   $("b-morenav").hidden = !pre;
   $("b-morenav").setAttribute("aria-pressed", String(open));
   if (!open) return;
-  const done = Math.max(0, newest - state.batchFrom), total = Math.max(1, state.cap - state.batchFrom);
+  const done = Math.max(0, newest - state.batchFrom), total = Number.isFinite(state.cap) ? Math.max(1, state.cap - state.batchFrom) : 1;
   $("b-more").hidden = state.computing;
   $("b-more-stop").hidden = !state.computing;
   $("sel-more").disabled = state.computing;

@@ -52,7 +52,7 @@ dd.s { font-size: 11px; }
 #mview .ex { color: var(--truth); }
 #mview .le { color: var(--accent); }
 #mstat { font: 11px var(--mono); color: var(--faint); }
-#more { position: fixed; left: 50%; bottom: 76px; transform: translateX(-50%); width: min(560px, calc(100% - 32px)); padding: 10px 14px; font-size: 12px; color: var(--dim); max-height: 45%; overflow-y: auto; }
+#more { position: fixed; left: 16px; bottom: var(--navh, 150px); width: 340px; padding: 10px 14px; font-size: 12px; color: var(--dim); max-height: 45%; overflow-y: auto; }
 #more[hidden] { display: none; }
 #more b { color: var(--fg); font-size: 12px; }
 #more p { margin: 6px 0 0; line-height: 1.45; }
@@ -90,7 +90,7 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
   header dl dd { font-size: 12px; }
   header dl div:nth-child(4), header .key { display: none; }
   #stats { left: 12px; right: 12px; top: 148px; width: auto; max-height: 35%; }
-  #more { bottom: 66px; width: calc(100% - 24px); max-height: 38%; padding: 8px 12px; }
+  #more { left: 12px; bottom: var(--navh, 66px); width: calc(100% - 24px); max-height: 38%; padding: 8px 12px; }
   #more p { margin-top: 4px; }
   #mview { left: 12px; right: 12px; top: 104px; width: auto; max-height: 50%; padding: 8px 12px; }
   nav.glass { left: 12px; right: 12px; bottom: 12px; transform: none; width: auto; max-width: none; flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; gap: 4px; padding: 6px; scrollbar-width: none; }
@@ -144,8 +144,8 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
 </details>
 <section id="more" class="glass" aria-label="compute more ticks" hidden>
   <b id="m-title">Shipped ticks</b>
-  <p>Ticks 0-100 above were computed ahead of time and are played from a file. Beyond tick 100 this page runs the model itself, in tile workers in your browser, from the exact tick-100 state, next to the exact sim.</p>
-  <p class="warn">Tick 100 is the longest horizon the project's rollout tests score (err@100). The model does not conserve energy and the dynamics are chaotic, so its error against the exact sim keeps growing with every tick (see Stats); long single-grid tests show a steady energy gain. The tiled code is checked against PyTorch for 20 ticks only.</p>
+  <p>Ticks 0-100 play from a file. Beyond them the model runs in your browser (tile workers), from the exact tick-100 state.</p>
+  <p class="warn">Tick 100 is the longest horizon the project's rollout tests score (err@100). The model does not conserve energy and the dynamics are chaotic, so its error against the exact sim keeps growing (see Stats). The tiled JS is checked against PyTorch for 20 ticks only.</p>
   <div class="mrow">
     <label class="sl">add <select id="sel-more" aria-label="ticks to compute"><option value="20">20</option><option value="50">50</option><option value="100">100</option></select> ticks</label>
     <button id="b-more" class="gold">Compute more ticks</button>

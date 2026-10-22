@@ -6,9 +6,9 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 # Serve web/ on port 8765 first. Usage: python3 ui_precomputed.py <outdir> [ticks_to_compute=20]
-base = "http://localhost:8765/scatter-tiled/index.html"
 out = sys.argv[1] if len(sys.argv) > 1 else "."
 MORE = sys.argv[2] if len(sys.argv) > 2 else "20"
+base = (sys.argv[3] if len(sys.argv) > 3 else "http://localhost:8765") + "/scatter-tiled/index.html"
 ref = json.loads((Path(__file__).parent / "ref_continue.json").read_text())
 errors = []
 
