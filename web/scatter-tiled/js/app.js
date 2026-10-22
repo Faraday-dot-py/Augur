@@ -1,6 +1,6 @@
 import { makeScene, SCENES } from "./tiled_model.js";
 import { makeOut, dequantFrame, framePhi, toCompact, frameBytes, GG } from "./tframes.js";
-import { DEFAULT, decodeAsset, decodeState, fetchProgress, gunzip } from "./precomputed.js";
+import { PRESETS, stateName, decodeAsset, decodeState, fetchProgress, gunzip } from "./precomputed.js";
 import { drawSeries } from "../../scatter/js/plots.js";
 import { createView } from "./view3d.js";
 
@@ -17,11 +17,12 @@ const state = {
 const frames = new Map(), sims = new Map(), errAt = new Map();
 let oldest = 0, newest = -1, lastAdv = 0, stepPending = false, view = null, out = null, config = null, inspect = -1, curves = null;
 const arrivals = [], shownAt = [];
-let producer = null, simWorker = null, simState = 0, readyRes = null, stateFile = null;
+let producer = null, simWorker = null, simState = 0, readyRes = null;
 const readyP = new Promise((res) => { readyRes = res; });
 const preLast = () => state.pre.meta.ticks;
 
-const isDefault = () => state.nt === DEFAULT.nt && state.scene === DEFAULT.scene && state.n === DEFAULT.n && state.mode === "fixed" && Object.values(state.flags).every(Boolean);
+const presetFor = () => { const p = PRESETS[state.scene]; return p && state.nt === p.nt && state.n === p.n && state.mode === "fixed" && Object.values(state.flags).every(Boolean) ? p : null; };
+const preCache = new Map(), preFailed = new Set(), stateFiles = new Map();
 
 function ensureProducer() {
   if (producer) return;
@@ -37,8 +38,9 @@ function ensureSim() {
 }
 
 function loadState() {
-  if (!stateFile) stateFile = fetch("precomputed/state100.bin.gz").then(gunzip).then((b) => decodeState(b, state.pre.meta.n, state.pre.meta.T));
-  return stateFile;
+  const m = state.pre.meta, p = PRESETS[m.scene];
+  if (!stateFiles.has(m.name)) stateFiles.set(m.name, fetch("precomputed/" + stateName(p)).then(gunzip).then((b) => decodeState(b, m.n, m.T)));
+  return stateFiles.get(m.name);
 }
 
 let loadT0 = 0;
@@ -54,17 +56,17 @@ function setLoad(f, got, total) {
   t.textContent = `loading shipped ticks ${Math.round(100 * f)}% · ${(got / 1e6).toFixed(1)} of ${(total / 1e6).toFixed(1)} MB · ~${Math.floor(f * K)} of ${K} ticks · ${eta}`;
 }
 
-let loadingPre = false;
+let loadingPre = false, loadSeq = 0;
 
-async function loadPre() {
-  loadingPre = true;
+async function loadPre(p) {
+  loadingPre = true; loadT0 = 0;
   try {
-    const meta = await fetch(`precomputed/${DEFAULT.name}.json`).then((r) => r.json());
-    const buf = await gunzip(await fetchProgress(`precomputed/${DEFAULT.name}.bin.gz`, setLoad));
-    state.pre = { meta, ...decodeAsset(meta, buf) };
+    const meta = await fetch(`precomputed/${p.name}.json`).then((r) => r.json());
+    const buf = await gunzip(await fetchProgress(`precomputed/${p.name}.bin.gz`, setLoad));
+    preCache.set(p.name, { meta, ...decodeAsset(meta, buf) });
   } catch (e) {
     console.warn("no shipped ticks, computing live", e);
-    state.pre = null;
+    preFailed.add(p.name);
   }
   loadingPre = false;
 }
@@ -80,7 +82,7 @@ const ahead = () => AHEAD[state.nt];
 function status() {
   const el = $("mstat");
   $("loading").hidden = state.tick >= 0;
-  if (state.tick < 0 && !state.fromPre && !state.pre && !loadingPre) { $("p-load").removeAttribute("value"); $("t-load").textContent = state.ready ? "computing tick 0" : "loading weights"; }
+  if (state.tick < 0 && !state.fromPre && !loadingPre) { $("p-load").removeAttribute("value"); $("t-load").textContent = state.ready ? "computing tick 0" : "loading weights"; }
   if (state.tick < 0) { el.textContent = state.fromPre ? "loading shipped ticks" : state.ready ? "computing tick 0 (" + Math.min(state.nt * state.nt, state.wanted || 1) + " tile workers)" : "loading weights"; return; }
   if (state.fromPre && !producer) { el.textContent = `tick ${state.tick} · shipped ticks 0-${preLast()} played from the file, no model code running · U-Net activations only in computed ticks`; moreUi(); return; }
   moreUi();
@@ -100,7 +102,17 @@ function startRun() {
   inspect = state.nt * state.nt / 2 + state.nt / 2;
   view.setInspect(inspect);
   view.setFlags(state.flags);
-  state.fromPre = state.preRun = !!state.pre && isDefault();
+  const p = presetFor();
+  if (p && params.get("live") === null && !preCache.has(p.name) && !preFailed.has(p.name)) {
+    const seq = ++loadSeq;
+    state.pre = null; state.fromPre = state.preRun = false;
+    updateStatus();
+    loadPre(p).then(() => { if (seq === loadSeq) startRun(); });
+    return;
+  }
+  loadSeq++;
+  state.pre = p ? preCache.get(p.name) || null : null;
+  state.fromPre = state.preRun = !!state.pre;
   if (state.fromPre) { startPre(); return; }
   ensureProducer();
   if (!state.ready) { updateStatus(); return; }
@@ -478,7 +490,9 @@ async function main() {
   };
   window.__state = state;
   window.__frames = frames;
-  if (isDefault() && params.get("live") === null) await loadPre();
+  const p0 = presetFor();
+  if (p0 && params.get("live") === null) await loadPre(p0);
+  state.pre = p0 ? preCache.get(p0.name) || null : null;
   if (state.pre) {
     const m = state.pre.meta;
     config = m.config; curves = m.curves; state.dt = m.dt;

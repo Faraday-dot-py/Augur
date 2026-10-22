@@ -1,18 +1,18 @@
 // Builds the shipped ticks of the default scene: runs the JS tiled model (traced) and the exact sim for ticks 0..TICKS, writes
-// precomputed/{tiled4_collapse300.json, tiled4_collapse300.bin.gz, state100.bin.gz} and tests/ref_continue.json (the continuous run's ticks
+// precomputed/{<name>.json, <name>.bin.gz, state100_<scene>.bin.gz} and tests/ref_continue.json (the continuous run's ticks
 // TICKS..TICKS+EXTRA, the reference the compute-more path is checked against).
-// Usage: node tools/precompute.mjs [TICKS=100] [EXTRA=20]
+// Usage: node tools/precompute.mjs [TICKS=100] [EXTRA=20] [SCENE=collapse]  (tests/ref_continue.json is only written for collapse)
 import { writeFileSync, mkdirSync } from "node:fs";
 import { gzipSync } from "node:zlib";
 import { TiledDriver, TileNet, makeScene, kernelCurves } from "../js/tiled_model.js";
 import { packFrame, toCompact } from "../js/tframes.js";
-import { encodeAsset, encodeState, assetBytes, DEFAULT } from "../js/precomputed.js";
+import { encodeAsset, encodeState, assetBytes, PRESETS, stateName } from "../js/precomputed.js";
 import * as truth from "../../scatter/js/truth.js";
 import { NodePool, weights, manifest } from "../tests/nodepool.mjs";
 
-const TICKS = +process.argv[2] || 100, EXTRA = +process.argv[3] || 20;
+const TICKS = +process.argv[2] || 100, EXTRA = +process.argv[3] || 20, PRE = PRESETS[process.argv[4] || "collapse"];
 const dir = new URL("..", import.meta.url).pathname;
-const { nt, n, scene, seed } = DEFAULT, T = nt * nt, flags = { ghosts: true, fx: true, far: true };
+const { nt, n, scene, seed } = PRE, T = nt * nt, flags = { ghosts: true, fx: true, far: true };
 const { pos, vel } = makeScene(scene, nt, n, seed);
 const spos = Float64Array.from(pos), svel = Float64Array.from(vel), sacc = new Float64Array(2 * n), dt = weights.config.dt;
 truth.accel(spos, n, sacc);
@@ -41,13 +41,13 @@ for (let tick = 0; tick <= TICKS + EXTRA; tick++) {
 pool.close();
 
 const net = new TileNet(weights), cv = kernelCurves(net, 100, 200), arr = (a) => Array.from(a, (x) => +x.toPrecision(6));
-const meta = { name: "tiled4_collapse300", nt, T, n, G: nt * 16 + 16, scene, seed, flags, dt, ticks: TICKS, checkpoint: weights.checkpoint, iters: weights.iters, kernel: manifest.kernel,
+const meta = { name: PRE.name, nt, T, n, G: nt * 16 + 16, scene, seed, flags, dt, ticks: TICKS, checkpoint: weights.checkpoint, iters: weights.iters, kernel: manifest.kernel,
   config: weights.config, params: Object.values(weights.w).reduce((a, t) => a + t.length, 0), curves: { r: arr(cv.r), learned: arr(cv.learned), shipped: arr(cv.shipped), exact: arr(cv.exact) } };
 const bin = gzipSync(Buffer.from(encodeAsset(meta, frames, sims)), { level: 9 });
 const st = gzipSync(Buffer.from(encodeState(state)), { level: 9 });
 mkdirSync(dir + "precomputed", { recursive: true });
-writeFileSync(dir + "precomputed/tiled4_collapse300.json", JSON.stringify(meta));
-writeFileSync(dir + "precomputed/tiled4_collapse300.bin.gz", bin);
-writeFileSync(dir + "precomputed/state100.bin.gz", st);
-writeFileSync(dir + "tests/ref_continue.json", JSON.stringify({ from: TICKS, n, ticks: ref.map((r) => r.tick), pos: ref.map((r) => r.pos), vel: ref.map((r) => r.vel) }));
+writeFileSync(dir + "precomputed/" + PRE.name + ".json", JSON.stringify(meta));
+writeFileSync(dir + "precomputed/" + PRE.name + ".bin.gz", bin);
+writeFileSync(dir + "precomputed/" + stateName(PRE), st);
+if (scene === "collapse") writeFileSync(dir + "tests/ref_continue.json", JSON.stringify({ from: TICKS, n, ticks: ref.map((r) => r.tick), pos: ref.map((r) => r.pos), vel: ref.map((r) => r.vel) }));
 console.log(`asset ${(bin.length / 1e6).toFixed(2)} MB gz (${(assetBytes(meta) / 1e6).toFixed(2)} MB raw), state ${(st.length / 1e6).toFixed(2)} MB gz, total ${((bin.length + st.length) / 1e6).toFixed(2)} MB; ${((performance.now() - t0) / 1000).toFixed(0)} s`);

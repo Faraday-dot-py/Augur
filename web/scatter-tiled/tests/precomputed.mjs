@@ -17,7 +17,7 @@ import { NodePool, weights } from "./nodepool.mjs";
 const dir = new URL("..", import.meta.url).pathname;
 const ab = (b) => b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength);
 const meta = JSON.parse(readFileSync(dir + `precomputed/${DEFAULT.name}.json`));
-const binGz = readFileSync(dir + `precomputed/${DEFAULT.name}.bin.gz`), stGz = readFileSync(dir + "precomputed/state100.bin.gz");
+const binGz = readFileSync(dir + `precomputed/${DEFAULT.name}.bin.gz`), stGz = readFileSync(dir + "precomputed/state100_collapse.bin.gz");
 const { frames, sims } = decodeAsset(meta, ab(gunzipSync(binGz)));
 const st = decodeState(ab(gunzipSync(stGz)), meta.n, meta.T);
 const ref = JSON.parse(readFileSync(dir + "tests/ref_continue.json"));

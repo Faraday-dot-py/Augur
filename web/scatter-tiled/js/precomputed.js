@@ -2,7 +2,9 @@
 // exact sim for ticks 0..last as one planar binary (gzip), plus the full-precision tick-`last` state the in-browser model resumes from.
 import { COMPACT, GG } from "./tframes.js";
 
-export const DEFAULT = { name: "tiled4_collapse300", nt: 4, scene: "collapse", n: 300, seed: 4738 };
+export const PRESETS = Object.fromEntries(["collapse", "warm", "cross"].map((scene) => [scene, { name: `tiled4_${scene}300`, nt: 4, scene, n: 300, seed: 4738 }]));
+export const DEFAULT = PRESETS.collapse;
+export const stateName = (p) => `state100_${p.scene}.bin.gz`;
 const LAYER_NAMES = ["rho", "phiK", "far", "phi"];
 
 // [name, array type, elements per tick]; the ghost lists are the one variable-length section (meta.ghStart)
