@@ -76,6 +76,37 @@ class GSim(Sim):
         return mom_c.float() - 0.5 * self.dt * (a - self.abar)
 
 
+class TGSim(GSim):
+    """Tiled mesh: 4x4 tiles of 32 units (halo 16, G=128 copies, domain +-64) + coarse global far term (scatter_tiling.TiledScatter, pair term off).
+    Ghost deposits are the slice of one global G=256 deposit; bodies outside +-64 get no force. Gather is from the assembled tile interiors."""
+
+    def __init__(self, model, n, chunk, c, dt, pd, md, mass, dev, nt=4, tile=32.0, halo=16.0, far=True, field_x=True):
+        super().__init__(model, n, chunk, c, dt, pd, md, mass, dev)
+        from scripts.scatter_tiling import TiledScatter
+        self.tt = TiledScatter(model, nt, tile, halo, ghosts=True, field_x=field_x, far=far)
+        self.gg = round(nt * tile / model.h)
+        model.grid, model.extent = self.gg, nt * tile
+        self.field = self.tt.init_field(dev)
+
+    def grid_force(self, x):
+        tt, m = self.tt, self.model
+        xt = tt.slice_field(x[0])
+        old = tt._scope()
+        try:
+            ak = m.kernel_acc(xt[:, :1])
+            if tt.far:
+                ak = ak + tt._far_acc(xt[:, :1])
+            f = m.net(torch.cat([xt, ak, self.field], 1))
+            acc = m.neg_grad(f[:, :1]) + ak
+        finally:
+            tt._restore(old)
+        self.field = tt.slice_field(tt.assemble(f)) if tt.field_x else f
+        accg = tt.assemble(acc)[None]
+        w = x[0, 0].double() * (m.h ** 2 / m.in_scale)
+        abar = (accg[0].double() * w).sum((1, 2)) / self.M
+        return accg, abar.float()
+
+
 @torch.no_grad()
 def potential(tg, src, w, eps=EPS):
     out = torch.empty(tg.shape[0], device=tg.device)
@@ -96,6 +127,7 @@ def diagnostics(n, mass, c, chunk, get_chunk, get_tgt, sub, tgt, t):
     bad = torch.zeros((), dtype=torch.float64, device=sub.device)
     nvc = torch.zeros((), dtype=torch.float64, device=sub.device)
     out_cnt = torch.zeros((), dtype=torch.float64, device=sub.device)
+    out64 = torch.zeros((), dtype=torch.float64, device=sub.device)
     vmax = torch.zeros((), device=sub.device)
     for s, e in chunks(n, chunk):
         p, q = get_chunk(s, e)
@@ -109,6 +141,7 @@ def diagnostics(n, mass, c, chunk, get_chunk, get_tgt, sub, tgt, t):
         lz += (p[:, 0] * q[:, 1] - p[:, 1] * q[:, 0]).sum(dtype=torch.float64)
         psum += q.sum(0, dtype=torch.float64)
         out_cnt += (p.abs() > 32).any(-1).sum()
+        out64 += (p.abs() > 64).any(-1).sum()
     ke = float(ke) * mass
     tp, tq = get_tgt(tgt)
     sp, _ = get_tgt(sub)
@@ -119,7 +152,7 @@ def diagnostics(n, mass, c, chunk, get_chunk, get_tgt, sub, tgt, t):
     r = tp.norm(dim=-1)
     return dict(tick=t, ke=ke, pe=pe, e=ke + pe, virial=2 * ke / abs(pe), bound=float((e_i < 0).float().mean()), lz=float(lz) * mass,
                 pnet=[float(psum[0]) * mass, float(psum[1]) * mass], nonfinite=int(bad), n_v_ge_c=int(nvc), vmax_over_c=float(vmax) / c,
-                frac_outside=float(out_cnt) / n, r25=float(r.quantile(0.25)), r50=float(r.quantile(0.5)), r90=float(r.quantile(0.9)))
+                frac_outside=float(out_cnt) / n, frac_outside64=float(out64) / n, r25=float(r.quantile(0.25)), r50=float(r.quantile(0.5)), r90=float(r.quantile(0.9)))
 
 
 @torch.no_grad()
@@ -172,6 +205,8 @@ def main():
     ap.add_argument("--nsnap", type=int, default=200000)
     ap.add_argument("--ntgt", type=int, default=50000)
     ap.add_argument("--nsrc", type=int, default=1_000_000)
+    ap.add_argument("--tile", action="store_true", help="tiled mesh (4x4x32, halo 16, far term)")
+    ap.add_argument("--kernel", default="old", help="scatter_far kernel spec (old = shipped kmlp)")
     ap.add_argument("--resume", action="store_true")
     ap.add_argument("--tag", required=True)
     args = ap.parse_args()
@@ -265,8 +300,11 @@ def main():
     model.load_state_dict(torch.load(os.path.expanduser(args.ckpt), map_location=dev, weights_only=False)["model"])
     model.eval()
     ops.no_pp(model)
+    if args.kernel != "old":
+        from scripts import scatter_far
+        scatter_far.install_spec(model, args.kernel)
     torch.cuda.reset_peak_memory_stats()
-    sim = GSim(model, n, chunk, c, dt, pd, md, mass, dev)
+    sim = (TGSim if args.tile else GSim)(model, n, chunk, c, dt, pd, md, mass, dev)
     with torch.no_grad():
         t0f = time.perf_counter()
         if args.resume:
