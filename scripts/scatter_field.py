@@ -550,7 +550,7 @@ class ScatterField(nn.Module):
         if self.pp:
             a_tok = a_tok + self.pp_acc(pos, mass, mask, self.knn)
         if self.raw_log is not None:
-            self.raw_log.append((pos, a_tok))
+            self.raw_log.append((pos, vel, a_tok))
         if self.momfix:
             mm = (mass * mask)[..., None]
             a_tok = a_tok - (mm * a_tok).sum(1, keepdim=True) / mm.sum(1, keepdim=True).clamp_min(1e-9)

@@ -27,7 +27,8 @@ def main():
                 bias = f"{p['cls']['core15']['bias_norm']:.2f}"
                 un = str([round(x, 2) for x in p["parts"]["core15"]["unet_mean"]]) if "parts" in p else ""
                 net = f"{np.linalg.norm(p['net_raw_model_inbox']):.3g} / {np.linalg.norm(p['net_exact_inbox']):.3g}"
-        lines.append(f"| {label} | {np.round(c1, 1).tolist()} | {np.round(c3, 1).tolist()} | {drift:.4f} | {bias} | {un} | {net} |")
+        rc = lambda c: None if c is None else np.round(c, 1).tolist()
+        lines.append(f"| {label} | {rc(c1)} | {rc(c3)} | {drift:.4f} | {bias} | {un} | {net} |")
     out = "\n".join(lines)
     print(out)
     if len(sys.argv) > 3:

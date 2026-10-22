@@ -23,7 +23,7 @@ nvidia-smi --query-gpu=name,memory.used --format=csv
 mkdir -p results/netforce checkpoints/netforce
 python scripts/train_scatter_netforce.py --arm B --lam $LAM --init-ckpt $E --iters $IT > results/netforce/trainB.log 2>&1 &
 PB=$!
-python scripts/train_scatter_netforce.py --arm C --lam 0 --init-ckpt $E --iters $IT > results/netforce/trainC.log 2>&1 &
+python scripts/train_scatter_netforce.py --arm C --lam 0 --mu 0 --init-ckpt $E --iters $IT > results/netforce/trainC.log 2>&1 &
 PC=$!
 trap 'kill -TERM $PB $PC 2>/dev/null; wait' TERM
 wait $PB $PC
