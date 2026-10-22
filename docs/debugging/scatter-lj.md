@@ -1,0 +1,24 @@
+# Scatter field on 2D Lennard-Jones MD (branch lj-scatter-field, from far-kernel-generalization b2a0522)
+
+Question: can the Exp E mesh model (`ms_kp_pot_v_g128`: U-Net on a grid, FFT kernel, pp=2 knn pair term, potential head, Verlet), run tiled, reproduce the six `lj_sim.py` scenes with the same metrics as the LJForceDynamics entry (experiment-log "2D Lennard-Jones MD", v2)? That model was a dedicated radial pair-force net; this tests the generic scatter field.
+
+## Mapping onto the scatter-field grid
+- Lengths / LS, LS = 1.25: the shifted-force cutoff rc = 2.5 sigma becomes the model pair radius pp = 2.0 (the stock window `(1-(r/pp)^2)^2` then spans exactly the LJ interaction); sigma = 0.8 model units, grid cell h = 0.5 (0.625 sigma). Time unchanged; v and a scale by 1/LS and LS. Frame = 20 truth steps = 4 model steps of dt 0.025 (stock dt is 0.1; 4 substeps/step in the gravity truth, here the model step is finer because LJ time scales are ~0.1 tau).
+- Boundary: periodic. The box is cut into cores of side <= 20 model units (e.g. N=2688 liquid: 2x2; gas: 10x10). Each tile runs one copy of the model on G = 64 (extent 32, h 0.5, same cell as Exp E's G=128/extent 64) centred on its core; it receives periodic ghost images of every body within the extended square (halo >= 6 units >> pp=2). Only own bodies keep their force; the recurrent field stays tile-local; the mean (momentum) removal is global. This is the same ghost-exchange scheme as `scatter_tiling.py` with wrap-around neighbours; no far term (rc is finite, so the halo is exact, unlike gravity). Cost O(N + tiles*G^2); the pair term is per-tile knn-24 within pp.
+- Not used: min-image all-pairs, any analytic LJ force, hard-coded antisymmetry/conservation. Energy/pressure are measured with the TRUE LJ potential evaluated on the model trajectory (as lj_eval does with the model's own stats it is the model state that matters; here E/N offset therefore measures state drift, not a learned-potential integral, so it is not directly comparable to the LJForceDynamics E offset; see caveat).
+
+## Zero-shot vs retrain
+Zero-shot (Exp E, gravity) is expected to fail: no repulsive core, wrong scale, and dt/units differ. It is run as a floor. Minimal fair retrain: finetune all Exp E weights (kernel MLP, pair MLP, U-Net; none frozen, none replaced) on small periodic LJ boxes with the same data protocol as `train_lj.py` (rho log-uniform 0.05-1.05, band 0.62-0.82 held out, T 0.2-2.5, 15% hot/dense scenes rho .9-1.05 T 2-5 to put d<1.2 into data; boxes one tile, N 120-400; free rollout k 8 -> 32 model steps; loss 100 pos + vel). Arm `scratch` (stock zero-init heads, no gravity prior) as the control for whether the gravity init helps. Liquid (0.70) and quench (0.80) sit in the held-out density band; solid/melt/coexist/gas are in-distribution densities but whole-box scenes at N=2688 (bigger than any training box, which tests tiling/size generalisation).
+Requirements check: O(N) (cell-list-free grid scatter + local knn); tileable (periodic tiles, scenes 16x larger than training boxes); no hard-coded conservative force (loss is trajectory only; no energy term, none conserved by construction except mean-momentum removal); no pp=8 or O(N^2) pairs.
+
+## Evaluation (comparable to lj_eval)
+Same truth npz (`results/lj_*.npz`, seed 4738, 800 frames), same functions (`lj_eval.summary/err_curve`): last-200-frame T, psi6, P, E/N, g(r) (rel L2), mean position error at frames 1..100 against the truth-rerun chaos floor. Energy/pressure/T are computed with the true LJ on model states (T from KE; P from KE + true virial), so an unphysical state shows as huge P. Also two-body force curve (full model vs truth, and pair term alone) for d 0.75-2.5.
+
+## Files
+`scripts/scatter_lj.py` (mapping, PeriodicTiles, rollout), `train_scatter_lj.py` (--resume, atomic checkpoint every 100 it + on SIGTERM, cached data), `scatter_lj_eval.py`, `polaris_scatter_lj.sh` (ARM=ft|scratch), `polaris_scatter_lj_resume_test.sh`, `tests/test_scatter_lj.py` (each body owned once; pair term equals min-image brute force; layout-independent; momentum 0; periodic wrap).
+
+## Smoke results (local CPU, tiny)
+Tests pass (3). Training 20 its on 12 tiny scenes runs; SIGTERM at it 11 saved a checkpoint (exit 143), `--resume` continued from it 11 to 40 (exit 0). Eval on two 168-body scenes with an untrained 20-it checkpoint runs end to end (garbage numbers, P ~1e15, as expected). No GPU timing yet: per-iteration cost unmeasured.
+
+## GPU estimate (not yet measured; first job logs s/it)
+Data 352 scenes x ~900 fp64 all-pairs steps at N<=400: ~10 min. Train 6000 it, batch 8, k<=32 two-force Verlet steps: guess 0.5-1 s/it = 1-1.7 h per arm. Eval: 6 scenes x 3200 model steps up to 100 tiles + 100-frame truth reruns: ~0.5 h. Total about 2 arms x ~2.5 h + zero-shot 0.3 h = ~5 GPU-h, runs on the two GPUs in parallel (~3 h wall). Fits the 8 h limit with margin; requeue-safe.
