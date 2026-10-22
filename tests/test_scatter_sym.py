@@ -35,7 +35,7 @@ def test_force_mirror_and_transpose():
     vel = torch.randn(1, 40, 2, generator=g).to(DEV)
     mass = (torch.rand(1, 40, generator=g) + 0.5).to(DEV)
     mask = torch.ones(1, 40, device=DEV)
-    f0 = m.init_field(1, DEV)
+    f0 = m.init_field(1, DEV)[0]
     a, _ = m.force(pos, vel, mass, mask, f0)
     s = torch.tensor([-1.0, 1.0], device=DEV)
     a2, _ = m.force(pos * s, vel * s, mass, mask, f0)

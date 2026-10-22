@@ -1,0 +1,28 @@
+== noise floor: stock E rerun vs stock E
+nr100  /home/adamwebb/augur_far/results/cons64_old B=64 t100: |dE| 0.004214 bound 1 vir 1.27  t1000: |dE| 0.02126 bound 0.91 vir 0.995  t10000: |dE| 1.058 bound 0.23 vir 3.9  vmax/c 1.076 nonfinite [-1]
+nr100  /home/adamwebb/augur_far/results/cons64_old2 B=64 t100: |dE| 0.004237 bound 1 vir 1.27  t1000: |dE| 0.01953 bound 0.9 vir 1.01  t10000: |dE| 1.165 bound 0.135 vir 11.9  vmax/c 1.108 nonfinite [-1]
+   t100: median ratio 1.006 (95% boot 0.886..1.099), paired median ratio 0.997, frac scenes B<A 0.52
+   t1000: median ratio 0.919 (95% boot 0.626..1.395), paired median ratio 0.984, frac scenes B<A 0.52
+bh300  /home/adamwebb/augur_far/results/cons64_old B=64 t100: |dE| 0.06091 bound 0.947 vir 1  t1000: |dE| 0.5903 bound 0.78 vir 0.961  t10000: |dE| 2.06 bound 0.00667 vir 418  vmax/c 0.957 nonfinite [-1]
+bh300  /home/adamwebb/augur_far/results/cons64_old2 B=64 t100: |dE| 0.06324 bound 0.947 vir 1.01  t1000: |dE| 0.6204 bound 0.792 vir 0.957  t10000: |dE| 2.06 bound 0.01 vir 428  vmax/c 0.957 nonfinite [-1]
+   t100: median ratio 1.038 (95% boot 0.981..1.169), paired median ratio 1.007, frac scenes B<A 0.48
+   t1000: median ratio 1.051 (95% boot 0.958..1.111), paired median ratio 1.070, frac scenes B<A 0.41
+== stock E rerun2 vs symd4
+nr100  /home/adamwebb/augur_far/results/cons64_old2 B=64 t100: |dE| 0.004237 bound 1 vir 1.27  t1000: |dE| 0.01953 bound 0.9 vir 1.01  t10000: |dE| 1.165 bound 0.135 vir 11.9  vmax/c 1.108 nonfinite [-1]
+nr100  results/armA_gate/cons_d4 B=64 t100: |dE| 0.004573 bound 1 vir 1.27  t1000: |dE| 0.01412 bound 0.91 vir 0.98  t10000: |dE| 1.155 bound 0.22 vir 3.76  vmax/c 1.157 nonfinite [-1]
+   t100: median ratio 1.079 (95% boot 0.659..1.484), paired median ratio 1.020, frac scenes B<A 0.48
+   t1000: median ratio 0.723 (95% boot 0.523..1.085), paired median ratio 0.767, frac scenes B<A 0.59
+bh300  /home/adamwebb/augur_far/results/cons64_old2 B=64 t100: |dE| 0.06324 bound 0.947 vir 1.01  t1000: |dE| 0.6204 bound 0.792 vir 0.957  t10000: |dE| 2.06 bound 0.01 vir 428  vmax/c 0.957 nonfinite [-1]
+bh300  results/armA_gate/cons_d4 B=64 t100: |dE| 0.06152 bound 0.948 vir 1.02  t1000: |dE| 0.6851 bound 0.8 vir 0.916  t10000: |dE| 1.603 bound 0.252 vir 4.54  vmax/c 0.968 nonfinite [-1]
+   t100: median ratio 0.973 (95% boot 0.889..1.049), paired median ratio 1.026, frac scenes B<A 0.45
+   t1000: median ratio 1.104 (95% boot 1.043..1.195), paired median ratio 1.126, frac scenes B<A 0.28
+== stock E rerun2 vs symc4
+nr100  /home/adamwebb/augur_far/results/cons64_old2 B=64 t100: |dE| 0.004237 bound 1 vir 1.27  t1000: |dE| 0.01953 bound 0.9 vir 1.01  t10000: |dE| 1.165 bound 0.135 vir 11.9  vmax/c 1.108 nonfinite [-1]
+nr100  results/armA_gate/cons_c4 B=64 t100: |dE| 0.003479 bound 1 vir 1.27  t1000: |dE| 0.01359 bound 0.905 vir 1.01  t10000: |dE| 0.5809 bound 0.335 vir 1.83  vmax/c 1.070 nonfinite [-1]
+   t100: median ratio 0.821 (95% boot 0.513..1.264), paired median ratio 0.875, frac scenes B<A 0.55
+   t1000: median ratio 0.696 (95% boot 0.500..1.005), paired median ratio 0.636, frac scenes B<A 0.64
+bh300  /home/adamwebb/augur_far/results/cons64_old2 B=64 t100: |dE| 0.06324 bound 0.947 vir 1.01  t1000: |dE| 0.6204 bound 0.792 vir 0.957  t10000: |dE| 2.06 bound 0.01 vir 428  vmax/c 0.957 nonfinite [-1]
+bh300  results/armA_gate/cons_c4 B=64 t100: |dE| 0.06194 bound 0.948 vir 1.02  t1000: |dE| 0.6829 bound 0.8 vir 0.918  t10000: |dE| 1.657 bound 0.225 vir 5.81  vmax/c 0.968 nonfinite [-1]
+   t100: median ratio 0.979 (95% boot 0.873..1.081), paired median ratio 1.032, frac scenes B<A 0.45
+   t1000: median ratio 1.101 (95% boot 1.043..1.191), paired median ratio 1.152, frac scenes B<A 0.28
+DONE
