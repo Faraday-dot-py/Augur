@@ -73,6 +73,7 @@ class ScatterField(nn.Module):
             self.gpad = nn.Conv2d(1, 1, (3, 3), padding=(1, 0), bias=False)
             nn.init.zeros_(self.gpad.weight)
         self.eps_cur = EPS0
+        self.raw_log = None
         ncol = 2 + int(cu) + int(epsin)
         if norm == "dens":
             self.register_buffer("d0", torch.tensor(8.0))
@@ -548,6 +549,8 @@ class ScatterField(nn.Module):
                 a_tok = a_tok * w + self.far_acc(pos, mass, mask) * (1 - w)
         if self.pp:
             a_tok = a_tok + self.pp_acc(pos, mass, mask, self.knn)
+        if self.raw_log is not None:
+            self.raw_log.append((pos, a_tok))
         if self.momfix:
             mm = (mass * mask)[..., None]
             a_tok = a_tok - (mm * a_tok).sum(1, keepdim=True) / mm.sum(1, keepdim=True).clamp_min(1e-9)

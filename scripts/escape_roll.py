@@ -27,6 +27,7 @@ from scripts.scatter_tiling import TiledScatter
 C, DT, EPS = 10.0, 0.1, 0.5
 R1B = "file:results/far_kernels/r1b_mlp.pt+cache"
 VARIANT = "ms_kp_pot_v_g128_ghost"
+VARIANT_OVERRIDE = ""
 SNAP_TICKS = (0, 5, 10, 20, 30, 50, 75, 100, 150, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000)
 CORE_TICK = 100
 ARMS = {
@@ -96,7 +97,7 @@ class Arm:
     def __init__(self, name, ckpt, dev, adapt_lmax=14):
         spec = ARMS[name]
         self.name, self.spec, self.kind = name, spec, spec["kind"]
-        m = tsf.build(tsf.EXPS["E"], VARIANT, DT).to(dev)
+        m = tsf.build(tsf.EXPS["E"], VARIANT_OVERRIDE or VARIANT, DT).to(dev)
         sf.load_compat(m, torch.load(ckpt, map_location=dev, weights_only=False)["model"])
         m.eval()
         sf.apply_opts(m, ("default" if spec.get("graph") else "kcache,fastio,cl,adapt") if self.kind == "single" else "kcache,adapt")
@@ -361,8 +362,11 @@ def main():
     ap.add_argument("--resume", action="store_true")
     ap.add_argument("--rot", type=int, default=0, help="rotate the initial condition by this many quarter turns")
     ap.add_argument("--shift", default="", help="dx,dy added to initial positions")
+    ap.add_argument("--variant", default="", help="model variant (default: ghost-closure variant)")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
+    global VARIANT_OVERRIDE
+    VARIANT_OVERRIDE = args.variant
     dev = torch.device("cuda")
     os.makedirs(args.out, exist_ok=True)
     pos0, vel0, mass0 = make_ic(args.n, args.seed, args.nt)
