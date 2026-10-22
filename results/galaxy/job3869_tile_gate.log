@@ -1,0 +1,315 @@
+N 20000 frac_in_domain 1.0000 rel diff all 2.17e-04 inside 2.17e-04 |a_ref| mean 5.8490
+N 20000 frac_in_domain 1.0000 rel diff all 2.21e-04 inside 2.21e-04 |a_ref| mean 5.8494
+IC generated in 0.1 s, peak 0.0 GB
+{"tick": 0, "ke": 4198.13991, "pe": -8327.33459, "e": -4129.19469, "virial": 1.00828, "bound": 1.0, "lz": 8394.79427, "pnet": [1.658323220908642e-06, -2.2294570226222276e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12061, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.3798, "r50": 5.14028, "r90": 13.21336, "dE": 0.0, "wall": 0.52283}
+tick 10 3 ms peak 0.3 GB wall 1 s
+{"tick": 20, "ke": 3541.74648, "pe": -7667.70573, "e": -4125.95924, "virial": 0.92381, "bound": 1.0, "lz": 8394.8165, "pnet": [8.168388158082963e-07, -2.4077511392533778e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.10123, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.63608, "r50": 5.7718, "r90": 13.61457, "dE": -0.00078, "wall": 0.96494}
+tick 20 3 ms peak 0.3 GB wall 1 s
+tick 30 3 ms peak 0.3 GB wall 1 s
+{"tick": 40, "ke": 3276.59109, "pe": -7405.45807, "e": -4128.86698, "virial": 0.88491, "bound": 1.0, "lz": 8395.32931, "pnet": [-3.343110904097557e-06, -1.2823591008782387e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.10416, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.56243, "r50": 6.03021, "r90": 14.48338, "dE": -8e-05, "wall": 1.28955}
+tick 40 3 ms peak 0.3 GB wall 1 s
+tick 50 3 ms peak 0.3 GB wall 2 s
+{"tick": 60, "ke": 3306.14088, "pe": -7432.66468, "e": -4126.5238, "virial": 0.88962, "bound": 1.0, "lz": 8394.45654, "pnet": [-3.859199769794941e-05, 2.8877612203359604e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.10883, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.55544, "r50": 5.68096, "r90": 14.9772, "dE": -0.00065, "wall": 1.83166}
+tick 60 3 ms peak 0.3 GB wall 2 s
+tick 70 3 ms peak 0.3 GB wall 2 s
+{"tick": 80, "ke": 3374.25674, "pe": -7502.11773, "e": -4127.86099, "virial": 0.89955, "bound": 1.0, "lz": 8395.48744, "pnet": [-2.792991232126951e-05, -1.7694887705147268e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.11172, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.54109, "r50": 5.61376, "r90": 14.93779, "dE": -0.00032, "wall": 2.17336}
+tick 80 3 ms peak 0.3 GB wall 2 s
+tick 90 3 ms peak 0.3 GB wall 2 s
+{"tick": 100, "ke": 3470.42676, "pe": -7609.76658, "e": -4139.33982, "virial": 0.9121, "bound": 1.0, "lz": 8392.86904, "pnet": [-2.7755308896303177e-05, -1.6040252521634102e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.11073, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.56173, "r50": 5.70806, "r90": 14.8924, "dE": 0.00246, "wall": 2.54338}
+tick 100 3 ms peak 0.3 GB wall 3 s
+tick 110 3 ms peak 0.3 GB wall 3 s
+{"tick": 120, "ke": 3494.61923, "pe": -7626.98708, "e": -4132.36785, "virial": 0.91638, "bound": 1.0, "lz": 8394.70122, "pnet": [-4.168176697567105e-05, 1.246771076694131e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.11347, "frac_outside": 1e-05, "frac_outside64": 0.0, "r25": 2.55819, "r50": 5.94733, "r90": 14.84397, "dE": 0.00077, "wall": 3.0732}
+tick 120 3 ms peak 0.3 GB wall 3 s
+tick 130 3 ms peak 0.3 GB wall 3 s
+{"tick": 140, "ke": 3375.16824, "pe": -7519.06357, "e": -4143.89533, "virial": 0.89776, "bound": 1.0, "lz": 8389.59714, "pnet": [-6.45544754806906e-05, -3.7077674176543955e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.11638, "frac_outside": 6e-05, "frac_outside64": 0.0, "r25": 2.53885, "r50": 6.19859, "r90": 14.93522, "dE": 0.00356, "wall": 3.4135}
+tick 140 3 ms peak 0.3 GB wall 3 s
+tick 150 3 ms peak 0.3 GB wall 4 s
+{"tick": 160, "ke": 3357.79626, "pe": -7500.81253, "e": -4143.01627, "virial": 0.89532, "bound": 1.0, "lz": 8390.98475, "pnet": [-2.1284277085214854e-05, -5.3693762049078946e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.11507, "frac_outside": 7e-05, "frac_outside64": 0.0, "r25": 2.49548, "r50": 6.19018, "r90": 15.26527, "dE": 0.00335, "wall": 3.96581}
+tick 160 3 ms peak 0.3 GB wall 4 s
+tick 170 3 ms peak 0.3 GB wall 4 s
+{"tick": 180, "ke": 3625.74249, "pe": -7780.21488, "e": -4154.4724, "virial": 0.93204, "bound": 1.0, "lz": 8387.30801, "pnet": [-4.784919647499919e-05, -5.413543037138879e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.11434, "frac_outside": 7e-05, "frac_outside64": 0.0, "r25": 2.34843, "r50": 5.66774, "r90": 15.89705, "dE": 0.00612, "wall": 4.30885}
+tick 180 3 ms peak 0.3 GB wall 4 s
+tick 190 3 ms peak 0.3 GB wall 4 s
+{"tick": 200, "ke": 3478.3858, "pe": -7625.20351, "e": -4146.81771, "virial": 0.91234, "bound": 1.0, "lz": 8385.57436, "pnet": [-2.5916277430951595e-05, -5.722564249299467e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.11886, "frac_outside": 8e-05, "frac_outside64": 0.0, "r25": 2.37307, "r50": 5.65287, "r90": 17.46594, "dE": 0.00427, "wall": 4.64817}
+tick 200 3 ms peak 0.3 GB wall 5 s
+tick 210 3 ms peak 0.3 GB wall 5 s
+{"tick": 220, "ke": 3376.6886, "pe": -7534.02214, "e": -4157.33354, "virial": 0.89638, "bound": 0.99996, "lz": 8387.81472, "pnet": [1.2067146599292756e-06, -7.216091640293598e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12065, "frac_outside": 0.00013, "frac_outside64": 0.0, "r25": 2.36651, "r50": 5.43364, "r90": 19.42123, "dE": 0.00681, "wall": 5.15639}
+tick 220 3 ms peak 0.3 GB wall 5 s
+tick 230 3 ms peak 0.3 GB wall 5 s
+{"tick": 240, "ke": 3250.15452, "pe": -7416.41293, "e": -4166.25841, "virial": 0.87648, "bound": 0.99996, "lz": 8382.95397, "pnet": [-4.378078412264585e-05, -7.347174268215895e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12097, "frac_outside": 0.0012, "frac_outside64": 0.0, "r25": 2.36769, "r50": 5.47664, "r90": 21.23963, "dE": 0.00898, "wall": 5.48852}
+tick 240 3 ms peak 0.3 GB wall 6 s
+tick 250 3 ms peak 0.3 GB wall 6 s
+checkpoint at tick 250
+{"tick": 260, "ke": 3208.45389, "pe": -7359.05228, "e": -4150.59838, "virial": 0.87197, "bound": 0.99996, "lz": 8383.2949, "pnet": [-2.9147322289645672e-05, -8.623430470470339e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.11953, "frac_outside": 0.00399, "frac_outside64": 0.0, "r25": 2.3726, "r50": 5.42941, "r90": 23.00872, "dE": 0.00518, "wall": 6.26084}
+tick 260 3 ms peak 0.3 GB wall 6 s
+tick 270 3 ms peak 0.3 GB wall 6 s
+{"tick": 280, "ke": 3173.1186, "pe": -7328.3226, "e": -4155.204, "virial": 0.86599, "bound": 0.99996, "lz": 8384.88306, "pnet": [3.589878184720874e-05, -0.0001834250637330115], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12213, "frac_outside": 0.00854, "frac_outside64": 0.0, "r25": 2.34639, "r50": 5.45401, "r90": 24.61731, "dE": 0.0063, "wall": 6.59196}
+tick 280 3 ms peak 0.3 GB wall 7 s
+tick 290 3 ms peak 0.3 GB wall 7 s
+{"tick": 300, "ke": 3110.12754, "pe": -7272.37358, "e": -4162.24604, "virial": 0.85533, "bound": 0.99994, "lz": 8378.40553, "pnet": [3.8108772598207e-05, -0.00021033033449202777], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.11891, "frac_outside": 0.0164, "frac_outside64": 0.0, "r25": 2.37368, "r50": 5.47797, "r90": 26.0405, "dE": 0.008, "wall": 6.93297}
+tick 300 3 ms peak 0.3 GB wall 7 s
+tick 310 3 ms peak 0.3 GB wall 7 s
+{"tick": 320, "ke": 3089.25125, "pe": -7240.23285, "e": -4150.9816, "virial": 0.85336, "bound": 0.99994, "lz": 8376.92994, "pnet": [4.189563822001219e-05, -0.0002714116796851158], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12395, "frac_outside": 0.02521, "frac_outside64": 0.0, "r25": 2.48815, "r50": 5.4763, "r90": 27.19922, "dE": 0.00528, "wall": 7.47231}
+tick 320 3 ms peak 0.3 GB wall 8 s
+tick 330 3 ms peak 0.3 GB wall 8 s
+{"tick": 340, "ke": 3123.60691, "pe": -7288.68942, "e": -4165.08251, "virial": 0.85711, "bound": 0.99994, "lz": 8375.47498, "pnet": [8.256196975708008e-05, -0.0003001773487776518], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12088, "frac_outside": 0.03502, "frac_outside64": 0.0, "r25": 2.47482, "r50": 5.45332, "r90": 28.15945, "dE": 0.00869, "wall": 7.81268}
+tick 340 3 ms peak 0.3 GB wall 8 s
+tick 350 3 ms peak 0.3 GB wall 8 s
+{"tick": 360, "ke": 3152.6301, "pe": -7307.53326, "e": -4154.90316, "virial": 0.86284, "bound": 0.99994, "lz": 8377.72259, "pnet": [5.475931288674474e-05, -0.0002915544155985117], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.11844, "frac_outside": 0.04451, "frac_outside64": 1e-05, "r25": 2.42888, "r50": 5.47496, "r90": 28.62578, "dE": 0.00623, "wall": 8.33279}
+tick 360 3 ms peak 0.3 GB wall 8 s
+tick 370 3 ms peak 0.3 GB wall 8 s
+{"tick": 380, "ke": 3159.00894, "pe": -7319.94267, "e": -4160.93373, "virial": 0.86312, "bound": 0.9999, "lz": 8367.31729, "pnet": [1.0204967111349106e-05, -0.0003258899417705834], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.11719, "frac_outside": 0.05537, "frac_outside64": 0.00013, "r25": 2.38457, "r50": 5.41984, "r90": 29.08692, "dE": 0.00769, "wall": 8.67485}
+tick 380 3 ms peak 0.3 GB wall 9 s
+tick 390 3 ms peak 0.3 GB wall 9 s
+{"tick": 400, "ke": 3140.00777, "pe": -7294.9316, "e": -4154.92384, "virial": 0.86087, "bound": 0.99984, "lz": 8366.69122, "pnet": [3.4582844004035e-05, -0.0003027484221383929], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12083, "frac_outside": 0.06149, "frac_outside64": 0.00027, "r25": 2.49864, "r50": 5.41913, "r90": 29.64169, "dE": 0.00623, "wall": 9.01841}
+tick 400 3 ms peak 0.3 GB wall 9 s
+tick 410 3 ms peak 0.3 GB wall 9 s
+{"tick": 420, "ke": 3110.32244, "pe": -7267.29984, "e": -4156.9774, "virial": 0.85598, "bound": 0.9998, "lz": 8372.48458, "pnet": [3.471267968416214e-05, -0.0003215666231699288], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.119, "frac_outside": 0.06495, "frac_outside64": 0.00044, "r25": 2.48531, "r50": 5.44826, "r90": 29.93669, "dE": 0.00673, "wall": 9.53753}
+tick 420 3 ms peak 0.3 GB wall 10 s
+tick 430 3 ms peak 0.3 GB wall 10 s
+{"tick": 440, "ke": 3137.70104, "pe": -7308.24909, "e": -4170.54805, "virial": 0.85867, "bound": 0.9998, "lz": 8366.76137, "pnet": [5.884713772684336e-05, -0.00035121116344816986], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12148, "frac_outside": 0.06592, "frac_outside64": 0.00063, "r25": 2.35774, "r50": 5.43345, "r90": 30.0866, "dE": 0.01001, "wall": 9.93205}
+tick 440 3 ms peak 0.3 GB wall 10 s
+tick 450 3 ms peak 0.3 GB wall 10 s
+{"tick": 460, "ke": 3147.28906, "pe": -7307.4852, "e": -4160.19614, "virial": 0.86139, "bound": 0.99976, "lz": 8361.57976, "pnet": [4.1397160850465295e-05, -0.0003610492979642004], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12442, "frac_outside": 0.06461, "frac_outside64": 0.00085, "r25": 2.42385, "r50": 5.43265, "r90": 30.36982, "dE": 0.00751, "wall": 10.46179}
+tick 460 3 ms peak 0.3 GB wall 11 s
+tick 470 3 ms peak 0.3 GB wall 11 s
+{"tick": 480, "ke": 3158.1077, "pe": -7337.96825, "e": -4179.86056, "virial": 0.86076, "bound": 0.99972, "lz": 8363.04662, "pnet": [7.057915348559618e-05, -0.00035781215596944097], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12648, "frac_outside": 0.06422, "frac_outside64": 0.00117, "r25": 2.52176, "r50": 5.35987, "r90": 30.47478, "dE": 0.01227, "wall": 10.79986}
+tick 480 3 ms peak 0.3 GB wall 11 s
+tick 490 3 ms peak 0.3 GB wall 11 s
+{"tick": 500, "ke": 3153.98557, "pe": -7303.30238, "e": -4149.31682, "virial": 0.86371, "bound": 0.99964, "lz": 8372.33042, "pnet": [0.00016646374901756644, -0.00037508209375664595], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12221, "frac_outside": 0.06496, "frac_outside64": 0.00152, "r25": 2.56932, "r50": 5.39035, "r90": 30.73755, "dE": 0.00487, "wall": 11.16234}
+tick 500 3 ms peak 0.3 GB wall 11 s
+checkpoint at tick 500
+tick 510 3 ms peak 0.3 GB wall 12 s
+{"tick": 520, "ke": 3138.31107, "pe": -7306.53076, "e": -4168.21969, "virial": 0.85904, "bound": 0.99956, "lz": 8362.71683, "pnet": [0.00015322873718105257, -0.0004175786962732673], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12098, "frac_outside": 0.06629, "frac_outside64": 0.00178, "r25": 2.41859, "r50": 5.37796, "r90": 30.89881, "dE": 0.00945, "wall": 12.09059}
+tick 520 3 ms peak 0.3 GB wall 12 s
+tick 530 3 ms peak 0.3 GB wall 12 s
+{"tick": 540, "ke": 3136.84398, "pe": -7286.50761, "e": -4149.66363, "virial": 0.861, "bound": 0.99954, "lz": 8362.89187, "pnet": [0.00012579442583955826, -0.0004495255365036428], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12005, "frac_outside": 0.06769, "frac_outside64": 0.00216, "r25": 2.34506, "r50": 5.49647, "r90": 30.91604, "dE": 0.00496, "wall": 12.44147}
+tick 540 3 ms peak 0.3 GB wall 13 s
+tick 550 3 ms peak 0.3 GB wall 13 s
+{"tick": 560, "ke": 3178.6803, "pe": -7354.3293, "e": -4175.649, "virial": 0.86444, "bound": 0.99954, "lz": 8363.36069, "pnet": [0.00013605588767677545, -0.0005099805425852537], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12065, "frac_outside": 0.07028, "frac_outside64": 0.00243, "r25": 2.32117, "r50": 5.32203, "r90": 31.2546, "dE": 0.01125, "wall": 12.98328}
+tick 560 3 ms peak 0.3 GB wall 13 s
+tick 570 3 ms peak 0.3 GB wall 13 s
+{"tick": 580, "ke": 3175.40053, "pe": -7337.66212, "e": -4162.26159, "virial": 0.86551, "bound": 0.9995, "lz": 8371.14256, "pnet": [0.00015378236258402467, -0.0005196460532024503], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12412, "frac_outside": 0.07288, "frac_outside64": 0.0026, "r25": 2.34508, "r50": 5.25651, "r90": 31.42482, "dE": 0.00801, "wall": 13.33736}
+tick 580 3 ms peak 0.3 GB wall 13 s
+tick 590 3 ms peak 0.3 GB wall 13 s
+{"tick": 600, "ke": 3159.01993, "pe": -7324.43104, "e": -4165.41111, "virial": 0.8626, "bound": 0.99942, "lz": 8359.98789, "pnet": [0.00012864401517435908, -0.0005029111253097654], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.11973, "frac_outside": 0.07414, "frac_outside64": 0.00272, "r25": 2.31069, "r50": 5.26302, "r90": 31.50513, "dE": 0.00877, "wall": 13.68258}
+tick 600 3 ms peak 0.3 GB wall 14 s
+tick 610 4 ms peak 0.3 GB wall 14 s
+{"tick": 620, "ke": 3204.85087, "pe": -7369.93904, "e": -4165.08817, "virial": 0.86971, "bound": 0.9994, "lz": 8361.28576, "pnet": [7.945361587917432e-05, -0.0004943548750597984], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12246, "frac_outside": 0.07571, "frac_outside64": 0.00284, "r25": 2.22798, "r50": 5.23095, "r90": 31.58439, "dE": 0.00869, "wall": 14.21078}
+tick 620 3 ms peak 0.3 GB wall 14 s
+tick 630 3 ms peak 0.3 GB wall 14 s
+{"tick": 640, "ke": 3204.92553, "pe": -7380.10025, "e": -4175.17472, "virial": 0.86853, "bound": 0.99936, "lz": 8362.22076, "pnet": [8.026878302916885e-05, -0.0005231012147851288], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12096, "frac_outside": 0.07665, "frac_outside64": 0.00293, "r25": 2.24502, "r50": 5.19805, "r90": 31.83101, "dE": 0.01114, "wall": 14.55503}
+tick 640 3 ms peak 0.3 GB wall 15 s
+tick 650 3 ms peak 0.3 GB wall 15 s
+{"tick": 660, "ke": 3169.5804, "pe": -7321.85898, "e": -4152.27857, "virial": 0.86579, "bound": 0.99934, "lz": 8368.77565, "pnet": [9.190548257902265e-05, -0.0005219365926459431], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12101, "frac_outside": 0.07781, "frac_outside64": 0.00308, "r25": 2.27138, "r50": 5.24073, "r90": 31.9557, "dE": 0.00559, "wall": 15.0939}
+tick 660 3 ms peak 0.3 GB wall 15 s
+tick 670 3 ms peak 0.3 GB wall 15 s
+{"tick": 680, "ke": 3186.83111, "pe": -7352.12975, "e": -4165.29863, "virial": 0.86691, "bound": 0.9993, "lz": 8358.73608, "pnet": [8.238987531512976e-05, -0.0005086486386135221], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.11898, "frac_outside": 0.07928, "frac_outside64": 0.00322, "r25": 2.23267, "r50": 5.19395, "r90": 32.18546, "dE": 0.00874, "wall": 15.4644}
+tick 680 3 ms peak 0.3 GB wall 16 s
+tick 690 3 ms peak 0.3 GB wall 16 s
+{"tick": 700, "ke": 3156.34777, "pe": -7315.17448, "e": -4158.82672, "virial": 0.86296, "bound": 0.9993, "lz": 8360.65208, "pnet": [0.00011016872129403055, -0.00047578474134206774], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12439, "frac_outside": 0.07993, "frac_outside64": 0.00346, "r25": 2.18365, "r50": 5.227, "r90": 32.45339, "dE": 0.00718, "wall": 15.81263}
+tick 700 3 ms peak 0.3 GB wall 16 s
+tick 710 3 ms peak 0.3 GB wall 16 s
+{"tick": 720, "ke": 3183.29655, "pe": -7352.50854, "e": -4169.212, "virial": 0.86591, "bound": 0.99922, "lz": 8360.13335, "pnet": [3.7493700161576275e-05, -0.0004797575636766851], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12073, "frac_outside": 0.08097, "frac_outside64": 0.0038, "r25": 2.16263, "r50": 5.14721, "r90": 32.74638, "dE": 0.00969, "wall": 16.33023}
+tick 720 3 ms peak 0.3 GB wall 16 s
+tick 730 3 ms peak 0.3 GB wall 16 s
+{"tick": 740, "ke": 3160.1831, "pe": -7301.83754, "e": -4141.65444, "virial": 0.86559, "bound": 0.9992, "lz": 8368.35077, "pnet": [2.5790808722376825e-05, -0.00046230054390616714], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.1213, "frac_outside": 0.08261, "frac_outside64": 0.00425, "r25": 2.18601, "r50": 5.179, "r90": 33.05093, "dE": 0.00302, "wall": 16.67661}
+tick 740 3 ms peak 0.3 GB wall 17 s
+tick 750 3 ms peak 0.3 GB wall 17 s
+checkpoint at tick 750
+{"tick": 760, "ke": 3146.99074, "pe": -7307.36389, "e": -4160.37315, "virial": 0.86132, "bound": 0.9992, "lz": 8358.78305, "pnet": [-8.225939702242613e-06, -0.0005022582127712668], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12185, "frac_outside": 0.08462, "frac_outside64": 0.00471, "r25": 2.1696, "r50": 5.16641, "r90": 33.34682, "dE": 0.00755, "wall": 17.51672}
+tick 760 3 ms peak 0.3 GB wall 18 s
+tick 770 3 ms peak 0.3 GB wall 18 s
+{"tick": 780, "ke": 3161.42599, "pe": -7316.06255, "e": -4154.63656, "virial": 0.86424, "bound": 0.9991, "lz": 8359.84216, "pnet": [-2.6367516489699483e-05, -0.0005244938659016043], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12008, "frac_outside": 0.08708, "frac_outside64": 0.00512, "r25": 2.14151, "r50": 5.12345, "r90": 33.66418, "dE": 0.00616, "wall": 17.84957}
+tick 780 3 ms peak 0.3 GB wall 18 s
+tick 790 3 ms peak 0.3 GB wall 18 s
+{"tick": 800, "ke": 3135.40684, "pe": -7298.43979, "e": -4163.03295, "virial": 0.8592, "bound": 0.99906, "lz": 8358.2624, "pnet": [-6.421487918123602e-05, -0.00047797789424657824], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12162, "frac_outside": 0.08968, "frac_outside64": 0.00565, "r25": 2.14068, "r50": 5.17166, "r90": 33.89848, "dE": 0.00819, "wall": 18.19502}
+tick 800 3 ms peak 0.3 GB wall 18 s
+tick 810 3 ms peak 0.3 GB wall 18 s
+{"tick": 820, "ke": 3164.13612, "pe": -7307.54471, "e": -4143.40859, "virial": 0.86599, "bound": 0.99896, "lz": 8366.67886, "pnet": [-3.7556433817371726e-05, -0.000492305388324894], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12065, "frac_outside": 0.09183, "frac_outside64": 0.00632, "r25": 2.14203, "r50": 5.13861, "r90": 34.11574, "dE": 0.00344, "wall": 18.70737}
+tick 820 3 ms peak 0.3 GB wall 19 s
+tick 830 3 ms peak 0.3 GB wall 19 s
+{"tick": 840, "ke": 3149.12684, "pe": -7304.5166, "e": -4155.38976, "virial": 0.86224, "bound": 0.99892, "lz": 8357.37896, "pnet": [8.232552674598993e-06, -0.00047486507194116715], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12267, "frac_outside": 0.0926, "frac_outside64": 0.0069, "r25": 2.13064, "r50": 5.11878, "r90": 34.31318, "dE": 0.00634, "wall": 19.04524}
+tick 840 3 ms peak 0.3 GB wall 19 s
+tick 850 3 ms peak 0.3 GB wall 19 s
+{"tick": 860, "ke": 3147.42941, "pe": -7297.64328, "e": -4150.21387, "virial": 0.86259, "bound": 0.99882, "lz": 8357.15343, "pnet": [2.199589996598661e-05, -0.00047677459730766715], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12234, "frac_outside": 0.09369, "frac_outside64": 0.00764, "r25": 2.15993, "r50": 5.1252, "r90": 34.58392, "dE": 0.00509, "wall": 19.58503}
+tick 860 3 ms peak 0.3 GB wall 20 s
+tick 870 3 ms peak 0.3 GB wall 20 s
+{"tick": 880, "ke": 3150.22365, "pe": -7306.81229, "e": -4156.58863, "virial": 0.86227, "bound": 0.99866, "lz": 8357.85338, "pnet": [3.9227845380082725e-05, -0.0004453451269073412], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12228, "frac_outside": 0.09553, "frac_outside64": 0.00864, "r25": 2.15028, "r50": 5.11493, "r90": 34.87218, "dE": 0.00663, "wall": 19.9284}
+tick 880 3 ms peak 0.3 GB wall 20 s
+tick 890 3 ms peak 0.3 GB wall 20 s
+{"tick": 900, "ke": 3151.81283, "pe": -7295.70293, "e": -4143.89011, "virial": 0.86402, "bound": 0.99858, "lz": 8362.67833, "pnet": [5.019643041305244e-05, -0.00045665084151551126], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12105, "frac_outside": 0.09775, "frac_outside64": 0.00949, "r25": 2.14262, "r50": 5.15666, "r90": 35.08992, "dE": 0.00356, "wall": 20.24813}
+tick 900 3 ms peak 0.3 GB wall 20 s
+tick 910 3 ms peak 0.3 GB wall 21 s
+{"tick": 920, "ke": 3146.65291, "pe": -7292.2966, "e": -4145.64369, "virial": 0.86301, "bound": 0.9985, "lz": 8360.95559, "pnet": [2.895012265071273e-05, -0.0004647922699805349], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12657, "frac_outside": 0.099, "frac_outside64": 0.01041, "r25": 2.13553, "r50": 5.12005, "r90": 35.31872, "dE": 0.00398, "wall": 20.77399}
+tick 920 3 ms peak 0.3 GB wall 21 s
+tick 930 3 ms peak 0.3 GB wall 21 s
+{"tick": 940, "ke": 3140.30138, "pe": -7302.82345, "e": -4162.52207, "virial": 0.86002, "bound": 0.9982, "lz": 8355.54483, "pnet": [-1.9239505170844497e-05, -0.00045535479414684235], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12615, "frac_outside": 0.09945, "frac_outside64": 0.01153, "r25": 2.13644, "r50": 5.1261, "r90": 35.52347, "dE": 0.00807, "wall": 21.11602}
+tick 940 3 ms peak 0.3 GB wall 21 s
+tick 950 3 ms peak 0.3 GB wall 21 s
+{"tick": 960, "ke": 3145.10087, "pe": -7288.35125, "e": -4143.25038, "virial": 0.86305, "bound": 0.99802, "lz": 8358.70296, "pnet": [-1.1075357208028435e-05, -0.0004805525449337438], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12666, "frac_outside": 0.10109, "frac_outside64": 0.01233, "r25": 2.18782, "r50": 5.13164, "r90": 35.79079, "dE": 0.0034, "wall": 21.63916}
+tick 960 3 ms peak 0.3 GB wall 22 s
+tick 970 3 ms peak 0.3 GB wall 22 s
+{"tick": 980, "ke": 3133.41222, "pe": -7282.68299, "e": -4149.27077, "virial": 0.86051, "bound": 0.99784, "lz": 8359.18985, "pnet": [-2.108668489381671e-05, -0.00043198121432214977], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12856, "frac_outside": 0.10261, "frac_outside64": 0.01328, "r25": 2.18965, "r50": 5.13249, "r90": 36.02649, "dE": 0.00486, "wall": 21.97267}
+tick 980 3 ms peak 0.3 GB wall 22 s
+tick 990 3 ms peak 0.3 GB wall 22 s
+{"tick": 1000, "ke": 3145.99593, "pe": -7281.14605, "e": -4135.15012, "virial": 0.86415, "bound": 0.99752, "lz": 8364.66067, "pnet": [-9.90668241865933e-06, -0.00041298291343264284], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12074, "frac_outside": 0.10393, "frac_outside64": 0.01412, "r25": 2.16569, "r50": 5.14791, "r90": 36.22464, "dE": 0.00144, "wall": 22.31605}
+tick 1000 3 ms peak 0.3 GB wall 23 s
+checkpoint at tick 1000
+IC generated in 0.1 s, peak 0.0 GB
+{"tick": 0, "ke": 465.57325, "pe": -925.2594, "e": -459.68615, "virial": 1.00636, "bound": 1.0, "lz": 1613.97481, "pnet": [-1.6219913959503175e-06, -3.2435818575322627e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06964, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.3798, "r50": 5.14028, "r90": 13.21336, "dE": 0.0, "wall": 0.51324}
+tick 10 3 ms peak 0.3 GB wall 1 s
+{"tick": 20, "ke": 410.84309, "pe": -869.6085, "e": -458.7654, "virial": 0.94489, "bound": 1.0, "lz": 1613.97743, "pnet": [1.8630004487931728e-06, -3.4903993364423513e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06529, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.73341, "r50": 5.38768, "r90": 13.35158, "dE": -0.002, "wall": 0.94381}
+tick 20 3 ms peak 0.3 GB wall 1 s
+tick 30 3 ms peak 0.3 GB wall 1 s
+{"tick": 40, "ke": 391.13099, "pe": -850.5476, "e": -459.41661, "virial": 0.91972, "bound": 1.0, "lz": 1613.96837, "pnet": [1.2972166296094655e-06, -1.928050071001053e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.05979, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.53038, "r50": 5.82641, "r90": 13.69463, "dE": -0.00059, "wall": 1.27805}
+tick 40 3 ms peak 0.3 GB wall 1 s
+tick 50 3 ms peak 0.3 GB wall 2 s
+{"tick": 60, "ke": 370.15611, "pe": -830.01842, "e": -459.86232, "virial": 0.89192, "bound": 1.0, "lz": 1613.93666, "pnet": [2.3650091607123615e-06, -2.9346365481615066e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.05892, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.59455, "r50": 6.01389, "r90": 14.01712, "dE": 0.00038, "wall": 1.8066}
+tick 60 3 ms peak 0.3 GB wall 2 s
+tick 70 3 ms peak 0.3 GB wall 2 s
+{"tick": 80, "ke": 369.26315, "pe": -829.142, "e": -459.87885, "virial": 0.89071, "bound": 1.0, "lz": 1613.8878, "pnet": [2.556240651756525e-06, -2.1745890844613315e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06082, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.53394, "r50": 5.87672, "r90": 14.71968, "dE": 0.00042, "wall": 2.15071}
+tick 80 3 ms peak 0.3 GB wall 2 s
+tick 90 3 ms peak 0.3 GB wall 2 s
+{"tick": 100, "ke": 371.0391, "pe": -830.80788, "e": -459.76878, "virial": 0.8932, "bound": 1.0, "lz": 1613.86457, "pnet": [2.5645706336945294e-06, -2.334259334020317e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06313, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.53035, "r50": 5.65337, "r90": 14.86705, "dE": 0.00018, "wall": 2.49071}
+tick 100 3 ms peak 0.3 GB wall 3 s
+tick 110 3 ms peak 0.3 GB wall 3 s
+{"tick": 120, "ke": 374.3054, "pe": -834.75523, "e": -460.44983, "virial": 0.8968, "bound": 1.0, "lz": 1613.88404, "pnet": [1.687861979007721e-06, -2.4708951823413374e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06679, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.54705, "r50": 5.56306, "r90": 14.83381, "dE": 0.00166, "wall": 3.03901}
+tick 120 3 ms peak 0.3 GB wall 3 s
+tick 130 3 ms peak 0.3 GB wall 3 s
+{"tick": 140, "ke": 380.05434, "pe": -840.01436, "e": -459.96002, "virial": 0.90488, "bound": 1.0, "lz": 1613.76162, "pnet": [3.0848674941807987e-06, -1.264460850507021e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06787, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.53097, "r50": 5.56385, "r90": 14.79427, "dE": 0.0006, "wall": 3.38729}
+tick 140 3 ms peak 0.3 GB wall 3 s
+tick 150 3 ms peak 0.3 GB wall 4 s
+{"tick": 160, "ke": 385.78672, "pe": -846.38195, "e": -460.59523, "virial": 0.91161, "bound": 1.0, "lz": 1613.61316, "pnet": [6.443790625780821e-06, 5.468449089676142e-07], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06228, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.55903, "r50": 5.60127, "r90": 14.76807, "dE": 0.00198, "wall": 3.91209}
+tick 160 3 ms peak 0.3 GB wall 4 s
+tick 170 3 ms peak 0.3 GB wall 4 s
+{"tick": 180, "ke": 391.04145, "pe": -851.93624, "e": -460.89479, "virial": 0.91801, "bound": 1.0, "lz": 1613.78948, "pnet": [3.595282789319754e-06, 1.2140742037445308e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06474, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.55294, "r50": 5.69999, "r90": 14.75963, "dE": 0.00263, "wall": 4.25865}
+tick 180 3 ms peak 0.3 GB wall 4 s
+tick 190 3 ms peak 0.3 GB wall 4 s
+{"tick": 200, "ke": 392.67654, "pe": -852.43549, "e": -459.75895, "virial": 0.92131, "bound": 1.0, "lz": 1613.75803, "pnet": [3.261712787207216e-06, -3.603341872803867e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06445, "frac_outside": 1e-05, "frac_outside64": 0.0, "r25": 2.55139, "r50": 5.85252, "r90": 14.73672, "dE": 0.00016, "wall": 4.60777}
+tick 200 3 ms peak 0.3 GB wall 5 s
+tick 210 3 ms peak 0.3 GB wall 5 s
+{"tick": 220, "ke": 387.85923, "pe": -848.47126, "e": -460.61203, "virial": 0.91425, "bound": 1.0, "lz": 1613.64922, "pnet": [1.782911829650402e-06, -1.6612720210105182e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.066, "frac_outside": 2e-05, "frac_outside64": 0.0, "r25": 2.5256, "r50": 5.98142, "r90": 14.69865, "dE": 0.00201, "wall": 5.15113}
+tick 220 3 ms peak 0.3 GB wall 5 s
+tick 230 3 ms peak 0.3 GB wall 5 s
+{"tick": 240, "ke": 381.73272, "pe": -843.0068, "e": -461.27408, "virial": 0.90565, "bound": 1.0, "lz": 1613.27443, "pnet": [8.496271912008524e-07, 1.128463540226221e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06554, "frac_outside": 5e-05, "frac_outside64": 0.0, "r25": 2.52053, "r50": 6.11471, "r90": 14.74183, "dE": 0.00345, "wall": 5.52713}
+tick 240 3 ms peak 0.3 GB wall 6 s
+tick 250 3 ms peak 0.3 GB wall 6 s
+checkpoint at tick 250
+{"tick": 260, "ke": 378.2115, "pe": -839.41784, "e": -461.20634, "virial": 0.90113, "bound": 1.0, "lz": 1613.8086, "pnet": [-2.0177727565169334e-06, 2.1272781887091695e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06785, "frac_outside": 5e-05, "frac_outside64": 0.0, "r25": 2.47434, "r50": 6.20478, "r90": 14.86053, "dE": 0.00331, "wall": 6.38309}
+tick 260 3 ms peak 0.3 GB wall 6 s
+tick 270 3 ms peak 0.3 GB wall 6 s
+{"tick": 280, "ke": 382.23636, "pe": -843.70785, "e": -461.47149, "virial": 0.90609, "bound": 1.0, "lz": 1613.65792, "pnet": [-4.334273282438517e-06, 5.0654073711484675e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06479, "frac_outside": 8e-05, "frac_outside64": 0.0, "r25": 2.48297, "r50": 6.11702, "r90": 15.0288, "dE": 0.00388, "wall": 6.72226}
+tick 280 3 ms peak 0.3 GB wall 7 s
+tick 290 3 ms peak 0.3 GB wall 7 s
+{"tick": 300, "ke": 401.38822, "pe": -862.5062, "e": -461.11798, "virial": 0.93075, "bound": 1.0, "lz": 1613.4329, "pnet": [2.544103190302849e-06, 4.254668019711971e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.0662, "frac_outside": 6e-05, "frac_outside64": 0.0, "r25": 2.3933, "r50": 5.82253, "r90": 15.36208, "dE": 0.00311, "wall": 7.06646}
+tick 300 3 ms peak 0.3 GB wall 7 s
+tick 310 3 ms peak 0.3 GB wall 7 s
+{"tick": 320, "ke": 406.89825, "pe": -869.14701, "e": -462.24877, "virial": 0.93632, "bound": 0.99998, "lz": 1613.18921, "pnet": [1.125045702792704e-06, 6.584670976735652e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06624, "frac_outside": 7e-05, "frac_outside64": 0.0, "r25": 2.35928, "r50": 5.58857, "r90": 16.09025, "dE": 0.00557, "wall": 7.59463}
+tick 320 3 ms peak 0.3 GB wall 8 s
+tick 330 3 ms peak 0.3 GB wall 8 s
+{"tick": 340, "ke": 393.01473, "pe": -854.54121, "e": -461.52648, "virial": 0.91983, "bound": 1.0, "lz": 1613.90493, "pnet": [1.5719561197329314e-06, 5.734069738537073e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06728, "frac_outside": 7e-05, "frac_outside64": 0.0, "r25": 2.34735, "r50": 5.6082, "r90": 17.15216, "dE": 0.004, "wall": 7.94086}
+tick 340 3 ms peak 0.3 GB wall 8 s
+tick 350 3 ms peak 0.3 GB wall 8 s
+{"tick": 360, "ke": 382.24331, "pe": -845.28933, "e": -463.04601, "virial": 0.90441, "bound": 1.0, "lz": 1613.6074, "pnet": [3.702940186485648e-06, 3.797135315835476e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.07109, "frac_outside": 0.0001, "frac_outside64": 0.0, "r25": 2.34051, "r50": 5.49672, "r90": 18.33223, "dE": 0.00731, "wall": 8.47461}
+tick 360 3 ms peak 0.3 GB wall 9 s
+tick 370 3 ms peak 0.3 GB wall 9 s
+{"tick": 380, "ke": 368.28586, "pe": -830.33867, "e": -462.05281, "virial": 0.88707, "bound": 1.0, "lz": 1613.86141, "pnet": [7.704466115683317e-06, 4.983277060091495e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06782, "frac_outside": 0.0001, "frac_outside64": 0.0, "r25": 2.34228, "r50": 5.45521, "r90": 19.46614, "dE": 0.00515, "wall": 8.81879}
+tick 380 3 ms peak 0.3 GB wall 9 s
+tick 390 3 ms peak 0.3 GB wall 9 s
+{"tick": 400, "ke": 364.54983, "pe": -826.74246, "e": -462.19263, "virial": 0.88189, "bound": 0.99998, "lz": 1613.81392, "pnet": [9.189865435473622e-06, 3.5652321530506016e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.07002, "frac_outside": 0.00042, "frac_outside64": 0.0, "r25": 2.27131, "r50": 5.50717, "r90": 20.52274, "dE": 0.00545, "wall": 9.16116}
+tick 400 3 ms peak 0.3 GB wall 9 s
+tick 410 3 ms peak 0.3 GB wall 9 s
+{"tick": 420, "ke": 357.61641, "pe": -819.93923, "e": -462.32282, "virial": 0.8723, "bound": 0.99998, "lz": 1613.59618, "pnet": [7.698282599449158e-06, 1.3283148873597384e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06856, "frac_outside": 0.00147, "frac_outside64": 0.0, "r25": 2.2801, "r50": 5.46853, "r90": 21.57763, "dE": 0.00574, "wall": 9.67218}
+tick 420 3 ms peak 0.3 GB wall 10 s
+tick 430 3 ms peak 0.3 GB wall 10 s
+{"tick": 440, "ke": 356.11758, "pe": -818.20164, "e": -462.08406, "virial": 0.87049, "bound": 0.99996, "lz": 1614.55745, "pnet": [1.1970429681241512e-05, 1.3979257782921195e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06986, "frac_outside": 0.00285, "frac_outside64": 0.0, "r25": 2.28981, "r50": 5.46752, "r90": 22.45157, "dE": 0.00522, "wall": 10.01557}
+tick 440 3 ms peak 0.3 GB wall 10 s
+tick 450 3 ms peak 0.3 GB wall 10 s
+{"tick": 460, "ke": 356.08032, "pe": -819.53888, "e": -463.45856, "virial": 0.86898, "bound": 0.99998, "lz": 1614.4198, "pnet": [1.0983202839270235e-05, 4.481993120862171e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06837, "frac_outside": 0.00512, "frac_outside64": 0.0, "r25": 2.30064, "r50": 5.4034, "r90": 23.31404, "dE": 0.00821, "wall": 10.5668}
+tick 460 3 ms peak 0.3 GB wall 11 s
+tick 470 3 ms peak 0.3 GB wall 11 s
+{"tick": 480, "ke": 353.64755, "pe": -815.88583, "e": -462.23828, "virial": 0.8669, "bound": 0.99998, "lz": 1614.31793, "pnet": [1.1797076324000955e-05, 5.223248852416873e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.0682, "frac_outside": 0.00811, "frac_outside64": 0.0, "r25": 2.28436, "r50": 5.43773, "r90": 24.1361, "dE": 0.00555, "wall": 10.93376}
+tick 480 3 ms peak 0.3 GB wall 11 s
+tick 490 3 ms peak 0.3 GB wall 11 s
+{"tick": 500, "ke": 351.32882, "pe": -813.42497, "e": -462.09615, "virial": 0.86383, "bound": 0.99998, "lz": 1614.3295, "pnet": [6.886951858177781e-06, 5.537752294912934e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.07153, "frac_outside": 0.01183, "frac_outside64": 0.0, "r25": 2.30551, "r50": 5.45596, "r90": 24.8292, "dE": 0.00524, "wall": 11.27722}
+tick 500 3 ms peak 0.3 GB wall 12 s
+checkpoint at tick 500
+tick 510 3 ms peak 0.3 GB wall 12 s
+{"tick": 520, "ke": 350.05957, "pe": -813.66949, "e": -463.60992, "virial": 0.86045, "bound": 0.99998, "lz": 1613.88829, "pnet": [8.116515120491386e-06, 4.985049832612276e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06754, "frac_outside": 0.01655, "frac_outside64": 0.0, "r25": 2.33741, "r50": 5.40339, "r90": 25.5398, "dE": 0.00854, "wall": 12.06403}
+tick 520 3 ms peak 0.3 GB wall 12 s
+tick 530 3 ms peak 0.3 GB wall 12 s
+{"tick": 540, "ke": 347.0089, "pe": -809.83057, "e": -462.82167, "virial": 0.85699, "bound": 0.99998, "lz": 1614.31271, "pnet": [5.86857320740819e-06, 5.192211829125881e-07], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06848, "frac_outside": 0.02058, "frac_outside64": 0.0, "r25": 2.40827, "r50": 5.45693, "r90": 26.11566, "dE": 0.00682, "wall": 12.38081}
+tick 540 3 ms peak 0.3 GB wall 12 s
+tick 550 3 ms peak 0.3 GB wall 13 s
+{"tick": 560, "ke": 346.38967, "pe": -808.8892, "e": -462.49953, "virial": 0.85646, "bound": 0.99998, "lz": 1614.56968, "pnet": [6.1708311550319195e-06, 6.505346624180675e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.07048, "frac_outside": 0.02524, "frac_outside64": 0.0, "r25": 2.50609, "r50": 5.49739, "r90": 26.611, "dE": 0.00612, "wall": 12.90645}
+tick 560 3 ms peak 0.3 GB wall 13 s
+tick 570 3 ms peak 0.3 GB wall 13 s
+{"tick": 580, "ke": 349.72601, "pe": -812.89759, "e": -463.17158, "virial": 0.86044, "bound": 0.99998, "lz": 1614.13792, "pnet": [5.173490266315639e-06, 3.818072844296694e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.0715, "frac_outside": 0.02959, "frac_outside64": 0.0, "r25": 2.52487, "r50": 5.50303, "r90": 27.08978, "dE": 0.00758, "wall": 13.25353}
+tick 580 3 ms peak 0.3 GB wall 13 s
+tick 590 3 ms peak 0.3 GB wall 13 s
+{"tick": 600, "ke": 353.72612, "pe": -815.92999, "e": -462.20387, "virial": 0.86705, "bound": 1.0, "lz": 1614.38265, "pnet": [1.0277368593961e-05, 1.0105888941325248e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.07303, "frac_outside": 0.03441, "frac_outside64": 0.0, "r25": 2.47846, "r50": 5.4739, "r90": 27.43383, "dE": 0.00548, "wall": 13.58148}
+tick 600 3 ms peak 0.3 GB wall 14 s
+tick 610 3 ms peak 0.3 GB wall 14 s
+{"tick": 620, "ke": 354.13838, "pe": -817.51919, "e": -463.38081, "virial": 0.86637, "bound": 0.99998, "lz": 1614.46427, "pnet": [1.1307383421808482e-05, 9.35993273742497e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06919, "frac_outside": 0.03935, "frac_outside64": 2e-05, "r25": 2.43772, "r50": 5.49114, "r90": 27.63431, "dE": 0.00804, "wall": 14.12946}
+tick 620 3 ms peak 0.3 GB wall 14 s
+tick 630 3 ms peak 0.3 GB wall 14 s
+{"tick": 640, "ke": 357.80761, "pe": -821.34228, "e": -463.53467, "virial": 0.87128, "bound": 0.99998, "lz": 1613.77552, "pnet": [1.1029086890630423e-05, 1.131376181729138e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.07179, "frac_outside": 0.04488, "frac_outside64": 6e-05, "r25": 2.3782, "r50": 5.45576, "r90": 27.92622, "dE": 0.00837, "wall": 14.47728}
+tick 640 3 ms peak 0.3 GB wall 15 s
+tick 650 3 ms peak 0.3 GB wall 15 s
+{"tick": 660, "ke": 357.87837, "pe": -819.88688, "e": -462.00851, "virial": 0.87299, "bound": 0.99994, "lz": 1613.58738, "pnet": [6.188868079334498e-06, 1.1765460949391128e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.07042, "frac_outside": 0.04899, "frac_outside64": 0.00013, "r25": 2.39719, "r50": 5.4606, "r90": 28.22686, "dE": 0.00505, "wall": 14.99367}
+tick 660 3 ms peak 0.3 GB wall 15 s
+tick 670 3 ms peak 0.3 GB wall 15 s
+{"tick": 680, "ke": 354.06185, "pe": -817.07888, "e": -463.01703, "virial": 0.86665, "bound": 0.99994, "lz": 1613.30861, "pnet": [4.981495323590934e-06, 1.954807504080236e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.07124, "frac_outside": 0.05218, "frac_outside64": 0.00019, "r25": 2.49409, "r50": 5.42836, "r90": 28.49351, "dE": 0.00725, "wall": 15.33548}
+tick 680 3 ms peak 0.3 GB wall 15 s
+tick 690 3 ms peak 0.3 GB wall 15 s
+{"tick": 700, "ke": 353.84858, "pe": -816.49685, "e": -462.64827, "virial": 0.86675, "bound": 0.99988, "lz": 1613.02773, "pnet": [9.087007492780686e-07, 1.817477820441127e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.07051, "frac_outside": 0.05486, "frac_outside64": 0.00026, "r25": 2.53886, "r50": 5.39572, "r90": 28.7843, "dE": 0.00644, "wall": 15.67034}
+tick 700 3 ms peak 0.3 GB wall 16 s
+tick 710 3 ms peak 0.3 GB wall 16 s
+{"tick": 720, "ke": 349.91329, "pe": -811.40232, "e": -461.48903, "virial": 0.86249, "bound": 0.99984, "lz": 1613.54935, "pnet": [-4.393467679619789e-07, 2.4890531436540188e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.07241, "frac_outside": 0.05747, "frac_outside64": 0.00034, "r25": 2.57523, "r50": 5.42979, "r90": 29.02018, "dE": 0.00392, "wall": 16.17529}
+tick 720 3 ms peak 0.3 GB wall 16 s
+tick 730 3 ms peak 0.3 GB wall 16 s
+{"tick": 740, "ke": 350.2283, "pe": -812.48388, "e": -462.25558, "virial": 0.86212, "bound": 0.99978, "lz": 1613.68253, "pnet": [-2.012230921536684e-06, 1.7674003029242158e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.07071, "frac_outside": 0.05929, "frac_outside64": 0.0004, "r25": 2.4813, "r50": 5.48119, "r90": 29.207, "dE": 0.00559, "wall": 16.51606}
+tick 740 3 ms peak 0.3 GB wall 17 s
+tick 750 3 ms peak 0.3 GB wall 17 s
+checkpoint at tick 750
+{"tick": 760, "ke": 352.99295, "pe": -815.86409, "e": -462.87113, "virial": 0.86532, "bound": 0.99976, "lz": 1612.94859, "pnet": [-2.0929970778524874e-06, 1.821095065679401e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.0701, "frac_outside": 0.05987, "frac_outside64": 0.00045, "r25": 2.4065, "r50": 5.47623, "r90": 29.3855, "dE": 0.00693, "wall": 17.34664}
+tick 760 3 ms peak 0.3 GB wall 17 s
+tick 770 3 ms peak 0.3 GB wall 17 s
+{"tick": 780, "ke": 351.22386, "pe": -813.41133, "e": -462.18747, "virial": 0.86358, "bound": 0.99968, "lz": 1612.35456, "pnet": [-2.527923556044698e-06, 1.4011442224727944e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06923, "frac_outside": 0.06026, "frac_outside64": 0.00053, "r25": 2.39844, "r50": 5.54874, "r90": 29.57158, "dE": 0.00544, "wall": 17.69016}
+tick 780 3 ms peak 0.3 GB wall 18 s
+tick 790 3 ms peak 0.3 GB wall 18 s
+{"tick": 800, "ke": 354.74243, "pe": -816.44564, "e": -461.7032, "virial": 0.86899, "bound": 0.99966, "lz": 1612.03291, "pnet": [3.0069088097661733e-07, 1.348161674104631e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.07057, "frac_outside": 0.05967, "frac_outside64": 0.00066, "r25": 2.5262, "r50": 5.46935, "r90": 29.89789, "dE": 0.00439, "wall": 18.03351}
+tick 800 3 ms peak 0.3 GB wall 18 s
+tick 810 3 ms peak 0.3 GB wall 18 s
+{"tick": 820, "ke": 353.63358, "pe": -815.75632, "e": -462.12274, "virial": 0.86701, "bound": 0.99962, "lz": 1611.75443, "pnet": [-4.1880563367158174e-07, 8.489065687172115e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06961, "frac_outside": 0.06053, "frac_outside64": 0.00071, "r25": 2.62357, "r50": 5.44539, "r90": 30.22944, "dE": 0.0053, "wall": 18.55226}
+tick 820 3 ms peak 0.3 GB wall 19 s
+tick 830 3 ms peak 0.3 GB wall 19 s
+{"tick": 840, "ke": 355.37107, "pe": -817.60225, "e": -462.23118, "virial": 0.8693, "bound": 0.99956, "lz": 1612.29336, "pnet": [-3.0363708501681684e-06, 8.63243080675602e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.07199, "frac_outside": 0.06316, "frac_outside64": 0.00079, "r25": 2.62624, "r50": 5.42157, "r90": 30.4759, "dE": 0.00554, "wall": 18.89437}
+tick 840 3 ms peak 0.3 GB wall 19 s
+tick 850 3 ms peak 0.3 GB wall 19 s
+{"tick": 860, "ke": 351.47045, "pe": -813.46092, "e": -461.99047, "virial": 0.86414, "bound": 0.99954, "lz": 1613.07841, "pnet": [-6.203077617101372e-06, 1.0645077156368643e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06985, "frac_outside": 0.06514, "frac_outside64": 0.00091, "r25": 2.595, "r50": 5.44141, "r90": 30.67017, "dE": 0.00501, "wall": 19.417}
+tick 860 3 ms peak 0.3 GB wall 19 s
+tick 870 3 ms peak 0.3 GB wall 20 s
+{"tick": 880, "ke": 347.9399, "pe": -810.72226, "e": -462.78235, "virial": 0.85835, "bound": 0.99946, "lz": 1612.54413, "pnet": [-3.869977779686451e-06, 1.1064258520491421e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.07073, "frac_outside": 0.06724, "frac_outside64": 0.001, "r25": 2.52067, "r50": 5.47849, "r90": 30.86665, "dE": 0.00674, "wall": 19.7582}
+tick 880 3 ms peak 0.3 GB wall 20 s
+tick 890 3 ms peak 0.3 GB wall 20 s
+{"tick": 900, "ke": 350.71048, "pe": -813.37862, "e": -462.66814, "virial": 0.86235, "bound": 0.99946, "lz": 1611.70067, "pnet": [-4.023738438263536e-07, 1.2857570196501911e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.07081, "frac_outside": 0.06874, "frac_outside64": 0.00109, "r25": 2.45639, "r50": 5.49433, "r90": 30.93429, "dE": 0.00649, "wall": 20.10065}
+tick 900 3 ms peak 0.3 GB wall 20 s
+tick 910 3 ms peak 0.3 GB wall 20 s
+{"tick": 920, "ke": 349.51951, "pe": -811.16304, "e": -461.64353, "virial": 0.86177, "bound": 0.99942, "lz": 1611.42784, "pnet": [-4.1030098218470815e-06, 1.1234135192353278e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.07199, "frac_outside": 0.06974, "frac_outside64": 0.00118, "r25": 2.44288, "r50": 5.49661, "r90": 31.01851, "dE": 0.00426, "wall": 20.62865}
+tick 920 3 ms peak 0.3 GB wall 21 s
+tick 930 3 ms peak 0.3 GB wall 21 s
+{"tick": 940, "ke": 350.27269, "pe": -812.23927, "e": -461.96658, "virial": 0.86249, "bound": 0.99936, "lz": 1611.08881, "pnet": [-3.8135939976200463e-06, 1.2010183068923653e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06973, "frac_outside": 0.07083, "frac_outside64": 0.00127, "r25": 2.4574, "r50": 5.47673, "r90": 31.17717, "dE": 0.00496, "wall": 20.97832}
+tick 940 3 ms peak 0.3 GB wall 21 s
+tick 950 3 ms peak 0.3 GB wall 21 s
+{"tick": 960, "ke": 349.91423, "pe": -812.94489, "e": -463.03066, "virial": 0.86086, "bound": 0.99932, "lz": 1611.03559, "pnet": [-2.5312649086117746e-06, 1.2239938834682108e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.07324, "frac_outside": 0.07178, "frac_outside64": 0.00133, "r25": 2.50069, "r50": 5.4099, "r90": 31.25747, "dE": 0.00728, "wall": 21.49221}
+tick 960 3 ms peak 0.3 GB wall 22 s
+tick 970 3 ms peak 0.3 GB wall 22 s
+{"tick": 980, "ke": 351.97378, "pe": -812.63981, "e": -460.66603, "virial": 0.86625, "bound": 0.99926, "lz": 1611.71365, "pnet": [5.8286584680899976e-06, 1.3279764156322927e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06946, "frac_outside": 0.07206, "frac_outside64": 0.00139, "r25": 2.53766, "r50": 5.37253, "r90": 31.43198, "dE": 0.00213, "wall": 21.84373}
+tick 980 3 ms peak 0.3 GB wall 22 s
+tick 990 3 ms peak 0.3 GB wall 22 s
+{"tick": 1000, "ke": 351.80491, "pe": -812.86726, "e": -461.06235, "virial": 0.86559, "bound": 0.99924, "lz": 1611.7355, "pnet": [1.2741533282678574e-05, 8.195081376470626e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.06977, "frac_outside": 0.07229, "frac_outside64": 0.00154, "r25": 2.49251, "r50": 5.37516, "r90": 31.4961, "dE": 0.00299, "wall": 22.18545}
+tick 1000 3 ms peak 0.3 GB wall 22 s
+checkpoint at tick 1000
+[2026-10-22T13:46:00-07:00] ALL DONE

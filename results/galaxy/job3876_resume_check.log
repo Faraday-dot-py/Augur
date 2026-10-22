@@ -1,0 +1,55 @@
+IC generated in 0.1 s, peak 0.2 GB
+{"tick": 0, "ke": 4195.8198, "pe": -8277.03266, "e": -4081.21286, "virial": 1.01385, "bound": 1.0, "lz": 8427.1236, "pnet": [7.051043375395238e-06, 6.942625623196363e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12076, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.42171, "r50": 5.16978, "r90": 13.1712, "dE": 0.0, "wall": 2.12125}
+tick 10 4 ms peak 2.0 GB wall 2 s
+{"tick": 20, "ke": 3500.007, "pe": -7583.61454, "e": -4083.60754, "virial": 0.92304, "bound": 1.0, "lz": 8427.30058, "pnet": [-5.4644703387748444e-05, 1.584744493011385e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.1038, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.7348, "r50": 5.81649, "r90": 13.64767, "dE": 0.00059, "wall": 3.99328}
+tick 20 4 ms peak 2.0 GB wall 4 s
+checkpoint at tick 20
+tick 30 4 ms peak 2.0 GB wall 5 s
+{"tick": 40, "ke": 3241.14295, "pe": -7315.56587, "e": -4074.42292, "virial": 0.88609, "bound": 1.0, "lz": 8427.62303, "pnet": [4.948004828765988e-05, -1.105478253448382e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.1037, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.63657, "r50": 6.1595, "r90": 14.50202, "dE": -0.00166, "wall": 6.24819}
+tick 40 4 ms peak 2.0 GB wall 6 s
+checkpoint at tick 40
+tick 50 4 ms peak 2.0 GB wall 7 s
+{"tick": 60, "ke": 3275.29861, "pe": -7345.67585, "e": -4070.37724, "virial": 0.89176, "bound": 1.0, "lz": 8427.51721, "pnet": [-3.723279177211225e-05, 1.0838551679626107e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.11088, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.61878, "r50": 5.69214, "r90": 15.02625, "dE": -0.00265, "wall": 8.65919}
+tick 60 4 ms peak 2.0 GB wall 9 s
+checkpoint at tick 60
+IC generated in 0.1 s, peak 0.2 GB
+{"tick": 0, "ke": 4195.8198, "pe": -8277.03266, "e": -4081.21286, "virial": 1.01385, "bound": 1.0, "lz": 8427.1236, "pnet": [7.0489784935489294e-06, 6.908390019088983e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12076, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.42171, "r50": 5.16978, "r90": 13.1712, "dE": 0.0, "wall": 1.9857}
+tick 10 4 ms peak 2.0 GB wall 2 s
+{"tick": 20, "ke": 3500.0069, "pe": -7583.62427, "e": -4083.61737, "virial": 0.92304, "bound": 1.0, "lz": 8427.28829, "pnet": [6.124186918605118e-05, 2.4655371252447364e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.1038, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.73492, "r50": 5.81672, "r90": 13.64773, "dE": 0.00059, "wall": 3.84804}
+tick 20 4 ms peak 2.0 GB wall 4 s
+checkpoint at tick 20
+tick 30 4 ms peak 2.0 GB wall 4 s
+{"tick": 40, "ke": 3241.13823, "pe": -7315.55958, "e": -4074.42135, "virial": 0.88609, "bound": 1.0, "lz": 8427.60993, "pnet": [5.605033765314146e-05, 4.317118566250428e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.1037, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.63574, "r50": 6.15939, "r90": 14.50135, "dE": -0.00166, "wall": 6.12362}
+tick 40 4 ms peak 2.0 GB wall 6 s
+checkpoint at tick 40
+tick 50 4 ms peak 2.0 GB wall 7 s
+{"tick": 60, "ke": 3275.34158, "pe": -7345.77599, "e": -4070.43441, "virial": 0.89176, "bound": 1.0, "lz": 8427.44829, "pnet": [8.643767136381938e-05, 1.1465050745755434e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.11084, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.61907, "r50": 5.69131, "r90": 15.02308, "dE": -0.00264, "wall": 8.57227}
+tick 60 4 ms peak 2.0 GB wall 9 s
+checkpoint at tick 60
+IC generated in 0.1 s, peak 0.2 GB
+{"tick": 0, "ke": 4195.8198, "pe": -8277.03266, "e": -4081.21287, "virial": 1.01385, "bound": 1.0, "lz": 8427.1236, "pnet": [7.040472119115292e-06, 6.908858008682727e-06], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.12076, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.42171, "r50": 5.16978, "r90": 13.1712, "dE": 0.0, "wall": 1.9798}
+tick 10 4 ms peak 2.0 GB wall 2 s
+{"tick": 20, "ke": 3500.04293, "pe": -7583.67863, "e": -4083.6357, "virial": 0.92305, "bound": 1.0, "lz": 8427.27709, "pnet": [9.49011807097122e-07, -1.0342903761193155e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.1038, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.73485, "r50": 5.81656, "r90": 13.64784, "dE": 0.00059, "wall": 3.85282}
+tick 20 4 ms peak 2.0 GB wall 4 s
+checkpoint at tick 20
+tick 30 4 ms peak 2.0 GB wall 4 s
+{"tick": 40, "ke": 3241.13872, "pe": -7315.58819, "e": -4074.44946, "virial": 0.88609, "bound": 1.0, "lz": 8427.59684, "pnet": [2.680544857867062e-05, -8.921211190754547e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.10371, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.63605, "r50": 6.15972, "r90": 14.50081, "dE": -0.00166, "wall": 6.12672}
+tick 40 4 ms peak 2.0 GB wall 6 s
+checkpoint at tick 40
+STOPPED 40
+/home/adamwebb/augur-galaxy-tile-3876/scripts/scatter_galaxy.py:317: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:213.)
+  arr[s:e] = torch.from_numpy(np.ascontiguousarray(mm[s:e])).to(dev)
+tick 50 4 ms peak 0.4 GB wall 0 s
+{"tick": 60, "ke": 3275.33318, "pe": -7345.76283, "e": -4070.42965, "virial": 0.89176, "bound": 1.0, "lz": 8427.45705, "pnet": [3.448662066366523e-05, -6.7471742676571e-05], "nonfinite": 0, "n_v_ge_c": 0, "vmax_over_c": 0.11088, "frac_outside": 0.0, "frac_outside64": 0.0, "r25": 2.61848, "r50": 5.69225, "r90": 15.02506, "dE": -0.00264, "wall": 2.12767}
+tick 60 4 ms peak 2.0 GB wall 2 s
+Traceback (most recent call last):
+  File "/home/adamwebb/augur-galaxy-tile-3876/scripts/scatter_galaxy.py", line 359, in <module>
+    main()
+  File "/home/adamwebb/augur-galaxy-tile-3876/scripts/scatter_galaxy.py", line 347, in main
+    save_state_mesh(out, pos, mom, sim, t, diag, ms, e0)
+  File "/home/adamwebb/augur-galaxy-tile-3876/scripts/scatter_galaxy.py", line 184, in save_state_mesh
+    os.rename(tmp, f"{out}/state")
+OSError: [Errno 39] Directory not empty: 'results/galaxy/rs_c/state_tmp' -> 'results/galaxy/rs_c/state'
+ticks compared [0, 20, 40, 60] max rel diff 3.66e-04
+ticks compared [0, 20, 40, 60] max rel diff 1.97e-04
+[2026-10-22T14:09:38-07:00] ALL DONE

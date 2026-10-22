@@ -207,6 +207,7 @@ def main():
     ap.add_argument("--nsrc", type=int, default=1_000_000)
     ap.add_argument("--tile", action="store_true", help="tiled mesh (4x4x32, halo 16, far term)")
     ap.add_argument("--kernel", default="old", help="scatter_far kernel spec (old = shipped kmlp)")
+    ap.add_argument("--stop-at", type=int, default=0, help="checkpoint and stop after this tick (resume test)")
     ap.add_argument("--resume", action="store_true")
     ap.add_argument("--tag", required=True)
     args = ap.parse_args()
@@ -314,6 +315,7 @@ def main():
                 mm = np.load(f"{out}/state/{name}.npy", mmap_mode="r")
                 for s, e in chunks(n, 50_000_000):
                     arr[s:e] = torch.from_numpy(np.ascontiguousarray(mm[s:e])).to(dev)
+                del mm
             st = torch.load(f"{out}/state/extra.pt", map_location=dev)
             sim.field, sim.acc, sim.abar, t0, diag, ms, e0 = st["field"], st["acc"], st["abar"], st["t"], st["diag"], st["ms"], st["e0"]
         else:
@@ -337,6 +339,8 @@ def main():
             if t % args.diag_every == 0:
                 bad = log_diag(diagnostics(n, mass, c, chunk, gc, gt, sub, tgt, t), t)
             record(t, lambda s, e: pos[s:e].float())
+            if t == args.stop_at:
+                STOP.append(1)
             if t % 10 == 0:
                 print(f"tick {t} {ms[-1]:.0f} ms peak {torch.cuda.max_memory_allocated() / 1e9:.1f} GB wall {time.perf_counter() - wall:.0f} s", flush=True)
             if t % args.ckpt_every == 0 or STOP or bad:
