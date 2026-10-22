@@ -68,6 +68,7 @@ class ScatterField(nn.Module):
         self.verlet = verlet
         self.far, self.far_band, self.far_eps, self.substeps = 0, 0.25, 0.5, 1
         self.cu, self.epsin, self.norm = cu, epsin, norm
+        self.sym = ""
         self.kpad, self.npad = ("ghost" if ghost else "zero"), "zero"
         if ghost:
             self.gpad = nn.Conv2d(1, 1, (3, 3), padding=(1, 0), bias=False)
@@ -115,6 +116,51 @@ class ScatterField(nn.Module):
         if self.epsin:
             f.append(torch.full_like(r, math.log(self.eps_cur / EPS0)))
         return torch.stack(f, -1)
+
+    SYM_OPS = {"d4": [(a, b, c) for c in (0, 1) for b in (0, 1) for a in (0, 1)], "c4": [(0, 0, 0), (1, 0, 1), (1, 1, 0), (0, 1, 1)], "flip": [(0, 0, 0), (1, 0, 0)]}
+
+    def _sym_op(self, t, op, vec):
+        """Apply one element (flip x, flip y, transpose) of the grid's symmetry group to a (B,C,Gy,Gx) tensor; vec = channel pairs that are vectors (x, y comps)."""
+        fx, fy, tr = op
+        if fx:
+            t = t.flip(-1)
+        if fy:
+            t = t.flip(-2)
+        if tr:
+            t = t.transpose(-1, -2)
+        if vec:
+            t = t.clone()
+            for c in vec:
+                a, b = t[:, c].clone(), t[:, c + 1].clone()
+                if fx:
+                    a = -a
+                if fy:
+                    b = -b
+                if tr:
+                    a, b = b, a
+                t[:, c], t[:, c + 1] = a, b
+        return t
+
+    def _sym_inv(self, t, op):
+        fx, fy, tr = op
+        if tr:
+            t = t.transpose(-1, -2)
+        if fy:
+            t = t.flip(-2)
+        if fx:
+            t = t.flip(-1)
+        return t
+
+    def net_fwd(self, x):
+        """Grid net; with self.sym the net's scalar output (potential) is averaged over the group of grid symmetries (input vectors transformed, output pulled back)."""
+        if not self.sym:
+            return self.net(x)
+        vec = [1, 3] if self.kernel else [1]
+        ops = self.SYM_OPS[self.sym]
+        B = x.shape[0]
+        xs = torch.cat([self._sym_op(x, op, vec) for op in ops], 0)
+        out = self.net(xs)
+        return sum(self._sym_inv(out[i * B:(i + 1) * B], op) for i, op in enumerate(ops)) / len(ops)
 
     def _nscale(self, x, mass, mask):
         if self.norm == "mass":
@@ -522,10 +568,10 @@ class ScatterField(nn.Module):
                 field = self._net16(x.half()).float()
             elif amp:
                 with torch.autocast("cuda", dtype=torch.float16 if amp == "half" else torch.bfloat16):
-                    field = self.net(x)
+                    field = self.net_fwd(x)
                 field = field.float()
             else:
-                field = self.net(x)
+                field = self.net_fwd(x)
         acc = self.neg_grad(field[:, :1], self.npad) if self.potential else field[:, :2]
         if self.kernel:
             acc = acc + ak
@@ -1150,6 +1196,9 @@ def apply_opt(model, name):
         return
     if name == "nrep":
         model.npad = "rep"
+        return
+    if name.startswith("sym"):
+        model.sym = name[3:]
         return
     if name.startswith("far") or name.startswith("kfar"):
         base, _, band = name.partition("@")

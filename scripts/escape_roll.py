@@ -47,6 +47,10 @@ ARMS = {
     "T4in": dict(kind="tile", nt=4, tile=32, halo=16, kern=R1B, mf="in"),
     "T8in": dict(kind="tile", nt=8, tile=32, halo=16, kern=R1B, mf="in"),
     "T8nf": dict(kind="tile", nt=8, tile=32, halo=16, kern=R1B, far=False),
+    "S1d4": dict(kind="single", kern=R1B, sym="d4"),
+    "S1c4": dict(kind="single", kern=R1B, sym="c4"),
+    "S1fl": dict(kind="single", kern=R1B, sym="flip"),
+    "T8d4": dict(kind="tile", nt=8, tile=32, halo=16, kern=R1B, sym="d4"),
     "T8old": dict(kind="tile", nt=8, tile=32, halo=16, kern="old"),
 }
 
@@ -102,6 +106,7 @@ class Arm:
         sf.apply_opts(m, ("default" if spec.get("graph") else "kcache,fastio,cl,adapt") if self.kind == "single" else "kcache,adapt")
         m.adapt_lmax = adapt_lmax
         m.nonet = bool(spec.get("nonet", False))
+        m.sym = spec.get("sym", "")
         if spec["kern"] != "old":
             sfar.install_spec(m, spec["kern"])
         mf = spec.get("mf", True)
@@ -160,7 +165,7 @@ class Arm:
         xin = torch.cat([x, ak, f[None] if f.dim() == 3 else f], 1)
         if "cl" in m.opt:
             xin = xin.contiguous(memory_format=torch.channels_last)
-        fld = m.net(xin)
+        fld = m.net_fwd(xin)
         an = m.neg_grad(fld[:, :1], m.npad)
         a_ker, a_net = m.gather(ak, p)[0], m.gather(an, p)[0]
         a_pp = m.pp_acc(p, MM, mk, m.knn)[0]

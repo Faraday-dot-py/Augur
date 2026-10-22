@@ -145,7 +145,7 @@ class TiledScatter:
             if self.far:
                 ak = ak + self._far_acc(x[:, :1])
             xin = torch.cat([x, ak, field[tiles]], 1)
-            f = x.new_zeros(len(tiles), m.cf, self.G, self.G) if m.nonet else m.net(xin)
+            f = x.new_zeros(len(tiles), m.cf, self.G, self.G) if m.nonet else m.net_fwd(xin)
             acc = m.neg_grad(f[:, :1]) + ak
             kw = {"qmask": OWN} if "adapt" in m.opt else {}
             a = m.gather(acc, P) * INS[..., None] + m.pp_acc(P, M, K, **kw)
