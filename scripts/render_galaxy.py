@@ -1,6 +1,6 @@
 """Side-by-side galaxy density video: columns = exact all-pairs truth (N=1e5) | scatter-field model (N=1e5) | scatter-field model (N=1e9, every body binned); rows = wide window (+-24) and bulge window (+-8).
 Colour = log10 of surface density (fraction of bodies per unit area), same limits in every panel. The 1e5 panels are binned 4x4 (192^2 bins) so a bin holds a usable number of bodies; the 1e9 panel is drawn at 768^2. Frames are streamed (one at a time from memmaps).
-Usage: python3 scripts/render_galaxy.py <dir with g1b g_mesh_100000 g_truth_100000> videos/scatter_galaxy_1e9.mp4"""
+Usage: python3 scripts/render_galaxy.py <dir with <preset>_mesh_1000000000, <preset>_mesh_100000, <preset>_truth_100000> videos/scatter_galaxy_g1.mp4 g1"""
 import json
 import subprocess
 import sys
@@ -12,8 +12,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 
-root, outp = sys.argv[1], sys.argv[2]
-runs = [("exact truth, N=1e5", "g_truth_100000", 100000), ("scatter-field model, N=1e5", "g_mesh_100000", 100000), ("scatter-field model, N=1e9", "g1b", 10 ** 9)]
+root, outp, preset = sys.argv[1], sys.argv[2], sys.argv[3]
+runs = [("exact truth, N=1e5", f"{preset}_truth_100000", 100000), ("scatter-field model, N=1e5", f"{preset}_mesh_100000", 100000), ("scatter-field model, N=1e9", f"{preset}_mesh_1000000000", 10 ** 9)]
 HW = (24.0, 8.0)
 QS = 3000.0
 data = []

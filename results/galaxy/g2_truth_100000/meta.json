@@ -1,0 +1,42 @@
+{
+ "args": {
+  "mode": "truth",
+  "n": 100000,
+  "steps": 1000,
+  "preset": "g2",
+  "ckpt": "",
+  "variant": "ms_kp_pot_v_g128",
+  "c": 100.0,
+  "dt": 0.1,
+  "substeps": 4,
+  "seed": 4738,
+  "state_dtype": "fp32",
+  "chunk": 50000000,
+  "rec_every": 5,
+  "diag_every": 20,
+  "ckpt_every": 250,
+  "res": 768,
+  "nsnap": 200000,
+  "ntgt": 50000,
+  "nsrc": 1000000,
+  "resume": false,
+  "tag": "g2_truth_100000"
+ },
+ "P": {
+  "mdisc": 80.0,
+  "mbulge": 20.0,
+  "rd": 4.0,
+  "rmax": 20.0,
+  "ab": 1.5,
+  "rbmax": 8.0,
+  "Q": 1.5,
+  "cdisp": 1.0
+ },
+ "mass": 0.001,
+ "gpu": "NVIDIA H200 NVL",
+ "nsub": 100000,
+ "ntgt": 50000,
+ "T": 201,
+ "median_ms": 2450.619875919074,
+ "wall_s": 2469.051419806201
+}
