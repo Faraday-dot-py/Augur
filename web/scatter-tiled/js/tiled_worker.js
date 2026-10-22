@@ -96,6 +96,7 @@ onmessage = (e) => {
   if (m.cmd === "init") init(m).catch((err) => postMessage({ type: "error", message: err.message }));
   else if (m.cmd === "reset") start(m, false).catch((err) => postMessage({ type: "error", message: err.message }));
   else if (m.cmd === "branch") start(m, true).catch((err) => postMessage({ type: "error", message: err.message }));
+  else if (m.cmd === "stop") { epoch = -1; limit = -1; }
   else if (m.cmd === "want" && m.epoch === epoch) { limit = m.limit; if (drv && tick >= 0) pump(); }
   else if (m.cmd === "inspect" && drv) { drv.inspect = inspect = m.tile; }
 };

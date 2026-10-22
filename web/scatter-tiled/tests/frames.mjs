@@ -1,5 +1,5 @@
 // Frame quantisation round trips and scene generation.
-import { pack16, unpack16, packUnet, unpackUnet, makeUnetOut } from "../js/tframes.js";
+import { pack16, unpack16, packUnet, unpackUnet, makeUnetOut, toCompact, dequantFrame, makeOut, framePhi } from "../js/tframes.js";
 import { makeScene, SCENES } from "../js/tiled_model.js";
 
 let bad = 0;
@@ -31,6 +31,18 @@ let w8 = 0;
   }
 });
 check(w8 < 0.008, `8-bit U-Net activations: worst error ${(w8 * 100).toFixed(2)}% of the channel max`);
+
+{
+  const f = (g) => Float32Array.from({ length: 16384 }, (_, i) => g(i % 128, Math.floor(i / 128)));
+  const fields = [f((x, y) => -5 - 60 * Math.exp(-((x - 40) ** 2 + (y - 70) ** 2) / 2) + 0.01 * x), f((x, y) => (x * y) % 7 === 0 ? 3 : 0)];
+  const fr = { nt: 1, tick: 0, n: 0, ms: 0, tiles: { rho: pack16([fields[1]], 16384), phiK: pack16([fields[0]], 16384), far: pack16([fields[0].slice(0, 1024)], 1024), phi: pack16([fields[0]], 16384) }, coarse: null };
+  const c = toCompact(fr), o = makeOut(1, 80);
+  dequantFrame(c, o);
+  const rel = (a, b) => { let m = 0, e = 0; for (let j = 0; j < a.length; j++) { m = Math.max(m, Math.abs(b[j])); e = Math.max(e, Math.abs(a[j] - b[j])); } return e / m; };
+  check(rel(o.tiles[0].phi, fields[0]) < 0.015 && rel(o.tiles[0].rho, fields[1]) < 0.015, `compact frame: potential and density at 128x128, worst error ${(100 * Math.max(rel(o.tiles[0].phi, fields[0]), rel(o.tiles[0].rho, fields[1]))).toFixed(2)}% of the tile max`);
+  const ph = framePhi(c, 0, new Float32Array(16384));
+  check(rel(ph, fields[0]) < 0.015, "framePhi of a compact frame matches the potential");
+}
 
 for (const nt of [2, 4]) {
   for (const kind of Object.keys(SCENES)) {

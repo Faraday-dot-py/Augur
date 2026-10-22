@@ -52,6 +52,14 @@ dd.s { font-size: 11px; }
 #mview .ex { color: var(--truth); }
 #mview .le { color: var(--accent); }
 #mstat { font: 11px var(--mono); color: var(--faint); }
+#more { position: fixed; left: 50%; bottom: 76px; transform: translateX(-50%); width: min(560px, calc(100% - 32px)); padding: 10px 14px; font-size: 12px; color: var(--dim); max-height: 45%; overflow-y: auto; }
+#more[hidden] { display: none; }
+#more b { color: var(--fg); font-size: 12px; }
+#more p { margin: 6px 0 0; line-height: 1.45; }
+#more p.warn { color: var(--gold); }
+#more .mrow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 8px; }
+#more progress { width: 140px; accent-color: var(--gold); }
+#m-stat { font: 11px var(--mono); color: var(--faint); }
 #tip { position: fixed; pointer-events: none; padding: 5px 8px; font: 11px var(--mono); max-width: 330px; z-index: 5; }
 #tip[hidden] { display: none; }
 nav.glass { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); width: max-content; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: center; padding: 8px; max-width: calc(100% - 32px); opacity: 0.3; transition: opacity 200ms ease;
@@ -82,6 +90,8 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
   header dl dd { font-size: 12px; }
   header dl div:nth-child(4), header .key { display: none; }
   #stats { left: 12px; right: 12px; top: 148px; width: auto; max-height: 35%; }
+  #more { bottom: 66px; width: calc(100% - 24px); max-height: 38%; padding: 8px 12px; }
+  #more p { margin-top: 4px; }
   #mview { left: 12px; right: 12px; top: 104px; width: auto; max-height: 50%; padding: 8px 12px; }
   nav.glass { left: 12px; right: 12px; bottom: 12px; transform: none; width: auto; max-width: none; flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; gap: 4px; padding: 6px; scrollbar-width: none; }
   nav::-webkit-scrollbar { display: none; }
@@ -129,8 +139,21 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
   </ul>
   <p><b class="ex">Exact operations</b> (no learned parameters): CIC scatter and gather, FFT convolution, finite-difference gradient, avg-pool and bilinear resampling for the far term, ghost and halo bookkeeping, momentum re-centring, Verlet. <b class="le">Learned</b>: the U-Net, the kernel K(r) (2-64-64-1 MLP, 4,417 parameters, retrained to the exact softened law out to r = 1500 and then frozen) and the short-range pair MLP. A tile slab stacks, front to back: potential, far term, local-kernel potential, density; keys 1-5 isolate one.</p>
   <p>Toggling a mechanism restarts the model from the tick on screen with that mechanism changed (the exact sim is unaffected), so the error plot shows what it contributed. The model is not conservative: its error against the sim grows with time (chaotic N-body dynamics amplifies any difference).</p>
+  <p>The default scene's first 100 ticks (model and exact sim) are shipped as a file (tile fields stored at 32x32 and 8 bits, no U-Net activations, so the U-Net panel is dimmed on them) and play with no model running. Compute more ticks continues from the exact tick-100 state; computed ticks have full-resolution fields and the U-Net.</p>
   <p id="mstat">loading weights</p>
 </details>
+<section id="more" class="glass" aria-label="compute more ticks" hidden>
+  <b id="m-title">Shipped ticks</b>
+  <p>Ticks 0-100 above were computed ahead of time and are played from a file. Beyond tick 100 this page runs the model itself, in tile workers in your browser, from the exact tick-100 state, next to the exact sim.</p>
+  <p class="warn">Tick 100 is the longest horizon the project's rollout tests score (err@100). The model does not conserve energy and the dynamics are chaotic, so its error against the exact sim keeps growing with every tick (see Stats); long single-grid tests show a steady energy gain. The tiled code is checked against PyTorch for 20 ticks only.</p>
+  <div class="mrow">
+    <label class="sl">add <select id="sel-more" aria-label="ticks to compute"><option value="20">20</option><option value="50">50</option><option value="100">100</option></select> ticks</label>
+    <button id="b-more" class="gold">Compute more ticks</button>
+    <button id="b-more-stop" hidden>Stop</button>
+    <progress id="p-more" max="1" value="0" hidden></progress>
+    <span id="m-stat"></span>
+  </div>
+</section>
 <div id="tip" class="glass" hidden></div>
 <nav class="glass" aria-label="controls">
   <div class="grp">
@@ -158,6 +181,8 @@ input[type=range] { width: 88px; accent-color: var(--accent); }
   </div>
   <span class="sep"></span>
   <label class="sl" id="l-tick">tick <input type="range" id="r-tick" min="0" max="0" value="0" aria-label="tick"><output id="o-tick">0</output></label>
+  <button id="b-morenav" class="gold" aria-pressed="false" title="Run the model past the shipped ticks, in this browser" hidden>Compute more ticks</button>
+  <span class="sep"></span>
   <label class="sl">channel <input type="range" id="r-ch" min="-1" max="31" value="0" aria-label="U-Net channel, -1 overlays all channels"><output id="o-ch">0</output></label>
   <span class="sep"></span>
   <div class="grp" role="group" aria-label="tile layer">

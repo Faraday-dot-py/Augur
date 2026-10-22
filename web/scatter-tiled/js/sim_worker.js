@@ -28,12 +28,14 @@ async function pump() {
 onmessage = (e) => {
   const m = e.data;
   if (m.cmd === "init") {
-    n = m.n; dt = m.dt; epoch = m.epoch; tick = 0; target = m.limit;
+    n = m.n; dt = m.dt; epoch = m.epoch; tick = m.tick0 || 0; target = m.limit;
     pos = Float64Array.from(m.pos); vel = Float64Array.from(m.vel);
     acc = new Float64Array(2 * n);
     truth.accel(pos, n, acc);
     post();
     pump();
+  } else if (m.cmd === "stop") {
+    target = -1;
   } else if (m.cmd === "want" && m.epoch === epoch) {
     if (m.limit > target) target = m.limit;
     pump();

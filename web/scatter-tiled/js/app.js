@@ -1,5 +1,6 @@
 import { makeScene, SCENES } from "./tiled_model.js";
-import { makeOut, dequantFrame, unpack16, frameBytes, GG } from "./tframes.js";
+import { makeOut, dequantFrame, framePhi, toCompact, frameBytes, GG } from "./tframes.js";
+import { DEFAULT, decodeAsset, decodeState, gunzip } from "./precomputed.js";
 import { drawSeries } from "../../scatter/js/plots.js";
 import { createView } from "./view3d.js";
 
@@ -11,13 +12,45 @@ const AHEAD = { 2: 50, 4: 24 };
 const state = {
   nt: 4, scene: "collapse", n: 300, flags: { ghosts: true, fx: true, far: true }, running: true, tick: -1, runEpoch: 0, modelEpoch: 0, ready: false,
   seed: 4738, mode: "fixed", pos: null, vel: null, errs: [], workers: 1, dt: 0.1,
+  pre: null, fromPre: false, preRun: false, live: true, cap: Infinity, computing: false, batchFrom: 0, moreOpen: false, produced: 0,
 };
 const frames = new Map(), sims = new Map(), errAt = new Map();
 let oldest = 0, newest = -1, lastAdv = 0, stepPending = false, view = null, out = null, config = null, inspect = -1, curves = null;
 const arrivals = [], shownAt = [];
+let producer = null, simWorker = null, simState = 0, readyRes = null, stateFile = null;
+const readyP = new Promise((res) => { readyRes = res; });
+const preLast = () => state.pre.meta.ticks;
 
-const producer = new Worker("js/tiled_worker.js", { type: "module" });
-const simWorker = new Worker("js/sim_worker.js", { type: "module" });
+const isDefault = () => state.nt === DEFAULT.nt && state.scene === DEFAULT.scene && state.n === DEFAULT.n && state.mode === "fixed" && Object.values(state.flags).every(Boolean);
+
+function ensureProducer() {
+  if (producer) return;
+  producer = new Worker("js/tiled_worker.js", { type: "module" });
+  producer.onmessage = onProducer;
+  producer.postMessage({ cmd: "init", workers: Math.max(1, Math.min(16, +params.get("workers") || (navigator.hardwareConcurrency || 4) - 2)) });
+}
+
+function ensureSim() {
+  if (simWorker) return;
+  simWorker = new Worker("js/sim_worker.js", { type: "module" });
+  simWorker.onmessage = onSim;
+}
+
+function loadState() {
+  if (!stateFile) stateFile = fetch("precomputed/state100.bin.gz").then(gunzip).then((b) => decodeState(b, state.pre.meta.n, state.pre.meta.T));
+  return stateFile;
+}
+
+async function loadPre() {
+  try {
+    const meta = await fetch(`precomputed/${DEFAULT.name}.json`).then((r) => r.json());
+    const buf = await fetch(`precomputed/${DEFAULT.name}.bin.gz`).then(gunzip);
+    state.pre = { meta, ...decodeAsset(meta, buf) };
+  } catch (e) {
+    console.warn("no shipped ticks, computing live", e);
+    state.pre = null;
+  }
+}
 
 function rate(list) {
   const now = performance.now();
@@ -29,7 +62,9 @@ const ahead = () => AHEAD[state.nt];
 
 function status() {
   const el = $("mstat");
-  if (state.tick < 0) { el.textContent = state.ready ? "computing tick 0 (" + Math.min(state.nt * state.nt, state.wanted || 1) + " tile workers)" : "loading weights"; return; }
+  if (state.tick < 0) { el.textContent = state.fromPre ? "loading shipped ticks" : state.ready ? "computing tick 0 (" + Math.min(state.nt * state.nt, state.wanted || 1) + " tile workers)" : "loading weights"; return; }
+  if (state.fromPre && !producer) { el.textContent = `tick ${state.tick} · shipped ticks 0-${preLast()} played from the file, no model code running · U-Net activations only in computed ticks`; moreUi(); return; }
+  moreUi();
   const tw = Math.min(state.nt * state.nt, state.wanted || 1), starved = state.running && !(frames.has(state.tick + 1) && sims.has(state.tick + 1));
   el.textContent = `tick ${state.tick} · buffer ${Math.max(0, newest - state.tick)}/${ahead()} · ${rate(shownAt).toFixed(1)} ticks/s shown · ${rate(arrivals).toFixed(2)} frames/s computed · ${tw} tile worker${tw > 1 ? "s" : ""}${starved ? " · waiting for next frame" : ""}`;
 }
@@ -38,17 +73,120 @@ function startRun() {
   state.runEpoch++; state.modelEpoch++;
   frames.clear(); sims.clear(); errAt.clear();
   oldest = 0; newest = -1; state.tick = -1; stepPending = false; state.errs = [];
+  state.cap = Infinity; state.computing = false; state.wantSent = undefined; state.simLimit = 0;
+  if (producer) producer.postMessage({ cmd: "stop" });
+  if (simWorker) simWorker.postMessage({ cmd: "stop" });
+  simState = 0;
   if (!view || view.nt !== state.nt) { view.build(state.nt); view.nt = state.nt; out = makeOut(state.nt * state.nt, state.nt * 16 + 16); }
   inspect = state.nt * state.nt / 2 + state.nt / 2;
   view.setInspect(inspect);
+  view.setFlags(state.flags);
+  state.fromPre = state.preRun = !!state.pre && isDefault();
+  if (state.fromPre) { startPre(); return; }
+  ensureProducer();
+  if (!state.ready) { updateStatus(); return; }
+  state.live = true;
   const seed = state.mode === "fixed" ? state.seed : (state.seed + Math.floor(performance.now())) >>> 0;
   state.runSeed = seed;
   const { pos, vel } = makeScene(state.scene, state.nt, state.n, seed);
   state.pos = pos;
+  ensureSim();
   producer.postMessage({ cmd: "reset", epoch: state.modelEpoch, nt: state.nt, flags: state.flags, pos, vel, limit: ahead() });
   simWorker.postMessage({ cmd: "init", epoch: state.runEpoch, n: state.n, dt: state.dt, pos, vel, limit: ahead() + 20 });
-  view.setFlags(state.flags);
+  simState = 2;
   updateStatus();
+}
+
+// the shipped default scene: every tick comes from the file, no model or sim code runs until the user asks for more
+function startPre() {
+  const { meta, frames: pf, sims: ps } = state.pre;
+  state.live = false;
+  state.pos = pf[0].pos;
+  pf.forEach((f, k) => { frames.set(k, f); sims.set(k, ps[k]); });
+  newest = meta.ticks;
+  state.wantSent = undefined;
+  syncRange();
+  lastAdv = performance.now();
+  show(0);
+}
+
+function wantSim(limit) {
+  state.simLimit = limit;
+  if (simState === 2) { simWorker.postMessage({ cmd: "want", epoch: state.runEpoch, limit }); return; }
+  if (simState === 1 || !state.preRun || limit <= preLast()) return;
+  simState = 1;
+  const ep = state.runEpoch;
+  loadState().then((st) => {
+    if (ep !== state.runEpoch) return;
+    ensureSim();
+    simWorker.postMessage({ cmd: "init", epoch: ep, n: state.n, dt: state.dt, pos: st.spos.slice(), vel: st.svel.slice(), tick0: preLast(), limit: state.simLimit });
+    simState = 2;
+  });
+}
+
+// pushes the model and sim limits for the tick on screen (or for the whole batch while computing more)
+function kick() {
+  if (!state.live) return;
+  const k = Math.max(state.tick, 0), batch = state.cap !== Infinity, want = batch ? state.cap : k + ahead();
+  wantSim(batch ? state.cap : want + 20);
+  if (state.wantSent !== want) { state.wantSent = want; producer.postMessage({ cmd: "want", epoch: state.modelEpoch, limit: want }); }
+}
+
+async function computeMore() {
+  if (!state.fromPre || state.computing) return;
+  const count = +$("sel-more").value;
+  state.batchFrom = newest;
+  state.computing = true;
+  state.cap = newest + count;
+  if (state.live) { kick(); moreUi(); return; }
+  moreUi();
+  const ep = state.modelEpoch;
+  const st = await loadState();
+  ensureProducer();
+  await readyP;
+  if (ep !== state.modelEpoch || !state.computing) return;
+  const last = preLast(), phis = st.phis.map((p) => p.slice());
+  state.live = true;
+  state.modelEpoch++;
+  state.runEpoch++;
+  state.wantSent = state.cap;
+  producer.postMessage({ cmd: "branch", epoch: state.modelEpoch, nt: state.nt, flags: state.flags, tick: last, pos: st.pos.slice(), vel: st.vel.slice(), acc: st.acc.slice(), phis, limit: state.cap },
+    phis.map((p) => p.buffer));
+  simState = 0;
+  wantSim(state.cap);
+}
+
+function stopMore() {
+  state.computing = false;
+  state.cap = newest;
+  kick();
+  moreUi();
+}
+
+function moreUi() {
+  const box = $("more"), pre = state.fromPre, k = state.tick, last = state.pre ? preLast() : 0;
+  const open = pre && (state.moreOpen || state.computing || k >= last || newest > last);
+  box.hidden = !open;
+  $("b-morenav").hidden = !pre;
+  $("b-morenav").setAttribute("aria-pressed", String(open));
+  if (!open) return;
+  const done = Math.max(0, newest - state.batchFrom), total = Math.max(1, state.cap - state.batchFrom);
+  $("b-more").hidden = state.computing;
+  $("b-more-stop").hidden = !state.computing;
+  $("sel-more").disabled = state.computing;
+  const pg = $("p-more");
+  pg.hidden = !state.computing;
+  pg.max = total; pg.value = done;
+  if (state.computing) {
+    $("m-title").textContent = `Computing in this browser: tick ${newest} of ${state.cap}`;
+    $("m-stat").textContent = `${rate(arrivals).toFixed(2)} ticks/s on ${Math.min(state.nt * state.nt, state.wanted || 1)} tile workers`;
+  } else if (newest > last) {
+    $("m-title").textContent = `Computed through tick ${newest} (shipped through ${last})`;
+    $("m-stat").textContent = "";
+  } else {
+    $("m-title").textContent = k >= last ? `Tick ${last} is the last shipped tick` : `Shipped ticks 0-${last}`;
+    $("m-stat").textContent = "";
+  }
 }
 
 function updateStatus() {
@@ -85,7 +223,7 @@ function show(k) {
   $("s-err").textContent = m.toFixed(3);
   $("s-seam").textContent = `${f(e.seam)} / ${f(e.inner)}`;
   $("s-seamn").textContent = `${e.seam[1]} / ${e.inner[1]}`;
-  $("s-ms").textContent = fr.ms.toFixed(0) + " ms";
+  $("s-ms").textContent = fr.shipped ? "shipped" : fr.ms.toFixed(0) + " ms";
   if (!state.chTouched && fr.unet && state.autoCh !== state.runEpoch) {
     state.autoCh = state.runEpoch;
     const a = out.unet.dec[0], n = 128 * 128;
@@ -103,14 +241,15 @@ function show(k) {
   syncRange();
   plot();
   shownAt.push(performance.now());
-  simWorker.postMessage({ cmd: "want", epoch: state.runEpoch, limit: k + ahead() + 20 });
-  const want = k + ahead();
-  if (state.wantSent !== want) { state.wantSent = want; producer.postMessage({ cmd: "want", epoch: state.modelEpoch, limit: want }); }
+  kick();
   status();
 }
 
 function history_trim(k) {
-  for (; oldest < k - BEHIND; oldest++) { frames.delete(oldest); sims.delete(oldest); }
+  for (let t = Math.max(0, k - BEHIND - 40); t < k - BEHIND; t++) {
+    const f = frames.get(t);
+    if (f && !f.compact) frames.set(t, toCompact(f));
+  }
 }
 
 function plot() {
@@ -147,12 +286,19 @@ function branch() {
   state.modelEpoch++;
   for (const t of [...frames.keys()]) if (t > k) frames.delete(t);
   newest = k;
+  state.fromPre = false; state.live = true; state.cap = Infinity; state.computing = false;
   const T = fr.nt * fr.nt, phis = [];
-  for (let t = 0; t < T; t++) phis.push(unpack16(fr.tiles.phi, t, new Float32Array(GG)));
-  const pos = fr.pos.slice(), vel = fr.vel.slice(), acc = fr.acc.slice();
+  for (let t = 0; t < T; t++) phis.push(framePhi(fr, t, new Float32Array(GG)));
+  const pos = Float64Array.from(fr.pos), vel = Float64Array.from(fr.vel), acc = Float64Array.from(fr.acc), ep = state.modelEpoch;
   state.wantSent = k + ahead();
-  producer.postMessage({ cmd: "branch", epoch: state.modelEpoch, nt: state.nt, flags: state.flags, tick: k, pos, vel, acc, phis, limit: k + ahead() }, [pos.buffer, vel.buffer, acc.buffer, ...phis.map((p) => p.buffer)]);
+  ensureProducer();
+  readyP.then(() => {
+    if (ep !== state.modelEpoch) return;
+    producer.postMessage({ cmd: "branch", epoch: ep, nt: state.nt, flags: state.flags, tick: k, pos, vel, acc, phis, limit: k + ahead() }, [pos.buffer, vel.buffer, acc.buffer, ...phis.map((p) => p.buffer)]);
+    wantSim(k + ahead() + 20);
+  });
   syncRange();
+  moreUi();
 }
 
 function setFlag(key) {
@@ -178,35 +324,41 @@ function setInspect(k) {
   if (k === inspect) return;
   inspect = k;
   view.setInspect(k);
+  if (!state.live) return;
   producer.postMessage({ cmd: "inspect", tile: k });
   if (state.tick >= 0) branch();
 }
 
-producer.onmessage = (e) => {
+const mcapText = (params) => `${params.toLocaleString()} parameters shared by every tile (U-Net, short-range pair MLP) plus the 4,417-parameter far kernel. Each tile runs the same 128x128 grid network on its 32-unit core plus a 16-unit halo; tiles never see each other except through the exchanged ghost bodies, halo potential and the coarse far term.`;
+
+function onProducer(e) {
   const m = e.data;
   if (m.type === "error") { err.textContent = "Model error: " + m.message; err.hidden = false; return; }
   if (m.type === "ready") {
     config = m.config; curves = m.curves; state.wanted = m.workers; state.dt = config.dt;
     $("s-ckpt").textContent = `${m.checkpoint} (${m.iters} it) + ${m.kernel}`;
-    $("mcap").textContent = `${m.params.toLocaleString()} parameters shared by every tile (U-Net, short-range pair MLP) plus the 4,417-parameter far kernel. Each tile runs the same 128x128 grid network on its 32-unit core plus a 16-unit halo; tiles never see each other except through the exchanged ghost bodies, halo potential and the coarse far term.`;
+    $("mcap").textContent = mcapText(m.params);
     state.ready = true;
-    if (view) { view.setChart(curves); startRun(); }
+    readyRes();
+    if (view && !state.fromPre) { view.setChart(curves); startRun(); }
     return;
   }
   if (m.type !== "frame" || m.epoch !== state.modelEpoch) return;
   frames.set(m.tick, m);
   newest = Math.max(newest, m.tick);
+  state.produced++;
   arrivals.push(performance.now());
+  if (state.computing && newest >= state.cap) state.computing = false;
   if (state.tick < 0 && sims.has(m.tick)) { lastAdv = performance.now(); show(m.tick); } else syncRange();
   status();
-};
+}
 
-simWorker.onmessage = (e) => {
+function onSim(e) {
   const m = e.data;
   if (m.type !== "sim" || m.epoch !== state.runEpoch) return;
   sims.set(m.tick, m);
   if (state.tick < 0 && frames.has(m.tick)) { lastAdv = performance.now(); show(m.tick); }
-};
+}
 
 $("b-pause").addEventListener("click", () => setRunning(!state.running));
 $("b-step").addEventListener("click", () => { if (state.running) setRunning(false); stepPending = true; tryAdvance(); });
@@ -252,6 +404,10 @@ $("b-arrows").addEventListener("click", () => toggleOpt("b-arrows", "arrows"));
 $("b-overlay").addEventListener("click", () => toggleOpt("b-overlay", "overlay"));
 $("b-stats").addEventListener("click", () => { $("stats").hidden = !$("stats").hidden; $("b-stats").setAttribute("aria-pressed", String(!$("stats").hidden)); plot(); });
 
+$("b-more").addEventListener("click", () => computeMore());
+$("b-more-stop").addEventListener("click", () => stopMore());
+$("b-morenav").addEventListener("click", () => { state.moreOpen = true; moreUi(); $("b-more").focus(); });
+
 window.addEventListener("keydown", (e) => {
   if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
   const k = e.key;
@@ -291,15 +447,28 @@ async function main() {
   state.nt = 0;
   setNtInitial(nt);
   view.show(true);
-  if (state.ready) { view.setChart(curves); startRun(); }
   setInterval(status, 500);
   window.__view = view;
   window.__app = () => {
     let bytes = 0;
     for (const f of frames.values()) bytes += frameBytes(f);
-    return { tick: state.tick, ahead: newest - state.tick, frames: frames.size, bytes, nt: state.nt, n: state.n, flags: { ...state.flags }, err: errAt.get(state.tick), shownRate: rate(shownAt), prodRate: rate(arrivals), workers: Math.min(state.nt * state.nt, state.wanted || 1), inspect };
+    return { tick: state.tick, ahead: newest - state.tick, frames: frames.size, bytes, nt: state.nt, n: state.n, flags: { ...state.flags }, err: errAt.get(state.tick), shownRate: rate(shownAt), prodRate: rate(arrivals), workers: Math.min(state.nt * state.nt, state.wanted || 1), inspect,
+      fromPre: state.fromPre, producerStarted: !!producer, simStarted: !!simWorker, produced: state.produced, newest, computing: state.computing, cap: state.cap };
   };
   window.__state = state;
+  window.__frames = frames;
+  if (isDefault() && params.get("live") === null) await loadPre();
+  if (state.pre) {
+    const m = state.pre.meta;
+    config = m.config; curves = m.curves; state.dt = m.dt;
+    view.setChart(curves);
+    $("s-ckpt").textContent = `${m.checkpoint} (${m.iters} it) + ${m.kernel}`;
+    $("mcap").textContent = mcapText(m.params);
+    startRun();
+  } else {
+    ensureProducer();
+    if (state.ready) { view.setChart(curves); startRun(); }
+  }
 }
 
 function setNtInitial(nt) {
@@ -314,5 +483,4 @@ function setNtInitial(nt) {
   out = makeOut(nt * nt, nt * 16 + 16);
 }
 
-producer.postMessage({ cmd: "init", workers: Math.max(1, Math.min(16, +params.get("workers") || (navigator.hardwareConcurrency || 4) - 2)) });
 main();

@@ -64,6 +64,32 @@ kernel) after 20 steps: 1.4e-3 (2x2), 1.9e-3 and 2.5e-3 (4x4), equal to PyTorch'
 `tests/frames.mjs` checks quantisation round trips and scene generation; `tests/ui.py <outdir>` drives the page with
 Playwright (serve `web/` on port 8765 first): lockstep, mechanism toggles, tile inspection, hover, 4x4 switch.
 
+## Shipped ticks and compute more
+
+The default scene (4x4 tiles, cold collapse, 300 bodies, fixed seed 4738, all mechanisms on) ships ticks 0-100 of the model and of the exact
+sim in `precomputed/`: `tiled4_collapse300.bin.gz` (planar binary, per-tick float32 bodies and accelerations, ghost lists, 8-bit
+sqrt-companded tile fields with a per-tile max; density and potential at 128x128, local-kernel potential and far term at 32x32, no U-Net
+activations), `tiled4_collapse300.json` (layout, kernel chart, weights summary) and `state100.bin.gz` (float64 bodies of the model and
+the sim at tick 100, float32 potential windows of the 16 tiles). The page plays the 101 ticks from the file with no model code running: no
+weights, tile worker or sim worker is fetched or started (checked in `tests/ui_precomputed.py`). "Compute more ticks" (a panel at tick 100, and a
+nav button) loads `state100.bin.gz` and the weights, starts the tile workers, restores the model from the exact tick-100 state
+(`TiledDriver.restore`) and the exact sim from its tick-100 state, and appends 20 / 50 / 100 ticks; Stop halts it and the same button resumes.
+Computed ticks keep full-resolution fields and the U-Net; frames older than 20 ticks are compacted to the shipped format. Any other scene,
+body count, grid, random seed or a mechanism toggle is computed live from tick 0 as before (a toggle at a shipped tick restarts from that tick's
+compressed state, which is slightly off the exact state: see the last line of the test). `?live` skips the shipped ticks.
+
+The panel states the horizon plainly: tick 100 is the longest horizon the project's rollout tests score (err@100), the model is not energy
+conserving, the dynamics are chaotic and its error against the sim keeps growing; the tiled JS is checked against PyTorch for 20 ticks only.
+
+Regenerate (about 5 min on 16 threads, writes the files above and `tests/ref_continue.json`, the continuous run's ticks 100-120):
+
+    node web/scatter-tiled/tools/precompute.mjs 100 20
+
+Check (`PARITY_TICKS=100` recomputes the whole shipped run from tick 0, about 4 min):
+
+    node web/scatter-tiled/tests/precomputed.mjs
+    python3 web/scatter-tiled/tests/ui_precomputed.py <outdir>     # serve web/ on port 8765 first
+
 ## Re-export weights
 
     PYTHONPATH=. python3 scripts/export_web_weights_scatter_tiled.py --checkpoint E_ms_kp_pot_v_g128.pt --kernel results/far_kernels/r1b_mlp.pt
@@ -75,7 +101,9 @@ Playwright (serve `web/` on port 8765 first): lockstep, mechanism toggles, tile 
   Verlet, restore), kernel curves, scenes. Builds on `../scatter/js/scatter_model.js` (U-Net, FFT, MLP).
 - `js/tiled_worker.js`: producer; spawns `js/tile_worker.js` workers, runs the Verlet loop and posts frames.
 - `js/sim_worker.js`: the exact simulation, one message per tick.
-- `js/tframes.js`: frame packing (16-bit per-tile fields, 8-bit U-Net of the inspected tile).
+- `js/tframes.js`: frame packing (16-bit per-tile fields, 8-bit U-Net of the inspected tile; compact 8-bit frames).
+- `js/precomputed.js`: shipped-tick file format (encode, decode) and the tick-100 state.
+- `tools/precompute.mjs`: builds `precomputed/` with the JS model on worker threads.
 - `js/view3d.js`, `js/app.js`: the 3D view, playback, controls. Uses `../scatter/js/{stage,colors,plots,truth}.js`.
 - `weights.bin` / `weights.json`: 264,836 fp32 weights (Exp E 260,419 + far kernel 4,417) and config.
 - `tests/vectors.json`: PyTorch references.
