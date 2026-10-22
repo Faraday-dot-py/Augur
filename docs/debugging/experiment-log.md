@@ -3357,3 +3357,18 @@ Caveat recorded up front: frozen E's own three nr100 dE@1000 runs span .0074-.01
 Prediction (mine): KILL on accuracy. ab err@20 ~.019-.021 (P(<=.0076) ~.07): the ladder's six arms collapsed to .0215 irrespective of trainable set, and 8.8k head params on top of frozen U-Net features have little capacity to move position error 3x; 6x more iterations at 5x lr should buy at most a few % more. dE keeps passing (P ~.8) since heads-only left the U-Net untouched. P(PASS both) ~.05.
 Resume plumbing: train() auto-resumes from the 100-it full-state checkpoint (no --resume flag exists; presence of the ckpt file is the trigger), SIGTERM handler saves and exits, wrapper has --requeue and a TERM trap; resume smoke-tested before the long jobs (see result).
 Resume smoke (job 3865, 3000-it version of the wrapper, ~0.106 s/it): SIGTERM at it ~100 -> "SIGTERM at it 108, checkpoint saved", wrapper exit 143; rerun -> "resumed from it 108", "trained 3000 iters", final checkpoint written. Resume + SIGTERM path now exercised (first attempt, job 3863, finished before the signal and proved nothing). Full jobs not yet submitted (queued behind the core-drift agents' jobs).
+
+#### Result (jobs 3884 seed 4738, 3885 seed 4739; 1 GPU each, ~2.9 h wall each incl. evals, ~5.5 GPU-h total; 2026-10-22) -- KILL: heads alone do not reach .0063
+Notation as in the ladder. nr100 dE@1000 = median of 3 regress runs (individual runs in brackets); frozen E re-evaluated with the same code (this job's frozen E median .0089, gate 1.15x = .0102).
+
+| arm | ab err@20 (gate <= .0076) | ab err@100 | cl err@20 / @100 | expB err@20 | nr100 dE@1000 (gate <= .0102) | bh300 dE / dL @100 | bh300 dE / dL @1000 | verdict |
+|---|---|---|---|---|---|---|---|---|
+| frozen E | .02327 | 1.397 | .0606 / 4.395 | .02396 | .0089 [.0187 .0089 .0079] | .037 / .210 | .493 / 1.91 | ref |
+| heads-only 60k it lr 5e-4 (4738) | .02146 (-7.8%) | 1.369 | .0571 / 4.412 | .02206 | .0109 [.0093 .0235 .0109] | .059 / .235 | .466 / 1.67 | KILL (accuracy; dE just over gate) |
+| heads-only 60k it lr 5e-4 (4739) | .02156 | 1.373 | .0574 / 4.416 | .02217 | .0322 [.0322 .0356 .0288] | .060 / .142 | .465 / 2.41 | KILL (accuracy and dE) |
+
+Findings. (1) Accuracy is unchanged by 6x iterations and 5x lr: .0215 vs ladder heads-only .0215 (10k it, lr 1e-4). The head params saturate at -7.5% regardless of schedule; the .0063 result requires moving the U-Net. This closes the ladder's open question: it is capacity of the trainable set, not schedule length (the ladder's "schedule limits accuracy" reading was wrong for heads-only). (2) nr100 dE@1000 is within eval noise for seed 4738 (.0109 vs E's .0079-.0187 range) but seed 4739 is 3.6x frozen E (.032), so longer/higher-lr head training does start to cost dE even with the U-Net frozen (ladder heads-only: .0055/.0174). (3) Other rows near E; bh300 dE@1000 slightly lower than E (.466 vs .493).
+Prediction check: ab err@20 ~.019-.021 predicted, got .0215 (marginally above range); KILL hit; dE-pass prediction (P .8) half missed (4739 fails).
+No render review: metrics-only arm, all rows within 8% of E in position error.
+Verdict: KILL. Do not pursue heads-only; accuracy beyond -8% needs U-Net weight change, which loses dE (full-scale Euclid, L2-SP, replay all fail dE).
+Files: scripts/polaris_el_heads_full.sh, polaris_el_heads_smoke.sh, heads_full_gate.py, results/euclid_heads_full/ (eval jsons).
