@@ -73,7 +73,7 @@ function startRun() {
   state.runEpoch++; state.modelEpoch++;
   frames.clear(); sims.clear(); errAt.clear();
   oldest = 0; newest = -1; state.tick = -1; stepPending = false; state.errs = [];
-  state.cap = Infinity; state.computing = false; state.wantSent = undefined; state.simLimit = 0;
+  state.cap = Infinity; state.computing = false; state.wantSent = undefined; state.simLimit = 0; state.moreShut = false; state.moreOpen = false;
   if (producer) producer.postMessage({ cmd: "stop" });
   if (simWorker) simWorker.postMessage({ cmd: "stop" });
   simState = 0;
@@ -165,7 +165,7 @@ function stopMore() {
 
 function moreUi() {
   const box = $("more"), pre = state.fromPre, k = state.tick, last = state.pre ? preLast() : 0;
-  const open = pre && (state.moreOpen || state.computing || k >= last || newest > last);
+  const open = pre && (state.moreOpen || state.computing || (!state.moreShut && (k >= last || newest > last)));
   box.hidden = !open;
   box.style.setProperty("--navh", document.querySelector("nav").offsetHeight + 28 + "px");
   $("b-morenav").hidden = !pre;
@@ -407,7 +407,8 @@ $("b-stats").addEventListener("click", () => { $("stats").hidden = !$("stats").h
 
 $("b-more").addEventListener("click", () => computeMore());
 $("b-more-stop").addEventListener("click", () => stopMore());
-$("b-morenav").addEventListener("click", () => { state.moreOpen = true; moreUi(); $("b-more").focus(); });
+$("b-morenav").addEventListener("click", () => { state.moreOpen = true; state.moreShut = false; moreUi(); $("b-more").focus(); });
+$("b-more-x").addEventListener("click", () => { state.moreOpen = false; state.moreShut = true; moreUi(); });
 
 window.addEventListener("keydown", (e) => {
   if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;

@@ -51,6 +51,11 @@ with sync_playwright() as p:
     check(d < 1e-5, f"displayed tick 100 equals the reference run (max diff {d:.1e})")
     check(not any("rror" in l for l in logs), f"no console errors {logs[:3]}")
 
+    pg.click("#b-more-x")
+    check(pg.evaluate("document.getElementById('more').hidden"), "panel can be closed")
+    pg.click("#b-morenav")
+    check(not pg.evaluate("document.getElementById('more').hidden"), "nav button reopens the panel")
+
     # compute more
     pg.select_option("#sel-more", MORE)
     t1 = time.time()

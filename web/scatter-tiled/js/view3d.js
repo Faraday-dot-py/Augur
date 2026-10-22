@@ -521,7 +521,8 @@ export async function createView({ canvas, labelsEl, tip, handlers }) {
     note("ks", "violet: shipped kmlp, repulsive beyond r = 64", V(KBASE[0] + 9, KBASE[1] - 12.2), "k1", 0.9);
     note("farT", "far term: mass outside a tile's box, via the coarse grid (orange arcs)", V((FAR_C0[0] + FAR_C1[0]) / 2, FAR_C0[1] + 11.5), fl.far ? "" : "dim", 0.95);
     const unetTile = fr && fr.unet ? fr.unet.tile : state.inspect, ux = unetTile;
-    note("ut", `U-Net of tile ${Math.floor(ux / nt)},${ux % nt} &middot; same weights in all ${T} tiles (click a tile) &middot; e = encoder, d = decoder`, V(46, 3.6), learned);
+    const noAct = fr && fr.compact && !fr.unet;
+    note("ut", `U-Net of tile ${Math.floor(ux / nt)},${ux % nt} &middot; ` + (noAct ? "activations not stored in shipped ticks" : `same weights in all ${T} tiles (click a tile) &middot; e = encoder, d = decoder`), V(46, 3.6), learned);
     for (const [id, b] of [["h0", U.h0], ...U.enc.map((b, l) => ["enc" + l, b]), ...U.dec.map((b, l) => ["dec" + l, b])]) {
       if (!b) continue;
       note("b" + id, id === "h0" ? "in conv &middot; 128&sup2;" : (id.startsWith("enc") ? "e" : "d") + id.slice(3) + " &middot; " + b.H + "&sup2;", V(b.group.position.x, -b.group.position.z + b.sizeY / 2 + 0.4, b.group.position.y), "", narrow ? 0 : 0.9);
