@@ -1,0 +1,57 @@
+ls: cannot access 'checkpoints/scatter_bh/': No such file or directory
+/home/adamwebb/edge_ck:
+ctrl_full.pt
+ctrl_inout.pt
+eval1_results
+eval2_results
+eval3_results
+eval4_results
+ff_ctrl.pt
+ff_open.pt
+gf_ctrl.pt
+gf_open.pt
+gf_trans.pt
+ghost_ctrl.pt
+ghost_lsq.pt
+ghost_open.pt
+ghost_trans.pt
+harn7_results
+if_ctrl.pt
+if_open.pt
+lr1_results
+lr2_results
+lr3_results
+lr4_results
+open_full.pt
+open_inout.pt
+trainA_results
+trainB_results
+trans_full.pt
+trans_inout.pt
+
+results/far_kernels:
+r1b_mlp.pt
+name, memory.used [MiB], memory.total [MiB]
+NVIDIA H200 NVL, 0 MiB, 143771 MiB
+Traceback (most recent call last):
+  File "/home/adamwebb/augur-p1e8/scripts/bh_wave_run.py", line 329, in <module>
+    main()
+  File "/home/adamwebb/augur-p1e8/scripts/bh_wave_run.py", line 315, in main
+    models["model_old"] = pc.build(args, DEV, "ms_kp_pot_v_g128", args.ckpt, "old")
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/augur-p1e8/scripts/proposed_check.py", line 45, in build
+    m.load_state_dict(torch.load(ckpt, map_location=dev, weights_only=False)["model"])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/.local/lib/python3.12/site-packages/torch/serialization.py", line 1565, in load
+    with _open_file_like(f, "rb") as opened_file:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/.local/lib/python3.12/site-packages/torch/serialization.py", line 795, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/.local/lib/python3.12/site-packages/torch/serialization.py", line 776, in __init__
+    super().__init__(open(name, mode))  # noqa: SIM115
+                     ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt'
+total 21
+drwxr-x--- 2 adamwebb Cal Poly Pomona Intranet Users  2 Oct 22 17:02 .
+drwxr-x--- 5 adamwebb Cal Poly Pomona Intranet Users 21 Oct 22 17:02 ..

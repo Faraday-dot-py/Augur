@@ -1,0 +1,190 @@
+[truth4 n=10000] tick 0 wall 0s L -5.877e+03 |l| 1.414e+06 KE/N 169.9 pmax 185 out 0.000
+[truth4 n=10000] tick 25 wall 1s L -5.870e+03 |l| 1.697e+06 KE/N 1359 pmax 662 out 0.013
+[truth4 n=10000] tick 50 wall 2s L -5.969e+03 |l| 1.848e+06 KE/N 1041 pmax 575 out 0.033
+[truth4 n=10000] tick 75 wall 3s L -6.142e+03 |l| 1.923e+06 KE/N 972.1 pmax 545 out 0.182
+[truth4 n=10000] tick 100 wall 3s L -6.239e+03 |l| 1.990e+06 KE/N 987.9 pmax 554 out 0.207
+[truth4 n=10000] tick 125 wall 4s L -6.353e+03 |l| 2.030e+06 KE/N 988.5 pmax 558 out 0.208
+[truth4 n=10000] tick 150 wall 5s L -6.474e+03 |l| 2.088e+06 KE/N 1003 pmax 571 out 0.207
+[truth1 n=10000] tick 0 wall 0s L -5.877e+03 |l| 1.414e+06 KE/N 169.9 pmax 185 out 0.000
+[truth1 n=10000] tick 25 wall 0s L -5.881e+03 |l| 1.782e+06 KE/N 1343 pmax 588 out 0.013
+[truth1 n=10000] tick 50 wall 1s L -5.949e+03 |l| 1.934e+06 KE/N 860.4 pmax 419 out 0.033
+[truth1 n=10000] tick 75 wall 1s L -6.089e+03 |l| 2.050e+06 KE/N 838.7 pmax 417 out 0.190
+[truth1 n=10000] tick 100 wall 2s L -6.162e+03 |l| 2.118e+06 KE/N 852.9 pmax 429 out 0.210
+[truth1 n=10000] tick 125 wall 2s L -6.255e+03 |l| 2.151e+06 KE/N 852.5 pmax 430 out 0.212
+[truth1 n=10000] tick 150 wall 2s L -6.355e+03 |l| 2.209e+06 KE/N 850.9 pmax 421 out 0.214
+[pm128 n=10000] tick 0 wall 0s L -5.877e+03 |l| 1.414e+06 KE/N 169.9 pmax 185 out 0.000
+[pm128 n=10000] tick 25 wall 0s L 4.962e+03 |l| 1.725e+06 KE/N 1287 pmax 561 out 0.010
+[pm128 n=10000] tick 50 wall 1s L 1.240e+04 |l| 1.929e+06 KE/N 835.4 pmax 405 out 0.021
+[pm128 n=10000] tick 75 wall 1s L 1.178e+05 |l| 2.168e+06 KE/N 853.6 pmax 439 out 0.136
+[pm128 n=10000] tick 100 wall 1s L 9.911e+04 |l| 2.159e+06 KE/N 872.8 pmax 426 out 0.156
+[pm128 n=10000] tick 125 wall 1s L 8.946e+04 |l| 2.167e+06 KE/N 895 pmax 433 out 0.162
+[pm128 n=10000] tick 150 wall 2s L 8.620e+04 |l| 2.167e+06 KE/N 844.6 pmax 403 out 0.168
+[pm256 n=10000] tick 0 wall 0s L -5.877e+03 |l| 1.414e+06 KE/N 169.9 pmax 185 out 0.000
+[pm256 n=10000] tick 25 wall 0s L -5.196e+03 |l| 1.762e+06 KE/N 1327 pmax 579 out 0.010
+[pm256 n=10000] tick 50 wall 1s L 7.569e+03 |l| 1.937e+06 KE/N 883.3 pmax 419 out 0.022
+[pm256 n=10000] tick 75 wall 1s L 8.233e+04 |l| 2.256e+06 KE/N 869.4 pmax 441 out 0.144
+[pm256 n=10000] tick 100 wall 1s L 7.447e+04 |l| 2.262e+06 KE/N 941.2 pmax 432 out 0.165
+[pm256 n=10000] tick 125 wall 1s L 6.841e+04 |l| 2.274e+06 KE/N 923.4 pmax 470 out 0.173
+[pm256 n=10000] tick 150 wall 2s L 6.531e+04 |l| 2.303e+06 KE/N 877.4 pmax 430 out 0.182
+[pm128s4 n=10000] tick 0 wall 0s L -5.877e+03 |l| 1.414e+06 KE/N 169.9 pmax 185 out 0.000
+[pm128s4 n=10000] tick 25 wall 0s L 6.690e+03 |l| 1.693e+06 KE/N 1316 pmax 626 out 0.010
+[pm128s4 n=10000] tick 50 wall 1s L 1.615e+04 |l| 1.805e+06 KE/N 927.5 pmax 502 out 0.020
+[pm128s4 n=10000] tick 75 wall 1s L 1.058e+05 |l| 2.020e+06 KE/N 908.9 pmax 505 out 0.125
+[pm128s4 n=10000] tick 100 wall 1s L 9.698e+04 |l| 2.008e+06 KE/N 980.5 pmax 517 out 0.145
+[pm128s4 n=10000] tick 125 wall 2s L 8.294e+04 |l| 2.006e+06 KE/N 948.4 pmax 491 out 0.149
+[pm128s4 n=10000] tick 150 wall 2s L 7.920e+04 |l| 2.016e+06 KE/N 940.2 pmax 513 out 0.154
+[model_old n=10000] tick 0 wall 0s L -5.877e+03 |l| 1.414e+06 KE/N 169.9 pmax 185 out 0.000
+[model_old n=10000] tick 25 wall 0s L -6.865e+04 |l| 1.925e+06 KE/N 1363 pmax 615 out 0.010
+[model_old n=10000] tick 50 wall 1s L -2.461e+04 |l| 2.334e+06 KE/N 959.8 pmax 458 out 0.028
+[model_old n=10000] tick 75 wall 1s L -1.123e+05 |l| 3.521e+06 KE/N 987.3 pmax 453 out 0.160
+[model_old n=10000] tick 100 wall 1s L -2.615e+05 |l| 4.262e+06 KE/N 1037 pmax 441 out 0.177
+[model_old n=10000] tick 125 wall 2s L -4.312e+05 |l| 4.912e+06 KE/N 988.5 pmax 441 out 0.185
+[model_old n=10000] tick 150 wall 2s L -6.778e+05 |l| 6.354e+06 KE/N 1006 pmax 421 out 0.199
+[model_new n=10000] tick 0 wall 0s L -5.877e+03 |l| 1.414e+06 KE/N 169.9 pmax 185 out 0.000
+[model_new n=10000] tick 25 wall 0s L -7.408e+04 |l| 1.873e+06 KE/N 1358 pmax 616 out 0.013
+[model_new n=10000] tick 50 wall 1s L -2.880e+04 |l| 2.110e+06 KE/N 944.4 pmax 444 out 0.036
+[model_new n=10000] tick 75 wall 1s L -2.771e+04 |l| 2.597e+06 KE/N 891.7 pmax 432 out 0.193
+[model_new n=10000] tick 100 wall 1s L -1.557e+05 |l| 3.425e+06 KE/N 957.3 pmax 443 out 0.215
+[model_new n=10000] tick 125 wall 2s L -3.542e+05 |l| 4.515e+06 KE/N 887.5 pmax 418 out 0.225
+[model_new n=10000] tick 150 wall 2s L -5.235e+05 |l| 6.653e+06 KE/N 907.7 pmax 429 out 0.240
+DONE
+[pm128 n=1000000] tick 0 wall 0s L -7.096e+06 |l| 3.005e+09 KE/N 4611 pmax 1.94e+03 out 0.000
+[pm128 n=1000000] tick 25 wall 0s L -7.499e+07 |l| 1.236e+10 KE/N 1.482e+05 pmax 5.55e+04 out 0.000
+[pm128 n=1000000] tick 50 wall 1s L -1.305e+08 |l| 1.508e+10 KE/N 1.215e+05 pmax 4.74e+04 out 0.003
+[pm128 n=1000000] tick 75 wall 1s L -2.839e+08 |l| 1.635e+10 KE/N 1.205e+05 pmax 4.77e+04 out 0.107
+[pm128 n=1000000] tick 100 wall 1s L -3.308e+08 |l| 1.681e+10 KE/N 1.251e+05 pmax 5.05e+04 out 0.111
+[pm128 n=1000000] tick 125 wall 2s L -3.976e+08 |l| 1.727e+10 KE/N 1.199e+05 pmax 4.93e+04 out 0.112
+[pm128 n=1000000] tick 150 wall 2s L -4.376e+08 |l| 1.734e+10 KE/N 1.195e+05 pmax 4.86e+04 out 0.114
+[pm256 n=1000000] tick 0 wall 0s L -7.096e+06 |l| 3.005e+09 KE/N 4611 pmax 1.94e+03 out 0.000
+[pm256 n=1000000] tick 25 wall 0s L -6.433e+07 |l| 1.439e+10 KE/N 1.433e+05 pmax 5.36e+04 out 0.000
+[pm256 n=1000000] tick 50 wall 1s L -7.947e+07 |l| 1.541e+10 KE/N 1.242e+05 pmax 5.37e+04 out 0.006
+[pm256 n=1000000] tick 75 wall 1s L -5.463e+07 |l| 1.685e+10 KE/N 1.274e+05 pmax 5.14e+04 out 0.123
+[pm256 n=1000000] tick 100 wall 1s L -4.625e+07 |l| 1.758e+10 KE/N 1.282e+05 pmax 5.39e+04 out 0.128
+[pm256 n=1000000] tick 125 wall 1s L -5.049e+07 |l| 1.754e+10 KE/N 1.241e+05 pmax 5.51e+04 out 0.131
+[pm256 n=1000000] tick 150 wall 2s L -5.290e+07 |l| 1.792e+10 KE/N 1.231e+05 pmax 5.25e+04 out 0.138
+[pm128s4 n=1000000] tick 0 wall 0s L -7.096e+06 |l| 3.005e+09 KE/N 4611 pmax 1.94e+03 out 0.000
+[pm128s4 n=1000000] tick 25 wall 0s L -1.152e+08 |l| 1.263e+10 KE/N 1.554e+05 pmax 6.46e+04 out 0.000
+[pm128s4 n=1000000] tick 50 wall 1s L -2.795e+08 |l| 1.496e+10 KE/N 1.34e+05 pmax 5.84e+04 out 0.002
+[pm128s4 n=1000000] tick 75 wall 1s L -8.120e+08 |l| 1.630e+10 KE/N 1.375e+05 pmax 6.13e+04 out 0.116
+[pm128s4 n=1000000] tick 100 wall 2s L -1.045e+09 |l| 1.668e+10 KE/N 1.332e+05 pmax 6.05e+04 out 0.118
+[pm128s4 n=1000000] tick 125 wall 2s L -5.950e+08 |l| 1.668e+10 KE/N 1.296e+05 pmax 6.1e+04 out 0.121
+[pm128s4 n=1000000] tick 150 wall 3s L -1.780e+08 |l| 1.688e+10 KE/N 1.316e+05 pmax 5.96e+04 out 0.124
+[model_old n=1000000] tick 0 wall 0s L -7.096e+06 |l| 3.005e+09 KE/N 4611 pmax 1.94e+03 out 0.000
+[model_old n=1000000] tick 25 wall 0s L -1.335e+08 |l| 1.370e+10 KE/N 1.458e+05 pmax 6.73e+04 out 0.001
+[model_old n=1000000] tick 50 wall 1s L -4.406e+08 |l| 1.778e+10 KE/N 1.42e+05 pmax 6.14e+04 out 0.007
+[model_old n=1000000] tick 75 wall 1s L 8.594e+07 |l| 2.721e+10 KE/N 1.343e+05 pmax 5.32e+04 out 0.128
+[model_old n=1000000] tick 100 wall 2s L 5.335e+08 |l| 3.111e+10 KE/N 1.393e+05 pmax 5.66e+04 out 0.137
+[model_old n=1000000] tick 125 wall 2s L 1.009e+09 |l| 3.747e+10 KE/N 1.337e+05 pmax 5.76e+04 out 0.141
+[model_old n=1000000] tick 150 wall 3s L 1.621e+09 |l| 4.710e+10 KE/N 1.342e+05 pmax 6.05e+04 out 0.148
+[model_new n=1000000] tick 0 wall 0s L -7.096e+06 |l| 3.005e+09 KE/N 4611 pmax 1.94e+03 out 0.000
+[model_new n=1000000] tick 25 wall 0s L -1.397e+08 |l| 1.316e+10 KE/N 1.457e+05 pmax 6.74e+04 out 0.001
+[model_new n=1000000] tick 50 wall 1s L -4.513e+08 |l| 1.695e+10 KE/N 1.408e+05 pmax 5.39e+04 out 0.011
+[model_new n=1000000] tick 75 wall 1s L -1.859e+08 |l| 1.987e+10 KE/N 1.273e+05 pmax 5.19e+04 out 0.145
+[model_new n=1000000] tick 100 wall 2s L 4.862e+08 |l| 2.811e+10 KE/N 1.297e+05 pmax 5.27e+04 out 0.158
+[model_new n=1000000] tick 125 wall 2s L 1.583e+09 |l| 4.413e+10 KE/N 1.265e+05 pmax 5.05e+04 out 0.166
+[model_new n=1000000] tick 150 wall 3s L 3.052e+09 |l| 6.741e+10 KE/N 1.275e+05 pmax 5.08e+04 out 0.171
+DONE
+[pm128 n=10000000] tick 0 wall 0s L 4.704e+06 |l| 9.507e+10 KE/N 1.48e+04 pmax 6.81e+03 out 0.000
+[pm128 n=10000000] tick 25 wall 1s L -2.121e+09 |l| 1.602e+12 KE/N 1.556e+06 pmax 5.56e+05 out 0.000
+[pm128 n=10000000] tick 50 wall 2s L -5.069e+08 |l| 1.757e+12 KE/N 1.2e+06 pmax 4.66e+05 out 0.006
+[pm128 n=10000000] tick 75 wall 3s L 8.757e+09 |l| 1.824e+12 KE/N 1.222e+06 pmax 4.84e+05 out 0.105
+[pm128 n=10000000] tick 100 wall 4s L 1.607e+10 |l| 1.843e+12 KE/N 1.238e+06 pmax 5.08e+05 out 0.108
+[pm128 n=10000000] tick 125 wall 4s L 2.535e+10 |l| 1.892e+12 KE/N 1.227e+06 pmax 5.15e+05 out 0.110
+[pm128 n=10000000] tick 150 wall 5s L 3.374e+10 |l| 1.909e+12 KE/N 1.195e+06 pmax 4.82e+05 out 0.115
+[model_old n=10000000] tick 0 wall 0s L 4.704e+06 |l| 9.507e+10 KE/N 1.48e+04 pmax 6.81e+03 out 0.000
+[model_old n=10000000] tick 25 wall 1s L 6.414e+10 |l| 1.620e+12 KE/N 1.582e+06 pmax 6.75e+05 out 0.000
+[W1022 17:24:09.081769294 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 81788928 bytes (free: 7929856, total: 150111715328).
+[W1022 17:24:09.089113364 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 81788928 bytes (free: 28901376, total: 150111715328).
+Traceback (most recent call last):
+  File "/home/adamwebb/augur-p1e8/scripts/bh_wave_run.py", line 329, in <module>
+    main()
+  File "/home/adamwebb/augur-p1e8/scripts/bh_wave_run.py", line 321, in main
+    res = run_arm(name, args, models, pos0, vel0)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/augur-p1e8/scripts/bh_wave_run.py", line 274, in run_arm
+    eng.tick()
+  File "/home/adamwebb/augur-p1e8/scripts/bh_wave_run.py", line 170, in tick
+    self.a = self.force()
+             ^^^^^^^^^^^^
+  File "/home/adamwebb/augur-p1e8/scripts/bh_wave_run.py", line 164, in force
+    a, self.field = self.m.force(self.pos[None], speed(self.mom, self.c)[None], self.mass, self.mass, self.field)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/augur-p1e8/scripts/scatter_field.py", line 468, in force
+    return self._force(pos, vel, mass, mask, field)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/augur-p1e8/scripts/scatter_field.py", line 523, in _force
+    a_tok = self.gather(acc, pos)
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/augur-p1e8/scripts/scatter_field.py", line 183, in gather
+    for flat, w in self._corner_iter(pos):
+                   ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/augur-p1e8/scripts/scatter_field.py", line 143, in _corner_iter
+    flat = bidx * G * G + iy.clamp(0, G - 1) * G + ix.clamp(0, G - 1)
+                          ~~~~~~~~~~~~~~~~~~~^~~
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 78.00 MiB. GPU 0 has a total capacity of 139.80 GiB of which 27.56 MiB is free. Including non-PyTorch memory, this process has 139.77 GiB memory in use. Of the allocated memory 136.36 GiB is allocated by PyTorch, and 2.72 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+[pm128 n=1000000] tick 0 wall 0s L 2.198e+08 |l| 3.011e+09 KE/N 4614 pmax 1.97e+03 out 0.000
+[pm128 n=1000000] tick 25 wall 0s L 1.481e+08 |l| 1.235e+10 KE/N 1.483e+05 pmax 5.56e+04 out 0.000
+[pm128 n=1000000] tick 50 wall 1s L 1.240e+08 |l| 1.510e+10 KE/N 1.216e+05 pmax 4.81e+04 out 0.003
+[pm128 n=1000000] tick 75 wall 1s L 1.507e+08 |l| 1.632e+10 KE/N 1.199e+05 pmax 4.74e+04 out 0.107
+[pm128 n=1000000] tick 100 wall 1s L 1.660e+08 |l| 1.686e+10 KE/N 1.249e+05 pmax 4.97e+04 out 0.111
+[pm128 n=1000000] tick 125 wall 2s L 2.353e+08 |l| 1.729e+10 KE/N 1.197e+05 pmax 4.9e+04 out 0.113
+[pm128 n=1000000] tick 150 wall 2s L 2.848e+08 |l| 1.731e+10 KE/N 1.195e+05 pmax 4.83e+04 out 0.115
+[model_new n=1000000] tick 0 wall 0s L 2.198e+08 |l| 3.011e+09 KE/N 4614 pmax 1.97e+03 out 0.000
+[model_new n=1000000] tick 25 wall 0s L 4.237e+07 |l| 1.403e+10 KE/N 1.466e+05 pmax 6.68e+04 out 0.001
+[model_new n=1000000] tick 50 wall 1s L -3.507e+08 |l| 1.659e+10 KE/N 1.406e+05 pmax 5.44e+04 out 0.010
+[model_new n=1000000] tick 75 wall 1s L -1.051e+08 |l| 1.997e+10 KE/N 1.242e+05 pmax 5.1e+04 out 0.146
+[model_new n=1000000] tick 100 wall 2s L 7.110e+08 |l| 3.041e+10 KE/N 1.295e+05 pmax 5.26e+04 out 0.160
+[model_new n=1000000] tick 125 wall 2s L 1.535e+09 |l| 4.856e+10 KE/N 1.254e+05 pmax 5.02e+04 out 0.168
+[model_new n=1000000] tick 150 wall 3s L 1.664e+09 |l| 7.380e+10 KE/N 1.269e+05 pmax 5.1e+04 out 0.174
+DONE
+total 735731
+drwxr-x--- 2 adamwebb Cal Poly Pomona Intranet Users       50 Oct 22 17:24 .
+drwxr-x--- 5 adamwebb Cal Poly Pomona Intranet Users       21 Oct 22 17:02 ..
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users      688 Oct 22 17:04 n1e4_s4738_meta.json
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 12794173 Oct 22 17:04 n1e4_s4738_model_new.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 12862745 Oct 22 17:04 n1e4_s4738_model_old.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 12951739 Oct 22 17:04 n1e4_s4738_pm128.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 12951473 Oct 22 17:04 n1e4_s4738_pm128s4.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 12957481 Oct 22 17:04 n1e4_s4738_pm256.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 12946705 Oct 22 17:04 n1e4_s4738_truth1.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 12935497 Oct 22 17:04 n1e4_s4738_truth4.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users      688 Oct 22 17:23 n1e4_s9000_meta.json
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 12854166 Oct 22 17:23 n1e4_s9000_model_new.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 12880520 Oct 22 17:23 n1e4_s9000_model_old.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 12940515 Oct 22 17:23 n1e4_s9000_pm128.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 12958184 Oct 22 17:23 n1e4_s9000_pm128s4.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 12948433 Oct 22 17:23 n1e4_s9000_pm256.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 12940438 Oct 22 17:23 n1e4_s9000_truth1.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 12936390 Oct 22 17:23 n1e4_s9000_truth4.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users      689 Oct 22 17:15 n1e5_s4738_meta.json
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 25552727 Oct 22 17:15 n1e5_s4738_model_new.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 25700999 Oct 22 17:15 n1e5_s4738_model_old.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 25695722 Oct 22 17:14 n1e5_s4738_pm128.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 25719204 Oct 22 17:15 n1e5_s4738_pm128s4.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 25695079 Oct 22 17:15 n1e5_s4738_pm256.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 25695904 Oct 22 17:14 n1e5_s4738_truth1.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 25700187 Oct 22 17:13 n1e5_s4738_truth4.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users      591 Oct 22 17:23 n1e6_s4738_meta.json
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 27352636 Oct 22 17:23 n1e6_s4738_model_new.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 27439524 Oct 22 17:23 n1e6_s4738_model_old.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 27422643 Oct 22 17:23 n1e6_s4738_pm128.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 27300332 Oct 22 17:23 n1e6_s4738_pm128s4.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 27430196 Oct 22 17:23 n1e6_s4738_pm256.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users      406 Oct 22 17:24 n1e7_s4738_meta.json
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 23330514 Oct 22 17:24 n1e7_s4738_pm128.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users      485 Oct 22 17:16 n3e4_s4738_meta.json
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 24681330 Oct 22 17:16 n3e4_s4738_model_new.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 24985807 Oct 22 17:16 n3e4_s4738_pm128.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 24987501 Oct 22 17:16 n3e4_s4738_truth4.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users      546 Oct 22 17:16 rot_n1e4_s4738_meta.json
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 12801997 Oct 22 17:16 rot_n1e4_s4738_model_new.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 12863881 Oct 22 17:16 rot_n1e4_s4738_model_old.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 12966808 Oct 22 17:16 rot_n1e4_s4738_pm128.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 12958922 Oct 22 17:16 rot_n1e4_s4738_truth4.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users      494 Oct 22 17:23 rot_n1e5_s4738_meta.json
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 25539766 Oct 22 17:23 rot_n1e5_s4738_model_new.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 25738937 Oct 22 17:23 rot_n1e5_s4738_pm128.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 25743627 Oct 22 17:22 rot_n1e5_s4738_truth4.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users      446 Oct 22 17:24 rot_n1e6_s4738_meta.json
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 27338615 Oct 22 17:24 rot_n1e6_s4738_model_new.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 27425227 Oct 22 17:24 rot_n1e6_s4738_pm128.npz
