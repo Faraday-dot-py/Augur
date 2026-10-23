@@ -72,7 +72,8 @@ def main():
     ap.add_argument("--k-end", type=int, default=30)
     ap.add_argument("--lr", type=float, default=5e-4)
     ap.add_argument("--per-shape", type=int, default=12000)
-    ap.add_argument("--loss-cap", type=float, default=1000.0, help="skip the update when the batch loss exceeds this (rollout blow-up)")
+    ap.add_argument("--sample-cap", type=float, default=100.0, help="drop a sample from the batch loss when its own loss exceeds this (rollout blow-up)")
+    ap.add_argument("--gate-every", type=int, default=250)
     ap.add_argument("--only", default="", help="comparator mode: shape:structure,... (single-law training)")
     ap.add_argument("--init-ckpt", default="kern/E_frozen.pt")
     ap.add_argument("--ckpt-dir", default="ckpt")
@@ -96,12 +97,12 @@ def main():
     torch.manual_seed(args.seed)
     model = sm.build().to(dev)
     opt = torch.optim.Adam(model.parameters(), lr=args.lr)
-    it0, elapsed0 = 0, 0.0
+    it0, elapsed0, kgate = 0, 0.0, args.k_start
     if args.resume and os.path.exists(path):
         st = torch.load(path, map_location=dev, weights_only=False)
         model.load_state_dict(st["model"])
         opt.load_state_dict(st["opt"])
-        it0, elapsed0 = st["it"], st.get("elapsed", 0.0)
+        it0, elapsed0, kgate = st["it"], st.get("elapsed", 0.0), st.get("kgate", args.k_start)
         log(f"resumed from it {it0} (elapsed {elapsed0:.0f}s)")
     elif args.init_ckpt:
         model.init_from_e(torch.load(args.init_ckpt, map_location=dev, weights_only=False)["model"])
@@ -114,12 +115,13 @@ def main():
     nsc = data["n"].to(dev)
     acc_sum = torch.zeros(len(labels), device=dev)
     acc_cnt = torch.zeros(len(labels), device=dev)
-    t_start, skipped = time.time(), 0
+    drop_by = torch.zeros(len(labels), device=dev)
+    t_start, skipped, dropped, dropped_prev = time.time(), 0, 0, 0
     it = it0
     hist = []
     while it < args.iters:
         frac = it / max(1, args.iters - 1)
-        k = int(round(args.k_start + (args.k_end - args.k_start) * min(1.0, frac / args.k_ramp)))
+        k = min(int(round(args.k_start + (args.k_end - args.k_start) * min(1.0, frac / args.k_ramp))), kgate)
         lr = args.lr * (0.05 + 0.95 * 0.5 * (1 + np.cos(np.pi * frac)))
         for pg in opt.param_groups:
             pg["lr"] = lr
@@ -137,25 +139,28 @@ def main():
         field = model.init_field(args.batch, dev)
         w = mk[:, :, None]
         denom = mk.sum() * 2 * k
-        lp = lv = 0.0
-        per = torch.zeros(args.batch, device=dev)
+        eps_l, evs_l = [], []
         for s in range(k):
             pos, vel, _, field, _ = sf._step_m(model, pos, vel, m, mk, field)
             pos, vel = pos.clamp(-1e3, 1e3), vel.clamp(-1e3, 1e3)
             dd = (pos - Pw[:, s + 1]).norm(dim=-1, keepdim=True)
             hub = torch.where(dd <= args.huber, dd ** 2, args.huber * (2 * dd - args.huber))
             ep = (hub * w).sum((1, 2)) / denom
-            lp = lp + ep.sum()
-            lv = lv + (((vel - Vw[:, s + 1]) ** 2) * w).sum() / denom
-            per = per + ep.detach()
-        loss = lp + 0.1 * lv
+            eps_l.append(ep)
+            evs_l.append((((vel - Vw[:, s + 1]) ** 2) * w).sum((1, 2)) / denom)
+        per_g = torch.stack(eps_l).sum(0)
+        per = per_g.detach()
+        keep = ((per * args.batch < args.sample_cap) & torch.isfinite(per)).float()
+        dropped += int(args.batch - keep.sum())
+        drop_by.index_add_(0, lab_id[idx], 1.0 - keep)
+        loss = (torch.nan_to_num(per_g + 0.1 * torch.stack(evs_l).sum(0)) * keep).sum()
         opt.zero_grad()
         loss.backward()
         gn = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-        if torch.isfinite(loss) and torch.isfinite(gn) and loss.item() < args.loss_cap:
+        if torch.isfinite(loss) and torch.isfinite(gn) and keep.sum() >= 1:
             opt.step()
-            acc_sum.index_add_(0, lab_id[idx], per)
-            acc_cnt.index_add_(0, lab_id[idx], torch.ones_like(per))
+            acc_sum.index_add_(0, lab_id[idx], torch.nan_to_num(per) * keep)
+            acc_cnt.index_add_(0, lab_id[idx], keep)
         else:
             opt.zero_grad()
             skipped += 1
@@ -163,19 +168,29 @@ def main():
                 log(f"it {it} loss {loss.item():.3g} non-finite or above cap, step skipped ({skipped} total)")
         it += 1
         if it % args.log_every == 0:
-            log(f"it {it} k {k} lr {lr:.2e} loss {loss.item():.6f} {(time.time() - t_start) / (it - it0):.3f}s/it")
+            log(f"it {it} k {k} lr {lr:.2e} loss {loss.item():.6f} dropped {dropped}/{(it - it0) * args.batch} {(time.time() - t_start) / (it - it0):.3f}s/it")
+        if it % args.gate_every == 0:
+            wd = (dropped - dropped_prev) / (args.gate_every * args.batch)
+            dropped_prev = dropped
+            if wd < 0.05:
+                kgate = min(args.k_end, kgate + 1)
+            elif wd > 0.25:
+                kgate = max(args.k_start, kgate - 2)
+            log(f"gate: window drop rate {wd:.3f} -> kgate {kgate}")
         if it % 1000 == 0:
             bd = {labels[j]: round(float(acc_sum[j] / acc_cnt[j].clamp_min(1)), 6) for j in range(len(labels))}
             log("by-law " + json.dumps(bd))
+            log("dropped-by-law " + json.dumps({labels[j]: int(drop_by[j]) for j in range(len(labels))}))
+            drop_by.zero_()
             hist.append({"it": it, "loss_by_law": bd})
             acc_sum.zero_()
             acc_cnt.zero_()
         stop = STOP["flag"]
         if stop or it % args.ckpt_every == 0 or it == args.iters:
             if all(torch.isfinite(p).all() for p in model.parameters()):
-                save(path, model, opt, it, args, {"elapsed": elapsed0 + time.time() - t_start})
+                save(path, model, opt, it, args, {"elapsed": elapsed0 + time.time() - t_start, "kgate": kgate})
                 if it % args.snap_every == 0:
-                    save(f"{path}.it{it}", model, opt, it, args, {"elapsed": elapsed0 + time.time() - t_start})
+                    save(f"{path}.it{it}", model, opt, it, args, {"elapsed": elapsed0 + time.time() - t_start, "kgate": kgate})
             else:
                 log("non-finite parameters, checkpoint NOT written")
         if stop:
