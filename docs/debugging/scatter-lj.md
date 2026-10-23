@@ -22,3 +22,13 @@ Tests pass (3). Training 20 its on 12 tiny scenes runs; SIGTERM at it 11 saved a
 
 ## GPU estimate (not yet measured; first job logs s/it)
 Data 352 scenes x ~900 fp64 all-pairs steps at N<=400: ~10 min. Train 6000 it, batch 8, k<=32 two-force Verlet steps: guess 0.5-1 s/it = 1-1.7 h per arm. Eval: 6 scenes x 3200 model steps up to 100 tiles + 100-frame truth reruns: ~0.5 h. Total about 2 arms x ~2.5 h + zero-shot 0.3 h = ~5 GPU-h, runs on the two GPUs in parallel (~3 h wall). Fits the 8 h limit with margin; requeue-safe.
+
+## Result 2026-10-23 (KILL both arms)
+Result (2026-10-23, Polaris jobs 3916 ft, 3917 scratch, one GPU each, 6000 it, 0.18 s/it = ~18 min train + ~7 min eval per arm; est. had been 1-1.7 h; seed 4738; results/scatter_lj_{zeroshot,ft,scratch}.json, scored by scripts/score_scatter_lj.py). T = temperature, psi6 = hexatic order, P = pressure, err = mean position error per body at frame 20 (v2 = LJForceDynamics).
+- zeroshot: KILL as predicted (T 12-2000x truth, P ~1e30+ in all six scenes).
+- ft: KILL (T off >5% in gas .22, liquid .60, coexist .54, solid .97, melt .056; passes only quench: T .023, psi6 .008, P .21). psi6 off >.03 in liquid (.80 vs .51 truth). P within 10% only in melt (.021). Frame-20 error 1.2-4.4x v2 (liquid .159, coexist .144, quench .387, solid .0087, melt .0058, gas .0091), not >5x in any scene.
+- scratch: KILL (T off >5% in gas .48, liquid .18, coexist .41, solid .87; passes quench and melt; melt T .037, P .028). Frame-20 error 1.5-4.2x v2. Scratch roughly equal to or better than ft on T/psi6/g(r) (liquid g(r) rel-L2 .05 vs .69), so gravity init did not help (prediction held).
+- Frame review (fresh agent, ft rollouts): solid cools to near-frozen (T .007 vs .214) and stays a clean lattice; liquid and quench develop voids/dense network (cavitation-like) by frames 150-800; melt heats up late; coexist coarsens into clumps and filaments. Energy is not conserved by the model: systematic T drift (heating in melt, cooling in solid), no thermostat-free stability.
+Verdict: KILL for both arms by pre-registration; generic scatter field, finetuned or from scratch, does not reproduce LJ thermodynamics with the 6000-it protocol. Short-horizon trajectories are within 1.2-4.4x of the dedicated pair-force net, so dynamics are partly learned but there is a slow T/density drift. Do not re-try: same protocol with more iterations; next would be an energy/drift-aware term or longer k, not tried.
+
+Measured: 0.18 s/it at k up to 32 (replaces the unmeasured estimate above).
