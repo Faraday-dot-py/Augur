@@ -84,6 +84,7 @@ export class UNetGPU {
       if (!adapter) return null;
       const device = await adapter.requestDevice();
       const u = new UNetGPU(device, manifest, buf, T);
+      u.keep = [gpu, adapter];
       u.adapter = adapter.info ? `${adapter.info.vendor} ${adapter.info.architecture} ${adapter.info.description || adapter.info.device}`.trim() : "unknown";
       u.software = !!(adapter.isFallbackAdapter || (adapter.info && /software|llvmpipe|swiftshader/i.test(`${adapter.info.architecture} ${adapter.info.device} ${adapter.info.description}`)));
       return u;

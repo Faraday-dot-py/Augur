@@ -107,3 +107,12 @@ Check (`PARITY_TICKS=100` recomputes the whole shipped run from tick 0, about 4 
 - `js/view3d.js`, `js/app.js`: the 3D view, playback, controls. Uses `../scatter/js/{stage,colors,plots,truth}.js`.
 - `weights.bin` / `weights.json`: 264,836 fp32 weights (Exp E 260,419 + far kernel 4,417) and config.
 - `tests/vectors.json`: PyTorch references.
+
+## WebGPU U-Net prototype (branch web-scatter-tiled-webgpu)
+
+Opt-in, not wired into the page. Only the tile U-Net forward runs as WebGPU compute shaders, batched over tiles; everything else and the CPU path are unchanged. Status 2026-10-23: numerics match on a software adapter (U-Net 1.2e-6 of peak vs the JS path, 20-tick rollout 5.7e-6 vs the JS CPU path, 3.75e-6 vs PyTorch float64); the speed criterion (>= 5x over CPU workers for 16 tiles) is UNTESTED because this machine has no hardware WebGPU adapter. Details in `docs/debugging/experiment-log.md`.
+
+- `js/unet_gpu.js`: `UNetGPU.tryCreate(manifest, buf, T)` returns null without WebGPU (caller keeps the CPU path); `run(x)` takes float32 `[T][6][128][128]`, returns `[T][128][128]`.
+- `js/tiled_gpu.js`: `GpuPool`, a drop-in for `LocalPool` that sends each finish phase's U-Nets to the GPU as one batch.
+- `webgpu_bench.html` (serve `web/`, open `scatter-tiled/webgpu_bench.html?tiles=16` in a WebGPU browser): on-page GPU vs CPU-worker timing, GPU vs CPU numerics, PASS/FAIL line.
+- `tests/webgpu_verify.mjs`: Node check (`npm i webgpu` somewhere, then `STEPS=20 WEBGPU_MODULE=<dir>/node_modules/webgpu/index.js node tests/webgpu_verify.mjs`).

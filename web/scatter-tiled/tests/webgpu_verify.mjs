@@ -49,7 +49,7 @@ TileNet.prototype.unet = orig;
 console.log(`CPU rollout (1 thread): ${(cpu.ms / 1000).toFixed(2)} s/tick, ${rec.x.length} U-Net calls recorded`);
 
 let worstOut = 0, worstElem = 0;
-for (const [label, first] of [["tick-0 force pass (zero recurrent field)", 0], [`final force pass (tick ${STEPS})`, rec.x.length - 2 * T]]) {
+for (const [label, first] of [["tick-0 force pass (zero recurrent field)", 0], [`final force pass (tick ${STEPS})`, rec.x.length - T]]) {
   const x = new Float32Array(T * 6 * GG);
   for (let k = 0; k < T; k++) x.set(rec.x[first + k], k * 6 * GG);
   const y = await unet.run(x);
