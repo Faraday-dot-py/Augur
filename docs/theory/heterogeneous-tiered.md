@@ -225,3 +225,9 @@ Purpose: can the moment-grid tiers represent any far-field signal at all (indepe
 - PRE-REGISTERED: PASS (tiers can represent far field) if far_rel < 0.5 on all three seeds; KILL if mean far_rel >= 0.8; otherwise PARTIAL.
 - Conditional follow-ups run in the same job (cheap), judged by the same thresholds: B = reach enlarged (14 layers per tier, 3 tiers); C = 2-tier stack (6 layers). "Reach helps" if B improves far_rel by >20% relative over A on every seed. Full-residual retry of S only after this.
 - Prediction: A PARTIAL (far_rel ~0.4-0.7): clump COM forces are smooth and tier-3 cells (4 units) resolve them, but 6-cell reach (24 units at tier 3) is short for 24-60 unit separations; B better than A; C worse than A.
+
+### Result: far-field-only diagnostic (job 3944, ~12 min GPU)
+far_rel (seeds 9100/9200/9300): A 3 tiers x 6 layers 0.689/0.611/0.673 (PARTIAL by pre-registered rule: <0.5 all seeds = pass, mean >=0.8 = kill); B 14 layers 0.696/0.622/0.670 (no gain, "reach helps" rule failed); C 2 tiers 0.952/0.911/0.925 (much worse).
+- Tiers do represent part of the far field (about 55% of target variance explained) from moment inputs, but training loss plateaus ~0.8-0.9 in sequence (noisy, batch 16). Deeper convs add nothing, so conv reach is not the limiter; the third tier is needed (2 tiers lose most of the signal), suggesting range coverage matters, not per-tier depth.
+- Prediction vs outcome: A PARTIAL as predicted; B better than A predicted, wrong; C worse, right.
+- Implication: the full-residual KILL is not explained by tiers being unable to learn far field at all, but by far-field being a small share of the residual plus capacity/optimisation limits (single-stage, 3000 iters). Retry of S on the full residual not run (coordinator gating: only after reach test, which was negative). Untested next levers: more training scenes/iterations, a third-order check on moments, tier-3 top-cell resolution.
