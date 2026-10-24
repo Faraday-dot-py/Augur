@@ -120,8 +120,9 @@ def wall_pe(pos, mask, lo, hi, radius, k):
     return (k / 3 * (pl ** 3 + ph ** 3)).sum(-1).mul(mask).sum(-1)
 
 
-def bond_terms(pos, vel, mass, mask, idx, k, rest, damp, bmask):
-    """Springs with optional damping along the bond. Returns acc (B,N,2) and spring PE (B,)."""
+def bond_terms(pos, vel, mass, mask, idx, k, rest, damp, bmask, brk=None):
+    """Springs with optional damping along the bond; with brk (stretch ratio) a bond carries no force beyond brk*rest (state-free
+    fracture: the spring potential is capped there). Returns acc (B,N,2) and spring PE (B,)."""
     B, N, _ = pos.shape
     i, j = idx[..., 0], idx[..., 1]
     gi = lambda a, ix: torch.gather(a, 1, ix[..., None].expand(-1, -1, 2))
@@ -129,11 +130,13 @@ def bond_terms(pos, vel, mass, mask, idx, k, rest, damp, bmask):
     l = d.norm(dim=-1).clamp_min(1e-9)
     n = d / l[..., None]
     rv = ((gi(vel, j) - gi(vel, i)) * n).sum(-1)
-    f = (k * (l - rest) + damp * rv) * bmask
+    live = bmask if brk is None else bmask * (l <= brk * rest).to(l.dtype)
+    f = (k * (l - rest) + damp * rv) * live
     fv = f[..., None] * n
     out = torch.zeros_like(pos)
     out = out.scatter_add(1, i[..., None].expand(-1, -1, 2), fv).scatter_add(1, j[..., None].expand(-1, -1, 2), -fv)
-    pe = (0.5 * k * (l - rest) ** 2 * bmask).sum(1)
+    lc = l if brk is None else torch.minimum(l, brk * rest)
+    pe = (0.5 * k * (lc - rest) ** 2 * bmask).sum(1)
     return out / mass.clamp_min(1e-9)[..., None] * mask[..., None], pe
 
 

@@ -71,7 +71,8 @@ class Oracle(TierModel):
     def step(self, pos, vel, mass, mask, state, ctx=None):
         ext = ctx.get("ext")
         t = ctx.get("t", 0.0)
-        r = tt.rollout(ctx["phys"], pos, vel, mass, mask, 1, self.dt, self.sub, ext=ext, t0=t)
+        sub = max(1, int(round(self.dt / ctx["h"]))) if ctx.get("h") else self.sub
+        r = tt.rollout(ctx["phys"], pos, vel, mass, mask, 1, self.dt, sub, ext=ext, t0=t)
         return r["pos"][:, 1], r["vel"][:, 1], state
 
 

@@ -187,5 +187,85 @@ def test_calibration_group_skipped_without_error_method():
 
 def test_seam_probe_zero_for_exact_force_model():
     r = te.g_seams(ti.Oracle(0.1), CPU, 4738, True)
-    assert r["spurious_work_across_seam"] < 1e-9
+    assert "spurious_work_across_seam" not in r
     assert abs(r["seam_jump_ratio_model"] - r["seam_jump_ratio_truth"]) < 1e-6
+
+
+def test_bond_fracture_potential_consistent():
+    rng = np.random.default_rng(4738)
+    s = sc.fracture_scene(rng)
+    b = sc.build_batch([s], CPU)
+    ph = b["phys"]
+    assert ph.bonds["brk"] == s["law"]["brk"]
+    p = (b["pos"] + 0.05 * torch.randn(b["pos"].shape, dtype=torch.float64)).requires_grad_(True)
+    g, = torch.autograd.grad(ph.pe(p, b["vel"], b["mass"], b["mask"]).sum(), p)
+    a = ph.acc(p.detach(), b["vel"], b["mass"], b["mask"])
+    assert torch.allclose(-g, a * b["mass"][..., None], atol=1e-6, rtol=1e-6)
+
+
+def test_object_scenes_roll_and_have_split():
+    for kind in sc.OBJECT_KINDS:
+        rng = np.random.default_rng(4738)
+        s = sc.make_scene(kind, rng, 256)
+        b = sc.build_batch([s], CPU)
+        r = tt.rollout(b["phys"], b["pos"], b["vel"], b["mass"], b["mask"], 3, b["dt"], b["sub"])
+        assert torch.isfinite(r["pos"]).all(), kind
+    rng = np.random.default_rng(4738)
+    s = sc.collision_scene(rng, typ="bonded", b_frac=0.0, v_rel=2.0, om=[0.0, 0.0])
+    assert s["tags"]["split"] < len(s["pos"])
+
+
+def test_objects_group_oracle_and_pile_stays_above_floor():
+    out = te.g_objects(ti.Oracle(0.1), CPU, 4738, True)
+    assert out["spin"]["err"]["20"] < 1e-9
+    k = out["collision_sweep"]["bonded_b0.0_v1.0"]["restitution_ke_ratio"]
+    assert abs(k["truth"] - k["model"]) < 1e-9
+    rng = np.random.default_rng(4738)
+    b = sc.build_batch([sc.pile_scene(rng)], CPU)
+    r = tt.rollout(b["phys"], b["pos"], b["vel"], b["mass"], b["mask"], 40, 0.05, 10)
+    assert float(r["pos"][0, -1, :, 1].min()) > -17.0
+
+
+def test_grid_renders_to_step_100(tmp_path):
+    import os
+    Pt = np.random.default_rng(4738).normal(0, 5, (101, 20, 2))
+    te.render_grid("t", (Pt, Pt + 0.1, np.ones(20), np.ones(20)), str(tmp_path / "g.png"))
+    assert os.path.getsize(tmp_path / "g.png") > 1000
+
+
+def test_arms_compare_verdict_logic(tmp_path):
+    import json
+    import types
+
+    from scripts import tiered_arms as ta
+
+    def arm(far, near, ms2000, ms1, ms0125):
+        return dict(model="m", per_seed={str(s): dict(far=dict(rel_rms_far_dominated=f, rel_rms_all=f), near=dict(rel_rms=near + 0.001 * i),
+                                                      rollout=dict(err={"100": 1.0}),
+                                                      cost=dict(n_sweep={"2000": dict(ms=ms2000)}, empty_sweep={"1.0": dict(ms=ms1), "0.125": dict(ms=ms0125)}))
+                                   for i, (s, f) in enumerate(zip(ta.HELD, far))})
+    json.dump(arm([0.2, 0.21, 0.19], 0.05, 10, 10, 10), open(tmp_path / "arms_B.json", "w"))
+    json.dump(arm([0.05, 0.06, 0.05], 0.05, 11, 11, 11), open(tmp_path / "arms_C.json", "w"))
+    ta.compare(types.SimpleNamespace(dir=str(tmp_path)))
+    assert json.load(open(tmp_path / "arms_compare.json"))["verdict"] == "PASS"
+    json.dump(arm([0.2, 0.21, 0.19], 0.05, 11, 11, 11), open(tmp_path / "arms_C.json", "w"))
+    ta.compare(types.SimpleNamespace(dir=str(tmp_path)))
+    assert json.load(open(tmp_path / "arms_compare.json"))["verdict"] == "KILL"
+
+
+def test_t0ext_adapter_when_branch_code_present():
+    import pytest
+    pytest.importorskip("scripts.scatter_tier0")
+    from scripts import scatter_tier0 as t0m
+    from scripts import tiered_adapters as ta
+    torch.manual_seed(4738)
+    m = sf.ScatterField(grid=32, extent=16.0, net="local", recurrent=True, hidden_ch=0, dt=0.1, width=8, layers=2, momfix=True)
+    t0m.attach_tier0(m, "ext=6,extapply,bnd,halo=2")
+    m = m.double()
+    ad = ta.Tier0ExtAdapter(m, "t0", dtype=torch.float64)
+    assert {"ext", "occ"} <= set(ad.caps)
+    pos, vel, mass, mask = _rand(20, spread=4.0)
+    gen = torch.Generator().manual_seed(4738)
+    ctx = dict(ext=tt.ExtField.random(1, gen, CPU), t=0.0, bound=[dict(kind="wall", lo=np.array([-6.0, -6.0]), hi=np.array([6.0, 6.0]))])
+    p2, v2, st = ad.step(pos, vel, mass, mask, ad.init_state(1, CPU), ctx)
+    assert torch.isfinite(p2).all() and torch.isfinite(v2).all()

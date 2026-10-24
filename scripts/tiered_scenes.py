@@ -144,7 +144,7 @@ def _assemble_bodies(bodies, dt=0.05, sub=10, kind="bonded"):
     s = _empty(kind, dt, sub)
     s.update(pos=np.concatenate(pos), vel=np.concatenate(vel), mass=np.ones(off), kmat=np.concatenate(km),
              bonds=np.concatenate(bonds), brest=np.concatenate(rest), bk=np.concatenate(bk), bd=np.concatenate(bd),
-             law=dict(contact=dict(radius=0.45, k=200.0), bonded=True))
+             law=dict(contact=dict(radius=0.45, k=200.0), bonded=True), tags=dict(split=len(bodies[0][0])))
     return s
 
 
@@ -162,10 +162,11 @@ def bonded_scene(rng, n_max=256, kind="bonded"):
     return s
 
 
-def collision_scene(rng, n_max=512, kind="collision"):
-    typ = rng.choice(["bonded", "lj_droplet", "grav"])
-    b_frac, v_rel = rng.uniform(0, 1), rng.uniform(0.5, 4.0)
-    om = rng.normal(0, 0.15, 2)
+def collision_scene(rng, n_max=512, kind="collision", typ=None, b_frac=None, v_rel=None, om=None):
+    typ = typ or rng.choice(["bonded", "lj_droplet", "grav"])
+    b_frac = rng.uniform(0, 1) if b_frac is None else b_frac
+    v_rel = rng.uniform(0.5, 4.0) if v_rel is None else v_rel
+    om = rng.normal(0, 0.15, 2) if om is None else np.asarray(om)
     if typ == "bonded":
         ps = [_bonded_body(rng) for _ in range(2)]
         R = [np.linalg.norm(p[0], axis=1).max() for p in ps]
@@ -178,7 +179,7 @@ def collision_scene(rng, n_max=512, kind="collision"):
             v = np.array([sg * v_rel / 2, 0.0]) + spin_vel(p, om[i])
             bodies.append((q, v, idx, r, k, d))
         s = _assemble_bodies(bodies, kind=kind)
-        s["tags"] = dict(b=float(b), v=float(v_rel), omega=om.tolist(), material=[float(ps[0][3]), float(ps[1][3])], body="bonded")
+        s["tags"] = dict(b=float(b), v=float(v_rel), omega=om.tolist(), material=[float(ps[0][3]), float(ps[1][3])], body="bonded", split=len(ps[0][0]))
     elif typ == "lj_droplet":
         a = lj_spacing(0.8)
         bodies = []
@@ -198,7 +199,7 @@ def collision_scene(rng, n_max=512, kind="collision"):
         n = sum(len(p) for p in pos)
         s = _empty(kind, LJ_TIMING["dt"], LJ_TIMING["sub"])
         s.update(pos=np.concatenate(pos), vel=np.concatenate(vel), mass=np.ones(n), kmat=np.ones(n), law=dict(lj=dict(rc=tt.LJ_RC)))
-        s["tags"] = dict(b=float(b), v=float(v_rel), omega=om.tolist(), material="lj", body="lj_droplet")
+        s["tags"] = dict(b=float(b), v=float(v_rel), omega=om.tolist(), material="lj", body="lj_droplet", split=len(pos[0]))
     else:
         pos, vel, mass = [], [], []
         sgs = []
@@ -299,7 +300,8 @@ def make_scene(kind, rng, n_max=256):
         return grav_scene(rng, n_max)
     if kind in LJ_PHASE:
         return lj_scene(rng, kind, max(n_max, 256))
-    return dict(contact=contact_scene, bonded=bonded_scene, collision=collision_scene, boundary=boundary_scene, edge=edge_scene)[kind](rng, n_max)
+    return dict(contact=contact_scene, bonded=bonded_scene, collision=collision_scene, boundary=boundary_scene, edge=edge_scene,
+                spin=spin_scene, fracture=fracture_scene, pile=pile_scene)[kind](rng, n_max)
 
 
 def build_batch(scenes, device, dtype=torch.float64):
@@ -335,6 +337,8 @@ def build_batch(scenes, device, dtype=torch.float64):
         kw["contact"] = law["contact"]
     if law.get("bonded"):
         kw["bonds"] = dict(idx=bidx, k=bk, rest=brest, damp=bd, bmask=bm)
+        if law.get("brk"):
+            kw["bonds"]["brk"] = float(law["brk"])
     if "g_vec" in law:
         kw["g_vec"] = np.stack([s["law"].get("g_vec", np.zeros(2)) for s in scenes])[:, None, :]
     bk0 = s0["bound"]["kind"]
@@ -454,3 +458,42 @@ def from_train_tiered(num, steps, seed, dev):
                  occ=torch.zeros(num, 3, GC, GC, device=dev), dt=0.1, sub=4, kind="grav", tags=[dict(ic="train_tiered")] * num,
                  bound=[dict(kind="none")] * num)
     return batch, d["P"], d["V"], d["lab"]
+
+
+def spin_scene(rng, n_max=256, kind="spin"):
+    p, idx, r, k, d = _bonded_body(rng, mat_d=0.0)
+    om = rng.choice([-1, 1]) * rng.uniform(0.2, 0.5)
+    s = _assemble_bodies([(p, spin_vel(p, om), idx, r, k, d)], kind=kind)
+    s["tags"] = dict(omega=float(om))
+    return s
+
+
+def fracture_scene(rng, n_max=256, kind="fracture", brk=1.35):
+    p, idx, r, k, d = _bonded_body(rng, mat_k=rng.uniform(80, 200), mat_d=0.1)
+    R = np.linalg.norm(p, axis=1).max()
+    q = irregular_blob(rng, r_range=(1.0, 2.0), n_discs=(1, 1))
+    qi, qr = bonds_from(q, 1.2)
+    v = rng.uniform(5.0, 9.0)
+    b = rng.uniform(-0.4, 0.4) * R
+    bodies = [(p, np.zeros_like(p), idx, r, k, d), (q + np.array([-R - 5.0, b]), np.broadcast_to(np.array([v, 0.0]), q.shape).copy(), qi, qr, 400.0, 0.1)]
+    s = _assemble_bodies(bodies, kind=kind)
+    s["law"]["brk"] = brk
+    s["tags"] = dict(v=float(v), b=float(b), brk=brk)
+    return s
+
+
+def pile_scene(rng, n_max=256, kind="pile"):
+    nb = int(rng.integers(2, 5))
+    bodies = []
+    for i in range(nb):
+        p, idx, r, k, d = _bonded_body(rng, mat_d=0.5)
+        p = p * 0.7 + np.array([rng.uniform(-8, 8), -8.0 + 5.0 * i + 4.0])
+        bodies.append((p, np.zeros_like(p), idx, r, k, d))
+    s = _assemble_bodies(bodies, kind=kind)
+    s["law"].update(walls=dict(radius=0.45, k=200.0), g_vec=np.array([0.0, -3.0]))
+    s["bound"] = dict(kind="wall", lo=np.array([-25.0, -16.0]), hi=np.array([25.0, 60.0]))
+    s["tags"] = dict(bodies=nb)
+    return s
+
+
+OBJECT_KINDS = ["spin", "fracture", "pile"]

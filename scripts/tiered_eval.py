@@ -7,7 +7,7 @@
 Groups: bias seams range gravity conservation sparsity objects boundaries calibration exposure generalisation timescale.
 A group is skipped (status "skipped: <reason>") when the model lacks the law or capability it needs. Seed 4738 first, held-out
 seeds 9100/9200/9300 for headline numbers (summary = mean over held-out). Metrics: err@k (mean per-particle position error, sim units),
-dE/dp/dL drift relative to the initial scale (and the truth's own drift), seam jump, spurious work, cost and memory vs N and empty fraction.
+dE/dp/dL drift relative to the initial scale (and the truth's own drift), seam jump, cost and memory vs N and empty fraction.
 Diagnostic grids (docs/debugging/frame-artifact-review-prompt.md layout: rows = truth / model / density difference, columns = steps,
 per-frame autoscale) are written to --grid-dir for the unbiased review."""
 import argparse
@@ -77,7 +77,7 @@ def wrap(model, span, sparse=True):
 
 
 def ctx_for(model, batch, ext, t):
-    c = dict(ext=ext, t=t, phys=batch["phys"], bound=batch["bound"])
+    c = dict(ext=ext, t=t, phys=batch["phys"], bound=batch["bound"], h=batch["dt"] / batch["sub"])
     if "occ" in model.caps:
         c["occ"] = batch["occ"]
     if "periodic" in model.caps and batch["phys"].period is not None:
@@ -254,7 +254,7 @@ def g_seams(model, dev, seed, quick):
     tl = ti.Tiled(model, 64.0, sparse=False) if model.reach < 1e9 else model
     rng = np.random.default_rng(seed)
     out = {}
-    w_seam, w_int, jm, jt, im, it = [], [], [], [], [], []
+    jm, jt, im, it = [], [], [], []
     xs = np.linspace(-6, 6, 49)
     mid = len(xs) // 2 - 1
     for rep in range(4 if quick else 12):
@@ -271,8 +271,6 @@ def g_seams(model, dev, seed, quick):
             a_m = tl.force(pos, torch.zeros_like(pos), mass, mk, tl.init_state(1, dev), dict(phys=tt.Physics(grav=dict(eps=tt.EPS))))[0][0]
             for sl, lst in ((slice(nb, nb + len(xs)), "seam"), (slice(nb + len(xs), nb + 2 * len(xs)), "ctl")):
                 am, at_ = a_m[sl].cpu().numpy(), a_t[sl].cpu().numpy()
-                d = (am - at_)[:, 0]
-                (w_seam if lst == "seam" else w_int).append(float(((d[1:] + d[:-1]) / 2 * np.diff(xs)).sum()))
                 if lst == "seam":
                     scale = float(np.linalg.norm(at_, axis=1).mean()) + 1e-12
                     lm, lt = np.linalg.norm(np.diff(am, axis=0), axis=1), np.linalg.norm(np.diff(at_, axis=0), axis=1)
@@ -282,8 +280,6 @@ def g_seams(model, dev, seed, quick):
     out["interior_link_over_field_model"], out["interior_link_over_field_truth"] = float(np.mean(im)), float(np.mean(it))
     out["seam_jump_ratio_model"] = float(np.mean(jm) / max(np.mean(im), 1e-3 * 1.0))
     out["seam_jump_ratio_truth"] = float(np.mean(jt) / max(np.mean(it), 1e-3))
-    out["spurious_work_across_seam"] = float(np.mean(np.abs(w_seam)))
-    out["spurious_work_interior_control"] = float(np.mean(np.abs(w_int)))
     cl = grav_batch("plummer", 300, 40.0, seed, 4, dev)
     a_t = tt.grav_acc(cl["pos"], cl["mass"], cl["mask"])
     tl2 = ti.Tiled(model, 64.0, sparse=False) if model.reach < 1e9 else model
@@ -446,30 +442,70 @@ def frag_count(pos, mask, thr=1.4):
     return int(lab.unique().numel())
 
 
+def ke_rel(r, mass, mask, split):
+    """Kinetic energy in the centre-of-mass frame of the two bodies' relative motion: sum over bodies of 0.5 M_body |V_body - V_cm|^2."""
+    v = r["vel"] * 1.0
+    m = (mass * mask)[:, None, :, None]
+    out = []
+    for k in (0, -1):
+        vk = v[:, k]
+        a = (m[:, 0, :split] * vk[:, :split]).sum(1) / m[:, 0, :split].sum(1)
+        b_ = (m[:, 0, split:] * vk[:, split:]).sum(1) / m[:, 0, split:].sum(1)
+        ma, mb = m[:, 0, :split].sum((1, 2)), m[:, 0, split:].sum((1, 2))
+        vcm = (ma[:, None] * a + mb[:, None] * b_) / (ma + mb)[:, None]
+        out.append(0.5 * (ma * ((a - vcm) ** 2).sum(-1) + mb * ((b_ - vcm) ** 2).sum(-1)))
+    return out
+
+
+def obj_batch(dev, seed, fn, B=4, **kw):
+    rng = np.random.default_rng(seed)
+    scenes = [getattr(sc, fn)(rng, 256, **kw) for _ in range(B)]
+    return scenes, sc.build_batch(scenes, dev)
+
+
 def g_objects(model, dev, seed, quick):
-    laws = lawsel(model, ["contact", "lj", "grav"])
-    if not laws or not ({"contact"} & set(model.laws)) and "bonded" not in model.laws:
+    if not ({"contact", "bonded"} & set(model.laws)):
         return "skipped: needs contact/bonded law"
     out = {}
     steps = 20 if quick else 100
     if "bonded" in model.laws:
-        for nm, kw in (("rest_stability", dict(fn="bonded_scene")), ("collision", dict(fn="collision_scene"))):
-            b = tier0_batch("bonded", seed, 4, dev, n_max=256, **kw)
-            if nm == "rest_stability":
-                b["vel"] = torch.zeros_like(b["vel"])
-            out[nm] = compare(model, b, steps, name=f"objects_{nm}")
-            if nm == "collision":
-                rt = truth_roll(b, model.dt, steps)
-                rm = model_roll(model, b, steps)
-                out[nm]["fragments"] = dict(truth=frag_count(rt["pos"][0, -1], b["mask"][0]), model=frag_count(rm["pos"][0, -1], b["mask"][0]))
+        _, b = obj_batch(dev, seed, "bonded_scene")
+        b["vel"] = torch.zeros_like(b["vel"])
+        out["rest_stability"] = compare(model, b, steps, name="objects_rest_stability")
+        _, b = obj_batch(dev, seed, "spin_scene")
+        out["spin"] = compare(model, b, steps, name="objects_spin")
+        _, b = obj_batch(dev, seed, "pile_scene", B=3)
+        out["pile"] = compare(model, b, steps, name="objects_pile")
+        _, b = obj_batch(dev, seed, "fracture_scene", B=3)
+        res = compare(model, b, steps, name="objects_fracture")
+        rt, rm = truth_roll(b, model.dt, steps), model_roll(model, b, steps)
+        res["fragments"] = dict(truth=[frag_count(rt["pos"][i, -1], b["mask"][i]) for i in range(3)], model=[frag_count(rm["pos"][i, -1], b["mask"][i]) for i in range(3)],
+                                before=[frag_count(rt["pos"][i, 0], b["mask"][i]) for i in range(3)])
+        out["fracture"] = res
+        out["collision_sweep"] = {}
+        for typ in ("bonded", "lj_droplet"):
+            if typ == "lj_droplet" and "lj" not in model.laws:
+                continue
+            for bf in (0.0, 0.5):
+                for v in ((1.0, 3.0) if quick else (1.0, 2.0, 4.0)):
+                    scenes, b = obj_batch(dev, seed, "collision_scene", B=1, typ=typ, b_frac=bf, v_rel=v, om=[0.0, 0.0])
+                    rt, rm = truth_roll(b, model.dt, steps), model_roll(model, b, steps)
+                    ec = err_curve(rm["pos"], rt["pos"], b["mask"])
+                    res = dict(err=at(ec), fragments=dict(truth=[frag_count(rt["pos"][i, -1], b["mask"][i]) for i in range(len(scenes))],
+                                                          model=[frag_count(rm["pos"][i, -1], b["mask"][i]) for i in range(len(scenes))]))
+                    res["momentum_err"] = float(((rm["vel"][:, -1] * (b["mass"] * b["mask"])[..., None]).sum(1) - (rt["vel"][:, -1] * (b["mass"] * b["mask"])[..., None]).sum(1)).norm(dim=-1).mean())
+                    if len(scenes) and len({sc_["tags"]["split"] for sc_ in scenes}) == 1:
+                        k0t, k1t = ke_rel(rt, b["mass"], b["mask"], scenes[0]["tags"]["split"])
+                        k0m, k1m = ke_rel(rm, b["mass"], b["mask"], scenes[0]["tags"]["split"])
+                        res["restitution_ke_ratio"] = dict(truth=float((k1t / k0t).mean()), model=float((k1m / k0m.clamp_min(1e-12)).mean()))
+                    out["collision_sweep"][f"{typ}_b{bf}_v{v}"] = res
     if "contact" in model.laws:
         b = tier0_batch("contact", seed, 8, dev, n_max=40)
         out["contact_balls"] = compare(model, b, steps, name="objects_contact")
-        pos = torch.tensor([[[-6.0, 0.0], [6.0, 0.05]]], device=dev, dtype=torch.float64)
         out["tunnelling"] = {}
         for v in (2.0, 6.0, 12.0):
             s = sc._empty("tunnel", 0.15, 8)
-            s.update(pos=pos[0].cpu().numpy(), vel=np.array([[v, 0.0], [-v, 0.0]]), mass=np.ones(2), kmat=np.ones(2),
+            s.update(pos=np.array([[-6.0, 0.0], [6.0, 0.05]]), vel=np.array([[v, 0.0], [-v, 0.0]]), mass=np.ones(2), kmat=np.ones(2),
                      law=dict(contact=dict(radius=sc.BALL_R, k=sc.BALL_K)))
             bb = sc.build_batch([s], dev)
             rt, rm = truth_roll(bb, model.dt, 20), model_roll(model, bb, 20)
@@ -583,13 +619,23 @@ def density(pos, mask, extent, G=96):
     return h.T
 
 
-def render_grid(name, frames, path, steps=(0, 1, 2, 3, 5, 8, 12, 20), extent=48.0):
+GRID_STEPS = (0, 1, 3, 8, 20, 35, 50, 75, 100)
+
+
+def render_grid(name, frames, path, steps=GRID_STEPS, extent=None):
+    """Rows truth / model / model-truth density, per-frame autoscale; columns run to step 100 (the last available step if shorter).
+    Spatial extent follows the truth's 98th-percentile radius over all frames unless given."""
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     Pt, Pm, m, mk = frames
-    steps = [s for s in steps if s < len(Pt)]
-    fig, ax = plt.subplots(3, len(steps), figsize=(1.9 * len(steps), 6.0), squeeze=False)
+    last = len(Pt) - 1
+    steps = sorted({min(s, last) for s in steps})
+    live = mk > 0
+    if extent is None:
+        r = np.percentile(np.abs(np.concatenate([Pt[:, live].reshape(-1, 2), Pm[:, live].reshape(-1, 2)])), 98)
+        extent = float(min(max(2.2 * r, 8.0), 400.0))
+    fig, ax = plt.subplots(3, len(steps), figsize=(1.9 * len(steps), 6.2), squeeze=False)
     rows = ["truth", "model", "model-truth"]
     for j, s in enumerate(steps):
         dt_, dm_ = density(Pt[s], mk, extent), density(Pm[s], mk, extent)
@@ -601,7 +647,7 @@ def render_grid(name, frames, path, steps=(0, 1, 2, 3, 5, 8, 12, 20), extent=48.
                 ax[i, j].set_title(f"step {s}", fontsize=8)
             if j == 0:
                 ax[i, j].set_ylabel(rows[i], fontsize=8)
-    fig.suptitle(name, fontsize=9)
+    fig.suptitle(f"{name} (view +-{extent / 2:.0f} units)", fontsize=9)
     fig.tight_layout()
     fig.savefig(path, dpi=110)
     plt.close(fig)
@@ -614,12 +660,19 @@ def load_model(spec, dev, dt):
         return ti.ConstVel(dt)
     if spec.startswith("scatter:"):
         return ti.load_scatter(spec[8:], dev, dt, name="scatterE")
+    from scripts import tiered_adapters as ta
+
+    kind, _, rest = spec.partition(":")
+    loaders = dict(tiered=lambda: ta.load_tiered(rest, dev), t0ext=lambda: ta.load_t0ext(rest, dev, dt), wide=lambda: ta.load_wide(rest, dev, dt),
+                   tiled=lambda: ta.load_tiled(rest, dev, dt))
+    if kind in loaders:
+        return loaders[kind]()
     raise ValueError(spec)
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--model", required=True, help="oracle | constvel | scatter:<ckpt>")
+    ap.add_argument("--model", required=True, help="oracle | constvel | scatter:<ckpt> | tiered:<nets>[,<tier0>] | t0ext:<ckpt> | wide:<ckpt>[,grid=,extent=] | tiled:<ckpt>[,nt=,tile=,halo=,far=]")
     ap.add_argument("--groups", default="all")
     ap.add_argument("--seeds", type=int, nargs="+", default=[4738, *HELD])
     ap.add_argument("--quick", action="store_true")

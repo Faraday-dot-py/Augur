@@ -17,5 +17,9 @@ rm -rf scripts model tests
 cp -r "$HOME/augur/scripts" "$HOME/augur/model" "$HOME/augur/tests" "$HOME/augur/conftest.py" .
 cp -r "$HOME/augur-hteval-src/scripts/." scripts/
 cp -r "$HOME/augur-hteval-src/tests/." tests/
+if [ -n "${OVERLAY:-1}" ]; then
+  cp -r "$HOME/augur-hteval-src/extra/scripts/." scripts/
+  cp -r "$HOME/augur-hteval-src/extra/model/." model/
+fi
 export PYTHONPATH=.
-python -m pytest tests/test_tiered.py -q 2>&1 | tail -60
+python -m pytest tests/test_tiered.py -q --tb=short 2>&1 | tail -80

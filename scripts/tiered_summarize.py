@@ -2,7 +2,7 @@
 import json
 import sys
 
-KEEP = ("err", "rel", "ratio", "exponent", "z", "spurious", "jump", "ms_per_step", "peak_mb", "escaped", "fragments", "gap", "shift", "rot",
+KEEP = ("err", "rel", "ratio", "exponent", "z", "jump", "ms_per_step", "peak_mb", "escaped", "fragments", "gap", "shift", "rot",
         "windows", "active", "min_gap", "mean_diff", "mean_signed", "verdict", "n_sweep", "empty_sweep", "neighbours")
 
 
