@@ -19,25 +19,25 @@ def _state(n, box, seed=1):
 
 
 def test_mesh_force_is_gradient_of_energy_and_velocity_blind():
-    m = _model()
+    m = _model().double()
     pt = sl.PeriodicTiles(m)
     box = [14.0, 13.0]
     pos, vel, mask, bx = _state(60, box)
     lay = sl.layout(bx[0])
     assert lay == (1, 1)
-    fld = pt.init_field(1, lay, "cpu")
+    fld = pt.init_field(1, lay, "cpu", torch.float64)
     with torch.no_grad():
         a, _, a_pp, pk = pt.force(pos, vel, mask, bx, lay, fld, parts=True)
         a2, _ = pt.force(pos, -3 * vel, mask, bx, lay, fld)
     assert torch.allclose(a, a2)
-    assert float(a.sum(1).abs().max()) < 1e-5
-    P = pk["P"].clone()
-    K = pk["K"]
+    assert float(a.sum(1).abs().max()) < 1e-8
+    P = pk["P"]
+    K, V = pk["K"], pk["V"]
 
     def U(Pt):
-        return pt.mesh_energy(m.scatter(Pt, pk["V"], K, K)[:, :1])
+        return pt.mesh_energy(m.scatter(Pt, V, K, K)[:, :1])
 
-    eps = 1e-2
+    eps = 1e-4
     for i in (3, 17):
         for d in (0, 1):
             Pp, Pm = P.clone(), P.clone()
@@ -46,7 +46,7 @@ def test_mesh_force_is_gradient_of_energy_and_velocity_blind():
             fd = -float(U(Pp) - U(Pm)) / (2 * eps)
             Pg = P.clone().requires_grad_(True)
             g = torch.autograd.grad(U(Pg), Pg)[0]
-            assert abs(fd + float(g[0, i, d])) < 2e-2 * max(1.0, abs(fd))
+            assert abs(fd + float(g[0, i, d])) < 1e-4 * max(1.0, abs(fd)), (fd, float(g[0, i, d]))
 
 
 def test_residual_zero_init_and_penalty_taken():

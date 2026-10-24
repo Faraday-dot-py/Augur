@@ -37,6 +37,7 @@ case $ARM in
     python -m scripts.scatter_lj_drift --ckpt ckpt/smoke_PR_final.pt --tag smoke --prefixes results/lj --scenes liquid --frames 20
     echo SLJH1 SMOKE DONE
     exit 0;;
+  ONLYEVAL) python -m scripts.scatter_lj_eval --ckpt ckpt/${TAG}_final.pt --tag h1_$TAG; echo SLJH1 EVALONLY DONE $TAG; exit 0;;
   P) FLAGS="--energy";;
   PR) FLAGS="--energy --resid";;
 esac
