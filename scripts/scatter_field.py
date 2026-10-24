@@ -79,6 +79,7 @@ class ScatterField(nn.Module):
         self._cap_now = None
         self.cell_cap_min = 16
         self.adapt_n = 50000
+        self.t0 = None
         self.cell_max_occ = None
         if pp:
             self.ppmlp = nn.Sequential(nn.Linear(ncol, 64), nn.GELU(), nn.Linear(64, 64), nn.GELU(), nn.Linear(64, 1))
@@ -413,7 +414,7 @@ class ScatterField(nn.Module):
         return (f, None) if self.verlet else f
 
     def force(self, pos, vel, mass, mask, field):
-        if "graph" in self.opt and not torch.is_grad_enabled() and not torch.cuda.is_current_stream_capturing() \
+        if "graph" in self.opt and self.t0 is None and not torch.is_grad_enabled() and not torch.cuda.is_current_stream_capturing() \
                 and self.pp_mode(pos.shape[1]) != "adapt":
             return self._graphed("force", self._force, pos, vel, mass, mask, field)
         return self._force(pos, vel, mass, mask, field)
@@ -443,7 +444,14 @@ class ScatterField(nn.Module):
         return tuple(o.clone() for o in out)
 
     def _force(self, pos, vel, mass, mask, field):
-        x = self.scatter(pos, vel, mass, mask)
+        ctx = None
+        spos, smass = pos, mass
+        if self.t0 is not None:
+            field, ctx = self.t0.begin(self, pos, vel, mass, mask, field)
+            spos, smass = ctx.pos, ctx.smass
+        x = self.scatter(spos, vel, smass, mask)
+        if ctx is not None:
+            x = self.t0.after_scatter(ctx, x)
         ns = self._nscale(x, mass, mask) if self.norm else None
         if ns is not None:
             x = x / ns
@@ -454,6 +462,8 @@ class ScatterField(nn.Module):
             x = torch.cat([x, field], 1)
         if self.epsin:
             x = torch.cat([x, x.new_full((x.shape[0], 1, self.grid, self.grid), math.log(self.eps_cur / EPS0))], 1)
+        if ctx is not None and ctx.extra is not None:
+            x = torch.cat([x, ctx.extra if ns is None else ctx.extra / ns], 1)
         if self.nonet:
             field = x.new_zeros(x.shape[0], self.cf, self.grid, self.grid)
         else:
@@ -468,10 +478,12 @@ class ScatterField(nn.Module):
                 field = field.float()
             else:
                 field = self.net(x)
+        if ctx is not None:
+            field = self.t0.after_net(field)
         acc = self.neg_grad(field[:, :1]) if self.potential else field[:, :2]
         if self.kernel:
             acc = acc + ak
-        a_tok = self.gather(acc, pos)
+        a_tok = self.gather(acc, spos)
         if ns is not None:
             a_tok = a_tok * ns.view(-1, 1, 1)
         if self.far:
@@ -479,10 +491,15 @@ class ScatterField(nn.Module):
             a_tok = a_tok * w + self.far_acc(pos, mass, mask) * (1 - w)
         if self.pp:
             a_tok = a_tok + self.pp_acc(pos, mass, mask, self.knn)
+        if ctx is not None:
+            a_tok = self.t0.head(self, ctx, a_tok, acc, vel, mass, mask)
         if self.momfix:
             mm = (mass * mask)[..., None]
             a_tok = a_tok - (mm * a_tok).sum(1, keepdim=True) / mm.sum(1, keepdim=True).clamp_min(1e-9)
-        return a_tok * mask[..., None], field
+        a_out = a_tok * mask[..., None]
+        if ctx is not None:
+            a_out, field = self.t0.finish(self, ctx, a_out, field, pos, mask)
+        return a_out, field
 
     def step(self, pos, vel, mass, mask, field):
         if self.substeps == 1:
@@ -1070,7 +1087,7 @@ def apply_opts(model, spec, kind="infer"):
 def _opt_ok(model, name):
     if type(model) is not ScatterField:
         return False
-    return name != "graphtrain" or model.verlet
+    return name != "graphtrain" or (model.verlet and model.t0 is None)
 
 
 def apply_opt(model, name):

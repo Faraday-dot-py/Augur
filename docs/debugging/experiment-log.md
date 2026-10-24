@@ -3294,3 +3294,9 @@ Fixes the mass-ratio OOD blind spot left open by `symlog_densershape` (seed-1200
 ### Solar 1e7 disc (job 3740, 2026-10-19) -- abandoned by user, branch `solar10m` deleted
 
 Rotating-disc IC with 3 placed protoplanets, 1000 ticks. Kernel-only PM (no learned weights) kept 3/3 bound, drift <=.21; orbit_ft2 0/3, E 2/3 (net heats the disc, seeds thrown to e>0.9); no spontaneous fragmentation in truth. User: experiment of low interest, not pursued. Earlier solar/clumpy-1e9 commits remain on `worktree-agent-abd021892286ed5f9`.
+
+## 2026-10-24 Tier-0 extensions implemented (opt-in, no training arm yet)
+Branch worktree-agent-a96914a7f2c210071: scripts/scatter_tier0.py + hooks in ScatterField (inert if `t0 is None`), `--t0` trainer flag. Tests on Polaris job 3936 ALL PASSED: flags off bitwise identical to pre-change on real E_ms_kp_pot_v_g128 ckpt (CPU), all extras on reproduce it at init (max abs 0), exact moment sums (1e-13), periodic shift invariance 1e-7, head+momfix momentum 3e-7, 30-it smoke train finite. Verdict: plumbing only; no accuracy claim. Details: docs/theory/heterogeneous-tiered.md "Implementation status". Wave 2 arms (moments / head / hidden / ext / bnd vs frozen baseline) not run.
+
+## 2026-10-24 Tier-0 arm A: ext=6,extapply,taper=8,bnd,halo=8 on windowed gravity + random external field (job 3945)
+50 epochs (18750 its, 52 min), warm start Exp E, seed 4738. Plain err@20 1.02x/1.01x Exp E (PASS). Hole-4 beta held-out: sparse -0.24/-0.17, mid -0.85/-1.01 (Exp E +0.25/+0.38), dense diverges. KILL (mid |beta|>0.5). Ext channels unused by the net (zeroing them changes nothing). Not tried: stronger/higher-order ext fields, density-correlated far-field (harvest from large rollouts), channel dropout. Details: docs/theory/heterogeneous-tiered.md "Arm A result". Raw: results/tier0_ext/.
