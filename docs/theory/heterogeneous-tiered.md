@@ -190,3 +190,14 @@ Started 2026-10-24, theory mode (no code run). Motivated by the LJ scatter-field
 - Arms vs frozen baseline: S sequential-frozen; S+R S plus rollout-in-loop for tier 1; S+J S plus joint fine-tune of all tiers with tier-0 near-field loss on small scenes retained.
 - Pass: improvement over S in far-field error and rollout energy drift beyond held-out-seed noise, hole-4 bias check not regressing. Kill: S+J improves rollout error but fails bias check (tier 0 absorbing far field).
 
+
+## Measured baselines (2026-10-24, existing Exp E + R1b + TiledScatter, no training; details experiment-log.md "Hetero-tiered baselines RESULTS")
+### Hole 4 (window bias) -- inconclusive, leaning no mean-field absorption at in-distribution density
+- Exp E was trained on isolated scenes of extent 64, i.e. already the hole-3 regime minus the external-field input. Run on 64x64 windows cut from larger scenes (teacher-forced exact states, carried field), beta = <(model - isolated truth).(full - isolated truth)>/<F.F>.
+- Sparse (~70 bodies/window): beta 8-16 from edge -0.03 (.04), 16-32 -0.20 (.10), 4-8 +0.00; bias as fraction of |a| -0.4% / -1.5%. Mid (~270): +0.25 (.05) / +0.38 (.19), one seed ~0. Dense (~700, OOD): +1.3 / +1.8, both seeds (KILL pattern but density-confounded).
+- Limit: model's own isolated-force error (15% sparse) exceeds the far-field size (7-12% of |a|); detection power is low. Edge 0-4 bin error 175% (edge artifact), cold-field tick 0 error ~50%.
+- Not tested: a tier 0 trained with the hole-3 external-field channel and truth-minus-external target.
+### Hole 5 (teacher-forced vs rollout) -- PASS at ticks <= 20
+- Tier-1 target proxy R = a_exact - a_tier0 (halo-only tier 0 = g16_fx): relative |R| .10-.13, 85-90% tile-scale smooth, inward (missing far pull). Rollout/teacher-forced ratio 1.00/1.01/1.04/1.12 at ticks 5/10/20/40 (smooth part 1.00/1.01/1.07/1.22); 4x4x32 1.05/1.13 at 20/40. With far term 0.99-1.00. cold300 0.95-1.01. Teacher forcing suffices for horizons <= 20; a small gap opens by tick 40.
+### Hole 7 (seams) -- PASS
+- Seam-crossing energy-change excess and accel-error-jump excess: tiled equals single within SE (e.g. de excess -.087(.023) vs -.090(.019); jump +.033 vs +.027); drift cluster identical to 3 digits; position error identical to 3 digits in the frame dump. Single-grid virtual seams show the same excess (speed effect, not seam). dE@40/KE0 tiled -.0125 vs single +.0139. This validates the ghost-halo + coarse far path only; the potential-blend seam mechanism of hole 7 was not exercised (no tier >= 1 exists).
