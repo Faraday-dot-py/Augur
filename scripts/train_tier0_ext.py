@@ -144,6 +144,14 @@ def evaluate(model, args, dev, log):
         m, _ = tsf.evaluate_model(model, data, dev, args.dt, args.eps)
         res[name] = {"err5_10_20": err_row(m), "dE40": m["energy_drift_rel_model"][39], "dE40_true": m["energy_drift_rel_true"][39]}
         log(f"{name} err@5/10/20 {err_row(m)}")
+    if t0.cfg.head:
+        data = tsf.make_data(tsf.EXPS["E"], 16, 2, tsf.EVAL_SEEDS[0], dev, args.dt, args.eps)
+        P, V, M, mask = [t.float() for t in sf.to_tensors(data, dev)]
+        t0.ext_grid = t0.ext_poly = None
+        out = t0m.tier0_forward(model, P[:, 0], V[:, 0], M, mask)
+        ha = out.aux["head_acc"]
+        res["head_rms_over_total_rms"] = float((ha ** 2).sum(-1).mul(mask).sum().sqrt() / (out.a_tok ** 2).sum(-1).mul(mask).sum().sqrt())
+        log(f"head rms / total acc rms {res['head_rms_over_total_rms']:.4f}")
     return res
 
 
