@@ -191,6 +191,11 @@ Started 2026-10-24, theory mode (no code run). Motivated by the LJ scatter-field
 - Pass: improvement over S in far-field error and rollout energy drift beyond held-out-seed noise, hole-4 bias check not regressing. Kill: S+J improves rollout error but fails bias check (tier 0 absorbing far field).
 
 
+### Hole 1 test outcomes (2026-10-24, branch hole1-potential-field in worktree agent-adfbf776853ca7eea; full numbers in docs/debugging/experiment-log.md)
+- LJ tier-0 test: mesh force = -autograd gradient of a scalar energy of density only (+ pair term + global mean removal): 160-frame NVE |dE/N| <= .0084 on seeds 4738/4739/4740 vs -.26/-.29 (ft liquid/solid): PASS. Adding the soft-penalised residual net (magnitude + curl, 300 each): |dE/N| <= .0093, penalty keeps residual ~1e-4 (off); no gain, no leak. Full eval: no scene T > 3% off; remaining error is the pair term (matches pair-only reference).
+- Caveat: the energy mesh is also memoryless and position-only; gradient structure and removal of velocity/history inputs are not separated. A velocity-dependent term would have to live in the residual channel, and the test did not show whether the penalty can contain a velocity-using residual that is actually needed (nothing in LJ needs one).
+- Polynomial-cell potential (phi0 + g.d + 0.5 d^T H d, bilinear blend, force = autograd gradient): exactly conservative (loop work ~1e-5 vs 1e-3..7e-3 relative for blending per-cell forces); order 2 beats order 1; held-out force error 1.7-2.5x the naive blend at sigma >= 1.5 in one fit, 0.9-1.6x in another (noisy). Accept the gradient form; accuracy cost unresolved.
+
 ## Measured baselines (2026-10-24, existing Exp E + R1b + TiledScatter, no training; details experiment-log.md "Hetero-tiered baselines RESULTS")
 ### Hole 4 (window bias) -- inconclusive, leaning no mean-field absorption at in-distribution density
 - Exp E was trained on isolated scenes of extent 64, i.e. already the hole-3 regime minus the external-field input. Run on 64x64 windows cut from larger scenes (teacher-forced exact states, carried field), beta = <(model - isolated truth).(full - isolated truth)>/<F.F>.
@@ -291,3 +296,6 @@ far_rel on seeds 9100/9200/9300 (arm A 0.689/0.611/0.673, mean 0.658):
 Config = original arm S (residual target vs frozen Exp E tier 0, 3 tiers, 6 layers) with D's budget: 1600 scenes x 40 steps, 30000 iters/stage, batch 16. PRE-REGISTERED, same rule as the original S: PASS if on every held-out seed (9100/9200/9300) force_rel and com_err both beat baseline by >10% and mean err@50 and mean dE are no worse than baseline mean + baseline seed std; KILL otherwise. Original S for reference: force_rel -12..14%, com_err +6% worse, err@50 +5..7%.
 - Prediction: force_rel gain grows to ~15-20%; com_err stays within +-5% of baseline (far-field is a small share of the residual; D showed far-only far_rel 0.55); verdict KILL.
 - Estimate: targets ~5 min, 3 stages ~40 min, eval ~5 min.
+
+## Implementation status: tiered data/eval harness (2026-10-24, branch worktree-agent-a8b09cd8f67d9fd44)
+Code: scripts/tiered_{gen,scenes,iface,eval,adapters,arms,summarize}.py, tests/test_tiered_harness.py (renamed from test_tiered.py to avoid clash with C's tests/test_tiered.py). 12-group eval harness, cell-multipole truth rel rms 5e-5 vs direct sum, branch adapters for the hole-9 arm driver. Baselines on Exp E ckpt (4 seeds): plummer err@20 .030, multiclump err@100 6.43, bias z_x -2.95, seam jump/field 4.56 vs truth .004; far-dom force err .438/.443 (A/B), N=2000 2.5/8.4 ms. Details: docs/debugging/experiment-log.md "Tiered-architecture data generators" and "Tiered harness round 2".
