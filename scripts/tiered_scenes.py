@@ -413,6 +413,20 @@ def big_scene(name, n, span, rng, dev):
         mass = np.concatenate([[M], np.full(n - 1, 0.05)])
         vel = circular_velocities(pos, mass, dev) * rng.uniform(0.9, 1.0, (n, 1))
         vel[0] = 0.0
+    elif name == "multiclump":
+        cen = []
+        for _ in range(1000):
+            c = rng.uniform(-span * 0.28, span * 0.28, 2)
+            if all(np.linalg.norm(c - o) >= span * 0.19 for o in cen):
+                cen.append(c)
+            if len(cen) == int(rng.integers(2, 5)):
+                break
+        cen = np.array(cen)
+        lab = rng.integers(0, len(cen), n)
+        sg = rng.uniform(3.0, 6.0, len(cen))
+        pos = np.clip(cen[lab] + rng.normal(0, 1, (n, 2)) * sg[lab, None], -span * 0.47, span * 0.47)
+        mass = np.ones(n)
+        vel = rng.normal(0, 1, (n, 2)) * (rng.uniform(0.1, 0.6, len(cen)) * np.sqrt(n / len(cen) / (4 * sg)))[lab, None] + rng.normal(0, 0.4, (len(cen), 2))[lab]
     elif name == "uniform":
         pos = rng.uniform(-span / 2, span / 2, (n, 2)) * 0.9
         mass = np.exp(rng.uniform(np.log(0.01), np.log(0.5), n))
@@ -428,3 +442,15 @@ def big_scene(name, n, span, rng, dev):
         raise ValueError(name)
     vel = vel - (mass[:, None] * vel).sum(0) / mass.sum()
     return pos.astype(np.float64), vel.astype(np.float64), mass.astype(np.float64)
+
+
+def from_train_tiered(num, steps, seed, dev):
+    """Adapter for agent C's multi-clump scenes (scripts/train_tiered.make_scenes, 128-box, unit masses, truth precomputed over `steps`).
+    Returns (batch dict as in tiered_eval.grav_batch, truth trajectories P, V (num, steps+1, N, 2), cluster labels)."""
+    from scripts import train_tiered as ttr
+
+    d = ttr.make_scenes(num, steps, seed, dev)
+    batch = dict(pos=d["P"][:, 0], vel=d["V"][:, 0], mass=d["M"], mask=d["mask"], phys=tt.Physics(grav=dict(eps=tt.EPS, g=1.0)),
+                 occ=torch.zeros(num, 3, GC, GC, device=dev), dt=0.1, sub=4, kind="grav", tags=[dict(ic="train_tiered")] * num,
+                 bound=[dict(kind="none")] * num)
+    return batch, d["P"], d["V"], d["lab"]

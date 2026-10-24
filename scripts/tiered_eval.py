@@ -333,9 +333,10 @@ def g_gravity(model, dev, seed, quick):
         return "skipped: law grav"
     steps = 20 if quick else 100
     out = {}
-    for ic, n in (("plummer", 200), ("cold_collapse", 200), ("binary", 60), ("disc", 300), ("bh", 300)):
-        b = grav_batch(ic, n, 44.0, seed, 4 if not quick else 2, dev)
-        tl = wrap(model, 64.0)
+    for ic, n in (("plummer", 200), ("cold_collapse", 200), ("binary", 60), ("disc", 300), ("bh", 300), ("multiclump", 300)):
+        span = 128.0 if ic == "multiclump" else 44.0
+        b = grav_batch(ic, n, span, seed, 4 if not quick else 2, dev)
+        tl = wrap(model, 128.0 if ic == "multiclump" else 64.0)
         out[ic] = compare(tl, b, steps, name=f"gravity_{ic}", extra_ctx=None)
     return out
 
