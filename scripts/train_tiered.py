@@ -32,6 +32,13 @@ def true_acc(pos, mass, mask, eps=EPS):
     return (d * (inv * (mass * mask)[:, None, :])[..., None]).sum(2) * mask[..., None]
 
 
+def far_acc(pos, mass, mask, r0, eps=EPS):
+    d = pos[:, None, :, :] - pos[:, :, None, :]
+    r2 = (d ** 2).sum(-1)
+    inv = (r2 + eps ** 2) ** -1.5 * (r2 >= r0 ** 2) * (1 - torch.eye(pos.shape[1], device=pos.device, dtype=pos.dtype))[None]
+    return (d * (inv * (mass * mask)[:, None, :])[..., None]).sum(2) * mask[..., None]
+
+
 def make_scenes(num, steps, seed, dev):
     rng = np.random.default_rng(seed)
     P = torch.zeros(num, steps + 1, NMAX, 2, dtype=torch.float64)
@@ -114,8 +121,12 @@ def gen(args, it, stage):
 
 def train_s(args, dev, log):
     d = make_scenes(args.scenes, args.steps, args.seed, dev)
-    tpath = os.path.join(args.ckpt_dir, f"targets_{args.seed}_{args.scenes}_{args.steps}.pt")
-    if os.path.exists(tpath):
+    tpath = os.path.join(args.ckpt_dir, f"targets_{args.seed}_{args.scenes}_{args.steps}{'_far%g' % args.far_radius if args.target == 'far' else ''}.pt")
+    if args.target == "far":
+        m, mk = d["M"].float(), d["mask"].float()
+        AT = torch.stack([far_acc(d["P"][:, t].float(), m, mk, args.far_radius) for t in range(d["P"].shape[1])], 1)
+        A0 = torch.zeros_like(AT)
+    elif os.path.exists(tpath):
         A0, AT = [x.to(dev) for x in torch.load(tpath)]
     else:
         t0 = load_tier0(args.tier0, dev)
@@ -127,7 +138,7 @@ def train_s(args, dev, log):
     rel0 = ((AT - A0) ** 2 * d["mask"][:, None, :, None]).sum() / (AT ** 2 * d["mask"][:, None, :, None]).sum()
     log(f"train tier-0 rel force err (sq) {float(rel0):.4f}")
     nets = make_nets(args.tiers, args, dev)
-    stage, it, ck = 0, 0, os.path.join(args.ckpt_dir, "tiered_S.pt")
+    stage, it, ck = 0, 0, os.path.join(args.ckpt_dir, f"tiered_S{args.tag}.pt")
     opt = None
     if args.resume and os.path.exists(ck):
         st = torch.load(ck, map_location=dev, weights_only=False)
@@ -276,13 +287,34 @@ def eval_arm(t0, nets, d, ticks=(10, 50, 100)):
     return out
 
 
+@torch.no_grad()
+def run_far(args, dev, log):
+    res = {}
+    for sd in EVAL_SEEDS:
+        d = make_scenes(args.eval_scenes, args.eval_steps, sd, dev)
+        m, mk = d["M"].float(), d["mask"].float()
+        nets = make_nets(args.tiers, args, dev)
+        nets.load_state_dict(torch.load(os.path.join(args.ckpt_dir, f"tiered_S{args.tag}.pt"), map_location=dev, weights_only=False)["nets"])
+        field = make_field(ZeroTier0(), nets)
+        num = den = ncl = 0.0
+        for t in range(0, d["P"].shape[1], 10):
+            p, v = d["P"][:, t].float(), d["V"][:, t].float()
+            tg = far_acc(p, m, mk, args.far_radius)
+            a, _ = field.upper_force(p, v, m, mk, field.init_state(p.shape[0], dev))
+            num += float(((a - tg) ** 2 * mk[..., None]).sum())
+            den += float((tg ** 2 * mk[..., None]).sum())
+        res[str(sd)] = {"far_rel": (num / den) ** 0.5}
+        log(f"seed {sd} far_rel {res[str(sd)]['far_rel']:.4f}")
+    json.dump(res, open(args.out, "w"), indent=1)
+
+
 def run_eval(args, dev, log):
     t0 = load_tier0(args.tier0, dev)
     arms = {"baseline": None}
     for name in args.arms.split(","):
         if name:
             nets = make_nets(args.tiers, args, dev)
-            nets.load_state_dict(torch.load(os.path.join(args.ckpt_dir, f"tiered_{name}.pt"), map_location=dev, weights_only=False)["nets"])
+            nets.load_state_dict(torch.load(os.path.join(args.ckpt_dir, f"tiered_{name}{args.tag}.pt"), map_location=dev, weights_only=False)["nets"])
             nets.eval().requires_grad_(False)
             arms[name] = nets
     res = {a: {} for a in arms}
@@ -313,10 +345,13 @@ def compare(args, log):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--mode", choices=["S", "R", "eval", "compare"], required=True)
+    ap.add_argument("--mode", choices=["S", "R", "eval", "compare", "far"], required=True)
     ap.add_argument("--tier0", default=os.path.expanduser("~/E_ms_kp_pot_v_g128.pt"))
     ap.add_argument("--init", default=None)
     ap.add_argument("--arms", default="S")
+    ap.add_argument("--target", choices=["resid", "far"], default="resid")
+    ap.add_argument("--far-radius", type=float, default=20.0)
+    ap.add_argument("--tag", default="")
     ap.add_argument("--tiers", type=int, default=3)
     ap.add_argument("--width", type=int, default=32)
     ap.add_argument("--layers", type=int, default=6)
@@ -347,7 +382,7 @@ def main():
     def log(s):
         print(s, flush=True)
 
-    {"S": lambda: train_s(args, dev, log), "R": lambda: train_r(args, dev, log), "eval": lambda: run_eval(args, dev, log),
+    {"S": lambda: train_s(args, dev, log), "R": lambda: train_r(args, dev, log), "eval": lambda: run_eval(args, dev, log), "far": lambda: run_far(args, dev, log),
      "compare": lambda: compare(args, log)}[args.mode]()
 
 
