@@ -23,6 +23,7 @@ H0, N0, G, HALO, BLEND = 0.5, 256, 16, 4, 2
 NMAX = 512
 EVAL_SEEDS = (9100, 9200, 9300)
 STOP = []
+ORDER3 = [False]
 
 
 def true_acc(pos, mass, mask, eps=EPS):
@@ -94,12 +95,12 @@ def force_series(t0, d, bs=16):
 
 
 def make_nets(K, args, dev):
-    return nn.ModuleList(TierNet(nfeat(True, False), H0 * 2 ** k, args.width, args.layers, residual=args.residual, latent_ch=0, err=False,
+    return nn.ModuleList(TierNet(nfeat(True, False, args.order3), H0 * 2 ** k, args.width, args.layers, residual=args.residual, latent_ch=0, err=False,
                                  out_scale=args.out_scale, log_rho=True) for k in range(1, K + 1)).to(dev)
 
 
 def make_field(tier0, nets):
-    return TieredField(tier0, list(nets), N0, H0, G, HALO, BLEND, static=True)
+    return TieredField(tier0, list(nets), N0, H0, G, HALO, BLEND, static=True, order3=ORDER3[0])
 
 
 def save(path, **st):
@@ -352,6 +353,7 @@ def main():
     ap.add_argument("--target", choices=["resid", "far"], default="resid")
     ap.add_argument("--far-radius", type=float, default=20.0)
     ap.add_argument("--tag", default="")
+    ap.add_argument("--order3", action="store_true")
     ap.add_argument("--tiers", type=int, default=3)
     ap.add_argument("--width", type=int, default=32)
     ap.add_argument("--layers", type=int, default=6)
@@ -375,6 +377,7 @@ def main():
     ap.add_argument("--out", default="results/tiered_eval.json")
     args = ap.parse_args()
     dev = torch.device(args.device)
+    ORDER3[0] = args.order3
     os.makedirs(args.ckpt_dir, exist_ok=True)
     signal.signal(signal.SIGTERM, on_term)
     torch.manual_seed(args.seed)

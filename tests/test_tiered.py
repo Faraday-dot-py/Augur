@@ -42,7 +42,8 @@ def test_merge_exact_vs_direct_sums():
     top = merge2x2(mid, 4.0)
     for mom, n, h in ((mid, 8, 4.0), (top, 4, 8.0)):
         direct = deposit_moments(pos, vel, mass, mask, n, h, origin)
-        assert torch.allclose(mom[:, :OCC], direct[:, :OCC], atol=1e-10, rtol=1e-10)
+        keep = [i for i in range(NMOM) if i != OCC]
+        assert torch.allclose(mom[:, keep], direct[:, keep], atol=1e-10, rtol=1e-10)
     assert torch.allclose(mid[:, OCC], occ[:, 0].reshape(2, 8, 2, 8, 2).mean((2, 4)))
     assert fine.shape[1] == NMOM
 
@@ -292,3 +293,19 @@ def test_static_and_verlet_step_conserve_momentum():
         pos, vel, st, a_prev = f.step_verlet(pos, vel, mass, mask, st, a_prev)
     assert torch.isfinite(pos).all()
     assert torch.allclose(((mass * mask)[..., None] * vel).sum(1), p0, atol=1e-9)
+
+
+def test_third_order_features_match_brute_force():
+    pos, vel, mass, mask = particles(B=1, N=400)
+    origin = torch.full((2,), -16.0, dtype=DT)
+    fine = deposit_moments(pos, vel, mass, mask, 16, 2.0, origin)
+    top = merge2x2(merge2x2(merge2x2(merge2x2(fine, 2.0), 4.0), 8.0), 16.0)
+    f = moment_features(top, 32.0, disp=False, cross=False, order3=True)
+    assert f.shape[1] == nfeat(False, False, True)
+    w = (mass * mask)[0]
+    d = pos[0] - origin - 16.0
+    c = (w[:, None] * d).sum(0) / w.sum()
+    d = d - c
+    t = [(w * d[:, 0] ** 3).sum(), (w * d[:, 0] ** 2 * d[:, 1]).sum(), (w * d[:, 0] * d[:, 1] ** 2).sum(), (w * d[:, 1] ** 3).sum()]
+    want = torch.stack(t) / w.sum() / 32.0 ** 3
+    assert torch.allclose(f[0, 8:12, 0, 0], want, atol=1e-12)

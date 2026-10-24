@@ -55,11 +55,11 @@ class TieredField(nn.Module):
     mean removed."""
 
     def __init__(self, tier0, nets, n0, h0, G, halo, blend, origin=None, periodic=False, disp=True, cross=False,
-                 mean_remove=True, dilate=1, refiners=(), feedback=False, static=False):
+                 mean_remove=True, dilate=1, refiners=(), feedback=False, static=False, order3=False):
         super().__init__()
         self.tier0, self.nets, self.refiners = tier0, nn.ModuleList(nets), nn.ModuleList(refiners)
         self.n0, self.h0, self.G, self.periodic, self.disp, self.cross = n0, h0, G, periodic, disp, cross
-        self.mean_remove, self.dilate, self.feedback, self.static = mean_remove, dilate, feedback, static
+        self.mean_remove, self.dilate, self.feedback, self.static, self.order3 = mean_remove, dilate, feedback, static, order3
         if origin is None:
             origin = torch.full((2,), -n0 * h0 / 2)
         self.origin = torch.as_tensor(origin, dtype=torch.float32)
@@ -70,7 +70,7 @@ class TieredField(nn.Module):
             n = n0 >> k
             self.layouts.append(TileLayout(n, G, halo, blend, h0 * 2 ** k, self.origin, periodic))
             ext = 3 if feedback and k < K else 0
-            cin = nfeat(disp, cross) + child + net.hidden_ch + ext
+            cin = nfeat(disp, cross, order3) + child + net.hidden_ch + ext
             assert net.inp.in_channels == cin, (k, net.inp.in_channels, cin)
             child = net.summary_ch
 
@@ -106,7 +106,7 @@ class TieredField(nn.Module):
         if child is not None:
             child = F.avg_pool2d(child, 2)
         for k, (net, L) in enumerate(zip(self.nets, self.layouts), 1):
-            ch = [moment_features(mom[k], L.h, self.disp, self.cross)]
+            ch = [moment_features(mom[k], L.h, self.disp, self.cross, order3=self.order3)]
             cw = self.tier0.summary_ch if k == 1 else self.nets[k - 2].summary_ch
             if cw:
                 ch.append(child if child is not None else ch[0].new_zeros(B, cw, L.n, L.n))
