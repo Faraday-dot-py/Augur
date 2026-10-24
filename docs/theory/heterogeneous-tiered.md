@@ -241,3 +241,11 @@ One lever at a time, same far-field target, same held-out seeds and metric (far_
 
 ### Status note (2026-10-24, later)
 Lever D (job 3950) stayed PENDING (QOSMaxGRESPerUser, both account GPUs held by other jobs) for hours; E (job 3953, afterany:3950) queued behind it. Polaris SSH then dropped (session lost; polaris_start returns "Error reading SSH protocol banner" on repeated tries). No D/E results yet. Resume: polaris_start (Duo), check 3950/3953, read ~/augur-tiered-farD-3950.log / farE, run `--mode far` results in results/far_D.json, far_E.json; then dilated-conv lever if D stalls, else full-residual S retry per pre-registration above.
+
+### Result: far-field levers (jobs 3950 D 40 min, 3953 E 4 min; Polaris GPU)
+far_rel on seeds 9100/9200/9300 (arm A 0.689/0.611/0.673, mean 0.658):
+- D (10x scenes = 1600, 10x iters = 30000/stage): 0.574/0.518/0.549, mean 0.547, 17% better than A on every seed. Pre-registered verdict PARTIAL-IMPROVED (not pass: needs <0.5 on all seeds; not stall: >10% gain). Undertraining is real but the gain is modest for 10x data and compute; stage-3 train loss ~0.25 (squared) vs held-out rms 0.55 suggests a gap that is not purely generalisation noise (single-batch loss, noisy).
+- E (third-order moments, A budget): 0.689/0.622/0.678, mean 0.663 vs A 0.658: STALL (no gain). Sub-cell shape is not the limiter; the exact 3rd-order merge is tested and kept as an option.
+- F (dilated convs) not run: its trigger (D stalls) was not met. S full-residual retry not run: trigger (a lever passes) not met.
+- Prediction vs outcome: D predicted 0.45-0.55 (landed at the top edge, 0.55, no pass); E predicted 0.60-0.65 (landed 0.66, stall).
+- Reading: input moment order and conv depth/reach are not limiting; more data/iterations helps slowly. Open (untested) levers: 100x budget along D's trend, tier-3 top cell/tile layout changes (G, halo), loss weighting toward large-force particles, joint (not sequential-frozen) training of the three tiers.

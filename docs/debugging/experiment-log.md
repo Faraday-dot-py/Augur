@@ -3299,3 +3299,6 @@ Fixes the mass-ratio OOD blind spot left open by `symlog_densershape` (seed-1200
 
 ### Tiered far-field-only diagnostic (job 3944, 2026-10-24) -- PARTIAL
 Target = pair forces from bodies >= 20 units (diagnostic construction only). Pre-registered: pass far_rel<0.5 all seeds, kill mean>=0.8. A (3 tiers, 6 layers) 0.61-0.69 PARTIAL; B (14 layers) 0.62-0.70, no reach gain; C (2 tiers) 0.91-0.95. Third tier matters, depth does not. See docs/theory/heterogeneous-tiered.md.
+
+### Tiered far-field levers (jobs 3950, 3953, 2026-10-24) -- D PARTIAL-IMPROVED, E STALL
+Vs arm A (mean far_rel 0.658): D 10x scenes + 10x iters 0.547 (17% better, all seeds; no pass); E third-order moments 0.663 (no gain). Dilated lever and full-residual S retry not triggered. See docs/theory/heterogeneous-tiered.md.
