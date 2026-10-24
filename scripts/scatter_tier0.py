@@ -355,7 +355,7 @@ class Tier0(nn.Module):
             ex.append(torch.zeros(B, c.ext, model.grid, model.grid, device=pos.device, dtype=pos.dtype) if e is None
                       else self._fit(e, B, c.ext).to(pos.dtype))
         if c.bnd:
-            if self.bnd_grid is None:
+            if self.bnd_grid is None or self.bnd_grid.shape[-1] != model.grid:
                 self.set_boundary(model, edge=c.boundary if c.boundary != "tile" else "open")
             ex.append(self._fit(self.bnd_grid, B, BND_CH).to(device=pos.device, dtype=pos.dtype))
         if ex:
