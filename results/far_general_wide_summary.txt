@@ -1,0 +1,10 @@
+file:results/far_kernels/r1b_mlp.pt err@5 0.018 err@10 0.053 err@20 0.169 n=2
+file:kern/gen/grav_theta_s4738.pt err@5 0.018 err@10 0.053 err@20 0.168 n=2
+file:kern/gen/grav_ctx_s4738.pt err@5 0.019 err@10 0.054 err@20 0.170 n=2
+file:kern/gen/grav_ctxnoise2_s4738.pt err@5 0.019 err@10 0.056 err@20 0.179 n=2
+file:kern/gen/grav_theta_s4739.pt err@5 0.018 err@10 0.053 err@20 0.168 n=2
+file:kern/gen/grav_ctx_s4739.pt err@5 0.018 err@10 0.054 err@20 0.172 n=2
+file:kern/gen/grav_ctxnoise2_s4739.pt err@5 0.018 err@10 0.053 err@20 0.169 n=2
+file:kern/gen/grav_theta_s4740.pt err@5 0.019 err@10 0.054 err@20 0.169 n=2
+file:kern/gen/grav_ctx_s4740.pt err@5 0.018 err@10 0.053 err@20 0.169 n=2
+file:kern/gen/grav_ctxnoise2_s4740.pt err@5 0.019 err@10 0.056 err@20 0.186 n=2
