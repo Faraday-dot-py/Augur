@@ -34,6 +34,13 @@ def summ_a(rows, held, scene):
             print(f"{t:3d} {BINS[b]:>5} {n:6d} {beta:+.3f} {se(bl):.3f} | {sum(r['e_iso'] for r in g)/sum(r['a_iso'] for r in g):.4f} "
                   f"{sum(r['e_full'] for r in g)/sum(r['a_full'] for r in g):.4f} {sum(r['F'] for r in g)/sum(r['a_iso'] for r in g):.4f} | "
                   f"{sum(r['dx'] for r in g)/n:+.2e} {sum(r['dy'] for r in g)/n:+.2e}")
+    print("-- ticks 5/10/20 pooled (excludes cold-field tick 0): bin n beta se(window-level) |F|/|a| err_vs_iso")
+    for b in range(4):
+        g = [r for r in rs if r["tick"] in (5, 10, 20) and r["bin"] == b]
+        if g:
+            bl = [r["num"] / r["den"] for r in g if r["den"] > 1e-9]
+            print(f"{BINS[b]:>5} {sum(r['n'] for r in g):6d} {sum(r['num'] for r in g)/max(sum(r['den'] for r in g),1e-12):+.3f} {se(bl):.3f} "
+                  f"{sum(r['F'] for r in g)/sum(r['a_iso'] for r in g):.3f} {sum(r['e_iso'] for r in g)/sum(r['a_iso'] for r in g):.3f}")
     if held:
         print("-- per-seed pooled beta (ticks pooled), bins 8-16 and 16-32")
         for sd in HELD:
@@ -105,7 +112,7 @@ if __name__ == "__main__":
     d, tag = sys.argv[1], sys.argv[2]
     for held in (True, False):
         try:
-            for sc_ in ("sparse", "dense"):
+            for sc_ in ("sparse", "mid", "dense"):
                 summ_a(load(d, "a", tag), held, sc_)
         except FileNotFoundError:
             pass

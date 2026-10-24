@@ -19,6 +19,7 @@ REPS = 3
 HALF = 32.0
 BINS = ((0, 4), (4, 8), (8, 16), (16, 32))
 SCENES_A = {"sparse": (800, 60.0, 256.0, ((0.0, 0.0), (40.0, 0.0), (0.0, 40.0), (-40.0, -40.0))),
+            "mid": (300, 14.0, 128.0, ((0.0, 0.0), (18.0, 0.0), (0.0, 18.0), (-18.0, -18.0))),
             "dense": (1200, 16.0, 128.0, ((0.0, 0.0), (20.0, 0.0), (0.0, 20.0), (-20.0, -20.0)))}
 
 
@@ -42,6 +43,8 @@ def phase_a(model, dev, a):
     ticks = (0, 5, 10, 20)
     rows = []
     for sname, (nb, sig, ext, centres) in SCENES_A.items():
+      if sname not in a.scenes.split(","):
+          continue
       for seed in seeds_of(a):
         for rep in range(reps_of(a)):
             p0, v0 = make_scene(nb, sig, 1.0, ext, seed, rep)
@@ -345,13 +348,39 @@ def phase_c(model, dev, a):
     return rows
 
 
+@torch.no_grad()
+def phase_d(model, dev, a):
+    """Trajectory dump for the frame review: drifting cluster crossing the x=0 seam, seed 4738; exact / single / 2x2 tiled / 4x4 tiled."""
+    steps = 40
+    p, v = make_scene(600, 6.0, 1.0, 128.0, 4738, 0)
+    p = p + np.array([-10.0, 0.0])
+    v = v + np.array([3.0, 0.0])
+    P0, V0 = torch.tensor(p, device=dev), torch.tensor(v, device=dev)
+    Pt, _ = ops.exact_rollout(P0, V0, steps, DT, SUB, EPS)
+    mass = torch.ones(600, device=dev)
+    out = {"exact": Pt.float().cpu().numpy()}
+    for name in ("single", "g16_fx_far", "t32_g16_fx_far"):
+        single_setup(model)
+        T, init, tf, step, st0 = variant_runner(model, name, dev)
+        pp, vv, st = P0.float(), V0.float(), st0()
+        L = [pp]
+        for _ in range(steps):
+            pp, vv, st, _a = step(pp, vv, mass, st)
+            L.append(pp)
+        out[name] = torch.stack(L).cpu().numpy()
+        single_setup(model)
+    np.savez(a.out, **out)
+    return []
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ckpt", required=True)
     ap.add_argument("--kernel", default="old")
-    ap.add_argument("--phase", choices=["a", "b", "c"], required=True)
+    ap.add_argument("--phase", choices=["a", "b", "c", "d"], required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--smoke", action="store_true")
+    ap.add_argument("--scenes", default="sparse,mid,dense")
     a = ap.parse_args()
     dev = torch.device("cuda")
     torch.manual_seed(4738)
@@ -359,8 +388,9 @@ def main():
     if a.kernel != "old":
         from scripts import scatter_far
         scatter_far.install_spec(model, a.kernel)
-    rows = {"a": phase_a, "b": phase_b, "c": phase_c}[a.phase](model, dev, a)
-    json.dump({"kernel": a.kernel, "rows": rows}, open(a.out, "w"))
+    rows = {"a": phase_a, "b": phase_b, "c": phase_c, "d": phase_d}[a.phase](model, dev, a)
+    if a.phase != "d":
+        json.dump({"kernel": a.kernel, "rows": rows}, open(a.out, "w"))
     print("DONE", a.phase, len(rows), flush=True)
 
 
