@@ -249,3 +249,8 @@ far_rel on seeds 9100/9200/9300 (arm A 0.689/0.611/0.673, mean 0.658):
 - F (dilated convs) not run: its trigger (D stalls) was not met. S full-residual retry not run: trigger (a lever passes) not met.
 - Prediction vs outcome: D predicted 0.45-0.55 (landed at the top edge, 0.55, no pass); E predicted 0.60-0.65 (landed 0.66, stall).
 - Reading: input moment order and conv depth/reach are not limiting; more data/iterations helps slowly. Open (untested) levers: 100x budget along D's trend, tier-3 top cell/tile layout changes (G, halo), loss weighting toward large-force particles, joint (not sequential-frozen) training of the three tiers.
+
+## Experiment 1: full-residual S retry with D config (2026-10-24)
+Config = original arm S (residual target vs frozen Exp E tier 0, 3 tiers, 6 layers) with D's budget: 1600 scenes x 40 steps, 30000 iters/stage, batch 16. PRE-REGISTERED, same rule as the original S: PASS if on every held-out seed (9100/9200/9300) force_rel and com_err both beat baseline by >10% and mean err@50 and mean dE are no worse than baseline mean + baseline seed std; KILL otherwise. Original S for reference: force_rel -12..14%, com_err +6% worse, err@50 +5..7%.
+- Prediction: force_rel gain grows to ~15-20%; com_err stays within +-5% of baseline (far-field is a small share of the residual; D showed far-only far_rel 0.55); verdict KILL.
+- Estimate: targets ~5 min, 3 stages ~40 min, eval ~5 min.
