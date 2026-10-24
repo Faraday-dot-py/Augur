@@ -238,3 +238,6 @@ One lever at a time, same far-field target, same held-out seeds and metric (far_
 - Estimate (1): scene gen ~10 min, 3 stages x ~11 min.
 - Lever (2) implemented as E = third-order moments (4 extra channels: sum m d^3, exact parallel-axis merge, central third moments as features; `--order3`), everything else = arm A (160 scenes, 3000 iters, 6 layers). Tests: 23 pass (job 3952). "Finer top cells" not run separately (2-tier result C already shows coverage loss; G=32 variants change reach). Queued after D (dependency) so only one GPU job runs.
 - Prediction (2): E ~0.60-0.65 (small gain; sub-clump shape matters little for forces at >=20 units from 3-6 sigma clumps).
+
+### Status note (2026-10-24, later)
+Lever D (job 3950) stayed PENDING (QOSMaxGRESPerUser, both account GPUs held by other jobs) for hours; E (job 3953, afterany:3950) queued behind it. Polaris SSH then dropped (session lost; polaris_start returns "Error reading SSH protocol banner" on repeated tries). No D/E results yet. Resume: polaris_start (Duo), check 3950/3953, read ~/augur-tiered-farD-3950.log / farE, run `--mode far` results in results/far_D.json, far_E.json; then dilated-conv lever if D stalls, else full-residual S retry per pre-registration above.
