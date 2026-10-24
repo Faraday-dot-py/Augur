@@ -42,6 +42,32 @@ class TieredAdapter(ti.TierModel):
         p2, v2, st, a = self.f.step_verlet(p, v, m, k, state[0], state[1])
         return p2.to(pos.dtype), v2.to(pos.dtype), [st, a]
 
+    @torch.no_grad()
+    def step_multirate(self, pos, vel, mass, mask, state, m_ratio):
+        """One RESPA macro step = m_ratio fast tier-0 steps with slow half-kicks around them (advances m_ratio * dt)."""
+        p, v, m, k = self._c(pos, vel, mass, mask)
+        p2, v2, st = self.f.step_respa(p, v, m, k, state[0], m_ratio)
+        return p2.to(pos.dtype), v2.to(pos.dtype), [st, None]
+
+    def tier0_only(self):
+        return Tier0Only(self.f.tier0, self.dtype, self.dt, self.reach, self.name + "/tier0")
+
+
+class Tier0Only(ti.TierModel):
+    laws = frozenset({"grav"})
+    caps = frozenset()
+
+    def __init__(self, t0, dtype, dt, reach, name):
+        self.t0, self.dtype, self.dt, self.reach, self.name = t0, dtype, dt, reach, name
+
+    def init_state(self, B, device):
+        return self.t0.init_state(B, device, self.dtype)
+
+    @torch.no_grad()
+    def force(self, pos, vel, mass, mask, state, ctx=None):
+        a, st = self.t0.force(pos.to(self.dtype), vel.to(self.dtype), mass.to(self.dtype), mask.to(self.dtype), state)
+        return a.to(pos.dtype), st
+
 
 def load_tiered(spec, device):
     """spec: '<nets.pt>[,<tier0.pt>]'; nets.pt is a checkpoint written by scripts/train_tiered.py (keys nets, args)."""

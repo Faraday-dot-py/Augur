@@ -269,3 +269,87 @@ def test_t0ext_adapter_when_branch_code_present():
     ctx = dict(ext=tt.ExtField.random(1, gen, CPU), t=0.0, bound=[dict(kind="wall", lo=np.array([-6.0, -6.0]), hi=np.array([6.0, 6.0]))])
     p2, v2, st = ad.step(pos, vel, mass, mask, ad.init_state(1, CPU), ctx)
     assert torch.isfinite(p2).all() and torch.isfinite(v2).all()
+
+
+def test_holes_respa_verdict_logic():
+    from scripts import tiered_holes as th
+    ok = {1: dict(err=[1.0, 1.1, 0.9], dE=[0.01, 0.01, 0.01], ms=[10, 10, 10]), 2: dict(err=[1.02, 1.1, 0.95], dE=[0.01, 0.01, 0.01], ms=[7, 7, 7])}
+    assert th.respa_verdict(ok)["verdict"] == "PASS"
+    bad = {1: ok[1], 2: dict(err=[2.0, 2.3, 2.1], dE=[0.01] * 3, ms=[7] * 3)}
+    assert th.respa_verdict(bad)["verdict"] == "KILL"
+    slow = {1: ok[1], 2: dict(err=[1.0, 1.1, 0.9], dE=[0.01] * 3, ms=[10] * 3)}
+    assert th.respa_verdict(slow)["verdict"] == "MIXED"
+
+
+def test_holes_respa_runs_with_exact_multirate_stub():
+    from scripts import tiered_holes as th
+
+    class Stub(ti.Oracle):
+        def step_multirate(self, pos, vel, mass, mask, state, m):
+            for _ in range(m):
+                pos, vel, state = ti.Oracle.step(self, pos, vel, mass, mask, state, dict(phys=tt.Physics(grav=dict(eps=tt.EPS))))
+            return pos, vel, state
+    out = th.run_respa(Stub(0.1), CPU, [9100, 9200], T=8, ms=(1, 2))
+    assert max(out["rows"][2]["err"]) < 1e-6
+
+
+def test_holes_exposure_verdict_logic():
+    from scripts import tiered_holes as th
+
+    def arm(e, d, z):
+        return {str(s): dict(err100=e + 0.01 * i, dE100=d + 0.001 * i, tier0_bias_absz=z, gap={"50": dict(ratio=1.0 + 0.02 * i)}) for i, s in enumerate(th.HELD)}
+    res = dict(S=arm(5.0, 0.05, 1.0), R=arm(3.0, 0.02, 1.0), J=arm(3.0, 0.02, 4.0), N=arm(5.0, 0.05, 1.0))
+    v = th.exposure_verdict(res)
+    assert v["R"]["verdict"] == "PASS" and v["J"]["verdict"] == "KILL" and v["N"]["verdict"] == "NO_GAIN"
+    assert v["S_gap_ratio_step50"]["teacher_forcing_suffices"] in (True, False)
+
+
+def test_holes_sparse_verdict_logic():
+    from scripts import tiered_holes as th
+    r = dict(equiv_rel_rms=1e-5, ms_sparse_0125=4.0, ms_dense_1=10.0, refine=dict(err50_base=[1.0, 1.1, 1.2], err50_refined=[0.7, 0.8, 0.85], far_base=[0.4] * 3, far_refined=[0.4] * 3))
+    v = th.sparse_verdict(r)
+    assert v["sparse"] == "PASS" and v["refine"]["verdict"] == "PASS"
+    assert th.sparse_verdict(dict(r, equiv_rel_rms=0.5))["sparse"] == "KILL"
+
+
+def test_holes_recurrent_verdict_and_refresh_runs():
+    from scripts import tiered_holes as th
+    r = dict(reset=dict(err50=[2.0, 2.1, 2.2]), persist=dict(err50=[1.5, 1.6, 1.4], ms=10.0, seam_jump=2.0),
+             refresh=dict(err50=[1.0, 1.1, 0.9], ms=11.0, seam_jump=0.5), shift=dict(half=0.003, floor=0.002))
+    v = th.recurrent_verdict(r)
+    assert v["refresh"]["verdict"] == "PASS" and v["shift_invariance"]["verdict"] == "PASS"
+    ad = _tiny_scatter()
+    tl = ti.Tiled(ad, 64.0, sparse=False, persist=True, refresh=True)
+    pos, vel, mass, mask = _rand(40, spread=20.0)
+    st = tl.init_state(1, CPU)
+    for _ in range(2):
+        a, st = tl.force(pos, vel, mass, mask, st, None)
+    assert torch.isfinite(a).all()
+
+
+class _Calib(ti.Oracle):
+    """Oracle plus a deterministic force error proportional to the true acceleration; error() reports it (noisy) or noise only."""
+
+    def __init__(self, informative=True):
+        super().__init__(0.1)
+        self.informative = informative
+
+    def force(self, pos, vel, mass, mask, state, ctx=None):
+        a, st = super().force(pos, vel, mass, mask, state, ctx)
+        return a * (1 + 0.3 * torch.sin(7.0 * pos[..., 0:1] + 3.0 * pos[..., 1:2])), st
+
+    def error(self, pos, vel, mass, mask, state, ctx=None):
+        true = tt.grav_acc(pos, mass, mask)
+        err = (self.force(pos, vel, mass, mask, state, ctx)[0] - true).norm(dim=-1)
+        g = torch.Generator().manual_seed(4738)
+        noise = torch.rand(err.shape, generator=g, dtype=err.dtype)
+        return err * (1 + 0.1 * noise) if self.informative else noise
+
+
+def test_holes_calibration_pass_and_kill():
+    from scripts import tiered_holes as th
+    good = th.run_calibration(_Calib(True), CPU, [4738, 9100])
+    assert good["verdict"] == "PASS", good
+    bad = th.run_calibration(_Calib(False), CPU, [4738, 9100])
+    assert bad["verdict"] == "KILL", bad
+    assert th.run_calibration(ti.ConstVel(), CPU, [4738])["verdict"].startswith("skipped")

@@ -132,8 +132,9 @@ class Tiled(TierModel):
     acceleration from the tile that owns it, halo copies are read-only. Per-tile recurrent field persists across steps. `sparse`
     activates only tiles whose window holds particles (missing tiles contribute nothing, as zero-mass halo)."""
 
-    def __init__(self, base, span, tile=32.0, sparse=False):
+    def __init__(self, base, span, tile=32.0, sparse=False, persist=True, refresh=False):
         self.base, self.span, self.tile, self.sparse = base, float(span), float(tile), sparse
+        self.persist, self.refresh = persist, refresh
         self.dt, self.reach, self.caps, self.laws = base.dt, float(span), base.caps, base.laws
         self.name = f"{base.name}+tiled{int(tile)}{'s' if sparse else ''}"
         n = max(1, int(round(span / tile)))
@@ -183,13 +184,37 @@ class Tiled(TierModel):
                 fields[int(i)] = st[j:j + 1]
         mine = ok & (own[order] == ids[:, None])
         out.index_add_(0, order[mine], a[mine])
+        if not self.persist:
+            fields.clear()
         return out
+
+    def _refresh(self, fields):
+        """Overwrite every tile's halo cells of the recurrent field with the neighbouring tiles' interior cells (hole 7)."""
+        if not fields:
+            return
+        n, G = self.nt, self.base.m.grid
+        c = int(round(G * self.tile / self.base.reach))
+        hw = (G - c) // 2
+        ref = next(iter(fields.values()))
+        glob = ref.new_zeros(1, ref.shape[1], n * c + 2 * hw, n * c + 2 * hw)
+        for t, f in fields.items():
+            ix, iy = divmod(t, n)
+            glob[:, :, hw + iy * c:hw + (iy + 1) * c, hw + ix * c:hw + (ix + 1) * c] = f[:, :, hw:hw + c, hw:hw + c]
+        for t in list(fields):
+            ix, iy = divmod(t, n)
+            new = glob[:, :, iy * c:iy * c + G, ix * c:ix * c + G].clone()
+            new[:, :, hw:hw + c, hw:hw + c] = fields[t][:, :, hw:hw + c, hw:hw + c]
+            fields[t] = new
 
     def force(self, pos, vel, mass, mask, state, ctx=None):
         B = pos.shape[0]
         if state is None or not isinstance(state, dict):
             state = self.init_state(B, pos.device)
         a = torch.stack([self._force_one(b, pos[b], vel[b], mass[b], mask[b], state) for b in range(B)])
+        if self.refresh and self.persist:
+            for b in range(B):
+                if state["fields"][b]:
+                    self._refresh(state["fields"][b])
         return a * mask[..., None], state
 
     def step(self, pos, vel, mass, mask, state, ctx=None):
