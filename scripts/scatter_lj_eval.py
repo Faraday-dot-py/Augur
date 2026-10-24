@@ -30,8 +30,7 @@ def main():
     if args.zeroshot:
         model = sl.build_model(args.ckpt, dev)
     else:
-        model = sl.build_model(None, dev)
-        model.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
+        model = sl.load_model(args.ckpt, dev)
     model.eval()
     out = {"ckpt": args.ckpt, "zeroshot": args.zeroshot}
     d = np.linspace(0.75, 2.5, 100)

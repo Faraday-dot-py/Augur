@@ -95,7 +95,7 @@ def run_batch(model, pt, D, idx, t0, k):
         tp, tv = D["P"][idx, t0 + s + 1] / ls, D["V"][idx, t0 + s + 1] / ls
         lp = lp + ((sl.wrap_diff(pos, tp, box) * ls) ** 2).sum(-1).mul(mask).sum(1).div(cnt).mean()
         lv = lv + (((vel - tv) * ls) ** 2).sum(-1).mul(mask).sum(1).div(cnt).mean()
-    return lp / k, lv / k
+    return lp / k, lv / k, pt.take_pen().to(lp.device)
 
 
 def main():
@@ -120,6 +120,10 @@ def main():
     ap.add_argument("--seed", type=int, default=4738)
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--resume", action="store_true")
+    ap.add_argument("--energy", action="store_true", help="mesh force = -autograd grad of a density-only scalar energy (hole-1 fix)")
+    ap.add_argument("--resid", action="store_true", help="add a soft-penalised residual force net (momentum channels)")
+    ap.add_argument("--lam-mag", type=float, default=300.0)
+    ap.add_argument("--lam-curl", type=float, default=300.0)
     args = ap.parse_args()
     dev = torch.device(args.device)
     os.makedirs(args.ckpt_dir, exist_ok=True)
@@ -151,7 +155,7 @@ def main():
     Dtr, Dva = to_dev(tr, dev), to_dev(va, dev)
 
     torch.manual_seed(args.seed)
-    model = sl.build_model(args.init_ckpt, dev)
+    model = sl.build_model(args.init_ckpt, dev, args.energy, args.resid)
     opt = torch.optim.Adam(model.parameters(), lr=args.lr)
     start = 0
     if args.resume and os.path.exists(base + ".pt"):
@@ -181,8 +185,8 @@ def main():
         i0 = int(torch.randint(0, S - args.batch + 1, (1,), generator=g))
         idx = torch.arange(i0, i0 + args.batch, device=dev)
         t0 = torch.randint(0, F - k, (args.batch,), generator=g).to(dev)
-        lp, lv = run_batch(model, pt, Dtr, idx, t0, k)
-        loss = 100 * lp + lv
+        lp, lv, pen = run_batch(model, pt, Dtr, idx, t0, k)
+        loss = 100 * lp + lv + args.lam_mag * pen[0] + args.lam_curl * pen[1]
         opt.zero_grad()
         loss.backward()
         gn = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -194,13 +198,13 @@ def main():
             log(f"it {it} non-finite loss/grad, step skipped ({skipped} total)")
         it += 1
         if it % args.log_every == 0:
-            log(f"it {it} k {k} lr {lr:.2e} loss {loss.item():.5f} pos {lp.item():.6f} vel {lv.item():.5f} t {time.time() - t_start:.0f}s")
+            log(f"it {it} k {k} lr {lr:.2e} loss {loss.item():.5f} pos {lp.item():.6f} vel {lv.item():.5f} pen {pen[0].item():.2e}/{pen[1].item():.2e} t {time.time() - t_start:.0f}s")
             hist.append((it, k, loss.item()))
         if it % args.val_every == 0 or it == args.iters:
             with torch.no_grad():
                 vs = [run_batch(model, pt, Dva, torch.arange(i, min(i + args.batch, Dva["P"].shape[0]), device=dev),
                                 torch.zeros(min(args.batch, Dva["P"].shape[0] - i), dtype=torch.long, device=dev), args.k_end) for i in range(0, Dva["P"].shape[0], args.batch)]
-            vloss = float(np.mean([100 * a.item() + b.item() for a, b in vs]))
+            vloss = float(np.mean([100 * a.item() + b.item() for a, b, _ in vs]))
             log(f"it {it} VAL k {args.k_end} loss {vloss:.5f}")
             hist.append((it, "val", vloss))
         if STOP:

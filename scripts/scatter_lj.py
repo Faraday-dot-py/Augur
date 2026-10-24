@@ -10,6 +10,7 @@ import math
 
 import numpy as np
 import torch
+import torch.nn as nn
 
 from scripts import lj_sim
 from scripts import scatter_field as sf
@@ -23,14 +24,31 @@ KNN = 24
 SHIFTS = torch.tensor([[a, b] for a in (-1, 0, 1) for b in (-1, 0, 1)], dtype=torch.float64)
 
 
-def build_model(ckpt=None, dev="cpu"):
+def build_model(ckpt=None, dev="cpu", energy=False, resid=False):
     """Exp E ms_kp_pot_v_g128 built at G=128 (U-Net depth 5 so E checkpoints load), then run on a G=64, extent-32 grid (same cell h = 0.5)."""
     m = sf.ScatterField(grid=128, extent=64.0, net="unet", recurrent=True, hidden_ch=0, dt=DT_M, momfix=True, in_scale=1.0,
                         potential=True, kernel=True, pp=2.0, split=True, verlet=True)
     if ckpt:
         m.load_state_dict(torch.load(ckpt, map_location="cpu", weights_only=False)["model"])
     m.grid, m.extent, m.h = GRID, EXTENT, EXTENT / GRID
+    m.energy = energy
+    if energy:
+        m.net = sf.UNet(1, 1, 32, 5)
+        nn.init.zeros_(m.net.out.weight)
+        nn.init.zeros_(m.net.out.bias)
+    if resid:
+        m.rnet = sf.UNet(3, 2, 32, 5)
+        nn.init.zeros_(m.rnet.out.weight)
+        nn.init.zeros_(m.rnet.out.bias)
     return m.to(dev)
+
+
+def load_model(path, dev):
+    """Rebuild a checkpoint's variant from its weights: energy-mode mesh (density-only 1-channel net) and optional residual net."""
+    st = torch.load(path, map_location=dev, weights_only=False)["model"]
+    m = build_model(None, dev, energy=st["net.inp.weight"].shape[1] == 1, resid="rnet.inp.weight" in st)
+    m.load_state_dict(st)
+    return m
 
 
 def layout(box):
@@ -41,6 +59,7 @@ class PeriodicTiles:
     def __init__(self, model, knn=KNN):
         self.m, self.knn = model, knn
         self.E = float(model.extent)
+        self.pen = []
 
     def init_field(self, S, lay, dev, dtype=torch.float32):
         return torch.zeros(S * lay[0] * lay[1], self.m.cf, GRID, GRID, device=dev, dtype=dtype)
@@ -84,8 +103,52 @@ class PeriodicTiles:
         out[pk["s"], pk["b"]] = a.reshape(-1, 2)[pk["flat"]]
         return out
 
+    def take_pen(self):
+        """Mean (magnitude, curl) penalty of the residual net over the force calls since the last take; zeros without one."""
+        out = torch.stack([torch.stack(p) for p in self.pen]).mean(0) if self.pen else torch.zeros(2)
+        self.pen = []
+        return out
+
+    def mesh_energy(self, rho):
+        m = self.m
+        G = m.grid
+        rf = torch.fft.rfft2(rho, s=(2 * G, 2 * G))
+        phi = torch.fft.irfft2(rf * m._kernel_fft(rho), s=(2 * G, 2 * G))[..., :G, :G] * m.h ** 2
+        return m.net(rho).sum() * m.h ** 2 + 0.5 * m.h ** 2 * (rho * phi).sum()
+
+    def force_energy(self, pos, vel, mask, box, lay, field, parts=False):
+        """Hole-1 fix (docs/theory/heterogeneous-tiered.md): mesh force = -d/dx of a scalar energy U = sum_cells psi(density) h^2 + 0.5 h^2 sum rho (K*rho),
+        by autograd through CIC scatter, the net and the FFT kernel (position-only, memoryless), so it does no net work around a closed path.
+        Plus the pair term, an optional soft-penalised residual force net (momentum channels, may depend on velocity), and global mean removal."""
+        m = self.m
+        S, N, _ = pos.shape
+        pk = self.pack(pos, vel, mask, box, lay)
+        P, V, K = pk["P"].to(field.dtype), pk["V"].to(field.dtype), pk["K"].to(field.dtype)
+        train = torch.is_grad_enabled()
+        with torch.enable_grad():
+            Pg = P if P.requires_grad else P.detach().requires_grad_(True)
+            x = m.scatter(Pg, V, K, K)
+            U = self.mesh_energy(x[:, :1])
+            g = torch.autograd.grad(U, Pg, create_graph=train)[0]
+        a_mesh = -g * K[..., None]
+        a_pp = m.pp_acc(P, K, K, knn=self.knn) * K[..., None]
+        a_res = torch.zeros_like(a_mesh)
+        if hasattr(m, "rnet"):
+            r = m.rnet(x)
+            a_res = m.gather(r, P) * K[..., None]
+            curl = ((r[:, 1, 1:-1, 2:] - r[:, 1, 1:-1, :-2]) - (r[:, 0, 2:, 1:-1] - r[:, 0, :-2, 1:-1])) / 2
+            self.pen.append([(a_res ** 2).sum() / K.sum(), (curl ** 2).mean()])
+        a = self.unpack(a_mesh + a_pp + a_res, pk, S, N).to(pos.dtype)
+        mk = mask[..., None]
+        a = (a - (mk * a).sum(1, keepdim=True) / mk.sum(1, keepdim=True)) * mk
+        if parts:
+            return a, field, self.unpack(a_pp, pk, S, N).to(pos.dtype), pk
+        return a, field
+
     def force(self, pos, vel, mask, box, lay, field, parts=False):
         m = self.m
+        if getattr(m, "energy", False):
+            return self.force_energy(pos, vel, mask, box, lay, field, parts)
         S, N, _ = pos.shape
         pk = self.pack(pos, vel, mask, box, lay)
         P, V, K = pk["P"].to(field.dtype), pk["V"].to(field.dtype), pk["K"].to(field.dtype)
