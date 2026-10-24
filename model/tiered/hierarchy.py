@@ -32,7 +32,8 @@ class ScatterFieldTier0:
         self.model, self.dt = model, model.dt
 
     def init_state(self, B, device, dtype=torch.float32):
-        return self.model.init_field(B, device, dtype)
+        f = self.model.init_field(B, device, dtype)
+        return f[0] if isinstance(f, tuple) else f
 
     def force(self, pos, vel, mass, mask, state):
         return self.model.force(pos, vel, mass, mask, state)
@@ -54,11 +55,11 @@ class TieredField(nn.Module):
     mean removed."""
 
     def __init__(self, tier0, nets, n0, h0, G, halo, blend, origin=None, periodic=False, disp=True, cross=False,
-                 mean_remove=True, dilate=1, refiners=(), feedback=False):
+                 mean_remove=True, dilate=1, refiners=(), feedback=False, static=False):
         super().__init__()
         self.tier0, self.nets, self.refiners = tier0, nn.ModuleList(nets), nn.ModuleList(refiners)
         self.n0, self.h0, self.G, self.periodic, self.disp, self.cross = n0, h0, G, periodic, disp, cross
-        self.mean_remove, self.dilate, self.feedback = mean_remove, dilate, feedback
+        self.mean_remove, self.dilate, self.feedback, self.static = mean_remove, dilate, feedback, static
         if origin is None:
             origin = torch.full((2,), -n0 * h0 / 2)
         self.origin = torch.as_tensor(origin, dtype=torch.float32)
@@ -115,12 +116,15 @@ class TieredField(nn.Module):
             if ext is not None:
                 ch.append(ext)
             x = L.extract(torch.cat(ch, 1))
-            act = active_tiles(core_mass(mom[k], L), self.dilate, self.periodic)
             T = L.T
+            act = torch.ones(B, T, T, dtype=torch.bool, device=pos.device) if self.static else active_tiles(core_mass(mom[k], L), self.dilate, self.periodic)
             coefs = x.new_zeros(B, T, T, net.ncoef, L.P, L.P)
             summ = x.new_zeros(B, T, T, net.summary_ch, L.P, L.P)
             hnew = x.new_zeros(B, T, T, net.hidden_ch, L.P, L.P)
-            if act.any():
+            if self.static:
+                c, s_, hh = net(x.flatten(0, 2))
+                coefs, summ, hnew = c.reshape_as(coefs), s_.reshape_as(summ), hh.reshape_as(hnew)
+            elif act.any():
                 coefs[act], summ[act], hnew[act] = net(x[act])
             phi, dphi, res = L.blend_eval(coefs, pos)
             a = -dphi + res
@@ -151,6 +155,14 @@ class TieredField(nn.Module):
         a, state, _ = self.force(pos, vel, mass, mask, state, occ)
         dv = a * self.dt
         return pos + self.dt * (vel + 0.5 * dv), vel + dv, state, dv
+
+    def step_verlet(self, pos, vel, mass, mask, state, a_prev=None, occ=None):
+        dt = self.dt
+        if a_prev is None:
+            a_prev, state, _ = self.force(pos, vel, mass, mask, state, occ)
+        pos_new = pos + dt * vel + 0.5 * dt ** 2 * a_prev
+        a_new, state, _ = self.force(pos_new, vel + dt * a_prev, mass, mask, state, occ)
+        return pos_new, vel + 0.5 * dt * (a_prev + a_new), state, a_new
 
     def step_respa(self, pos, vel, mass, mask, state, m, occ=None):
         """Slow (upper tier) half-kicks of m*dt around m fast tier-0 steps."""

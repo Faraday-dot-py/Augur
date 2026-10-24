@@ -277,3 +277,18 @@ def test_gated_refine_force_is_gradient_of_gated_potential():
     g, _, _ = L.blend_eval(gt, p)
     auto = -torch.autograd.grad((g * phi).sum(), p)[0]
     assert torch.allclose(auto, a, atol=1e-9)
+
+
+def test_static_and_verlet_step_conserve_momentum():
+    nets = make_nets(2)
+    for n in nets:
+        n.log_rho = True
+    f = TieredField(ZeroTier0(), nets, 32, 1.0, 4, 3, 1.0, static=True)
+    pos, vel, mass, mask = particles()
+    st = f.init_state(2, pos.device, DT)
+    p0 = ((mass * mask)[..., None] * vel).sum(1)
+    a_prev = None
+    for _ in range(3):
+        pos, vel, st, a_prev = f.step_verlet(pos, vel, mass, mask, st, a_prev)
+    assert torch.isfinite(pos).all()
+    assert torch.allclose(((mass * mask)[..., None] * vel).sum(1), p0, atol=1e-9)
