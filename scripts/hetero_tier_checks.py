@@ -18,7 +18,8 @@ SEEDS = (4738, 9000, 12000)
 REPS = 3
 HALF = 32.0
 BINS = ((0, 4), (4, 8), (8, 16), (16, 32))
-CENTRES = ((0.0, 0.0), (20.0, 0.0), (0.0, 20.0), (-20.0, -20.0))
+SCENES_A = {"sparse": (800, 60.0, 256.0, ((0.0, 0.0), (40.0, 0.0), (0.0, 40.0), (-40.0, -40.0))),
+            "dense": (1200, 16.0, 128.0, ((0.0, 0.0), (20.0, 0.0), (0.0, 20.0), (-20.0, -20.0)))}
 
 
 def seeds_of(a):
@@ -40,12 +41,13 @@ def mforce(model, pos, vel, field):
 def phase_a(model, dev, a):
     ticks = (0, 5, 10, 20)
     rows = []
-    for seed in seeds_of(a):
+    for sname, (nb, sig, ext, centres) in SCENES_A.items():
+      for seed in seeds_of(a):
         for rep in range(reps_of(a)):
-            p0, v0 = make_scene(1200, 16.0, 1.0, 128.0, seed, rep)
+            p0, v0 = make_scene(nb, sig, 1.0, ext, seed, rep)
             P0, V0 = torch.tensor(p0, device=dev), torch.tensor(v0, device=dev)
             Pt, Vt = ops.exact_rollout(P0, V0, 20, DT, SUB, EPS)
-            for ci, c in enumerate(CENTRES):
+            for ci, c in enumerate(centres):
                 cc = torch.tensor(c, device=dev, dtype=torch.float64)
                 ops.retarget(model, 128, 2 * HALF)
                 field = model.init_field(1, dev)[0]
@@ -70,7 +72,7 @@ def phase_a(model, dev, a):
                         if not m.any():
                             continue
                         rows.append({
-                            "seed": seed, "rep": rep, "centre": ci, "tick": t, "bin": bi, "n": int(m.sum()),
+                            "scene": sname, "seed": seed, "rep": rep, "centre": ci, "tick": t, "bin": bi, "n": int(m.sum()),
                             "dx": float(d_iso[m, 0].sum()), "dy": float(d_iso[m, 1].sum()),
                             "Fx": float(F[m, 0].sum()), "Fy": float(F[m, 1].sum()),
                             "num": float((d_iso[m] * F[m]).sum()), "den": float((F[m] ** 2).sum()),
@@ -102,15 +104,15 @@ def phase_a(model, dev, a):
                         if not m.any():
                             continue
                         rows.append({
-                            "seed": seed, "rep": rep, "centre": ci, "tick": k, "bin": bi, "kind": "pos", "n": int(m.sum()),
+                            "scene": sname, "seed": seed, "rep": rep, "centre": ci, "tick": k, "bin": bi, "kind": "pos", "n": int(m.sum()),
                             "pi": float(ei[m].norm(dim=-1).sum()), "pf": float(ef[m].norm(dim=-1).sum()),
                             "pix": float(ei[m, 0].sum()), "piy": float(ei[m, 1].sum()),
                             "pfx": float(ef[m, 0].sum()), "pfy": float(ef[m, 1].sum())})
                     rows.append({
-                        "seed": seed, "rep": rep, "centre": ci, "tick": k, "kind": "energy", "n": n,
+                        "scene": sname, "seed": seed, "rep": rep, "centre": ci, "tick": k, "kind": "energy", "n": n,
                         "E_model": ops.exact_energy(Pm[k], Vm[k], EPS) - e0,
                         "E_iso": ops.exact_energy(Pi[k], Vi[k], EPS) - e0, "ke0": float(0.5 * (Vi[0] ** 2).sum())})
-            print("a done", seed, rep, flush=True)
+            print("a done", sname, seed, rep, flush=True)
     return rows
 
 
