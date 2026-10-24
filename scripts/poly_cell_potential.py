@@ -51,7 +51,7 @@ def naive_force(coef, pos, h, extent):
     return sum(wt[..., None] * f for wt, _, f in _cells(coef, pos, h, extent))
 
 
-def loop_work(fn, centre, radius, h, extent, n=400):
+def loop_work(fn, centre, radius, h, extent, n=20000):
     """Line integral of force around a circle, per unit circumference-radius (zero for a conservative force). centre (2,) tensor."""
     t = torch.linspace(0, 2 * torch.pi, n + 1, dtype=centre.dtype, device=centre.device)[:-1]
     pts = centre + radius * torch.stack([torch.cos(t), torch.sin(t)], -1)
