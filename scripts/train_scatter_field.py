@@ -166,8 +166,11 @@ def train(model, tensors, args, ckpt_path, log):
         field = model.init_field(args.batch, args.device)
         lp = lv = lm = 0.0
         hp = getattr(args, 'head_pen', 0.0) if model.t0 is not None and model.t0.cfg.head else 0.0
+        hw = getattr(args, 'head_pow', 0.0) if model.t0 is not None and model.t0.cfg.head else 0.0
         if hp:
             model.t0.pen_list = []
+        if hw:
+            model.t0.pow_list = []
         w = mk[:, :, None]
         denom = mk.sum() * 2 * k
         for s in range(k):
@@ -179,6 +182,9 @@ def train(model, tensors, args, ckpt_path, log):
         if hp:
             loss = loss + hp * torch.stack(model.t0.pen_list).mean()
             model.t0.pen_list = None
+        if hw:
+            loss = loss + hw * torch.stack(model.t0.pow_list).mean()
+            model.t0.pow_list = None
         opt.zero_grad()
         loss.backward()
         if args.long_windows > 0 and torch.isfinite(loss):
