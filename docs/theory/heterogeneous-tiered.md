@@ -275,3 +275,11 @@ Verdict: KILL (diverged). Training loss left 4 at k=9 (it ~2000) and 5854 of 800
 
 ### B1 tiling (job 4007)
 `t0ext:armB1.pt` through `tiered_eval.py` gravity and seams groups: both `ok` (gravity 109 s). The earlier crash (hidden size 245 vs 244 between windows) is gone with the id-keyed store (Tiled passes the particle ids and an owner-tile write mask; commit 936af00 in worktree-agent-a8b09cd8f67d9fd44, needs scatter_tier0.set_ids from this branch). Results JSON on Polaris: ~/t0t/results/tiered/eval_t0ext_B1_ids.json; accuracy numbers not examined.
+
+## Fine-tuning-itself hypothesis (pre-registered 2026-10-25, before launch)
+Observation: mid-density beta (8-16 / 16-32, held-out) is negative in every fine-tuned variant (A0 -0.50/-0.54, A1 -0.80/-0.90, B1 -0.74/-0.84, H3 -0.94/-1.05) and positive for Exp E (+0.25/+0.38, 2 held-out seeds). Tests, one change each, all from Exp E, seed 4738:
+- E5: Exp E untouched, beta on 5 held-out seeds (9000, 12000, 13000, 14000, 15000), sparse/mid/dense. Question: is the baseline's mid beta robust? PASS-as-baseline: mid beta within [+0.1, +0.5] at both bins pooled over 5 seeds and no seed negative; if seeds scatter around 0 or are negative, the "Exp E is positive" premise is noise.
+- Fa: A0 scene mix (no ext), `halo=8`, lr 2e-5, 10 epochs (25x less update than A0). If mid |beta| <= 0.15 -> fine-tune size is the cause; if >= 0.5 -> any fine-tune on these scenes biases; between -> dose-dependent.
+- Fb: body frozen, only new first-conv input channels trained (spec `ext=6,extapply,taper=8,bnd,halo=8`, ext scene mix of arm A, lr 2e-4, 20 epochs), start = Exp E exactly except taper. If mid |beta| <= 0.15 the bias comes from body updates; >= 0.5 -> from data/ext path even with a frozen body.
+- Fc (LoRA adapter): not run; the first conv is the only part that takes new inputs, and Fb already restricts updates to it; a low-rank adapter on the body would need new net code. Listed as not done.
+Scored: hole-4 beta all scenes, plain err@20 vs Exp E, dE@100. No pass/kill on the arms themselves (diagnostic); a variant is "clean" if |beta| <= 0.15 sparse+mid, <= 0.5 dense, err@20 <= 1.10x.
