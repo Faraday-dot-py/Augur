@@ -134,3 +134,20 @@ def test_respa_pair_sub_one_matches_verlet_and_substeps_run():
         p3, v3, _ = pt.step(pos, vel, mask, bx, lay, st0)
     assert torch.allclose(p1, p2, atol=1e-6) and torch.allclose(v1, v2, atol=1e-6)
     assert torch.isfinite(p3).all() and torch.isfinite(v3).all()
+
+
+def test_cached_pair_substeps_close_to_uncached():
+    torch.manual_seed(3)
+    m = sl.build_model(energy=True)
+    for mod in (m.ppmlp[-1], m.net.out):
+        torch.nn.init.normal_(mod.weight, std=0.05)
+    pt = sl.PeriodicTiles(m)
+    pos, vel, mask, bx = _state(40, [12.0, 12.0])
+    lay = sl.layout(bx[0])
+    st0 = (pt.init_field(1, lay, "cpu"), None)
+    m.pair_sub = 4
+    with torch.no_grad():
+        p1, v1, _ = pt.step_respa(pos, vel, mask, bx, lay, st0)
+        p2, v2, _ = pt.step_respa_cached(pos, vel, mask, bx, lay, st0)
+    d = (p1 - p2 + bx[:, None, :] / 2) % bx[:, None, :] - bx[:, None, :] / 2
+    assert float(d.abs().max()) < 1e-3 and float((v1 - v2).abs().max()) < 1e-2

@@ -49,14 +49,14 @@ def build_model(ckpt=None, dev="cpu", energy=False, resid=False, vblind=False, n
     return m.to(dev)
 
 
-def load_model(path, dev, nsub=None, pair_sub=1):
+def load_model(path, dev, nsub=None, pair_sub=1, pair_cache=False):
     """Rebuild a checkpoint's variant from its weights: energy-mode mesh (density-only 1-channel net) and optional residual net."""
     st = torch.load(path, map_location=dev, weights_only=False)["model"]
     a = torch.load(path, map_location="cpu", weights_only=False).get("args", {})
     m = build_model(None, dev, energy=st["net.inp.weight"].shape[1] == 1, resid="rnet.inp.weight" in st, vblind=a.get("vblind", False),
                     norec=a.get("norec", False), asym="ppmlp_a.0.weight" in st, oracle=a.get("oracle", False), nomesh=a.get("nomesh", False),
                     substeps=nsub or a.get("substeps", 1))
-    m.pair_sub = pair_sub
+    m.pair_sub, m.pair_cache = pair_sub, pair_cache
     m.load_state_dict(st)
     return m
 
@@ -258,7 +258,63 @@ class PeriodicTiles:
         self.which = "all"
         return p, v + 0.5 * dt * a_new, (field, a_new)
 
+    def pair_idx(self, P, K):
+        B, N = K.shape
+        k = min(self.knn, N - 1)
+        d_all = P[:, None, :, :] - P[:, :, None, :]
+        r_all = torch.sqrt((d_all ** 2).sum(-1) + 1e-8)
+        bad = (1 - K)[:, None, :] + torch.eye(N, device=P.device, dtype=P.dtype)[None]
+        return torch.topk(r_all + 1e6 * (bad > 0).to(P.dtype), k, dim=-1, largest=False)[1]
+
+    def pair_acc_idx(self, P, K, idx):
+        """Learned symmetric pair acceleration on a fixed neighbour index (positions re-read, set not re-searched)."""
+        m = self.m
+        B, N = K.shape
+        k = idx.shape[-1]
+        pj = torch.gather(P[:, None, :, :].expand(B, N, N, 2), 2, idx[..., None].expand(B, N, k, 2))
+        d = pj - P[:, :, None, :]
+        r = torch.sqrt((d ** 2).sum(-1) + 1e-8)
+        kj = torch.gather(K[:, None, :].expand(B, N, N), 2, idx)
+        ok = kj * K[:, :, None]
+        g = m.ppmlp(torch.stack([r, torch.log(r + 0.05)], -1))[..., 0]
+        win = (1 - (r / m.pp).clamp(max=1.0) ** 2) ** 2
+        return ((g * win * ok)[..., None] * d / r[..., None]).sum(2)
+
+    def step_respa_cached(self, pos, vel, mask, box, lay, st):
+        """As step_respa, but the pair substeps run in packed tile space with one tile assembly and one neighbour search per model step."""
+        field, a_mesh = st
+        m = self.m
+        dt, n = m.dt, m.pair_sub
+        S, N, _ = pos.shape
+        self.which = "mesh"
+        if a_mesh is None:
+            a_mesh, field = self.force(pos, vel, mask, box, lay, field)
+        v = vel + 0.5 * dt * a_mesh
+        pk = self.pack(pos, v, mask, box, lay)
+        P0, V, K = pk["P"].to(field.dtype), pk["V"].to(field.dtype), pk["K"].to(field.dtype)
+        P = P0
+        flat = pk["flat"]
+        idx = self.pair_idx(P, K)
+
+        def acc(P):
+            a = self.pair_acc_idx(P, K, idx) * K[..., None]
+            return (a - a.reshape(-1, 2)[flat].mean(0)) * K[..., None]
+
+        a = acc(P)
+        for _ in range(n):
+            V = V + 0.5 * dt / n * a
+            P = P + dt / n * V
+            a = acc(P)
+            V = V + 0.5 * dt / n * a
+        p = (pos + self.unpack(P - P0, pk, S, N).to(pos.dtype)) % box[:, None, :]
+        v = self.unpack(V, pk, S, N).to(pos.dtype)
+        a_new, field = self.force(p, v, mask, box, lay, field)
+        self.which = "all"
+        return p, v + 0.5 * dt * a_new, (field, a_new)
+
     def step(self, pos, vel, mask, box, lay, st):
+        if getattr(self.m, "pair_sub", 1) > 1 and getattr(self.m, "pair_cache", False):
+            return self.step_respa_cached(pos, vel, mask, box, lay, st)
         if getattr(self.m, "pair_sub", 1) > 1:
             return self.step_respa(pos, vel, mask, box, lay, st)
         field, a_prev = st

@@ -55,6 +55,8 @@ case $ARM in
   DTP2) python -m scripts.scatter_lj_dt_sweep --ckpt ckpt/P2_final.pt --label P2 --configs 2:1,2:2,2:4 --drift-frames 160 --drift-prefixes $PREF --tag P2; echo SLJH1 DTP2 DONE; exit 0;;
   DTP4) python -m scripts.scatter_lj_dt_sweep --ckpt ckpt/P4_final.pt --label P4 --configs 4:1 --drift-frames 160 --drift-prefixes $PREF --tag P4; echo SLJH1 DTP4 DONE; exit 0;;
   P2) FLAGS="--energy --substeps 2";;
+  DTC) for t in P; do cp -n $HOME/augur_h1/ckpt/${t}_final.pt ckpt/ 2>/dev/null; done
+    python -m scripts.scatter_lj_dt_sweep --ckpt ckpt/P_final.pt --label Pc --configs 1:1,1:1,1:2,1:2:c,1:4:c,2:1 --drift-frames 160 --drift-prefixes results/lj --tag Pc; echo SLJH1 DTC DONE; exit 0;;
   P2S) FLAGS="--energy --substeps 2 --seed 4739";;
   P4) FLAGS="--energy --substeps 4";;
   S2) FLAGS="--seed 4739";;

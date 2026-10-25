@@ -38,12 +38,14 @@ def main():
     dev = torch.device(args.device)
     out = {}
     for cfg in args.configs.split(","):
-        n, ps = [int(x) for x in cfg.split(":")]
+        parts = cfg.split(":")
+        n, ps = int(parts[0]), int(parts[1])
+        cache = len(parts) > 2 and parts[2] == "c"
         if args.exact:
             model = sl.build_model(energy=True, oracle=True, nomesh=True, substeps=n).to(dev)
-            model.pair_sub = ps
+            model.pair_sub, model.pair_cache = ps, cache
         else:
-            model = sl.load_model(args.ckpt, dev, nsub=n, pair_sub=ps)
+            model = sl.load_model(args.ckpt, dev, nsub=n, pair_sub=ps, pair_cache=cache)
         model.eval()
         r = {}
         for name in args.scenes.split(","):
