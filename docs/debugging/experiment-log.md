@@ -3308,3 +3308,6 @@ Vs arm A (mean far_rel 0.658): D 10x scenes + 10x iters 0.547 (17% better, all s
 
 ### Tiered S+J joint fine-tune (job 3976, 2026-10-24) -- KILL on dE only
 All tiers + tier 0 trained jointly (rollout k 2->8, 4000 iters) with tier-0 near-field retention loss. Vs tier-0 baseline on 3 held-out seeds: force_rel +25..28%, com_err +22..43%, err@50 -12..13%, tier-0 near_rel improved (0.057->0.051), bias slope within tolerance; dE_model 6-7x baseline (0.06 vs 0.01) -> KILL by pre-registered rule. Best tiered result so far; fix target is energy drift. See docs/theory/heterogeneous-tiered.md Experiment 2.
+
+### Tiered structural levers Z/L/Er on frozen-tier-0 S (job 3979, 2026-10-24) -- KILL all
+Latent summary (Z), learned downsampler (L), error-channel proxy (Er): force_rel +28..29%, com_err -6..+3% on all seeds, same as plain S. Structure of the upward summary is not the limit; joint tier-0 tuning (S+J) is what moved com_err. See docs/theory/heterogeneous-tiered.md Experiment 3.

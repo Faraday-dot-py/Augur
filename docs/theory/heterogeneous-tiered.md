@@ -284,3 +284,6 @@ Base = Experiment 2 (J: init Exp 1 S nets, 4000 iters, rollout k 2->8, near-fiel
 - JT: tier 0 frozen (lr0 = 0), upper tiers still trained jointly on rollouts.
 - PRE-REGISTERED: JE judged by the full Exp 2 rule (force_rel and com_err >10% better than baseline on every seed, err@50 and dE no worse than baseline mean + std, bias check as Exp 2) -> PASS/KILL. Drift attribution: factor X (mean removal / tier-0 co-adaptation) is the cause if its ablation cuts mean dE_model below half of J's (<0.031); dominant if below 2x baseline mean (<0.020); otherwise not the cause. JM/JT also report rollout metrics but are not candidates for adoption.
 - Prediction: JE passes dE (energy loss directly penalizes drift) but may lose 5 points on com_err; JT dE stays high (the upper tiers drift on their own); JM dE drops moderately. p(JE PASS) ~45%. Est. 55 min per arm, ~3 h total.
+
+### Result: Experiment 3 complete (job 3979, ~2.2 h GPU)
+Er (latent + predicted-error channel): force_rel +28.8/29.2/28.3%, com_err +2.2/-0.2/-0.5%, err@50 +4%/+1%/+2%, dE ok -> KILL (com_err). All three structural arms (Z, L, Er) are indistinguishable from Exp 1 S (force_rel ~+28.5%, com_err ~0): none helps, so summary-channel design and learned downsampling are not limiting; the frozen tier-0 bias is. Tile/halo layout lever not run.
