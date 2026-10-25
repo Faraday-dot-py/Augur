@@ -44,10 +44,26 @@ class TieredAdapter(ti.TierModel):
 
     @torch.no_grad()
     def step_multirate(self, pos, vel, mass, mask, state, m_ratio):
-        """One RESPA macro step = m_ratio fast tier-0 steps with slow half-kicks around them (advances m_ratio * dt)."""
+        """RESPA macro step = m_ratio velocity-Verlet tier-0 steps with slow (upper tier) half-kicks of m_ratio*dt around them; advances m_ratio * dt.
+        Own inner integrator: TieredField.step_respa's inner loop is not Verlet (v updated with a(t) only), which confounds multi-rate with the integrator."""
         p, v, m, k = self._c(pos, vel, mass, mask)
-        p2, v2, st = self.f.step_respa(p, v, m, k, state[0], m_ratio)
-        return p2.to(pos.dtype), v2.to(pos.dtype), [st, None]
+        f, dt = self.f, self.f.dt
+        s0, hid, coefs = state[0]
+        a_slow, (hid, coefs, _) = f.slow_force(p, v, m, k, (s0, hid, coefs))
+        v = v + 0.5 * m_ratio * dt * a_slow
+        a0 = state[1]
+        if a0 is None:
+            a0, s0 = f.tier0.force(p, v, m, k, s0)
+            a0 = a0 * k[..., None]
+        for _ in range(m_ratio):
+            v = v + 0.5 * dt * a0
+            p = p + dt * v
+            a0, s0 = f.tier0.force(p, v, m, k, s0)
+            a0 = a0 * k[..., None]
+            v = v + 0.5 * dt * a0
+        a_slow, (hid, coefs, _) = f.slow_force(p, v, m, k, (s0, hid, coefs))
+        v = v + 0.5 * m_ratio * dt * a_slow
+        return p.to(pos.dtype), v.to(pos.dtype), [(s0, hid, coefs), a0]
 
     def tier0_only(self):
         return Tier0Only(self.f.tier0, self.dtype, self.dt, self.reach, self.name + "/tier0")

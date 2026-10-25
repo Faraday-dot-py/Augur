@@ -1,3 +1,4 @@
+import math
 import numpy as np
 import torch
 
@@ -353,3 +354,31 @@ def test_holes_calibration_pass_and_kill():
     bad = th.run_calibration(_Calib(False), CPU, [4738, 9100])
     assert bad["verdict"] == "KILL", bad
     assert th.run_calibration(ti.ConstVel(), CPU, [4738])["verdict"].startswith("skipped")
+
+
+class _StubField:
+    dt, n0, h0 = 0.05, 4, 1.0
+
+    class _T0:
+        def force(self, pos, vel, mass, mask, st):
+            return -pos, st
+
+    tier0 = _T0()
+
+    def slow_force(self, pos, vel, mass, mask, state, occ=None):
+        return -0.5 * pos, (None, None, None)
+
+
+def test_adapter_multirate_matches_verlet_for_linear_force():
+    from scripts import tiered_adapters as tad
+    ad = tad.TieredAdapter(_StubField(), dtype=torch.float64)
+    pos = torch.tensor([[[1.0, 0.0], [0.0, 2.0]]], dtype=torch.float64)
+    vel = torch.zeros_like(pos)
+    mass, mask = torch.ones(1, 2, dtype=torch.float64), torch.ones(1, 2, dtype=torch.float64)
+    st = [(None, None, None), None]
+    p1, v1, s1 = ad.step_multirate(pos, vel, mass, mask, st, 1)
+    a = -1.5 * pos
+    assert torch.allclose(p1, pos + 0.05 * vel + 0.5 * 0.05 ** 2 * a, atol=2e-4)
+    pm, vm, sm = ad.step_multirate(pos, vel, mass, mask, st, 4)
+    w = 1.5 ** 0.5
+    assert torch.allclose(pm, pos * math.cos(w * 0.2), atol=2e-3)
