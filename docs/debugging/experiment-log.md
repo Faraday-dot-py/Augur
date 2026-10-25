@@ -3311,3 +3311,6 @@ All tiers + tier 0 trained jointly (rollout k 2->8, 4000 iters) with tier-0 near
 
 ### Tiered structural levers Z/L/Er on frozen-tier-0 S (job 3979, 2026-10-24) -- KILL all
 Latent summary (Z), learned downsampler (L), error-channel proxy (Er): force_rel +28..29%, com_err -6..+3% on all seeds, same as plain S. Structure of the upward summary is not the limit; joint tier-0 tuning (S+J) is what moved com_err. See docs/theory/heterogeneous-tiered.md Experiment 3.
+
+### Tiered S+J energy term and drift ablations (job 3985, 2026-10-24) -- KILL all on dE
+JE (energy-similarity loss vs truth E(t)): dE mean 0.048 (J 0.0625, baseline 0.010), com_err +23..44%, err@50 -14%. JT (tier 0 frozen): dE 0.033, com_err ~0. JM (no mean removal): dE 0.061, no change. Drift cause: not mean removal; about half from tier-0 co-adaptation, rest from rollout-trained upper tiers. See docs/theory/heterogeneous-tiered.md Experiment 4.

@@ -287,3 +287,10 @@ Base = Experiment 2 (J: init Exp 1 S nets, 4000 iters, rollout k 2->8, near-fiel
 
 ### Result: Experiment 3 complete (job 3979, ~2.2 h GPU)
 Er (latent + predicted-error channel): force_rel +28.8/29.2/28.3%, com_err +2.2/-0.2/-0.5%, err@50 +4%/+1%/+2%, dE ok -> KILL (com_err). All three structural arms (Z, L, Er) are indistinguishable from Exp 1 S (force_rel ~+28.5%, com_err ~0): none helps, so summary-channel design and learned downsampling are not limiting; the frozen tier-0 bias is. Tile/halo layout lever not run.
+
+### Result: Experiment 4 (job 3985, private dir ~/augur_tiered_c2, 3 arms ~55 min each)
+Mean dE_model over seeds (baseline 0.0104, Exp 2 J 0.0625; threshold "cause" <0.031, "dominant" <0.020):
+- JE (energy-similarity term, w 1.0): dE 0.051/0.044/0.048 (mean 0.048, -23% vs J); force_rel +27.5/26.3/24.5%, com_err +26.3/22.9/43.7%, err@50 -14..-15%; bias OK (near_rel 0.051/0.046/0.048). Verdict KILL on dE (still 4.6x baseline). Energy term helps only partially: loss covers k<=8 steps, drift is measured at tick 100.
+- JT (tier 0 frozen, upper tiers rollout-trained): dE 0.035/0.034/0.031 (mean 0.033, -47% vs J, just above "cause" line); force_rel +15..17%, com_err -2..-4% (no gain). KILL. Drift persists without tier-0 co-adaptation, so rollout-trained upper tiers are the main drift source (S alone: 0.013-0.016); tier-0 co-adaptation adds the rest but is also what delivers com_err.
+- JM (no mean removal): dE 0.065/0.055/0.062 (mean 0.061, -3% vs J); com_err gain smaller (+13..37%). Mean removal is NOT the cause.
+- Attribution: mean removal no; tier-0 co-adaptation partial (about half); rollout training of the upper tiers the rest. Untested hypothesis: tier potentials are coarse approximations of pairwise potential so -grad(coarse potential) does not conserve the true pairwise energy under long rollouts; energy loss over longer k or an explicit energy-drift penalty at long horizon is the next candidate.
