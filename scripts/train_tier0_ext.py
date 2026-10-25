@@ -224,6 +224,7 @@ def main():
     ap.add_argument("--ckpt-every", type=int, default=250)
     ap.add_argument("--baseline", default=None, help="Exp E checkpoint evaluated on the same plain scenes")
     ap.add_argument("--drag", action="store_true", help="per-particle linear drag scenes (material channel = gam/GAM_MAX), no external field")
+    ap.add_argument("--no-ext", action="store_true", help="control: same scene mix with no external field")
     ap.add_argument("--est", action="store_true")
     ap.add_argument("--eval-only", action="store_true")
     args = ap.parse_args()
@@ -241,7 +242,7 @@ def main():
         log(f"warm start from {args.init_ckpt}")
     log(f"params {sum(p.numel() for p in model.parameters())} spec '{model.t0_spec}' extra input channels {model.t0.cfg.n_extra()}")
     t_gen = time.time()
-    data = td.make_scenes(args.scenes if not args.est else 256, args.steps, args.seed, dev, drag=args.drag)
+    data = td.make_scenes(args.scenes if not args.est else 256, args.steps, args.seed, dev, p_zero=1.0 if args.no_ext else 0.2, drag=args.drag)
     log(f"generated {len(data[0])} scenes in {time.time() - t_gen:.0f}s kinds {np.bincount(data[2]).tolist()}")
     if args.est:
         P, V, M, mask = [t.float() for t in sf.to_tensors(data[0], dev)]

@@ -316,6 +316,8 @@ class Tier0(nn.Module):
         if isinstance(field, tuple):
             field, ph = field
         B, N = pos.shape[:2]
+        if ph is not None and ph.shape[1] != N:
+            ph = None
         if c.phid and ph is None:
             ph = torch.zeros(B, N, c.phid, device=pos.device, dtype=pos.dtype)
         ctx = _Ctx()
