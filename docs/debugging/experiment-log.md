@@ -3314,3 +3314,6 @@ Latent summary (Z), learned downsampler (L), error-channel proxy (Er): force_rel
 
 ### Tiered S+J energy term and drift ablations (job 3985, 2026-10-24) -- KILL all on dE
 JE (energy-similarity loss vs truth E(t)): dE mean 0.048 (J 0.0625, baseline 0.010), com_err +23..44%, err@50 -14%. JT (tier 0 frozen): dE 0.033, com_err ~0. JM (no mean removal): dE 0.061, no change. Drift cause: not mean removal; about half from tier-0 co-adaptation, rest from rollout-trained upper tiers. See docs/theory/heterogeneous-tiered.md Experiment 4.
+
+### Tiered energy-functional tiers (EN-rho job 3999, EN-M job 4002, 2026-10-24/25) -- KILL
+Upper tiers as exact -grad of a learned scalar energy (CIC deposit -> per-cell energy density, autograd force; tests: FD, zero closed-path work). EN-rho (density only): fit fails (loss .93 vs .57), aborted. EN-M (+CIC moments): S force_rel +19%, com_err -5..-13% KILL; S+J force_rel +23..25%, com_err +25..45%, bias ok, dE 0.064 = same as polynomial J (0.0625; baseline 0.010) -> KILL. Conclusion: drift is not from time-dependent polynomial potentials; tier-0 co-adaptation is the main source. ckpts ~/augur_tiered_c2/ck_ENM.
