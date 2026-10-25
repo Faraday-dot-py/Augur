@@ -287,6 +287,8 @@ def train_j(args, dev, log):
     field = make_field(t0, nets)
     opt = torch.optim.Adam([{"params": list(nets.parameters()), "lr": args.lr}, {"params": list(t0.model.parameters()), "lr": args.lr0}])
     base = [args.lr, args.lr0]
+    p0 = [q.detach().clone() for q in t0.model.parameters()]
+    n0 = sum((q ** 2).sum() for q in p0)
     ck, it = os.path.join(args.ckpt_dir, "tiered_J.pt"), 0
     if args.resume and os.path.exists(ck):
         st = torch.load(ck, map_location=dev, weights_only=False)
@@ -327,7 +329,8 @@ def train_j(args, dev, log):
         ps, vs = rollout_t0(t0, Qw[:, 0], Uw[:, 0], qm, qk, k)
         wq, dq = qk[:, :, None], qk.sum() * 2 * k
         ln = sum((((p_ - Qw[:, i + 1]) ** 2) * wq).sum() / dq + 0.1 * (((v_ - Uw[:, i + 1]) ** 2) * wq).sum() / dq for i, (p_, v_) in enumerate(zip(ps, vs)))
-        loss = loss_large + args.near_w * ln
+        drift = sum(((q - r) ** 2).sum() for q, r in zip(t0.model.parameters(), p0)) / n0
+        loss = loss_large + args.near_w * ln + args.l2sp * drift
         opt.zero_grad()
         loss.backward()
         gn = torch.nn.utils.clip_grad_norm_(list(nets.parameters()) + list(t0.model.parameters()), 1.0)
@@ -335,7 +338,7 @@ def train_j(args, dev, log):
             opt.step()
         it += 1
         if it % args.log_every == 0:
-            log(f"J it {it} k {k} large {loss_large.item():.6f} near {ln.item():.6f} t {time.time() - t_start:.0f}s")
+            log(f"J it {it} k {k} large {loss_large.item():.6f} near {ln.item():.6f} drift {drift.item() ** 0.5:.5f} t {time.time() - t_start:.0f}s")
         if it % args.ckpt_every == 0 or STOP or it == args.iters:
             save(ck, nets=nets.state_dict(), tier0=t0.model.state_dict(), opt=opt.state_dict(), it=it, args=vars(args))
         if STOP:
@@ -516,6 +519,7 @@ def main():
     ap.add_argument("--joint", action="store_true")
     ap.add_argument("--small-scenes", type=int, default=400)
     ap.add_argument("--lr0", type=float, default=1e-5)
+    ap.add_argument("--l2sp", type=float, default=0.0)
     ap.add_argument("--near-w", type=float, default=1.0)
     ap.add_argument("--tiers", type=int, default=3)
     ap.add_argument("--width", type=int, default=32)
