@@ -184,6 +184,8 @@ def evaluate(model, args, dev, log):
     if args.drag:
         res.update(drag_eval(model, args, dev, log))
         return res
+    if not t0.cfg.ext:
+        return res
     data, ext, kinds = td.make_scenes(48, 40, args.seed + 1000, dev)
     exts = tuple(torch.tensor(a, dtype=torch.float32, device=dev) for a in ext)
     for name, zero in (("ext", False), ("ext_chan_zeroed", True)):
