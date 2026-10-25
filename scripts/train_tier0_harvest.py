@@ -21,11 +21,13 @@ from scripts import train_scatter_field as tsf
 from scripts import train_tier0_ext as tte
 
 STOP = tte.STOP
+NO_HIGH = False
 
 
-def load_data(path, dev):
-    fs = sorted(glob.glob(os.path.join(path, "hv_s*.npz")))
-    cols = {k: [] for k in ("pos", "vel", "mask_f", "mass", "a0", "J", "exp_err")}
+def load_data(path, dev, pat="hv_s*.npz"):
+    fs = sorted(glob.glob(os.path.join(path, pat)))
+    extra = ("Q", "C") if pat.startswith("hv3") else ()
+    cols = {k: [] for k in ("pos", "vel", "mask_f", "mass", "a0", "J") + extra + (("exp_err2", "exp_err3") if extra else ("exp_err",))}
     for f in fs:
         z = np.load(f)
         for k in cols:
@@ -37,7 +39,8 @@ def load_data(path, dev):
 def set_ext(model, d, idx, tt):
     a0, J = d["a0"][idx, tt], d["J"][idx, tt]
     H = torch.stack([-J[:, 0, 0], -0.5 * (J[:, 0, 1] + J[:, 1, 0]), -J[:, 1, 1]], -1)
-    model.t0.set_external(model, phi0=torch.zeros(len(idx), device=a0.device), g=-a0, H=H)
+    high = (d["Q"][idx, tt], d["C"][idx, tt]) if "C" in d and not NO_HIGH else None
+    model.t0.set_external(model, phi0=torch.zeros(len(idx), device=a0.device), g=-a0, H=H, high=high)
 
 
 def rollout_loss(model, d, idx, t0, k, with_ext=True):
@@ -57,6 +60,25 @@ def rollout_loss(model, d, idx, t0, k, with_ext=True):
         w = (mk * d["mask_f"][idx, t0 + s + 1].float())[:, :, None]
         lp = lp + (((pos - d["pos"][idx, t0 + s + 1]) ** 2) * w).sum() / denom
         lv = lv + (((vel - d["vel"][idx, t0 + s + 1]) ** 2) * w).sum() / denom
+    return lp + 0.1 * lv
+
+
+def iso_loss(model, iso, idx, k, g, dev):
+    P, V, M, mask = iso
+    t0s = torch.randint(0, P.shape[1] - k, (len(idx),), generator=g).to(dev)
+    tt = t0s[:, None] + torch.arange(k + 1, device=dev)[None]
+    Pw, Vw = P[idx[:, None], tt], V[idx[:, None], tt]
+    model.t0.ext_grid = model.t0.ext_poly = None
+    model.t0.ext_high = None
+    pos, vel, m, mk = Pw[:, 0], Vw[:, 0], M[idx], mask[idx]
+    field = model.init_field(len(idx), dev)
+    lp = lv = 0.0
+    denom = mk.sum() * 2 * k
+    for s in range(k):
+        pos, vel, m, field, _ = sf._step_m(model, pos, vel, m, mk, field)
+        w = mk[:, :, None]
+        lp = lp + (((pos - Pw[:, s + 1]) ** 2) * w).sum() / denom
+        lv = lv + (((vel - Vw[:, s + 1]) ** 2) * w).sum() / denom
     return lp + 0.1 * lv
 
 
@@ -83,6 +105,9 @@ def main():
     ap.add_argument("--lr", type=float, default=2e-4)
     ap.add_argument("--val-frac", type=float, default=0.05)
     ap.add_argument("--norm-ext", action="store_true", help="scale ext input channels to unit rms (extgain from the data)")
+    ap.add_argument("--pattern", default="hv_s*.npz")
+    ap.add_argument("--replay", type=float, default=0.0, help="weight of isolated Exp E scenes in the loss (0 = windows only)")
+    ap.add_argument("--n-iso", type=int, default=1500)
     ap.add_argument("--dt", type=float, default=0.1)
     ap.add_argument("--eps", type=float, default=0.5)
     ap.add_argument("--seed", type=int, default=4738)
@@ -95,9 +120,9 @@ def main():
     torch.manual_seed(a.seed)
     signal.signal(signal.SIGTERM, lambda *_: STOP.append(1))
     log = lambda s: print(s, flush=True)
-    d, nsh = load_data(a.data, dev)
+    d, nsh = load_data(a.data, dev, a.pattern)
     S, T = d["pos"].shape[:2]
-    log(f"windows {S} frames {T} N {d['pos'].shape[2]} shards {nsh} mean far-expansion err {float(d['exp_err'].mean()):.3f}")
+    log(f"windows {S} frames {T} N {d['pos'].shape[2]} shards {nsh} mean far-expansion err {float(d[[k for k in d if k.startswith('exp_err')][-1]].mean()):.3f}")
     rms_a0 = float(d["a0"].pow(2).sum(-1).mean().sqrt())
     log(f"rms a0 {rms_a0:.4f} rms J {float(d['J'].pow(2).sum((-1, -2)).mean().sqrt()):.4f}")
     if a.norm_ext:
@@ -110,6 +135,11 @@ def main():
     perm = torch.randperm(S, generator=torch.Generator().manual_seed(a.seed)).to(dev)
     nv = max(16, int(S * a.val_frac))
     vidx, tidx = perm[:nv], perm[nv:]
+    iso = None
+    if a.replay > 0:
+        data_iso = tsf.make_data(tsf.EXPS["E"], a.n_iso, 40, a.seed + 77, dev, a.dt, a.eps)
+        iso = [t.float() for t in sf.to_tensors(data_iso, dev)]
+        log(f"replay: {a.n_iso} isolated Exp E scenes, weight {a.replay}")
     iters = a.epochs * (len(tidx) // a.batch)
     opt = torch.optim.Adam(model.parameters(), lr=a.lr)
     path = os.path.join(a.out_dir, a.tag + ".pt")
@@ -136,6 +166,8 @@ def main():
         idx = tidx[torch.randint(len(tidx), (a.batch,), generator=g).to(dev)]
         t0s = torch.randint(0, T - k, (a.batch,), generator=g).to(dev)
         loss = rollout_loss(model, d, idx, t0s, k)
+        if iso is not None:
+            loss = (1 - a.replay) * loss + a.replay * iso_loss(model, iso, torch.randint(len(iso[0]), (a.batch,), generator=g).to(dev), k, g, dev)
         opt.zero_grad()
         loss.backward()
         gn = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
