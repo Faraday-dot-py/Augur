@@ -21,6 +21,8 @@ Every feature is a flag in the spec string (comma separated, `name` or `name=val
   vscale=S      velocity scale for head inputs
   extgain=S     gain on the ext input channels only (extapply keeps the physical amplitude)
   headmax=S     bound the head acceleration: S*tanh(a/S) (0 = unbounded)
+  headgate      (contact models) gate the head output by the contact window set from outside (Tier0.gate)
+  vclip=S       clamp the velocity inputs of the head to [-S, S]
 
 New net input channels are appended after all existing ones, so `scatter_field.load_compat` zero-pads a plain checkpoint and
 the model reproduces it at init (head last layer is zero-initialised).
@@ -64,6 +66,8 @@ class Tier0Cfg:
     vscale: float = 1.0
     extgain: float = 1.0
     headmax: float = 0.0
+    vclip: float = 0.0
+    headgate: bool = False
 
     def n_extra(self):
         return (2 * (self.moments >= 1) + 3 * (self.moments >= 2) + 3 * self.vdisp + 4 * self.cross
@@ -226,8 +230,10 @@ class Tier0(nn.Module):
         self.aux = {}
         self.material = None
         self.ids = None
+        self.write = None
         self.n_global = 0
         self.pen_list = None
+        self.gate = None
         self.ext_grid = None
         self.ext_poly = None
         self.ext_high = None
@@ -261,10 +267,11 @@ class Tier0(nn.Module):
     def set_material(self, material):
         self.material = material
 
-    def set_ids(self, ids, n_global):
+    def set_ids(self, ids, n_global, write=None):
         """Key the per-particle hidden state by global particle id for tiled use: ids (B, N) long, -1 = padding. The state then carries a
-        (B, n_global, phid) store; each window gathers its members' hidden and writes the update back. None restores per-window state."""
-        self.ids, self.n_global = ids, n_global
+        (B, n_global, phid) store; each window gathers its members' hidden and writes the update back (only where `write` (B, N) bool is
+        true, e.g. the owner tile's particles; default all valid ids). None restores per-window state."""
+        self.ids, self.n_global, self.write = ids, n_global, write
 
     def set_external(self, model, phi0=None, g=None, H=None, grid=None, high=None):
         """Imposed external potential expansion about the grid centre: phi = phi0 + g.x + x.H.x/2, H = (Hxx, Hxy, Hyy).
@@ -297,7 +304,9 @@ class Tier0(nn.Module):
             a = -torch.stack([g[:, None, 0] + H[:, None, 0] * x + H[:, None, 1] * y, g[:, None, 1] + H[:, None, 1] * x + H[:, None, 2] * y], -1)
             if self.ext_high is not None:
                 Q, C = self.ext_high
-                a = a + 0.5 * torch.einsum("bijk,bnj,bnk->bni", Q, pos, pos) + torch.einsum("bijkl,bnj,bnk,bnl->bni", C, pos, pos, pos) / 6
+                xj, xk, xl = pos[:, :, None, :, None, None], pos[:, :, None, None, :, None], pos[:, :, None, None, None, :]
+                a = a + 0.5 * (Q[:, None] * pos[:, :, None, :, None] * pos[:, :, None, None, :]).sum((-1, -2))
+                a = a + (C[:, None] * xj * xk * xl).sum((-1, -2, -3)) / 6
             return a
         assert self.ext_grid is not None and self.ext_grid.shape[1] >= 3
         return -model.gather(self.ext_grid[:, 1:3], pos)
@@ -417,6 +426,8 @@ class Tier0(nn.Module):
         gg = model.gather(grid, ctx.pos)
         rho_g, ug = gg[..., 0:1], gg[..., 1:3]
         rel = (vel - ug) * c.vscale
+        if c.vclip:
+            vel, rel = vel.clamp(-c.vclip, c.vclip), rel.clamp(-c.vclip, c.vclip)
         f = [vel * c.vscale, rel, rel.norm(dim=-1, keepdim=True), mass[..., None], torch.log1p(rho_g.clamp_min(0.0)), a_tok]
         if c.phid:
             f.append(ctx.ph)
@@ -426,6 +437,8 @@ class Tier0(nn.Module):
             f.append(gg[..., 3:6])
         o = self.headnet(torch.cat(f, -1))
         ah = o[..., :2] if not c.headmax else c.headmax * torch.tanh(o[..., :2] / c.headmax)
+        if self.gate is not None:
+            ah = ah * self.gate[..., None]
         ctx.a_head = ah * mask[..., None]
         if self.pen_list is not None:
             self.pen_list.append((ctx.a_head ** 2).sum() / mask.sum().clamp_min(1.0))
@@ -445,7 +458,7 @@ class Tier0(nn.Module):
             self.aux = {"acc_mesh": ctx.mesh, "head_acc": ctx.a_head, "ph": ctx.ph, "x0": ctx.x0, "extra": ctx.extra,
                         "max_acc": (a_out ** 2).sum(-1).sqrt().amax().detach()}
         if c.phid and ctx.store is not None:
-            ok = (self.ids >= 0)
+            ok = (self.ids >= 0) if self.write is None else ((self.ids >= 0) & self.write)
             store = ctx.store.clone()
             b = torch.arange(ctx.ph.shape[0], device=ctx.ph.device)[:, None].expand_as(self.ids)
             store[b[ok], self.ids[ok]] = ctx.ph[ok]
