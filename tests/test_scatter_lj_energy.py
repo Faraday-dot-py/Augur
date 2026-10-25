@@ -56,8 +56,31 @@ def test_residual_zero_init_and_penalty_taken():
     lay = sl.layout(bx[0])
     a, _ = pt.force(pos, vel, mask, bx, lay, pt.init_field(1, lay, "cpu"))
     pen = pt.take_pen()
-    assert pen.shape == (2,) and float(pen.abs().sum()) == 0.0
-    assert pt.take_pen().shape == (2,)
+    assert pen.shape == (4,) and float(pen.abs().sum()) == 0.0
+    assert pt.take_pen().shape == (4,)
+
+
+def test_vblind_is_velocity_blind_and_asym_pair_penalties():
+    torch.manual_seed(0)
+    m = sl.build_model(vblind=True, norec=True)
+    for mod in (m.ppmlp[-1], m.kmlp[-1], m.net.out):
+        torch.nn.init.normal_(mod.weight, std=0.05)
+    pt = sl.PeriodicTiles(m)
+    pos, vel, mask, bx = _state(50, [12.0, 12.0])
+    lay = sl.layout(bx[0])
+    fld = torch.randn_like(pt.init_field(1, lay, "cpu"))
+    with torch.no_grad():
+        a, _ = pt.force(pos, vel, mask, bx, lay, fld)
+        a2, _ = pt.force(pos, -2 * vel, mask, bx, lay, torch.zeros_like(fld))
+    assert torch.allclose(a, a2)
+    ma = sl.build_model(energy=True, asym=True)
+    torch.nn.init.normal_(ma.ppmlp_a[-1].weight, std=0.05)
+    pa = sl.PeriodicTiles(ma)
+    a, _ = pa.force(pos, vel, mask, bx, lay, pa.init_field(1, lay, "cpu"))
+    pen = pa.take_pen()
+    assert pen[2] > 0 and pen[3] >= 0
+    (pen[2] + pen[3]).backward()
+    assert float(ma.ppmlp_a[-1].weight.grad.abs().sum()) > 0
 
 
 def test_energy_force_trains():

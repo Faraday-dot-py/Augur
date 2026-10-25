@@ -24,14 +24,14 @@ KNN = 24
 SHIFTS = torch.tensor([[a, b] for a in (-1, 0, 1) for b in (-1, 0, 1)], dtype=torch.float64)
 
 
-def build_model(ckpt=None, dev="cpu", energy=False, resid=False):
+def build_model(ckpt=None, dev="cpu", energy=False, resid=False, vblind=False, norec=False, asym=False):
     """Exp E ms_kp_pot_v_g128 built at G=128 (U-Net depth 5 so E checkpoints load), then run on a G=64, extent-32 grid (same cell h = 0.5)."""
     m = sf.ScatterField(grid=128, extent=64.0, net="unet", recurrent=True, hidden_ch=0, dt=DT_M, momfix=True, in_scale=1.0,
                         potential=True, kernel=True, pp=2.0, split=True, verlet=True)
     if ckpt:
         m.load_state_dict(torch.load(ckpt, map_location="cpu", weights_only=False)["model"])
     m.grid, m.extent, m.h = GRID, EXTENT, EXTENT / GRID
-    m.energy = energy
+    m.energy, m.vblind, m.norec = energy, vblind, norec
     if energy:
         m.net = sf.UNet(1, 1, 32, 5)
         nn.init.zeros_(m.net.out.weight)
@@ -40,13 +40,19 @@ def build_model(ckpt=None, dev="cpu", energy=False, resid=False):
         m.rnet = sf.UNet(3, 2, 32, 5)
         nn.init.zeros_(m.rnet.out.weight)
         nn.init.zeros_(m.rnet.out.bias)
+    if asym:
+        m.ppmlp_a = nn.Sequential(nn.Linear(4, 64), nn.GELU(), nn.Linear(64, 64), nn.GELU(), nn.Linear(64, 1))
+        nn.init.zeros_(m.ppmlp_a[-1].weight)
+        nn.init.zeros_(m.ppmlp_a[-1].bias)
     return m.to(dev)
 
 
 def load_model(path, dev):
     """Rebuild a checkpoint's variant from its weights: energy-mode mesh (density-only 1-channel net) and optional residual net."""
     st = torch.load(path, map_location=dev, weights_only=False)["model"]
-    m = build_model(None, dev, energy=st["net.inp.weight"].shape[1] == 1, resid="rnet.inp.weight" in st)
+    a = torch.load(path, map_location="cpu", weights_only=False).get("args", {})
+    m = build_model(None, dev, energy=st["net.inp.weight"].shape[1] == 1, resid="rnet.inp.weight" in st, vblind=a.get("vblind", False),
+                    norec=a.get("norec", False), asym="ppmlp_a.0.weight" in st)
     m.load_state_dict(st)
     return m
 
@@ -104,10 +110,39 @@ class PeriodicTiles:
         return out
 
     def take_pen(self):
-        """Mean (magnitude, curl) penalty of the residual net over the force calls since the last take; zeros without one."""
-        out = torch.stack([torch.stack(p) for p in self.pen]).mean(0) if self.pen else torch.zeros(2)
+        """Mean (residual magnitude, residual curl, pair reciprocity, momentum) penalties over the force calls since the last take; zeros if absent."""
+        out = torch.stack([torch.stack(p) for p in self.pen]).mean(0) if self.pen else torch.zeros(4)
         self.pen = []
         return out
+
+    def pp_acc_asym(self, P, K):
+        """Pair term with no built-in reciprocity: g depends on r and on both bodies' local densities (i, j order matters). Returns (acc, reciprocity penalty)."""
+        m = self.m
+        B, N = K.shape
+        k = min(self.knn, N - 1)
+        d_all = P[:, None, :, :] - P[:, :, None, :]
+        r_all = torch.sqrt((d_all ** 2).sum(-1) + 1e-8)
+        bad = (1 - K)[:, None, :] + torch.eye(N, device=P.device, dtype=P.dtype)[None]
+        r_sel, idx = torch.topk(r_all + 1e6 * (bad > 0).to(P.dtype), k, dim=-1, largest=False)
+        d = torch.gather(d_all, 2, idx[..., None].expand(B, N, k, 2))
+        ok = (r_sel < 1e5).to(P.dtype) * K[:, :, None]
+        r = r_sel.clamp(max=1e5)
+        win = (1 - (r / m.pp).clamp(max=1.0) ** 2) ** 2
+        rho = (win * ok).sum(2) / 8.0
+        rho_j = torch.gather(rho[:, None, :].expand(B, N, N), 2, idx)
+        rho_i = rho[:, :, None].expand(B, N, k)
+        lr = torch.log(r + 0.05)
+        g = m.ppmlp_a(torch.stack([r, lr, rho_i, rho_j], -1))[..., 0]
+        g_sw = m.ppmlp_a(torch.stack([r, lr, rho_j, rho_i], -1))[..., 0]
+        w = g * win * ok
+        recip = (((g - g_sw) * win * ok) ** 2).sum() / ok.sum().clamp(min=1)
+        return (w[..., None] * d / r[..., None]).sum(2), recip
+
+    def pair(self, P, K):
+        if hasattr(self.m, "ppmlp_a"):
+            a, recip = self.pp_acc_asym(P, K)
+            return a, recip
+        return self.m.pp_acc(P, K, K, knn=self.knn), None
 
     def mesh_energy(self, rho):
         m = self.m
@@ -131,15 +166,19 @@ class PeriodicTiles:
             U = self.mesh_energy(x[:, :1])
             g = torch.autograd.grad(U, Pg, create_graph=train)[0]
         a_mesh = -g * K[..., None]
-        a_pp = m.pp_acc(P, K, K, knn=self.knn) * K[..., None]
+        a_pp, recip = self.pair(P, K)
+        a_pp = a_pp * K[..., None]
         a_res = torch.zeros_like(a_mesh)
         if hasattr(m, "rnet"):
             r = m.rnet(x)
             a_res = m.gather(r, P) * K[..., None]
             curl = ((r[:, 1, 1:-1, 2:] - r[:, 1, 1:-1, :-2]) - (r[:, 0, 2:, 1:-1] - r[:, 0, :-2, 1:-1])) / 2
-            self.pen.append([(a_res ** 2).sum() / K.sum(), (curl ** 2).mean()])
+            self.pen.append([(a_res ** 2).sum() / K.sum(), (curl ** 2).mean(), a_res.new_zeros(()), a_res.new_zeros(())])
         a = self.unpack(a_mesh + a_pp + a_res, pk, S, N).to(pos.dtype)
         mk = mask[..., None]
+        if recip is not None:
+            z = a.new_zeros(())
+            self.pen.append([z, z, recip, (((mk * a).sum(1) / mk.sum(1)) ** 2).sum(-1).mean()])
         a = (a - (mk * a).sum(1, keepdim=True) / mk.sum(1, keepdim=True)) * mk
         if parts:
             return a, field, self.unpack(a_pp, pk, S, N).to(pos.dtype), pk
@@ -152,9 +191,9 @@ class PeriodicTiles:
         S, N, _ = pos.shape
         pk = self.pack(pos, vel, mask, box, lay)
         P, V, K = pk["P"].to(field.dtype), pk["V"].to(field.dtype), pk["K"].to(field.dtype)
-        x = m.scatter(P, V, K, K)
+        x = m.scatter(P, V * (0.0 if getattr(m, 'vblind', False) else 1.0), K, K)
         ak = m.kernel_acc(x[:, :1])
-        f = m.net(torch.cat([x, ak, field], 1))
+        f = m.net(torch.cat([x, ak, field * (0.0 if getattr(m, 'norec', False) else 1.0)], 1))
         acc = m.neg_grad(f[:, :1]) + ak
         a_mesh = m.gather(acc, P)
         a_pp = m.pp_acc(P, K, K, knn=self.knn)

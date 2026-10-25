@@ -38,6 +38,11 @@ case $ARM in
     echo SLJH1 SMOKE DONE
     exit 0;;
   ONLYEVAL) python -m scripts.scatter_lj_eval --ckpt ckpt/${TAG}_final.pt --tag h1_$TAG; echo SLJH1 EVALONLY DONE $TAG; exit 0;;
+  DIAG) python -m scripts.scatter_lj_pair_diag --ckpt ckpt/P_final.pt --eval-json results/scatter_lj_h1_P.json --tag P; echo SLJH1 DIAG DONE; exit 0;;
+  V) FLAGS="--vblind --norec";;
+  N) FLAGS="--norec";;
+  VO) FLAGS="--vblind";;
+  A) FLAGS="--energy --asym";;
   P) FLAGS="--energy";;
   PR) FLAGS="--energy --resid";;
 esac

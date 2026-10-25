@@ -122,6 +122,11 @@ def main():
     ap.add_argument("--resume", action="store_true")
     ap.add_argument("--energy", action="store_true", help="mesh force = -autograd grad of a density-only scalar energy (hole-1 fix)")
     ap.add_argument("--resid", action="store_true", help="add a soft-penalised residual force net (momentum channels)")
+    ap.add_argument("--vblind", action="store_true", help="zero the velocity-density scatter channels (original non-gradient mesh)")
+    ap.add_argument("--norec", action="store_true", help="zero the recurrent field input (original non-gradient mesh)")
+    ap.add_argument("--asym", action="store_true", help="pair term without built-in reciprocity (needs --energy); soft reciprocity + momentum penalties")
+    ap.add_argument("--lam-recip", type=float, default=10.0)
+    ap.add_argument("--lam-mom", type=float, default=100.0)
     ap.add_argument("--lam-mag", type=float, default=300.0)
     ap.add_argument("--lam-curl", type=float, default=300.0)
     args = ap.parse_args()
@@ -155,7 +160,7 @@ def main():
     Dtr, Dva = to_dev(tr, dev), to_dev(va, dev)
 
     torch.manual_seed(args.seed)
-    model = sl.build_model(args.init_ckpt, dev, args.energy, args.resid)
+    model = sl.build_model(args.init_ckpt, dev, args.energy, args.resid, args.vblind, args.norec, args.asym)
     opt = torch.optim.Adam(model.parameters(), lr=args.lr)
     start = 0
     if args.resume and os.path.exists(base + ".pt"):
@@ -186,7 +191,7 @@ def main():
         idx = torch.arange(i0, i0 + args.batch, device=dev)
         t0 = torch.randint(0, F - k, (args.batch,), generator=g).to(dev)
         lp, lv, pen = run_batch(model, pt, Dtr, idx, t0, k)
-        loss = 100 * lp + lv + args.lam_mag * pen[0] + args.lam_curl * pen[1]
+        loss = 100 * lp + lv + args.lam_mag * pen[0] + args.lam_curl * pen[1] + args.lam_recip * pen[2] + args.lam_mom * pen[3]
         opt.zero_grad()
         loss.backward()
         gn = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -198,7 +203,7 @@ def main():
             log(f"it {it} non-finite loss/grad, step skipped ({skipped} total)")
         it += 1
         if it % args.log_every == 0:
-            log(f"it {it} k {k} lr {lr:.2e} loss {loss.item():.5f} pos {lp.item():.6f} vel {lv.item():.5f} pen {pen[0].item():.2e}/{pen[1].item():.2e} t {time.time() - t_start:.0f}s")
+            log(f"it {it} k {k} lr {lr:.2e} loss {loss.item():.5f} pos {lp.item():.6f} vel {lv.item():.5f} pen {pen[0].item():.2e}/{pen[1].item():.2e}/{pen[2].item():.2e}/{pen[3].item():.2e} t {time.time() - t_start:.0f}s")
             hist.append((it, k, loss.item()))
         if it % args.val_every == 0 or it == args.iters:
             with torch.no_grad():
