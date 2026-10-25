@@ -3303,3 +3303,6 @@ Branch worktree-agent-a96914a7f2c210071: scripts/scatter_tier0.py + hooks in Sca
 
 ## 2026-10-24 Tier-0 arm B1: per-particle head+hidden+material on drag scenes (job 3971)
 Spec head=32,phid=8,mat=1,taper=8,bnd,halo=8, Exp E warm start, 6000 gravity scenes with per-particle linear drag (mat = gam/0.3), 50 epochs, seed 4738. Drag err@20 arm B/Exp E 0.28/0.24 (PASS), head-zeroed 3.4-3.8x worse (head used). Plain err@20 1.08x/1.104x Exp E (guard <=1.10x: borderline) -> INCONCLUSIVE. Head fit slope 1.49, resid ~.5. phid untested (memoryless force). hetero phase a crashes with phid (N changes). B2 LJ / B3 contact not run (blocked on lj-scatter-field decision). Details: docs/theory/heterogeneous-tiered.md "Arm B1 result".
+
+## 2026-10-24 Tier-0 A0/A1 (job 3986): ext-channel fix and no-ext control
+A0 (halo=8, no ext, lr 2e-4): mid beta -0.50/-0.54 (Exp E +0.25/+0.38), sparse -0.08/-0.14, dense -0.28/-0.30, plain err@20 1.00x. A1 (extgain=100, ext amp to 0.3): mid -0.80/-0.90, dense -0.65/-0.71, channels still unused. KILL A1; bias is from fine-tune mix not ext path; arm A dense divergence was lr 5e-4. Not tried: mid-density/far-field-correlated windows, non-extapply arm. See heterogeneous-tiered.md.
