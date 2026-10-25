@@ -3306,3 +3306,6 @@ Spec head=32,phid=8,mat=1,taper=8,bnd,halo=8, Exp E warm start, 6000 gravity sce
 
 ## 2026-10-24 Tier-0 A0/A1 (job 3986): ext-channel fix and no-ext control
 A0 (halo=8, no ext, lr 2e-4): mid beta -0.50/-0.54 (Exp E +0.25/+0.38), sparse -0.08/-0.14, dense -0.28/-0.30, plain err@20 1.00x. A1 (extgain=100, ext amp to 0.3): mid -0.80/-0.90, dense -0.65/-0.71, channels still unused. KILL A1; bias is from fine-tune mix not ext path; arm A dense divergence was lr 5e-4. Not tried: mid-density/far-field-correlated windows, non-extapply arm. See heterogeneous-tiered.md.
+
+## 2026-10-25 Tier-0 H3, contact Bh2, B1 tiling
+H3 (harvested windows + 50% replay + 3rd-order far field, job 4005): plain err@20 1.04x/1.03x PASS; mid beta -0.94/-1.05, sparse -0.27/-0.55 -> KILL. Mid bias persists in all fine-tuned variants. Contact Bh2 (tanh-5 head + 0.1 penalty, job 4006): training diverged at k~9, tunnel 100% -> KILL. B1 now tiles (gravity+seams ok, job 4007) with particle-id-keyed hidden state. Regression after set_ids passes (job 4003).
