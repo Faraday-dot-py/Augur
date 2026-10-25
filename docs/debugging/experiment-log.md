@@ -3305,3 +3305,6 @@ Vs arm A (mean far_rel 0.658): D 10x scenes + 10x iters 0.547 (17% better, all s
 
 ### Tiered full-residual S retry with D config (job 3963, 2026-10-24) -- KILL
 1600 scenes, 30000 iters/stage. force_rel +28..29% better than tier 0 (0.056->0.040) on all 3 held-out seeds, but com_err 0/-5/-1% (needs >10%), err@50 +4/+3/-1%, dE ~1.0-1.7x. Upper tiers fix force error, not clump-scale acceleration error. See docs/theory/heterogeneous-tiered.md Experiment 1.
+
+### Tiered S+J joint fine-tune (job 3976, 2026-10-24) -- KILL on dE only
+All tiers + tier 0 trained jointly (rollout k 2->8, 4000 iters) with tier-0 near-field retention loss. Vs tier-0 baseline on 3 held-out seeds: force_rel +25..28%, com_err +22..43%, err@50 -12..13%, tier-0 near_rel improved (0.057->0.051), bias slope within tolerance; dE_model 6-7x baseline (0.06 vs 0.01) -> KILL by pre-registered rule. Best tiered result so far; fix target is energy drift. See docs/theory/heterogeneous-tiered.md Experiment 2.

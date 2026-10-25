@@ -8,10 +8,11 @@ class TierNet(nn.Module):
     optional soft-penalised residual force, error estimate, latent summary and hidden field. Weights are shared
     by every tile of the tier; cell size h only enters through the output scaling."""
 
-    def __init__(self, cin, h, width=32, layers=6, residual=True, latent_ch=0, err=True, hidden_ch=0, out_scale=1.0, log_rho=False):
+    def __init__(self, cin, h, width=32, layers=6, residual=True, latent_ch=0, err=True, hidden_ch=0, out_scale=1.0, log_rho=False, learned_pool=False):
         super().__init__()
         self.h, self.residual, self.latent_ch, self.err, self.hidden_ch, self.out_scale, self.log_rho = h, residual, latent_ch, err, hidden_ch, out_scale, log_rho
         self.ncoef = 8 if residual else 6
+        self.pool = nn.Conv2d(latent_ch + int(err), latent_ch + int(err), 2, 2) if learned_pool and latent_ch + int(err) else None
         self.inp = nn.Conv2d(cin, width, 3, padding=1)
         self.mid = nn.ModuleList(nn.Conv2d(width, width, 3, padding=1) for _ in range(layers - 1))
         self.out = nn.Conv2d(width, self.ncoef + latent_ch + int(err) + hidden_ch, 3, padding=1)

@@ -309,3 +309,20 @@ def test_third_order_features_match_brute_force():
     t = [(w * d[:, 0] ** 3).sum(), (w * d[:, 0] ** 2 * d[:, 1]).sum(), (w * d[:, 0] * d[:, 1] ** 2).sum(), (w * d[:, 1] ** 3).sum()]
     want = torch.stack(t) / w.sum() / 32.0 ** 3
     assert torch.allclose(f[0, 8:12, 0, 0], want, atol=1e-12)
+
+
+def test_learned_pool_latent_err_and_per_tier_accs():
+    torch.manual_seed(4738)
+    n1 = TierNet(nfeat(), 2.0, 8, 2, False, 3, True, 0, learned_pool=True).to(DT)
+    n2 = TierNet(nfeat() + 4, 4.0, 8, 2, False, 3, True, 0).to(DT)
+    for n in (n1, n2):
+        nn.init.normal_(n.out.weight, std=0.05)
+        nn.init.normal_(n.out.bias, std=0.05)
+    f = TieredField(ZeroTier0(), [n1, n2], 32, 1.0, 4, 3, 1.0, static=True)
+    pos, vel, mass, mask = particles()
+    a, _ = f.upper_force(pos, vel, mass, mask, f.init_state(2, pos.device, DT))
+    assert n1.pool is not None and len(f.last_accs) == 2
+    assert torch.allclose(f.last_accs[0] + f.last_accs[1], a)
+    assert f.last_errs[0].shape == (2, 1, 16, 16) and (f.last_errs[1] >= 0).all()
+    a.sum().backward()
+    assert n1.pool.weight.grad.abs().sum() > 0

@@ -101,7 +101,7 @@ class TieredField(nn.Module):
         _, hid, prev = state
         B = pos.shape[0]
         mom = self.moment_pyramid(pos, vel, mass, mask, occ)
-        acc, new_hid, coefs_all, act_all = 0, [], [], []
+        acc, new_hid, coefs_all, act_all, accs, errs = 0, [], [], [], [], []
         child = self.tier0.summary()
         if child is not None:
             child = F.avg_pool2d(child, 2)
@@ -128,15 +128,21 @@ class TieredField(nn.Module):
                 coefs[act], summ[act], hnew[act] = net(x[act])
             phi, dphi, res = L.blend_eval(coefs, pos)
             a = -dphi + res
-            acc = acc + (remove_mean(a, mass, mask) if self.mean_remove else a)
+            at = remove_mean(a, mass, mask) if self.mean_remove else a
+            acc = acc + at
+            accs.append(at)
             if net.hidden_ch:
                 am = act[:, None].repeat_interleave(L.G, 2).repeat_interleave(L.G, 3)
                 new_hid.append(torch.where(am, L.interior(hnew), hid[k - 1]))
             else:
                 new_hid.append(hid[k - 1])
-            child = F.avg_pool2d(L.interior(summ) * (mom[k][:, M:M + 1] > 0).to(pos.dtype), 2) if net.summary_ch else None
+            sg = L.interior(summ)
+            errs.append(sg[:, -1:] if net.err else None)
+            sg = sg * (mom[k][:, M:M + 1] > 0).to(pos.dtype)
+            child = (net.pool(sg) if net.pool is not None else F.avg_pool2d(sg, 2)) if net.summary_ch else None
             coefs_all.append(coefs)
             act_all.append(act)
+        self.last_accs, self.last_errs = accs, errs
         return acc, (new_hid, coefs_all, act_all)
 
     def slow_force(self, pos, vel, mass, mask, state, occ=None):
