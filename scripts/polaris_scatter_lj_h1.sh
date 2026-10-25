@@ -12,20 +12,21 @@
 #SBATCH --output=augur-slj-h1-%j.log
 # usage: sbatch --export=ARM=P scripts/polaris_scatter_lj_h1.sh
 #   ARM = P (energy mesh only) | PR (energy mesh + soft-penalised residual) | SMOKE (tests + timing + truth gen)
-# Needs ~/lj_h1_code.tgz (scripts/ tests/), truth npz in ~/augur_slj/results (seed 4738). Held-out seeds 4739, 4740 generated (3200 steps = 160 frames) on first run.
+# Needs ~/slj_hv_code.tgz (own name: ~/lj_h1_code.tgz is overwritten by other agents) (scripts/ tests/), truth npz in ~/augur_slj/results (seed 4738). Held-out seeds 4739, 4740 generated (3200 steps = 160 frames) on first run.
 # Requeue-safe: train_scatter_lj.py --resume (checkpoint every 100 it + SIGTERM); eval only after training is done.
 set -uo pipefail
 export PYTHONUNBUFFERED=1 PYTHONPATH=.
 ARM=${ARM:-P}
 ITERS=${ITERS:-6000}
-D=$HOME/augur_h1
+D=$HOME/augur_slj_hv
 mkdir -p $D/results $D/ckpt
 cd $D
-tar xzf $HOME/lj_h1_code.tgz
+tar xzf $HOME/slj_hv_code.tgz
 for s in gas liquid solid coexist melt quench; do [ -f results/lj_$s.npz ] || cp $HOME/augur_slj/results/lj_$s.npz results/; done
 [ -f ckpt/data_s4738_n320_f100_t2.5_h0.15.npz ] || cp $HOME/augur_slj/ckpt/data_s4738_n320_f100_t2.5_h0.15.npz ckpt/ 2>/dev/null
 for seed in 4739 4740; do
   mkdir -p results/s$seed
+  cp -n $HOME/augur_h1/results/s$seed/lj_*.npz results/s$seed/ 2>/dev/null
   [ -f results/s$seed/lj_coexist.npz ] || python -m scripts.lj_sim --scenes gas,liquid,solid,coexist --steps 3200 --seed $seed --out results/s$seed/lj
 done
 PREF=results/lj,results/s4739/lj,results/s4740/lj
