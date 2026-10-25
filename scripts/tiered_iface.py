@@ -145,7 +145,7 @@ class Tiled(TierModel):
         self.last_tiles = n * n
 
     def init_state(self, B, device):
-        return dict(fields=[None] * B, aprev=None, ften=[None] * B)
+        return dict(fields=[None] * B, aprev=None, ften=[None] * B, ph=[None] * B)
 
     def _owner(self, pos):
         n, T = self.nt, self.tile
@@ -209,9 +209,16 @@ class Tiled(TierModel):
         f0 = proto[0] if isinstance(proto, tuple) else proto
         if f0 is not None and (not torch.is_tensor(f0) or (isinstance(proto, tuple) and len(proto) > 1)):
             outs = []
+            phid = getattr(getattr(self.base, "cfg", None), "phid", 0)
+            if phid and state["ph"][b] is None:
+                state["ph"][b] = torch.zeros(1, pos.shape[0], phid, device=dev, dtype=torch.float32)
             for j, i in enumerate(ids.tolist()):
                 sti = fields.get(int(i)) or self.base.init_state(1, dev)
-                aj, sti = self.base.force(loc[j:j + 1], vel[order[j]][None], mass[order[j]][None], ok[j:j + 1].to(pos.dtype), sti, None)
+                cx = None
+                if phid:
+                    cx = dict(ph_store=state["ph"][b], ids=torch.where(ok[j:j + 1], order[j:j + 1], -torch.ones_like(order[j:j + 1])), n_global=pos.shape[0],
+                              write=(ok[j] & (own[order[j]] == i))[None])
+                aj, sti = self.base.force(loc[j:j + 1], vel[order[j]][None], mass[order[j]][None], ok[j:j + 1].to(pos.dtype), sti, cx)
                 fields[int(i)] = sti
                 outs.append(aj)
             a = torch.cat(outs)

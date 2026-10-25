@@ -448,3 +448,27 @@ def test_tiled_tuple_state_multi_step():
     for _ in range(3):
         a, st = tl.force(pos, z, o, o, st)
     assert torch.isfinite(a).all()
+
+
+def test_tiled_per_particle_hidden_keyed_by_id():
+    from scripts import scatter_field as sf
+    from scripts import scatter_tier0 as t0m
+    from scripts import tiered_adapters as ta
+
+    torch.manual_seed(4738)
+    m = sf.ScatterField(dt=0.1, grid=32, extent=32.0, net="local", potential=True, verlet=True, width=8, layers=3)
+    t0m.attach_tier0(m, "head=8,phid=4")
+    with torch.no_grad():
+        for p in m.parameters():
+            p.add_(0.05 * torch.randn_like(p))
+    ad = ta.Tier0ExtAdapter(m.eval(), dtype=torch.float32)
+    tl = ti.Tiled(ad, 64.0, tile=16.0, sparse=True)
+    pos = (torch.rand(1, 40, 2, dtype=torch.float64) - 0.5) * 60
+    vel = torch.randn(1, 40, 2, dtype=torch.float64)
+    one = torch.ones(1, 40, dtype=torch.float64)
+    st = tl.init_state(1, pos.device)
+    for _ in range(3):
+        pos, vel, st = tl.step(pos, vel, one, one, st)
+    store = st["ph"][0]
+    assert store.shape == (1, 40, 4) and torch.isfinite(store).all() and float(store.abs().max()) > 0
+    assert torch.isfinite(pos).all()

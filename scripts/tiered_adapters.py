@@ -163,7 +163,16 @@ class Tier0ExtAdapter(ti.TierModel):
         self._feed(pos.shape[0], ctx)
         p, v, m, k = self._c(pos, vel, mass, mask)
         f = state[0] if isinstance(state, tuple) else state
-        a, f2 = self.m.force(p, v, m, k, f)
+        store = (ctx or {}).get("ph_store")
+        if store is not None and self.cfg.phid:
+            self.m.t0.set_ids(ctx["ids"], ctx["n_global"], ctx.get("write"))
+            try:
+                a, (f2, store2) = self.m.force(p, v, m, k, (f, store))
+            finally:
+                self.m.t0.set_ids(None, 0)
+            store.copy_(store2)
+        else:
+            a, f2 = self.m.force(p, v, m, k, f)
         return a.to(pos.dtype), (f2, state[1]) if isinstance(state, tuple) else f2
 
     @torch.no_grad()
