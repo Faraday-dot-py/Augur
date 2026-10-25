@@ -177,6 +177,19 @@ class Tiled(TierModel):
             fields = state["fields"][b] = {}
         proto = self.base.init_state(1, dev)
         f0 = proto[0] if isinstance(proto, tuple) else proto
+        if f0 is not None and not torch.is_tensor(f0):
+            outs = []
+            for j, i in enumerate(ids.tolist()):
+                sti = fields.get(int(i)) or self.base.init_state(1, dev)
+                aj, sti = self.base.force(loc[j:j + 1], vel[order[j]][None], mass[order[j]][None], ok[j:j + 1].to(pos.dtype), sti, None)
+                fields[int(i)] = sti
+                outs.append(aj)
+            a = torch.cat(outs)
+            mine = ok & (own[order] == ids[:, None])
+            out.index_add_(0, order[mine], a[mine])
+            if not self.persist:
+                fields.clear()
+            return out
         st = None if f0 is None else torch.cat([fields[int(i)] if int(i) in fields else torch.zeros_like(f0) for i in ids.tolist()])
         a, st = self.base.force(loc, vel[order], mass[order], ok.to(pos.dtype), st, None)
         if st is not None:

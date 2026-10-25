@@ -382,3 +382,25 @@ def test_adapter_multirate_matches_verlet_for_linear_force():
     pm, vm, sm = ad.step_multirate(pos, vel, mass, mask, st, 4)
     w = 1.5 ** 0.5
     assert torch.allclose(pm, pos * math.cos(w * 0.2), atol=2e-3)
+
+
+class _ListState(ti.TierModel):
+    laws, caps, name, dt, reach = frozenset({"grav"}), frozenset(), "ls", 0.1, 64.0
+
+    def init_state(self, B, device):
+        return [(None, [torch.zeros(1)], None), None]
+
+    def force(self, pos, vel, mass, mask, state, ctx=None):
+        st = state[0]
+        return -pos * mask[..., None], [(st[0], [st[1][0] + 1], st[2]), None]
+
+
+def test_tiled_handles_non_tensor_model_state():
+    tl = ti.Tiled(_ListState(), 128.0, sparse=True)
+    g = torch.Generator().manual_seed(4738)
+    pos = (torch.rand(2, 50, 2, generator=g, dtype=torch.float64) - 0.5) * 100
+    vel, mass, mask = torch.zeros_like(pos), torch.ones(2, 50, dtype=torch.float64), torch.ones(2, 50, dtype=torch.float64)
+    st = tl.init_state(2, pos.device)
+    for _ in range(2):
+        a, st = tl.force(pos, vel, mass, mask, st)
+    assert torch.isfinite(a).all() and any(v[0][1][0].item() == 2 for v in st["fields"][0].values())
