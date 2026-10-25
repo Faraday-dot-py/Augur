@@ -223,6 +223,8 @@ class Tier0(nn.Module):
         self.record = False
         self.aux = {}
         self.material = None
+        self.ids = None
+        self.n_global = 0
         self.ext_grid = None
         self.ext_poly = None
         self.bnd_grid = None
@@ -254,6 +256,11 @@ class Tier0(nn.Module):
 
     def set_material(self, material):
         self.material = material
+
+    def set_ids(self, ids, n_global):
+        """Key the per-particle hidden state by global particle id for tiled use: ids (B, N) long, -1 = padding. The state then carries a
+        (B, n_global, phid) store; each window gathers its members' hidden and writes the update back. None restores per-window state."""
+        self.ids, self.n_global = ids, n_global
 
     def set_external(self, model, phi0=None, g=None, H=None, grid=None):
         """Imposed external potential expansion about the grid centre: phi = phi0 + g.x + x.H.x/2, H = (Hxx, Hxy, Hyy).
@@ -318,11 +325,17 @@ class Tier0(nn.Module):
         if isinstance(field, tuple):
             field, ph = field
         B, N = pos.shape[:2]
-        if ph is not None and ph.shape[1] != N:
+        ctx = _Ctx()
+        ctx.store = None
+        if self.ids is not None and c.phid:
+            if ph is None:
+                ph = torch.zeros(B, self.n_global, c.phid, device=pos.device, dtype=pos.dtype)
+            ctx.store = ph
+            ph = ph.gather(1, self.ids.clamp_min(0)[..., None].expand(-1, -1, c.phid)) * (self.ids >= 0)[..., None].to(ph.dtype)
+        elif ph is not None and ph.shape[1] != N:
             ph = None
         if c.phid and ph is None:
             ph = torch.zeros(B, N, c.phid, device=pos.device, dtype=pos.dtype)
-        ctx = _Ctx()
         ctx.ph, ctx.extra, ctx.x0, ctx.vdisp = ph, None, None, None
         ctx.pos, ctx.smass = self.geometry(model, pos, mass)
         mat = None
@@ -418,6 +431,12 @@ class Tier0(nn.Module):
         if self.record:
             self.aux = {"acc_mesh": ctx.mesh, "head_acc": ctx.a_head, "ph": ctx.ph, "x0": ctx.x0, "extra": ctx.extra,
                         "max_acc": (a_out ** 2).sum(-1).sqrt().amax().detach()}
+        if c.phid and ctx.store is not None:
+            ok = (self.ids >= 0)
+            store = ctx.store.clone()
+            b = torch.arange(ctx.ph.shape[0], device=ctx.ph.device)[:, None].expand_as(self.ids)
+            store[b[ok], self.ids[ok]] = ctx.ph[ok]
+            return a_out, (field, store)
         return a_out, ((field, ctx.ph) if c.phid else field)
 
     def head_penalty(self, mask):
