@@ -404,3 +404,29 @@ def test_tiled_handles_non_tensor_model_state():
     for _ in range(2):
         a, st = tl.force(pos, vel, mass, mask, st)
     assert torch.isfinite(a).all() and any(v[0][1][0].item() == 2 for v in st["fields"][0].values())
+
+
+class _TensorState(ti.TierModel):
+    laws, caps, name, dt, reach = frozenset({"grav"}), frozenset(), "ts", 0.1, 64.0
+
+    def init_state(self, B, device):
+        return torch.zeros(B, 2, 2, 2, dtype=torch.float64, device=device)
+
+    def force(self, pos, vel, mass, mask, state, ctx=None):
+        a = (-pos + state.mean((1, 2, 3))[:, None, None] * 0.1 + (pos * mask[..., None]).sum(1, keepdim=True) * 0.001) * mask[..., None]
+        return a, state + mask.sum(1)[:, None, None, None] * 0.01 + 1.0
+
+
+def test_tiled_batched_and_bucketed_match_dict_path():
+    g = torch.Generator().manual_seed(4738)
+    pos = (torch.rand(2, 70, 2, generator=g, dtype=torch.float64) - 0.5) * 120
+    pos[:, :40] = pos[:, :40] * 0.3 + 30
+    vel, mass, mask = torch.zeros_like(pos), torch.ones(2, 70, dtype=torch.float64), torch.ones(2, 70, dtype=torch.float64)
+    outs = []
+    for kw in (dict(), dict(batched=True), dict(batched=True, bucket=True)):
+        tl = ti.Tiled(_TensorState(), 128.0, sparse=True, **kw)
+        st = tl.init_state(2, pos.device)
+        for _ in range(3):
+            a, st = tl.force(pos, vel, mass, mask, st)
+        outs.append(a)
+    assert torch.allclose(outs[0], outs[1], atol=1e-12) and torch.allclose(outs[0], outs[2], atol=1e-12)

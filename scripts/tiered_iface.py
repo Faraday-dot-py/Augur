@@ -132,9 +132,9 @@ class Tiled(TierModel):
     acceleration from the tile that owns it, halo copies are read-only. Per-tile recurrent field persists across steps. `sparse`
     activates only tiles whose window holds particles (missing tiles contribute nothing, as zero-mass halo)."""
 
-    def __init__(self, base, span, tile=32.0, sparse=False, persist=True, refresh=False):
+    def __init__(self, base, span, tile=32.0, sparse=False, persist=True, refresh=False, batched=False, bucket=False):
         self.base, self.span, self.tile, self.sparse = base, float(span), float(tile), sparse
-        self.persist, self.refresh = persist, refresh
+        self.persist, self.refresh, self.batched, self.bucket = persist, refresh, batched, bucket
         self.dt, self.reach, self.caps, self.laws = base.dt, float(span), base.caps, base.laws
         self.name = f"{base.name}+tiled{int(tile)}{'s' if sparse else ''}"
         n = max(1, int(round(span / tile)))
@@ -145,7 +145,7 @@ class Tiled(TierModel):
         self.last_tiles = n * n
 
     def init_state(self, B, device):
-        return dict(fields=[None] * B, aprev=None)
+        return dict(fields=[None] * B, aprev=None, ften=[None] * B)
 
     def _owner(self, pos):
         n, T = self.nt, self.tile
@@ -169,9 +169,39 @@ class Tiled(TierModel):
         if len(ids) == 0:
             return out
         M = max(1, int(cnt[ids].max()))
+        if self.bucket:
+            M = min(pos.shape[0], 1 << (M - 1).bit_length())
+            M = max(M, min(16, pos.shape[0]))
         order = torch.argsort((~inwin[ids]).to(torch.int8), dim=1, stable=True)[:, :M]
         ok = torch.gather(inwin[ids], 1, order)
         loc = pos[order] - cen[ids][:, None, :]
+        proto0 = self.base.init_state(1, dev)
+        f00 = proto0[0] if isinstance(proto0, tuple) else proto0
+        if self.batched and not self.refresh and torch.is_tensor(f00):
+            K = len(ids)
+            if self.bucket:
+                K = 1 << (K - 1).bit_length()
+            ften = state["ften"][b]
+            if ften is None:
+                ften = state["ften"][b] = f00.new_zeros(len(cen), *f00.shape[1:])
+            pad = K - len(ids)
+            if pad:
+                order = torch.cat([order, order.new_zeros(pad, M)])
+                ok = torch.cat([ok, ok.new_zeros(pad, M)])
+                ids_p = torch.cat([ids, ids.new_zeros(pad)])
+            else:
+                ids_p = ids
+            loc = pos[order] - cen[ids_p][:, None, :]
+            st = ften[ids_p]
+            if pad:
+                st = torch.cat([st[:len(ids)], torch.zeros_like(st[len(ids):])])
+            a, st = self.base.force(loc, vel[order], mass[order], ok.to(pos.dtype), st, None)
+            if self.persist:
+                ften[ids] = st[:len(ids)]
+            mine = ok & (own[order] == ids_p[:, None])
+            mine[len(ids):] = False
+            out.index_add_(0, order[mine], a[mine])
+            return out
         fields = state["fields"][b]
         if fields is None:
             fields = state["fields"][b] = {}
