@@ -57,6 +57,13 @@ case $ARM in
   P2) FLAGS="--energy --substeps 2";;
   DTC) for t in P; do cp -n $HOME/augur_h1/ckpt/${t}_final.pt ckpt/ 2>/dev/null; done
     python -m scripts.scatter_lj_dt_sweep --ckpt ckpt/P_final.pt --label Pc --configs 1:1,1:1,1:2,1:2:c,1:4:c,2:1 --drift-frames 160 --drift-prefixes results/lj --tag Pc; echo SLJH1 DTC DONE; exit 0;;
+  GV) mkdir -p results/gv ckpt/gv
+    GA="--exp E --device cuda --seed 4738 --train 1500 --steps 50 --batch 8 --k-start 4 --k-end 20 --lr 5e-4 --iters 12000 --out-dir results/gv --ckpt-dir ckpt/gv"
+    python -m scripts.train_scatter_field $GA --variant ms_kp_pot_v_g128 --eval-only --init-ckpt $HOME/E_ms_kp_pot_v_g128.pt
+    for v in gv_EN gv_NG gv_R; do
+      python -m scripts.train_scatter_field $GA --variant $v --init-ckpt $HOME/E_ms_kp_pot_v_g128.pt --init-partial || echo "train exit $v"
+    done
+    echo SLJH1 GV DONE; exit 0;;
   P2S) FLAGS="--energy --substeps 2 --seed 4739";;
   P4) FLAGS="--energy --substeps 4";;
   S2) FLAGS="--seed 4739";;

@@ -37,6 +37,9 @@ VARIANTS = {
     "ms_kp_pot_g128": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, grid=128),
     "ms_kp_pot_v": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True),
     "ms_kp_pot_v_g128": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128),
+    "gv_R": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128),
+    "gv_NG": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128, vblind=True, norec=True),
+    "gv_EN": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128, energy=True),
     "ms_pot": dict(net="unet", potential=True),
     "ms_pot_g128": dict(net="unet", potential=True, grid=128),
     "ml_rec": dict(arch="ml"),
@@ -51,7 +54,7 @@ EXPS = {
               variants=["ss_rec", "ss_norec", "ms_rec", "ms_norec", "ms_rec_g32", "ms_rec_g128", "ms_rec_nomomfix", "ss_rec_h8", "ml_rec", "ml_norec", "ml_noquad", "ml_k4", "ml_nodm", "ss_pot", "ms_pot", "ms_pot_g128", "ms_ker", "ms_ker_g128", "ms_ker_pp", "ms_ker_pp_g128", "kp_nonet", "ms_kp_split", "ms_kp_pot", "ms_kp_pot_g128", "ms_kp_pot_v", "ms_kp_pot_v_g128"]),
     "B": dict(n=(10, 100), scale=True, extent=64.0, in_scale=1.0, star=False,
               variants=["ss_rec", "ss_norec", "ms_rec", "ms_norec", "ms_rec_g32", "ms_rec_g128", "ms_rec_nomomfix", "ml_rec", "ml_norec", "ml_k4"]),
-    "E": dict(n=(10, 200), scale=True, extent=64.0, in_scale=1.0, star=False, cluster=0.5, variants=["ms_kp_pot_v_g128"]),
+    "E": dict(n=(10, 200), scale=True, extent=64.0, in_scale=1.0, star=False, cluster=0.5, variants=["ms_kp_pot_v_g128", "gv_R", "gv_NG", "gv_EN"]),
     "C": dict(n=None, scale=False, extent=64.0, in_scale=0.1, star=True,
               variants=["ss_rec", "ss_norec", "ms_rec", "ms_norec", "ss_rec_h8", "ml_rec", "ml_norec"]),
     "D": dict(n=(2, 2), scale=False, extent=32.0, in_scale=1.0, star=False, orbit=True,
@@ -219,6 +222,8 @@ def main():
     ap.add_argument("--mode", choices=["train", "baseline", "summarize"], default="train")
     ap.add_argument("--opt", default="", help="speed flags: cl, graphtrain, half, bf16 (see scatter_field.apply_opt)")
     ap.add_argument("--baseline-ckpt", default=None)
+    ap.add_argument("--eval-only", action="store_true", help="skip training; --init-ckpt is the full checkpoint to evaluate")
+    ap.add_argument("--init-partial", action="store_true", help="with --init-ckpt load only kmlp/ppmlp (kernel + pair) weights")
     ap.add_argument("--init-ckpt", default=None, help="warm-start model weights (optimizer and iteration reset)")
     ap.add_argument("--train", type=int, default=2000)
     ap.add_argument("--steps", type=int, default=30)
@@ -290,9 +295,13 @@ def main():
             r, rc, glob = sf.receptive_field(model)
         log(f"=== {args.exp} {name} params {sum(p.numel() for p in model.parameters())} receptive field {r} cells = {rc:.1f} units global={glob}")
         if args.init_ckpt:
-            model.load_state_dict(torch.load(args.init_ckpt, map_location=dev, weights_only=False)["model"])
+            st = torch.load(args.init_ckpt, map_location=dev, weights_only=False)["model"]
+            if args.init_partial:
+                st = {k: v for k, v in st.items() if k.startswith(("kmlp", "ppmlp"))}
+                log(f"partial warm start (kernel + pair MLPs only) from {args.init_ckpt}: {len(st)} tensors")
+            model.load_state_dict(st, strict=not args.init_partial)
             log(f"warm start from {args.init_ckpt}")
-        n_it, secs = train(model, tensors, args, f"{args.ckpt_dir}/{args.exp}_{name}.pt", log)
+        n_it, secs = (0, 0.0) if args.eval_only else train(model, tensors, args, f"{args.ckpt_dir}/{args.exp}_{name}.pt", log)
         res = {"train_iters": n_it, "train_seconds": secs, "variant": name, "cfg": {**BASE, **VARIANTS[name]}, "rf_cells": r, "rf_units": rc, "rf_global": glob,
                "args": vars(args), "self_force": sf.self_force_probe(model, dev)}
         for seed in EVAL_SEEDS:

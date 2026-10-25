@@ -57,8 +57,9 @@ class ScatterField(nn.Module):
     grid covers [-extent/2, extent/2)^2 and tokens outside it get zero force."""
 
     def __init__(self, grid=64, extent=64.0, net="local", recurrent=True, hidden_ch=0, dt=0.1, width=32, layers=8,
-                 levels=5, momfix=True, in_scale=1.0, potential=False, kernel=False, pp=0.0, split=False, nonet=False, verlet=False):
+                 levels=5, momfix=True, in_scale=1.0, potential=False, kernel=False, pp=0.0, split=False, nonet=False, verlet=False, energy=False, vblind=False, norec=False):
         super().__init__()
+        self.energy, self.vblind, self.norec = energy, vblind, norec
         self.potential, self.kernel, self.pp, self.split, self.nonet = potential, kernel, pp, split, nonet
         self.verlet = verlet
         self.opt = set()
@@ -83,6 +84,32 @@ class ScatterField(nn.Module):
             self.net = UNet(cin, self.cf, width, min(levels, int(math.log2(grid)) - 2))
         nn.init.zeros_(self.net.out.weight)
         nn.init.zeros_(self.net.out.bias)
+        if energy:
+            self.net = UNet(1, 1, width, min(levels, int(math.log2(grid)) - 2))
+            nn.init.zeros_(self.net.out.weight)
+            nn.init.zeros_(self.net.out.bias)
+
+    def _energy_force(self, pos, vel, mass, mask, field):
+        """Hole-1 recipe on gravity: mesh force = -d/dx of U = sum psi(rho) h^2 + 0.5 h^2 sum rho (K*rho) through CIC scatter (density only, memoryless),
+        plus pair term and momentum removal."""
+        G = self.grid
+        train = torch.is_grad_enabled()
+        with torch.enable_grad():
+            Pg = pos if pos.requires_grad else pos.detach().requires_grad_(True)
+            rho = self.scatter(Pg, vel, mass, mask)[:, :1]
+            U = self.net(rho).sum() * self.h ** 2
+            if self.kernel:
+                rf = torch.fft.rfft2(rho, s=(2 * G, 2 * G))
+                phi = torch.fft.irfft2(rf * self._kernel_fft(rho), s=(2 * G, 2 * G))[..., :G, :G] * self.h ** 2
+                U = U + 0.5 * self.h ** 2 * (rho * phi).sum()
+            g = torch.autograd.grad(U, Pg, create_graph=train)[0]
+        a_tok = -g / (mass * mask).clamp_min(1e-9)[..., None]
+        if self.pp:
+            a_tok = a_tok + self.pp_acc(pos, mass, mask)
+        if self.momfix:
+            mm = (mass * mask)[..., None]
+            a_tok = a_tok - (mm * a_tok).sum(1, keepdim=True) / mm.sum(1, keepdim=True).clamp_min(1e-9)
+        return a_tok * mask[..., None], field
 
     def _corners(self, pos):
         u = (pos + self.extent / 2) / self.h - 0.5
@@ -355,12 +382,14 @@ class ScatterField(nn.Module):
         return tuple(o.clone() for o in out)
 
     def _force(self, pos, vel, mass, mask, field):
-        x = self.scatter(pos, vel, mass, mask)
+        if self.energy:
+            return self._energy_force(pos, vel, mass, mask, field)
+        x = self.scatter(pos, vel * (0.0 if self.vblind else 1.0), mass, mask)
         if self.kernel:
             ak = self.kernel_acc(x[:, :1])
             x = torch.cat([x, ak], 1)
         if self.recurrent:
-            x = torch.cat([x, field], 1)
+            x = torch.cat([x, field * (0.0 if self.norec else 1.0)], 1)
         if self.nonet:
             field = x.new_zeros(x.shape[0], self.cf, self.grid, self.grid)
         else:
