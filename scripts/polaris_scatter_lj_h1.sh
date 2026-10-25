@@ -44,6 +44,11 @@ case $ARM in
   N) FLAGS="--norec";;
   VO) FLAGS="--vblind";;
   A) FLAGS="--energy --asym";;
+  DIAG2) for t in P A V O; do cp -n $HOME/augur_h1/ckpt/${t}_final.pt ckpt/ 2>/dev/null; done
+    python -m scripts.scatter_lj_channel_diag --ckpts P=ckpt/P_final.pt,A=ckpt/A_final.pt,O=ckpt/O_final.pt,M=ckpt/M_final.pt --tag ch; echo SLJH1 DIAG2 DONE; exit 0;;
+  BLOCK) for t in P A V; do cp -n $HOME/augur_h1/ckpt/${t}_final.pt ckpt/ 2>/dev/null; done
+    python -m scripts.scatter_lj_block --ckpts P=ckpt/P_final.pt,A=ckpt/A_final.pt,V=ckpt/V_final.pt,M=ckpt/M_final.pt --tag blk; echo SLJH1 BLOCK DONE; exit 0;;
+  S2) FLAGS="--seed 4739";;
   O) FLAGS="--energy --oracle";;
   M) FLAGS="--energy --nomesh";;
   S) FLAGS="";;

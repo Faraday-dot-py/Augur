@@ -167,7 +167,8 @@ class PeriodicTiles:
         G = m.grid
         rf = torch.fft.rfft2(rho, s=(2 * G, 2 * G))
         phi = torch.fft.irfft2(rf * m._kernel_fft(rho), s=(2 * G, 2 * G))[..., :G, :G] * m.h ** 2
-        return m.net(rho).sum() * m.h ** 2 + 0.5 * m.h ** 2 * (rho * phi).sum()
+        part = getattr(m, "mesh_part", "all")
+        return (m.net(rho).sum() * m.h ** 2 if part != "kernel" else 0.0) + (0.5 * m.h ** 2 * (rho * phi).sum() if part != "net" else 0.0)
 
     def force_energy(self, pos, vel, mask, box, lay, field, parts=False):
         """Hole-1 fix (docs/theory/heterogeneous-tiered.md): mesh force = -d/dx of a scalar energy U = sum_cells psi(density) h^2 + 0.5 h^2 sum rho (K*rho),
