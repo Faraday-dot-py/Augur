@@ -328,17 +328,18 @@ def test_learned_pool_latent_err_and_per_tier_accs():
     assert n1.pool.weight.grad.abs().sum() > 0
 
 
-def energy_field(seed=4738):
+def energy_field(seed=4738, moments=False):
     from model.tiered import TierNetE, TieredFieldE
     torch.manual_seed(seed)
-    nets = [TierNetE(0.5 * 2 ** k, width=8, layers=3) for k in (1, 2)]
+    nets = [TierNetE(0.5 * 2 ** k, width=8, layers=3, moments=moments) for k in (1, 2)]
     for n in nets:
         nn.init.normal_(n.out.weight, std=0.05)
     return TieredFieldE(ZeroTier0(), nets, 64, 0.5, 4, 3).double()
 
 
-def test_energy_tier_force_is_minus_grad_of_scalar():
-    f = energy_field()
+@pytest.mark.parametrize("moments", [False, True])
+def test_energy_tier_force_is_minus_grad_of_scalar(moments):
+    f = energy_field(moments=moments)
     pos, vel, mass, mask = particles(B=1, N=40, extent=28.0)
     a, _ = f.upper_force(pos, vel, mass, mask, f.init_state(1, "cpu", DT))
     for i in (0, 7, 19):
@@ -351,8 +352,9 @@ def test_energy_tier_force_is_minus_grad_of_scalar():
             assert abs(float(fd) - float(a[0, i, ax])) < 1e-5 * max(1.0, abs(float(fd)))
 
 
-def test_energy_tier_no_work_on_closed_path():
-    f = energy_field()
+@pytest.mark.parametrize("moments", [False, True])
+def test_energy_tier_no_work_on_closed_path(moments):
+    f = energy_field(moments=moments)
     pos, vel, mass, mask = particles(B=1, N=40, extent=28.0)
     mask[0, 0] = 1.0
     th = torch.linspace(0, 2 * torch.pi, 801, dtype=DT)

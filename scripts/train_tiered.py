@@ -98,7 +98,7 @@ def force_series(t0, d, bs=16):
 
 def make_nets(K, args, dev):
     if ENERGY[0]:
-        return nn.ModuleList(TierNetE(H0 * 2 ** k, args.width, args.layers, args.out_scale) for k in range(1, K + 1)).to(dev)
+        return nn.ModuleList(TierNetE(H0 * 2 ** k, args.width, args.layers, args.out_scale, args.moments) for k in range(1, K + 1)).to(dev)
     nets, child = [], 0
     for k in range(1, K + 1):
         net = TierNet(nfeat(True, False, args.order3) + child, H0 * 2 ** k, args.width, args.layers, residual=args.residual, latent_ch=args.latent,
@@ -512,6 +512,7 @@ def main():
     ap.add_argument("--e-w", type=float, default=0.0)
     ap.add_argument("--no-mean-remove", action="store_true")
     ap.add_argument("--energy-tiers", action="store_true")
+    ap.add_argument("--moments", action="store_true")
     ap.add_argument("--joint", action="store_true")
     ap.add_argument("--small-scenes", type=int, default=400)
     ap.add_argument("--lr0", type=float, default=1e-5)

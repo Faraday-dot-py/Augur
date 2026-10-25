@@ -6,15 +6,18 @@ from model.tiered.blend import TileLayout
 from model.tiered.hierarchy import TieredField
 
 
-def cic_density(pos, mass, mask, n, h, origin):
-    """Smooth (cloud-in-cell) mass density, (B,1,n,n); differentiable in pos. Mass falling off the grid is dropped."""
+def cic_density(pos, mass, mask, n, h, origin, moments=False):
+    """Smooth (cloud-in-cell) mass density, (B,1,n,n); differentiable in pos. Mass falling off the grid is dropped.
+    With moments=True returns (B,6,n,n): density plus CIC-weighted first and second offset moments about the cell centre
+    (m dx/h, m dy/h, m dx^2/h^2, m dx dy/h^2, m dy^2/h^2, all per area); every channel is a continuous function of pos."""
     B, N = mask.shape
     s = (pos - origin) / h - 0.5
     i0 = torch.floor(s)
     f = s - i0
     i0 = i0.long()
     w = mass * mask
-    out = torch.zeros(B * n * n, device=pos.device, dtype=pos.dtype)
+    C = 6 if moments else 1
+    out = torch.zeros(B * n * n, C, device=pos.device, dtype=pos.dtype)
     bidx = torch.arange(B, device=pos.device)[:, None].expand(B, N)
     for dy in (0, 1):
         for dx in (0, 1):
@@ -22,8 +25,13 @@ def cic_density(pos, mass, mask, n, h, origin):
             ok = ((ix >= 0) & (ix < n) & (iy >= 0) & (iy < n)).to(pos.dtype)
             wt = w * ok * (f[..., 0] if dx else 1 - f[..., 0]) * (f[..., 1] if dy else 1 - f[..., 1])
             flat = bidx * n * n + iy.clamp(0, n - 1) * n + ix.clamp(0, n - 1)
-            out = out.index_add(0, flat.reshape(-1), wt.reshape(-1))
-    return out.view(B, 1, n, n) / h ** 2
+            if moments:
+                ox, oy = s[..., 0] - (ix.to(s.dtype) + 0.0), s[..., 1] - (iy.to(s.dtype) + 0.0)
+                val = torch.stack([wt, wt * ox, wt * oy, wt * ox * ox, wt * ox * oy, wt * oy * oy], -1)
+            else:
+                val = wt[..., None]
+            out = out.index_add(0, flat.reshape(-1), val.reshape(-1, C))
+    return out.view(B, n, n, C).permute(0, 3, 1, 2) / h ** 2
 
 
 class TierNetE(nn.Module):
@@ -36,17 +44,17 @@ class TierNetE(nn.Module):
     pool = None
     energy = True
 
-    def __init__(self, h, width=32, layers=6, out_scale=1.0):
+    def __init__(self, h, width=32, layers=6, out_scale=1.0, moments=False):
         super().__init__()
-        self.h, self.out_scale = h, out_scale
-        self.inp = nn.Conv2d(2, width, 3, padding=1)
+        self.h, self.out_scale, self.moments = h, out_scale, moments
+        self.inp = nn.Conv2d(7 if moments else 2, width, 3, padding=1)
         self.mid = nn.ModuleList(nn.Conv2d(width, width, 3, padding=1) for _ in range(layers - 1))
         self.out = nn.Conv2d(width, 1, 3, padding=1)
         nn.init.zeros_(self.out.weight)
         nn.init.zeros_(self.out.bias)
 
     def forward(self, rho):
-        x = torch.cat([rho, torch.log1p(rho)], 1)
+        x = torch.cat([rho[:, :1], torch.log1p(rho[:, :1]), rho[:, 1:]], 1)
         h = F.gelu(self.inp(x))
         for c in self.mid:
             h = h + F.gelu(c(h))
@@ -71,7 +79,7 @@ class TieredFieldE(TieredField):
 
     def tier_energy(self, k, pos, mass, mask):
         net, L = self.nets[k - 1], self.layouts[k - 1]
-        rho = cic_density(pos, mass, mask, L.n, L.h, self.origin.to(pos))
+        rho = cic_density(pos, mass, mask, L.n, L.h, self.origin.to(pos), self.nets[k - 1].moments)
         e = net(L.extract(rho).flatten(0, 2))
         e = e.reshape(rho.shape[0], L.T, L.T, 1, L.P, L.P)
         return L.interior(e).sum((1, 2, 3))
