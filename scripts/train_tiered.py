@@ -24,6 +24,7 @@ NMAX = 512
 EVAL_SEEDS = (9100, 9200, 9300)
 STOP = []
 ORDER3 = [False]
+MEAN_REMOVE = [True]
 
 
 def true_acc(pos, mass, mask, eps=EPS):
@@ -116,7 +117,7 @@ def cell_mean(val, pos, mask, n, h):
 
 
 def make_field(tier0, nets):
-    return TieredField(tier0, list(nets), N0, H0, G, HALO, BLEND, static=True, order3=ORDER3[0])
+    return TieredField(tier0, list(nets), N0, H0, G, HALO, BLEND, static=True, order3=ORDER3[0], mean_remove=MEAN_REMOVE[0])
 
 
 def save(path, **st):
@@ -236,7 +237,7 @@ def train_r(args, dev, log):
         Pw, Vw = d["P"][idx[:, None], tt].float(), d["V"][idx[:, None], tt].float()
         m, mk = d["M"][idx].float(), d["mask"][idx].float()
         pos, vel, st, a_prev = Pw[:, 0], Vw[:, 0], field.init_state(args.batch, dev), None
-        w, denom, lp, lv = mk[:, :, None], mk.sum() * 2 * k, 0.0, 0.0
+        w, denom, lp, lv, le = mk[:, :, None], mk.sum() * 2 * k, 0.0, 0.0, 0.0
         for s in range(k):
             pos, vel, st, a_prev = field.step_verlet(pos, vel, m, mk, st, a_prev)
             lp = lp + (((pos - Pw[:, s + 1]) ** 2) * w).sum() / denom
@@ -304,12 +305,15 @@ def train_j(args, dev, log):
         Pw, Vw = d["P"][idx[:, None], tt].float(), d["V"][idx[:, None], tt].float()
         m, mk = d["M"][idx].float(), d["mask"][idx].float()
         pos, vel, st, a_prev = Pw[:, 0], Vw[:, 0], field.init_state(args.batch, dev), None
-        w, denom, lp, lv = mk[:, :, None], mk.sum() * 2 * k, 0.0, 0.0
+        w, denom, lp, lv, le = mk[:, :, None], mk.sum() * 2 * k, 0.0, 0.0, 0.0
         for s in range(k):
             pos, vel, st, a_prev = field.step_verlet(pos, vel, m, mk, st, a_prev)
             lp = lp + (((pos - Pw[:, s + 1]) ** 2) * w).sum() / denom
             lv = lv + (((vel - Vw[:, s + 1]) ** 2) * w).sum() / denom
-        loss_large = lp + 0.1 * lv
+            if args.e_w > 0:
+                Et = sf.energy(Pw[:, s + 1], Vw[:, s + 1], m, mk, EPS)
+                le = le + (((sf.energy(pos, vel, m, mk, EPS) - Et) / Et.abs().clamp_min(1e-6)) ** 2).mean() / k
+        loss_large = lp + 0.1 * lv + args.e_w * le
         si = torch.randint(SS, (args.batch,), generator=g).to(dev)
         ss0 = torch.randint(0, ST - k, (args.batch,), generator=g).to(dev)
         stt = ss0[:, None] + torch.arange(k + 1, device=dev)[None]
@@ -500,6 +504,8 @@ def main():
     ap.add_argument("--err", action="store_true")
     ap.add_argument("--err-w", type=float, default=0.1)
     ap.add_argument("--learned-pool", action="store_true")
+    ap.add_argument("--e-w", type=float, default=0.0)
+    ap.add_argument("--no-mean-remove", action="store_true")
     ap.add_argument("--joint", action="store_true")
     ap.add_argument("--small-scenes", type=int, default=400)
     ap.add_argument("--lr0", type=float, default=1e-5)
@@ -528,6 +534,7 @@ def main():
     args = ap.parse_args()
     dev = torch.device(args.device)
     ORDER3[0] = args.order3
+    MEAN_REMOVE[0] = not args.no_mean_remove
     os.makedirs(args.ckpt_dir, exist_ok=True)
     signal.signal(signal.SIGTERM, on_term)
     torch.manual_seed(args.seed)
