@@ -3432,3 +3432,6 @@ Spec head=32,phid=8,mat=1,taper=8,bnd,halo=8, Exp E warm start, 6000 gravity sce
 Energy-gradient mesh + pair + per-particle head(32), lam-mag 300, 6000 its. Gate passes, |dE/N| <= .0116, err@20 1.0-2.2x P (6/6 worse) -> INCONCLUSIVE; head harmless, not helpful on LJ. Contact balls not run. See heterogeneous-tiered.md.
 ## 2026-10-24 Tier-0 A0/A1 (job 3986): ext-channel fix and no-ext control
 A0 (halo=8, no ext, lr 2e-4): mid beta -0.50/-0.54 (Exp E +0.25/+0.38), sparse -0.08/-0.14, dense -0.28/-0.30, plain err@20 1.00x. A1 (extgain=100, ext amp to 0.3): mid -0.80/-0.90, dense -0.65/-0.71, channels still unused. KILL A1; bias is from fine-tune mix not ext path; arm A dense divergence was lr 5e-4. Not tried: mid-density/far-field-correlated windows, non-extapply arm. See heterogeneous-tiered.md.
+
+## 2026-10-24 Tier-0 harvest arms H1/H2 (job 3997) and LJ PH review
+H1 (extapply) / H2 (channels only, normalised): plain err@20 12.8x / 23.7x Exp E, sparse beta +1.33/+0.64 and +2.05/+1.26 -> KILL both; channels barely used in H2 (zeroing 1.3x). Multiclump stable to step 100. Needs Exp E replay in the mix. LJ PH rollout grids (fresh unbiased subagent): liquid disordered, solid lattice kept, coexist sparse gas-like (no phase separation), quench ends as polycrystal with voids at frame 800 (no truth comparison made); nothing pathological.
