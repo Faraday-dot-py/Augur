@@ -20,6 +20,7 @@ Every feature is a flag in the spec string (comma separated, `name` or `name=val
   taper=T       cosine taper of scattered mass to zero over the outer T cells of the grid (hole 3)
   vscale=S      velocity scale for head inputs
   extgain=S     gain on the ext input channels only (extapply keeps the physical amplitude)
+  headmax=S     bound the head acceleration: S*tanh(a/S) (0 = unbounded)
 
 New net input channels are appended after all existing ones, so `scatter_field.load_compat` zero-pads a plain checkpoint and
 the model reproduces it at init (head last layer is zero-initialised).
@@ -62,6 +63,7 @@ class Tier0Cfg:
     taper: int = 0
     vscale: float = 1.0
     extgain: float = 1.0
+    headmax: float = 0.0
 
     def n_extra(self):
         return (2 * (self.moments >= 1) + 3 * (self.moments >= 2) + 3 * self.vdisp + 4 * self.cross
@@ -225,6 +227,7 @@ class Tier0(nn.Module):
         self.material = None
         self.ids = None
         self.n_global = 0
+        self.pen_list = None
         self.ext_grid = None
         self.ext_poly = None
         self.ext_high = None
@@ -422,7 +425,10 @@ class Tier0(nn.Module):
         if c.vdisp:
             f.append(gg[..., 3:6])
         o = self.headnet(torch.cat(f, -1))
-        ctx.a_head = o[..., :2] * mask[..., None]
+        ah = o[..., :2] if not c.headmax else c.headmax * torch.tanh(o[..., :2] / c.headmax)
+        ctx.a_head = ah * mask[..., None]
+        if self.pen_list is not None:
+            self.pen_list.append((ctx.a_head ** 2).sum() / mask.sum().clamp_min(1.0))
         if c.phid:
             gate = torch.sigmoid(o[..., 2:2 + c.phid])
             ph = (1 - gate) * ctx.ph + gate * torch.tanh(o[..., 2 + c.phid:])
