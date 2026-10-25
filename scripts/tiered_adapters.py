@@ -75,7 +75,7 @@ def load_tiered(spec, device):
 
     parts = spec.split(",")
     st = torch.load(parts[0], map_location=device, weights_only=False)
-    args = types.SimpleNamespace(**st["args"])
+    args = types.SimpleNamespace(**{**dict(order3=False, latent=0, err=False, learned_pool=False, residual=False, out_scale=1.0), **st["args"]})
     ttr.ORDER3[0] = bool(getattr(args, "order3", False))
     t0 = ttr.load_tier0(parts[1] if len(parts) > 1 else args.tier0, device)
     nets = ttr.make_nets(args.tiers, args, device)
