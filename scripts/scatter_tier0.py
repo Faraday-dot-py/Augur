@@ -416,7 +416,8 @@ class Tier0(nn.Module):
         if c.extapply and (self.ext_poly is not None or self.ext_grid is not None):
             a_out = a_out + self.ext_acc(model, pos) * mask[..., None]
         if self.record:
-            self.aux = {"acc_mesh": ctx.mesh, "head_acc": ctx.a_head, "ph": ctx.ph, "x0": ctx.x0, "extra": ctx.extra}
+            self.aux = {"acc_mesh": ctx.mesh, "head_acc": ctx.a_head, "ph": ctx.ph, "x0": ctx.x0, "extra": ctx.extra,
+                        "max_acc": (a_out ** 2).sum(-1).sqrt().amax().detach()}
         return a_out, ((field, ctx.ph) if c.phid else field)
 
     def head_penalty(self, mask):
