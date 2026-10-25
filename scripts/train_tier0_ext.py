@@ -82,7 +82,7 @@ def train(model, data, args, dev, log):
         it = st["it"]
         log(f"resumed from it {it}/{iters}")
     g = torch.Generator(device="cpu").manual_seed(args.seed + it)
-    t_start, skipped, it_start = time.time(), 0, it
+    t_start, skipped, it_start, streak = time.time(), 0, it, 0
     log(f"scenes {S} N {P.shape[2]} batch {args.batch} iters {iters} ({args.epochs} epochs)")
     while it < iters:
         if STOP:
@@ -103,7 +103,16 @@ def train(model, data, args, dev, log):
         else:
             opt.zero_grad()
             skipped += 1
+            streak += 1
             log(f"it {it} non-finite, skipped ({skipped})")
+            if streak >= 20 and os.path.exists(path):
+                st = torch.load(path, map_location=dev, weights_only=False)
+                model.load_state_dict(st["model"])
+                opt.load_state_dict(st["opt"])
+                log(f"rolled back to checkpoint it {st['it']}")
+                streak = 0
+        if torch.isfinite(loss):
+            streak = 0
         it += 1
         if it % args.log_every == 0:
             el = time.time() - t_start
@@ -184,6 +193,8 @@ def evaluate(model, args, dev, log):
     if args.drag:
         res.update(drag_eval(model, args, dev, log))
         return res
+    if not t0.cfg.ext:
+        return res
     data, ext, kinds = td.make_scenes(48, 40, args.seed + 1000, dev)
     exts = tuple(torch.tensor(a, dtype=torch.float32, device=dev) for a in ext)
     for name, zero in (("ext", False), ("ext_chan_zeroed", True)):
@@ -224,6 +235,8 @@ def main():
     ap.add_argument("--ckpt-every", type=int, default=250)
     ap.add_argument("--baseline", default=None, help="Exp E checkpoint evaluated on the same plain scenes")
     ap.add_argument("--drag", action="store_true", help="per-particle linear drag scenes (material channel = gam/GAM_MAX), no external field")
+    ap.add_argument("--no-ext", action="store_true", help="control: same scene mix with no external field")
+    ap.add_argument("--sigma-hi", type=float, default=0.05, help="upper bound of the log-uniform external field amplitude")
     ap.add_argument("--est", action="store_true")
     ap.add_argument("--eval-only", action="store_true")
     args = ap.parse_args()
@@ -241,7 +254,7 @@ def main():
         log(f"warm start from {args.init_ckpt}")
     log(f"params {sum(p.numel() for p in model.parameters())} spec '{model.t0_spec}' extra input channels {model.t0.cfg.n_extra()}")
     t_gen = time.time()
-    data = td.make_scenes(args.scenes if not args.est else 256, args.steps, args.seed, dev, drag=args.drag)
+    data = td.make_scenes(args.scenes if not args.est else 256, args.steps, args.seed, dev, p_zero=1.0 if args.no_ext else 0.2, drag=args.drag, sigma=(0.003, args.sigma_hi))
     log(f"generated {len(data[0])} scenes in {time.time() - t_gen:.0f}s kinds {np.bincount(data[2]).tolist()}")
     if args.est:
         P, V, M, mask = [t.float() for t in sf.to_tensors(data[0], dev)]

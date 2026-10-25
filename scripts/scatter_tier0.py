@@ -19,6 +19,7 @@ Every feature is a flag in the spec string (comma separated, `name` or `name=val
                 feels force, halo field zeroed; periodic: wrap at core size L, halo = wrapped copies (needs halo >= net reach)
   taper=T       cosine taper of scattered mass to zero over the outer T cells of the grid (hole 3)
   vscale=S      velocity scale for head inputs
+  extgain=S     gain on the ext input channels only (extapply keeps the physical amplitude)
 
 New net input channels are appended after all existing ones, so `scatter_field.load_compat` zero-pads a plain checkpoint and
 the model reproduces it at init (head last layer is zero-initialised).
@@ -60,6 +61,7 @@ class Tier0Cfg:
     boundary: str = "tile"
     taper: int = 0
     vscale: float = 1.0
+    extgain: float = 1.0
 
     def n_extra(self):
         return (2 * (self.moments >= 1) + 3 * (self.moments >= 2) + 3 * self.vdisp + 4 * self.cross
@@ -316,6 +318,8 @@ class Tier0(nn.Module):
         if isinstance(field, tuple):
             field, ph = field
         B, N = pos.shape[:2]
+        if ph is not None and ph.shape[1] != N:
+            ph = None
         if c.phid and ph is None:
             ph = torch.zeros(B, N, c.phid, device=pos.device, dtype=pos.dtype)
         ctx = _Ctx()
@@ -353,7 +357,7 @@ class Tier0(nn.Module):
         if c.ext:
             e = self.ext_grid
             ex.append(torch.zeros(B, c.ext, model.grid, model.grid, device=pos.device, dtype=pos.dtype) if e is None
-                      else self._fit(e, B, c.ext).to(pos.dtype))
+                      else self._fit(e, B, c.ext).to(pos.dtype) * c.extgain)
         if c.bnd:
             if self.bnd_grid is None or self.bnd_grid.shape[-1] != model.grid:
                 self.set_boundary(model, edge=c.boundary if c.boundary != "tile" else "open")
@@ -412,7 +416,8 @@ class Tier0(nn.Module):
         if c.extapply and (self.ext_poly is not None or self.ext_grid is not None):
             a_out = a_out + self.ext_acc(model, pos) * mask[..., None]
         if self.record:
-            self.aux = {"acc_mesh": ctx.mesh, "head_acc": ctx.a_head, "ph": ctx.ph, "x0": ctx.x0, "extra": ctx.extra}
+            self.aux = {"acc_mesh": ctx.mesh, "head_acc": ctx.a_head, "ph": ctx.ph, "x0": ctx.x0, "extra": ctx.extra,
+                        "max_acc": (a_out ** 2).sum(-1).sqrt().amax().detach()}
         return a_out, ((field, ctx.ph) if c.phid else field)
 
     def head_penalty(self, mask):
