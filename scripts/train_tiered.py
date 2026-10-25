@@ -14,7 +14,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from model.tiered import ScatterFieldTier0, TierNet, TieredField, ZeroTier0, nfeat
+from model.tiered import ScatterFieldTier0, TierNet, TierNetE, TieredField, TieredFieldE, ZeroTier0, nfeat
 from scripts import gravity_sim as gs
 from scripts import scatter_field as sf
 
@@ -25,6 +25,7 @@ EVAL_SEEDS = (9100, 9200, 9300)
 STOP = []
 ORDER3 = [False]
 MEAN_REMOVE = [True]
+ENERGY = [False]
 
 
 def true_acc(pos, mass, mask, eps=EPS):
@@ -96,6 +97,8 @@ def force_series(t0, d, bs=16):
 
 
 def make_nets(K, args, dev):
+    if ENERGY[0]:
+        return nn.ModuleList(TierNetE(H0 * 2 ** k, args.width, args.layers, args.out_scale) for k in range(1, K + 1)).to(dev)
     nets, child = [], 0
     for k in range(1, K + 1):
         net = TierNet(nfeat(True, False, args.order3) + child, H0 * 2 ** k, args.width, args.layers, residual=args.residual, latent_ch=args.latent,
@@ -117,6 +120,8 @@ def cell_mean(val, pos, mask, n, h):
 
 
 def make_field(tier0, nets):
+    if ENERGY[0]:
+        return TieredFieldE(tier0, list(nets), N0, H0, G, HALO)
     return TieredField(tier0, list(nets), N0, H0, G, HALO, BLEND, static=True, order3=ORDER3[0], mean_remove=MEAN_REMOVE[0])
 
 
@@ -506,6 +511,7 @@ def main():
     ap.add_argument("--learned-pool", action="store_true")
     ap.add_argument("--e-w", type=float, default=0.0)
     ap.add_argument("--no-mean-remove", action="store_true")
+    ap.add_argument("--energy-tiers", action="store_true")
     ap.add_argument("--joint", action="store_true")
     ap.add_argument("--small-scenes", type=int, default=400)
     ap.add_argument("--lr0", type=float, default=1e-5)
@@ -535,6 +541,7 @@ def main():
     dev = torch.device(args.device)
     ORDER3[0] = args.order3
     MEAN_REMOVE[0] = not args.no_mean_remove
+    ENERGY[0] = args.energy_tiers
     os.makedirs(args.ckpt_dir, exist_ok=True)
     signal.signal(signal.SIGTERM, on_term)
     torch.manual_seed(args.seed)

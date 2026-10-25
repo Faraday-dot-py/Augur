@@ -326,3 +326,44 @@ def test_learned_pool_latent_err_and_per_tier_accs():
     assert f.last_errs[0].shape == (2, 1, 16, 16) and (f.last_errs[1] >= 0).all()
     a.sum().backward()
     assert n1.pool.weight.grad.abs().sum() > 0
+
+
+def energy_field(seed=4738):
+    from model.tiered import TierNetE, TieredFieldE
+    torch.manual_seed(seed)
+    nets = [TierNetE(0.5 * 2 ** k, width=8, layers=3) for k in (1, 2)]
+    for n in nets:
+        nn.init.normal_(n.out.weight, std=0.05)
+    return TieredFieldE(ZeroTier0(), nets, 64, 0.5, 4, 3).double()
+
+
+def test_energy_tier_force_is_minus_grad_of_scalar():
+    f = energy_field()
+    pos, vel, mass, mask = particles(B=1, N=40, extent=28.0)
+    a, _ = f.upper_force(pos, vel, mass, mask, f.init_state(1, "cpu", DT))
+    for i in (0, 7, 19):
+        for ax in (0, 1):
+            e = torch.zeros_like(pos)
+            e[0, i, ax] = 1e-5
+            up = sum(f.tier_energy(k, pos + e, mass, mask).sum() for k in (1, 2))
+            dn = sum(f.tier_energy(k, pos - e, mass, mask).sum() for k in (1, 2))
+            fd = -(up - dn) / 2e-5 / mass[0, i] * mask[0, i]
+            assert abs(float(fd) - float(a[0, i, ax])) < 1e-5 * max(1.0, abs(float(fd)))
+
+
+def test_energy_tier_no_work_on_closed_path():
+    f = energy_field()
+    pos, vel, mass, mask = particles(B=1, N=40, extent=28.0)
+    mask[0, 0] = 1.0
+    th = torch.linspace(0, 2 * torch.pi, 801, dtype=DT)
+    w = 0.0
+    prev = None
+    for t in th:
+        p = pos.clone()
+        p[0, 0] = torch.stack([3.0 + 2.0 * torch.cos(t), -1.0 + 2.0 * torch.sin(t)])
+        a, _ = f.upper_force(p, vel, mass, mask, f.init_state(1, "cpu", DT))
+        cur = (p[0, 0], mass[0, 0] * a[0, 0])
+        if prev is not None:
+            w += float(((cur[1] + prev[1]) / 2 * (cur[0] - prev[0])).sum())
+        prev = cur
+    assert abs(w) < 1e-4
