@@ -20,6 +20,7 @@ Every feature is a flag in the spec string (comma separated, `name` or `name=val
   taper=T       cosine taper of scattered mass to zero over the outer T cells of the grid (hole 3)
   vscale=S      velocity scale for head inputs
   extgain=S     gain on the ext input channels only (extapply keeps the physical amplitude)
+  headmax=S     bound the head acceleration: S*tanh(a/S) (0 = unbounded)
 
 New net input channels are appended after all existing ones, so `scatter_field.load_compat` zero-pads a plain checkpoint and
 the model reproduces it at init (head last layer is zero-initialised).
@@ -62,6 +63,7 @@ class Tier0Cfg:
     taper: int = 0
     vscale: float = 1.0
     extgain: float = 1.0
+    headmax: float = 0.0
 
     def n_extra(self):
         return (2 * (self.moments >= 1) + 3 * (self.moments >= 2) + 3 * self.vdisp + 4 * self.cross
@@ -223,8 +225,12 @@ class Tier0(nn.Module):
         self.record = False
         self.aux = {}
         self.material = None
+        self.ids = None
+        self.n_global = 0
+        self.pen_list = None
         self.ext_grid = None
         self.ext_poly = None
+        self.ext_high = None
         self.bnd_grid = None
         self.edge = "open"
         assert not (cfg.boundary == "periodic" and (model.kernel or model.pp)), "periodic wrap does not cover kernel/pp terms"
@@ -255,10 +261,17 @@ class Tier0(nn.Module):
     def set_material(self, material):
         self.material = material
 
-    def set_external(self, model, phi0=None, g=None, H=None, grid=None):
+    def set_ids(self, ids, n_global):
+        """Key the per-particle hidden state by global particle id for tiled use: ids (B, N) long, -1 = padding. The state then carries a
+        (B, n_global, phid) store; each window gathers its members' hidden and writes the update back. None restores per-window state."""
+        self.ids, self.n_global = ids, n_global
+
+    def set_external(self, model, phi0=None, g=None, H=None, grid=None, high=None):
         """Imposed external potential expansion about the grid centre: phi = phi0 + g.x + x.H.x/2, H = (Hxx, Hxy, Hyy).
+        `high=(Q, C)`: acceleration Taylor coefficients of order 2 (B,2,2,2) and 3 (B,2,2,2,2) added by extapply (not in the channels).
         Fills the ext input channels at cell centres; or pass `grid` (B, ext, G, G) directly (e.g. a parent's lagged expansion)."""
         c = self.cfg
+        self.ext_high = high
         if grid is not None:
             self.ext_grid, self.ext_poly = grid, None
             return
@@ -281,7 +294,11 @@ class Tier0(nn.Module):
         if self.ext_poly is not None:
             g, H = self.ext_poly
             x, y = pos[..., 0], pos[..., 1]
-            return -torch.stack([g[:, None, 0] + H[:, None, 0] * x + H[:, None, 1] * y, g[:, None, 1] + H[:, None, 1] * x + H[:, None, 2] * y], -1)
+            a = -torch.stack([g[:, None, 0] + H[:, None, 0] * x + H[:, None, 1] * y, g[:, None, 1] + H[:, None, 1] * x + H[:, None, 2] * y], -1)
+            if self.ext_high is not None:
+                Q, C = self.ext_high
+                a = a + 0.5 * torch.einsum("bijk,bnj,bnk->bni", Q, pos, pos) + torch.einsum("bijkl,bnj,bnk,bnl->bni", C, pos, pos, pos) / 6
+            return a
         assert self.ext_grid is not None and self.ext_grid.shape[1] >= 3
         return -model.gather(self.ext_grid[:, 1:3], pos)
 
@@ -318,11 +335,17 @@ class Tier0(nn.Module):
         if isinstance(field, tuple):
             field, ph = field
         B, N = pos.shape[:2]
-        if ph is not None and ph.shape[1] != N:
+        ctx = _Ctx()
+        ctx.store = None
+        if self.ids is not None and c.phid:
+            if ph is None:
+                ph = torch.zeros(B, self.n_global, c.phid, device=pos.device, dtype=pos.dtype)
+            ctx.store = ph
+            ph = ph.gather(1, self.ids.clamp_min(0)[..., None].expand(-1, -1, c.phid)) * (self.ids >= 0)[..., None].to(ph.dtype)
+        elif ph is not None and ph.shape[1] != N:
             ph = None
         if c.phid and ph is None:
             ph = torch.zeros(B, N, c.phid, device=pos.device, dtype=pos.dtype)
-        ctx = _Ctx()
         ctx.ph, ctx.extra, ctx.x0, ctx.vdisp = ph, None, None, None
         ctx.pos, ctx.smass = self.geometry(model, pos, mass)
         mat = None
@@ -402,7 +425,10 @@ class Tier0(nn.Module):
         if c.vdisp:
             f.append(gg[..., 3:6])
         o = self.headnet(torch.cat(f, -1))
-        ctx.a_head = o[..., :2] * mask[..., None]
+        ah = o[..., :2] if not c.headmax else c.headmax * torch.tanh(o[..., :2] / c.headmax)
+        ctx.a_head = ah * mask[..., None]
+        if self.pen_list is not None:
+            self.pen_list.append((ctx.a_head ** 2).sum() / mask.sum().clamp_min(1.0))
         if c.phid:
             gate = torch.sigmoid(o[..., 2:2 + c.phid])
             ph = (1 - gate) * ctx.ph + gate * torch.tanh(o[..., 2 + c.phid:])
@@ -418,6 +444,12 @@ class Tier0(nn.Module):
         if self.record:
             self.aux = {"acc_mesh": ctx.mesh, "head_acc": ctx.a_head, "ph": ctx.ph, "x0": ctx.x0, "extra": ctx.extra,
                         "max_acc": (a_out ** 2).sum(-1).sqrt().amax().detach()}
+        if c.phid and ctx.store is not None:
+            ok = (self.ids >= 0)
+            store = ctx.store.clone()
+            b = torch.arange(ctx.ph.shape[0], device=ctx.ph.device)[:, None].expand_as(self.ids)
+            store[b[ok], self.ids[ok]] = ctx.ph[ok]
+            return a_out, (field, store)
         return a_out, ((field, ctx.ph) if c.phid else field)
 
     def head_penalty(self, mask):
