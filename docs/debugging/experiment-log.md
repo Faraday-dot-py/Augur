@@ -3302,3 +3302,6 @@ Target = pair forces from bodies >= 20 units (diagnostic construction only). Pre
 
 ### Tiered far-field levers (jobs 3950, 3953, 2026-10-24) -- D PARTIAL-IMPROVED, E STALL
 Vs arm A (mean far_rel 0.658): D 10x scenes + 10x iters 0.547 (17% better, all seeds; no pass); E third-order moments 0.663 (no gain). Dilated lever and full-residual S retry not triggered. See docs/theory/heterogeneous-tiered.md.
+
+### Tiered full-residual S retry with D config (job 3963, 2026-10-24) -- KILL
+1600 scenes, 30000 iters/stage. force_rel +28..29% better than tier 0 (0.056->0.040) on all 3 held-out seeds, but com_err 0/-5/-1% (needs >10%), err@50 +4/+3/-1%, dE ~1.0-1.7x. Upper tiers fix force error, not clump-scale acceleration error. See docs/theory/heterogeneous-tiered.md Experiment 1.
