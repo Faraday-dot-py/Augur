@@ -3435,3 +3435,6 @@ A0 (halo=8, no ext, lr 2e-4): mid beta -0.50/-0.54 (Exp E +0.25/+0.38), sparse -
 
 ## 2026-10-24 Tier-0 harvest arms H1/H2 (job 3997) and LJ PH review
 H1 (extapply) / H2 (channels only, normalised): plain err@20 12.8x / 23.7x Exp E, sparse beta +1.33/+0.64 and +2.05/+1.26 -> KILL both; channels barely used in H2 (zeroing 1.3x). Multiclump stable to step 100. Needs Exp E replay in the mix. LJ PH rollout grids (fresh unbiased subagent): liquid disordered, solid lattice kept, coexist sparse gas-like (no phase separation), quench ends as polycrystal with voids at frame 800 (no truth comparison made); nothing pathological.
+
+## 2026-10-24 Contact Bh = B2 + tier-0 head (job 4001)
+err@20 equal to B2 (<=1.01x) but explodes after tick ~30: tunnel@100 98-99%, KE ratio 1e7-7e14, err@100 5e3-2e7 -> KILL. Unbounded head, no penalty (LJ PH used lam-mag 300 and stayed harmless). Not tried: bounded or penalised head here. See heterogeneous-tiered.md.

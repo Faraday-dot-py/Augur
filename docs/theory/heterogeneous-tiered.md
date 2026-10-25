@@ -369,3 +369,10 @@ Verdict: both KILL (plain err@20 >> 1.25x Exp E; sparse beta far over 0.5).
 - Channel use (val windows, loss with ext / channels zeroed / no ext at all): H1 .0048/.0052/.0184 (channels ignored, extapply carries it); H2 .0135/.0175/.0206 (zeroing hurts only 1.3x; without extapply the net recovers only ~1/3 of what exact application gives, so the channels are weakly used, below the 2x usage criterion).
 - Multiclump to step 100 (D2 blow-up diagnostic): both finite, max |v| <= 26 (H1) and <= 15 (H2), no blow-up; first position error >10 at steps 24-56. Armed-A style divergence is absent at lr 2e-4.
 - Reading: harvested-window training with a truncated (30% residual) far field overfits the window distribution and costs isolated accuracy; not a viable replacement. Untested: mixing harvested windows with Exp E isolated scenes (replay), higher-order far expansion, larger window set (1718 windows is small).
+
+### Contact arm Bh result (job 4001, 8000 its, 23 min, B2 recipe + head=32)
+Verdict: KILL (tunnel@100 98-99% on all six families; pre-registered kill is any > 5%).
+- err@5/10/20 match B2 (box15 4.98 vs 5.11, box_var 4.47 vs 4.53, post_circle 4.92 vs 4.92, post_rect 4.14 vs 4.11, disc 4.36 vs 4.49, post_poly 4.82 vs 4.83): within 1.01x everywhere. Truth tunnel@100 <= 1.5%.
+- Beyond the training horizon (k_end 20) it explodes: err@50 45-66, err@100 5e3-2e7, KE ratio@100 1e7-7e14, tunnel@50 72-82%. B2 stays at err@100 3.8-5.5, KE .003-.009, tunnel 0. Same failure signature as arm A2 (kernel option), now with the head: a velocity-dependent per-particle force is unbounded past the trained horizon, and the head has no energy-closing term (penalty or FMAX bound; B2's bounded heads do not cover it).
+- Wall restitution 0.46 (v=12), 0.66 (v=15) vs B2 0.49/0.57, truth 1.0. No KE-ratio gain (B2's over-damping unchanged until blow-up).
+- Not tried: tanh-bound / soft magnitude penalty on the head (as in LJ PH, where lam-mag 300 kept it harmless), training with longer k_end, head fed only relative velocities.
