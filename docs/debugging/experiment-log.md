@@ -3427,3 +3427,6 @@ RESULT polynomial-cell potential (jobs 3956/3961, scripts/poly_cell_fit.py, resu
 
 ## 2026-10-24 Tier-0 arm B1: per-particle head+hidden+material on drag scenes (job 3971)
 Spec head=32,phid=8,mat=1,taper=8,bnd,halo=8, Exp E warm start, 6000 gravity scenes with per-particle linear drag (mat = gam/0.3), 50 epochs, seed 4738. Drag err@20 arm B/Exp E 0.28/0.24 (PASS), head-zeroed 3.4-3.8x worse (head used). Plain err@20 1.08x/1.104x Exp E (guard <=1.10x: borderline) -> INCONCLUSIVE. Head fit slope 1.49, resid ~.5. phid untested (memoryless force). hetero phase a crashes with phid (N changes). B2 LJ / B3 contact not run (blocked on lj-scatter-field decision). Details: docs/theory/heterogeneous-tiered.md "Arm B1 result".
+
+## 2026-10-24 LJ arm PH = P + tier-0 head (job 3995)
+Energy-gradient mesh + pair + per-particle head(32), lam-mag 300, 6000 its. Gate passes, |dE/N| <= .0116, err@20 1.0-2.2x P (6/6 worse) -> INCONCLUSIVE; head harmless, not helpful on LJ. Contact balls not run. See heterogeneous-tiered.md.
