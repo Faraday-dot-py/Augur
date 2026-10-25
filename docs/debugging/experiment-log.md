@@ -3300,3 +3300,6 @@ Branch worktree-agent-a96914a7f2c210071: scripts/scatter_tier0.py + hooks in Sca
 
 ## 2026-10-24 Tier-0 arm A: ext=6,extapply,taper=8,bnd,halo=8 on windowed gravity + random external field (job 3945)
 50 epochs (18750 its, 52 min), warm start Exp E, seed 4738. Plain err@20 1.02x/1.01x Exp E (PASS). Hole-4 beta held-out: sparse -0.24/-0.17, mid -0.85/-1.01 (Exp E +0.25/+0.38), dense diverges. KILL (mid |beta|>0.5). Ext channels unused by the net (zeroing them changes nothing). Not tried: stronger/higher-order ext fields, density-correlated far-field (harvest from large rollouts), channel dropout. Details: docs/theory/heterogeneous-tiered.md "Arm A result". Raw: results/tier0_ext/.
+
+## 2026-10-24 Tier-0 arm B1: per-particle head+hidden+material on drag scenes (job 3971)
+Spec head=32,phid=8,mat=1,taper=8,bnd,halo=8, Exp E warm start, 6000 gravity scenes with per-particle linear drag (mat = gam/0.3), 50 epochs, seed 4738. Drag err@20 arm B/Exp E 0.28/0.24 (PASS), head-zeroed 3.4-3.8x worse (head used). Plain err@20 1.08x/1.104x Exp E (guard <=1.10x: borderline) -> INCONCLUSIVE. Head fit slope 1.49, resid ~.5. phid untested (memoryless force). hetero phase a crashes with phid (N changes). B2 LJ / B3 contact not run (blocked on lj-scatter-field decision). Details: docs/theory/heterogeneous-tiered.md "Arm B1 result".
