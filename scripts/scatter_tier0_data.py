@@ -85,11 +85,11 @@ def pad_material(gam, N):
     return out
 
 
-def make_scenes(num, steps, seed, device, mix=(0.35, 0.35, 0.30), p_zero=0.2, drag=False):
+def make_scenes(num, steps, seed, device, mix=(0.35, 0.35, 0.30), p_zero=0.2, drag=False, sigma=(0.003, 0.05)):
     """Returns (data, ext, kinds[, gam]) with data = list of (P, V) absolute coords (T,N,2) and ext = (phi0 (S,), g (S,2), H (S,3)).
     drag: per-particle linear drag -gam*v (half the particles gam=0, no external field); gam list appended."""
     rng = np.random.default_rng(seed)
-    phi0, g, H = ext_params(num, rng, 1.0 if drag else p_zero)
+    phi0, g, H = ext_params(num, rng, 1.0 if drag else p_zero, sigma)
     kinds = rng.choice(len(KINDS), num, p=np.array(mix) / sum(mix))
     data, gams = [], []
     for i in range(num):
