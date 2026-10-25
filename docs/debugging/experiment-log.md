@@ -3320,3 +3320,6 @@ Upper tiers as exact -grad of a learned scalar energy (CIC deposit -> per-cell e
 
 ### Tiered bias-test reconciliation vs D2 (job 4010, 2026-10-25)
 Same ckpts through both tests: hole-4 max|z| baseline 5.97, J 4.68 (D2's 4.7 reproduced), JE 5.04, JM 4.64, EN-M J 4.95; my near_rel improves 12% for J. Different questions (significance of small mean vector bias on +-64 windows vs relative near-field error at a clump); the hole-4 failure is pre-existing in baseline tier 0 and S+J reduces it slightly. See docs/theory/heterogeneous-tiered.md Experiment 7.
+
+### Tiered long-horizon energy penalty JL (job 4010/4019, 2026-10-25) -- KILL (narrow, best trade-off)
+S+J with energy-similarity term and free-rollout horizon k 2->20 (OOM at 22; resumed capped at 20). force_rel +15..18%, com_err +18..42%, err@50 -14..-18%, bias unchanged, dE 0.0212 (baseline 0.0104, J 0.0625, JE 0.048; rule threshold ~0.0125) -> KILL by 1.7x. Long horizon is what cuts drift. ckpt ~/augur_tiered_c2/ck_JL.
