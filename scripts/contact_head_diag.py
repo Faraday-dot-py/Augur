@@ -44,8 +44,8 @@ def main():
             pos[i, :k], vel[i, :k] = torch.tensor(s["pos"], dtype=torch.float32), torch.tensor(s["vel"], dtype=torch.float32)
             mass[i, :k], mask[i, :k] = torch.tensor(s["mass"], dtype=torch.float32), 1.0
         with torch.no_grad():
-            f0 = m0.init_field(len(scenes), dev)
-            f1 = m1.init_field(len(scenes), dev)
+            f0 = m0.init_field(len(scenes), dev)[0]
+            f1 = m1.init_field(len(scenes), dev)[0]
             a0, _ = m0.force(pos, vel, mass, mask, f0)
             a1, _ = m1.force(pos, vel, mass, mask, f1)
         res["step0_identity_max_abs"] = float((a0 - a1).abs().max())
