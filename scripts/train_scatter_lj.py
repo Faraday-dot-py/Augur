@@ -91,7 +91,8 @@ def run_batch(model, pt, D, idx, t0, k):
     lp = lv = 0.0
     cnt = mask.sum(1)
     for s in range(k):
-        pos, vel, st = pt.step(pos, vel, mask, box, lay, st)
+        for _ in range(model.nsub):
+            pos, vel, st = pt.step(pos, vel, mask, box, lay, st)
         tp, tv = D["P"][idx, t0 + s + 1] / ls, D["V"][idx, t0 + s + 1] / ls
         lp = lp + ((sl.wrap_diff(pos, tp, box) * ls) ** 2).sum(-1).mul(mask).sum(1).div(cnt).mean()
         lv = lv + (((vel - tv) * ls) ** 2).sum(-1).mul(mask).sum(1).div(cnt).mean()
@@ -125,6 +126,7 @@ def main():
     ap.add_argument("--vblind", action="store_true", help="zero the velocity-density scatter channels (original non-gradient mesh)")
     ap.add_argument("--norec", action="store_true", help="zero the recurrent field input (original non-gradient mesh)")
     ap.add_argument("--asym", action="store_true", help="pair term without built-in reciprocity (needs --energy); soft reciprocity + momentum penalties")
+    ap.add_argument("--substeps", type=int, default=1, help="model steps of dt 0.025/substeps per stored frame")
     ap.add_argument("--oracle", action="store_true", help="pair term = exact shifted-force LJ (needs --energy); mesh learned")
     ap.add_argument("--nomesh", action="store_true", help="mesh force zeroed (needs --energy); learned pair only")
     ap.add_argument("--lam-recip", type=float, default=10.0)
@@ -162,7 +164,8 @@ def main():
     Dtr, Dva = to_dev(tr, dev), to_dev(va, dev)
 
     torch.manual_seed(args.seed)
-    model = sl.build_model(args.init_ckpt, dev, args.energy, args.resid, args.vblind, args.norec, args.asym, args.oracle, args.nomesh)
+    model = sl.build_model(args.init_ckpt, dev, args.energy, args.resid, args.vblind, args.norec, args.asym, args.oracle, args.nomesh, args.substeps)
+    model.nsub = args.substeps
     opt = torch.optim.Adam(model.parameters(), lr=args.lr)
     start = 0
     if args.resume and os.path.exists(base + ".pt"):

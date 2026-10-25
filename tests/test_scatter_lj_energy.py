@@ -115,3 +115,22 @@ def test_oracle_pair_matches_lj_and_nomesh_zeroes_mesh():
     lay = sl.layout(bx[0])
     acc, _ = pt.force(pos, vel, mask, bx, lay, pt.init_field(1, lay, "cpu"))
     assert torch.isfinite(acc).all()
+
+
+def test_respa_pair_sub_one_matches_verlet_and_substeps_run():
+    torch.manual_seed(2)
+    m = sl.build_model(energy=True)
+    for mod in (m.ppmlp[-1], m.net.out):
+        torch.nn.init.normal_(mod.weight, std=0.05)
+    pt = sl.PeriodicTiles(m)
+    pos, vel, mask, bx = _state(40, [12.0, 12.0])
+    lay = sl.layout(bx[0])
+    st0 = (pt.init_field(1, lay, "cpu"), None)
+    with torch.no_grad():
+        p1, v1, _ = pt.step(pos, vel, mask, bx, lay, st0)
+        m.pair_sub = 1
+        p2, v2, _ = pt.step_respa(pos, vel, mask, bx, lay, st0)
+        m.pair_sub = 4
+        p3, v3, _ = pt.step(pos, vel, mask, bx, lay, st0)
+    assert torch.allclose(p1, p2, atol=1e-6) and torch.allclose(v1, v2, atol=1e-6)
+    assert torch.isfinite(p3).all() and torch.isfinite(v3).all()

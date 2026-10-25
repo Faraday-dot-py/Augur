@@ -24,7 +24,7 @@ KNN = 24
 SHIFTS = torch.tensor([[a, b] for a in (-1, 0, 1) for b in (-1, 0, 1)], dtype=torch.float64)
 
 
-def build_model(ckpt=None, dev="cpu", energy=False, resid=False, vblind=False, norec=False, asym=False, oracle=False, nomesh=False):
+def build_model(ckpt=None, dev="cpu", energy=False, resid=False, vblind=False, norec=False, asym=False, oracle=False, nomesh=False, substeps=1):
     """Exp E ms_kp_pot_v_g128 built at G=128 (U-Net depth 5 so E checkpoints load), then run on a G=64, extent-32 grid (same cell h = 0.5)."""
     m = sf.ScatterField(grid=128, extent=64.0, net="unet", recurrent=True, hidden_ch=0, dt=DT_M, momfix=True, in_scale=1.0,
                         potential=True, kernel=True, pp=2.0, split=True, verlet=True)
@@ -32,6 +32,8 @@ def build_model(ckpt=None, dev="cpu", energy=False, resid=False, vblind=False, n
         m.load_state_dict(torch.load(ckpt, map_location="cpu", weights_only=False)["model"])
     m.grid, m.extent, m.h = GRID, EXTENT, EXTENT / GRID
     m.energy, m.vblind, m.norec, m.oracle, m.nomesh = energy, vblind, norec, oracle, nomesh
+    m.dt = DT_M / substeps
+    m.pair_sub = 1
     if energy:
         m.net = sf.UNet(1, 1, 32, 5)
         nn.init.zeros_(m.net.out.weight)
@@ -47,12 +49,14 @@ def build_model(ckpt=None, dev="cpu", energy=False, resid=False, vblind=False, n
     return m.to(dev)
 
 
-def load_model(path, dev):
+def load_model(path, dev, nsub=None, pair_sub=1):
     """Rebuild a checkpoint's variant from its weights: energy-mode mesh (density-only 1-channel net) and optional residual net."""
     st = torch.load(path, map_location=dev, weights_only=False)["model"]
     a = torch.load(path, map_location="cpu", weights_only=False).get("args", {})
     m = build_model(None, dev, energy=st["net.inp.weight"].shape[1] == 1, resid="rnet.inp.weight" in st, vblind=a.get("vblind", False),
-                    norec=a.get("norec", False), asym="ppmlp_a.0.weight" in st, oracle=a.get("oracle", False), nomesh=a.get("nomesh", False))
+                    norec=a.get("norec", False), asym="ppmlp_a.0.weight" in st, oracle=a.get("oracle", False), nomesh=a.get("nomesh", False),
+                    substeps=nsub or a.get("substeps", 1))
+    m.pair_sub = pair_sub
     m.load_state_dict(st)
     return m
 
@@ -179,18 +183,26 @@ class PeriodicTiles:
         pk = self.pack(pos, vel, mask, box, lay)
         P, V, K = pk["P"].to(field.dtype), pk["V"].to(field.dtype), pk["K"].to(field.dtype)
         train = torch.is_grad_enabled()
-        with torch.enable_grad():
-            Pg = P if P.requires_grad else P.detach().requires_grad_(True)
-            x = m.scatter(Pg, V, K, K)
-            U = self.mesh_energy(x[:, :1])
-            g = torch.autograd.grad(U, Pg, create_graph=train)[0]
+        which = getattr(self, "which", "all")
+        x = None
+        if which == "pair":
+            g = torch.zeros_like(P)
+        else:
+            with torch.enable_grad():
+                Pg = P if P.requires_grad else P.detach().requires_grad_(True)
+                x = m.scatter(Pg, V, K, K)
+                U = self.mesh_energy(x[:, :1])
+                g = torch.autograd.grad(U, Pg, create_graph=train)[0]
         a_mesh = -g * K[..., None]
         if getattr(m, "nomesh", False):
             a_mesh = a_mesh * 0.0
-        a_pp, recip = self.pair(P, K)
+        if which == "mesh":
+            a_pp, recip = torch.zeros_like(P), None
+        else:
+            a_pp, recip = self.pair(P, K)
         a_pp = a_pp * K[..., None]
         a_res = torch.zeros_like(a_mesh)
-        if hasattr(m, "rnet"):
+        if hasattr(m, "rnet") and x is not None:
             r = m.rnet(x)
             a_res = m.gather(r, P) * K[..., None]
             curl = ((r[:, 1, 1:-1, 2:] - r[:, 1, 1:-1, :-2]) - (r[:, 0, 2:, 1:-1] - r[:, 0, :-2, 1:-1])) / 2
@@ -225,7 +237,30 @@ class PeriodicTiles:
             return a, f, self.unpack(a_pp * K[..., None], pk, S, N).to(pos.dtype), pk
         return a, f
 
+    def step_respa(self, pos, vel, mask, box, lay, st):
+        """Reversible multi-rate step: mesh kick at dt, pair term integrated with pair_sub velocity-Verlet substeps of dt/pair_sub."""
+        field, a_mesh = st
+        dt, n = self.m.dt, self.m.pair_sub
+        self.which = "mesh"
+        if a_mesh is None:
+            a_mesh, field = self.force(pos, vel, mask, box, lay, field)
+        v = vel + 0.5 * dt * a_mesh
+        p = pos
+        self.which = "pair"
+        a_pp, _ = self.force(p, v, mask, box, lay, field)
+        for _ in range(n):
+            v = v + 0.5 * dt / n * a_pp
+            p = (p + dt / n * v) % box[:, None, :]
+            a_pp, _ = self.force(p, v, mask, box, lay, field)
+            v = v + 0.5 * dt / n * a_pp
+        self.which = "mesh"
+        a_new, field = self.force(p, v, mask, box, lay, field)
+        self.which = "all"
+        return p, v + 0.5 * dt * a_new, (field, a_new)
+
     def step(self, pos, vel, mask, box, lay, st):
+        if getattr(self.m, "pair_sub", 1) > 1:
+            return self.step_respa(pos, vel, mask, box, lay, st)
         field, a_prev = st
         dt = self.m.dt
         if a_prev is None:
@@ -264,7 +299,8 @@ def rollout(model, pos0, vel0, box, frames, dev, ramp=None, total_steps=16000, t
     bm = (box_t / LS)[None]
     mask = torch.ones(1, n, device=dev, dtype=torch.float64)
     st = (pt.init_field(1, lay, dev), None)
-    per = 20 // SUB
+    sub = model.dt / 0.005
+    per = int(round(20 / sub))
     fp, fv, stats, ratio = [], [], [], []
     ok = True
     for j in range(frames * per + 1):
@@ -275,16 +311,16 @@ def rollout(model, pos0, vel0, box, frames, dev, ramp=None, total_steps=16000, t
             if not (torch.isfinite(pl).all() and torch.isfinite(vl).all()):
                 ok = False
                 break
-            stats.append([j * SUB] + true_stats(pl, vl, box_t, area))
+            stats.append([j * sub] + true_stats(pl, vl, box_t, area))
             if log and (j // per) % 100 == 0:
                 log(f"frame {j // per} T {stats[-1][1]:.3f} E/N {stats[-1][3]:.4f}")
         if j == frames * per:
             break
         p, v, st = pt.step(p, v, mask, bm, lay, st)
         if ramp is not None:
-            target = ramp[0] + (ramp[1] - ramp[0]) * (j * SUB) / total_steps
+            target = ramp[0] + (ramp[1] - ramp[0]) * (j * sub) / total_steps
             temp = float(((v * LS) ** 2).sum()) / (2 * n)
-            v = v * math.sqrt(1 + SUB * 0.005 / tau * (target / temp - 1))
+            v = v * math.sqrt(1 + sub * 0.005 / tau * (target / temp - 1))
     return np.stack(fp), np.stack(fv), np.array(stats), ok
 
 
