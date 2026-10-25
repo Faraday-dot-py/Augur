@@ -55,6 +55,7 @@ case $ARM in
   DTP2) python -m scripts.scatter_lj_dt_sweep --ckpt ckpt/P2_final.pt --label P2 --configs 2:1,2:2,2:4 --drift-frames 160 --drift-prefixes $PREF --tag P2; echo SLJH1 DTP2 DONE; exit 0;;
   DTP4) python -m scripts.scatter_lj_dt_sweep --ckpt ckpt/P4_final.pt --label P4 --configs 4:1 --drift-frames 160 --drift-prefixes $PREF --tag P4; echo SLJH1 DTP4 DONE; exit 0;;
   P2) FLAGS="--energy --substeps 2";;
+  P2S) FLAGS="--energy --substeps 2 --seed 4739";;
   P4) FLAGS="--energy --substeps 4";;
   S2) FLAGS="--seed 4739";;
   O) FLAGS="--energy --oracle";;
