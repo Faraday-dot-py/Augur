@@ -272,7 +272,7 @@ def run_train(args, dev):
     os.makedirs(CKPT, exist_ok=True)
     ckpt = f"{CKPT}/{args.tag}.pt"
     targs = types.SimpleNamespace(lr=args.lr, device=str(dev), seed=ss.TRAIN_SEED, opt=args.opt, time_budget=0, iters=args.iters, k_start=args.k_start, k_end=args.k_end,
-                                  steps=args.steps, batch=args.batch, log_every=args.log_every, loss_cap=args.loss_cap, long_windows=0, long_k=0, lam_e=0.0, lam_l=0.0, head_pen=args.head_pen, batch_hook=lambda idx: model.set_scene(geom[idx], rad[idx]))
+                                  steps=args.steps, batch=args.batch, log_every=args.log_every, loss_cap=args.loss_cap, long_windows=0, long_k=0, lam_e=0.0, lam_l=0.0, head_pen=args.head_pen, head_pow=args.head_pow, batch_hook=lambda idx: model.set_scene(geom[idx], rad[idx]))
     n_it, secs = tsf.train(model, tensors, targs, ckpt, lambda s: print(s, flush=True))
     print(f"TRAIN DONE iters {n_it} secs {secs:.0f}", flush=True)
     model.set_scene(None, None)
@@ -302,6 +302,7 @@ def main():
     ap.add_argument("--init", default="checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt")
     ap.add_argument("--tag", default="B")
     ap.add_argument("--opt", default="")
+    ap.add_argument("--head-pow", type=float, default=0.0, help="weight of the one-sided soft penalty on positive head power mean(relu(a_head . v))")
     ap.add_argument("--head-pen", type=float, default=0.0, help="weight of the soft penalty on the tier-0 head acceleration (mean square)")
     ap.add_argument("--t0", default="", help="tier-0 extension spec (scatter_tier0), e.g. head=32")
     ap.add_argument("--iters", type=int, default=8000)
