@@ -4,7 +4,7 @@ import json
 import sys
 
 BINS = ("0-4", "4-8", "8-16", "16-32")
-HELD = (9000, 12000)
+HELD = tuple(int(x) for x in (sys.argv[3] if len(sys.argv) > 3 else "9000,12000").split(","))
 d, tag = sys.argv[1], sys.argv[2]
 for sc in ("sparse", "mid", "dense"):
     try:

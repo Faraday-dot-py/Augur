@@ -24,6 +24,8 @@ SCENES_A = {"sparse": (800, 60.0, 256.0, ((0.0, 0.0), (40.0, 0.0), (0.0, 40.0), 
 
 
 def seeds_of(a):
+    if getattr(a, 'seeds', None):
+        return tuple(int(x) for x in a.seeds.split(','))
     return SEEDS[:1] if a.smoke else SEEDS
 
 
@@ -380,6 +382,7 @@ def main():
     ap.add_argument("--phase", choices=["a", "b", "c", "d"], required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--smoke", action="store_true")
+    ap.add_argument("--seeds", default="", help="comma list overriding the default seeds")
     ap.add_argument("--t0", default="", help="tier-0 extension spec the checkpoint was trained with (ext channels fed zero)")
     ap.add_argument("--scenes", default="sparse,mid,dense")
     a = ap.parse_args()

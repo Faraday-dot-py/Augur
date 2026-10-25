@@ -66,13 +66,29 @@ def step_loss(model, P, V, M, mask, ext, idx, k, t0s, dev, mat=None):
     return lp + 0.1 * lv
 
 
+def freeze_body(model):
+    """Train only the new input channels of the first conv and the tier-0 head; the old input weights and the rest of the net stay fixed."""
+    n_new = model.t0.cfg.n_extra()
+    for n, p in model.named_parameters():
+        p.requires_grad_(n.startswith("t0.headnet") or n == "net.inp.weight")
+    if n_new:
+        w = model.net.inp.weight
+        mask = torch.zeros_like(w)
+        mask[:, w.shape[1] - n_new:] = 1.0
+        w.register_hook(lambda g: g * mask)
+    else:
+        model.net.inp.weight.requires_grad_(False)
+
+
 def train(model, data, args, dev, log):
     P, V, M, mask = [t.float() for t in sf.to_tensors(data[0], dev)]
     ext = tuple(torch.tensor(a, dtype=torch.float32, device=dev) for a in data[1])
     mat = torch.tensor(td.pad_material(data[3], P.shape[2]), device=dev) if len(data) > 3 else None
     S = P.shape[0]
     iters = args.epochs * (S // args.batch)
-    opt = torch.optim.Adam(model.parameters(), lr=args.lr)
+    if args.freeze_body:
+        freeze_body(model)
+    opt = torch.optim.Adam([p for p in model.parameters() if p.requires_grad], lr=args.lr)
     path = os.path.join(args.out_dir, args.tag + ".pt")
     it = 0
     if os.path.exists(path):
@@ -237,6 +253,7 @@ def main():
     ap.add_argument("--drag", action="store_true", help="per-particle linear drag scenes (material channel = gam/GAM_MAX), no external field")
     ap.add_argument("--no-ext", action="store_true", help="control: same scene mix with no external field")
     ap.add_argument("--sigma-hi", type=float, default=0.05, help="upper bound of the log-uniform external field amplitude")
+    ap.add_argument("--freeze-body", action="store_true")
     ap.add_argument("--est", action="store_true")
     ap.add_argument("--eval-only", action="store_true")
     args = ap.parse_args()

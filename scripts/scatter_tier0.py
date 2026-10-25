@@ -233,7 +233,6 @@ class Tier0(nn.Module):
         self.write = None
         self.n_global = 0
         self.pen_list = None
-        self.pow_list = None
         self.gate = None
         self.ext_grid = None
         self.ext_poly = None
@@ -443,8 +442,6 @@ class Tier0(nn.Module):
         ctx.a_head = ah * mask[..., None]
         if self.pen_list is not None:
             self.pen_list.append((ctx.a_head ** 2).sum() / mask.sum().clamp_min(1.0))
-        if self.pow_list is not None:
-            self.pow_list.append(torch.relu((ctx.a_head * vel).sum(-1)).sum() / mask.sum().clamp_min(1.0))
         if c.phid:
             gate = torch.sigmoid(o[..., 2:2 + c.phid])
             ph = (1 - gate) * ctx.ph + gate * torch.tanh(o[..., 2 + c.phid:])
