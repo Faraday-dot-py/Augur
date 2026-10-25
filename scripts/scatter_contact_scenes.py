@@ -259,6 +259,9 @@ def run_eval(model, tag, args, dev):
 def run_train(args, dev):
     model = build(args.model, dev, args.init, args.t0)
     model.train()
+    if args.head_only:
+        for n, p in model.named_parameters():
+            p.requires_grad_(n.startswith("t0.headnet"))
     for o in [x for x in args.opt.split(",") if x]:
         sf.apply_opt(model, o)
     t0 = time.time()
@@ -302,6 +305,7 @@ def main():
     ap.add_argument("--init", default="checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt")
     ap.add_argument("--tag", default="B")
     ap.add_argument("--opt", default="")
+    ap.add_argument("--head-only", action="store_true", help="train only the tier-0 head (init from a frozen contact checkpoint via --init)")
     ap.add_argument("--head-pow", type=float, default=0.0, help="weight of the one-sided soft penalty on positive head power mean(relu(a_head . v))")
     ap.add_argument("--head-pen", type=float, default=0.0, help="weight of the soft penalty on the tier-0 head acceleration (mean square)")
     ap.add_argument("--t0", default="", help="tier-0 extension spec (scatter_tier0), e.g. head=32")

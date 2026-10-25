@@ -76,7 +76,11 @@ def main():
             j = int(mag.flatten().argmax())
             b, i = divmod(j, n)
             sd = float(sc.scene_sdf(scenes[b]["prims"], pos[b, i:i + 1].double().cpu()).numpy()[0]) if i < len(scenes[b]["mass"]) else None
-            rows.append(dict(step=t + 1, head_max=float(mag.max()), head_mean=float(mag.sum() / mask.sum()), speed_max=float(sp.max()),
+            act = (mag > 1e-3).to(mag.dtype) * mask
+            pwr = (ha * vel).sum(-1)
+            nact = float(act.sum())
+            rows.append(dict(power_mean_active=float((pwr * act).sum() / max(nact, 1)), frac_positive_power=float(((pwr > 0).to(mag.dtype) * act).sum() / max(nact, 1)),
+                             n_active=nact, step=t + 1, head_max=float(mag.max()), head_mean=float(mag.sum() / mask.sum()), speed_max=float(sp.max()),
                              speed_at_headmax=float(sp[b, i]), sdf_at_headmax=sd, rad=float(scenes[b]["rad"][i]) if i < len(scenes[b]["mass"]) else None,
                              finite=bool(torch.isfinite(pos).all())))
     res["rollout"] = rows

@@ -22,6 +22,7 @@ Every feature is a flag in the spec string (comma separated, `name` or `name=val
   extgain=S     gain on the ext input channels only (extapply keeps the physical amplitude)
   headmax=S     bound the head acceleration: S*tanh(a/S) (0 = unbounded)
   headgate      (contact models) gate the head output by the contact window set from outside (Tier0.gate)
+  lora=R        rank-R low-rank adapter on every conv of the grid net (zero-init output, base weights keep their names)
   vclip=S       clamp the velocity inputs of the head to [-S, S]
 
 New net input channels are appended after all existing ones, so `scatter_field.load_compat` zero-pads a plain checkpoint and
@@ -68,6 +69,7 @@ class Tier0Cfg:
     headmax: float = 0.0
     vclip: float = 0.0
     headgate: bool = False
+    lora: int = 0
 
     def n_extra(self):
         return (2 * (self.moments >= 1) + 3 * (self.moments >= 2) + 3 * self.vdisp + 4 * self.cross
@@ -487,6 +489,21 @@ def _rebuild_net(model, extra):
     return net.to(next(old.parameters()).device)
 
 
+class LoRAConv2d(nn.Conv2d):
+    def forward(self, x):
+        return super().forward(x) + self.lora_b(self.lora_a(x))
+
+
+def add_lora(net, rank):
+    """In place: every Conv2d becomes LoRAConv2d (same weight/bias keys) with a parallel kxk conv to `rank` channels then a 1x1 back, zero-init."""
+    for m in [m for m in net.modules() if type(m) is nn.Conv2d]:
+        m.lora_a = nn.Conv2d(m.in_channels, rank, m.kernel_size, stride=m.stride, padding=m.padding).to(m.weight.device)
+        m.lora_b = nn.Conv2d(rank, m.out_channels, 1).to(m.weight.device)
+        nn.init.zeros_(m.lora_b.weight)
+        nn.init.zeros_(m.lora_b.bias)
+        m.__class__ = LoRAConv2d
+
+
 def attach_tier0(model, spec=""):
     """Attach tier-0 extensions to a ScatterField (before load_compat of any checkpoint). Returns the model."""
     assert type(model) is sf.ScatterField or isinstance(model, sf.ScatterField)
@@ -494,6 +511,8 @@ def attach_tier0(model, spec=""):
     extra = cfg.n_extra()
     if extra:
         model.net = _rebuild_net(model, extra)
+    if cfg.lora:
+        add_lora(model.net, cfg.lora)
     dev = next(model.parameters()).device
     model.t0 = Tier0(cfg, model).to(dev)
     model.t0_spec = cfg.spec()
