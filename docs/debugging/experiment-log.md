@@ -3438,3 +3438,6 @@ H1 (extapply) / H2 (channels only, normalised): plain err@20 12.8x / 23.7x Exp E
 
 ## 2026-10-24 Contact Bh = B2 + tier-0 head (job 4001)
 err@20 equal to B2 (<=1.01x) but explodes after tick ~30: tunnel@100 98-99%, KE ratio 1e7-7e14, err@100 5e3-2e7 -> KILL. Unbounded head, no penalty (LJ PH used lam-mag 300 and stayed harmless). Not tried: bounded or penalised head here. See heterogeneous-tiered.md.
+
+## 2026-10-25 Fine-tune bias hypotheses, contact head Bh3/Bh4, B1 tiled
+Exp E mid beta robust over 5 seeds (+.24/+.39). Fa (lr 2e-5, 10 ep, A0 mix) still flips mid to -.45/-.42 (plain 1.18x); Fb (body frozen, new inputs only) keeps +.40/+.76 (plain 1.09x). Bias comes from updating the body on these scenes, not from dose. Contact: head active in free flight (Bh/Bh2), gated head (Bh3) and gated+power-penalised head (Bh4) train stably with err@20 = B2 but explode at wall contact after tick ~35 (tunnel 100%, KE 1e5+); KILL x2; needs post-horizon training. B1 tiled: seams .1828 (A1 .099), plummer err@20 .052 vs A1 .020, dE 50x A1. See heterogeneous-tiered.md.
