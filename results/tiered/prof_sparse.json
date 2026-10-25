@@ -1,0 +1,608 @@
+{
+ "span128_occ1.0": {
+  "dense": {
+   "ms": 3.650236129760742,
+   "mb": 310.27197265625,
+   "active": 16.0,
+   "tiles": 16
+  },
+  "sparse": {
+   "ms": 3.6991119384765625,
+   "mb": 310.27197265625,
+   "active": 16.0,
+   "tiles": 16
+  },
+  "dense_batched": {
+   "ms": 3.5892486572265625,
+   "mb": 310.20947265625,
+   "active": 16.0,
+   "tiles": 16
+  },
+  "sparse_batched": {
+   "ms": 3.597259521484375,
+   "mb": 310.20947265625,
+   "active": 16.0,
+   "tiles": 16
+  },
+  "sparse_bucketed": {
+   "ms": 3.6043167114257812,
+   "mb": 310.25390625,
+   "active": 16.0,
+   "tiles": 16
+  },
+  "n": 819
+ },
+ "span128_occ0.5": {
+  "dense": {
+   "ms": 3.609609603881836,
+   "mb": 310.17724609375,
+   "active": 16.0,
+   "tiles": 16
+  },
+  "sparse": {
+   "ms": 3.604745864868164,
+   "mb": 310.17724609375,
+   "active": 16.0,
+   "tiles": 16
+  },
+  "dense_batched": {
+   "ms": 3.589200973510742,
+   "mb": 310.11474609375,
+   "active": 16.0,
+   "tiles": 16
+  },
+  "sparse_batched": {
+   "ms": 3.5843849182128906,
+   "mb": 310.11474609375,
+   "active": 16.0,
+   "tiles": 16
+  },
+  "sparse_bucketed": {
+   "ms": 3.610658645629883,
+   "mb": 310.1689453125,
+   "active": 16.0,
+   "tiles": 16
+  },
+  "n": 409
+ },
+ "span128_occ0.25": {
+  "dense": {
+   "ms": 3.5431861877441406,
+   "mb": 310.03759765625,
+   "active": 16.0,
+   "tiles": 16
+  },
+  "sparse": {
+   "ms": 3.555154800415039,
+   "mb": 310.03759765625,
+   "active": 16.0,
+   "tiles": 16
+  },
+  "dense_batched": {
+   "ms": 3.517627716064453,
+   "mb": 309.97509765625,
+   "active": 16.0,
+   "tiles": 16
+  },
+  "sparse_batched": {
+   "ms": 3.5089492797851562,
+   "mb": 309.97509765625,
+   "active": 16.0,
+   "tiles": 16
+  },
+  "sparse_bucketed": {
+   "ms": 3.5035133361816406,
+   "mb": 309.98486328125,
+   "active": 16.0,
+   "tiles": 16
+  },
+  "n": 204
+ },
+ "span128_occ0.125": {
+  "dense": {
+   "ms": 3.5243988037109375,
+   "mb": 309.97216796875,
+   "active": 16.0,
+   "tiles": 16
+  },
+  "sparse": {
+   "ms": 3.459596633911133,
+   "mb": 292.67626953125,
+   "active": 15.0,
+   "tiles": 16
+  },
+  "dense_batched": {
+   "ms": 3.4888744354248047,
+   "mb": 309.90966796875,
+   "active": 16.0,
+   "tiles": 16
+  },
+  "sparse_batched": {
+   "ms": 3.4387588500976562,
+   "mb": 292.67626953125,
+   "active": 15.0,
+   "tiles": 16
+  },
+  "sparse_bucketed": {
+   "ms": 11.536884307861328,
+   "mb": 311.962890625,
+   "active": 15.0,
+   "tiles": 16
+  },
+  "n": 102
+ },
+ "span256_occ1.0": {
+  "dense": {
+   "ms": 7.450342178344727,
+   "mb": 1143.732421875,
+   "active": 64.0,
+   "tiles": 64
+  },
+  "sparse": {
+   "ms": 7.44929313659668,
+   "mb": 1143.732421875,
+   "active": 64.0,
+   "tiles": 64
+  },
+  "dense_batched": {
+   "ms": 7.373142242431641,
+   "mb": 1143.26953125,
+   "active": 64.0,
+   "tiles": 64
+  },
+  "sparse_batched": {
+   "ms": 7.358646392822266,
+   "mb": 1143.26953125,
+   "active": 64.0,
+   "tiles": 64
+  },
+  "sparse_bucketed": {
+   "ms": 7.767152786254883,
+   "mb": 1143.3408203125,
+   "active": 64.0,
+   "tiles": 64
+  },
+  "n": 3276
+ },
+ "span256_occ0.5": {
+  "dense": {
+   "ms": 7.439470291137695,
+   "mb": 1141.87158203125,
+   "active": 64.0,
+   "tiles": 64
+  },
+  "sparse": {
+   "ms": 7.439231872558594,
+   "mb": 1141.87158203125,
+   "active": 64.0,
+   "tiles": 64
+  },
+  "dense_batched": {
+   "ms": 7.344341278076172,
+   "mb": 1141.80908203125,
+   "active": 64.0,
+   "tiles": 64
+  },
+  "sparse_batched": {
+   "ms": 7.341909408569336,
+   "mb": 1141.80908203125,
+   "active": 64.0,
+   "tiles": 64
+  },
+  "sparse_bucketed": {
+   "ms": 7.420873641967773,
+   "mb": 1141.9248046875,
+   "active": 64.0,
+   "tiles": 64
+  },
+  "n": 1638
+ },
+ "span256_occ0.25": {
+  "dense": {
+   "ms": 7.41734504699707,
+   "mb": 1141.30029296875,
+   "active": 64.0,
+   "tiles": 64
+  },
+  "sparse": {
+   "ms": 5.210351943969727,
+   "mb": 657.8076171875,
+   "active": 36.0,
+   "tiles": 64
+  },
+  "dense_batched": {
+   "ms": 7.334136962890625,
+   "mb": 1141.23779296875,
+   "active": 64.0,
+   "tiles": 64
+  },
+  "sparse_batched": {
+   "ms": 5.159425735473633,
+   "mb": 658.2451171875,
+   "active": 36.0,
+   "tiles": 64
+  },
+  "sparse_bucketed": {
+   "ms": 27.51307487487793,
+   "mb": 1149.39208984375,
+   "active": 36.0,
+   "tiles": 64
+  },
+  "n": 819
+ },
+ "span256_occ0.125": {
+  "dense": {
+   "ms": 7.406806945800781,
+   "mb": 1140.9892578125,
+   "active": 64.0,
+   "tiles": 64
+  },
+  "sparse": {
+   "ms": 3.6277294158935547,
+   "mb": 310.19384765625,
+   "active": 16.0,
+   "tiles": 64
+  },
+  "dense_batched": {
+   "ms": 7.330989837646484,
+   "mb": 1140.9267578125,
+   "active": 64.0,
+   "tiles": 64
+  },
+  "sparse_batched": {
+   "ms": 3.5958290100097656,
+   "mb": 313.13134765625,
+   "active": 16.0,
+   "tiles": 64
+  },
+  "sparse_bucketed": {
+   "ms": 3.6118030548095703,
+   "mb": 313.1884765625,
+   "active": 16.0,
+   "tiles": 64
+  },
+  "n": 409
+ },
+ "span512_occ1.0": {
+  "dense": {
+   "ms": 22.957801818847656,
+   "mb": 4493.7841796875,
+   "active": 256.0,
+   "tiles": 256
+  },
+  "sparse": {
+   "ms": 22.944116592407227,
+   "mb": 4493.7841796875,
+   "active": 256.0,
+   "tiles": 256
+  },
+  "dense_batched": {
+   "ms": 22.55535125732422,
+   "mb": 4493.7216796875,
+   "active": 256.0,
+   "tiles": 256
+  },
+  "sparse_batched": {
+   "ms": 22.588682174682617,
+   "mb": 4493.7216796875,
+   "active": 256.0,
+   "tiles": 256
+  },
+  "sparse_bucketed": {
+   "ms": 22.74308204650879,
+   "mb": 4493.935546875,
+   "active": 256.0,
+   "tiles": 256
+  },
+  "n": 13107
+ },
+ "span512_occ0.5": {
+  "dense": {
+   "ms": 22.955751419067383,
+   "mb": 4478.8505859375,
+   "active": 256.0,
+   "tiles": 256
+  },
+  "sparse": {
+   "ms": 17.914676666259766,
+   "mb": 3385.69287109375,
+   "active": 193.0,
+   "tiles": 256
+  },
+  "dense_batched": {
+   "ms": 22.691679000854492,
+   "mb": 4478.7880859375,
+   "active": 256.0,
+   "tiles": 256
+  },
+  "sparse_batched": {
+   "ms": 17.653560638427734,
+   "mb": 3389.19091796875,
+   "active": 193.0,
+   "tiles": 256
+  },
+  "sparse_bucketed": {
+   "ms": 89.15510177612305,
+   "mb": 4500.27685546875,
+   "active": 193.0,
+   "tiles": 256
+  },
+  "n": 6553
+ },
+ "span512_occ0.25": {
+  "dense": {
+   "ms": 22.88079261779785,
+   "mb": 4471.1875,
+   "active": 256.0,
+   "tiles": 256
+  },
+  "sparse": {
+   "ms": 10.326242446899414,
+   "mb": 1768.17578125,
+   "active": 100.0,
+   "tiles": 256
+  },
+  "dense_batched": {
+   "ms": 22.559165954589844,
+   "mb": 4471.125,
+   "active": 256.0,
+   "tiles": 256
+  },
+  "sparse_batched": {
+   "ms": 10.195446014404297,
+   "mb": 1777.48828125,
+   "active": 100.0,
+   "tiles": 256
+  },
+  "sparse_bucketed": {
+   "ms": 47.88956642150879,
+   "mb": 2274.46240234375,
+   "active": 100.0,
+   "tiles": 256
+  },
+  "n": 3276
+ },
+ "span512_occ0.125": {
+  "dense": {
+   "ms": 22.805356979370117,
+   "mb": 4467.38330078125,
+   "active": 256.0,
+   "tiles": 256
+  },
+  "sparse": {
+   "ms": 7.394647598266602,
+   "mb": 1142.14013671875,
+   "active": 64.0,
+   "tiles": 256
+  },
+  "dense_batched": {
+   "ms": 22.43175506591797,
+   "mb": 4468.12158203125,
+   "active": 256.0,
+   "tiles": 256
+  },
+  "sparse_batched": {
+   "ms": 7.318353652954102,
+   "mb": 1154.07763671875,
+   "active": 64.0,
+   "tiles": 256
+  },
+  "sparse_bucketed": {
+   "ms": 7.429981231689453,
+   "mb": 1154.22900390625,
+   "active": 64.0,
+   "tiles": 256
+  },
+  "n": 1638
+ },
+ "span1024_occ1.0": {
+  "dense": {
+   "ms": 88.28387260437012,
+   "mb": 18222.06787109375,
+   "active": 1024.0,
+   "tiles": 1024
+  },
+  "sparse": {
+   "ms": 88.28330039978027,
+   "mb": 18222.06787109375,
+   "active": 1024.0,
+   "tiles": 1024
+  },
+  "dense_batched": {
+   "ms": 87.08071708679199,
+   "mb": 18221.95068359375,
+   "active": 1024.0,
+   "tiles": 1024
+  },
+  "sparse_batched": {
+   "ms": 87.05325126647949,
+   "mb": 18221.95068359375,
+   "active": 1024.0,
+   "tiles": 1024
+  },
+  "sparse_bucketed": {
+   "ms": 87.33353614807129,
+   "mb": 18221.91650390625,
+   "active": 1024.0,
+   "tiles": 1024
+  },
+  "n": 52428
+ },
+ "span1024_occ0.5": {
+  "dense": {
+   "ms": 86.90896034240723,
+   "mb": 17989.810546875,
+   "active": 1024.0,
+   "tiles": 1024
+  },
+  "sparse": {
+   "ms": 49.880313873291016,
+   "mb": 10146.365234375,
+   "active": 576.0,
+   "tiles": 1024
+  },
+  "dense_batched": {
+   "ms": 85.68892478942871,
+   "mb": 17989.669921875,
+   "active": 1024.0,
+   "tiles": 1024
+  },
+  "sparse_batched": {
+   "ms": 49.10602569580078,
+   "mb": 10175.2216796875,
+   "active": 576.0,
+   "tiles": 1024
+  },
+  "sparse_bucketed": {
+   "ms": 337.76068687438965,
+   "mb": 17919.27880859375,
+   "active": 576.0,
+   "tiles": 1024
+  },
+  "n": 26214
+ },
+ "span1024_occ0.25": {
+  "dense": {
+   "ms": 87.76774406433105,
+   "mb": 17874.84814453125,
+   "active": 1024.0,
+   "tiles": 1024
+  },
+  "sparse": {
+   "ms": 29.301834106445312,
+   "mb": 5688.25634765625,
+   "active": 324.0,
+   "tiles": 1024
+  },
+  "dense_batched": {
+   "ms": 86.53106689453125,
+   "mb": 17874.78564453125,
+   "active": 1024.0,
+   "tiles": 1024
+  },
+  "sparse_batched": {
+   "ms": 28.79810333251953,
+   "mb": 5731.13134765625,
+   "active": 324.0,
+   "tiles": 1024
+  },
+  "sparse_bucketed": {
+   "ms": 212.32333183288574,
+   "mb": 9020.146484375,
+   "active": 324.0,
+   "tiles": 1024
+  },
+  "n": 13107
+ },
+ "span1024_occ0.125": {
+  "dense": {
+   "ms": 85.67872047424316,
+   "mb": 17815.302734375,
+   "active": 1024.0,
+   "tiles": 1024
+  },
+  "sparse": {
+   "ms": 18.222665786743164,
+   "mb": 3424.79541015625,
+   "active": 195.0,
+   "tiles": 1024
+  },
+  "dense_batched": {
+   "ms": 84.46807861328125,
+   "mb": 17814.3720703125,
+   "active": 1024.0,
+   "tiles": 1024
+  },
+  "sparse_batched": {
+   "ms": 17.94872283935547,
+   "mb": 3477.02783203125,
+   "active": 195.0,
+   "tiles": 1024
+  },
+  "sparse_bucketed": {
+   "ms": 89.33215141296387,
+   "mb": 4552.78076171875,
+   "active": 195.0,
+   "tiles": 1024
+  },
+  "n": 6553
+ },
+ "profile_sparse_largest_occ0125": {
+  "cuda_ms": 34.496447999999994,
+  "cpu_ms": 19.50102900000006,
+  "top": [
+   {
+    "name": "cudaStreamSynchronize",
+    "cpu_ms": 13.314879999999999,
+    "cuda_ms": 0.0,
+    "calls": 8
+   },
+   {
+    "name": "aten::cudnn_convolution",
+    "cpu_ms": 0.42773899999999865,
+    "cuda_ms": 8.595771999999998,
+    "calls": 24
+   },
+   {
+    "name": "sm90_xmma_fprop_implicit_gemm_f32f32_tf32f32_f32_nhwckrsc_nhwc_tilesize128x32x32_warpgroupsize1x1x1_g1_execute_segment_k_off_kernel__5x_cudnn",
+    "cpu_ms": 0.0,
+    "cuda_ms": 3.2256500000000026,
+    "calls": 16
+   },
+   {
+    "name": "void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native::CUDAFunctor_add<float> >(at::TensorIteratorBase&, at::native::CUDAFunctor_add<float> const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::CUDAFunctor_add<float> >(at::TensorIteratorBase&, at::native::CUDAFunctor_add<float> const&)::{lambda(int)#1})",
+    "cpu_ms": 0.0,
+    "cuda_ms": 2.374484999999997,
+    "calls": 32
+   },
+   {
+    "name": "aten::add_",
+    "cpu_ms": 0.05135999999999876,
+    "cuda_ms": 2.202259000000001,
+    "calls": 24
+   },
+   {
+    "name": "void cudnn::engines_precompiled::nchwToNhwcKernel<float, float, float, false, true, (cudnnKernelDataType_t)0>(cudnn::engines_precompiled::nchw2nhwc_params_t<float>, float const*, float*)",
+    "cpu_ms": 0.0,
+    "cuda_ms": 1.7939669999999988,
+    "calls": 32
+   },
+   {
+    "name": "aten::gelu",
+    "cpu_ms": 0.0868300000000022,
+    "cuda_ms": 1.4994059999999976,
+    "calls": 27
+   },
+   {
+    "name": "void at::native::vectorized_elementwise_kernel<4, at::native::GeluCUDAKernelImpl(at::TensorIteratorBase&, at::native::GeluType)::{lambda()#2}::operator()() const::{lambda()#2}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>, false>(int, at::native::GeluCUDAKernelImpl(at::TensorIteratorBase&, at::native::GeluType)::{lambda()#2}::operator()() const::{lambda()#2}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>)",
+    "cpu_ms": 0.0,
+    "cuda_ms": 1.4994059999999976,
+    "calls": 27
+   },
+   {
+    "name": "cudaLaunchKernel",
+    "cpu_ms": 1.450092000000005,
+    "cuda_ms": 0.0,
+    "calls": 487
+   },
+   {
+    "name": "sm80_xmma_fprop_implicit_gemm_tf32f32_tf32f32_f32_nhwckrsc_nchw_tilesize128x128x16_stage4_warpsize2x2x1_g1_tensor16x8x8_alignc4_execute_kernel__5x_cudnn",
+    "cpu_ms": 0.0,
+    "cuda_ms": 1.2290649999999996,
+    "calls": 1
+   },
+   {
+    "name": "void cudnn::engines_precompiled::nhwcToNchwKernel<float, float, float, true, false, (cudnnKernelDataType_t)0>(cudnn::engines_precompiled::nhwc2nchw_params_t<float>, float const*, float*)",
+    "cpu_ms": 0.0,
+    "cuda_ms": 1.2046500000000042,
+    "calls": 16
+   },
+   {
+    "name": "aten::cat",
+    "cpu_ms": 0.11550100000000475,
+    "cuda_ms": 0.7338940000000007,
+    "calls": 14
+   }
+  ]
+ }
+}
