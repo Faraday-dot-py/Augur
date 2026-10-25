@@ -272,7 +272,7 @@ def run_train(args, dev):
     os.makedirs(CKPT, exist_ok=True)
     ckpt = f"{CKPT}/{args.tag}.pt"
     targs = types.SimpleNamespace(lr=args.lr, device=str(dev), seed=ss.TRAIN_SEED, opt=args.opt, time_budget=0, iters=args.iters, k_start=args.k_start, k_end=args.k_end,
-                                  steps=args.steps, batch=args.batch, log_every=args.log_every, loss_cap=args.loss_cap, batch_hook=lambda idx: model.set_scene(geom[idx], rad[idx]))
+                                  steps=args.steps, batch=args.batch, log_every=args.log_every, loss_cap=args.loss_cap, long_windows=0, long_k=0, lam_e=0.0, lam_l=0.0, batch_hook=lambda idx: model.set_scene(geom[idx], rad[idx]))
     n_it, secs = tsf.train(model, tensors, targs, ckpt, lambda s: print(s, flush=True))
     print(f"TRAIN DONE iters {n_it} secs {secs:.0f}", flush=True)
     model.set_scene(None, None)
