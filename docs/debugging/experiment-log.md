@@ -3317,3 +3317,6 @@ JE (energy-similarity loss vs truth E(t)): dE mean 0.048 (J 0.0625, baseline 0.0
 
 ### Tiered energy-functional tiers (EN-rho job 3999, EN-M job 4002, 2026-10-24/25) -- KILL
 Upper tiers as exact -grad of a learned scalar energy (CIC deposit -> per-cell energy density, autograd force; tests: FD, zero closed-path work). EN-rho (density only): fit fails (loss .93 vs .57), aborted. EN-M (+CIC moments): S force_rel +19%, com_err -5..-13% KILL; S+J force_rel +23..25%, com_err +25..45%, bias ok, dE 0.064 = same as polynomial J (0.0625; baseline 0.010) -> KILL. Conclusion: drift is not from time-dependent polynomial potentials; tier-0 co-adaptation is the main source. ckpts ~/augur_tiered_c2/ck_ENM.
+
+### Tiered bias-test reconciliation vs D2 (job 4010, 2026-10-25)
+Same ckpts through both tests: hole-4 max|z| baseline 5.97, J 4.68 (D2's 4.7 reproduced), JE 5.04, JM 4.64, EN-M J 4.95; my near_rel improves 12% for J. Different questions (significance of small mean vector bias on +-64 windows vs relative near-field error at a clump); the hole-4 failure is pre-existing in baseline tier 0 and S+J reduces it slightly. See docs/theory/heterogeneous-tiered.md Experiment 7.
