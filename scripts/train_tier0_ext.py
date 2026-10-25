@@ -28,9 +28,12 @@ def build(args, dev):
     return model
 
 
-def set_batch_ext(model, ext, idx):
-    phi0, g, H = ext
-    model.t0.set_external(model, phi0=phi0[idx], g=g[idx], H=H[idx])
+def set_batch_ext(model, ext, idx, mat=None):
+    if mat is not None:
+        model.t0.set_material(mat[idx])
+    if model.t0.cfg.ext:
+        phi0, g, H = ext
+        model.t0.set_external(model, phi0=phi0[idx], g=g[idx], H=H[idx])
 
 
 def save(path, model, opt, it, args):
@@ -46,8 +49,8 @@ def schedule(args, it, iters):
     return k, lr
 
 
-def step_loss(model, P, V, M, mask, ext, idx, k, t0s, dev):
-    set_batch_ext(model, ext, idx)
+def step_loss(model, P, V, M, mask, ext, idx, k, t0s, dev, mat=None):
+    set_batch_ext(model, ext, idx, mat)
     tt = t0s[:, None] + torch.arange(k + 1, device=dev)[None]
     Pw, Vw = P[idx[:, None], tt], V[idx[:, None], tt]
     m, mk = M[idx], mask[idx]
@@ -66,6 +69,7 @@ def step_loss(model, P, V, M, mask, ext, idx, k, t0s, dev):
 def train(model, data, args, dev, log):
     P, V, M, mask = [t.float() for t in sf.to_tensors(data[0], dev)]
     ext = tuple(torch.tensor(a, dtype=torch.float32, device=dev) for a in data[1])
+    mat = torch.tensor(td.pad_material(data[3], P.shape[2]), device=dev) if len(data) > 3 else None
     S = P.shape[0]
     iters = args.epochs * (S // args.batch)
     opt = torch.optim.Adam(model.parameters(), lr=args.lr)
@@ -90,7 +94,7 @@ def train(model, data, args, dev, log):
             pg["lr"] = lr
         idx = torch.randint(S, (args.batch,), generator=g).to(dev)
         t0s = torch.randint(0, args.steps - k + 1, (args.batch,), generator=g).to(dev)
-        loss = step_loss(model, P, V, M, mask, ext, idx, k, t0s, dev)
+        loss = step_loss(model, P, V, M, mask, ext, idx, k, t0s, dev, mat)
         opt.zero_grad()
         loss.backward()
         gn = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -127,14 +131,59 @@ def plain_eval(model, args, dev, log, tag):
 
 
 @torch.no_grad()
+def drag_eval(model, args, dev, log):
+    t0 = model.t0
+    res = {}
+    base = tsf.build(tsf.EXPS["E"], "ms_kp_pot_v_g128", args.dt).to(dev)
+    sf.load_compat(base, torch.load(args.baseline, map_location=dev, weights_only=False)["model"])
+    base.eval()
+    for seed in tsf.EVAL_SEEDS:
+        data, _, _, gams = td.make_scenes(48, 40, seed + 1000, dev, drag=True)
+        mat = torch.tensor(td.pad_material(gams, max(len(d[0][0]) for d in data)), device=dev)
+        for name, zero in (("armB", False), ("armB_head_zeroed", True)):
+            t0.set_material(mat)
+            if zero:
+                w = [p.clone() for p in t0.headnet.parameters()]
+                for p in t0.headnet.parameters():
+                    p.zero_()
+            m, _ = tsf.evaluate_model(model, data, dev, args.dt, args.eps)
+            if zero:
+                for p, q in zip(t0.headnet.parameters(), w):
+                    p.copy_(q)
+            res[f"drag_{name}_{seed}"] = {"err5_10_20": err_row(m), "dE40": m["energy_drift_rel_model"][39], "dE40_true": m["energy_drift_rel_true"][39]}
+            log(f"drag {name} {seed} err@5/10/20 {err_row(m)}")
+        m, _ = tsf.evaluate_model(base, data, dev, args.dt, args.eps)
+        res[f"drag_expE_{seed}"] = {"err5_10_20": err_row(m)}
+        log(f"drag expE {seed} err@5/10/20 {err_row(m)}")
+        P, V, M, mask = [t.float() for t in sf.to_tensors(data, dev)]
+        t0.set_material(mat)
+        t0.record = True
+        out = t0m.tier0_forward(model, P[:, 0], V[:, 0], M, mask)
+        t0.record = False
+        ha, v, gm = out.aux["head_acc"], V[:, 0], mat * td.GAM_MAX
+        tgt = -gm * v
+        w = mask[..., None]
+        slope = float((ha * tgt * w).sum() / (tgt * tgt * w).sum().clamp_min(1e-12))
+        r = float(((ha - tgt) ** 2 * w).sum() / (tgt ** 2 * w).sum().clamp_min(1e-12))
+        res[f"drag_head_fit_{seed}"] = {"slope_vs_minus_gam_v": slope, "rel_resid": r}
+        log(f"head fit seed {seed}: slope {slope:.3f} rel resid {r:.3f}")
+    t0.set_material(None)
+    return res
+
+
+@torch.no_grad()
 def evaluate(model, args, dev, log):
     t0 = model.t0
     t0.ext_grid = t0.ext_poly = None
+    t0.set_material(None)
     res = plain_eval(model, args, dev, log, "plain")
     if args.baseline:
         base = tsf.build(tsf.EXPS["E"], "ms_kp_pot_v_g128", args.dt).to(dev)
         sf.load_compat(base, torch.load(args.baseline, map_location=dev, weights_only=False)["model"])
         res.update(plain_eval(base.eval(), args, dev, log, "expE"))
+    if args.drag:
+        res.update(drag_eval(model, args, dev, log))
+        return res
     data, ext, kinds = td.make_scenes(48, 40, args.seed + 1000, dev)
     exts = tuple(torch.tensor(a, dtype=torch.float32, device=dev) for a in ext)
     for name, zero in (("ext", False), ("ext_chan_zeroed", True)):
@@ -174,6 +223,7 @@ def main():
     ap.add_argument("--log-every", type=int, default=100)
     ap.add_argument("--ckpt-every", type=int, default=250)
     ap.add_argument("--baseline", default=None, help="Exp E checkpoint evaluated on the same plain scenes")
+    ap.add_argument("--drag", action="store_true", help="per-particle linear drag scenes (material channel = gam/GAM_MAX), no external field")
     ap.add_argument("--est", action="store_true")
     ap.add_argument("--eval-only", action="store_true")
     args = ap.parse_args()
@@ -191,7 +241,7 @@ def main():
         log(f"warm start from {args.init_ckpt}")
     log(f"params {sum(p.numel() for p in model.parameters())} spec '{model.t0_spec}' extra input channels {model.t0.cfg.n_extra()}")
     t_gen = time.time()
-    data = td.make_scenes(args.scenes if not args.est else 256, args.steps, args.seed, dev)
+    data = td.make_scenes(args.scenes if not args.est else 256, args.steps, args.seed, dev, drag=args.drag)
     log(f"generated {len(data[0])} scenes in {time.time() - t_gen:.0f}s kinds {np.bincount(data[2]).tolist()}")
     if args.est:
         P, V, M, mask = [t.float() for t in sf.to_tensors(data[0], dev)]

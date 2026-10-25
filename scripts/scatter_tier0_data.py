@@ -39,10 +39,11 @@ def init_scene(kind, rng):
 
 
 @torch.no_grad()
-def rollout_ext(pos, vel, steps, device, g, H, dt=0.1, substeps=4, eps=0.5):
+def rollout_ext(pos, vel, steps, device, g, H, dt=0.1, substeps=4, eps=0.5, gam=None):
     h = dt / substeps
     pos, vel = torch.tensor(pos, device=device), torch.tensor(vel, device=device)
     g, H = torch.tensor(g, device=device), torch.tensor(H, device=device)
+    damp = None if gam is None else torch.exp(-torch.tensor(gam, device=device) * h / 2)[:, None]
 
     def acc(p):
         d = p[None, :, :] - p[:, None, :]
@@ -57,21 +58,45 @@ def rollout_ext(pos, vel, steps, device, g, H, dt=0.1, substeps=4, eps=0.5):
     for _ in range(steps):
         for _ in range(substeps):
             vel = vel + 0.5 * h * a
+            if damp is not None:
+                vel = vel * damp
             pos = pos + h * vel
             a = acc(pos)
+            if damp is not None:
+                vel = vel * damp
             vel = vel + 0.5 * h * a
         ps.append(pos.cpu().numpy() + gs.CENTER)
         vs.append(vel.cpu().numpy())
     return np.stack(ps), np.stack(vs)
 
 
-def make_scenes(num, steps, seed, device, mix=(0.35, 0.35, 0.30), p_zero=0.2):
-    """Returns (data, ext) with data = list of (P, V) absolute coords (T,N,2) and ext = (phi0 (S,), g (S,2), H (S,3))."""
+GAM_MAX = 0.3
+
+
+def drag_coeffs(n, rng):
+    gam = np.exp(rng.uniform(np.log(0.02), np.log(GAM_MAX), n))
+    return gam * (rng.random(n) < 0.5)
+
+
+def pad_material(gam, N):
+    out = np.zeros((len(gam), N, 1), dtype=np.float32)
+    for i, x in enumerate(gam):
+        out[i, :len(x), 0] = x / GAM_MAX
+    return out
+
+
+def make_scenes(num, steps, seed, device, mix=(0.35, 0.35, 0.30), p_zero=0.2, drag=False):
+    """Returns (data, ext, kinds[, gam]) with data = list of (P, V) absolute coords (T,N,2) and ext = (phi0 (S,), g (S,2), H (S,3)).
+    drag: per-particle linear drag -gam*v (half the particles gam=0, no external field); gam list appended."""
     rng = np.random.default_rng(seed)
-    phi0, g, H = ext_params(num, rng, p_zero)
+    phi0, g, H = ext_params(num, rng, 1.0 if drag else p_zero)
     kinds = rng.choice(len(KINDS), num, p=np.array(mix) / sum(mix))
-    data = []
+    data, gams = [], []
     for i in range(num):
         p, v = init_scene(KINDS[kinds[i]], rng)
-        data.append(rollout_ext(p, v, steps, device, g[i], H[i]))
+        gam = drag_coeffs(len(p), rng) if drag else None
+        gams.append(gam)
+        data.append(rollout_ext(p, v, steps, device, g[i], H[i], gam=gam))
+    if drag:
+        return data, (phi0, g, H), kinds, gams
     return data, (phi0, g, H), kinds
