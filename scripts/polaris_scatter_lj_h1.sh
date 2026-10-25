@@ -40,6 +40,7 @@ case $ARM in
   ONLYEVAL) python -m scripts.scatter_lj_eval --ckpt ckpt/${TAG}_final.pt --tag h1_$TAG; echo SLJH1 EVALONLY DONE $TAG; exit 0;;
   P) FLAGS="--energy";;
   PR) FLAGS="--energy --resid";;
+  PH) FLAGS="--energy --head 32";;
 esac
 python -m scripts.train_scatter_lj --tag $ARM --ckpt-dir ckpt $FLAGS --iters $ITERS --resume
 rc=$?

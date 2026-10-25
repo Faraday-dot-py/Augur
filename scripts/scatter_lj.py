@@ -7,6 +7,7 @@ G = 64 grid (extent 32, tile centre at the origin) and receives periodic ghost i
 bodies keep their force. Tiles are one batch (emulation of one device per tile); the recurrent field stays with its tile.
 """
 import math
+from types import SimpleNamespace
 
 import numpy as np
 import torch
@@ -14,6 +15,7 @@ import torch.nn as nn
 
 from scripts import lj_sim
 from scripts import scatter_field as sf
+from scripts import scatter_tier0 as t0m
 
 LS = 1.25
 DT_M = 0.025
@@ -24,7 +26,7 @@ KNN = 24
 SHIFTS = torch.tensor([[a, b] for a in (-1, 0, 1) for b in (-1, 0, 1)], dtype=torch.float64)
 
 
-def build_model(ckpt=None, dev="cpu", energy=False, resid=False):
+def build_model(ckpt=None, dev="cpu", energy=False, resid=False, head=0):
     """Exp E ms_kp_pot_v_g128 built at G=128 (U-Net depth 5 so E checkpoints load), then run on a G=64, extent-32 grid (same cell h = 0.5)."""
     m = sf.ScatterField(grid=128, extent=64.0, net="unet", recurrent=True, hidden_ch=0, dt=DT_M, momfix=True, in_scale=1.0,
                         potential=True, kernel=True, pp=2.0, split=True, verlet=True)
@@ -40,13 +42,16 @@ def build_model(ckpt=None, dev="cpu", energy=False, resid=False):
         m.rnet = sf.UNet(3, 2, 32, 5)
         nn.init.zeros_(m.rnet.out.weight)
         nn.init.zeros_(m.rnet.out.bias)
+    if head:
+        t0m.attach_tier0(m, f"head={head}")
     return m.to(dev)
 
 
 def load_model(path, dev):
     """Rebuild a checkpoint's variant from its weights: energy-mode mesh (density-only 1-channel net) and optional residual net."""
     st = torch.load(path, map_location=dev, weights_only=False)["model"]
-    m = build_model(None, dev, energy=st["net.inp.weight"].shape[1] == 1, resid="rnet.inp.weight" in st)
+    hk = "t0.headnet.0.weight"
+    m = build_model(None, dev, energy=st["net.inp.weight"].shape[1] == 1, resid="rnet.inp.weight" in st, head=st[hk].shape[0] if hk in st else 0)
     m.load_state_dict(st)
     return m
 
@@ -138,7 +143,12 @@ class PeriodicTiles:
             a_res = m.gather(r, P) * K[..., None]
             curl = ((r[:, 1, 1:-1, 2:] - r[:, 1, 1:-1, :-2]) - (r[:, 0, 2:, 1:-1] - r[:, 0, :-2, 1:-1])) / 2
             self.pen.append([(a_res ** 2).sum() / K.sum(), (curl ** 2).mean()])
-        a = self.unpack(a_mesh + a_pp + a_res, pk, S, N).to(pos.dtype)
+        a_tok = a_mesh + a_pp + a_res
+        if m.t0 is not None and m.t0.cfg.head:
+            ctx = SimpleNamespace(x0=x, pos=P, ph=None, mat=None, vdisp=None)
+            a_tok = m.t0.head(m, ctx, a_tok, None, V, K, K) * K[..., None]
+            self.pen.append([(ctx.a_head ** 2).sum() / K.sum(), a_tok.new_zeros(())])
+        a = self.unpack(a_tok, pk, S, N).to(pos.dtype)
         mk = mask[..., None]
         a = (a - (mk * a).sum(1, keepdim=True) / mk.sum(1, keepdim=True)) * mk
         if parts:

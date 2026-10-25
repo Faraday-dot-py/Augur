@@ -122,6 +122,7 @@ def main():
     ap.add_argument("--resume", action="store_true")
     ap.add_argument("--energy", action="store_true", help="mesh force = -autograd grad of a density-only scalar energy (hole-1 fix)")
     ap.add_argument("--resid", action="store_true", help="add a soft-penalised residual force net (momentum channels)")
+    ap.add_argument("--head", type=int, default=0, help="tier-0 per-particle head width (velocity-dependent acceleration, soft-penalised via --lam-mag)")
     ap.add_argument("--lam-mag", type=float, default=300.0)
     ap.add_argument("--lam-curl", type=float, default=300.0)
     args = ap.parse_args()
@@ -155,7 +156,7 @@ def main():
     Dtr, Dva = to_dev(tr, dev), to_dev(va, dev)
 
     torch.manual_seed(args.seed)
-    model = sl.build_model(args.init_ckpt, dev, args.energy, args.resid)
+    model = sl.build_model(args.init_ckpt, dev, args.energy, args.resid, args.head)
     opt = torch.optim.Adam(model.parameters(), lr=args.lr)
     start = 0
     if args.resume and os.path.exists(base + ".pt"):
