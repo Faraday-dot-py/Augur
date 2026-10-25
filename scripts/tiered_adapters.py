@@ -94,6 +94,8 @@ def load_tiered(spec, device):
     args = types.SimpleNamespace(**{**dict(order3=False, latent=0, err=False, learned_pool=False, residual=False, out_scale=1.0), **st["args"]})
     ttr.ORDER3[0] = bool(getattr(args, "order3", False))
     t0 = ttr.load_tier0(parts[1] if len(parts) > 1 else args.tier0, device)
+    if len(parts) == 1 and "tier0" in st:
+        t0.model.load_state_dict(st["tier0"])
     nets = ttr.make_nets(args.tiers, args, device)
     nets.load_state_dict(st["nets"])
     field = ttr.make_field(t0, nets).to(device).eval()
