@@ -24,14 +24,14 @@ KNN = 24
 SHIFTS = torch.tensor([[a, b] for a in (-1, 0, 1) for b in (-1, 0, 1)], dtype=torch.float64)
 
 
-def build_model(ckpt=None, dev="cpu", energy=False, resid=False, vblind=False, norec=False, asym=False):
+def build_model(ckpt=None, dev="cpu", energy=False, resid=False, vblind=False, norec=False, asym=False, oracle=False, nomesh=False):
     """Exp E ms_kp_pot_v_g128 built at G=128 (U-Net depth 5 so E checkpoints load), then run on a G=64, extent-32 grid (same cell h = 0.5)."""
     m = sf.ScatterField(grid=128, extent=64.0, net="unet", recurrent=True, hidden_ch=0, dt=DT_M, momfix=True, in_scale=1.0,
                         potential=True, kernel=True, pp=2.0, split=True, verlet=True)
     if ckpt:
         m.load_state_dict(torch.load(ckpt, map_location="cpu", weights_only=False)["model"])
     m.grid, m.extent, m.h = GRID, EXTENT, EXTENT / GRID
-    m.energy, m.vblind, m.norec = energy, vblind, norec
+    m.energy, m.vblind, m.norec, m.oracle, m.nomesh = energy, vblind, norec, oracle, nomesh
     if energy:
         m.net = sf.UNet(1, 1, 32, 5)
         nn.init.zeros_(m.net.out.weight)
@@ -52,7 +52,7 @@ def load_model(path, dev):
     st = torch.load(path, map_location=dev, weights_only=False)["model"]
     a = torch.load(path, map_location="cpu", weights_only=False).get("args", {})
     m = build_model(None, dev, energy=st["net.inp.weight"].shape[1] == 1, resid="rnet.inp.weight" in st, vblind=a.get("vblind", False),
-                    norec=a.get("norec", False), asym="ppmlp_a.0.weight" in st)
+                    norec=a.get("norec", False), asym="ppmlp_a.0.weight" in st, oracle=a.get("oracle", False), nomesh=a.get("nomesh", False))
     m.load_state_dict(st)
     return m
 
@@ -138,7 +138,25 @@ class PeriodicTiles:
         recip = (((g - g_sw) * win * ok) ** 2).sum() / ok.sum().clamp(min=1)
         return (w[..., None] * d / r[..., None]).sum(2), recip
 
+    def pp_acc_lj(self, P, K):
+        """Exact shifted-force LJ pair acceleration (model units) on the same top-knn neighbour set as the learned pair term."""
+        B, N = K.shape
+        k = min(self.knn, N - 1)
+        d_all = P[:, None, :, :] - P[:, :, None, :]
+        r_all = torch.sqrt((d_all ** 2).sum(-1) + 1e-8)
+        bad = (1 - K)[:, None, :] + torch.eye(N, device=P.device, dtype=P.dtype)[None]
+        r_sel, idx = torch.topk(r_all + 1e6 * (bad > 0).to(P.dtype), k, dim=-1, largest=False)
+        d = torch.gather(d_all, 2, idx[..., None].expand(B, N, k, 2))
+        ok = (r_sel < 1e5).to(P.dtype) * K[:, :, None] * (r_sel < self.m.pp).to(P.dtype)
+        rl = r_sel.clamp(min=0.5, max=1e5) * LS
+        f_rc = lj_sim._sf_consts(lj_sim.RC)[1]
+        fmag = (24 * (2 * rl ** -13 - rl ** -7) - f_rc) / LS
+        w = -fmag * ok
+        return (w[..., None] * d / r_sel.clamp(min=1e-6)[..., None]).sum(2)
+
     def pair(self, P, K):
+        if getattr(self.m, "oracle", False):
+            return self.pp_acc_lj(P, K), None
         if hasattr(self.m, "ppmlp_a"):
             a, recip = self.pp_acc_asym(P, K)
             return a, recip
@@ -166,6 +184,8 @@ class PeriodicTiles:
             U = self.mesh_energy(x[:, :1])
             g = torch.autograd.grad(U, Pg, create_graph=train)[0]
         a_mesh = -g * K[..., None]
+        if getattr(m, "nomesh", False):
+            a_mesh = a_mesh * 0.0
         a_pp, recip = self.pair(P, K)
         a_pp = a_pp * K[..., None]
         a_res = torch.zeros_like(a_mesh)

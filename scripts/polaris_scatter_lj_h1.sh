@@ -43,6 +43,9 @@ case $ARM in
   N) FLAGS="--norec";;
   VO) FLAGS="--vblind";;
   A) FLAGS="--energy --asym";;
+  O) FLAGS="--energy --oracle";;
+  M) FLAGS="--energy --nomesh";;
+  S) FLAGS="";;
   P) FLAGS="--energy";;
   PR) FLAGS="--energy --resid";;
 esac

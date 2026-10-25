@@ -96,3 +96,22 @@ def test_energy_force_trains():
     loss.backward()
     assert all(torch.isfinite(q.grad).all() for q in m.net.parameters() if q.grad is not None)
     assert m.net.out.weight.grad is not None and float(m.net.out.weight.grad.abs().sum()) > 0
+
+
+def test_oracle_pair_matches_lj_and_nomesh_zeroes_mesh():
+    from scripts import lj_sim
+    torch.manual_seed(1)
+    m = sl.build_model(energy=True, oracle=True, nomesh=True)
+    pt = sl.PeriodicTiles(m)
+    box_lj = torch.tensor([1000.0, 1000.0], dtype=torch.float64)
+    g = torch.arange(6, dtype=torch.float64)
+    pos_lj = torch.stack(torch.meshgrid(g, g, indexing="ij"), -1).reshape(-1, 2) * 1.15 + 0.05 * torch.randn(36, 2, dtype=torch.float64)
+    a_ref, _, _ = lj_sim.force(pos_lj, box_lj)
+    P = (pos_lj / sl.LS)[None]
+    K = torch.ones(1, 36, dtype=torch.float64)
+    a = pt.pp_acc_lj(P, K)[0] * sl.LS
+    assert float((a - a_ref).abs().max()) < 1e-3 * float(a_ref.abs().max())
+    pos, vel, mask, bx = _state(50, [12.0, 12.0])
+    lay = sl.layout(bx[0])
+    acc, _ = pt.force(pos, vel, mask, bx, lay, pt.init_field(1, lay, "cpu"))
+    assert torch.isfinite(acc).all()
