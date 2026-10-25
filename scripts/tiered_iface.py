@@ -207,7 +207,7 @@ class Tiled(TierModel):
             fields = state["fields"][b] = {}
         proto = self.base.init_state(1, dev)
         f0 = proto[0] if isinstance(proto, tuple) else proto
-        if f0 is not None and not torch.is_tensor(f0):
+        if f0 is not None and (not torch.is_tensor(f0) or (isinstance(proto, tuple) and len(proto) > 1)):
             outs = []
             for j, i in enumerate(ids.tolist()):
                 sti = fields.get(int(i)) or self.base.init_state(1, dev)

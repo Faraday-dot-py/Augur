@@ -430,3 +430,21 @@ def test_tiled_batched_and_bucketed_match_dict_path():
             a, st = tl.force(pos, vel, mass, mask, st)
         outs.append(a)
     assert torch.allclose(outs[0], outs[1], atol=1e-12) and torch.allclose(outs[0], outs[2], atol=1e-12)
+
+
+class _TupleState(_TensorState):
+    def init_state(self, B, device):
+        return (torch.zeros(B, 2, 2, 2, dtype=torch.float64, device=device), torch.zeros(B, 3, dtype=torch.float64, device=device))
+
+    def force(self, pos, vel, mass, mask, state, ctx=None):
+        return -pos * mask[..., None], (state[0] + 1, state[1] + 2)
+
+
+def test_tiled_tuple_state_multi_step():
+    tl = ti.Tiled(_TupleState(), 128.0, sparse=True)
+    pos = (torch.rand(1, 30, 2, dtype=torch.float64) - 0.5) * 100
+    z, o = torch.zeros_like(pos), torch.ones(1, 30, dtype=torch.float64)
+    st = tl.init_state(1, pos.device)
+    for _ in range(3):
+        a, st = tl.force(pos, z, o, o, st)
+    assert torch.isfinite(a).all()
