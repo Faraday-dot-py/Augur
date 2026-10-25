@@ -19,6 +19,7 @@ import torch
 
 from scripts import scatter_contact as sc
 from scripts import scatter_field as sf
+from scripts import scatter_tier0 as t0m
 from scripts import scatter_scenes as ss
 from scripts import train_scatter_field as tsf
 
@@ -137,7 +138,7 @@ def train_set(num, steps, dev):
     return scenes, data
 
 
-def build(name, dev, ckpt=None):
+def build(name, dev, ckpt=None, t0=""):
     if name == "E":
         return ss.build_model("E", DT, dev, ckpt)
     if name == "augur1":
@@ -146,6 +147,8 @@ def build(name, dev, ckpt=None):
     kw = dict(tsf.BASE)
     kw.update(tsf.VARIANTS["ms_kp_pot_v_g128"])
     model = sc.ContactScatterField(extent=cfg["extent"], dt=DT, in_scale=cfg["in_scale"], obstacle={"B": "sdf", "A": "kernel"}[name], **kw)
+    if t0:
+        t0m.attach_tier0(model, t0)
     if ckpt and ckpt != "none":
         sd = torch.load(ckpt, map_location=dev, weights_only=False)["model"]
         r = model.load_state_dict(sd, strict=False)
@@ -254,7 +257,7 @@ def run_eval(model, tag, args, dev):
 
 
 def run_train(args, dev):
-    model = build(args.model, dev, args.init)
+    model = build(args.model, dev, args.init, args.t0)
     model.train()
     for o in [x for x in args.opt.split(",") if x]:
         sf.apply_opt(model, o)
@@ -299,6 +302,7 @@ def main():
     ap.add_argument("--init", default="checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt")
     ap.add_argument("--tag", default="B")
     ap.add_argument("--opt", default="")
+    ap.add_argument("--t0", default="", help="tier-0 extension spec (scatter_tier0), e.g. head=32")
     ap.add_argument("--iters", type=int, default=8000)
     ap.add_argument("--train", type=int, default=800)
     ap.add_argument("--steps", type=int, default=80)
@@ -325,7 +329,7 @@ def main():
         print(f"train truth cached t={time.time() - t0:.0f}s", flush=True)
         return
     if args.mode == "eval":
-        model = build(args.model, dev, args.ckpt)
+        model = build(args.model, dev, args.ckpt, args.t0)
     else:
         model = run_train(args, dev)
     for o in [x for x in args.eval_opt.split(",") if x]:
