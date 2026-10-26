@@ -3326,3 +3326,6 @@ S+J with energy-similarity term and free-rollout horizon k 2->20 (OOM at 22; res
 
 ### Tiered Exp 8/9 (job 4019, 2026-10-25)
 ENMT (EN-M, tier 0 frozen): dE 0.0116 (~baseline) but com_err -3..-7%, force_rel +9..11% -> KILL; co-adaptation of tier 0 drives the drift. JA (L2-SP 0.05 anchor + energy term): tier-0 weight drift halved (0.0073 vs 0.0163), all gains kept (com_err +23..43%, err@50 -14..-15%, bias improved) but dE 0.0485 = JE -> KILL. Drift is not proportional to weight movement; only the long horizon (JL) lowered it to 0.021. ckpts ~/augur_tiered_c2/ck_{ENMT,JA}.
+
+### Tiered JL40: gradient-checkpointed rollout k 2->40 + energy term (job 4021, 2026-10-26) -- KILL (narrow)
+dE 0.0123 (baseline 0.0106, J 0.0625, JL k<=20 0.0212): monotone with horizon; com_err +18..43%, err@50 -15..-19%, force_rel +9.5..11.8% (seed 9300 under 10%), near_rel 1.07-1.11x baseline (9100 over 1.10x). Fails three criteria by margins of 0.5 pt / 5% / 1%. ckpt ~/augur_tiered_c2/ck_JL40. 4.4 h GPU.
