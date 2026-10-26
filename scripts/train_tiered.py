@@ -13,6 +13,7 @@ import time
 import numpy as np
 import torch
 import torch.nn as nn
+import torch.utils.checkpoint
 
 from model.tiered import ScatterFieldTier0, TierNet, TierNetE, TieredField, TieredFieldE, ZeroTier0, nfeat
 from scripts import gravity_sim as gs
@@ -244,7 +245,10 @@ def train_r(args, dev, log):
         pos, vel, st, a_prev = Pw[:, 0], Vw[:, 0], field.init_state(args.batch, dev), None
         w, denom, lp, lv, le = mk[:, :, None], mk.sum() * 2 * k, 0.0, 0.0, 0.0
         for s in range(k):
-            pos, vel, st, a_prev = field.step_verlet(pos, vel, m, mk, st, a_prev)
+            if a_prev is None or not args.ckpt_roll:
+                pos, vel, st, a_prev = field.step_verlet(pos, vel, m, mk, st, a_prev)
+            else:
+                pos, vel, st, a_prev = ckpt(lambda p, v, s_, a: field.step_verlet(p, v, m, mk, s_, a), True, pos, vel, st, a_prev)
             lp = lp + (((pos - Pw[:, s + 1]) ** 2) * w).sum() / denom
             lv = lv + (((vel - Vw[:, s + 1]) ** 2) * w).sum() / denom
         loss = lp + 0.1 * lv
@@ -264,14 +268,22 @@ def train_r(args, dev, log):
     log("R done")
 
 
-def rollout_t0(t0, pos, vel, m, mk, k):
+def ckpt(fn, on, *a):
+    return torch.utils.checkpoint.checkpoint(fn, *a, use_reentrant=False) if on else fn(*a)
+
+
+def rollout_t0(t0, pos, vel, m, mk, k, on=False):
     st, a_prev, ps, vs = t0.init_state(pos.shape[0], pos.device), None, [], []
+
+    def one(pos, vel, a_prev, st):
+        pn = pos + DT * vel + 0.5 * DT ** 2 * a_prev
+        a_new, st = t0.force(pn, vel + DT * a_prev, m, mk, st)
+        return pn, vel + 0.5 * DT * (a_prev + a_new), a_new, st
+
     for _ in range(k):
         if a_prev is None:
             a_prev, st = t0.force(pos, vel, m, mk, st)
-        pn = pos + DT * vel + 0.5 * DT ** 2 * a_prev
-        a_new, st = t0.force(pn, vel + DT * a_prev, m, mk, st)
-        vel, pos, a_prev = vel + 0.5 * DT * (a_prev + a_new), pn, a_new
+        pos, vel, a_prev, st = ckpt(one, on, pos, vel, a_prev, st)
         ps.append(pos)
         vs.append(vel)
     return ps, vs
@@ -314,7 +326,10 @@ def train_j(args, dev, log):
         pos, vel, st, a_prev = Pw[:, 0], Vw[:, 0], field.init_state(args.batch, dev), None
         w, denom, lp, lv, le = mk[:, :, None], mk.sum() * 2 * k, 0.0, 0.0, 0.0
         for s in range(k):
-            pos, vel, st, a_prev = field.step_verlet(pos, vel, m, mk, st, a_prev)
+            if a_prev is None or not args.ckpt_roll:
+                pos, vel, st, a_prev = field.step_verlet(pos, vel, m, mk, st, a_prev)
+            else:
+                pos, vel, st, a_prev = ckpt(lambda p, v, s_, a: field.step_verlet(p, v, m, mk, s_, a), True, pos, vel, st, a_prev)
             lp = lp + (((pos - Pw[:, s + 1]) ** 2) * w).sum() / denom
             lv = lv + (((vel - Vw[:, s + 1]) ** 2) * w).sum() / denom
             if args.e_w > 0:
@@ -326,7 +341,7 @@ def train_j(args, dev, log):
         stt = ss0[:, None] + torch.arange(k + 1, device=dev)[None]
         Qw, Uw = sp[si[:, None], stt].float(), sv[si[:, None], stt].float()
         qm, qk = sm[si].float(), smk[si].float()
-        ps, vs = rollout_t0(t0, Qw[:, 0], Uw[:, 0], qm, qk, k)
+        ps, vs = rollout_t0(t0, Qw[:, 0], Uw[:, 0], qm, qk, k, args.ckpt_roll)
         wq, dq = qk[:, :, None], qk.sum() * 2 * k
         ln = sum((((p_ - Qw[:, i + 1]) ** 2) * wq).sum() / dq + 0.1 * (((v_ - Uw[:, i + 1]) ** 2) * wq).sum() / dq for i, (p_, v_) in enumerate(zip(ps, vs)))
         drift = sum(((q - r) ** 2).sum() for q, r in zip(t0.model.parameters(), p0)) / n0
@@ -519,6 +534,7 @@ def main():
     ap.add_argument("--joint", action="store_true")
     ap.add_argument("--small-scenes", type=int, default=400)
     ap.add_argument("--lr0", type=float, default=1e-5)
+    ap.add_argument("--ckpt-roll", action="store_true")
     ap.add_argument("--l2sp", type=float, default=0.0)
     ap.add_argument("--near-w", type=float, default=1.0)
     ap.add_argument("--tiers", type=int, default=3)
