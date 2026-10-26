@@ -42,6 +42,48 @@ class TieredAdapter(ti.TierModel):
         p2, v2, st, a = self.f.step_verlet(p, v, m, k, state[0], state[1])
         return p2.to(pos.dtype), v2.to(pos.dtype), [st, a]
 
+    @torch.no_grad()
+    def step_multirate(self, pos, vel, mass, mask, state, m_ratio):
+        """RESPA macro step = m_ratio velocity-Verlet tier-0 steps with slow (upper tier) half-kicks of m_ratio*dt around them; advances m_ratio * dt.
+        Own inner integrator: TieredField.step_respa's inner loop is not Verlet (v updated with a(t) only), which confounds multi-rate with the integrator."""
+        p, v, m, k = self._c(pos, vel, mass, mask)
+        f, dt = self.f, self.f.dt
+        s0, hid, coefs = state[0]
+        a_slow, (hid, coefs, _) = f.slow_force(p, v, m, k, (s0, hid, coefs))
+        v = v + 0.5 * m_ratio * dt * a_slow
+        a0 = state[1]
+        if a0 is None:
+            a0, s0 = f.tier0.force(p, v, m, k, s0)
+            a0 = a0 * k[..., None]
+        for _ in range(m_ratio):
+            v = v + 0.5 * dt * a0
+            p = p + dt * v
+            a0, s0 = f.tier0.force(p, v, m, k, s0)
+            a0 = a0 * k[..., None]
+            v = v + 0.5 * dt * a0
+        a_slow, (hid, coefs, _) = f.slow_force(p, v, m, k, (s0, hid, coefs))
+        v = v + 0.5 * m_ratio * dt * a_slow
+        return p.to(pos.dtype), v.to(pos.dtype), [(s0, hid, coefs), a0]
+
+    def tier0_only(self):
+        return Tier0Only(self.f.tier0, self.dtype, self.dt, self.reach, self.name + "/tier0")
+
+
+class Tier0Only(ti.TierModel):
+    laws = frozenset({"grav"})
+    caps = frozenset()
+
+    def __init__(self, t0, dtype, dt, reach, name):
+        self.t0, self.dtype, self.dt, self.reach, self.name = t0, dtype, dt, reach, name
+
+    def init_state(self, B, device):
+        return self.t0.init_state(B, device, self.dtype)
+
+    @torch.no_grad()
+    def force(self, pos, vel, mass, mask, state, ctx=None):
+        a, st = self.t0.force(pos.to(self.dtype), vel.to(self.dtype), mass.to(self.dtype), mask.to(self.dtype), state)
+        return a.to(pos.dtype), st
+
 
 def load_tiered(spec, device):
     """spec: '<nets.pt>[,<tier0.pt>]'; nets.pt is a checkpoint written by scripts/train_tiered.py (keys nets, args)."""
@@ -49,9 +91,11 @@ def load_tiered(spec, device):
 
     parts = spec.split(",")
     st = torch.load(parts[0], map_location=device, weights_only=False)
-    args = types.SimpleNamespace(**st["args"])
+    args = types.SimpleNamespace(**{**dict(order3=False, latent=0, err=False, learned_pool=False, residual=False, out_scale=1.0), **st["args"]})
     ttr.ORDER3[0] = bool(getattr(args, "order3", False))
     t0 = ttr.load_tier0(parts[1] if len(parts) > 1 else args.tier0, device)
+    if len(parts) == 1 and "tier0" in st:
+        t0.model.load_state_dict(st["tier0"])
     nets = ttr.make_nets(args.tiers, args, device)
     nets.load_state_dict(st["nets"])
     field = ttr.make_field(t0, nets).to(device).eval()
@@ -119,7 +163,16 @@ class Tier0ExtAdapter(ti.TierModel):
         self._feed(pos.shape[0], ctx)
         p, v, m, k = self._c(pos, vel, mass, mask)
         f = state[0] if isinstance(state, tuple) else state
-        a, f2 = self.m.force(p, v, m, k, f)
+        store = (ctx or {}).get("ph_store")
+        if store is not None and self.cfg.phid:
+            self.m.t0.set_ids(ctx["ids"], ctx["n_global"], ctx.get("write"))
+            try:
+                a, (f2, store2) = self.m.force(p, v, m, k, (f, store))
+            finally:
+                self.m.t0.set_ids(None, 0)
+            store.copy_(store2)
+        else:
+            a, f2 = self.m.force(p, v, m, k, f)
         return a.to(pos.dtype), (f2, state[1]) if isinstance(state, tuple) else f2
 
     @torch.no_grad()
