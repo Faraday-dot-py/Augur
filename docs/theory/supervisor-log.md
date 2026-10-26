@@ -4,14 +4,14 @@ Role: supervisor delegates; does no work itself. Concerns non-blocking unless mi
 Polaris: connected 14:10 (adamwebb). Use both GPUs (student-pleiades QOS).
 
 
-## Live status (updated 2026-10-26 14:30 PDT; the Log below is history, not current state)
+## Live status (updated 2026-10-26 14:35 PDT; the Log below is history, not current state)
 
 | Agent | State | Doing |
 | --- | --- | --- |
-| tier-k lever continuation | running | no-velocity retrain, job 4050 (seed 4738) plus second seed, then four-arm hierarchy rerun |
+| tier-k lever continuation | running | no-velocity retrain: job 4050 (seed 4738) at iteration 41,300 of 60,000, job 4051 (second seed) running; then four-arm hierarchy rerun |
 | planetesimal-disk solar-system test | finished | out of range for our models (unit-mass only); proxy KILL; reference numbers logged (0f19cf5) |
 | loss analysis and error-distribution diagnostic | finished | tail terms dropped for tiered arms; local work-bias loss term recommended (75d8622); not yet run |
-| local work-bias loss term test | running | writing code and tests, queued for a free Polaris GPU behind the retrain |
+| local work-bias loss term test | running | code and 7 CPU tests done; job 4052 (seed 4738, three concurrent arms) submitted, pending behind the retrain |
 | planetesimal-disk video and per-body-mass support | running | video render and review, then mass-support design, dataset and training script (no training yet) |
 | comparison videos | finished | six videos in videos/, reviewed by fresh reviewers, logged (0220a18) |
 | all earlier agents (hole-1, tier-0 extensions, upper-tier module, naming, page restyle, sandbox wrapper) | finished or stopped | results are in the Log |
