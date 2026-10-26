@@ -97,11 +97,13 @@ class TieredField(nn.Module):
         v, g, _ = self.layouts[k].blend_eval(prev[k], L.centres(B, device, dtype))
         return torch.cat([v[..., None], g], -1).reshape(B, L.n, L.n, 3).permute(0, 3, 1, 2)
 
-    def upper_force(self, pos, vel, mass, mask, state, occ=None):
+    def upper_force(self, pos, vel, mass, mask, state, occ=None, at=None):
         _, hid, prev = state
         B = pos.shape[0]
+        if getattr(self, 'vblind_up', False):
+            vel = torch.zeros_like(vel)
         mom = self.moment_pyramid(pos, vel, mass, mask, occ)
-        acc, new_hid, coefs_all, act_all = 0, [], [], []
+        acc, new_hid, coefs_all, act_all, accs, errs = 0, [], [], [], [], []
         child = self.tier0.summary()
         if child is not None:
             child = F.avg_pool2d(child, 2)
@@ -126,17 +128,23 @@ class TieredField(nn.Module):
                 coefs, summ, hnew = c.reshape_as(coefs), s_.reshape_as(summ), hh.reshape_as(hnew)
             elif act.any():
                 coefs[act], summ[act], hnew[act] = net(x[act])
-            phi, dphi, res = L.blend_eval(coefs, pos)
+            phi, dphi, res = L.blend_eval(coefs, pos if at is None else at)
             a = -dphi + res
-            acc = acc + (remove_mean(a, mass, mask) if self.mean_remove else a)
+            a_t = remove_mean(a, mass, mask) if (self.mean_remove and at is None) else a
+            acc = acc + a_t
+            accs.append(a_t)
             if net.hidden_ch:
                 am = act[:, None].repeat_interleave(L.G, 2).repeat_interleave(L.G, 3)
                 new_hid.append(torch.where(am, L.interior(hnew), hid[k - 1]))
             else:
                 new_hid.append(hid[k - 1])
-            child = F.avg_pool2d(L.interior(summ) * (mom[k][:, M:M + 1] > 0).to(pos.dtype), 2) if net.summary_ch else None
+            sg = L.interior(summ)
+            errs.append(sg[:, -1:] if net.err else None)
+            sg = sg * (mom[k][:, M:M + 1] > 0).to(pos.dtype)
+            child = (net.pool(sg) if net.pool is not None else F.avg_pool2d(sg, 2)) if net.summary_ch else None
             coefs_all.append(coefs)
             act_all.append(act)
+        self.last_accs, self.last_errs = accs, errs
         return acc, (new_hid, coefs_all, act_all)
 
     def slow_force(self, pos, vel, mass, mask, state, occ=None):

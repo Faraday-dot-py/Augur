@@ -13,8 +13,9 @@ import time
 import numpy as np
 import torch
 import torch.nn as nn
+import torch.utils.checkpoint
 
-from model.tiered import ScatterFieldTier0, TierNet, TieredField, ZeroTier0, nfeat
+from model.tiered import ScatterFieldTier0, TierNet, TierNetE, TieredField, TieredFieldE, ZeroTier0, nfeat
 from scripts import gravity_sim as gs
 from scripts import scatter_field as sf
 
@@ -24,6 +25,10 @@ NMAX = 512
 EVAL_SEEDS = (9100, 9200, 9300)
 STOP = []
 ORDER3 = [False]
+MEAN_REMOVE = [True]
+ENERGY = [False]
+BLIND_T0 = [False]
+VBLIND_UP = [False]
 
 
 def true_acc(pos, mass, mask, eps=EPS):
@@ -70,7 +75,7 @@ def make_scenes(num, steps, seed, dev):
 
 def load_tier0(path, dev):
     m = sf.ScatterField(grid=256, extent=128.0, net="unet", recurrent=True, hidden_ch=0, momfix=True, dt=DT, in_scale=1.0,
-                        potential=True, kernel=True, pp=2.0, split=True, verlet=True).to(dev)
+                        potential=True, kernel=True, pp=2.0, split=True, verlet=True, vblind=BLIND_T0[0], norec=BLIND_T0[0]).to(dev)
     m.load_state_dict(torch.load(path, map_location=dev, weights_only=False)["model"])
     m.eval().requires_grad_(False)
     return ScatterFieldTier0(m)
@@ -95,12 +100,38 @@ def force_series(t0, d, bs=16):
 
 
 def make_nets(K, args, dev):
-    return nn.ModuleList(TierNet(nfeat(True, False, args.order3), H0 * 2 ** k, args.width, args.layers, residual=args.residual, latent_ch=0, err=False,
-                                 out_scale=args.out_scale, log_rho=True) for k in range(1, K + 1)).to(dev)
+    if ENERGY[0]:
+        return nn.ModuleList(TierNetE(H0 * 2 ** k, args.width, args.layers, args.out_scale, args.moments) for k in range(1, K + 1)).to(dev)
+    nets, child = [], 0
+    for k in range(1, K + 1):
+        net = TierNet(nfeat(True, False, args.order3) + child, H0 * 2 ** k, args.width, args.layers, residual=args.residual, latent_ch=args.latent,
+                      err=args.err, out_scale=args.out_scale, log_rho=True, learned_pool=args.learned_pool and k < K)
+        nets.append(net)
+        child = net.summary_ch
+    return nn.ModuleList(nets).to(dev)
+
+
+def cell_mean(val, pos, mask, n, h):
+    B = val.shape[0]
+    i = torch.floor((pos + N0 * H0 / 2) / h).long()
+    w = mask * ((i >= 0) & (i < n)).all(-1).to(val.dtype)
+    i = i.clamp(0, n - 1)
+    flat = torch.arange(B, device=val.device)[:, None] * n * n + i[..., 1] * n + i[..., 0]
+    num = torch.zeros(B * n * n, device=val.device).index_add(0, flat.reshape(-1), (val * w).reshape(-1))
+    den = torch.zeros(B * n * n, device=val.device).index_add(0, flat.reshape(-1), w.reshape(-1))
+    return (num / den.clamp_min(1)).view(B, 1, n, n), (den > 0).view(B, 1, n, n).to(val.dtype)
 
 
 def make_field(tier0, nets):
-    return TieredField(tier0, list(nets), N0, H0, G, HALO, BLEND, static=True, order3=ORDER3[0])
+    f = _make_field(tier0, nets)
+    f.vblind_up = VBLIND_UP[0]
+    return f
+
+
+def _make_field(tier0, nets):
+    if ENERGY[0]:
+        return TieredFieldE(tier0, list(nets), N0, H0, G, HALO)
+    return TieredField(tier0, list(nets), N0, H0, G, HALO, BLEND, static=True, order3=ORDER3[0], mean_remove=MEAN_REMOVE[0])
 
 
 def save(path, **st):
@@ -147,11 +178,13 @@ def train_s(args, dev, log):
         stage, it = st["stage"], st["it"]
         log(f"resumed stage {stage} it {it}")
     S, T = d["P"].shape[:2]
-    while stage < args.tiers:
+    nstage = 1 if args.joint else args.tiers
+    while stage < nstage:
         for j, n in enumerate(nets):
-            n.requires_grad_(j == stage)
-        field = make_field(ZeroTier0(), nets[:stage + 1])
-        opt = torch.optim.Adam(nets[stage].parameters(), lr=args.lr)
+            n.requires_grad_(args.joint or j == stage)
+        field = make_field(ZeroTier0(), nets if args.joint else nets[:stage + 1])
+        params = list(nets.parameters()) if args.joint else list(nets[stage].parameters())
+        opt = torch.optim.Adam(params, lr=args.lr)
         if args.resume and os.path.exists(ck) and it > 0:
             opt.load_state_dict(st["opt"])
         t_start = time.time()
@@ -166,9 +199,16 @@ def train_s(args, dev, log):
             tgt = (AT[idx, tt] - A0[idx, tt]) * mk[..., None]
             a, _ = field.upper_force(pos, vel, m, mk, field.init_state(args.batch, dev))
             loss = ((a * mk[..., None] - tgt) ** 2).sum() / (tgt ** 2).sum().clamp_min(1e-9)
+            if args.err:
+                rms = ((tgt ** 2).sum() / mk.sum().clamp_min(1) / 2).sqrt().clamp_min(1e-9)
+                cum = 0
+                for at, ek, L in zip(field.last_accs, field.last_errs, field.layouts):
+                    cum = cum + at.detach()
+                    tg, occ = cell_mean((cum - tgt).norm(dim=-1) / rms, pos, mk, L.n, L.h)
+                    loss = loss + args.err_w * (((ek - tg) ** 2) * occ).sum() / occ.sum().clamp_min(1)
             opt.zero_grad()
             loss.backward()
-            gn = torch.nn.utils.clip_grad_norm_(nets[stage].parameters(), 1.0)
+            gn = torch.nn.utils.clip_grad_norm_(params, 1.0)
             if torch.isfinite(loss) and torch.isfinite(gn):
                 opt.step()
             it += 1
@@ -211,9 +251,12 @@ def train_r(args, dev, log):
         Pw, Vw = d["P"][idx[:, None], tt].float(), d["V"][idx[:, None], tt].float()
         m, mk = d["M"][idx].float(), d["mask"][idx].float()
         pos, vel, st, a_prev = Pw[:, 0], Vw[:, 0], field.init_state(args.batch, dev), None
-        w, denom, lp, lv = mk[:, :, None], mk.sum() * 2 * k, 0.0, 0.0
+        w, denom, lp, lv, le = mk[:, :, None], mk.sum() * 2 * k, 0.0, 0.0, 0.0
         for s in range(k):
-            pos, vel, st, a_prev = field.step_verlet(pos, vel, m, mk, st, a_prev)
+            if a_prev is None or not args.ckpt_roll:
+                pos, vel, st, a_prev = field.step_verlet(pos, vel, m, mk, st, a_prev)
+            else:
+                pos, vel, st, a_prev = ckpt(lambda p, v, s_, a: field.step_verlet(p, v, m, mk, s_, a), True, pos, vel, st, a_prev)
             lp = lp + (((pos - Pw[:, s + 1]) ** 2) * w).sum() / denom
             lv = lv + (((vel - Vw[:, s + 1]) ** 2) * w).sum() / denom
         loss = lp + 0.1 * lv
@@ -231,6 +274,135 @@ def train_r(args, dev, log):
             log("SIGTERM: checkpoint saved, exiting")
             return
     log("R done")
+
+
+def ckpt(fn, on, *a):
+    return torch.utils.checkpoint.checkpoint(fn, *a, use_reentrant=False) if on else fn(*a)
+
+
+def rollout_t0(t0, pos, vel, m, mk, k, on=False):
+    st, a_prev, ps, vs = t0.init_state(pos.shape[0], pos.device), None, [], []
+
+    def one(pos, vel, a_prev, st):
+        pn = pos + DT * vel + 0.5 * DT ** 2 * a_prev
+        a_new, st = t0.force(pn, vel + DT * a_prev, m, mk, st)
+        return pn, vel + 0.5 * DT * (a_prev + a_new), a_new, st
+
+    for _ in range(k):
+        if a_prev is None:
+            a_prev, st = t0.force(pos, vel, m, mk, st)
+        pos, vel, a_prev, st = ckpt(one, on, pos, vel, a_prev, st)
+        ps.append(pos)
+        vs.append(vel)
+    return ps, vs
+
+
+def train_j(args, dev, log):
+    d = make_scenes(args.scenes, args.steps, args.seed, dev)
+    sp, sv, sm, smk = sf.to_tensors(gs.make_dataset(args.small_scenes, (10, 100), args.steps, args.seed + 1, scale=True, device=dev, dt=DT, eps=EPS), dev)
+    t0 = load_tier0(args.tier0, dev)
+    t0.model.requires_grad_(True)
+    nets = make_nets(args.tiers, args, dev)
+    nets.load_state_dict(torch.load(args.init, map_location=dev, weights_only=False)["nets"])
+    field = make_field(t0, nets)
+    opt = torch.optim.Adam([{"params": list(nets.parameters()), "lr": args.lr}, {"params": list(t0.model.parameters()), "lr": args.lr0}])
+    base = [args.lr, args.lr0]
+    p0 = [q.detach().clone() for q in t0.model.parameters()]
+    n0 = sum((q ** 2).sum() for q in p0)
+    ck, it = os.path.join(args.ckpt_dir, "tiered_J.pt"), 0
+    if args.resume and os.path.exists(ck):
+        st = torch.load(ck, map_location=dev, weights_only=False)
+        nets.load_state_dict(st["nets"])
+        t0.model.load_state_dict(st["tier0"])
+        opt.load_state_dict(st["opt"])
+        it = st["it"]
+        log(f"resumed it {it}")
+    S, T = d["P"].shape[:2]
+    SS, ST = sp.shape[:2]
+    t_start = time.time()
+    while it < args.iters:
+        frac = it / max(1, args.iters - 1)
+        k = int(round(args.k_start + (args.k_end - args.k_start) * frac))
+        for pg, b in zip(opt.param_groups, base):
+            pg["lr"] = b * (0.05 + 0.95 * 0.5 * (1 + np.cos(np.pi * frac)))
+        g = gen(args, it, 0)
+        idx = torch.randint(S, (args.batch,), generator=g).to(dev)
+        s0 = torch.randint(0, T - k, (args.batch,), generator=g).to(dev)
+        tt = s0[:, None] + torch.arange(k + 1, device=dev)[None]
+        Pw, Vw = d["P"][idx[:, None], tt].float(), d["V"][idx[:, None], tt].float()
+        m, mk = d["M"][idx].float(), d["mask"][idx].float()
+        pos, vel, st, a_prev = Pw[:, 0], Vw[:, 0], field.init_state(args.batch, dev), None
+        w, denom, lp, lv, le = mk[:, :, None], mk.sum() * 2 * k, 0.0, 0.0, 0.0
+        for s in range(k):
+            if a_prev is None or not args.ckpt_roll:
+                pos, vel, st, a_prev = field.step_verlet(pos, vel, m, mk, st, a_prev)
+            else:
+                pos, vel, st, a_prev = ckpt(lambda p, v, s_, a: field.step_verlet(p, v, m, mk, s_, a), True, pos, vel, st, a_prev)
+            lp = lp + (((pos - Pw[:, s + 1]) ** 2) * w).sum() / denom
+            lv = lv + (((vel - Vw[:, s + 1]) ** 2) * w).sum() / denom
+            if args.e_w > 0:
+                Et = sf.energy(Pw[:, s + 1], Vw[:, s + 1], m, mk, EPS)
+                le = le + (((sf.energy(pos, vel, m, mk, EPS) - Et) / Et.abs().clamp_min(1e-6)) ** 2).mean() / k
+        loss_large = lp + 0.1 * lv + args.e_w * le
+        si = torch.randint(SS, (args.batch,), generator=g).to(dev)
+        ss0 = torch.randint(0, ST - k, (args.batch,), generator=g).to(dev)
+        stt = ss0[:, None] + torch.arange(k + 1, device=dev)[None]
+        Qw, Uw = sp[si[:, None], stt].float(), sv[si[:, None], stt].float()
+        qm, qk = sm[si].float(), smk[si].float()
+        ps, vs = rollout_t0(t0, Qw[:, 0], Uw[:, 0], qm, qk, k, args.ckpt_roll)
+        wq, dq = qk[:, :, None], qk.sum() * 2 * k
+        ln = sum((((p_ - Qw[:, i + 1]) ** 2) * wq).sum() / dq + 0.1 * (((v_ - Uw[:, i + 1]) ** 2) * wq).sum() / dq for i, (p_, v_) in enumerate(zip(ps, vs)))
+        drift = sum(((q - r) ** 2).sum() for q, r in zip(t0.model.parameters(), p0)) / n0
+        loss = loss_large + args.near_w * ln + args.l2sp * drift
+        opt.zero_grad()
+        loss.backward()
+        gn = torch.nn.utils.clip_grad_norm_(list(nets.parameters()) + list(t0.model.parameters()), 1.0)
+        if torch.isfinite(loss) and torch.isfinite(gn):
+            opt.step()
+        it += 1
+        if it % args.log_every == 0:
+            log(f"J it {it} k {k} large {loss_large.item():.6f} near {ln.item():.6f} drift {drift.item() ** 0.5:.5f} t {time.time() - t_start:.0f}s")
+        if it % args.ckpt_every == 0 or STOP or it == args.iters:
+            save(ck, nets=nets.state_dict(), tier0=t0.model.state_dict(), opt=opt.state_dict(), it=it, args=vars(args))
+        if STOP:
+            log("SIGTERM: checkpoint saved, exiting")
+            return
+    log("J done")
+
+
+@torch.no_grad()
+def run_bias(args, dev, log):
+    arms = {"baseline": load_tier0(args.tier0, dev)}
+    for name in args.arms.split(","):
+        if name:
+            t = load_tier0(args.tier0, dev)
+            t.model.load_state_dict(torch.load(os.path.join(args.ckpt_dir, f"tiered_{name}.pt"), map_location=dev, weights_only=False)["tier0"])
+            arms[name] = t
+    res = {a: {} for a in arms}
+    for sd in EVAL_SEEDS:
+        d = make_scenes(args.eval_scenes, args.eval_steps, sd, dev)
+        m, mk = d["M"].float(), d["mask"].float()
+        S, T = d["P"].shape[:2]
+        for a, t0 in arms.items():
+            st = t0.init_state(S, dev)
+            num = den = sn = sdn = 0.0
+            for t in range(T):
+                p, v = d["P"][:, t].float(), d["V"][:, t].float()
+                w0 = ((d["lab"] == 0).float() * mk)
+                c = (p * w0[..., None]).sum(1) / w0.sum(1, keepdim=True).clamp_min(1)
+                win = ((p - c[:, None]).abs().max(-1).values < 18.0).float() * mk
+                a0, st = t0.force(p, v, m, win, st)
+                if t % 10 == 0:
+                    iso = true_acc(p, m, win)
+                    far = (true_acc(p, m, mk) - iso) * win[..., None]
+                    dd = (a0 - iso) * win[..., None]
+                    num += float((dd ** 2).sum())
+                    den += float((iso ** 2).sum())
+                    sn += float((dd * far).sum())
+                    sdn += float((far ** 2).sum())
+            res[a][str(sd)] = {"near_rel": (num / den) ** 0.5, "slope": sn / sdn}
+            log(f"bias seed {sd} {a} {json.dumps({k_: round(x, 4) for k_, x in res[a][str(sd)].items()})}")
+    json.dump(res, open(args.out, "w"), indent=1)
 
 
 def com_err(a_pred, a_true, lab):
@@ -311,18 +483,23 @@ def run_far(args, dev, log):
 
 def run_eval(args, dev, log):
     t0 = load_tier0(args.tier0, dev)
-    arms = {"baseline": None}
+    arms = {"baseline": (None, t0)}
     for name in args.arms.split(","):
         if name:
             nets = make_nets(args.tiers, args, dev)
-            nets.load_state_dict(torch.load(os.path.join(args.ckpt_dir, f"tiered_{name}{args.tag}.pt"), map_location=dev, weights_only=False)["nets"])
+            ck = torch.load(os.path.join(args.ckpt_dir, f"tiered_{name}{args.tag}.pt"), map_location=dev, weights_only=False)
+            nets.load_state_dict(ck["nets"])
             nets.eval().requires_grad_(False)
-            arms[name] = nets
+            ta = t0
+            if "tier0" in ck:
+                ta = load_tier0(args.tier0, dev)
+                ta.model.load_state_dict(ck["tier0"])
+            arms[name] = (nets, ta)
     res = {a: {} for a in arms}
     for sd in EVAL_SEEDS:
         d = make_scenes(args.eval_scenes, args.eval_steps, sd, dev)
-        for a, nets in arms.items():
-            res[a][str(sd)] = eval_arm(t0, nets, d)
+        for a, (nets, ta) in arms.items():
+            res[a][str(sd)] = eval_arm(ta, nets, d)
             log(f"seed {sd} {a} {json.dumps({k: round(v, 5) for k, v in res[a][str(sd)].items()})}")
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
     json.dump(res, open(args.out, "w"), indent=1)
@@ -346,7 +523,7 @@ def compare(args, log):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--mode", choices=["S", "R", "eval", "compare", "far"], required=True)
+    ap.add_argument("--mode", choices=["S", "R", "J", "eval", "compare", "far", "bias"], required=True)
     ap.add_argument("--tier0", default=os.path.expanduser("~/E_ms_kp_pot_v_g128.pt"))
     ap.add_argument("--init", default=None)
     ap.add_argument("--arms", default="S")
@@ -354,6 +531,22 @@ def main():
     ap.add_argument("--far-radius", type=float, default=20.0)
     ap.add_argument("--tag", default="")
     ap.add_argument("--order3", action="store_true")
+    ap.add_argument("--latent", type=int, default=0)
+    ap.add_argument("--err", action="store_true")
+    ap.add_argument("--err-w", type=float, default=0.1)
+    ap.add_argument("--learned-pool", action="store_true")
+    ap.add_argument("--e-w", type=float, default=0.0)
+    ap.add_argument("--no-mean-remove", action="store_true")
+    ap.add_argument("--energy-tiers", action="store_true")
+    ap.add_argument("--blind-t0", action="store_true")
+    ap.add_argument("--vblind-up", action="store_true")
+    ap.add_argument("--moments", action="store_true")
+    ap.add_argument("--joint", action="store_true")
+    ap.add_argument("--small-scenes", type=int, default=400)
+    ap.add_argument("--lr0", type=float, default=1e-5)
+    ap.add_argument("--ckpt-roll", action="store_true")
+    ap.add_argument("--l2sp", type=float, default=0.0)
+    ap.add_argument("--near-w", type=float, default=1.0)
     ap.add_argument("--tiers", type=int, default=3)
     ap.add_argument("--width", type=int, default=32)
     ap.add_argument("--layers", type=int, default=6)
@@ -378,6 +571,10 @@ def main():
     args = ap.parse_args()
     dev = torch.device(args.device)
     ORDER3[0] = args.order3
+    MEAN_REMOVE[0] = not args.no_mean_remove
+    ENERGY[0] = args.energy_tiers
+    BLIND_T0[0] = args.blind_t0
+    VBLIND_UP[0] = args.vblind_up
     os.makedirs(args.ckpt_dir, exist_ok=True)
     signal.signal(signal.SIGTERM, on_term)
     torch.manual_seed(args.seed)
@@ -385,7 +582,7 @@ def main():
     def log(s):
         print(s, flush=True)
 
-    {"S": lambda: train_s(args, dev, log), "R": lambda: train_r(args, dev, log), "eval": lambda: run_eval(args, dev, log), "far": lambda: run_far(args, dev, log),
+    {"S": lambda: train_s(args, dev, log), "R": lambda: train_r(args, dev, log), "eval": lambda: run_eval(args, dev, log), "far": lambda: run_far(args, dev, log), "J": lambda: train_j(args, dev, log), "bias": lambda: run_bias(args, dev, log),
      "compare": lambda: compare(args, log)}[args.mode]()
 
 
