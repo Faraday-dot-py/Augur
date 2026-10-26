@@ -21,6 +21,7 @@ Every feature is a flag in the spec string (comma separated, `name` or `name=val
   vscale=S      velocity scale for head inputs
   extgain=S     gain on the ext input channels only (extapply keeps the physical amplitude)
   headmax=S     bound the head acceleration: S*tanh(a/S) (0 = unbounded)
+  matgate       zero the head output where the particle's material channels are all zero (needs mat)
   headgate      (contact models) gate the head output by the contact window set from outside (Tier0.gate)
   lora=R        rank-R low-rank adapter on every conv of the grid net (zero-init output, base weights keep their names)
   vclip=S       clamp the velocity inputs of the head to [-S, S]
@@ -69,6 +70,7 @@ class Tier0Cfg:
     headmax: float = 0.0
     vclip: float = 0.0
     headgate: bool = False
+    matgate: bool = False
     lora: int = 0
 
     def n_extra(self):
@@ -104,6 +106,7 @@ def parse_spec(spec):
     assert cfg.ext in (0, 1, 3, 6) and cfg.boundary in ("tile", "open", "periodic") and cfg.moments in (0, 1, 2)
     assert not cfg.phscatter or cfg.phid
     assert not cfg.phid or cfg.head
+    assert not cfg.matgate or (cfg.head and cfg.mat)
     assert cfg.boundary != "periodic" or cfg.halo >= 1
     return cfg
 
@@ -442,6 +445,8 @@ class Tier0(nn.Module):
         ah = o[..., :2] if not c.headmax else c.headmax * torch.tanh(o[..., :2] / c.headmax)
         if self.gate is not None:
             ah = ah * self.gate[..., None]
+        if c.matgate:
+            ah = ah * (ctx.mat.abs().amax(-1) > 0).to(ah.dtype)[..., None]
         ctx.a_head = ah * mask[..., None]
         if self.pen_list is not None:
             self.pen_list.append((ctx.a_head ** 2).sum() / mask.sum().clamp_min(1.0))
