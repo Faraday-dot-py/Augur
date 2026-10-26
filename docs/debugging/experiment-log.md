@@ -3335,3 +3335,7 @@ S alone: force_rel -38% but com_err +14.5/+2.2/+0.6% worse (KILL on its own). S+
 
 ### Tiered tier0-gravity-velocity-inputs-removed, position-only upper tiers (Exp 11 NGb): position-only upper tiers (--vblind-up) on gv_NG tier 0 (job 4024, 2026-10-26) -- PASS, no extra drift benefit
 S+J: force_rel -35..-36%, com_err -64/-68/-83%, err@50 -32..-41%, dE 0.0176/0.0147/0.0171 (mean 0.0165, NGa 0.0145, baseline 0.0359), near_rel 0.86-0.88x baseline. Position-only moments cost nothing in accuracy but do not lower dE vs NGa (+14%); drift fix is tier 0 input removal. ckpt ~/augur_tiered_c2/ck_NGb.
+
+### Tiered s1-tier0-with-upper-tier-external-field (Exp 12): end-to-end hierarchy, job 4045, 2026-10-26 -- KILL
+Tiled 4x4 windows of 64 with S1 tier 0 (external-field aware), external field from upper tiers vs exact vs baseline (Exp E tiled + far kernel). Exact-field oracle already 2.4x baseline at err@20, 2x at err@50, dE 11x (0.104 vs 0.009); upper-tier sequential 1.04-1.10x oracle; joint rollout fine-tune 2.4x baseline err@20, dE 0.06-0.11. Learned external field is not the bottleneck; S1 tiled itself is. Deviation: sample grid +-18 not +-30. Code scripts/exp12_hier.py; ckpts ~/augur_tiered_c2_s1_extfield_ckpt.
+
