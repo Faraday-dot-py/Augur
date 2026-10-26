@@ -3342,3 +3342,6 @@ Tiled 4x4 windows of 64 with the external-field-aware scratch-trained tier 0, ex
 ### Tiered end-to-end-hierarchy-matched-60k-tier0, job 4046, 2026-10-26 -- KILL (improved over 10k tier 0)
 Matched 60k-iteration tier 0 inside the tiled window hierarchy. Exact-field oracle err@20 1.5-1.7x baseline (10k tier 0: 2.4x), dE 4-5x (11x). Upper tiers sequential 1.2-1.3x oracle; joint 2.0/2.1/1.8x baseline err@20, dE 3.5-5x, com_err 3x; joint gives nothing over sequential. Tier 0 tiled is the gap, not the upper-tier supply. Ckpts ~/augur_tiered_c2_hier_matched60k_ckpt.
 
+### Tiered hierarchy error-by-channel diagnosis (matched 60k tier 0, exact external field), jobs 4048/4049, 2026-10-26
+Drift is a dense-region (>=12 neighbours) energy-work bias, 2.1x baseline overall (3.3x ticks 10-30) with only +9% force error; force gap grows with tick (-27% at tick 0, +13-16% by tick 30-100); low-density particles 3x worse but 3.6% of error; seam/owned-core, external field (no-ext arm equals exact), 18-unit sampling grid and the dropped 4-unit ring are not causes. Velocity input zeroed at inference flips work sign (+0.0158), recurrent state zeroed triples force error. Proposed (not launched): retrain matched tier 0 with velocity and recurrent inputs removed; PASS exact-field err@20 <= 1.2x and dE <= 2x baseline on all seeds. Script scripts/exp12_diag.py.
+
