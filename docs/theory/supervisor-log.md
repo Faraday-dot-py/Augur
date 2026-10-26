@@ -3,6 +3,17 @@
 Role: supervisor delegates; does no work itself. Concerns non-blocking unless mission-critical (check old transcripts for prior decisions first).
 Polaris: connected 14:10 (adamwebb). Use both GPUs (student-pleiades QOS).
 
+
+## Live status (updated 2026-10-26 13:35 PDT; the Log below is history, not current state)
+
+| Agent | State | Doing |
+| --- | --- | --- |
+| tier-k lever continuation | running | no-velocity retrain, job 4050 (seed 4738) plus second seed, then four-arm hierarchy rerun |
+| planetesimal-disk solar-system test | running | star plus planetesimal disk vs direct N-body, on the sandbox 1080 Ti |
+| comparison videos | stopped | six videos rendered in videos/; frame review, log entry and commit unconfirmed |
+| all earlier agents (hole-1, tier-0 extensions, upper-tier module, naming, page restyle, sandbox wrapper) | finished or stopped | results are in the Log |
+
+Pending on retrain result: frozen-base residual corrector test (user approved); cold-collapse scoping.
 ## Log
 - 14:10 Polaris connected.
 - 14:15 Dispatched agent lj-potential-gradient-agent (hole-1 potential-gradient fix on LJ solid/liquid; worktree, 1 GPU) and agent cutout-bias-and-seam-check-agent (hole-4 cutout bias, hole-5 teacher-forced vs rollout gap, hole-3 seam checks on existing ckpts; worktree, 1 GPU). Both told to pre-register criteria, log to experiment-log + theory doc, not push. (legacy: A, B)

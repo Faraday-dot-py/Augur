@@ -3294,3 +3294,20 @@ Fixes the mass-ratio OOD blind spot left open by `symlog_densershape` (seed-1200
 ### Solar 1e7 disc (job 3740, 2026-10-19) -- abandoned by user, branch `solar10m` deleted
 
 Rotating-disc IC with 3 placed protoplanets, 1000 ticks. Kernel-only PM (no learned weights) kept 3/3 bound, drift <=.21; orbit_ft2 0/3, E 2/3 (net heats the disc, seeds thrown to e>0.9); no spontaneous fragmentation in truth. User: experiment of low interest, not pursued. Earlier solar/clumpy-1e9 commits remain on `worktree-agent-abd021892286ed5f9`.
+
+### Star plus planetesimal disk vs direct N-body (2026-10-26) -- PRE-REGISTRATION (written before any run)
+
+Question: can our learned gravity models simulate a star + planetesimal disk? Not previously tried at 1000:1 (the 2026-10-19 solar 1e7 disc used kernel-only PM and was abandoned; see above). Script `scripts/protodisk_gravity_test.py`, results `results/protodisk_*.json`.
+
+Range facts (from code): `CentralForceDynamics` (gravity_central_v1.pt, 2D, N 100-1000) and the scatter models take no per-body mass (force independent of source mass; scatter masses are all 1); trained at G=1, softening eps=0.5, dt=0.1, scale-init clouds (half-width ~5*sqrt(N/8)), speeds ~1-3. So a 1000:1 star/particle mass ratio, 0.3-30 AU dynamic range (100:1 in radius) and Keplerian v ~ 1/sqrt(r) with a point-like central mass are OUTSIDE range. No claim will be made from the model about the real design. In-range proxy: 300 unit-mass bodies as a Plummer "star" core (scale a=15) + 700 unit-mass disk bodies on near-circular orbits (v_c from the enclosed body count, e-noise 1%) at r=20-55, 15,000 ticks (~100 orbits at the innermost disk radius), N=1000, 2D, eps=0.5, dt=0.1.
+
+Arms: (1) direct N-body reference (own float64 KDK leapfrog, torch); (2) CentralForceDynamics on the proxy only; (3) sticky merge on close approach, post-processed on saved snapshots identically for reference and model (real design: r_merge=0.02 AU, snapshots every 0.01 yr; proxy: disk-disk r_merge=0.5 = eps, snapshots every 10 ticks). Metrics: semi-major axis a and eccentricity e per disk body (a=(r_peri+r_apo)/2 about system centre of mass over first vs last 10% of snapshots), dE/E0, dL/L0 (L = total angular momentum), survivors (disk bodies within 150 of centre of mass, proxy) and merge counts, gap depletion near the Jupiter seed (real design, reference only), err@k = mean per-body position error at tick k vs reference (proxy only).
+
+Real-design minimal test (reference only): 1 Msun star (softening 0.005 AU), 1000 equal-mass disk particles totalling 1.5% Msun (1.5e-5 each), r 0.3-30 AU, surface density r^-1.5, e~0.01 (Rayleigh), i~0.005 rad, one 1e-3 Msun Jupiter seed at 5 AU, 100 yr, dt=0.0016 yr (T/100 at 0.3 AU).
+- Reference validity (else the reference itself is not usable): |dE/E0|<=1e-3 and |dL/L0|<=1e-9.
+- Gap metric: fraction of initial disk bodies with |a-5 AU|<0.7 AU (2 Hill radii) remaining at 100 yr, reported only.
+
+Proxy PASS (all): err@20<=0.1; |dE/E0| model<=max(3x ref, 0.01) and <=0.05; |dL/L0|<=1e-3; median |da/a| of model <=2x ref + 0.02; median e_end within 0.05 of ref; survivor fraction within 0.05 of ref; merge count within 30% of ref.
+Proxy KILL (any): err@100>1.0; |dE/E0|>0.3; survivor fraction differs >0.2; non-finite. Otherwise inconclusive.
+Verdict on the real design: NOT TESTED for the models (out of range); only the reference is run.
+Not run: scatter-field/tier0 checkpoints (also unit-mass, 2D tile windows of 64 units; same mass-ratio blocker; one in-range proxy with the cheapest model is enough for the minimal test).

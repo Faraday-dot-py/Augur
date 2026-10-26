@@ -20,3 +20,10 @@ web/token/tests/vectors.json
 web/token/tests/physics_ref.json
 web/gravity/tests/vectors.json
 results/ball_50k_rollout.npz
+
+# secrets
+temp.env
+*.token
+.env
+*.env
+jupyterhub-sandbox/
