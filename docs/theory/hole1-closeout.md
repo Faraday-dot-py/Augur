@@ -15,3 +15,8 @@ Tested on 2D Lennard-Jones (LJ) scatter field, tier 0 only, seed 4738, held-out 
 - Remaining liquid/coexist err@20 (0.13-0.14, 0.045) is learned-force error plus chaos; pair-curve accuracy in the core is the lever, not dt.
 - dt study is one training seed per dt; cost for pair-only substepping with a cached neighbour list untested; P2 not yet run through the full six-scene gate (T/psi6/P) beyond err@20/drift.
 - Fine-tuning from an existing checkpoint at smaller dt, and non-reciprocal / velocity-dependent / dissipative cases (residual channel) were not tested; block test has no fragmentation or restitution case.
+
+## Addendum 2026-10-25 (round 4)
+- P2 full gate: passes T <= 1%, psi6, drift, solid/melt err@20 (.0029/.0024); quench P error 15.0% marginal. Second training seed (P2S): same except quench P error 25%, solid err@20 .0043 (1.5x P2). Both 4-6x better than P (.0171): the dt result is robust to training seed.
+- Pair-only substepping with a cached neighbour list: solid err@20 .0114 at 1.24x cost on an existing dt-.025 checkpoint (uncached 1.9x). Retrained P2 is more accurate (.0029-.0043) at 1.8x.
+- Gravity (2D softened, Exp E scenes): the energy-gradient mesh does not lower energy drift vs the non-gradient mesh (dE/E@100 .029/.028 vs .028/.023); removing velocity+recurrent inputs does (.015/.014) at no cost; err@20 equal across arms (.040-.046); EN training 5.6x slower. The gradient form is not the lever; input removal is.
