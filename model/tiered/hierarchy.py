@@ -100,6 +100,8 @@ class TieredField(nn.Module):
     def upper_force(self, pos, vel, mass, mask, state, occ=None):
         _, hid, prev = state
         B = pos.shape[0]
+        if getattr(self, 'vblind_up', False):
+            vel = torch.zeros_like(vel)
         mom = self.moment_pyramid(pos, vel, mass, mask, occ)
         acc, new_hid, coefs_all, act_all, accs, errs = 0, [], [], [], [], []
         child = self.tier0.summary()

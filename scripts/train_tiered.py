@@ -27,6 +27,8 @@ STOP = []
 ORDER3 = [False]
 MEAN_REMOVE = [True]
 ENERGY = [False]
+BLIND_T0 = [False]
+VBLIND_UP = [False]
 
 
 def true_acc(pos, mass, mask, eps=EPS):
@@ -73,7 +75,7 @@ def make_scenes(num, steps, seed, dev):
 
 def load_tier0(path, dev):
     m = sf.ScatterField(grid=256, extent=128.0, net="unet", recurrent=True, hidden_ch=0, momfix=True, dt=DT, in_scale=1.0,
-                        potential=True, kernel=True, pp=2.0, split=True, verlet=True).to(dev)
+                        potential=True, kernel=True, pp=2.0, split=True, verlet=True, vblind=BLIND_T0[0], norec=BLIND_T0[0]).to(dev)
     m.load_state_dict(torch.load(path, map_location=dev, weights_only=False)["model"])
     m.eval().requires_grad_(False)
     return ScatterFieldTier0(m)
@@ -121,6 +123,12 @@ def cell_mean(val, pos, mask, n, h):
 
 
 def make_field(tier0, nets):
+    f = _make_field(tier0, nets)
+    f.vblind_up = VBLIND_UP[0]
+    return f
+
+
+def _make_field(tier0, nets):
     if ENERGY[0]:
         return TieredFieldE(tier0, list(nets), N0, H0, G, HALO)
     return TieredField(tier0, list(nets), N0, H0, G, HALO, BLEND, static=True, order3=ORDER3[0], mean_remove=MEAN_REMOVE[0])
@@ -530,6 +538,8 @@ def main():
     ap.add_argument("--e-w", type=float, default=0.0)
     ap.add_argument("--no-mean-remove", action="store_true")
     ap.add_argument("--energy-tiers", action="store_true")
+    ap.add_argument("--blind-t0", action="store_true")
+    ap.add_argument("--vblind-up", action="store_true")
     ap.add_argument("--moments", action="store_true")
     ap.add_argument("--joint", action="store_true")
     ap.add_argument("--small-scenes", type=int, default=400)
@@ -563,6 +573,8 @@ def main():
     ORDER3[0] = args.order3
     MEAN_REMOVE[0] = not args.no_mean_remove
     ENERGY[0] = args.energy_tiers
+    BLIND_T0[0] = args.blind_t0
+    VBLIND_UP[0] = args.vblind_up
     os.makedirs(args.ckpt_dir, exist_ok=True)
     signal.signal(signal.SIGTERM, on_term)
     torch.manual_seed(args.seed)

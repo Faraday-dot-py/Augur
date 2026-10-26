@@ -57,8 +57,9 @@ class ScatterField(nn.Module):
     grid covers [-extent/2, extent/2)^2 and tokens outside it get zero force."""
 
     def __init__(self, grid=64, extent=64.0, net="local", recurrent=True, hidden_ch=0, dt=0.1, width=32, layers=8,
-                 levels=5, momfix=True, in_scale=1.0, potential=False, kernel=False, pp=0.0, split=False, nonet=False, verlet=False):
+                 levels=5, momfix=True, in_scale=1.0, potential=False, kernel=False, pp=0.0, split=False, nonet=False, verlet=False, vblind=False, norec=False):
         super().__init__()
+        self.vblind, self.norec = vblind, norec
         self.potential, self.kernel, self.pp, self.split, self.nonet = potential, kernel, pp, split, nonet
         self.verlet = verlet
         self.opt = set()
@@ -346,12 +347,12 @@ class ScatterField(nn.Module):
         return tuple(o.clone() for o in out)
 
     def _force(self, pos, vel, mass, mask, field):
-        x = self.scatter(pos, vel, mass, mask)
+        x = self.scatter(pos, vel * (0.0 if self.vblind else 1.0), mass, mask)
         if self.kernel:
             ak = self.kernel_acc(x[:, :1])
             x = torch.cat([x, ak], 1)
         if self.recurrent:
-            x = torch.cat([x, field], 1)
+            x = torch.cat([x, field * (0.0 if self.norec else 1.0)], 1)
         if self.nonet:
             field = x.new_zeros(x.shape[0], self.cf, self.grid, self.grid)
         else:
