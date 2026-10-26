@@ -106,6 +106,7 @@ def main():
     ap.add_argument("--val-frac", type=float, default=0.05)
     ap.add_argument("--norm-ext", action="store_true", help="scale ext input channels to unit rms (extgain from the data)")
     ap.add_argument("--pattern", default="hv_s*.npz")
+    ap.add_argument("--freeze-body", action="store_true")
     ap.add_argument("--replay", type=float, default=0.0, help="weight of isolated Exp E scenes in the loss (0 = windows only)")
     ap.add_argument("--n-iso", type=int, default=1500)
     ap.add_argument("--dt", type=float, default=0.1)
@@ -141,7 +142,9 @@ def main():
         iso = [t.float() for t in sf.to_tensors(data_iso, dev)]
         log(f"replay: {a.n_iso} isolated Exp E scenes, weight {a.replay}")
     iters = a.epochs * (len(tidx) // a.batch)
-    opt = torch.optim.Adam(model.parameters(), lr=a.lr)
+    if a.freeze_body:
+        tte.freeze_body(model)
+    opt = torch.optim.Adam([p for p in model.parameters() if p.requires_grad], lr=a.lr)
     path = os.path.join(a.out_dir, a.tag + ".pt")
     it = 0
     if os.path.exists(path):

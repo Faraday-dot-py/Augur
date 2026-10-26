@@ -70,7 +70,7 @@ def freeze_body(model):
     """Train only the new input channels of the first conv and the tier-0 head; the old input weights and the rest of the net stay fixed."""
     n_new = model.t0.cfg.n_extra()
     for n, p in model.named_parameters():
-        p.requires_grad_(n.startswith("t0.headnet") or n == "net.inp.weight")
+        p.requires_grad_(n.startswith("t0.headnet") or n == "net.inp.weight" or "lora_" in n)
     if n_new:
         w = model.net.inp.weight
         mask = torch.zeros_like(w)
