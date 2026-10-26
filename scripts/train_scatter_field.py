@@ -43,6 +43,7 @@ VARIANTS = {
     "ms_kp_pot_v_g128_cu": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128, cu=True),
     "ms_kp_pot_v_g128_eps": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128, epsin=True),
     "ms_kp_pot_v_g128_mnorm": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128, norm="mass"),
+    "ms_kp_pot_v_g128_massfeat": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128, norm="gmean", massfeat=True),
     "ms_kp_pot_v_g128_dnorm": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128, norm="dens"),
     "ms_kp_pot_v_g128_cu_eps_mnorm": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128, cu=True, epsin=True, norm="mass"),
     "ms_pot": dict(net="unet", potential=True),

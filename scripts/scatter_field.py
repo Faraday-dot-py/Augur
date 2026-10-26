@@ -49,6 +49,12 @@ class UNet(nn.Module):
         return self.out(h)
 
 
+def softclip(x, c=64.0):
+    """Identity for |x| <= c, logarithmic growth beyond (continuous), so a 1e3-mass cell does not saturate the grid net."""
+    a = x.abs()
+    return torch.where(a <= c, x, torch.sign(x) * (c + c * torch.log(a.clamp_min(c) / c)))
+
+
 class ScatterField(nn.Module):
     """Tokens (pos, vel, mass) -> CIC scatter of [m, m*vx, m*vy] onto a grid
     (x,y consumed by the scatter) -> grid net -> output diff field
@@ -60,7 +66,7 @@ class ScatterField(nn.Module):
 
     def __init__(self, grid=64, extent=64.0, net="local", recurrent=True, hidden_ch=0, dt=0.1, width=32, layers=8,
                  levels=5, momfix=True, in_scale=1.0, potential=False, kernel=False, pp=0.0, split=False, nonet=False, verlet=False,
-                 prior=False, knn=16, eps=0.5, cu=False, epsin=False, norm=""):
+                 prior=False, knn=16, eps=0.5, cu=False, epsin=False, norm="", massfeat=False):
         super().__init__()
         assert not prior or (kernel and pp and split)
         self.prior, self.knn, self.eps = prior, knn, eps
@@ -68,6 +74,9 @@ class ScatterField(nn.Module):
         self.verlet = verlet
         self.far, self.far_band, self.far_eps, self.substeps = 0, 0.25, 0.5, 1
         self.cu, self.epsin, self.norm = cu, epsin, norm
+        self.massfeat = massfeat
+        self.mass_unit = None
+        assert not massfeat or norm in ("mass", "gmean")
         self.eps_cur = EPS0
         ncol = 2 + int(cu) + int(epsin)
         if norm == "dens":
@@ -87,7 +96,7 @@ class ScatterField(nn.Module):
         self.grid, self.extent, self.h = grid, extent, extent / grid
         self.recurrent, self.dt, self.momfix, self.in_scale = recurrent, dt, momfix, in_scale
         self.cf = (1 if potential else 2) + hidden_ch
-        cin = 3 + (self.cf if recurrent else 0) + (2 if kernel else 0) + (1 if epsin else 0)
+        cin = 3 + (self.cf if recurrent else 0) + (2 if kernel else 0) + (1 if epsin else 0) + (2 if massfeat else 0)
         if kernel:
             self.kmlp = nn.Sequential(nn.Linear(ncol, 64), nn.GELU(), nn.Linear(64, 64), nn.GELU(), nn.Linear(64, 1))
             nn.init.zeros_(self.kmlp[-1].weight)
@@ -113,13 +122,27 @@ class ScatterField(nn.Module):
         return torch.stack(f, -1)
 
     def _nscale(self, x, mass, mask):
-        if self.norm == "mass":
+        if self.norm == "gmean":
+            if self.mass_unit is not None:
+                s = torch.as_tensor(self.mass_unit, dtype=mass.dtype, device=mass.device).expand(mass.shape[0])
+            else:
+                s = torch.exp((torch.log(mass.clamp_min(1e-6)) * mask).sum(1) / mask.sum(1).clamp_min(1.0))
+        elif self.norm == "mass":
             s = ((mass * mask).sum(1) / mask.sum(1).clamp_min(1.0)).clamp_min(1e-6)
         else:
             rho = x[:, 0].flatten(1)
             top = rho.topk(min(64, rho.shape[1]), dim=1).values.mean(1)
             s = (top / self.d0).clamp_min(1.0)
         return s.detach().view(-1, 1, 1, 1)
+
+    def _massfeat(self, x, pos, vel, mass, mask, ns):
+        """Mass-range channels from additive cell sums only: log1p of cell density and log of the density-weighted mean body mass
+        (sum m^2 / sum m, from a second scatter of m^2), both in units of the mass unit; zero in empty cells."""
+        s1 = x[:, :1]
+        s2 = self.scatter(pos, torch.zeros_like(vel), mass * mass, mask)[:, :1] / ns.view(-1, 1, 1, 1) ** 2
+        occ = s1 > 1e-8
+        dom = torch.where(occ, torch.log(s2.clamp_min(1e-12) / s1.clamp_min(1e-8)), torch.zeros_like(s1))
+        return torch.cat([torch.log1p(s1.clamp_min(0.0)), dom], 1)
 
     def _corners(self, pos):
         u = (pos + self.extent / 2) / self.h - 0.5
@@ -449,11 +472,17 @@ class ScatterField(nn.Module):
             x = x / ns
         if self.kernel:
             ak = self.kernel_acc(x[:, :1])
+        if self.massfeat:
+            xm = self._massfeat(x, pos, vel, mass, mask, ns)
+            x = softclip(x)
+        if self.kernel:
             x = torch.cat([x, ak], 1)
         if self.recurrent:
             x = torch.cat([x, field], 1)
         if self.epsin:
             x = torch.cat([x, x.new_full((x.shape[0], 1, self.grid, self.grid), math.log(self.eps_cur / EPS0))], 1)
+        if self.massfeat:
+            x = torch.cat([x, xm], 1)
         if self.nonet:
             field = x.new_zeros(x.shape[0], self.cf, self.grid, self.grid)
         else:
