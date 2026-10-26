@@ -77,6 +77,14 @@ case $ARM in
     for cfg in "2 1 _n2" "4 1 _n4" "1 2 _ps2"; do set -- $cfg
       python -m scripts.train_scatter_field $GA --variant gv_NG --init-ckpt $HOME/E_ms_kp_pot_v_g128.pt --init-partial --nsub $1 --pair-sub $2 --tag $3 || echo "train fail $3"; done
     echo SLJH1 GV2 DONE; exit 0;;
+  CTC) mkdir -p results/contact checkpoints_contact
+    for f in trainset_c_train_4000_80.pt $(cd $HOME/augur-contact/results/contact && ls evalset_*.pt); do cp -n $HOME/augur-contact/results/contact/$f results/contact/ 2>/dev/null; done
+    FAMS=c_id,c_big,c_small,c_pos,c_count,c_nonconvex,c_cont,box15,box_var,post_circle,post_rect,disc,post_poly
+    CA="train_eval --model C --init $HOME/E_ms_kp_pot_v_g128.pt --iters 8000 --train 4000 --steps 80 --fams $FAMS"
+    python -m scripts.scatter_contact_scenes $CA --tag CRE || echo "fail CRE"
+    python -m scripts.scatter_contact_scenes $CA --tag CN --norec || echo "fail CN"
+    python -m scripts.scatter_contact_scenes $CA --tag CNV --norec --vblind || echo "fail CNV"
+    echo SLJH1 CTC DONE; exit 0;;
   P2S) FLAGS="--energy --substeps 2 --seed 4739";;
   P4) FLAGS="--energy --substeps 4";;
   S2) FLAGS="--seed 4739";;
