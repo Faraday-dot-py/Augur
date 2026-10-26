@@ -59,7 +59,10 @@ Arms and runs.
 | gv_NG | tier0-gravity-no-velocity-no-recurrent-inputs | ~/augur_tiered_c2/gv_NG.pt (from ~/augur_slj_hv/ckpt/gv/E_gv_NG.pt) |
 | gv_EN | tier0-gravity-energy-gradient-mesh | |
 | Exp 11 NGa | tiers-on-gv-NG-tier0-sequential-then-joint | job 4024 |
-| Exp 8/9, 10, 12 | not recoverable from master; see integration worktree experiment-log (job 4019) | |
+| Exp 8 | tiers-energy-functional-tier0-frozen | job 4019, supervisor-log 17:50 (10-25) |
+| Exp 9 | tiers-joint-finetune-l2sp-anchor-plus-energy-term | job 4019 |
+| Exp 10 | unknown: only "scored before Exp 12" appears (integration worktree heterogeneous-tiered.md); owner must confirm | |
+| Exp 12 | tier0-with-upper-tier-ext-expansion | pre-registered, not run; uses the S1 and S2 tier-0 ckpts |
 | P | lj-mesh-energy-gradient-no-residual | 48efe5a, job 3927 |
 | PR | lj-mesh-energy-gradient-plus-penalised-residual | 56f5111 |
 | V | lj-mesh-non-gradient-inputs-zeroed | 9f08b27 |
@@ -95,20 +98,25 @@ Arms and runs.
 | S2 (tiling table) | strip-width-2 | experiment-log.md job 2989 entry |
 | H1-H7 (adaptive eval) | accuracy / efficiency / robustness / generalization / scaling / tileability / interpretability claims | adaptive-eval-agent-preamble.md |
 
-Rows whose mapping is by name inference from the log text (not from a commit) are: JT, JM, JA, Bh4-Bh6, Fa, FbH3, Exp 1, Exp 11 NGa. Verify before relying on them.
+Verification flags. Every descriptive name above was written by the naming audit; the legacy-label-to-experiment link is confirmed from a commit message or log text except for these rows, which are INFERRED [unverified]: JT, JM, JA, JL, ENMT, ENM, Exp 1, Exp 3 (Z, L, Er), Exp 10, Exp 11 NGa, gv_R, gv_EN, Fa, Fb, FbL, FbH3, Bh4, Bh5, Bh6, PH, O, A2 (contact), the D1-D6 and S1/S2 (substep) names, the S3 job number (4041 per the integration doc, "t0m" per the supervisor log).
+
+Highest-value confirmations, ask the owning agent:
+1. Exp 10: unknown. Ask upper-tier-module-agent-resumed what it was and its job id.
+2. JT, JM, JA, JL, ENMT, Exp 1, Exp 3: ask upper-tier-module-agent-resumed to confirm each name against its commit messages and ckpt directories (~/augur_tiered_c2/ck_*).
+3. Fa, Fb, FbL, FbH3, Bh4-Bh6: ask tier0-extensions-agent-resumed to confirm each name and the job ids (4008, 4020).
 
 ## Research: how agents and harnesses handle identifiers and hand-offs
-Method: web search and fetch, text only (see security log). Only the sources marked "fetched" were read; abstract-level sources are marked. Nothing found tests the user's claim directly.
+Method: web search and fetch, text only (see security log). Sources marked (abstract read) had their arXiv abstract page fetched; full papers were not read, so methods and numbers are unchecked. Nothing found tests the user's claim directly.
 
 Supported
 - A subagent starts with fresh context and sees only the parent's delegation message; rules and names must be restated in that message. Claude Code sub-agents docs (fetched, first 100k chars): https://code.claude.com/docs/en/sub-agents
 - Vague or terse hand-offs cause misread tasks and duplicated work; Anthropic's multi-agent research system post recommends explicit objective, output format, boundaries, and passing "lightweight references" to external artifacts rather than relaying content (fetched): https://www.anthropic.com/engineering/multi-agent-research-system
 - Inter-agent misalignment is a documented failure cluster: MAST taxonomy, 14 modes, 1,600+ annotated traces, 7 frameworks (abstract only; identifier loss not itemised): https://arxiv.org/abs/2503.13657
-- LLM code comprehension depends on identifier names: renaming degrades understanding, and misleading names are worse than uninformative ones (search snippets and third-party summary only, numbers unchecked): https://arxiv.org/pdf/2510.03178.pdf, https://arxiv.org/pdf/2606.31725
-- Naming-style rewrites change model behaviour (about 9% on average in TokDrift, attributed to tokenization misalignment; snippet only): https://arxiv.org/pdf/2510.14972
+- Names carry meaning for LLMs: removing identifier names hurts intent-level tasks (models regress to line-by-line descriptions) and also lowers execution-task scores (abstract read, arXiv 2510.03178): https://arxiv.org/abs/2510.03178. A separate paper reports that adversarial identifier renaming disrupts comprehension; its plain-renaming condition is not described in the abstract (abstract read, arXiv 2606.31725): https://arxiv.org/abs/2606.31725
+- Tokenization misalignment changes code-LLM behaviour: semantically identical code that tokenizes differently (whitespace, identifier naming) shifts behaviour across nine code LLMs; the abstract gives no figure (abstract read, TokDrift, arXiv 2510.14972): https://arxiv.org/abs/2510.14972. This shows tokenization sensitivity, not that models choose short names to save tokens.
 
 Not supported
-- No source shows LLMs deliberately compress names to save tokens. Documented RLHF length bias points toward longer outputs: https://arxiv.org/html/2511.12573v1
+- No source shows LLMs deliberately compress names to save tokens. Reward models are reported to favour longer responses, i.e. length bias points toward verbosity (abstract read, arXiv 2511.12573): https://arxiv.org/abs/2511.12573
 - No source shows a tokenization cost that makes "A2" cheaper in a way a model optimises; no measured tokens-per-identifier data was found.
 - No study isolating single-letter versus descriptive names in agent hand-offs was found.
 
@@ -127,5 +135,5 @@ Practice recommendations
 5. Avoid near-collision names; make the distinguishing token the first one.
 
 ## Security log
-- Web research: WebSearch/WebFetch only, performed by a read-only subagent. Pages treated as data; no instructions followed. Nothing downloaded, installed or executed. Fetched: the three URLs marked fetched above; the others were search results only.
+- Web research: WebSearch/WebFetch only, performed by a read-only subagent. Pages treated as data; no instructions followed. Nothing downloaded, installed or executed. Fetched: the three URLs marked fetched above plus the four arXiv abstract pages (2510.03178, 2606.31725, 2510.14972, 2511.12573) in a second pass.
 - No public code or prompts were run. No scanners were needed or installed (nothing to scan). Verdict for every item: read-only, nothing run.
