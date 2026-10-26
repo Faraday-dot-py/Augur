@@ -1,0 +1,544 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Tiered Run Log</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600&family=Barlow:wght@400;600&family=Spline+Sans+Mono:wght@400;500;600&display=swap">
+<style>
+/* layout: phosphor raster of a CRT with no boxes. The page is the tube face: a phosphor-tinted fog of layered gradients (the blueprint grid was removed on user request, superseding the earlier keep-the-blueprint note; the corner registration marks stay), scanlines, RGB stripe mask, vignette and glare as front glass. Text floats directly on the raster; a tight etched-glass halo (stacked soft dark text-shadows) sits behind the letters only. Rules are straight with square ends. Big titles are pre-rendered ASCII art over a hidden real heading. All overlays are decorative and inert. */
+:root {
+  color-scheme: dark;
+  --screen: #080c0a;
+  --line: #3fcfd6;
+  --ink: #b3bdc7;
+  --phos: #6dbb7d;
+  --ascii: #bbc7be;
+  --dim: #8ca493;
+  --amber: #c79948;
+  --pass: #50c764;
+  --mixed: #bdbd2d;
+  --kill: #c7736c;
+  --stripe-pass: #00bf00;
+  --stripe-mixed: #bfbf00;
+  --stripe-kill: #bf0000;
+  --etch: 0 0 0.04em currentColor, 0 0 0.1875em rgba(6,10,8,0.95), 0 0 0.5em rgba(6,10,8,0.9);
+  --etch-lite: 0 0 0.04em currentColor, 0 0 0.15em rgba(6,10,8,0.95);
+  --display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --data: "Spline Sans Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-contrast: more) {
+  :root { --dim: #a9c4b0; --etch: 0 0 0.1875em #060a08, 0 0 0.5em #060a08; --etch-lite: 0 0 0.15em #060a08; }
+}
+html { font-size: 250%; }
+* { box-sizing: border-box; overflow-wrap: anywhere; }
+body {
+  background-color: var(--screen);
+  color: var(--ink);
+  text-shadow: var(--etch-lite);
+  font: 400 1rem/1.55 var(--body);
+  padding-block: 1.5rem 4rem;
+  padding-left: max(1rem, env(safe-area-inset-left, 0rem));
+  padding-right: max(1rem, env(safe-area-inset-right, 0rem));
+}
+html::before {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; transform: translateZ(0);
+  background-image:
+    radial-gradient(ellipse 55% 45% at 18% 12%, rgba(40,255,140,0.12), transparent 70%),
+    radial-gradient(ellipse 50% 42% at 82% 28%, rgba(60,90,255,0.12), transparent 72%),
+    radial-gradient(ellipse 60% 48% at 55% 78%, rgba(255,60,60,0.09), transparent 72%),
+    radial-gradient(ellipse 90% 70% at 40% 50%, rgba(70,220,170,0.06), transparent 75%),
+    conic-gradient(from 200deg at 45% 55%, rgba(0,255,200,0.05), rgba(120,60,255,0.05), rgba(255,80,80,0.05), rgba(0,255,200,0.05));
+  background-size: 140% 140%;
+  background-position: 50% 50%;
+}
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: 40; pointer-events: none; transform: translateZ(0);
+  background: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0, rgba(0,0,0,0.10) 1.5px, rgba(0,0,0,0) 3px);
+}
+body::after {
+  content: ""; position: fixed; inset: 0; z-index: 41; pointer-events: none; transform: translateZ(0);
+  background:
+    radial-gradient(ellipse at 50% 45%, transparent 52%, rgba(0,0,0,0.58) 100%),
+    linear-gradient(115deg, rgba(255,255,255,0.06), transparent 28%);
+}
+@media (prefers-contrast: more) {
+  body::before, body::after { display: none; }
+}
+main { max-width: 57.5rem; margin: 0 auto; display: flex; flex-direction: column; gap: 1.375rem; min-width: 0; }
+main > * { min-width: 0; }
+h1 { font: 600 clamp(2.375rem, 3.6vw, 4rem)/0.95 var(--display); letter-spacing: 0.01em; margin: 0; text-wrap: balance; color: var(--phos); -webkit-text-stroke: 0.025em var(--phos); text-shadow: -0.7px 0 0.0625rem rgba(255,50,50,0.4), 0.0437rem 0 0.0625rem rgba(50,170,255,0.4), var(--etch); }
+h2 { font: 600 1.5rem/1.1 var(--display); letter-spacing: 0.04em; margin: 0 0 0.625rem; color: var(--phos); -webkit-text-stroke: 0.025em var(--phos); text-shadow: var(--etch); }
+h2::after, pre.ascii::after { content: ""; display: block; height: 0.125rem; margin-top: 0.5rem; border-radius: 0; background: linear-gradient(90deg, var(--line), rgba(63,207,214,0.15)); box-shadow: 0 0 0.375rem 0.0625rem rgba(63,207,214,0.55); }
+h3 { font: 600 1.1875rem/1.2 var(--display); letter-spacing: 0.03em; margin: 0 0 0.5rem; color: var(--amber); -webkit-text-stroke: 0.0187rem var(--amber); text-shadow: var(--etch); }
+p { margin: 0 0 0.5rem; max-width: 70ch; }
+small, .legacy { font: 400 0.7188rem var(--data); color: var(--dim); white-space: normal; }
+code { font: 400 0.88em var(--data); }
+a { color: inherit; }
+
+pre.ascii { display: none; margin: 0; padding: 0; overflow: hidden; user-select: none; white-space: pre; font: 400 var(--size) / 1 var(--data); letter-spacing: 0; color: var(--ascii); text-shadow: 0 0 0.12em rgba(140,240,160,0.22), 0 0 0.1875em rgba(6,10,8,0.95), 0 0 0.5em rgba(6,10,8,0.9); }
+pre.ascii-h1::after { display: none; }
+pre.ascii-h1 { --size: min(0.9375rem, calc((100vw - 7.5rem) / (var(--cols) * 0.62))); }
+pre.ascii-h2 { --size: min(0.6875rem, calc((100vw - 7.5rem) / (var(--cols) * 0.62))); }
+.sheet pre.ascii { margin-bottom: 0.75rem; }
+@media (min-width: 1750px) {
+  pre.ascii { display: block; }
+  h1.ah, h2.ah { position: absolute; width: 0.0625rem; height: 0.0625rem; margin: -0.0625rem; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  h2.ah::after { display: none; }
+}
+
+.bars { position: relative; display: flex; height: 0.875rem; overflow: hidden; pointer-events: none; }
+.bars::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(255,255,255,0.38), rgba(255,255,255,0) 55%, rgba(0,0,0,0.25)); }
+.bars i { flex: 1; display: block; }
+.bars i:nth-child(1) { background: #bfbfbf; }
+.bars i:nth-child(2) { background: #bfbf00; }
+.bars i:nth-child(3) { background: #00bfbf; }
+.bars i:nth-child(4) { background: #00bf00; }
+.bars i:nth-child(5) { background: #bf00bf; }
+.bars i:nth-child(6) { background: #bf0000; }
+.bars i:nth-child(7) { background: #0000bf; }
+
+.sheet { padding: 0.375rem 0; }
+.titleblock { position: relative; display: grid; grid-template-columns: 2fr 1fr 1fr; padding: 0.625rem 0; }
+.titleblock::before, .titleblock::after { content: "+"; position: absolute; font: 400 1rem/1 var(--data); color: var(--line); pointer-events: none; text-shadow: 0 0 0.375rem rgba(42,169,176,0.8); }
+.titleblock::before { top: -0.25rem; left: -0.25rem; }
+.titleblock::after { bottom: -0.25rem; right: -0.25rem; }
+.titleblock > div { padding: 0.625rem 1rem 0.625rem 0; min-width: 0; overflow-wrap: anywhere; }
+.titleblock .wide { grid-column: 1 / -1; }
+.titleblock .k { text-shadow: var(--etch); display: block; font: 500 0.6562rem var(--data); letter-spacing: 0.08em; text-transform: lowercase; color: var(--dim); }
+.titleblock .big { grid-column: 1 / -1; padding: 0.625rem 0 0.875rem; }
+.titleblock .v2 { font: 500 0.875rem var(--data); color: var(--amber); }
+.lede { max-width: 62ch; margin-top: 0.625rem; font-size: 1.0625rem; }
+
+.roster, .tablewrap { overflow-x: auto; }
+table { display: block; overflow-x: auto; max-width: 100%; border-collapse: collapse; width: 100%; font-size: 0.9062rem; }
+th, td { min-width: 6rem; text-align: left; vertical-align: top; padding: 0.5rem 0.875rem 0.5rem 0; border: 0; }
+th { text-shadow: var(--etch); font: 500 0.6875rem var(--data); letter-spacing: 0.06em; color: var(--dim); text-transform: lowercase; }
+.roster table, .tablewrap table { min-width: 37.5rem; }
+td:first-child { font-weight: 600; color: var(--phos); }
+td.n { font-family: var(--data); font-size: 0.8125rem; font-variant-numeric: tabular-nums; }
+
+.verdicts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16.875rem), 1fr)); gap: 1.375rem 1.75rem; }
+.verdicts > div { padding: 0; }
+.verdicts h3::after { content: ""; display: block; height: 0.1875rem; margin-top: 0.375rem; border-radius: 0; background: var(--stripe); box-shadow: 0 0 0.5rem 0.0625rem var(--stripe); }
+.verdicts .s { --stripe: var(--stripe-pass); }
+.verdicts .x { --stripe: var(--stripe-kill); }
+.verdicts .o { --stripe: var(--stripe-mixed); }
+.verdicts h3 { margin-bottom: 0.625rem; }
+.verdicts ul { margin: 0; padding-left: 1.125rem; display: flex; flex-direction: column; gap: 0.4375rem; font-size: 0.9062rem; }
+.verdicts li::marker { color: var(--dim); }
+
+.v { font: 600 0.7188rem var(--data); letter-spacing: 0.04em; white-space: nowrap; }
+.v.k { color: var(--kill); }
+.v.p { color: var(--pass); }
+.v.m { color: var(--mixed); }
+
+.filter { position: relative; }
+.filter > input { position: absolute; opacity: 0; width: 0.0625rem; height: 0.0625rem; pointer-events: none; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.375rem 1.125rem; margin: 0 0 0.875rem; }
+.chips label { font: 500 0.7812rem var(--data); color: var(--ink); text-decoration: underline dotted 0.0625rem; text-underline-offset: 0.3125rem; cursor: pointer; }
+.chips label:hover { color: var(--amber); }
+#f-all:checked ~ .chips [for="f-all"],
+#f-lj:checked ~ .chips [for="f-lj"],
+#f-base:checked ~ .chips [for="f-base"],
+#f-tiers:checked ~ .chips [for="f-tiers"],
+#f-harness:checked ~ .chips [for="f-harness"],
+#f-tier0:checked ~ .chips [for="f-tier0"],
+#f-integ:checked ~ .chips [for="f-integ"],
+#f-sup:checked ~ .chips [for="f-sup"] { color: var(--amber); text-decoration: underline solid 0.125rem; }
+#f-all:focus-visible ~ .chips [for="f-all"],
+#f-lj:focus-visible ~ .chips [for="f-lj"],
+#f-base:focus-visible ~ .chips [for="f-base"],
+#f-tiers:focus-visible ~ .chips [for="f-tiers"],
+#f-harness:focus-visible ~ .chips [for="f-harness"],
+#f-tier0:focus-visible ~ .chips [for="f-tier0"],
+#f-integ:focus-visible ~ .chips [for="f-integ"],
+#f-sup:focus-visible ~ .chips [for="f-sup"] { outline: 0.1875rem solid var(--phos); outline-offset: 0.125rem; }
+#f-lj:checked ~ .log .e:not(.g-lj),
+#f-base:checked ~ .log .e:not(.g-base),
+#f-tiers:checked ~ .log .e:not(.g-tiers),
+#f-harness:checked ~ .log .e:not(.g-harness),
+#f-tier0:checked ~ .log .e:not(.g-tier0),
+#f-integ:checked ~ .log .e:not(.g-integ),
+#f-sup:checked ~ .log .e:not(.g-sup) { display: none; }
+#f-lj:checked ~ .log .d:not(:has(.g-lj)),
+#f-base:checked ~ .log .d:not(:has(.g-base)),
+#f-tiers:checked ~ .log .d:not(:has(.g-tiers)),
+#f-harness:checked ~ .log .d:not(:has(.g-harness)),
+#f-tier0:checked ~ .log .d:not(:has(.g-tier0)),
+#f-integ:checked ~ .log .d:not(:has(.g-integ)),
+#f-sup:checked ~ .log .d:not(:has(.g-sup)) { display: none; }
+
+.d h3 { margin: 0.875rem 0 0.25rem; padding: 0 0 0.25rem; color: var(--amber); font-family: var(--data); font-weight: 500; font-size: 0.8125rem; letter-spacing: 0.04em; -webkit-text-stroke: 0; border-bottom: 0.125rem solid rgba(255,196,92,0.6); box-shadow: 0 0.0625rem 0.375rem -1px rgba(255,196,92,0.6); }
+.d:first-child h3 { margin-top: 0; }
+.d { content-visibility: auto; contain-intrinsic-size: auto 100rem; }
+.e { content-visibility: auto; contain-intrinsic-size: auto 7rem; display: grid; grid-template-columns: 3.375rem 1fr; gap: 0.125rem 0.75rem; margin: 0; padding: 0.4375rem 0; max-width: none; font-size: 0.9375rem; }
+.e time { font: 400 0.7812rem var(--data); color: var(--dim); padding-top: 0.1875rem; }
+.e span.t { min-width: 0; overflow-wrap: anywhere; }
+.e b.who { font: 500 0.7188rem var(--data); color: var(--amber); margin-right: 0.5rem; }
+.e .legacy { white-space: normal; }
+.foot { font: 400 0.75rem var(--data); color: var(--dim); }
+@media (max-width: 1400px) {
+  .titleblock { grid-template-columns: 1fr 1fr; }
+  .e { grid-template-columns: 1fr; }
+}
+.e time a { color: inherit; text-decoration: underline dotted; text-underline-offset: 3px; }
+.e time a:hover, .e time a:focus-visible, .xl:hover, .xl:focus-visible { text-decoration: underline; }
+.xl { margin-left: 0.6em; font-size: 0.82em; white-space: nowrap; color: var(--phos, inherit); }
+</style>
+<main>
+<div class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div class="titleblock">
+<div class="big"><span class="k">drawing</span><pre class="ascii ascii-h1" aria-hidden="true" style="--cols:79">##### ##### ##### ####  ##### ####      ####  #   # #   #     #      ###   ####
+  #     #   #     #   # #     #   #     #   # #   # ##  #     #     #   # #    
+  #     #   ####  ####  ####  #   #     ####  #   # # # #     #     #   # # ###
+  #     #   #     #  #  #     #   #     #  #  #   # #  ##     #     #   # #   #
+  #   ##### ##### #   # ##### ####      #   #  ###  #   #     #####  ###   ### </pre><h1 class="ah">Tiered Run Log</h1><p class="lede">Supervisor sheet for the heterogeneous-tiered architecture run on Augur. Which agents ran, what passed, what was killed, what is still open.</p></div>
+<div><span class="k">run started</span><span class="v2">2026-10-24 14:10 PDT</span></div>
+<div><span class="k">log current through</span><span class="v2">2026-10-26 14:40 PDT</span></div>
+<div><span class="k">source</span><span class="v2">docs/theory/supervisor-log.md</span></div>
+<div class="wide"><span class="k">naming rule, 2026-10-26</span>Experiments, arms and agents carry descriptive names that say what changes. The old letter labels appear once after each name in small type, for traceability. Names follow the glossary in docs/theory/experiment-naming.md (merged to master at ed036be). Where the glossary has no entry (dt-0.0125 retrain, cached-pair-substeps retrain, far-field-target-10x-data, contact-head-arms) the name is mine.</div>
+</div>
+<div class="sheet">
+<pre class="ascii ascii-h2" aria-hidden="true" style="--cols:29">##### ##### ####  #   #  ####
+  #   #     #   # ## ## #    
+  #   ####  ####  # # #  ### 
+  #   #     #  #  #   #     #
+  #   ##### #   # #   # #### </pre><h2 class="ah">Terms</h2>
+<ul>
+<li><strong>err@20</strong>: position error per body at tick 20, simulation units. <strong>dE</strong>: energy drift, |dE/N| per particle.</li>
+<li><strong>beta</strong>: force-bias statistic for a tier-0 model by density band (sparse, mid, dense). Exact definition is in the experiment log, not restated here.</li>
+<li><strong>tier 0</strong>: the fine-scale model. <strong>upper tiers</strong>: coarser moment and potential levels above it. <strong>hole N</strong>: numbered design risk in docs/theory/heterogeneous-tiered.md.</li>
+<li><strong>scatter-gravity-clustered-baseline</strong> <span class="legacy">(legacy: Exp E)</span>: the plain tier 0 checkpoint every comparison uses.</li>
+</ul>
+</div>
+<pre class="ascii ascii-h2" aria-hidden="true" style="--cols:35"> ###   #### ##### #   # #####  ####
+#   # #     #     ##  #   #   #    
+##### # ### ####  # # #   #    ### 
+#   # #   # #     #  ##   #       #
+#   #  ###  ##### #   #   #   #### </pre><h2 class="ah">Agents</h2>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>State</th>
+<th>Status at 14:40 10-26</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>tier-k lever continuation</strong></td>
+<td>running</td>
+<td>no-velocity retrain: job 4050 (seed 4738) at iteration 41,300 of 60,000, job 4051 (second seed) running; then four-arm hierarchy rerun</td>
+</tr>
+<tr>
+<td><strong>planetesimal-disk solar-system test</strong></td>
+<td>finished</td>
+<td>out of range for our models (unit-mass only); proxy KILL; reference numbers logged (0f19cf5)</td>
+</tr>
+<tr>
+<td><strong>loss analysis and error-distribution diagnostic</strong></td>
+<td>finished</td>
+<td>tail terms dropped for tiered arms; local work-bias loss term recommended (75d8622); not yet run</td>
+</tr>
+<tr>
+<td><strong>local work-bias loss term test</strong></td>
+<td>running</td>
+<td>code and 7 CPU tests done; job 4052 (seed 4738, three concurrent arms) submitted, pending behind the retrain</td>
+</tr>
+<tr>
+<td><strong>planetesimal-disk video and per-body-mass support</strong></td>
+<td>finished</td>
+<td>video rendered and reviewed; mass-conditioning design, curriculum trainer and 10 CPU tests committed (0f1c7d8, 79a6c70); not trained, queued for a free GPU</td>
+</tr>
+<tr>
+<td><strong>comparison videos</strong></td>
+<td>finished</td>
+<td>six videos in videos/, reviewed by fresh reviewers, logged (0220a18)</td>
+</tr>
+<tr>
+<td><strong>all earlier agents (hole-1, tier-0 extensions, upper-tier module, naming, page restyle, sandbox wrapper)</strong></td>
+<td>finished or stopped</td>
+<td>results are in the Log</td>
+</tr>
+</tbody>
+</table>
+<p>Pending on retrain result: frozen-base residual corrector test (user approved); cold-collapse scoping.</p>
+<div class="verdicts">
+<div class="s">
+<h3>Settled</h3>
+<ul>
+<li>LJ energy drift comes from the velocity and recurrent inputs. Removing them holds drift at or under 0.013.</li>
+<li>A gradient-of-energy mesh helps LJ modestly and adds nothing for 2D gravity (5.6x slower, no benefit).</li>
+<li>The 9x solid LJ error was mostly integrator time step. Retraining at dt 0.0125 gives solid err@20 0.0029 against an exact-force floor of 0.0028 (1.8x cost). Cached pair substeps keep 0.0035 at 1.24x cost.</li>
+<li>Teacher forcing suffices for tiers (gap 1.056 +/- 0.051).</li>
+<li>Tile-route sparse activation is 4.7x faster at a 1024-unit span with 12.5% occupancy.</li>
+<li>Tier 0 from scratch is the first to tile better than it runs untiled (0.54x). Matched-budget retrain (60,000 iterations) passes every pre-registered line: err@20 1.13x / 1.12x baseline, mid beta -0.118 / -0.052, tiled over untiled 0.95. The earlier mid-density bias was mostly undertraining.</li>
+<li>Contact head gives no benefit; the existing contact option stays.</li>
+<li>Hole 1 is closed.</li>
+</ul>
+</div>
+<div class="x">
+<h3>Killed</h3>
+<ul>
+<li>Every tier 1 and above arm on the far-field target. Best far_rel 0.547 against a 0.5 pass line.</li>
+<li>Joint fine-tune of all tiers fails only on energy drift (0.048 to 0.064 against 0.010).</li>
+<li>Every contact-head arm (six tried): tunnelling up to 100%, divergence, or no gain over the existing contact option.</li>
+<li>Harvested-window tier 0 fine-tunes: accuracy collapse or a mid-density bias.</li>
+<li>Tiers on the hole-9 comparison lost to the wide grid on accuracy and cost.</li>
+<li>Density-stratified harvest at 18.75k iterations: err@20 1.34x baseline, mid beta worse.</li>
+<li>End-to-end hierarchy (tier 0 with external field from upper tiers), both with the 10k-iteration and the matched-budget tier 0: joint fine-tune 1.8-2.4x the tiled baseline at tick 20, drift 3.5-13x. Gap is the field-aware tier 0 in 64-unit windows, not the upper-tier supply.</li>
+<li>Planetesimal-disk proxy for our unit-mass models: err@100 1.73, energy drift 1.23 vs 0.003 reference, disk survivors 0.00 vs 0.39.</li>
+</ul>
+</div>
+<div class="o">
+<h3>Open</h3>
+<ul>
+<li>Mid-density bias in the earlier window-trained tier 0 checkpoints was real, not a test artefact (imposed-field re-score). Undertraining is now the supported cause (matched-budget run, one seed).</li>
+<li>Matched-budget tier 0 caveats: sparse beta sits on its 0.15 limit, dense 16-32 beta +0.48 near the 0.5 kill line, plain dE@100 0.03 vs 0.014.</li>
+<li>Retrain without velocity and recurrent inputs (jobs 4050, 4051) running; pass if exact-field err@20 at most 1.2x baseline and drift at most 2x on every seed.</li>
+<li>Local work-bias loss term (job 4052) and per-body-mass training: queued behind the retrain.</li>
+<li>Joint fine-tune drift: the co-adaptation explanation is unconfirmed (one seed per arm). Frozen sequential training stays the default; test a regularised joint variant if the no-velocity tier 0 still drifts.</li>
+<li>Not started: refinement tier, error head and calibration, object collisions on a trained model.</li>
+</ul>
+</div>
+</div>
+<pre class="ascii ascii-h2" aria-hidden="true" style="--cols:93">#   # #####  ###  ####  #     ##### #   # #####     #   # #   # #   # ####  ##### ####   ####
+#   # #     #   # #   # #       #   ##  # #         ##  # #   # ## ## #   # #     #   # #    
+##### ####  ##### #   # #       #   # # # ####      # # # #   # # # # ####  ####  ####   ### 
+#   # #     #   # #   # #       #   #  ## #         #  ## #   # #   # #   # #     #  #      #
+#   # ##### #   # ####  ##### ##### #   # #####     #   #  ###  #   # ####  ##### #   # #### </pre><h2 class="ah">Headline numbers</h2>
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+<th>Arm</th>
+<th>What changes</th>
+<th>Key result</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>lj-mesh-energy-gradient-no-residual</strong> <span class="legacy">(legacy: P, PR)</span></td>
+<td>LJ mesh force is the gradient of a density energy</td>
+<td>dE/N &lt;= 0.0093; fine-tune baseline was -0.26 / -0.29</td>
+<td><span class="v p">PASS</span></td>
+</tr>
+<tr>
+<td><strong>lj-mesh-energy-gradient-no-residual-retrain-dt-0.0125</strong> <span class="legacy">(legacy: P2)</span></td>
+<td>Same, retrained at dt 0.0125</td>
+<td>solid err@20 0.0029 / 0.0043 (two seeds) vs 0.0171</td>
+<td><span class="v p">PASS</span></td>
+</tr>
+<tr>
+<td><strong>lj-mesh-energy-gradient-no-residual-retrain-cached-pair-substeps</strong> <span class="legacy">(legacy: P2C)</span></td>
+<td>Pair term sub-stepped from cache</td>
+<td>solid err@20 0.0035, 1.24x cost, drift &lt;= 0.0034</td>
+<td><span class="v p">PASS</span></td>
+</tr>
+<tr>
+<td><strong>lj-mesh-non-gradient-inputs-zeroed</strong> <span class="legacy">(legacy: V)</span></td>
+<td>Non-gradient mesh, velocity and recurrent inputs zeroed</td>
+<td>drift &lt;= 0.013</td>
+<td><span class="v p">PASS</span></td>
+</tr>
+<tr>
+<td><strong>lj-exact-pair-plus-learned-mesh</strong> <span class="legacy">(legacy: O)</span></td>
+<td>Exact LJ pair plus learned mesh</td>
+<td>solid err@20 0.0133; coexist drift up to 0.0335 vs 0.03 line; quench blows up</td>
+<td><span class="v m">MIXED</span></td>
+</tr>
+<tr>
+<td><strong>tiers-sequential-frozen</strong> <span class="legacy">(legacy: S, S+R, retry)</span></td>
+<td>Tier 1 trained over frozen baseline tier 0</td>
+<td>force_rel +12% to +29%; com_err 6-7% worse (first try)</td>
+<td><span class="v k">KILL</span></td>
+</tr>
+<tr>
+<td><strong>far-field-target-10x-data</strong> <span class="legacy">(legacy: far-field D)</span></td>
+<td>Far-field-only target, 10x scenes and iterations</td>
+<td>far_rel 0.547 vs 0.658</td>
+<td><span class="v m">MIXED</span></td>
+</tr>
+<tr>
+<td><strong>tiers-sequential-then-joint-finetune</strong> <span class="legacy">(legacy: S+J)</span></td>
+<td>All tiers fine-tuned together</td>
+<td>com_err +22% to +43%; dE 0.0625 vs 0.010</td>
+<td><span class="v k">KILL</span></td>
+</tr>
+<tr>
+<td><strong>tiers-joint-finetune-plus-energy-term</strong> <span class="legacy">(legacy: JE)</span></td>
+<td>Joint fine-tune plus energy-similarity loss</td>
+<td>dE 0.048</td>
+<td><span class="v k">KILL</span></td>
+</tr>
+<tr>
+<td><strong>tiers-joint-finetune-long-horizon-energy-penalty</strong> <span class="legacy">(legacy: JL)</span></td>
+<td>Energy penalty out to k = 20</td>
+<td>dE 0.0212; com_err +18% to +42%</td>
+<td><span class="v k">KILL</span></td>
+</tr>
+<tr>
+<td><strong>tiers-energy-functional-moment-inputs</strong> <span class="legacy">(legacy: EN-M)</span></td>
+<td>Tier force is the gradient of a scalar energy of moments</td>
+<td>dE 0.064; force_rel +23-25%</td>
+<td><span class="v k">KILL</span></td>
+</tr>
+<tr>
+<td><strong>tiers-energy-functional-tier0-frozen</strong> <span class="legacy">(legacy: ENMT)</span></td>
+<td>Tier 0 frozen</td>
+<td>dE 0.0116; com_err gain gone</td>
+<td><span class="v k">KILL</span></td>
+</tr>
+<tr>
+<td><strong>tier0-per-particle-head-material-gated</strong> <span class="legacy">(legacy: B1g)</span></td>
+<td>Drag head gated by material channel</td>
+<td>gravity err@20 0.028; drag win kept (0.046 / 0.041 vs 0.165 / 0.173)</td>
+<td><span class="v p">PASS</span></td>
+</tr>
+<tr>
+<td><strong>tier0-from-scratch-harvest-plus-replay</strong> <span class="legacy">(legacy: S1)</span></td>
+<td>Tier 0 from scratch, harvested windows plus 50% replay</td>
+<td>err@20 1.32x baseline (line 1.25x); tiled/untiled 0.54x</td>
+<td><span class="v k">KILL</span></td>
+</tr>
+<tr>
+<td><strong>tier0-from-scratch-density-stratified-harvest</strong> <span class="legacy">(legacy: S2)</span></td>
+<td>Harvest stratified by density, N up to 1500</td>
+<td>err@20 1.34x; mid beta -1.46 / -1.78; Plummer untiled 0.019 vs 0.037 baseline</td>
+<td><span class="v k">KILL</span></td>
+</tr>
+<tr>
+<td><strong>tier0-from-scratch-density-stratified-harvest-matched-iterations</strong></td>
+<td>Same recipe trained 60,000 iterations (5.06 GPU-hours, seed 4738)</td>
+<td>err@20 1.13x / 1.12x baseline; mid beta -0.118 / -0.052; tiled/untiled 0.95; tiled dE@100 0.019</td>
+<td><span class="v p">PASS</span></td>
+</tr>
+<tr>
+<td><strong>hierarchy-external-field-tier0-matched-budget</strong></td>
+<td>Tiered hierarchy with matched-budget tier 0, four arms, seeds 9100/9200/9300</td>
+<td>joint fine-tune 2.0 / 2.1 / 1.8x tiled baseline at tick 20; drift 3.5-5x</td>
+<td><span class="v k">KILL</span></td>
+</tr>
+<tr>
+<td><strong>gravity-tier0-no-velocity-no-recurrent-inputs-in-hierarchy</strong></td>
+<td>Velocity and recurrent inputs removed from gravity tier 0, standard and position-only upper tiers</td>
+<td>force error -35 to -38%; position error at tick 50 -32 to -41%; dE@100 0.0145 / 0.0165 vs 0.035</td>
+<td><span class="v p">PASS</span></td>
+</tr>
+<tr>
+<td><strong>planetesimal-disk-central-force-proxy</strong></td>
+<td>Star plus disk proxy with unit-mass central-force model</td>
+<td>err@100 1.73; dE 1.23 vs 0.003; survivors 0.00 vs 0.39</td>
+<td><span class="v k">KILL</span></td>
+</tr>
+<tr>
+<td><strong>contact-head-arms</strong> <span class="legacy">(legacy: six variants)</span></td>
+<td>Learned head on contact</td>
+<td>tunnel@100 98-99%, or divergence</td>
+<td><span class="v k">KILL</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<pre class="ascii ascii-h2" aria-hidden="true" style="--cols:45">##### #   # #     #         #      ###   ####
+#     #   # #     #         #     #   # #    
+####  #   # #     #         #     #   # # ###
+#     #   # #     #         #     #   # #   #
+#      ###  ##### #####     #####  ###   ### </pre><h2 class="ah">Full log</h2>
+<div class="filter">
+<input type="radio" name="f" id="f-all" checked>
+<input type="radio" name="f" id="f-lj">
+<input type="radio" name="f" id="f-base">
+<input type="radio" name="f" id="f-tiers">
+<input type="radio" name="f" id="f-harness">
+<input type="radio" name="f" id="f-tier0">
+<input type="radio" name="f" id="f-integ">
+<input type="radio" name="f" id="f-sup">
+<div class="chips"><label for="f-all">all</label><label for="f-lj">lj-potential-gradient</label><label for="f-base">baseline</label><label for="f-tiers">upper-tier</label><label for="f-harness">eval-harness</label><label for="f-tier0">tier0-extensions</label><label for="f-integ">integration</label><label for="f-sup">supervisor and ops</label></div>
+<div class="log">
+<div class="d"><h3>2026-10-24 (oldest first)</h3>
+<p class="e g-sup"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L440" rel="noreferrer noopener" target="_blank">14:10</a></time><span class="t"><b class="who">ops</b>Polaris (cluster) connected. Two GPUs, student-pleiades QOS.</span></p>
+<p class="e g-sup"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L537" rel="noreferrer noopener" target="_blank">14:15</a></time><span class="t"><b class="who">supervisor</b>Dispatched lj-potential-gradient-agent (hole 1 on LJ solid/liquid) and cutout-bias-and-seam-check-agent (holes 3, 4, 5). Pre-registered criteria required.</span></p>
+<p class="e g-sup"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L616" rel="noreferrer noopener" target="_blank">14:20</a></time><span class="t"><b class="who">supervisor</b>User scope: whole doc, new architecture, significant new code OK. Dispatched upper-tier-module-agent, tiered-data-and-eval-harness-agent, tier0-extensions-agent.</span></p>
+<p class="e g-base"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L537" rel="noreferrer noopener" target="_blank">14:30</a></time><span class="t"><b class="who">baseline</b>Done (b1898a5). Hole 5 <span class="v p">PASS</span> to tick 20 (ratio 1.00-1.04; 1.12 at 40). Hole 7 seam <span class="v p">PASS</span>. Hole 4 <span class="v m">INCONCLUSIVE</span>: low power; dense out-of-distribution scenes show bias beta +1.3 to +1.8. <a class="xl" href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/91814d08f45f249f9ffb9987.md?plain=1#L2705" rel="noreferrer noopener" target="_blank">agent transcript</a></span></p>
+<p class="e g-tiers"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L616" rel="noreferrer noopener" target="_blank">14:35</a></time><span class="t"><b class="who">upper-tier</b>Done (ccf18d6). model/tiered/ built; 21 unit tests pass. Not done: training, learned downsampler, GPU speed, 3D. <a class="xl" href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/1b03f72c3f147cb2b913e813.md?plain=1#L1247" rel="noreferrer noopener" target="_blank">agent transcript</a></span></p>
+<p class="e g-tier0"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L707" rel="noreferrer noopener" target="_blank">14:45</a></time><span class="t"><b class="who">tier0-extensions</b>Done (bb83b57). scripts/scatter_tier0.py with flags off is bitwise identical to the baseline checkpoint. <a class="xl" href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/8e5d3333c8e9360aa9c395ef.md?plain=1#L1969" rel="noreferrer noopener" target="_blank">agent transcript</a></span></p>
+<p class="e g-tiers"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L1174" rel="noreferrer noopener" target="_blank">15:10</a></time><span class="t"><b class="who">upper-tier</b>Far-field-only diagnostic <span class="v m">MIXED</span>: reach is not the limiter. Told to scale scenes and iterations 10x.</span></p>
+<p class="e g-sup"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L1174" rel="noreferrer noopener" target="_blank">15:10</a></time><span class="t"><b class="who">ops</b>Rate limit killed four agents mid-task; resumed.</span></p>
+<p class="e g-tiers"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L1346" rel="noreferrer noopener" target="_blank">15:25</a></time><span class="t"><b class="who">upper-tier</b>tiers-sequential-frozen and its residual variant both <span class="v k">KILL</span>: force_rel -12 to -14% but com_err 6-7% worse, err@50 5-7% worse, dE 1.2-3.5x.</span></p>
+<p class="e g-sup"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L1240" rel="noreferrer noopener" target="_blank">15:20-15:30</a></time><span class="t"><b class="who">ops</b>Upper-tier agent ended its turn twice with jobs pending behind QOS limits; told to block-poll.</span></p>
+<p class="e g-lj"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L1558" rel="noreferrer noopener" target="_blank">15:40</a></time><span class="t"><b class="who">lj-potential-gradient</b>lj-mesh-energy-gradient-no-residual <span class="v p">PASS</span> on drift: dE/N <= 0.0084 on four scenes and three seeds. Caveat: position-only mesh does not separate gradient structure from removing velocity inputs.</span></p>
+<p class="e g-harness"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L1425" rel="noreferrer noopener" target="_blank">15:40</a></time><span class="t"><b class="who">eval-harness</b>Generators, 12-group harness, TierModel interface, 14 tests pass (bdde9b3, 437b4ea). <a class="xl" href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/89daa667e76f55609c7bddd1.md?plain=1#L488" rel="noreferrer noopener" target="_blank">agent transcript</a></span></p>
+<p class="e g-sup"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L1558" rel="noreferrer noopener" target="_blank">15:40</a></time><span class="t"><b class="who">ops</b><span class="v k">BLOCKER</span> Polaris session dropped; needs user Duo push. Agents avoided the 3-fail lockout.</span></p>
+<p class="e g-tier0"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L1527" rel="noreferrer noopener" target="_blank">15:45</a></time><span class="t"><b class="who">tier0-extensions</b>Stopped on Polaris outage; external-field job 3945 about 9 min from done.</span></p>
+<p class="e g-harness"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L1635" rel="noreferrer noopener" target="_blank">15:55</a></time><span class="t"><b class="who">eval-harness</b>Baseline done (fb34e1a). Baseline tier 0 err@20: Plummer 0.030, multiclump 0.22, disc 0.39, binary 0.81, black hole 1.95. Seam jump 4.56 vs truth 0.004; 9% wall escapes. Polaris reconnected 15:50. <a class="xl" href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/89daa667e76f55609c7bddd1.md?plain=1#L934" rel="noreferrer noopener" target="_blank">agent transcript</a></span></p>
+<p class="e g-tiers"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L1881" rel="noreferrer noopener" target="_blank">16:40</a></time><span class="t"><b class="who">upper-tier</b>Far-field levers (4853f0c): baseline far_rel 0.658; 10x data and iterations 0.547 <span class="v m">MIXED</span>; third-order moments 0.663 <span class="v m">STALL</span>. <a class="xl" href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/156deb62c7208f4eeef15fb0.md?plain=1#L21" rel="noreferrer noopener" target="_blank">agent transcript</a></span></p>
+<p class="e g-harness"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L1965" rel="noreferrer noopener" target="_blank">16:45</a></time><span class="t"><b class="who">eval-harness</b>Hole-9 driver (46480ac): dense U-Net vs tiled-plus-far-field equal on far field (0.438 vs 0.443); wide grid 3.3x cheaper at N=2000. Objects scenes built; pile err 1.7@100. <a class="xl" href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/ad1ef9e6357f2a137a68980d.md?plain=1#L21" rel="noreferrer noopener" target="_blank">agent transcript</a></span></p>
+<p class="e g-integ"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L2489" rel="noreferrer noopener" target="_blank">16:45</a></time><span class="t"><b class="who">integration</b>Dispatched to build hetero-tiered-integration and reconcile the doc. <a class="xl" href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/571f0f6a68739e6ef0ae7b64.md?plain=1#L690" rel="noreferrer noopener" target="_blank">agent transcript</a></span></p>
+<p class="e g-lj"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L2082" rel="noreferrer noopener" target="_blank">16:50</a></time><span class="t"><b class="who">lj-potential-gradient</b>(56f5111) Energy-gradient mesh <span class="v p">PASS</span>, dE/N <= 0.0093, temperature within 3%. Solid err@20 9x the LJ v2 baseline. Polynomial-cell potential exact and conservative, accuracy inconclusive. <a class="xl" href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/3eeb8495f5b12ac302474187.md?plain=1#L21" rel="noreferrer noopener" target="_blank">agent transcript</a></span></p>
+<p class="e g-sup"><time>16:55</time><span class="t"><b class="who">supervisor</b>User stopped all five agents; user also stopped an rm -rf from one of them (suspected integration agent) before it ran. Project intact. Replacements launched on request with explicit no-deletion rule; old agents refused resume.</span></p>
+<p class="e g-integ"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L2489" rel="noreferrer noopener" target="_blank">17:00</a></time><span class="t"><b class="who">integration</b>Done (d75c0da). Merges baseline, tier-0, LJ, upper-tier and harness branches; tests pass (job 3969). Procedure in docs/theory/integration-procedure.md. No deletions. <a class="xl" href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/571f0f6a68739e6ef0ae7b64.md?plain=1#L690" rel="noreferrer noopener" target="_blank">agent transcript</a></span></p>
+<p class="e g-lj"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L2592" rel="noreferrer noopener" target="_blank">18:05</a></time><span class="t"><b class="who">lj-potential-gradient</b>(9f08b27) lj-mesh-non-gradient-inputs-zeroed: drift <= 0.013, so input removal, not gradient structure, removes drift. Learned pair with soft reciprocity: drift <= 0.0071. 95% of pair-curve error sits at r 0.9-1.2. <a class="xl" href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/3eeb8495f5b12ac302474187.md?plain=1#L1006" rel="noreferrer noopener" target="_blank">agent transcript</a></span></p>
+<p class="e g-harness"><time>19:10</time><span class="t"><b class="who">eval-harness</b>Multi-rate stepping m=2 1.02x, m=4 1.04x error, m=4 cost 0.53x <span class="v m">MIXED</span>. Teacher forcing suffices (gap 1.056 +/- 0.051). Sparse forces agree to 2.9e-4 but cost is flat <span class="v m">MIXED</span>. Recurrent carry beats reset (gain 0.36 +/- 0.13). Tiers on hole-9 <span class="v k">KILL</span>: far 0.575 vs 0.438, near 0.186 vs 0.06, cost 2.9x.</span></p>
+<p class="e g-tier0"><time>19:20</time><span class="t"><b class="who">tier0-extensions</b>External-field fine-tune <span class="v k">KILL</span> (channels ignored). Drag head (job 3971): drag err@20 0.28 / 0.24 of baseline <span class="v p">PASS</span>; head zeroed 3.4-3.8x worse; plain err@20 1.08 / 1.104x <span class="v m">INCONCLUSIVE</span>. <a class="xl" href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/0f13edd58277289492e19bd4.md?plain=1#L848" rel="noreferrer noopener" target="_blank">agent transcript</a></span></p>
+<p class="e g-sup"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L2942" rel="noreferrer noopener" target="_blank">20:00-20:20</a></time><span class="t"><b class="who">ops</b>Rate limit, then Polaris disconnected (Duo unapproved, SSH banner errors). Reconnected 20:20; agents resumed with private-filename and one-retry-per-15-min rules. A shared tarball was overwritten by another agent, killing one job.</span></p>
+<p class="e g-lj"><time>20:12</time><span class="t"><b class="who">lj-potential-gradient</b>lj-exact-pair-plus-learned-mesh: solid err@20 0.0133 vs 0.0171, so the error sits in the mesh and state path, not the pair curve. Coexist drift 0.0335 above 0.03 line; quench blows up late.</span></p>
+<p class="e g-tiers"><time>20:15</time><span class="t"><b class="who">upper-tier</b>tiers-sequential-frozen retry <span class="v k">KILL</span>: force_rel +28-29%. tiers-sequential-then-joint-finetune <span class="v k">KILL</span> on dE only: com_err +22-43%, err@50 +12-13%, bias check pass, dE 0.06-0.07 vs 0.01. Best tiered result so far.</span></p>
+</div>
+<div class="d"><h3>2026-10-24 late evening to 2026-10-25</h3>
+<p class="e g-lj"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L3408" rel="noreferrer noopener" target="_blank">22:05</a></time><span class="t"><b class="who">lj-potential-gradient</b>(291f82f) lj-mesh-off-pair-only: drift <= 0.0082, solid err@20 0.0195. lj-scratch-with-velocity-and-recurrent-inputs (seed 4739): large drift, so velocity and history inputs cause drift (seed and data confound). Exact LJ at model dt gives 0.0133 = 77% of 0.0171: the 9x gap is mostly time-step error. Bonded block stable. <a class="xl" href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/3eeb8495f5b12ac302474187.md?plain=1#L2481" rel="noreferrer noopener" target="_blank">agent transcript</a></span></p>
+<p class="e g-tiers"><time>23:35</time><span class="t"><b class="who">upper-tier</b>Three structure levers all <span class="v k">KILL</span> (about +28% force_rel). Energy term <span class="v k">KILL</span>: dE 0.048 vs 0.063. Ablations: mean removal not the cause (0.061); tier 0 frozen 0.033 but com gain vanishes.</span></p>
+<p class="e g-harness"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L3659" rel="noreferrer noopener" target="_blank">23:30</a></time><span class="t"><b class="who">eval-harness</b>(392b7d3) Black frame in external-field arm = velocity blow-up from step 35 via ext-channel path. Sparse tile route 4.7x at 1024 span, 12.5% occupancy. Exposure <span class="v m">NO GAIN</span>, bias |z| 4.7, multi-rate m=4 passes on joint model (1.06x, 0.54x cost). <a class="xl" href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/ad1ef9e6357f2a137a68980d.md?plain=1#L3759" rel="noreferrer noopener" target="_blank">agent transcript</a></span></p>
+<p class="e g-tier0"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L3953" rel="noreferrer noopener" target="_blank">23:45</a></time><span class="t"><b class="who">tier0-extensions</b>External-field channels still ignored (100x smaller scale, redundant). Control with no ext channels already shows mid bias -0.50 / -0.54: bias comes from the fine-tune scene mix. Arm blew up at lr 5e-4; fine at 2e-4. LJ pair-plus-head <span class="v m">INCONCLUSIVE</span>: dE/N 0.0116.</span></p>
+<p class="e g-tiers"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L3953" rel="noreferrer noopener" target="_blank">23:55</a></time><span class="t"><b class="who">upper-tier</b>Four experiments all <span class="v k">KILL</span>. Bias discrepancy with eval-harness unreconciled.</span></p>
+<p class="e g-tier0"><time>00:15 (10-25)</time><span class="t"><b class="who">tier0-extensions</b>Harvested windows <span class="v k">KILL</span>: plain err@20 12.8-24x baseline. Contact head with unbounded output <span class="v k">KILL</span>: tunnel@100 98-99%, KE above 1e7. Id-keyed hidden store implemented.</span></p>
+<p class="e g-sup"><time>02:20</time><span class="t"><b class="who">ops</b>Rate limit; resumed three agents.</span></p>
+<p class="e g-tier0"><time>02:25</time><span class="t"><b class="who">tier0-extensions</b>Regression passes on Polaris (job 4003). Harvest plus 50% baseline replay plus third-order far field <span class="v k">KILL</span>: dE@100 2.4x; mid beta -0.94 / -1.05 (baseline +0.25 / +0.38). Mid bias appears in every fine-tune, so fine-tuning itself is suspected. Bounded contact head <span class="v k">KILL</span> (diverged k~9).</span></p>
+<p class="e g-lj"><time>02:50</time><span class="t"><b class="who">lj-potential-gradient</b>Hole 1 closed (5d7418d). Retrain at dt 0.0125: solid err@20 0.0029 vs 0.0171, 1.8x cost; dt 0.00625 gives 0.0025 at 3.4x (no gain); inference-only halving 0.0114. Pair-only substep 1.9x cost. Open: gradient form for gravity and tiers, single-seed dt study. Master pushed (e449363).</span></p>
+<p class="e g-sup"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L941" rel="noreferrer noopener" target="_blank">14:57</a></time><span class="t"><b class="who">ops</b>Session restarted; three agents resumed. Polaris disconnected (Duo).</span></p>
+<p class="e g-tiers"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L991" rel="noreferrer noopener" target="_blank">15:05</a></time><span class="t"><b class="who">upper-tier</b>Energy-functional tiers <span class="v k">KILL</span>: density-only fit fails (train loss 0.93 vs 0.57); with moments force_rel +23-25%, dE 0.064. A time-dependent polynomial potential is not the drift cause. Bias test: baseline max|z| 5.97, so the failure exists in an unmodified tier 0.</span></p>
+<p class="e g-sup"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L1558" rel="noreferrer noopener" target="_blank">15:45</a></time><span class="t"><b class="who">ops</b>Polaris connected.</span></p>
+<p class="e g-tier0"><time>16:00</time><span class="t"><b class="who">tier0-extensions</b>Baseline robust over 5 seeds (mid +0.24 / +0.39). Low-lr fine-tune still flips mid to -0.45 / -0.42. Body-frozen fine-tune removes the flip but mid 16-32 +0.76. Contact arms with gated head and velocity clamp still explode at the wall. Tiled drag head: seam err 0.1828, dE about 50x control.</span></p>
+<p class="e g-sup"><time>17:05</time><span class="t"><b class="who">ops</b>Rate limit hit upper-tier agent; resumed.</span></p>
+<p class="e g-tiers"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L2592" rel="noreferrer noopener" target="_blank">17:50</a></time><span class="t"><b class="who">upper-tier</b>Long-horizon energy penalty (k 2 to 20, OOM at 22) dE 0.0212 <span class="v k">KILL</span> narrowly. Tier-0-frozen energy-functional dE 0.0116 but com_err -3 to -7% <span class="v k">KILL</span>. L2-SP anchor plus energy term dE 0.0485 <span class="v k">KILL</span>. Drift driven by tier-0 co-adaptation, not proportional to its weight change.</span></p>
+<p class="e g-lj"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L2592" rel="noreferrer noopener" target="_blank">17:58</a></time><span class="t"><b class="who">lj-potential-gradient</b>(949a75c) dt 0.0125 retrain passes full gate on both seeds (T <= 0.7%, solid err@20 0.0029 / 0.0043, drift 0.0025 / 0.0056). Gravity 2D: input removal halves dE/E (0.015 / 0.014 = baseline) at no cost; gradient mesh 0.029 / 0.028, 5.6x slower, no benefit. Cached pair substeps 1.24x cost, err@20 0.0114 (inference only).</span></p>
+<p class="e g-tier0"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L2777" rel="noreferrer noopener" target="_blank">18:15</a></time><span class="t"><b class="who">tier0-extensions</b>Positive-feedback hypothesis refuted. Two further contact variants <span class="v k">KILL</span>. LoRA rank-4 fine-tune mid -1.29 / -1.35: body updates cause the sign flip. Drag head is the source of the extra error (zeroed: 0.027 / 0.040). Tiling cost at span 128: drag head 1.4x, control 1.9x, baseline 4.9x. All tier-0 arms so far were fine-tunes; told to train from scratch.</span></p>
+<p class="e g-sup"><time>19:15</time><span class="t"><b class="who">ops</b>Rate limit; resumed two agents.</span></p>
+<p class="e g-tiers"><time>21:15</time><span class="t"><b class="who">upper-tier</b>Stopped on Polaris disconnect. Jobs 4021 (long-horizon energy penalty, k up to 40) and 4024 (gravity inputs-removed tier 0 in joint fine-tune, two variants) pending; 258 tests pass.</span></p>
+<p class="e g-tier0"><time>21:25</time><span class="t"><b class="who">tier0-extensions</b>tier0-from-scratch-harvest-plus-replay (job 4023, 41 min) <span class="v k">KILL</span>: err@20 1.32 / 1.34x; first tier 0 tiling better than untiled (0.54x). Material-gated drag head <span class="v p">PASS</span>.</span></p>
+<p class="e g-tier0"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L3408" rel="noreferrer noopener" target="_blank">21:35</a></time><span class="t"><b class="who">tier0-extensions</b>Imposed-field re-score (job 4031): negative mid and dense beta is not a test artefact. Grid review clean. Checkpoint at results/tier0_ext/S1.pt <span class="legacy">(legacy: S1)</span>.</span></p>
+<p class="e g-sup"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/2371a1874c9038908ebb087b.md?plain=1#L3491" rel="noreferrer noopener" target="_blank">23:10</a></time><span class="t"><b class="who">ops</b>Rate limit; resumed three agents.</span></p>
+<p class="e g-lj"><time>23:25</time><span class="t"><b class="who">lj-potential-gradient</b>Cached-pair-substep retrain <span class="v p">PASS</span>: solid err@20 0.0035 at 1.24x cost; drift <= 0.0034; quench pressure bias 8.4%, systematic not seed noise. Gravity dt study (job 4022) and contact link pending.</span></p>
+<p class="e g-sup"><time>23:30-23:35</time><span class="t"><b class="who">ops</b>Polaris disconnected, then reconnected after user Duo. Upper-tier experiment with the from-scratch tier 0 plus ext expansion pre-registered, not implemented.</span></p>
+<p class="e g-tier0"><time>23:40</time><span class="t"><b class="who">tier0-extensions</b>Diagnosis of mid bias: harvest windows hold N/64x64 quantiles 17/72/138/209/273 but mid eval has 203-285 and dense 727-1098, 3x beyond. Bias larger for denser surroundings (-1.04 to -1.44). Density-stratified harvest (job 4036) <span class="v k">KILL</span>: err@20 1.34 / 1.33x, mid beta worse, but best Plummer model yet (untiled 0.019 vs 0.037; tiled 0.024 vs 0.185). Suspect undertraining (18,750 vs about 60k iterations). Matched-budget retrain (tier0-from-scratch-density-stratified-harvest-matched-iterations) requested.</span></p>
+</div>
+<div class="d"><h3>2026-10-26</h3>
+<p class="e g-sup"><time><a href="https://github.com/Faraday-dot-py/agent-transcript-archive/blob/main/3ea959af603562d3ab130512.md?plain=1#L2788" rel="noreferrer noopener" target="_blank">01:55</a></time><span class="t"><b class="who">supervisor</b>New user rule: experiment, arm and agent names must be descriptive, never letter or letter-number labels. Dispatched experiment-naming-audit-agent (branch descriptive-experiment-names). Running agents told. Legacy labels remain in older log text until the glossary lands.</span></p>
+<p class="e g-tier0"><time>02:05</time><span class="t"><b class="who">tier0-extensions</b>Density-coverage diagnosis: windows-trained tier 0 mid-density bias is not edge, taper or radial; larger for denser surroundings. Density-stratified harvest failed (plain err@20 1.34x, mid beta -1.46 / -1.78) but gives the best Plummer gravity model. Suspected undertraining (18,750 vs about 60k iterations); matched-budget run sent.</span></p>
+<p class="e g-sup"><time>02:05</time><span class="t"><b class="who">supervisor</b>User requests: (1) summary page redesign through the graphic-design skill, static HTML from a declarative source, no JS or Python; (2) verify the naming rule as agents report; (3) commit-time filter hook that spawns an advisory reviewer (security, quality, verifiability, traceability, trust) that cannot override supervisor purview. Dispatched a summary-redesign agent and a commit-review-hook agent. Concern (non-blocking): reviewer cost against repeated usage-limit hits; hook builder told to throttle, use a cheap model and add a one-switch disable. Note: 'website' read as the published summary artifact, not the viz-web site.</span></p>
+<p class="e g-sup"><time>02:05</time><span class="t"><b class="who">supervisor</b>Resumed naming-audit, summary-redesign (asked to show converter vetting before publish) and commit-review-hook agents from saved work. The three experiment agents still running.</span></p>
+<p class="e g-sup"><time>02:30</time><span class="t"><b class="who">supervisor</b>Naming rule landed on master (ed036be): convention, glossary and a name-check tool in docs/theory/experiment-naming.md; master fast-forwarded from descriptive-experiment-names. To confirm with owning agents: the unmapped tier-energy experiment, the joint-training ablation names, the tier-0 fine-tune names.</span></p>
+<p class="e g-sup"><time>02:30</time><span class="t"><b class="who">supervisor</b>Summary page rebuilt with the signed Ubuntu cmark-gfm converter after the npm marked package failed the no-error-margin vetting. cmark-gfm C source not audited; trust rests on the signed archive.</span></p>
+<p class="e g-sup"><time>02:30</time><span class="t"><b class="who">supervisor</b>Commit-review hook installed (advisory only, always exits 0): stage one deterministic, stage two a haiku reviewer capped at 10 per day, about $0.01-0.02 each. Disable with a single marker file. First real commit under the hook is this one.</span></p>
+<p class="e g-sup"><time>02:30</time><span class="t"><b class="who">supervisor</b>Dispatched the prompting-architecture case report agent (persuasive artifact titled Prompting Architecture Case; may spawn read-only research subagents and ask running agents for facts). Evidence-only rule; project lead referred to by role.</span></p>
+<p class="e g-sup"><time>02:40</time><span class="t"><b class="who">supervisor</b>Summary page restyle requested: dark CRT and analog color theme, blueprint kept, decorative-only garnishes, color-research note before palette, contrast computed. Sent to the summary page agent.</span></p>
+<p class="e g-sup"><time>02:55</time><span class="t"><b class="who">supervisor</b>User requested every log line link to a redacted Claude Code conversation file in a new private GitHub repo, links obfuscated per a security research subagent. Dispatched the conversation-linked-log agent (security research, mapping design, redaction and scanner pipeline, private repo, page republish). Concern (non-blocking): transcripts may hold secrets; pipeline requires zero scanner findings and excludes any file it cannot redact with certainty. Authorization: the user's explicit request; no other pushes.</span></p>
+<p class="e g-lj"><time>02:30</time><span class="t"><b class="who">lj-potential-gradient</b>Hole-1 round 5 closed (branch hole1-potential-field, unpushed): gravity trained at half the timestep cut position error at 20 ticks about 40% and relative energy drift about 3.5x (0.0149 to 0.0043) at 1.9x training cost, <span class="v p">PASS</span> on the pre-registered bar; quarter timestep drifts less but costs 3.8x; substepping only the pair term fails for gravity. LJ retrain with cached pair substeps passes (solid error 0.0035 at 1.24x cost) but loses the coexist scene to whole-step halving (0.0617 vs 0.0498). Contact recurrent-field ablation shows no effect and the original runaway did not reproduce on a same-recipe rerun, so it needs a second seed; no usable contact arm. Naming slip: the report still used legacy labels.</span></p>
+<p class="e g-tiers"><time>04:20</time><span class="t"><b class="who">upper-tier</b>Tier-k round: removing velocity and recurrent inputs from the gravity tier 0 (job 4024) <span class="v p">PASS</span> on its pre-registered rule with standard and with position-only upper tiers: force error down 35-38%, clump-mean error down 57-83%, position error at tick 50 down 32-41% versus the same tier 0 alone. Energy drift at tick 100 is 0.0145 and 0.0165 against a same-tier baseline near 0.035, but this tier 0 drifts 3.3x more than the earlier density-stratified one alone (0.0145 is about 1.4x its 0.0106 baseline). One training seed per arm; dropping velocity from upper tiers gives no drift benefit. Upper-tier external-field hierarchy implemented and smoke-passed (job 4044); full run 4045 submitted, unscored because Polaris was locked out after three failed reconnects. Naming slip: the report still cited legacy labels.</span></p>
+<p class="e g-tiers"><time>10:25</time><span class="t"><b class="who">upper-tier</b>End-to-end hierarchy (scratch-trained tier 0 given an external field from upper tiers, 4x4 windows of 64 units, seeds 9100/9200/9300) <span class="v k">KILL</span> on its pre-registered rule: joint fine-tune is about 2.4x the density-stratified tiled baseline at tick 20 (0.159 / 0.170 / 0.180 vs 0.066 / 0.067 / 0.076), 2x at tick 50, 7-13x energy drift at tick 100, clump-mean error 0.96-1.14 vs 0.23-0.42. Upper tiers add only 4-10% error over an exact external field, so the bottleneck is the external-field-aware tier 0 itself. Next lever is that tier 0, not upper-tier supply.</span></p>
+<p class="e g-tier0"><time>10:27</time><span class="t"><b class="who">tier0-extensions</b>Matched-budget tier 0 (job 4041, density-stratified recipe, 60,000 iterations, 5.06 GPU-hours, seed 4738 only) <span class="v p">PASS</span> on every pre-registered criterion: plain err@20 1.13x / 1.12x the 60k-iteration baseline (limit 1.25x; the 10k-iteration run was 1.34x), mid-density beta -0.118 / -0.052 (limit 0.15; was -1.46 / -1.78), tiled over untiled err@20 0.95 (limit 1.5x), tiled energy drift at tick 100 0.019. The earlier mid-density bias was mostly undertraining, not coverage or architecture, so the larger-grid and edge-distance variants were not run. Caveats: sparse beta on the 0.15 limit, dense 16-32 beta +0.48 near the 0.5 kill line (not a pass criterion), plain err@100 2.92 vs 2.82, plain dE@100 0.03 vs 0.014, one seed. Supersedes both earlier from-scratch tier-0 checkpoints.</span></p>
+<p class="e g-tiers"><time>11:30</time><span class="t"><b class="who">upper-tier</b>End-to-end hierarchy rerun with the matched-budget tier 0 (job 4046, same seeds, arms and rule) <span class="v k">KILL</span> again but closer: with the exact external field the tier 0 is 1.5-1.7x the tiled baseline error at tick 20 (10k-iteration tier 0: 2.4x) and 4-5x its energy drift (was 11x); sequential-fit upper tiers 1.2-1.3x the exact-field arm; joint fine-tune 2.0 / 2.1 / 1.8x baseline at tick 20, 1.5-1.7x at tick 50, drift 3.5-5x, clump-mean error 0.75 / 0.86 / 0.88 vs 0.23 / 0.29 / 0.42; joint fine-tune gives nothing over sequential. The gap is the external-field-aware tier 0 in 64-unit tiled windows. No frame review (no renderer for the tiled hierarchy).</span></p>
+<p class="e g-tiers"><time>11:40</time><span class="t"><b class="who">upper-tier</b>Diagnosis of the tiled hierarchy gap (teacher-forced, 1.66M particle-ticks): dense-region energy-work error is 2.1x baseline (3.3x in ticks 10-30; dense bins hold 76% of it, force error only +9%) and is the drift; recurrent state adds 13-16% force error by ticks 30-100 (windows keep independent recurrent state, no halo exchange); low-density particles have 3x force error but only 3.6% of squared error. Ruled out: seam distance, owned-core size, external field and upper tiers, the plus/minus 18 sampling grid, the dropped 4-unit ring. Fix approved: retrain the matched-budget tier 0 without velocity and recurrent inputs; pass if exact-field error at tick 20 is at most 1.2x baseline and energy drift at most 2x baseline on every seed.</span></p>
+<p class="e g-tiers"><time>12:30</time><span class="t"><b class="who">upper-tier</b>Retrain without velocity and recurrent inputs launched on the matched-budget tier 0 (job 4050, seed 4738, running about 1.3 h at this entry; second seed on the other GPU), then the four-arm hierarchy rerun on seeds 9100/9200/9300. User asked whether frozen sequential training is right: current answer is keep it as the default (joint fine-tuning drifted about 6x on the earlier tier 0 and gave nothing over sequential on both hierarchy runs), but the co-adaptation explanation is unconfirmed and evidence is one seed per arm; if the no-velocity tier 0 still drifts, test a regularised joint variant (energy-similarity term or alternating freeze). User approved a frozen-base residual corrector test (is the tiered drift correctable by a small head on a frozen base), held until the retrain reports.</span></p>
+<p class="e g-harness"><time>13:40</time><span class="t"><b class="who">eval-harness</b>Comparison videos rendered and reviewed (six, in videos/, experiment-log entry 0220a18). Fresh reviewers: gravity clustered scene, models collapse at ticks 20-40, tiled worst (err@100 about 14 vs about 7); multiclump 128, untiled fails first then tiled overtakes around tick 50, no seam pattern; gravity generations near-identical (err@100 7.3-7.8); wall contact, the existing set-up and the kernel-convolution variant blow up at ticks 30-35, the sdf-gather variant stays bounded but freezes into a clump; liquid-argon solid and coexist, no artifacts, smooth error growth. Planetesimal-disk solar-system test started on the sandbox GPU.</span></p>
+<p class="e g-sup"><time>13:52</time><span class="t"><b class="who">supervisor</b>Planetesimal-disk solar-system test (star plus disk around a central mass vs direct N-body) finished, <span class="v k">KILL</span> on the in-range proxy and out of range for the real design: our models take no per-body mass (unit-mass only, gravitational constant 1, softening 0.5, timestep 0.1, 100-1000 bodies), so the 1000:1 star-to-particle ratio and the 100:1 radius range are untestable and no model claim is made. Direct N-body reference for the real design (star, 1000 disk particles, one Jupiter-mass body at 5 AU, 100 years) is valid: relative energy drift 2.4e-5 (limit 1e-3), median semi-major axis change 6.4%, median eccentricity 0.0096 to 0.059, Jupiter 4.995 to 4.924 AU, 54% of bodies near 5 AU remain, sticky merging leaves 618 of 1000. Proxy (300 unit-mass core plus 700 disk bodies, central-force model): err@20 0.016 passes (limit 0.1), err@100 1.73 (kill above 1.0), relative energy drift 1.23 vs 0.003 reference (kill above 0.3), disk survivors 0.00 vs 0.39 (kill if difference above 0.2); a heavier-core proxy also <span class="v k">KILL</span> (err@100 4.68). Caveats: proxy reference disks are violent not cold, no scatter-field or tier-0 checkpoint run, no frame review. Needs per-body-mass support in the model before any real test.</span></p>
+<p class="e g-sup"><time>14:10</time><span class="t"><b class="who">supervisor</b>Loss analysis finished (75d8622, docs/debugging/loss-analysis-2026-10-26.md, CPU rollouts only), started 13:47 at user request after the question whether the loss hides how the model is wrong. Worst 1% of particles hold under 20% of squared position error at tick 50 in all six cells and at tick 20 for the tiered arms (0.11-0.21), so the tail-term idea is dropped for the tiered arms; it only fails for the old baseline at tick 20 (0.25 and 0.39, a few close-encounter particles). Tiered error is mostly coherent (whole neighbourhoods displaced together, share 0.36-0.54); the baseline's is incoherent scatter. The densest 10% of particles hold only 12-26% of squared position error but carry the largest negative kinetic-energy error in every arm (N=1000 tick 50: matched tier 0 -46.9, tiled -37.5, baseline -8.9). Recommendation, not run: ranked 1, a local signed work-bias term (squared per-density-bin mean of kinetic-energy error; differs from the failed scene-total energy-similarity term), pass if dense-bin energy-work error at most 1.5x baseline (now 2.1x), tiled drift at tick 100 at most 0.012 (now 0.019), position error at tick 20 at most 1.10x control; ranked 2, a clump-centre (16-nearest-neighbour mean) error term; dropped: tail or top-k, heteroscedastic weighting, more noise injection, Huber. Cost about 0.3 GPU-hours per short fine-tune arm, 5.1 for a full retrain. Literature review (25 arXiv abstracts read, not full text) has no verified sources for several loss families; treat as pointers only.</span></p>
+<p class="e g-sup"><time>14:30</time><span class="t"><b class="who">supervisor</b>User asked to pursue the local work-bias loss direction, add per-body-mass support, and produce a video of the planetesimal-disk run. Dispatched: local work-bias loss term test (separate arms for the work-bias and clump-centre terms, queued behind the retrain for a Polaris GPU), and an agent for the disk video plus per-body-mass design, mass-ratio curriculum dataset and training code (no training until a GPU frees). Retrain job 4050 at about 2 h 40 min, still running.</span></p>
+<p class="e g-sup"><time>14:40</time><span class="t"><b class="who">supervisor</b>Planetesimal-disk video rendered (videos/protodisk_real_reference_faceon_edgeon_plus_central_force_proxy.mp4, 500 frames, sandbox GPU, server stopped) and per-body-mass support designed (docs/theory/mass-conditioned-scatter-field.md, commits 0f1c7d8 and 79a6c70). Fresh reviewer: real-design panels change slowly (disk eccentricity 10th / 50th / 90th percentile 0.004 / 0.010 / 0.018 to 0.020 / 0.059 / 0.146); proxy panels start identical and diverge by about tick 1800, reference thins out while the model stays a tight central clump; no stripes or black frames; overlay text small and overlapping in corners, not fixed. Design: mass-weighted deposit and pair term already linear in source mass; earlier mass fine-tunes failed the in-distribution gate; new are two mass-range input channels, soft-clipped inputs and a per-scene geometric-mean mass unit (keeps tiling seamless); new input columns start at zero so unit-mass behaviour is reproduced exactly (unit-tested). Pass and kill lines pre-registered (planet semi-major-axis error at most 0.02, kill above 0.15; disk at most 0.05, kill above 0.25; in-distribution gate 1.15x, kill above 1.5x). Curriculum reaches 1000:1 star-to-planet and 1e4:1 star-to-disk-particle; the real design's about 6.7e4:1 needs a later stage. Training code ready (3 arms, 7 stages x 600 iterations, about 1 GPU-hour estimated), needs a tier-0 checkpoint as the initial checkpoint; GPU path untested; not submitted, waiting for a free GPU behind jobs 4050, 4051 and 4052.</span></p>
+</div>
+</div>
+</div>
+<p class="foot">Numbers are copied from docs/theory/supervisor-log.md and docs/theory/heterogeneous-tiered.md. Unverified here: definitions of beta, com_err and far_rel (taken as named in the log); the residual-variant meaning of the old S+R label; results from jobs 4050, 4051 and 4052 (running or pending). Transcript links are not regenerated for entries after 01:55 on 2026-10-26.</p>
+</main>
+
+</body></html>
