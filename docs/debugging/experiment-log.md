@@ -3323,3 +3323,6 @@ Same ckpts through both tests: hole-4 max|z| baseline 5.97, J 4.68 (D2's 4.7 rep
 
 ### Tiered long-horizon energy penalty JL (job 4010/4019, 2026-10-25) -- KILL (narrow, best trade-off)
 S+J with energy-similarity term and free-rollout horizon k 2->20 (OOM at 22; resumed capped at 20). force_rel +15..18%, com_err +18..42%, err@50 -14..-18%, bias unchanged, dE 0.0212 (baseline 0.0104, J 0.0625, JE 0.048; rule threshold ~0.0125) -> KILL by 1.7x. Long horizon is what cuts drift. ckpt ~/augur_tiered_c2/ck_JL.
+
+### Tiered Exp 8/9 (job 4019, 2026-10-25)
+ENMT (EN-M, tier 0 frozen): dE 0.0116 (~baseline) but com_err -3..-7%, force_rel +9..11% -> KILL; co-adaptation of tier 0 drives the drift. JA (L2-SP 0.05 anchor + energy term): tier-0 weight drift halved (0.0073 vs 0.0163), all gains kept (com_err +23..43%, err@50 -14..-15%, bias improved) but dE 0.0485 = JE -> KILL. Drift is not proportional to weight movement; only the long horizon (JL) lowered it to 0.021. ckpts ~/augur_tiered_c2/ck_{ENMT,JA}.
