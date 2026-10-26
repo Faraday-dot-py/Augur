@@ -474,3 +474,9 @@ Conclusion: beta negativity is NOT a test artefact at mid and dense density (ext
 
 ### Unbiased grid review S1 / B1g multiclump (job 4033, hypothesis-free subagent, images results/tier0_ext/rev_*_multiclump.png)
 Both models: match truth closely through step ~3 (isolated single-pixel speckle only), gradual departure from step ~20 (blue/red dipoles at the clumps), clumps displaced toward each other by 35-50, merged into one blob by step 75 where truth keeps two clumps; step 100 mismatched positions. No stripes, blockiness, grid or seam pattern; no missing structure. Differences: S1 ends with two clumps (one lower-centre, one at upper-right edge); B1g ends with one central clump, wider haze, slightly larger step-50 differences and sparser early speckle. Verdict: smooth chaotic-divergence / over-attraction of clump pair, no spatial artefact.
+
+### Tier-0 checkpoints available for Exp 12 / agent C2 (2026-10-25)
+Both need the far-field supply (see S1 section; spec `ext=6,extapply,taper=8,bnd,halo=8`, load via `t0ext:<ckpt>`):
+- S1: `results/tier0_ext/S1.pt` (job 4023; 3257 windows N<=300, 9650 its). Plummer N=300 err@20 untiled .039 / tiled(128) .021, tiled/untiled 0.54; ext beta mid -1.15/-1.21; plain err@20 1.32x/1.34x Exp E.
+- S2: `results/tier0_ext/S2.pt` (job 4036; density-stratified windows N<=1500, 10300 its). Plummer err@20 untiled .019 / tiled .024, tiled/untiled 1.23, dE@100 .012/.019; ext beta mid -1.46/-1.78; plain err@20 1.33x/1.34x.
+On tiled gravity S2 is better in absolute error (.024 vs .021 is a near tie at span 128; untiled S2 is 2x better) and has the lower dE@100 (.019 vs .026): use S2 unless the matched-budget S3 (job 4041, 60k its, Exp E has 60769) supersedes both. S3 ckpt path will be added here when scored.

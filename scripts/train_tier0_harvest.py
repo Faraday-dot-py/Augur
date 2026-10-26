@@ -99,6 +99,7 @@ def main():
     ap.add_argument("--tag", default="H1")
     ap.add_argument("--out-dir", default="results/tier0_ext")
     ap.add_argument("--epochs", type=int, default=50)
+    ap.add_argument("--iters", type=int, default=0, help="total iterations; overrides --epochs (matched-budget runs)")
     ap.add_argument("--batch", type=int, default=16)
     ap.add_argument("--k-start", type=int, default=4)
     ap.add_argument("--k-end", type=int, default=20)
@@ -141,7 +142,7 @@ def main():
         data_iso = tsf.make_data(tsf.EXPS["E"], a.n_iso, 40, a.seed + 77, dev, a.dt, a.eps)
         iso = [t.float() for t in sf.to_tensors(data_iso, dev)]
         log(f"replay: {a.n_iso} isolated Exp E scenes, weight {a.replay}")
-    iters = a.epochs * (len(tidx) // a.batch)
+    iters = a.iters or a.epochs * (len(tidx) // a.batch)
     if a.freeze_body:
         tte.freeze_body(model)
     opt = torch.optim.Adam([p for p in model.parameters() if p.requires_grad], lr=a.lr)
