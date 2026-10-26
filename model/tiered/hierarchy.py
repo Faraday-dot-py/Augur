@@ -97,7 +97,7 @@ class TieredField(nn.Module):
         v, g, _ = self.layouts[k].blend_eval(prev[k], L.centres(B, device, dtype))
         return torch.cat([v[..., None], g], -1).reshape(B, L.n, L.n, 3).permute(0, 3, 1, 2)
 
-    def upper_force(self, pos, vel, mass, mask, state, occ=None):
+    def upper_force(self, pos, vel, mass, mask, state, occ=None, at=None):
         _, hid, prev = state
         B = pos.shape[0]
         if getattr(self, 'vblind_up', False):
@@ -128,11 +128,11 @@ class TieredField(nn.Module):
                 coefs, summ, hnew = c.reshape_as(coefs), s_.reshape_as(summ), hh.reshape_as(hnew)
             elif act.any():
                 coefs[act], summ[act], hnew[act] = net(x[act])
-            phi, dphi, res = L.blend_eval(coefs, pos)
+            phi, dphi, res = L.blend_eval(coefs, pos if at is None else at)
             a = -dphi + res
-            at = remove_mean(a, mass, mask) if self.mean_remove else a
-            acc = acc + at
-            accs.append(at)
+            a_t = remove_mean(a, mass, mask) if (self.mean_remove and at is None) else a
+            acc = acc + a_t
+            accs.append(a_t)
             if net.hidden_ch:
                 am = act[:, None].repeat_interleave(L.G, 2).repeat_interleave(L.G, 3)
                 new_hid.append(torch.where(am, L.interior(hnew), hid[k - 1]))
