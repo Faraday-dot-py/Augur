@@ -3329,3 +3329,6 @@ ENMT (EN-M, tier 0 frozen): dE 0.0116 (~baseline) but com_err -3..-7%, force_rel
 
 ### Tiered JL40: gradient-checkpointed rollout k 2->40 + energy term (job 4021, 2026-10-26) -- KILL (narrow)
 dE 0.0123 (baseline 0.0106, J 0.0625, JL k<=20 0.0212): monotone with horizon; com_err +18..43%, err@50 -15..-19%, force_rel +9.5..11.8% (seed 9300 under 10%), near_rel 1.07-1.11x baseline (9100 over 1.10x). Fails three criteria by margins of 0.5 pt / 5% / 1%. ckpt ~/augur_tiered_c2/ck_JL40. 4.4 h GPU.
+
+### Tiered Exp 11 NGa: gv_NG tier 0 (velocity + recurrent inputs removed) + S+J (job 4024, 2026-10-25) -- PASS
+S alone: force_rel -38% but com_err +14.5/+2.2/+0.6% worse (KILL on its own). S+J: force_rel -35..-38%, com_err -57/-66/-81%, err@50 -34..-40%, dE 0.0176/0.0121/0.0137 vs gv_NG baseline 0.0275/0.0289/0.0490, bias near_rel 0.84-0.85x baseline. Input removal in tier 0 removes the S+J drift (Exp E tier 0: dE 6x baseline). Caveat: gv_NG baseline dE is 3.3x Exp E (0.0351 vs 0.0106). ckpt ~/augur_tiered_c2/ck_NGa. NGb (position-only upper tiers) pending.
