@@ -27,3 +27,7 @@ INVESTIGATION GOALS:
 ```
 
 Note: in the first use the agent did not spawn subagents despite permission, and Polaris dropped mid-run (Duo re-auth needed); resume via SendMessage after reconnect.
+
+## Naming rule (add to every dispatched prompt)
+
+Never name an experiment, arm, agent, branch, worktree, job, result file or script flag with a single letter or letter-number (`A`, `A2`, `S+J`, `H3`). Use a descriptive kebab-case name that says what changed and against what, e.g. `tier0-from-scratch-density-stratified-harvest`. Use the exact string given to you; do not abbreviate it in reports, commits or filenames. Job id, seed and date go in metadata, not the name. Return exact names and artifact paths. See docs/theory/experiment-naming.md; `python scripts/check_experiment_names.py --commits` must pass before you commit.

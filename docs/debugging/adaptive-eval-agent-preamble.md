@@ -32,3 +32,7 @@ H3 robustness: broken or shifted estimators are detected and handled (no silent 
 H4 generalization: unseen initial conditions, particle counts and force laws still meet the target error via the audit, keeping the cost advantage or degrading gracefully to the geometric rule.
 H5 scaling: cost per particle is constant in N and wall time is linear.
 H6 tileability and H7 interpretability are exploratory.
+
+## Naming rule
+
+Never name an experiment, arm, agent, branch, result file or flag with a single letter or letter-number. Use a descriptive kebab-case name that says what changed and against what; use the exact string given to you. `H1`-`H7` above are legacy claim labels (accuracy, efficiency, robustness, generalization, scaling, tileability, interpretability); refer to claims by those words in new write-ups. See docs/theory/experiment-naming.md.

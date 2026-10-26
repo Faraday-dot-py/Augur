@@ -1,0 +1,7 @@
+# math symbols and plotting tokens allowed by scripts/check_experiment_names.py (E0 = initial energy, C0-C3 = matplotlib colors, L0 = base length)
+E0
+L0
+C0
+C1
+C2
+C3
