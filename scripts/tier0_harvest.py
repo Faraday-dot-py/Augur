@@ -54,7 +54,9 @@ def harvest_one(args, dev, seed, sh):
     keys = ("pos", "vel", "mask_f", "acc_far", "a0", "J", "Q", "C", "exp_err2", "exp_err3", "mass", "centre")
     outs = {k: [] for k in keys}
     tries = 0
-    while len(outs["pos"]) < args.windows and tries < args.windows * 20:
+    edges = np.array([0, 50, 100, 200, 400, 800, 1 << 30])
+    quota, got = -(-args.windows // (len(edges) - 1)), np.zeros(len(edges) - 1, int)
+    while len(outs["pos"]) < args.windows and tries < args.windows * (400 if args.strat else 20):
         tries += 1
         t0 = int(rng.integers(0, F - K + 1))
         c = P[t0, int(rng.integers(0, nb))] if rng.random() < 0.7 else torch.as_tensor(rng.uniform(-dom / 3, dom / 3, 2), device=dev)
@@ -65,6 +67,11 @@ def harvest_one(args, dev, seed, sh):
         n = len(ids)
         if n < 8 or n > args.n_max:
             continue
+        if args.strat:
+            bi = int(np.searchsorted(edges, n, side="right") - 1)
+            if got[bi] >= quota:
+                continue
+            got[bi] += 1
         mk = inw[:, ids].to(torch.float64)
         mi = m[0, ids]
         xr = rel[:, ids]
@@ -89,6 +96,7 @@ def main():
     ap.add_argument("--windows", type=int, default=32)
     ap.add_argument("--steps", type=int, default=24)
     ap.add_argument("--n-max", type=int, default=300)
+    ap.add_argument("--strat", action="store_true", help="cap windows per body-count bin (50/100/200/400/800) at windows/6 so dense windows are not outnumbered")
     ap.add_argument("--n-big", type=int, default=8192)
     ap.add_argument("--domain", type=float, default=256.0)
     ap.add_argument("--big-steps", type=int, default=40)
