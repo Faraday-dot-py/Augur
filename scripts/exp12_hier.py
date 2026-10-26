@@ -119,6 +119,8 @@ class S1Windows:
 
         self.ad = ta.load_t0ext(ckpt, dev)
         self.m, self.t0 = self.ad.m, self.ad.m.t0
+        if torch.load(ckpt, map_location='cpu', weights_only=False)['args'].get('blind'):
+            self.m.vblind = self.m.norec = True
         self.dev, self.chunk = dev, chunk
         self.cen = centres(dev)
 
