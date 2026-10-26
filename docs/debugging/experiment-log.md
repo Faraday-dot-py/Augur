@@ -3309,3 +3309,6 @@ A0 (halo=8, no ext, lr 2e-4): mid beta -0.50/-0.54 (Exp E +0.25/+0.38), sparse -
 
 ## 2026-10-25 Tier-0 H3, contact Bh2, B1 tiling
 H3 (harvested windows + 50% replay + 3rd-order far field, job 4005): plain err@20 1.04x/1.03x PASS; mid beta -0.94/-1.05, sparse -0.27/-0.55 -> KILL. Mid bias persists in all fine-tuned variants. Contact Bh2 (tanh-5 head + 0.1 penalty, job 4006): training diverged at k~9, tunnel 100% -> KILL. B1 now tiles (gravity+seams ok, job 4007) with particle-id-keyed hidden state. Regression after set_ids passes (job 4003).
+
+## 2026-10-25 Round b (job 4020)
+Bh4 head power was negative (dissipative) until the blow-up: positive-feedback hypothesis refuted. Bh5 (k_end 60) unstable KILL (err@20 70-84, tunnel 14-41%); Bh6 (head on frozen B2) = B2 exactly (KE .003-.008), safe/no gain. FbH3 sparse clean (0.00) but mid +0.60/+1.02 and err@20 1.6x; FbL (LoRA) flips mid to -1.29/-1.35. B1 head zeroed fixes B1 gravity (err@20 .027 vs .059, dE@100 .04 vs .31); tiling cost x1.4 on err@20.
