@@ -3339,3 +3339,6 @@ S+J: force_rel -35..-36%, com_err -64/-68/-83%, err@50 -32..-41%, dE 0.0176/0.01
 ### Tiered tier0-with-upper-tier-external-field (legacy label Exp 12): end-to-end hierarchy, job 4045, 2026-10-26 -- KILL
 Tiled 4x4 windows of 64 with the external-field-aware scratch-trained tier 0, external field from upper tiers vs exact vs baseline (Exp E tiled + far kernel). Exact-field oracle already 2.4x baseline at err@20, 2x at err@50, dE 11x (0.104 vs 0.009); upper-tier sequential 1.04-1.10x oracle; joint rollout fine-tune 2.4x baseline err@20, dE 0.06-0.11. Learned external field is not the bottleneck; that tiled tier 0 itself is. Deviation: sample grid +-18 not +-30. Code scripts/exp12_hier.py; ckpts ~/augur_tiered_c2_s1_extfield_ckpt.
 
+### Tiered end-to-end-hierarchy-matched-60k-tier0, job 4046, 2026-10-26 -- KILL (improved over 10k tier 0)
+Matched 60k-iteration tier 0 inside the tiled window hierarchy. Exact-field oracle err@20 1.5-1.7x baseline (10k tier 0: 2.4x), dE 4-5x (11x). Upper tiers sequential 1.2-1.3x oracle; joint 2.0/2.1/1.8x baseline err@20, dE 3.5-5x, com_err 3x; joint gives nothing over sequential. Tier 0 tiled is the gap, not the upper-tier supply. Ckpts ~/augur_tiered_c2_hier_matched60k_ckpt.
+
