@@ -41,3 +41,22 @@ def test_energy_forces_train_and_nongradient_flags():
     a1, _ = ng.force(pos, torch.randn(1, 12, 2), mass, mask, f0)
     a2, _ = ng.force(pos, torch.zeros(1, 12, 2), mass, mask, f0 + 1.0)
     assert torch.allclose(a1, a2, atol=1e-6)
+
+
+def test_gravity_respa_pair_sub1_matches_verlet_and_nsub_runs():
+    m = _model(vblind=True, norec=True)
+    pos = (torch.rand(1, 14, 2) - 0.5) * 8
+    vel = torch.randn(1, 14, 2) * 0.1
+    mass, mask = torch.ones(1, 14), torch.ones(1, 14)
+    st = m.init_field(1, "cpu")
+    with torch.no_grad():
+        p1, v1, _, _ = m.step(pos, vel, mass, mask, st)
+        m.pair_sub = 1
+        p2, v2, _, _ = m.step_respa(pos, vel, mass, mask, st)
+        assert torch.allclose(p1, p2, atol=1e-5) and torch.allclose(v1, v2, atol=1e-5)
+        m.pair_sub = 4
+        p3, v3, _, dv = m.step(pos, vel, mass, mask, st)
+        assert torch.isfinite(p3).all() and torch.allclose(dv, v3 - vel)
+        m.pair_sub, m.nsub = 1, 2
+        p4, v4, _, _ = m.step(pos, vel, mass, mask, st)
+        assert torch.isfinite(p4).all() and m.dt == 0.1

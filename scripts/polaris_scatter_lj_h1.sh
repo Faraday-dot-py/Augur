@@ -64,6 +64,19 @@ case $ARM in
       python -m scripts.train_scatter_field $GA --variant $v --init-ckpt $HOME/E_ms_kp_pot_v_g128.pt --init-partial || echo "train exit $v"
     done
     echo SLJH1 GV DONE; exit 0;;
+  P2S3) FLAGS="--energy --substeps 2 --seed 4740";;
+  P2C) FLAGS="--energy --pair-sub 2";;
+  P4C) FLAGS="--energy --pair-sub 4";;
+  DTC2) python -m scripts.scatter_lj_dt_sweep --ckpt ckpt/P2C_final.pt --label P2C --configs 1:2:c --drift-frames 160 --drift-prefixes $PREF --tag P2C; python -m scripts.scatter_lj_dt_sweep --ckpt ckpt/P2_final.pt --label P2t --configs 2:1 --tag P2t; echo SLJH1 DTC2 DONE; exit 0;;
+  GV2) mkdir -p results/gv ckpt/gv
+    GA="--exp E --device cuda --seed 4738 --train 1500 --steps 50 --batch 8 --k-start 4 --k-end 20 --lr 5e-4 --iters 12000 --out-dir results/gv --ckpt-dir ckpt/gv"
+    CK=ckpt/gv/E_gv_NG.pt
+    [ -f $CK ] || cp $HOME/augur_slj_hv/ckpt/gv/E_gv_NG.pt $CK
+    for cfg in "1 2 _inf_ps2" "1 4 _inf_ps4" "2 1 _inf_n2" "4 1 _inf_n4"; do set -- $cfg
+      python -m scripts.train_scatter_field $GA --variant gv_NG --eval-only --init-ckpt $CK --nsub $1 --pair-sub $2 --tag $3 || echo "eval fail $3"; done
+    for cfg in "2 1 _n2" "4 1 _n4" "1 2 _ps2"; do set -- $cfg
+      python -m scripts.train_scatter_field $GA --variant gv_NG --init-ckpt $HOME/E_ms_kp_pot_v_g128.pt --init-partial --nsub $1 --pair-sub $2 --tag $3 || echo "train fail $3"; done
+    echo SLJH1 GV2 DONE; exit 0;;
   P2S) FLAGS="--energy --substeps 2 --seed 4739";;
   P4) FLAGS="--energy --substeps 4";;
   S2) FLAGS="--seed 4739";;

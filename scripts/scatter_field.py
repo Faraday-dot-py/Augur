@@ -60,6 +60,7 @@ class ScatterField(nn.Module):
                  levels=5, momfix=True, in_scale=1.0, potential=False, kernel=False, pp=0.0, split=False, nonet=False, verlet=False, energy=False, vblind=False, norec=False):
         super().__init__()
         self.energy, self.vblind, self.norec = energy, vblind, norec
+        self.nsub, self.pair_sub, self.which = 1, 1, "all"
         self.potential, self.kernel, self.pp, self.split, self.nonet = potential, kernel, pp, split, nonet
         self.verlet = verlet
         self.opt = set()
@@ -381,7 +382,59 @@ class ScatterField(nn.Module):
         g.replay()
         return tuple(o.clone() for o in out)
 
+    def pp_idx(self, pos, mass, mask, knn=16):
+        B, N = mask.shape
+        k = min(knn, N - 1)
+        d_all = pos[:, None, :, :] - pos[:, :, None, :]
+        r_all = torch.sqrt((d_all ** 2).sum(-1) + 1e-8)
+        bad = (1 - mask)[:, None, :] + torch.eye(N, device=pos.device, dtype=pos.dtype)[None]
+        return torch.topk(r_all + 1e6 * (bad > 0).to(pos.dtype), k, dim=-1, largest=False)[1]
+
+    def pp_acc_idx(self, pos, mass, mask, idx):
+        B, N = mask.shape
+        k = idx.shape[-1]
+        pj = torch.gather(pos[:, None, :, :].expand(B, N, N, 2), 2, idx[..., None].expand(B, N, k, 2))
+        d = pj - pos[:, :, None, :]
+        r = torch.sqrt((d ** 2).sum(-1) + 1e-8)
+        mj = torch.gather((mass * mask)[:, None, :].expand(B, N, N), 2, idx)
+        ok = (torch.gather(mask[:, None, :].expand(B, N, N), 2, idx)) * mask[:, :, None]
+        g = self.ppmlp(torch.stack([r, torch.log(r + 0.05)], -1))[..., 0]
+        win = (1 - (r / self.pp).clamp(max=1.0) ** 2) ** 2
+        return ((g * win * mj * ok)[..., None] * d / r[..., None]).sum(2)
+
+    def _momfix(self, a_tok, mass, mask):
+        mm = (mass * mask)[..., None]
+        return (a_tok - (mm * a_tok).sum(1, keepdim=True) / mm.sum(1, keepdim=True).clamp_min(1e-9)) * mask[..., None]
+
+    def step_respa(self, pos, vel, mass, mask, state):
+        """Mesh kick at dt, pair term integrated with pair_sub velocity-Verlet substeps (neighbour list found once per step)."""
+        field, a_mesh = state
+        dt, n = self.dt, self.pair_sub
+        self.which = "mesh"
+        if a_mesh is None:
+            a_mesh, field = self.force(pos, vel, mass, mask, field)
+        v = vel + 0.5 * dt * a_mesh
+        idx = self.pp_idx(pos, mass, mask)
+        p = pos
+
+        def pa(p):
+            return self._momfix(self.pp_acc_idx(p, mass, mask, idx), mass, mask) if self.momfix else self.pp_acc_idx(p, mass, mask, idx) * mask[..., None]
+
+        a = pa(p)
+        for _ in range(n):
+            v = v + 0.5 * dt / n * a
+            p = p + dt / n * v
+            a = pa(p)
+            v = v + 0.5 * dt / n * a
+        a_new, field = self.force(p, v, mass, mask, field)
+        self.which = "all"
+        v = v + 0.5 * dt * a_new
+        return p, v, (field, a_new), v - vel
+
     def _force(self, pos, vel, mass, mask, field):
+        return self._force_inner(pos, vel, mass, mask, field)
+
+    def _force_inner(self, pos, vel, mass, mask, field):
         if self.energy:
             return self._energy_force(pos, vel, mass, mask, field)
         x = self.scatter(pos, vel * (0.0 if self.vblind else 1.0), mass, mask)
@@ -408,7 +461,7 @@ class ScatterField(nn.Module):
         if self.kernel:
             acc = acc + ak
         a_tok = self.gather(acc, pos)
-        if self.pp:
+        if self.pp and self.which != "mesh":
             a_tok = a_tok + self.pp_acc(pos, mass, mask)
         if self.momfix:
             mm = (mass * mask)[..., None]
@@ -416,6 +469,20 @@ class ScatterField(nn.Module):
         return a_tok * mask[..., None], field
 
     def step(self, pos, vel, mass, mask, field):
+        if self.nsub > 1:
+            dt0, v0 = self.dt, vel
+            self.dt = dt0 / self.nsub
+            try:
+                for _ in range(self.nsub):
+                    pos, vel, field, _dv = self._step1(pos, vel, mass, mask, field)
+            finally:
+                self.dt = dt0
+            return pos, vel, field, vel - v0
+        return self._step1(pos, vel, mass, mask, field)
+
+    def _step1(self, pos, vel, mass, mask, field):
+        if self.pair_sub > 1 and self.verlet and self.pp:
+            return self.step_respa(pos, vel, mass, mask, field)
         if not self.verlet:
             a_tok, field = self.force(pos, vel, mass, mask, field)
             dv = a_tok * self.dt

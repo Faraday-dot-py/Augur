@@ -222,6 +222,9 @@ def main():
     ap.add_argument("--mode", choices=["train", "baseline", "summarize"], default="train")
     ap.add_argument("--opt", default="", help="speed flags: cl, graphtrain, half, bf16 (see scatter_field.apply_opt)")
     ap.add_argument("--baseline-ckpt", default=None)
+    ap.add_argument("--nsub", type=int, default=1, help="model substeps (dt/nsub) per stored step")
+    ap.add_argument("--pair-sub", type=int, default=1, help="pair-only substeps with cached neighbour list per model step")
+    ap.add_argument("--tag", default="", help="suffix for output/ckpt names")
     ap.add_argument("--eval-only", action="store_true", help="skip training; --init-ckpt is the full checkpoint to evaluate")
     ap.add_argument("--init-partial", action="store_true", help="with --init-ckpt load only kmlp/ppmlp (kernel + pair) weights")
     ap.add_argument("--init-ckpt", default=None, help="warm-start model weights (optimizer and iteration reset)")
@@ -282,13 +285,14 @@ def main():
     names = cfg["variants"] if args.variant == "all" else args.variant.split(",")
     eval_sets = {seed: make_data(cfg, args.eval_scenes, args.eval_steps, seed, dd, args.dt, args.eps) for seed in EVAL_SEEDS}
     for name in names:
-        out_path = f"{args.out_dir}/{args.exp}_{name}.json"
+        out_path = f"{args.out_dir}/{args.exp}_{name}{args.tag}.json"
         if os.path.exists(out_path):
             log(f"skip {name} (done)")
             continue
         model = build(cfg, name, args.dt).to(dev)
         for o in [x for x in args.opt.split(",") if x]:
             sf.apply_opt(model, o)
+        model.nsub, model.pair_sub = args.nsub, args.pair_sub
         if isinstance(model, sf.MultiLevelScatterField):
             r, rc, glob = 3, 3 * model.h0, True
         else:
@@ -301,7 +305,7 @@ def main():
                 log(f"partial warm start (kernel + pair MLPs only) from {args.init_ckpt}: {len(st)} tensors")
             model.load_state_dict(st, strict=not args.init_partial)
             log(f"warm start from {args.init_ckpt}")
-        n_it, secs = (0, 0.0) if args.eval_only else train(model, tensors, args, f"{args.ckpt_dir}/{args.exp}_{name}.pt", log)
+        n_it, secs = (0, 0.0) if args.eval_only else train(model, tensors, args, f"{args.ckpt_dir}/{args.exp}_{name}{args.tag}.pt", log)
         res = {"train_iters": n_it, "train_seconds": secs, "variant": name, "cfg": {**BASE, **VARIANTS[name]}, "rf_cells": r, "rf_units": rc, "rf_global": glob,
                "args": vars(args), "self_force": sf.self_force_probe(model, dev)}
         for seed in EVAL_SEEDS:

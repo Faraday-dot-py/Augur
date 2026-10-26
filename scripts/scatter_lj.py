@@ -56,7 +56,7 @@ def load_model(path, dev, nsub=None, pair_sub=1, pair_cache=False):
     m = build_model(None, dev, energy=st["net.inp.weight"].shape[1] == 1, resid="rnet.inp.weight" in st, vblind=a.get("vblind", False),
                     norec=a.get("norec", False), asym="ppmlp_a.0.weight" in st, oracle=a.get("oracle", False), nomesh=a.get("nomesh", False),
                     substeps=nsub or a.get("substeps", 1))
-    m.pair_sub, m.pair_cache = pair_sub, pair_cache
+    m.pair_sub, m.pair_cache = (pair_sub, pair_cache) if pair_sub > 1 else (a.get("pair_sub", 1), a.get("pair_sub", 1) > 1)
     m.load_state_dict(st)
     return m
 
