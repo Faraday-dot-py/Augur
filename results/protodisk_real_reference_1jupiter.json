@@ -1,0 +1,31 @@
+{
+ "mode": "real",
+ "n_disk": 1000,
+ "jupiters": [
+  5.0
+ ],
+ "years": 100.0,
+ "dt": 0.0015625,
+ "eps": 0.005,
+ "seed": 4738,
+ "dE_over_E0": 2.3529469009757824e-05,
+ "dL_over_L0": 2.0424922134804774e-15,
+ "max_abs_dE": 0.00015268916836325215,
+ "median_da_over_a_disk": 0.06439193103306573,
+ "median_ecc_end": 0.058532076230335905,
+ "median_ecc_start": 0.00961262929203436,
+ "median_da_over_a_1AU": 0.11379998228188372,
+ "unbound_disk_end": 0,
+ "jupiter_0_a_start_end": [
+  4.995009980039923,
+  4.924305337407015
+ ],
+ "jupiter_0_ecc_end": 0.02587543146699222,
+ "gap_fraction_remaining_within_0.7AU_of_5AU": 0.5409836065573771,
+ "merges": 383,
+ "accreted_onto_star": 0,
+ "survivors": 618,
+ "survivor_mass_disk_plus_jup": 0.015999999999999997,
+ "snapshot_every_yr": 0.0125,
+ "r_merge_AU": 0.02
+}
