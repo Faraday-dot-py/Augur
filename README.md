@@ -2,11 +2,42 @@
 
 **Learning particle simulators that scale, tile, and stay honest about what they get wrong.**
 
-Augur is a research project by Adam Webb (Cal Poly Pomona, GitHub: Faraday-dot-py) on neural surrogate simulators: models that learn the rules of a particle system from examples, then run it fast enough for real-time and very large scenes. It was started as "Bounce" (a bouncing-ball model) and renamed Augur in October 2026. It is about five weeks old at the time of writing and has 537 commits.
+Augur is a research project by Adam Webb (Cal Poly Pomona, GitHub: Faraday-dot-py) on neural surrogate simulators: models that learn the rules of a particle system from examples, then run it fast enough for real-time and very large scenes. It is about five weeks old at the time of writing and has 538 commits.
 
 [contact: add preferred email]
 
-Live demos run in the browser: https://faraday-dot-py.github.io/Bounce/
+[Augur live demos](https://faraday-dot-py.github.io/Augur/) run in the browser.
+
+## Showcase
+
+Videos are hosted on YouTube (links pending upload). Each one says whether it is a model rollout or a reference simulation. None of them is an accuracy claim: at 1 billion bodies and above there is no exact reference, so those videos show that the model runs and stays stable, not that it is right.
+
+**Black holes**
+
+[![1 billion bodies falling into a black-hole-like core, lensed](thumbnail-pending)](https://www.youtube.com/watch?v=PENDING)
+A cloud of 1 billion bodies collapses into a dense core while the background stars bend around it, as light would near a black hole. Model rollout: scatter-field network, 300 ticks, the lensing is a rendering effect computed from the body density, not part of the physics model. Speed and stability result only.
+
+[![10 billion bodies, density at three zoom levels](thumbnail-pending)](https://www.youtube.com/watch?v=PENDING)
+The same collapse with 10 billion bodies, shown as density at three zoom levels. Model rollout: scatter-field network, 100 ticks, 88 GB peak memory on one GPU. Speed and memory result only. The bright frame around the full-box panel is consistent with bodies piled on the clipped edge of the starting cloud.
+
+[![100,000 bodies: learned model next to exact simulation, lensed](thumbnail-pending)](https://www.youtube.com/watch?v=PENDING)
+The 100,000-body version, with the exact direct simulation beside the model. Model rollout against an exact reference: they agree for roughly the first 20 ticks and then drift apart, which is the honest picture at this size (position error 1.33 at tick 20, 8.1 at tick 50).
+
+**Galactic collapse**
+
+[![1 billion bodies in 30 clumps falling together, lensed](thumbnail-pending)](https://www.youtube.com/watch?v=PENDING)
+Thirty small clumps of bodies fall toward each other and merge into one central mass. Model rollout: scatter-field network, 1 billion bodies, 200 ticks. Speed and stability result only.
+
+[![1 million bodies in clumps merging over 5000 steps](thumbnail-pending)](https://www.youtube.com/watch?v=PENDING)
+A smaller scene with 1 million bodies where clumps pull together, merge, and fling stragglers outward. This one is a reference-style simulation (analytic gravity with an adaptive far-field estimate), not a neural-network rollout.
+
+**Solar systems**
+
+[![A star with 8 planets, a moon and a belt: exact versus learned model](thumbnail-pending)](https://www.youtube.com/watch?v=PENDING)
+A star, 8 planets, one moon and a belt of small bodies, exact simulation on the left and the learned scatter-field model on the right. Model rollout against an exact reference. The model keeps all 8 planets in orbit for about 1000 ticks, with a 19 percent error in orbital period, and loses 7 of 8 by tick 2000. This model was not designed for a heavy central star, and the video shows where it breaks.
+
+[![Planetesimal disk around a star, direct simulation](thumbnail-pending)](https://www.youtube.com/watch?v=PENDING)
+A star with 1000 small bodies and one Jupiter-mass planet at 5 AU over 100 years, seen face-on and edge-on, with an in-range toy version beside a learned model. The top row is an exact direct N-body reference (gravity only, a toy: no gas, so it does not model how planets actually form). The bottom row is a learned model on a toy version with equal-mass bodies, and it fails: its error grows past the kill line after about 100 ticks. The learned models handle only equal-mass bodies today, so the real star-to-planetesimal mass ratio (1000 to 1) is out of range until per-body-mass support is trained.
 
 ## The through-line: four requirements
 
@@ -42,9 +73,9 @@ The scatter field is local: it sees a bounded neighborhood. The current design s
 | WebGPU network port, speed | next (needs a real-GPU browser run) |
 | Tier 0 at matched training budget | done, passes every pre-registered criterion (one seed) |
 | End-to-end hierarchy accuracy | not passing: 1.5 to 2x the tiled baseline's position error at tick 20 |
-| Retrain removing velocity and recurrent inputs (the targeted fix) | in test, two seeds running |
-| Local energy-bias loss term | code and tests done, queued |
-| Per-body-mass support (planet-and-disk systems) | design, curriculum and trainer written and unit-tested, not trained |
+| Retrain removing velocity and recurrent inputs (the targeted fix) | running, two seeds (jobs 4050 and 4051) |
+| Local energy-bias loss term | code and tests done, queued behind the retrain (job 4052) |
+| Per-body-mass support (planet-and-disk systems) | design, curriculum and trainer written and unit-tested, waiting for a free GPU, not trained |
 | Interpretability (recovering the rules) | not started |
 
 Two diagnoses made the hierarchy gap specific. First, a mid-density bias that looked architectural turned out to be mostly undertraining: the matched-budget tier 0 closed it (bias from -1.5 and -1.8 to about -0.1). Second, teacher-forced analysis located the remaining hierarchy error in the dense regions of the tier-0 model (its energy-work error there is 2.1x the baseline's), not in the upper tiers, which add only 4 to 10 percent error over an exact external field. That narrowed the fix to one retrain.
@@ -68,7 +99,7 @@ Results are logged with the numbers that decide them, so a reader can see which 
 
 ## Comparison videos
 
-Six rendered comparison videos cover gravity clusters, multi-clump scenes, successive model generations, wall contact, and liquid-argon-style molecular dynamics. A separate 500-frame disk video also exists. The video files are large and are not stored in the repository; they are available on request.
+Six rendered comparison videos cover gravity clusters, multi-clump scenes, successive model generations, wall contact, and liquid-argon-style molecular dynamics. A separate 500-frame disk video also exists, and the showcase above lists the headline runs. The video files are large and are not stored in the repository; they are being uploaded to YouTube and the links above will be filled in.
 
 ## Who this is for
 

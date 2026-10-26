@@ -16,7 +16,10 @@ Usage: PYTHONPATH=. python scripts/scatter_bh_1b.py --ckpt checkpoints/scatter_b
 import argparse
 import json
 import math
+import os
+import signal
 import statistics
+import sys
 import time
 
 import numpy as np
@@ -34,9 +37,30 @@ def sync():
     torch.cuda.synchronize()
 
 
+STOP = [False]
+
+
+def _on_term(signum, frame):
+    STOP[0] = True
+
+
+def save_state(path, sim, pos, mom, out, t):
+    tmp = path + ".tmp"
+    torch.save({"pos": pos, "mom": mom, "field": sim.field, "out": out, "t": t}, tmp)
+    os.replace(tmp, path)
+
+
 def chunks(n, chunk):
     for s in range(0, n, chunk):
         yield s, min(n, s + chunk)
+
+
+def clump_params(n, args, dev):
+    g = torch.Generator(device=dev)
+    g.manual_seed(args.seed + 2)
+    cen = (torch.randn(args.k, 2, device=dev, generator=g) * args.clump_spread).clamp_(-args.clump_max, args.clump_max)
+    vb = torch.randn(args.k, 2, device=dev, generator=g) * (args.vfac * math.sqrt(n / (4 * args.field_sigma)))
+    return cen, vb
 
 
 def make_ic(n, chunk, args, pd, md, ms, dev):
@@ -45,13 +69,28 @@ def make_ic(n, chunk, args, pd, md, ms, dev):
     vscale = args.vfac * math.sqrt(n / (4 * args.sigma))
     c = args.c
     vsum = torch.zeros(2, dtype=torch.float64, device=dev)
+    if args.ic == "clumpy":
+        cen, vb = clump_params(n, args, dev)
+        nclump = args.clump_frac * n / args.k
+        vscale_c = args.vfac * math.sqrt(nclump / (4 * args.clump_sigma))
+        vscale_f = args.vfac * math.sqrt(n / (4 * args.field_sigma))
     for pas in range(2):
         g = torch.Generator(device=dev)
         g.manual_seed(args.seed)
         vmean = vsum / n
         for s, e in chunks(n, chunk):
-            p = torch.randn(e - s, 2, device=dev, generator=g) * args.sigma
-            v = torch.randn(e - s, 2, device=dev, generator=g) * vscale
+            if args.ic == "clumpy":
+                m = e - s
+                u = torch.rand(m, device=dev, generator=g)
+                cid = torch.randint(0, args.k, (m,), device=dev, generator=g)
+                isc = (u < args.clump_frac)[:, None]
+                z = torch.randn(m, 2, device=dev, generator=g)
+                w = torch.randn(m, 2, device=dev, generator=g)
+                p = torch.where(isc, cen[cid] + z * args.clump_sigma, z * args.field_sigma)
+                v = torch.where(isc, vb[cid] + w * vscale_c, w * vscale_f)
+            else:
+                p = torch.randn(e - s, 2, device=dev, generator=g) * args.sigma
+                v = torch.randn(e - s, 2, device=dev, generator=g) * vscale
             if args.ic_resample:
                 p = torch.where(p.abs() > 29.0, torch.randn(e - s, 2, device=dev, generator=g) * args.sigma, p)
             p = p.clamp_(-29.0, 29.0)
@@ -219,12 +258,16 @@ def rollout(model, args, pd, md, ms, dev, steps, sub, hist, snaps, label, lens=N
     torch.cuda.reset_peak_memory_stats()
     sim = Sim(model, n, args.chunk, args.c, args.dt, pd, md, ms, dev)
     pos, mom = make_ic(n, args.chunk, args, pd, md, ms, dev)
+    nm = torch.zeros(2, dtype=torch.float64, device=dev)
+    for s_, e_ in chunks(n, args.chunk):
+        nm += mom[s_:e_].float().sum(0, dtype=torch.float64) * ms
+    net_mom_ic = (nm / n).tolist()
     sync()
     t0 = time.perf_counter()
     sim.init_kick(pos, mom)
     sync()
     out = {"label": label, "n": n, "pos_dtype": str(pd), "mom_dtype": str(md), "mom_scale": ms, "chunk": args.chunk,
-           "init_force_ms": (time.perf_counter() - t0) * 1e3, "ms_per_tick": [], "diag": []}
+           "init_force_ms": (time.perf_counter() - t0) * 1e3, "net_mom_ic_per_body": net_mom_ic, "ms_per_tick": [], "diag": []}
     d = diagnostics(sim, pos, mom, sub, hist)
     hists = [d.pop("hist")] if hist else []
     out["diag"].append(d)
@@ -234,8 +277,20 @@ def rollout(model, args, pd, md, ms, dev, steps, sub, hist, snaps, label, lens=N
         lens[0][0] = lens_hist(sim, pos, lens[1][0], args.lens_res)
         lens[0].flush()
     print(f"[{label}] init force {out['init_force_ms']:.0f} ms, peak {torch.cuda.max_memory_allocated() / 1e9:.1f} GB", flush=True)
+    ck = os.path.join(args.resume_dir, label + ".ckpt.pt") if args.resume_dir else None
+    t_start = 0
+    if ck and os.path.exists(ck):
+        assert not (hist or snaps or args.grid_dump), "resume supports lens and plain runs only"
+        st = torch.load(ck, map_location=dev, weights_only=False)
+        pos.copy_(st["pos"])
+        mom.copy_(st["mom"])
+        sim.field = st["field"]
+        out = st["out"]
+        t_start = st["t"]
+        del st
+        print(f"[{label}] resumed from {ck} at tick {t_start}", flush=True)
     t_all = time.perf_counter()
-    for t in range(steps):
+    for t in range(t_start, steps):
         sync()
         t0 = time.perf_counter()
         sim.tick(pos, mom)
@@ -255,6 +310,12 @@ def rollout(model, args, pd, md, ms, dev, steps, sub, hist, snaps, label, lens=N
         if lens is not None:
             lens[0][t + 1] = lens_hist(sim, pos, lens[1][t + 1], args.lens_res)
             lens[0].flush()
+        if ck and ((t + 1) % args.ckpt_every == 0 and t + 1 < steps or STOP[0]):
+            save_state(ck, sim, pos, mom, out, t + 1)
+            print(f"[{label}] checkpoint at tick {t + 1}", flush=True)
+        if STOP[0]:
+            print(f"[{label}] SIGTERM: stopped at tick {t + 1}", flush=True)
+            sys.exit(0)
         if t % 5 == 0 or t == steps - 1:
             print(f"[{label}] tick {t + 1} {out['ms_per_tick'][-1]:.0f} ms out {d['frac_outside']:.3f} vmax/c {d['vmax_over_c']:.4f} pmax {d['pmax']:.3g} "
                   f"core {d['core_r45']:.3f} nonfinite {d['nonfinite']} peak {d['peak_gb']:.1f} GB wall {time.perf_counter() - t_all:.0f} s", flush=True)
@@ -297,6 +358,13 @@ def main():
     ap.add_argument("--c", type=float, default=10.0)
     ap.add_argument("--dt", type=float, default=0.1)
     ap.add_argument("--seed", type=int, default=4738)
+    ap.add_argument("--ic", choices=["gaussian", "clumpy"], default="gaussian", help="clumpy: k Gaussian clumps (centres N(0, clump-spread) clamped to +-clump-max, cold bulk + internal velocities) plus a broad field component, mirrors nbody_ic.clumpy")
+    ap.add_argument("--k", type=int, default=30)
+    ap.add_argument("--clump-frac", type=float, default=0.7)
+    ap.add_argument("--clump-sigma", type=float, default=1.5)
+    ap.add_argument("--clump-spread", type=float, default=10.0)
+    ap.add_argument("--clump-max", type=float, default=20.0)
+    ap.add_argument("--field-sigma", type=float, default=10.0)
     ap.add_argument("--ic-resample", action="store_true", help="redraw positions beyond +-29 instead of piling them on the clip lines (square-wall control)")
     ap.add_argument("--nsub", type=int, default=1_000_000)
     ap.add_argument("--hist", action="store_true")
@@ -304,18 +372,28 @@ def main():
     ap.add_argument("--lens-out", default=None, help="two-pass: pass 1 finds the renderer windows, pass 2 saves per-frame window histograms of all bodies to this .npy memmap")
     ap.add_argument("--lens-res", type=int, default=1080)
     ap.add_argument("--lens-min-half", type=float, default=3.0)
+    ap.add_argument("--resume-dir", default=None, help="directory for per-rollout full-state checkpoints (pos, momentum, field, diagnostics); an existing checkpoint is resumed. lens and plain runs only")
+    ap.add_argument("--ckpt-every", type=int, default=100)
+    ap.add_argument("--done-file", default=None, help="written after a lens run completes (resume wrappers test for it)")
     ap.add_argument("--tag", default="scatter_bh_1b")
     ap.add_argument("--force-probe", type=lambda v: [int(i) for i in v.split(",") if i], default=[], help="ticks at which to compare grid force with exact pairwise force on the subsample")
     ap.add_argument("--grid-dump", action="store_true", help="save per-tick 128x128 maps (density, |a|, far-field potential, net potential) to results/<tag>_grids.npy")
     ap.add_argument("--probe-targets", type=int, default=20000)
     ap.add_argument("--check-variants", default="fp32:fp32,fp16:fp16")
     args = ap.parse_args()
+    if args.resume_dir:
+        signal.signal(signal.SIGTERM, _on_term)
+        os.makedirs(args.resume_dir, exist_ok=True)
     dev = torch.device("cuda")
     model = tsf.build(tsf.EXPS["E"], "ms_kp_pot_v_g128", args.dt).to(dev)
     model.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
     model.eval()
     ops.no_pp(model)
     res = {"gpu": torch.cuda.get_device_name(), "args": vars(args)}
+    if args.ic == "clumpy":
+        cen, vb = clump_params(args.n, args, dev)
+        res["clumpy_centres"] = cen.tolist()
+        res["clumpy_bulk_v"] = vb.tolist()
     json_path = f"results/{args.tag}{'_check' if args.mode == 'check' else ''}.json"
 
     def write():
@@ -356,19 +434,30 @@ def main():
                 for d in o["diag"]:
                     d.pop("hist", None)
         elif args.lens_out:
-            o1, _, _, pos = rollout(model, args, DT[args.pos_dtype], DT[args.mom_dtype], args.mom_scale, dev, args.steps, sub, False, False, args.tag + "_pass1")
-            del pos
-            win = lens_windows(o1["diag"], args.lens_min_half)
-            np.save(args.lens_out.replace(".npy", "_windows.npy"), win)
+            win_path = args.lens_out.replace(".npy", "_windows.npy")
+            p1_path = f"results/{args.tag}_pass1.json"
+            if args.resume_dir and os.path.exists(win_path) and os.path.exists(p1_path):
+                o1 = json.load(open(p1_path))
+                win = np.load(win_path)
+                print("pass 1 already complete, reusing windows", flush=True)
+            else:
+                o1, _, _, pos = rollout(model, args, DT[args.pos_dtype], DT[args.mom_dtype], args.mom_scale, dev, args.steps, sub, False, False, args.tag + "_pass1")
+                del pos
+                win = lens_windows(o1["diag"], args.lens_min_half)
+                np.save(win_path, win)
+                json.dump(o1, open(p1_path, "w"))
             res["pass1"] = o1
             write()
-            mm = np.lib.format.open_memmap(args.lens_out, mode="w+", dtype=np.float32, shape=(len(win), args.lens_res, args.lens_res))
+            resume_mm = bool(args.resume_dir) and os.path.exists(args.lens_out)
+            mm = np.lib.format.open_memmap(args.lens_out, mode="r+" if resume_mm else "w+", dtype=np.float32, shape=(len(win), args.lens_res, args.lens_res))
             o, _, _, pos = rollout(model, args, DT[args.pos_dtype], DT[args.mom_dtype], args.mom_scale, dev, args.steps, sub, False, False, args.tag + "_pass2", lens=(mm, win))
             res["run"] = o
             res["lens_windows"] = win.tolist()
             res["pass2_vs_pass1_centre_r45"] = [[a["centre"], a["core_r45"], b["centre"], b["core_r45"]] for a, b in zip(o1["diag"], o["diag"])]
             write()
             print(f"n {args.n}: pass2 median {o['median_ms']:.0f} ms peak {o['peak_gb']:.1f} GB", flush=True)
+            if args.done_file:
+                open(args.done_file, "w").write("done\n")
         else:
             o, hists, sn, pos = rollout(model, args, DT[args.pos_dtype], DT[args.mom_dtype], args.mom_scale, dev, args.steps, sub, args.hist, args.snaps, args.tag)
             res["run"] = o

@@ -26,6 +26,7 @@ ap.add_argument("--stars", type=int, default=6000)
 ap.add_argument("--dt", type=float, default=0.1)
 ap.add_argument("--label", default="scatter field mesh-only, N=1e9 (all bodies), c=10")
 ap.add_argument("--preview", type=int, default=-1)
+ap.add_argument("--title", default=None, help="clean overlay: TITLE | t = ... (replaces the diagnostic label)")
 args = ap.parse_args()
 H = np.load(args.hist, mmap_mode="r")
 win = np.load(args.windows)
@@ -86,7 +87,7 @@ label = ax.text(0.02, 0.98, "", color="white", transform=ax.transAxes, va="top",
 
 def update(i):
     im.set_data(render(i))
-    label.set_text(f"{args.n:,} bodies ({args.label}), step {i}, t = {i * args.dt:.1f}")
+    label.set_text(f"{args.title}   |   {args.n:,} bodies   |   t = {i * args.dt:.1f}" if args.title else f"{args.n:,} bodies ({args.label}), step {i}, t = {i * args.dt:.1f}")
 
 
 if args.preview >= 0:
