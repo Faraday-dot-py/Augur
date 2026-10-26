@@ -73,6 +73,7 @@ class ScatterField(nn.Module):
         self.potential, self.kernel, self.pp, self.split, self.nonet = potential, kernel, pp, split, nonet
         self.verlet = verlet
         self.far, self.far_band, self.far_eps, self.substeps = 0, 0.25, 0.5, 1
+        self.kpad = "zero"
         self.cu, self.epsin, self.norm = cu, epsin, norm
         self.massfeat = massfeat
         self.mass_unit = None
@@ -225,8 +226,11 @@ class ScatterField(nn.Module):
         else:
             Kf = self._kernel_fft(rho)
         rf = torch.fft.rfft2(rho, s=(2 * G, 2 * G))
-        phi = torch.fft.irfft2(rf * Kf, s=(2 * G, 2 * G))[..., :G, :G] * self.h ** 2
-        return self.neg_grad(phi)
+        full = torch.fft.irfft2(rf * Kf, s=(2 * G, 2 * G)) * self.h ** 2
+        if self.kpad == "ext":
+            idx = torch.tensor([2 * G - 1] + list(range(G + 1)), device=rho.device)
+            return self.neg_grad(full[..., idx, :][..., idx], "none")
+        return self.neg_grad(full[..., :G, :G])
 
     def _pair_w(self, r, mj, ok):
         g = self.ppmlp(self._feat(r, "p"))[..., 0]
@@ -425,8 +429,8 @@ class ScatterField(nn.Module):
             a = a + aq
         return a * mask[..., None]
 
-    def neg_grad(self, phi):
-        p = F.pad(phi, (1, 1, 1, 1))
+    def neg_grad(self, phi, pad="zero"):
+        p = phi if pad == "none" else F.pad(phi, (1, 1, 1, 1))
         gx = (p[:, :, 1:-1, 2:] - p[:, :, 1:-1, :-2]) / (2 * self.h)
         gy = (p[:, :, 2:, 1:-1] - p[:, :, :-2, 1:-1]) / (2 * self.h)
         return -torch.cat([gx, gy], 1)
@@ -1105,6 +1109,9 @@ def _opt_ok(model, name):
 def apply_opt(model, name):
     """Besides speed flags: far[@band] / farquad[@band] (far-field multipole outside/at the grid edge), subN (N force evals per tick)."""
     model.opt.add(name)
+    if name == "kext":
+        model.kpad = "ext"
+        return
     if name.startswith("far"):
         base, _, band = name.partition("@")
         model.far = 2 if base == "farquad" else 1

@@ -375,6 +375,7 @@ def main():
     ap.add_argument("--resume-dir", default=None, help="directory for per-rollout full-state checkpoints (pos, momentum, field, diagnostics); an existing checkpoint is resumed. lens and plain runs only")
     ap.add_argument("--ckpt-every", type=int, default=100)
     ap.add_argument("--done-file", default=None, help="written after a lens run completes (resume wrappers test for it)")
+    ap.add_argument("--kpad", choices=["zero", "ext"], default="zero", help="ext: kernel potential taken one cell beyond each grid side (removes the grid-edge force artifact)")
     ap.add_argument("--tag", default="scatter_bh_1b")
     ap.add_argument("--force-probe", type=lambda v: [int(i) for i in v.split(",") if i], default=[], help="ticks at which to compare grid force with exact pairwise force on the subsample")
     ap.add_argument("--grid-dump", action="store_true", help="save per-tick 128x128 maps (density, |a|, far-field potential, net potential) to results/<tag>_grids.npy")
@@ -389,6 +390,7 @@ def main():
     model.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
     model.eval()
     ops.no_pp(model)
+    model.kpad = args.kpad
     res = {"gpu": torch.cuda.get_device_name(), "args": vars(args)}
     if args.ic == "clumpy":
         cen, vb = clump_params(args.n, args, dev)

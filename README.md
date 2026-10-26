@@ -54,7 +54,9 @@ Every design choice is judged against four requirements, and the project reports
 
 ![Measured cost scaling to 1 billion bodies](results/bench_scaling.png)
 
-![All 1e9 bodies at ticks 0, 11, 40 and 100: density, learned force, far-field potential](videos/scatter_bh_1b_panels_frames.png)
+![All 1e6 bodies at ticks 0, 11, 40 and 100, edge-artifact-free model: density, learned force, far-field potential](videos/scatter_bh_panels_frames_no_edge_artifact_1e6.png)
+
+The same scene with 1 million bodies (not 1 billion) and the grid-edge fix: the potential of the kernel term is taken one cell beyond each grid side, with the trained weights unchanged. The earlier version of this figure (1 billion bodies, `videos/scatter_bh_1b_panels_frames.png`) showed a bright frame in the force panel; that frame was an artificial force near the grid border, about 60 to 145 times the exact force within 2 units of the edge and about 1.5 times it elsewhere, and it is gone here (`videos/scatter_bh_edge_old_vs_fixed_force_1e6.png` shows the old and fixed force maps side by side). A 1-billion-body version of this figure is queued as Polaris job 4056 and will replace this one when it finishes. Bodies that leave the grid still feel no force.
 
 **Browser.** A live site runs the models client-side with side-by-side ground truth and a view inside the network. A WebGPU port of the network passes its numerical check against the CPU path (maximum relative difference 2.4e-6 on one pass, 5.7e-6 over a 20-tick rollout). Its speed has not been measured on a real GPU, so there is no speedup claim yet.
 
