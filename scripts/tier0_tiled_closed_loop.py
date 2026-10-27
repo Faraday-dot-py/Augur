@@ -88,9 +88,25 @@ def verlet_step(tt, pos, vel, a_prev, fld, m, mk):
     return pn, vel + 0.5 * DT * (a_prev + a_new), a_new, fld
 
 
-def rollout_terms(tt, d, idx, t0s, k, tb=0, grad=True):
+def similarity_energy_terms(pos, vel, Pt, Vt, m, mk, lab):
+    """Energy-similarity error of the model state against the truth state at the same tick (never against E(0)): relative squared difference of the
+    total energy per scene, averaged with the same for each cluster's internal energy (labels lab, up to 4 clusters per scene)."""
+    et = sf.energy(Pt, Vt, m, mk, EPS)
+    tot = (((sf.energy(pos, vel, m, mk, EPS) - et) / et.abs().clamp_min(1e-6)) ** 2).mean()
+    cl, n = 0.0, 0
+    for c in range(4):
+        mc = mk * (lab == c).float()
+        ec = sf.energy(Pt, Vt, m, mc, EPS)
+        ok = (mc.sum(1) > 1).float()
+        cl = cl + ((((sf.energy(pos, vel, m, mc, EPS) - ec) / ec.abs().clamp_min(1e-6)) ** 2) * ok).sum()
+        n = n + ok.sum()
+    return 0.5 * (tot + cl / n.clamp_min(1.0))
+
+
+def rollout_terms(tt, d, idx, t0s, k, tb=0, grad=True, energy=False):
     """Closed-loop rollout of k ticks from the truth state at t0s (per scene); returns per-tick mean squared position and velocity errors
-    (lists of 0-dim tensors, differentiable when grad). tb > 0 truncates backprop (detach state) every tb ticks."""
+    (lists of 0-dim tensors, differentiable when grad). tb > 0 truncates backprop (detach state) every tb ticks. energy=True also returns the
+    per-tick energy-similarity terms as a third list."""
     dev = d["P"].device
     tt_i = t0s[:, None] + torch.arange(k + 1, device=dev)[None]
     Pw, Vw = d["P"][idx[:, None], tt_i].float(), d["V"][idx[:, None], tt_i].float()
@@ -100,14 +116,17 @@ def rollout_terms(tt, d, idx, t0s, k, tb=0, grad=True):
     a_prev, fld = tt.force(pos, vel, m, mk, fld)
     w = mk[:, :, None]
     denom = mk.sum() * 2
-    lp, lv = [], []
+    lp, lv, le = [], [], []
+    lab = d["lab"][idx]
     for s in range(k):
         pos, vel, a_prev, fld = verlet_step(tt, pos, vel, a_prev, fld, m, mk)
         lp.append((((pos - Pw[:, s + 1]) ** 2) * w).sum() / denom)
         lv.append((((vel - Vw[:, s + 1]) ** 2) * w).sum() / denom)
+        if energy:
+            le.append(similarity_energy_terms(pos, vel, Pw[:, s + 1], Vw[:, s + 1], m, mk, lab))
         if tb and (s + 1) % tb == 0:
             pos, vel, a_prev, fld = pos.detach(), vel.detach(), a_prev.detach(), fld.detach()
-    return lp, lv
+    return (lp, lv, le) if energy else (lp, lv)
 
 
 def closed_loop_loss(lp, lv, ref_p, ref_v, omega):

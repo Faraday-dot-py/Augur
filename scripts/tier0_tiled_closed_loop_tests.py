@@ -118,6 +118,17 @@ def test_model(dev):
     check("truncated-backprop rollout returns the same values", len(lp) == 3 and all(torch.isfinite(x) for x in lp))
 
 
+def test_energy_term():
+    g = torch.Generator().manual_seed(0)
+    P = torch.randn(2, 12, 2, generator=g, dtype=torch.float64) * 3
+    V = torch.randn(2, 12, 2, generator=g, dtype=torch.float64)
+    m, mk = torch.ones(2, 12, dtype=torch.float64), torch.ones(2, 12, dtype=torch.float64)
+    lab = torch.arange(12)[None].expand(2, 12) // 4
+    z = tc.similarity_energy_terms(P, V, P, V, m, mk, lab)
+    nz = tc.similarity_energy_terms(P, V * 1.1, P, V, m, mk, lab)
+    check("energy-similarity term is zero at the truth state and positive off it", float(z) == 0.0 and float(nz) > 0, f"{float(z)} {float(nz)}")
+
+
 def run_train(args, env):
     return subprocess.run([sys.executable, "scripts/train_tier0_tiled_closed_loop.py"] + args, env=env, capture_output=True, text=True)
 
@@ -143,6 +154,8 @@ def test_trainer(dev):
     check("resume continues from the checkpoint", "resumed it 2" in r2.stdout and st2["it"] == 3 and os.path.exists(os.path.join(tmp, "t.TRAIN_DONE")), r2.stderr[-300:])
     r3 = run_train(base + ["--tag", "k", "--iters", "3", "--probe-at", "1", "--gate1-err", "0.0"], env)
     check("early-stop probe writes EARLY_KILL on a violated gate", os.path.exists(os.path.join(tmp, "k.EARLY_KILL")) and "EARLY_KILL" in r3.stdout, r3.stderr[-300:])
+    r5 = run_train(base + ["--tag", "en", "--iters", "2", "--w-energy", "1.0", "--gate1-dE", "100", "--probe-at", "1"], env)
+    check("energy-similarity trainer runs and logs the term", r5.returncode == 0 and '"energy"' in r5.stdout and os.path.exists(os.path.join(tmp, "en.pt")), r5.stderr[-400:])
     r4 = run_train(base + ["--tag", "e", "--iters", "3", "--est"], env)
     check("--est exits without training", r4.returncode == 0 and not os.path.exists(os.path.join(tmp, "e.pt")), r4.stderr[-300:])
 
@@ -155,6 +168,7 @@ def main():
     dev = torch.device(a.device)
     test_exchange()
     test_weights()
+    test_energy_term()
     test_model(dev)
     if not a.fast:
         test_trainer(dev)

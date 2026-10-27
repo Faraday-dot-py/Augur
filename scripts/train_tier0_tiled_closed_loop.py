@@ -48,7 +48,7 @@ def plain_err20(model, dev, seed=9000, n=16):
 
 @torch.no_grad()
 def tiled_metrics(tt, dval):
-    r = h.eval_generic(lambda p, v, m, k, st: tt.force(p, v, m, k, st), tt.init_state, dval, ticks=(10, 20))
+    r = h.eval_generic(lambda p, v, m, k, st: tt.force(p, v, m, k, st), tt.init_state, dval, ticks=(10, 20, 40))
     return {k: r[k] for k in ("force_rel", "force_rel_free_rollout", "err@10", "err@20", "dE_model")}
 
 
@@ -77,6 +77,9 @@ def gate(m, ref, bl, after, a):
             bad.append(f"tiled err@20 {m['err@20'] / ref['err@20']:.3f}x init > {a.gate2_err}")
         if bl is not None and m["err@20"] > a.gate2_bl * bl["err@20"]:
             bad.append(f"tiled err@20 {m['err@20'] / bl['err@20']:.3f}x baseline > {a.gate2_bl}")
+    lim = a.gate1_dE if after <= a.probe_at[0] else a.gate2_dE
+    if lim is not None and m["dE_model"] > lim * ref["dE_model"]:
+        bad.append(f"dE@40 {m['dE_model'] / ref['dE_model']:.3f}x init > {lim}")
     return bad
 
 
@@ -139,6 +142,10 @@ def main():
     ap.add_argument("--tb", type=int, default=0)
     ap.add_argument("--p-start0", type=float, default=0.5)
     ap.add_argument("--w-tiled", type=float, default=0.6)
+    ap.add_argument("--w-energy", type=float, default=0.0, help="weight of the energy-similarity closed-loop term (0 = off)")
+    ap.add_argument("--energy-scale", type=float, default=0.02, help="relative energy error that counts as 1 in the energy-similarity term")
+    ap.add_argument("--gate1-dE", type=float, default=None, help="probe 1: kill if dE@40 exceeds this multiple of the initial model's")
+    ap.add_argument("--gate2-dE", type=float, default=None, help="probe 2: same")
     ap.add_argument("--w-harvest", type=float, default=0.2)
     ap.add_argument("--w-iso", type=float, default=0.2)
     ap.add_argument("--k-plain", type=int, default=16)
@@ -200,7 +207,7 @@ def main():
 
             bl = ta.load_tiled(f"{a.tier0},nt=4,tile=32,halo=16,far=1", dev)
             ref["probe_baseline"] = {k: v for k, v in h.eval_generic(lambda p, v, m, k, st: bl.force(p, v, m, k, st), lambda S: bl.init_state(S, dev), dval,
-                                                                     ticks=(10, 20)).items() if k in ("force_rel", "force_rel_free_rollout", "err@10", "err@20", "dE_model")}
+                                                                     ticks=(10, 20, 40)).items() if k in ("force_rel", "force_rel_free_rollout", "err@10", "err@20", "dE_model")}
         model.load_state_dict(init_model_state)
         model.train()
         json.dump(ref, open(ref_path, "w"), indent=1)
@@ -240,10 +247,19 @@ def main():
             pg["lr"] = lr
         opt.zero_grad()
         idx, t0s = sample(g, S, T, k, a.batch, a.p_start0, dev)
-        p, v = tc.rollout_terms(tt, d, idx, t0s, k, a.tb)
+        if a.w_energy > 0:
+            p, v, e = tc.rollout_terms(tt, d, idx, t0s, k, a.tb, energy=True)
+        else:
+            p, v = tc.rollout_terms(tt, d, idx, t0s, k, a.tb)
         lt = tc.closed_loop_loss(p, v, ref_p, ref_v, omega)
-        (a.w_tiled * lt).backward()
         parts = {"tiled": float(lt.detach())}
+        if a.w_energy > 0:
+            le = (torch.stack(e) * omega[:k].to(dev)).sum() / omega[:k].sum() / a.energy_scale ** 2
+            parts["energy"] = float(le.detach())
+            lt = a.w_tiled * lt + a.w_energy * le
+        else:
+            lt = a.w_tiled * lt
+        lt.backward()
         ok = bool(torch.isfinite(lt))
         if dh is not None:
             S2, T2 = dh["pos"].shape[:2]
