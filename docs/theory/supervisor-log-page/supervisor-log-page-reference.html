@@ -193,7 +193,7 @@ td.n { font-family: var(--data); font-size: 0.8125rem; font-variant-numeric: tab
   #     #   #     #  #  #     #   #     #  #  #   # #  ##     #     #   # #   #
   #   ##### ##### #   # ##### ####      #   #  ###  #   #     #####  ###   ### </pre><h1 class="ah">Tiered Run Log</h1><p class="lede">Supervisor sheet for the heterogeneous-tiered architecture run on Augur. Which agents ran, what passed, what was killed, what is still open.</p></div>
 <div><span class="k">run started</span><span class="v2">2026-10-24 14:10 PDT</span></div>
-<div><span class="k">log current through</span><span class="v2">2026-10-26 14:40 PDT</span></div>
+<div><span class="k">log current through</span><span class="v2">2026-10-27 00:50 PDT</span></div>
 <div><span class="k">source</span><span class="v2">docs/theory/supervisor-log.md</span></div>
 <div class="wide"><span class="k">naming rule, 2026-10-26</span>Experiments, arms and agents carry descriptive names that say what changes. The old letter labels appear once after each name in small type, for traceability. Names follow the glossary in docs/theory/experiment-naming.md (merged to master at ed036be). Where the glossary has no entry (dt-0.0125 retrain, cached-pair-substeps retrain, far-field-target-10x-data, contact-head-arms) the name is mine.</div>
 </div>
@@ -220,14 +220,14 @@ td.n { font-family: var(--data); font-size: 0.8125rem; font-variant-numeric: tab
 <tr>
 <th>Agent</th>
 <th>State</th>
-<th>Status at 14:40 10-26</th>
+<th>Status at 00:50 10-27</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>tier-k lever continuation</strong></td>
-<td>running</td>
-<td>no-velocity retrain: job 4050 (seed 4738) at iteration 41,300 of 60,000, job 4051 (second seed) running; then four-arm hierarchy rerun</td>
+<td>finished</td>
+<td>no-velocity retrain KILL on both seeds; owner-change diagnosis and residual-corrector test dispatched</td>
 </tr>
 <tr>
 <td><strong>planetesimal-disk solar-system test</strong></td>
@@ -237,17 +237,32 @@ td.n { font-family: var(--data); font-size: 0.8125rem; font-variant-numeric: tab
 <tr>
 <td><strong>loss analysis and error-distribution diagnostic</strong></td>
 <td>finished</td>
-<td>tail terms dropped for tiered arms; local work-bias loss term recommended (75d8622); not yet run</td>
+<td>tail terms dropped for tiered arms; local work-bias loss term recommended (75d8622)</td>
 </tr>
 <tr>
 <td><strong>local work-bias loss term test</strong></td>
-<td>running</td>
-<td>code and 7 CPU tests done; job 4052 (seed 4738, three concurrent arms) submitted, pending behind the retrain</td>
+<td>finished</td>
+<td>both loss terms KILL on both seeds, no gain over control (6336ef3)</td>
+</tr>
+<tr>
+<td><strong>residual corrector test</strong></td>
+<td>finished</td>
+<td>KILL: head did not help, held-out error slightly worse (a57452c)</td>
+</tr>
+<tr>
+<td><strong>tiled closed-loop tier 0 with halo exchange</strong></td>
+<td>finished</td>
+<td>KILL on two of four lines, but position error now beats the tiled baseline (e44b796); energy drift still about 4x</td>
 </tr>
 <tr>
 <td><strong>planetesimal-disk video and per-body-mass support</strong></td>
 <td>finished</td>
 <td>video rendered and reviewed; mass-conditioning design, curriculum trainer and 10 CPU tests committed (0f1c7d8, 79a6c70); not trained, queued for a free GPU</td>
+</tr>
+<tr>
+<td><strong>recruiter README and overnight showcase renders</strong></td>
+<td>finished (renders done)</td>
+<td>README committed (f906210) with YouTube placeholders; render jobs 4053-4056 completed 00:50 PDT (exit 0); download and review of videos pending</td>
 </tr>
 <tr>
 <td><strong>comparison videos</strong></td>
@@ -261,7 +276,7 @@ td.n { font-family: var(--data); font-size: 0.8125rem; font-variant-numeric: tab
 </tr>
 </tbody>
 </table>
-<p>Pending on retrain result: frozen-base residual corrector test (user approved); cold-collapse scoping.</p>
+<p>Dispatched at 00:50: drift-metric like-for-like check and energy-similarity term test on the tiled closed-loop tier 0. The 00:50 render jobs 4053-4056 finished (exit code 0) but are not yet downloaded, rendered or reviewed.</p>
 <div class="verdicts">
 <div class="s">
 <h3>Settled</h3>
@@ -274,6 +289,8 @@ td.n { font-family: var(--data); font-size: 0.8125rem; font-variant-numeric: tab
 <li>Tier 0 from scratch is the first to tile better than it runs untiled (0.54x). Matched-budget retrain (60,000 iterations) passes every pre-registered line: err@20 1.13x / 1.12x baseline, mid beta -0.118 / -0.052, tiled over untiled 0.95. The earlier mid-density bias was mostly undertraining.</li>
 <li>Contact head gives no benefit; the existing contact option stays.</li>
 <li>Hole 1 is closed.</li>
+<li>Seam / owner-window hypothesis ruled out: particles that changed owner window carry 0.6-3% of the energy-work error and a stationary probe shows no force step at a seam.</li>
+<li>README figure edge artifact was inference-side (kernel potential zero-padded at the grid border); fixed with a one-cell extension, weights unchanged (3756e2a, 66cbc29).</li>
 </ul>
 </div>
 <div class="x">
@@ -287,6 +304,10 @@ td.n { font-family: var(--data); font-size: 0.8125rem; font-variant-numeric: tab
 <li>Density-stratified harvest at 18.75k iterations: err@20 1.34x baseline, mid beta worse.</li>
 <li>End-to-end hierarchy (tier 0 with external field from upper tiers), both with the 10k-iteration and the matched-budget tier 0: joint fine-tune 1.8-2.4x the tiled baseline at tick 20, drift 3.5-13x. Gap is the field-aware tier 0 in 64-unit windows, not the upper-tier supply.</li>
 <li>Planetesimal-disk proxy for our unit-mass models: err@100 1.73, energy drift 1.23 vs 0.003 reference, disk survivors 0.00 vs 0.39.</li>
+<li>Retrain of the matched tier 0 without velocity and recurrent inputs (both seeds): tick-20 error 1.56-1.85x baseline, drift 6.0-7.3x (lines 1.2x and 2x).</li>
+<li>Local work-bias and clump-centre loss terms: no gain over the control fine-tune on either seed (short fine-tunes, a weak test).</li>
+<li>Frozen-base residual corrector: tick-20 error 1.60-1.92x baseline (line 1.25x), drift 4.7-5.3x; the head barely learned.</li>
+<li>Tiled closed-loop tier 0 with halo exchange: fails drift (3.9-4.8x vs line 2.5x) and mid-density bias by 0.003, though position error passes.</li>
 </ul>
 </div>
 <div class="o">
@@ -294,9 +315,11 @@ td.n { font-family: var(--data); font-size: 0.8125rem; font-variant-numeric: tab
 <ul>
 <li>Mid-density bias in the earlier window-trained tier 0 checkpoints was real, not a test artefact (imposed-field re-score). Undertraining is now the supported cause (matched-budget run, one seed).</li>
 <li>Matched-budget tier 0 caveats: sparse beta sits on its 0.15 limit, dense 16-32 beta +0.48 near the 0.5 kill line, plain dE@100 0.03 vs 0.014.</li>
-<li>Retrain without velocity and recurrent inputs (jobs 4050, 4051) running; pass if exact-field err@20 at most 1.2x baseline and drift at most 2x on every seed.</li>
-<li>Local work-bias loss term (job 4052) and per-body-mass training: queued behind the retrain.</li>
-<li>Joint fine-tune drift: the co-adaptation explanation is unconfirmed (one seed per arm). Frozen sequential training stays the default; test a regularised joint variant if the no-velocity tier 0 still drifts.</li>
+<li>Energy drift stays about 4x baseline in the tiled closed-loop tier 0 even though own-state force error (0.039-0.041) is below the baseline (0.052). Dispatched: drift-metric like-for-like check and an energy-similarity term. Single seed.</li>
+<li>Visited-state effect: free-rollout force error was 1.5-1.6x baseline at the model's own states against +6-12% teacher-forced for the earlier tier 0; the halo exchange with closed-loop training closes the position gap but not the drift.</li>
+<li>Per-body-mass training: design, curriculum and trainer committed, not submitted (needs a free GPU; GPU path untested).</li>
+<li>Overnight showcase renders (jobs 4053-4056) completed; not downloaded or reviewed. README figure still shows an unexplained interior force offset of about 1.55x against exact.</li>
+<li>Joint fine-tune drift: the co-adaptation explanation is unconfirmed (one seed per arm). Frozen sequential training stays the default; joint fine-tune again gave nothing over sequential. A regularised joint variant is untested.</li>
 <li>Not started: refinement tier, error head and calibration, object collisions on a trained model.</li>
 </ul>
 </div>
@@ -432,6 +455,42 @@ td.n { font-family: var(--data); font-size: 0.8125rem; font-variant-numeric: tab
 <td><span class="v k">KILL</span></td>
 </tr>
 <tr>
+<td><strong>tier0-matched-budget-no-velocity-no-recurrent-inputs-retrain</strong></td>
+<td>Matched-budget tier 0 retrained without velocity and recurrent inputs, seeds 4738 / 4739, then four-arm hierarchy</td>
+<td>tick-20 error 1.56-1.85x baseline (line 1.2x); drift 6.0-7.3x (line 2x)</td>
+<td><span class="v k">KILL</span></td>
+</tr>
+<tr>
+<td><strong>hierarchy-seam-owner-window-hypothesis</strong></td>
+<td>Split free-rollout energy change by whether a particle changed owner window</td>
+<td>owner changers 1.2-2.2% of particle-steps, 0.6-3% of energy-work error; no force step at seams</td>
+<td><span class="v k">KILL</span></td>
+</tr>
+<tr>
+<td><strong>tier0-local-work-bias-loss-term-finetune</strong></td>
+<td>Signed per-density-bin kinetic-energy error term, 4000-iteration fine-tune, seeds 4738 / 4739</td>
+<td>dense-bin work 1.96x / 2.27x baseline vs control 2.05x / 2.29x; drift 0.0219 / 0.0207 vs 0.0203 / 0.0194</td>
+<td><span class="v k">KILL</span></td>
+</tr>
+<tr>
+<td><strong>tier0-clump-centre-loss-term-finetune</strong></td>
+<td>16-nearest-neighbour mean error term, same fine-tune</td>
+<td>clump-mean error 0.98x matched-60k (line 0.7x), 1.00x control</td>
+<td><span class="v k">KILL</span></td>
+</tr>
+<tr>
+<td><strong>tiled-hierarchy-frozen-base-residual-corrector</strong></td>
+<td>Small head on a frozen base, seeds 9100/9200/9300</td>
+<td>tick-20 error 1.60-1.92x (line 1.25x); drift 4.7-5.3x (line 2.5x)</td>
+<td><span class="v k">KILL</span></td>
+</tr>
+<tr>
+<td><strong>tier0-tiled-closed-loop-halo-exchange</strong></td>
+<td>Matched-60k tier 0 fine-tuned inside the 4x4 tiling with halo exchange of the recurrent field, closed-loop to 28 ticks (single seed)</td>
+<td>tick-20 error 0.82x / 0.82x / 0.75x baseline (pass); drift 4.10x / 4.75x / 3.89x (line 2.5x); mid beta -0.153 (limit 0.15)</td>
+<td><span class="v k">KILL</span></td>
+</tr>
+<tr>
 <td><strong>contact-head-arms</strong> <span class="legacy">(legacy: six variants)</span></td>
 <td>Learned head on contact</td>
 <td>tunnel@100 98-99%, or divergence</td>
@@ -535,10 +594,20 @@ td.n { font-family: var(--data); font-size: 0.8125rem; font-variant-numeric: tab
 <p class="e g-sup"><time>14:10</time><span class="t"><b class="who">supervisor</b>Loss analysis finished (75d8622, docs/debugging/loss-analysis-2026-10-26.md, CPU rollouts only), started 13:47 at user request after the question whether the loss hides how the model is wrong. Worst 1% of particles hold under 20% of squared position error at tick 50 in all six cells and at tick 20 for the tiered arms (0.11-0.21), so the tail-term idea is dropped for the tiered arms; it only fails for the old baseline at tick 20 (0.25 and 0.39, a few close-encounter particles). Tiered error is mostly coherent (whole neighbourhoods displaced together, share 0.36-0.54); the baseline's is incoherent scatter. The densest 10% of particles hold only 12-26% of squared position error but carry the largest negative kinetic-energy error in every arm (N=1000 tick 50: matched tier 0 -46.9, tiled -37.5, baseline -8.9). Recommendation, not run: ranked 1, a local signed work-bias term (squared per-density-bin mean of kinetic-energy error; differs from the failed scene-total energy-similarity term), pass if dense-bin energy-work error at most 1.5x baseline (now 2.1x), tiled drift at tick 100 at most 0.012 (now 0.019), position error at tick 20 at most 1.10x control; ranked 2, a clump-centre (16-nearest-neighbour mean) error term; dropped: tail or top-k, heteroscedastic weighting, more noise injection, Huber. Cost about 0.3 GPU-hours per short fine-tune arm, 5.1 for a full retrain. Literature review (25 arXiv abstracts read, not full text) has no verified sources for several loss families; treat as pointers only.</span></p>
 <p class="e g-sup"><time>14:30</time><span class="t"><b class="who">supervisor</b>User asked to pursue the local work-bias loss direction, add per-body-mass support, and produce a video of the planetesimal-disk run. Dispatched: local work-bias loss term test (separate arms for the work-bias and clump-centre terms, queued behind the retrain for a Polaris GPU), and an agent for the disk video plus per-body-mass design, mass-ratio curriculum dataset and training code (no training until a GPU frees). Retrain job 4050 at about 2 h 40 min, still running.</span></p>
 <p class="e g-sup"><time>14:40</time><span class="t"><b class="who">supervisor</b>Planetesimal-disk video rendered (videos/protodisk_real_reference_faceon_edgeon_plus_central_force_proxy.mp4, 500 frames, sandbox GPU, server stopped) and per-body-mass support designed (docs/theory/mass-conditioned-scatter-field.md, commits 0f1c7d8 and 79a6c70). Fresh reviewer: real-design panels change slowly (disk eccentricity 10th / 50th / 90th percentile 0.004 / 0.010 / 0.018 to 0.020 / 0.059 / 0.146); proxy panels start identical and diverge by about tick 1800, reference thins out while the model stays a tight central clump; no stripes or black frames; overlay text small and overlapping in corners, not fixed. Design: mass-weighted deposit and pair term already linear in source mass; earlier mass fine-tunes failed the in-distribution gate; new are two mass-range input channels, soft-clipped inputs and a per-scene geometric-mean mass unit (keeps tiling seamless); new input columns start at zero so unit-mass behaviour is reproduced exactly (unit-tested). Pass and kill lines pre-registered (planet semi-major-axis error at most 0.02, kill above 0.15; disk at most 0.05, kill above 0.25; in-distribution gate 1.15x, kill above 1.5x). Curriculum reaches 1000:1 star-to-planet and 1e4:1 star-to-disk-particle; the real design's about 6.7e4:1 needs a later stage. Training code ready (3 arms, 7 stages x 600 iterations, about 1 GPU-hour estimated), needs a tier-0 checkpoint as the initial checkpoint; GPU path untested; not submitted, waiting for a free GPU behind jobs 4050, 4051 and 4052.</span></p>
+<p class="e g-sup"><time>15:35</time><span class="t"><b class="who">supervisor</b>Recruiter-facing README written (4db3002) and extended (f906210): showcase section with YouTube thumbnail placeholders for 1e9 black hole (lensed), 1e10 black hole, 1e5 black hole (model vs exact), 1e9 clumpy galactic collapse, solar system (exact vs learned; the model loses 7 of 8 planets by tick 2000) and planetesimal disk (reference only; real mass ratio out of range for the model); upload sheet in docs/showcase-videos.md; no accuracy claim at 1e9 or above; old project name removed. Overnight re-render jobs submitted on Polaris with begin time 22:00 PDT and low priority: 4053 solar system (about 5 min), 4054 1e9 black hole 300 ticks (about 25 min), 4055 1e9 clumpy collapse 200 ticks (about 15 min); resume path smoke-tested on the sandbox GPU and CPU. Not tested at full scale: the 8 GB checkpoint write, Polaris disk quota, timezone of the begin time. Fresh-reviewer step for the new videos pending for the morning.</span></p>
+<p class="e g-sup"><time>16:20</time><span class="t"><b class="who">supervisor</b>README figure replaced with an edge-artifact-free version (commits 3756e2a, 66cbc29). Cause: the old figure used the stock checkpoint with the kernel potential zero-padded when taking the gradient, giving a spurious force near the grid border. Fix is inference-side (take the kernel potential one cell beyond each grid side, flag --kpad ext in scripts/scatter_bh_1b.py), weights unchanged. Numeric check at 1e6 bodies, force over exact force: within 1 unit of the edge 91x to 1.53x, 3-4 units 11x to 1.58x, interior 1.5-1.6x unchanged. Fresh blinded reviewer saw a nested bright rim on the old force panel and none on the fixed one. Caveat: a roughly 1.55x interior force offset against exact is unexplained and not an edge effect. The 1e9 version is queued as job 4056 (begin 23:30, low priority); it cannot resume mid-rollout, so a preemption restarts from tick 0 (about 5 min).</span></p>
+<p class="e g-tiers"><time>18:10</time><span class="t"><b class="who">upper-tier</b>No-velocity-and-recurrent-input retrain of the matched tier 0 (jobs 4050 seed 4738 and 4051 seed 4739, 6 h each, then the four-arm hierarchy rerun on seeds 9100/9200/9300) <span class="v k">KILL</span> on both seeds. Pass line was exact-field position error at tick 20 at most 1.2x baseline and energy drift at most 2x baseline on every seed. Observed, seed 4738 / 4739: tick-20 error 1.58-1.85x / 1.56-1.74x; energy drift 6.5-7.0x / 6.0-7.3x; sequential upper tiers 1.86-2.26x / 1.90-2.14x; joint 1.92-2.30x / 1.79-2.04x. The plain tier 0 alone is fine (within 2-9% of the baseline at tick 20), and teacher-forced force error is now within 6-12% of baseline at every tick with the dense-region energy bias gone, yet free-rollout error and drift remain far off, so the cause is something the teacher-forced diagnosis could not see. The exact-field arm is slightly worse than with the inputs kept (1.5-1.7x error, 4-5x drift). Joint fine-tune again gave nothing over sequential. Next (dispatched): split free-rollout energy change by whether a particle changed owner window at that step, and the approved frozen-base residual corrector test. Loss-term jobs 4052 (seed 4738) and 4057 (seed 4739) are running on the matched-60k tier 0, which remains the tier 0 of record.</span></p>
+<p class="e g-tiers"><time>18:25</time><span class="t"><b class="who">upper-tier</b>Seam / owner-window hypothesis <span class="v k">KILL</span> (b40c8a6; 8 scenes per seed, seeds 9100/9200/9300, 100 ticks, sandbox GPU). Failure reproduced: tick-20 position error 0.067 for the tiled baseline vs 0.111 matched-60k, 0.122 / 0.117 no-velocity seeds 4738 / 4739 (1.66-1.82x); energy drift at tick 100 4.1x for matched-60k, 6.7-7.0x for the no-velocity seeds. Particles that changed owner window are 1.2-2.2% of particle-steps and carry 0.6-3% of the energy-work error; relative force error is flat across seam-distance bins (0.079-0.090 hierarchy vs 0.052-0.057 baseline); a stationary probe across a seam shows no force step (window-to-window gap at most 4%, 13% at the weakest-force point); neighbouring windows' recurrent fields differ by relative RMS 0.9-1.5 over their overlap (no halo exchange). Fresh reviewer: gradual divergence, no jumps at seam lines. Open finding: force error at the model's own free-rollout states is 1.5-1.6x baseline everywhere, against +6-12% teacher-forced, so the cause is a visited-state effect, not geometry. Proposed next fix: train tier 0 with its own-state rollout in the loop plus the signed local work-bias term; line free-rollout relative force error at most 1.15x baseline and drift at tick 100 at most 2x. This overlaps the running loss-term jobs and the queued residual-corrector test, so nothing new was dispatched until they reported. Residual corrector: code and tests committed on branch tier0-residual-corrector, pre-registered, waiting for a free GPU.</span></p>
+<p class="e g-tiers"><time>19:45</time><span class="t"><b class="who">upper-tier</b>Local loss-term test finished (6336ef3; jobs 4052 seed 4738 and 4057 seed 4739, 4000-iteration fine-tunes of the matched-60k tier 0, 3.3 GPU-hours): both terms <span class="v k">KILL</span> on both seeds; neither beats the control (same fine-tune with the term off). Local work-bias term, seed 4738 / 4739: dense-bin energy-work error 1.96x / 2.27x baseline (line at most 1.5x; control 2.05x / 2.29x), tiled drift at tick 100 0.0219 / 0.0207 (line at most 0.012; control 0.0203 / 0.0194), plain error at tick 20 and force error 1.00x control; it also hit the stop rule (dense-bin work above 1.7x). Clump-centre term: clump-mean error 0.98x matched-60k on both seeds (line at most 0.7x), 1.00x control; hierarchy drift 0.0434 / 0.0436 vs control 0.0409 / 0.0431. Free-rollout force error 0.059-0.060 for every arm vs 0.0596 for the unmodified matched-60k tier 0 and 0.052 for the tiled baseline; hierarchy drift at tick 100 0.040-0.044 for every arm vs 0.042 unmodified and 0.010 tiled baseline. Caveats: the short fine-tunes barely move the model (control plain error 0.0422 vs 0.0420 before), the work-bias term's weighted share of the loss was only about 0-6% after the first iterations, and a larger weight or the full 60k retrain (5.1 GPU-hours) was not run, so this is a weak test of the idea, not a refutation of loss changes in general. No frame review (no renderer for the tiled hierarchy). Residual corrector submitted as job 4059, pending for a GPU.</span></p>
+<p class="e g-tiers"><time>20:25</time><span class="t"><b class="who">upper-tier</b>Frozen-base residual corrector test finished: <span class="v k">KILL</span> (a57452c on branch tier0-residual-corrector, job 4059, about 50 min on one GPU, seeds 9100/9200/9300). Oracle bound passed its gate (removing half the frozen force error at every tick would close 121% of the tick-20 error gap and 69% of the tick-100 drift gap) and shows the error is spread across particles (exact force for only the densest 10% closes 11% of the err gap). Trained head, against the tiled baseline: tick-20 error 1.60-1.92x (line at most 1.25x), vs frozen 1.08-1.16x (slightly worse); drift at tick 100 4.7-5.3x (line at most 2.5x); plain untiled tick-20 error 2.5x frozen (line at most 1.10x). The energy-similarity arm differs from the position-loss arm by under 1%; validation-loss ratio 0.97-0.99 so the head barely learned; the exact-field-input arm was skipped. Likely cause, untested: the 40-tick squared-position loss is dominated by chaotic late ticks. A retry would need a loss weighted to the tick-20 scale, plain scenes in training and neighbour information beyond the coarse grid. No frame review (no rollouts rendered). Levers killed so far on the tiled hierarchy gap: removing velocity and recurrent inputs, local work-bias and clump-centre loss terms, seam / owner-window hypothesis, residual corrector, joint fine-tune. Still open: the visited-state effect (force error 1.5-1.6x baseline at the model's own free-rollout states vs +6-12% teacher-forced) and recurrent state with no halo exchange between windows.</span></p>
+</div>
+<div class="d"><h3>2026-10-27</h3>
+<p class="e g-sup"><time>00:50</time><span class="t"><b class="who">supervisor</b>Overnight showcase render jobs 4053 (solar system, 34 s), 4054 (1e9 black hole, 17.5 min), 4055 (1e9 clumpy collapse, 12.2 min) and 4056 (1e9 edge-free figure, 7 min) all completed with exit code 0; outputs not yet downloaded, rendered or reviewed. Polaris was found disconnected at 00:35 and reconnected by 00:36 (not by the supervisor).</span></p>
+<p class="e g-tier0"><time>00:50</time><span class="t"><b class="who">tier0-extensions</b>Tiled closed-loop tier 0 with halo exchange of the recurrent field (job 4060, fine-tune of the matched-60k tier 0 inside the 4x4 tiling, closed-loop rollouts to 28 ticks, 1.35 h on one GPU, seed 4738; e44b796 on branch tier0-tiled-closed-loop) <span class="v k">KILL</span> on two of four pre-registered lines, but the first lever to beat the tiled baseline on position error. Tiled error at tick 20 on held-out seeds 9100/9200/9300: 0.82x / 0.82x / 0.75x baseline (line at most 1.25x; matched-60k was 1.66-1.82x) <span class="v p">PASS</span>; plain error at tick 20 0.67x matched-60k (line at most 1.10x) <span class="v p">PASS</span>; drift at tick 100 4.10x / 4.75x / 3.89x baseline (line at most 2.5x; matched-60k about 4.1x) <span class="v k">FAIL</span>; mid-density bias -0.153 in the 8-16 bin (limit plus or minus 0.15, fails by 0.003) and -0.050 in 16-32. Own-state force error 0.039-0.041, below the baseline's 0.052. Same weights evaluated without the halo exchange are 1.0-1.2x worse at tick 20, so the exchange belongs to the tier-0 definition. Reading: the visited-state effect and the missing halo exchange explain the position-error gap, but not the energy drift, which stays about 4x baseline even with force error below baseline. Single seed; no frame review (no renderer for the tiled hierarchy). Not tried: energy-similarity term in this setting, horizons beyond 28 ticks, longer training, the stateless variant. Next dispatched: check that the drift metric compares like with like (truth's own drift under the same tiling measure) and test an energy-similarity term.</span></p>
 </div>
 </div>
 </div>
-<p class="foot">Numbers are copied from docs/theory/supervisor-log.md and docs/theory/heterogeneous-tiered.md. Unverified here: definitions of beta, com_err and far_rel (taken as named in the log); the residual-variant meaning of the old S+R label; results from jobs 4050, 4051 and 4052 (running or pending). Transcript links are not regenerated for entries after 01:55 on 2026-10-26.</p>
+<p class="foot">Numbers are copied from docs/theory/supervisor-log.md and docs/theory/heterogeneous-tiered.md. Unverified here: definitions of beta, com_err and far_rel (taken as named in the log); the residual-variant meaning of the old S+R label; results from the 00:50 render jobs 4053-4056 (completed, not yet reviewed). Transcript links are not regenerated for entries after 01:55 on 2026-10-26.</p>
 </main>
 
 </body></html>
