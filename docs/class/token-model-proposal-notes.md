@@ -4,10 +4,19 @@ Purpose: everything needed to write the 1-page proposal for the applied ML proje
 
 ## 0. Read this first (honesty and policy)
 
-- This is existing work (about 5 weeks old, 500+ commits). The proposal says "plan", so it must (a) state what already exists and (b) propose new, concrete work for the course term. Do not hide prior work.
-- Check the course/instructor policy on submitting pre-existing work before submitting. Ask in writing; disclose the prior work in the proposal either way (the draft in section 8 does).
-- Naming trap: the project calls the model a "token-per-ball" model, but the version that is deployed in the browser (conservative-contact, `results/cons_pure_100.pt`) has NO attention. It is one state token per ball, with a learned distance-only pair-force MLP, a wall-force MLP, a learned uniform gravity, and 8 velocity-Verlet substeps (8,708 exported floats). The attention + GRU path (radius-graph single-head attention, `model/token_free.py::_core`) exists in the code and in the older "soup B" model, and is kept as an optional residual (`contact_residual=True`, never trained). Do not call the deployed model "a transformer" in the proposal. Say "token-per-ball graph model (attention variant plus physics-structured variant)".
-- Accuracy is real only at small N and short horizon (about 20 ticks). Past about 30-50 ticks, positions decorrelate from truth in chaotic contact scenes (expected; the truth sim itself is chaotic). Large-N results (1k, 50k) are stability/scale checks, not accuracy claims. The 1 billion ball run was speed and memory only, on an older model (soup B), not the deployed one.
+- User confirmed (2026-10-26): submitting pre-existing work is allowed. Still disclose it briefly as prior work and frame the proposal around new semester work (done in the draft).
+- Model name to use: "conservative-contact token model" (one state token per ball; learned distance-only pair-force MLP, wall-force MLP, learned uniform gravity, 8 velocity-Verlet substeps; NO attention, no recurrent state). The attention + GRU path (`model/token_free.py::_core`, older "soup B") is a separate, superseded variant used only as a baseline. Do not call the deployed model a transformer.
+- Accuracy is real only at small N and short horizon (about 20 ticks). Past about 30-50 ticks positions decorrelate from truth in chaotic contact scenes (expected; the truth sim is chaotic). Large-N results are stability/scale checks. The 1 billion ball run was speed and memory only, on the older soup B model.
+
+## Chosen checkpoint: `results/cons_pure_100.pt` (the checkpoint named by the live site's `weights.json`)
+
+- Family: conservative_contact. Candidates: `results/cons_pure.pt` (trained with scenes up to about 120 balls, n<=200) and `results/cons_pure_100.pt` (retrained with at most 100 balls, 50 epochs, seed 4738, per memory notes; commit fbbe239 on 2026-09-28 is the last commit touching it). Soup B and all attention variants are worse on every energy row (see below), so they are excluded.
+- Why `cons_pure_100.pt`: it is the checkpoint the live demo serves (`weights.json` on the site names `cons_pure_100.pt`, checked), and it is the one tested to 50,000 balls. Its err@1/5/10 at 50k balls (0.019/0.107/0.280) are similar to `cons_pure.pt` at 1k balls (0.018/0.106/0.281), but those are different scenes, so the choice is by deployment and test coverage, not by a measured accuracy win. Be honest that the two were not compared head to head on the same small-N seeds.
+- Re-read from results JSON this session (no torch locally, nothing re-run):
+  - `results/ball_50k_rollout.json` (cons_pure_100, 50,000 balls, box n=2237, 100 steps, from true start): err@1/5/10/20/50/100 = 0.0188/0.1065/0.2799/0.9374/9.32/71.53; kinetic energy per ball at tick 100: 6323 model vs 6433 truth (1.7 percent low); finite for all steps; about 1.2-1.3 s total for model and truth.
+  - `results/ball_1k_fix.json` (`cons_pure.pt`, 1,000 balls, 500 steps, soup B for comparison): cons_pure err@1/5/10/20/50 = 0.0178/0.1056/0.2807/1.3828/32.9, never non-finite in 500 steps; soup B 0.0381/0.1904/0.3884/2.1408/56.4, first non-finite at step 75.
+  - `results/eval_energy_fix.json` (`cons_pure.pt` vs soup B, 4 balls and 100 balls; see section 5 facts): conservative wins on err@5/10/20, energy at tick 100, restitution and pair rows.
+- Not available: a small-N held-out eval of `cons_pure_100.pt` itself in results/. Week 2 of the plan reruns `scripts/eval_energy_fix.py` on it (needs the GPU environment; torch is not installed on this machine).
 
 ## 1. Rubric checklist (score 1 needs all four; any missing = 0 and 0 on final project)
 
@@ -88,33 +97,37 @@ Read from code: `model/token_free.py`, `model/token_model.py`, `scripts/train_co
 - Browser parity: JS port vs PyTorch one-step max abs diff about 2e-6 (below the 1e-4 gate); in dense contact the float32 rollout diff reaches about 4e-3; free-run diffs at step 20 are chaotic. Source: `web/token/README.md` (not re-run here).
 - Known failures (state them in the report/demo): attention model failed gravity at 100-1000 bodies (a different model, `CentralForceDynamics`, was needed; not part of this proposal); 1k-ball rollouts with the older model collapsed onto the floor; the open gravity offset of about 0.88 in pair-momentum error comes from learned g_x 8.90 vs true 9.
 
+
 ## 6. Planned implementation
 
-Assumption: 4-6 weeks available (5-week plan below; shrink by dropping week-4 ablations and the second seed).
+Term: a full semester, about 15 weeks (user confirmed).
 
 **Already built (disclose as prior work)**
-- Truth simulator (`augur.py`, GPU version in `scripts/energy_probe2.py`), token model code (`model/token_free.py`, `model/token_model.py`), conservative-contact training and eval scripts, 1k and 50k rollout scripts, JS port and 3D inspector page (`web/token/`), verification tests (`tests/test_token_free.py`, `web/token/tests/`), several rollout videos.
+- Truth simulator (`augur.py`, GPU version in `scripts/energy_probe2.py`), token model code (`model/token_free.py`, `model/token_model.py`), conservative-contact training and eval scripts, 1k and 50k rollout scripts, JS port and 3D inspector page (`web/token/`), verification tests (`tests/test_token_free.py`, `web/token/tests/`), rollout videos.
 
-**To build or adapt in this term (the planned work)**
-1. One-command reproducible pipeline (data generation, train, evaluate, export weights, verify web parity) with a README, tested on a clean clone. Today the steps are spread across scripts.
-2. GNS-style GNN baseline in PyTorch (encoder, 3-5 message-passing layers, decoder to acceleration, same Verlet-free Euler update, same data and loss).
-3. Single evaluation harness: err@k, energy drift, momentum, restitution, non-finite step, across 3 seed sets, mean and bootstrap interval over scenes; one results table plus plots.
-4. Ablations: substeps, residual path, gravity fine-tune (open item in the repo), unroll length.
-5. Demo polish: results panel in the browser page, side-by-side truth vs model video (new, from the final checkpoint), slides.
+**To build or adapt this term (the planned work)**
+1. One-command reproducible pipeline (data generation, train, evaluate, export weights, verify web parity) with a README, tested on a clean clone.
+2. GNS-style GNN baseline in PyTorch (encoder, 3-5 message-passing layers, decoder to acceleration, same data and unrolled loss).
+3. Single evaluation harness: err@k, energy drift, momentum, restitution, non-finite step, 3 seed sets, bootstrap intervals over scenes; results table plus plots.
+4. Ablations: substeps, residual attention path (never trained), gravity fine-tune (open repo item), unroll length.
+5. Scaling study: ball count 100 to 50k at constant density, box size, speeds beyond training (>40), timing vs N.
+6. Demo polish: results panel in the browser page, new side-by-side video, final slides.
 
-**Week plan**
-- Week 1: freeze baseline checkpoint and scripts; write the pass/kill criterion; build the single pipeline script; clean-clone run. Deliverable: pipeline README.
-- Week 2: GNN baseline implemented and trained; unit tests (shape, permutation invariance, momentum check). Deliverable: baseline checkpoint and curve.
-- Week 3: evaluation harness; run all models on 3 seed sets, N in {4, 100, 1000}; add 10k-50k stability check. Deliverable: results table v1.
-- Week 4: ablations and gravity fine-tune; rerun table; honest write-up of failures. Deliverable: ablation table.
-- Week 5: demo: rendered videos, web results panel, rehearsal, final report/slides.
+**Week plan (15 weeks, milestones in bold)**
+- **Weeks 1-2: proposal approved**; freeze `cons_pure_100.pt` and scripts; write pass/kill criteria; one-command pipeline; rerun small-N eval on `cons_pure_100.pt`; clean-clone test.
+- Weeks 3-5: GNN baseline implemented, unit-tested (shapes, permutation invariance, pair momentum), trained on the same scenes.
+- **Weeks 6-7: baselines milestone**: evaluation harness, all models (constant velocity, soup B, GNN, conservative) on 3 seed sets, N in {4, 100, 1000}; results table v1.
+- **Weeks 8-10: ablations milestone**: substeps, residual path, gravity fine-tune, unroll length; ablation table; log every run, failures included.
+- **Weeks 11-12: scaling study milestone**: 100 to 50k balls, box size, speed beyond training; timing; floor-pile failure analysis.
+- Weeks 13-14: **demo polish**: browser results panel, side-by-side truth/model/GNN video (new), unbiased frame review of the video, report draft.
+- Week 15: **final presentation** and report; buffer for slips.
 
 **Risks and fallbacks**
-- GNN baseline beats the structured model: report it honestly; the project then compares trade-offs (energy, size, speed, interpretability).
-- GPU queue delays: all trainings are under 1 hour; the small-N tests also run on CPU (slowly).
-- Chaos makes long-horizon comparison noisy: restrict to ticks <=20 and physical metrics.
-- Time: drop the ablations and the 50k rerun (the prior numbers stay labeled as prior).
-- Web demo breaks: videos and table are the fallback demo.
+- GNN baseline beats the structured model: report it; compare trade-offs (energy, size, speed, interpretability).
+- GPU queue delays: each training is under 1 hour; schedule in batches.
+- Chaos makes long-horizon comparison noisy: restrict accuracy to ticks <=20 and use physical metrics beyond.
+- Time: drop the scaling study (prior 1k/50k numbers stay labeled as prior), then the unroll-length ablation.
+- Web demo breaks: videos and results table are the fallback demo.
 
 ## 7. Planned demo
 
@@ -123,34 +136,20 @@ Assumption: 4-6 weeks available (5-week plan below; shrink by dropping week-4 ab
 - New for the term: side-by-side truth vs model vs GNN video from the final checkpoint; results table slide; ablation plot.
 - Structure of the talk (about 10 min): problem, token design (diagram), data and training, results table and failure cases, live demo, limits.
 
-## 8. Draft of the one-page proposal (about 480 words; verify it fits one page at 11 pt, trim related work first if not)
 
-**Project type:** Applied project.
+## 8. One-page proposal (source and PDF)
 
-**Project idea.** We will build and evaluate a learned simulator for 2D bouncing balls in which each ball is a single token (position, velocity) and a small neural network predicts the next state. Such learned simulators matter because physics solvers become costly at scale, and learned models can be faster but often drift in energy and fail on long rollouts. We ask how a physics-structured token model compares with a generic graph-network baseline in accuracy, energy behavior and generalization to many more balls than it was trained on. The result is a working prototype with a live browser demo.
+- Source text: `docs/class/token-model-proposal.md` (about 550 words incl. headings). Edit it, then rerun `python3 docs/class/render_proposal_pdf.py`.
+- PDF: `docs/class/token-model-proposal.pdf`, 1 page, US Letter, 1-inch margins, Liberation Serif 11 pt (Times-metric). Last render: text ends 2.5 in above the page bottom (1.5 in of slack above the 1-inch margin).
+- No pandoc, LaTeX or LibreOffice on this machine; the PDF is produced by matplotlib (embedded Liberation Serif, TrueType). Layout is plain (no hyphenation, ragged-right words with fixed spacing). For a more polished final, paste the text into Word/Google Docs (11 pt, 1-inch margins) and export to PDF.
+- Verified with pypdf: 1 page, 612x792 pt, fonts LiberationSerif and LiberationSerif-Bold embedded. Font size 11 is set in the script (`SIZE = 11.0`), not read back from the PDF.
 
-**Prior work disclosure.** I started this system before the course (about 5 weeks of work). It already contains the exact simulator, a token-per-ball model with a learned pair-force and wall-force network and Verlet integration, a first training/evaluation script set, and a browser port. The course work below is the new part: a reproducible pipeline, a graph-network baseline, a systematic evaluation, ablations and a finished demo.
+## 9. Format checklist
 
-**Related work.** Graph Network-based Simulators (Sanchez-Gonzalez et al., ICML 2020; DeepMind reference code), Interaction Networks (Battaglia et al., NIPS 2016), MeshGraphNets (Pfaff et al., ICLR 2021), Neural Relational Inference (Kipf et al., ICML 2018), Hamiltonian Neural Networks (Greydanus et al., NeurIPS 2019), Lagrangian Neural Networks (Cranmer et al., 2020), and Attention Is All You Need (Vaswani et al., 2017).
+- Required: PDF, minimum 11 pt font, 1-inch margins, maximum 1 page, with: project type, project idea, related work/GitHub references, methods/pipeline, planned implementation, planned demo (all in the source text).
+- Alternative production: LaTeX `\documentclass[11pt]{article}\usepackage[margin=1in]{geometry}` with `pdflatex`; or pandoc `pandoc proposal.md -o proposal.pdf -V fontsize=11pt -V geometry:margin=1in`.
+- Verify: page count 1 (`pdfinfo file.pdf | grep Pages`, or `pypdf`), fonts at 11 pt, headings not smaller than 11 pt, no small-font tables or URLs.
 
-**Methods and pipeline.** Data: a seeded, GPU-based force simulator (walls, ball contact, gravity) generates trajectories of 1 to 100 balls in boxes of several sizes; about 1,200 training scenes of 24 steps, 100 validation scenes. Model: per-ball tokens; a distance-only pair-force network and a wall-force network (about 9k parameters) with eight velocity-Verlet substeps and a learned gravity, built on a linear-time neighbor graph. Training: multi-step unrolled loss on position and velocity (1, 4, then 8 steps), 50 epochs, one GPU, under 1 hour. Baselines: constant velocity, a previous attention-plus-GRU token model, and a new message-passing GNN trained on the same data. Evaluation: mean position error per ball at ticks 1 to 20 (err@k), energy drift, momentum, wall restitution versus speed, and stability at 100, 1,000 and 50,000 balls, on three held-out seed sets with confidence intervals. We use ticks up to 20 for accuracy because rollouts are chaotic beyond that. Ablations: number of substeps, residual attention path, learned versus fixed gravity, unroll length.
-
-**Planned implementation.** Week 1: one-command pipeline (generate, train, evaluate, export) and clean-clone test. Week 2: PyTorch GNN baseline with tests. Week 3: evaluation harness and results table. Week 4: ablations and a gravity fine-tune. Week 5: demo and report. All training uses a university GPU cluster (single GPU). Fallback: if the structured model does not beat the baseline, we report that and compare the trade-offs.
-
-**Planned demo.** A live browser page (already built) that runs the model next to the exact simulator with an energy plot and editable weights, a side-by-side truth/model/GNN rollout video, and a results table with ablations.
-
-(Count the words after editing; trim the related-work line first if over a page.)
-
-## 9. Format checklist and open questions
-
-- Required: PDF, minimum 11 pt font, 1-inch margins, maximum 1 page.
-- Produce: Google Docs or Word (set margins 1 inch under Page setup, font 11 pt, e.g. Times New Roman or Arial) and export to PDF. Or LaTeX: `\documentclass[11pt]{article}\usepackage[margin=1in]{geometry}` and `pdflatex`. Pandoc: `pandoc proposal.md -o proposal.pdf -V fontsize=11pt -V geometry:margin=1in`.
-- Verify: open the PDF, check page count is 1 (`pdfinfo proposal.pdf | grep Pages`), check fonts at 11 pt (`pdffonts`, or zoom to 100 percent), and that bold headings are also at least 11 pt. Tables and URLs in small fonts can violate the 11 pt rule; avoid them.
-- Needed: Project type; Project idea; Related work / GitHub references; Proposed methods / pipeline; Planned implementation; Planned demo (all in the draft).
-- Open questions for you:
-  1. Is submitting pre-existing work allowed? If not, can the scope be limited to the new baseline/evaluation work as the project?
-  2. Which model is "the token model" for the proposal: the deployed physics-structured one (no attention) or the attention variant? The draft uses the structured one and keeps the attention one as a baseline.
-  3. OK to put the public demo URL (contains the GitHub handle) and the repo in the proposal?
-  4. Is the term 5 weeks? Adjust the weekly plan.
-  5. Do you want the GNN baseline, or a cheaper "MLP per ball without neighbors" baseline if time is short?
-  6. Whether to reproduce the small-N numbers for `cons_pure_100.pt` (the deployed checkpoint): the table in section 5 is for `cons_pure.pt`; the 100-ball-capped checkpoint was verified at 1k/50k per notes only.
+**Open questions for you (remaining)**
+1. GNN baseline vs a cheaper "MLP per ball without neighbors" baseline if time runs short: keep the GNN as the plan?
+2. The small-N table in section 5 is for `cons_pure.pt`; OK to rerun the eval on `cons_pure_100.pt` in week 2 and cite those numbers in the final report?
