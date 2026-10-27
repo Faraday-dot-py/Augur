@@ -225,13 +225,19 @@ def eval_generic(force_fn, init_state, d, ticks=(10, 20, 50, 100)):
     st = init_state(S)
     a_prev, st = force_fn(pos, vel, m, mk, st)
     traj = {0: (pos, vel)}
+    fnum = fden = 0.0
     for t in range(1, T):
         pn = pos + DT * vel + 0.5 * DT ** 2 * a_prev
         a_new, st = force_fn(pn, vel + DT * a_prev, m, mk, st)
+        if t % 10 == 0:
+            at_free = ttr.true_acc(pn, m, mk)
+            fnum += float(((a_new - at_free) ** 2 * mk[..., None]).sum())
+            fden += float((at_free ** 2 * mk[..., None]).sum())
         pos, vel, a_prev = pn, vel + 0.5 * DT * (a_prev + a_new), a_new
         if t in ticks:
             traj[t] = (pos, vel)
     out = {"force_rel": (num / den) ** 0.5, "com_err": float(np.mean(coms))}
+    out["force_rel_free_rollout"] = (fnum / max(fden, 1e-30)) ** 0.5
     cnt = d["mask"].sum(1)
     for k in ticks:
         e = ((traj[k][0].double() - d["P"][:, k]).norm(dim=-1) * d["mask"]).sum(1) / cnt
