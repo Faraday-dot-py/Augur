@@ -193,7 +193,7 @@ td.n { font-family: var(--data); font-size: 0.8125rem; font-variant-numeric: tab
   #     #   #     #  #  #     #   #     #  #  #   # #  ##     #     #   # #   #
   #   ##### ##### #   # ##### ####      #   #  ###  #   #     #####  ###   ### </pre><h1 class="ah">Tiered Run Log</h1><p class="lede">Supervisor sheet for the heterogeneous-tiered architecture run on Augur. Which agents ran, what passed, what was killed, what is still open.</p></div>
 <div><span class="k">run started</span><span class="v2">2026-10-24 14:10 PDT</span></div>
-<div><span class="k">log current through</span><span class="v2">2026-10-27 00:50 PDT</span></div>
+<div><span class="k">log current through</span><span class="v2">2026-10-27 01:00 PDT</span></div>
 <div><span class="k">source</span><span class="v2">docs/theory/supervisor-log.md</span></div>
 <div class="wide"><span class="k">naming rule, 2026-10-26</span>Experiments, arms and agents carry descriptive names that say what changes. The old letter labels appear once after each name in small type, for traceability. Names follow the glossary in docs/theory/experiment-naming.md (merged to master at ed036be). Where the glossary has no entry (dt-0.0125 retrain, cached-pair-substeps retrain, far-field-target-10x-data, contact-head-arms) the name is mine.</div>
 </div>
@@ -220,14 +220,14 @@ td.n { font-family: var(--data); font-size: 0.8125rem; font-variant-numeric: tab
 <tr>
 <th>Agent</th>
 <th>State</th>
-<th>Status at 00:50 10-27</th>
+<th>Status at 01:00 10-27</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>tier-k lever continuation</strong></td>
 <td>finished</td>
-<td>no-velocity retrain KILL on both seeds; owner-change diagnosis and residual-corrector test dispatched</td>
+<td>no-velocity retrain KILL on both seeds (jobs 4050, 4051); follow-ups ran as the agents below</td>
 </tr>
 <tr>
 <td><strong>planetesimal-disk solar-system test</strong></td>
@@ -255,14 +255,19 @@ td.n { font-family: var(--data); font-size: 0.8125rem; font-variant-numeric: tab
 <td>KILL on two of four lines, but position error now beats the tiled baseline (e44b796); energy drift still about 4x</td>
 </tr>
 <tr>
+<td><strong>energy drift metric audit and energy-similarity test</strong></td>
+<td><span class="v m">RUNNING</span></td>
+<td>checking that the drift metric compares like with like (truth drift under the same tiling), then an energy-similarity term in the closed-loop tiled fine-tune; started 00:36</td>
+</tr>
+<tr>
 <td><strong>planetesimal-disk video and per-body-mass support</strong></td>
 <td>finished</td>
 <td>video rendered and reviewed; mass-conditioning design, curriculum trainer and 10 CPU tests committed (0f1c7d8, 79a6c70); not trained, queued for a free GPU</td>
 </tr>
 <tr>
 <td><strong>recruiter README and overnight showcase renders</strong></td>
-<td>finished (renders done)</td>
-<td>README committed (f906210) with YouTube placeholders; render jobs 4053-4056 completed 00:50 PDT (exit 0); download and review of videos pending</td>
+<td>finished</td>
+<td>README committed (f906210); render jobs 4053-4056 completed overnight (exit 0), outputs on Polaris under augur-showcase/results, not yet downloaded, rendered or reviewed</td>
 </tr>
 <tr>
 <td><strong>comparison videos</strong></td>
@@ -276,7 +281,7 @@ td.n { font-family: var(--data); font-size: 0.8125rem; font-variant-numeric: tab
 </tr>
 </tbody>
 </table>
-<p>Dispatched at 00:50: drift-metric like-for-like check and energy-similarity term test on the tiled closed-loop tier 0. The 00:50 render jobs 4053-4056 finished (exit code 0) but are not yet downloaded, rendered or reviewed.</p>
+<p>Running now: energy drift metric audit and energy-similarity test (started 00:36). The 00:50 render jobs 4053-4056 finished (exit code 0) but are not yet downloaded, rendered or reviewed.</p>
 <div class="verdicts">
 <div class="s">
 <h3>Settled</h3>
