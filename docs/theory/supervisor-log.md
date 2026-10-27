@@ -4,18 +4,19 @@ Role: supervisor delegates; does no work itself. Concerns non-blocking unless mi
 Polaris: connected 14:10 (adamwebb). Use both GPUs (student-pleiades QOS).
 
 
-## Live status (updated 2026-10-27 00:50 PDT; the Log below is history, not current state)
+## Live status (updated 2026-10-27 01:00 PDT; the Log below is history, not current state)
 
 | Agent | State | Doing |
 | --- | --- | --- |
-| tier-k lever continuation | finished | no-velocity retrain KILL on both seeds; owner-change diagnosis and residual-corrector test dispatched |
+| tier-k lever continuation | finished | no-velocity retrain KILL on both seeds (jobs 4050, 4051); follow-ups ran as the agents below |
 | planetesimal-disk solar-system test | finished | out of range for our models (unit-mass only); proxy KILL; reference numbers logged (0f19cf5) |
 | loss analysis and error-distribution diagnostic | finished | tail terms dropped for tiered arms; local work-bias loss term recommended (75d8622); not yet run |
 | local work-bias loss term test | finished | both loss terms KILL on both seeds, no gain over control (6336ef3) |
 | residual corrector test | finished | KILL: head did not help, held-out error slightly worse (a57452c) |
 | tiled closed-loop tier 0 with halo exchange | finished | KILL on two of four lines, but position error now beats the tiled baseline (e44b796); energy drift still about 4x |
+| energy drift metric audit and energy-similarity test | running | checking that the drift metric compares like with like (truth drift under the same tiling), then an energy-similarity term in the closed-loop tiled fine-tune; started 00:36 |
 | planetesimal-disk video and per-body-mass support | finished | video rendered and reviewed; mass-conditioning design, curriculum trainer and 10 CPU tests committed (0f1c7d8, 79a6c70); not trained, queued for a free GPU |
-| recruiter README and overnight showcase renders | finished (jobs pending) | README committed (f906210) with YouTube placeholders; render jobs 4053-4055 pending, begin 22:00 PDT; review of videos pending for morning |
+| recruiter README and overnight showcase renders | finished | README committed (f906210); render jobs 4053-4056 completed overnight (exit 0), outputs on Polaris under augur-showcase/results, not yet downloaded, rendered or reviewed |
 | comparison videos | finished | six videos in videos/, reviewed by fresh reviewers, logged (0220a18) |
 | all earlier agents (hole-1, tier-0 extensions, upper-tier module, naming, page restyle, sandbox wrapper) | finished or stopped | results are in the Log |
 
