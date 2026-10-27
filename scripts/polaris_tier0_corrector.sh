@@ -22,12 +22,7 @@ S1=results/tier0_ext/tier0-matched-60k-iterations.pt
 T0=$(date +%s)
 [ -f $O/oracle_done ] || { python scripts/eval_tier0_corrector.py --mode oracle --s1 $S1 --out $O/oracle.json > $O/oracle.log 2>&1 && touch $O/oracle_done; }
 echo "ORACLE_SECONDS $(( $(date +%s) - T0 ))"
-python - <<'PY' || { echo "ORACLE_KILL"; exit 0; }
-import json, sys
-c = json.load(open("results/tier0_corrector/oracle.json"))["lam0.5"]["closure"]
-print("lam0.5 closure", c)
-sys.exit(0 if min(c.values()) >= 0.30 else 1)
-PY
+python scripts/tier0_corrector_oracle_gate.py $O/oracle.json || { echo "ORACLE_KILL"; exit 0; }
 declare -A EXTRA=( [corrector-position-loss]="" [corrector-position-plus-energy-similarity-loss]="--e-w 1.0" )
 PIDS=()
 trap 'kill -TERM "${PIDS[@]}" 2>/dev/null; wait; exit 143' TERM
