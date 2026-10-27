@@ -61,6 +61,8 @@ def metrics(d, tag):
         m["com_err"] = {s: o[s]["com_err"] for s in SEEDS}
         m["hier_err20"] = sum(o[s]["err@20"] for s in SEEDS) / 3
         m["hier_dE"] = sum(o[s]["dE_model"] for s in SEEDS) / 3
+        if "force_rel_free_rollout" in o[SEEDS[0]]:
+            m["force_rel_free_rollout"] = sum(o[s]["force_rel_free_rollout"] for s in SEEDS) / 3
     if tl:
         k = [x for x in tl if x.endswith("@128")][0]
         m["tiled_dE100"] = tl[k]["dE@100_model"]
@@ -96,6 +98,8 @@ def main():
             v["plain_err20_over_control"] = m["plain_err20"] / c["plain_err20"]
         if "force_rel" in m and "force_rel" in c:
             v["force_rel_over_control"] = m["force_rel"] / c["force_rel"]
+        if "force_rel_free_rollout" in m and "force_rel_free_rollout" in c:
+            v["free_force_rel_over_control"] = m["force_rel_free_rollout"] / c["force_rel_free_rollout"]
         if "com_err" in m:
             v["com_err_over_matched60k"] = {s: m["com_err"][s] / base["matched60k_com_err"][s] for s in SEEDS}
             v["com_err_over_control"] = {s: m["com_err"][s] / c["com_err"][s] for s in SEEDS}
