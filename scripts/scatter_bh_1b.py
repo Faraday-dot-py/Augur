@@ -44,9 +44,9 @@ def _on_term(signum, frame):
     STOP[0] = True
 
 
-def save_state(path, sim, pos, mom, out, t):
+def save_state(path, sim, pos, mom, out, t, extra=None):
     tmp = path + ".tmp"
-    torch.save({"pos": pos, "mom": mom, "field": sim.field, "out": out, "t": t}, tmp)
+    torch.save({"pos": pos, "mom": mom, "field": sim.field, "out": out, "t": t, **(extra or {})}, tmp)
     os.replace(tmp, path)
 
 
@@ -280,13 +280,15 @@ def rollout(model, args, pd, md, ms, dev, steps, sub, hist, snaps, label, lens=N
     ck = os.path.join(args.resume_dir, label + ".ckpt.pt") if args.resume_dir else None
     t_start = 0
     if ck and os.path.exists(ck):
-        assert not (hist or snaps or args.grid_dump), "resume supports lens and plain runs only"
+        assert not (snaps or args.grid_dump), "resume supports lens, plain and --hist runs only"
         st = torch.load(ck, map_location=dev, weights_only=False)
         pos.copy_(st["pos"])
         mom.copy_(st["mom"])
         sim.field = st["field"]
         out = st["out"]
         t_start = st["t"]
+        if hist:
+            hists = [[h.to(dev) for h in x] for x in st["hists"]]
         del st
         print(f"[{label}] resumed from {ck} at tick {t_start}", flush=True)
     t_all = time.perf_counter()
@@ -311,8 +313,11 @@ def rollout(model, args, pd, md, ms, dev, steps, sub, hist, snaps, label, lens=N
             lens[0][t + 1] = lens_hist(sim, pos, lens[1][t + 1], args.lens_res)
             lens[0].flush()
         if ck and ((t + 1) % args.ckpt_every == 0 and t + 1 < steps or STOP[0]):
-            save_state(ck, sim, pos, mom, out, t + 1)
-            print(f"[{label}] checkpoint at tick {t + 1}", flush=True)
+            try:
+                save_state(ck, sim, pos, mom, out, t + 1, {"hists": [[h.cpu() for h in x] for x in hists]} if hist else None)
+                print(f"[{label}] checkpoint at tick {t + 1}", flush=True)
+            except Exception as e:
+                print(f"[{label}] checkpoint at tick {t + 1} FAILED: {e!r}", flush=True)
         if STOP[0]:
             print(f"[{label}] SIGTERM: stopped at tick {t + 1}", flush=True)
             sys.exit(0)

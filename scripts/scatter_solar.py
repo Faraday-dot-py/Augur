@@ -75,10 +75,14 @@ def solar_scene(seed=4738, nbelt=200, k=3.5):
     return dict(pos=pos, vel=vel, mass=mass, kind=np.array(kind))
 
 
+KPAD = ["zero"]
+
+
 def build(spec, dt, dev):
     exp, variant, ckpt = spec
     m = tsf.build(tsf.EXPS[exp], variant, dt).to(dev)
     sf.load_compat(m, torch.load(ckpt, map_location=dev, weights_only=False)["model"])
+    m.kpad = KPAD[0]
     return m.eval()
 
 
@@ -173,10 +177,12 @@ def main():
     ap.add_argument("--steps", type=int, default=2000)
     ap.add_argument("--belt", type=int, default=200)
     ap.add_argument("--hill-k", type=float, default=3.5)
+    ap.add_argument("--kpad", choices=["zero", "ext"], default="zero", help="ext: kernel potential taken one cell beyond each grid side (grid-edge force fix)")
     ap.add_argument("--tag", default="solar")
     ap.add_argument("--n-scenes", type=int, default=24)
     args = ap.parse_args()
     dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    KPAD[0] = args.kpad
     cands = parse_cands(args.cands) if args.cands else {}
     os.makedirs(OUT, exist_ok=True)
     if args.mode == "select":
