@@ -4,5 +4,5 @@ Rule (user, 2026-10-27): showcase videos have equal priority, attention and GPU 
 
 | Slot | Owner | State | Since |
 | --- | --- | --- | --- |
-| GPU 1 | experiments (energy drift audit and energy-similarity test) | reserved | 2026-10-27 01:05 |
+| GPU 1 | experiments | released | 2026-10-27 01:40 |
 | GPU 2 | showcase videos | reserved | 2026-10-27 01:05 |
