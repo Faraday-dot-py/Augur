@@ -9,15 +9,23 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from model.neuron_graph_variants import NeuronGraphVariantDynamics
 from model.neuron_graph import NeuronGraphDynamics, SPIKE_POS_WEIGHT, count_parameters, normalize_state
-from scripts.neuron_loss_diagnostic import full_raw_state, prepare_eval, rate_statistics
+from scripts.neuron_loss_diagnostic import full_raw_state, prepare_eval, rate_statistics, regime_flags
+from scripts.neuron_spike_tick_investigation import one_step_spike_ticks, summarise
 from scripts.neuron_circuit_teacher import simulate
 from scripts.train_neuron_graph_smoke import (
     EVAL_HORIZON, EVAL_SIZES, SEG_TRAIN, TRAIN_SIZES, build_arm, free_rollout, make_heldout_data, make_train_data,
     rollout_metrics, sample_batch,
 )
 
-VARIANTS = ("smoothed-spike-timing-tolerant-van-rossum", "statistics-matching-rate-and-correlation", "gaussian-nll-voltage-head")
+VARIANTS = ("smoothed-spike-timing-tolerant-van-rossum", "statistics-matching-rate-and-correlation", "gaussian-nll-voltage-head",
+            "absolute-reset-value-output", "in-degree-normalised-message-sum", "calibrated-emission-with-baseline-loss",
+            "calibrated-emission-with-smoothed-van-rossum-loss")
+SMOOTHED = ("smoothed-spike-timing-tolerant-van-rossum", "calibrated-emission-with-smoothed-van-rossum-loss")
+ARCHITECTURE = {"absolute-reset-value-output": {"absolute_reset": True}, "in-degree-normalised-message-sum": {"normalize_messages": True},
+                "calibrated-emission-with-baseline-loss": {"calibrated_emission": True},
+                "calibrated-emission-with-smoothed-van-rossum-loss": {"calibrated_emission": True}}
 SMOOTH_SIGMA = 2.0
 SMOOTH_WEIGHT = 100.0
 CORR_SIGMA = 5.0
@@ -65,6 +73,8 @@ def variant_loss(model, graph, st, ex, rollout, variant):
     for k in range(length):
         target = st[:, k + 1]
         x_next, logit, h = model.step(x, ex[:, k], h, graph, None if rollout else target[..., 3])
+        if getattr(model, "calibrated_emission", False) and model.training:
+            model.calibrate(logit, target[..., 3])
         probs.append(torch.sigmoid(logit))
         targets_spk.append(target[..., 3])
         if k < cap:
@@ -74,14 +84,14 @@ def variant_loss(model, graph, st, ex, rollout, variant):
                 v_nll = (0.5 * (torch.exp(-lv) * (x_next[..., 0] - target[..., 0]) ** 2 + lv)).mean()
                 rest = F.mse_loss(x_next[..., 1:3], target[..., 1:3]) * (2.0 / 3.0)
                 traj = traj + v_nll / 3.0 + rest + 0.5 * bce
-            elif variant == "smoothed-spike-timing-tolerant-van-rossum":
+            elif variant in SMOOTHED:
                 traj = traj + F.mse_loss(x_next[..., :3], target[..., :3])
             else:
                 traj = traj + F.mse_loss(x_next[..., :3], target[..., :3]) + 0.5 * bce
         x = x_next if rollout else target
     loss = traj / cap
     p, s = torch.stack(probs), torch.stack(targets_spk)
-    if variant == "smoothed-spike-timing-tolerant-van-rossum":
+    if variant in SMOOTHED:
         loss = loss + SMOOTH_WEIGHT * 0.5 * F.mse_loss(smooth(p, SMOOTH_SIGMA), smooth(s, SMOOTH_SIGMA))
     if variant == "statistics-matching-rate-and-correlation" and rollout:
         rate_p, rate_s = p.mean(dim=0), s.mean(dim=0)
@@ -103,6 +113,8 @@ def correlation_matrix(trace):
 def build_variant_arm(variant, messages):
     if variant == "gaussian-nll-voltage-head":
         return GaussianVoltageDynamics(messages=messages)
+    if variant in ARCHITECTURE:
+        return NeuronGraphVariantDynamics(messages=messages, **ARCHITECTURE[variant])
     return NeuronGraphDynamics(messages=messages)
 
 
@@ -132,21 +144,33 @@ def train_variant(variant, messages, data, seed, args, device, log, tag):
     return model
 
 
-def evaluate_arms(arms, heldout, seed, device):
+def evaluate_arms(arms, heldout, seed, device, dump_dir=None):
     out = {}
     for n in EVAL_SIZES:
         circ, idx, truth, ex, graph = prepare_eval(heldout, n, device)
         truth_r = truth[:, 1:]
         x0 = normalize_state(truth[:, 0])
         row = {}
+        exc = circ["exc"][idx]
+        code = regime_flags(truth)
+        preds = {}
         for name, m in arms.items():
             m.eval()
             pr = full_raw_state(free_rollout(m, x0, ex, graph, EVAL_HORIZON))
+            preds[name] = pr
             met = rollout_metrics(pr, truth_r, ex.shape[0] // 8, 8)
             row[name] = {k: [float(np.mean(v)), float(np.std(v))] for k, v in met.items()}
             row[name]["per_circuit"] = {k: [float(x) for x in met[k]] for k in ("err@10", "err@20", "spike_f1@20", "divergence_horizon")}
             row[name]["rate_statistics"] = {str(h): rate_statistics(pr, truth_r, h) for h in (100, 300)}
+            with torch.no_grad():
+                st = summarise(one_step_spike_ticks(m, truth, ex, graph, exc, code))
+            row[name]["spike_tick_one_step"] = {k: st[k] for k in ("rmse", "bias", "median_abs")}
         out[n] = row
+        if dump_dir is not None:
+            np.savez_compressed(os.path.join(dump_dir, f"rollout_n{n}.npz"), truth=truth_r[:8].cpu().numpy(),
+                                pred=preds["variant-full-synaptic-messages"][:8].cpu().numpy(),
+                                ablation=preds["baseline-full-synaptic-messages"][:8].cpu().numpy(),
+                                weights=circ["W"][0].cpu().numpy(), exc=circ["exc"][0].cpu().numpy(), ext=ex[:8].cpu().numpy())
     return out
 
 
@@ -179,6 +203,8 @@ def main():
         m.load_state_dict(torch.load(os.path.join(args.baseline_dir, f"{name}.pt"), map_location=device))
         arms[f"baseline-{name}"] = m
     for messages, label in ((True, "full-synaptic-messages"), (False, "no-message-ablation")):
+        if args.variant == "in-degree-normalised-message-sum" and not messages:
+            continue
         path = os.path.join(out_dir, f"{label}.pt")
         m = build_variant_arm(args.variant, messages).to(device)
         if os.path.exists(path):
@@ -187,7 +213,7 @@ def main():
             m = train_variant(args.variant, messages, data, args.seed, args, device, log, f"{args.variant}-{label}")
             torch.save(m.state_dict(), path)
         arms[f"variant-{label}"] = m
-    res = evaluate_arms(arms, heldout, args.seed, device)
+    res = evaluate_arms(arms, heldout, args.seed, device, out_dir)
     with open(os.path.join(out_dir, "results.json"), "w") as f:
         json.dump({"variant": args.variant, "seed": args.seed, "args": vars(args),
                    "parameters": {k: count_parameters(m) for k, m in arms.items()}, "eval": res}, f, indent=1)
@@ -195,7 +221,7 @@ def main():
         log(f"N={n}")
         for name, r in res[n].items():
             log(f"  {name}: err@10 {r['err@10'][0]:.2f} err@20 {r['err@20'][0]:.2f} f1@20 {r['spike_f1@20'][0]:.2f} f1@100 {r['spike_f1@100'][0]:.2f} "
-                f"div {r['divergence_horizon'][0]:.1f} rate300 ratio {r['rate_statistics']['300']['ratio']:.2f} slope {r['rate_statistics']['300']['slope_pred_on_true']:.2f} corr {r['rate_statistics']['300']['correlation']:.2f}")
+                f"div {r['divergence_horizon'][0]:.1f} spike-tick rmse {r['spike_tick_one_step']['rmse']:.1f} bias {r['spike_tick_one_step']['bias']:.1f} rate300 ratio {r['rate_statistics']['300']['ratio']:.2f} slope {r['rate_statistics']['300']['slope_pred_on_true']:.2f} corr {r['rate_statistics']['300']['correlation']:.2f}")
     log("DONE")
 
 
