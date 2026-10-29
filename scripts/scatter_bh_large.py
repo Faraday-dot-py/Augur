@@ -43,6 +43,7 @@ def main():
     ap.add_argument("--seed", type=int, default=4738)
     ap.add_argument("--tag", default="scatter_bh_large")
     ap.add_argument("--device", default="cuda")
+    ap.add_argument("--kpad", choices=["zero", "ext"], default="zero")
     args = ap.parse_args()
     dev = torch.device(args.device)
     rng = np.random.default_rng(args.seed)
@@ -54,6 +55,7 @@ def main():
     model = tsf.build(tsf.EXPS["E"], "ms_kp_pot_v_g128", dt).to(dev)
     model.load_state_dict(torch.load(args.ckpt, map_location=dev, weights_only=False)["model"])
     model.eval()
+    model.kpad = args.kpad
     ops.chunked_pp(model)
 
     pos = torch.tensor(pos0, dtype=torch.float32, device=dev)[None]

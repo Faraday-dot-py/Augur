@@ -26,6 +26,8 @@ ap.add_argument("--stars", type=int, default=6000)
 ap.add_argument("--dt", type=float, default=0.1)
 ap.add_argument("--label", default="scatter field mesh-only, N=1e9 (all bodies), c=10")
 ap.add_argument("--preview", type=int, default=-1)
+ap.add_argument("--lattice-blur", action="store_true", help="fp16 position lattice (spacing 2^(e-10) at |coord| in [2^e, 2^(e+1))) aliases against the histogram bins when the window is off-origin (horizontal contour stripes); blur each axis by 2.5 lattice spacings in bins")
+ap.add_argument("--fontsize", type=float, default=16)
 ap.add_argument("--title", default=None, help="clean overlay: TITLE | t = ... (replaces the diagnostic label)")
 args = ap.parse_args()
 H = np.load(args.hist, mmap_mode="r")
@@ -34,8 +36,17 @@ nf, res = H.shape[0], H.shape[1]
 half = win[:, 2]
 
 
+def lattice_sigma(c, h):
+    m = abs(c) + h
+    return 2.5 * 2.0 ** (np.floor(np.log2(max(m, 1e-3))) - 10) / (2 * h / res)
+
+
 def density(i):
-    return np.asarray(H[i], dtype=np.float32) / (2 * half[i] / res) ** 2
+    d = np.asarray(H[i], dtype=np.float32)
+    if args.lattice_blur:
+        sx, sy = lattice_sigma(win[i, 0], half[i]), lattice_sigma(win[i, 1], half[i])
+        d = gaussian_filter(d, (sy, sx))
+    return d / (2 * half[i] / res) ** 2
 
 
 step = max(nf // 40, 1)
@@ -82,7 +93,7 @@ fig = plt.figure(figsize=(res / 100, res / 100), dpi=100, facecolor="black")
 ax = fig.add_axes([0, 0, 1, 1])
 ax.axis("off")
 im = ax.imshow(np.zeros((res, res, 3), dtype=np.float32), origin="lower")
-label = ax.text(0.02, 0.98, "", color="white", transform=ax.transAxes, va="top", fontsize=16)
+label = ax.text(0.02, 0.98, "", color="white", transform=ax.transAxes, va="top", fontsize=args.fontsize)
 
 
 def update(i):

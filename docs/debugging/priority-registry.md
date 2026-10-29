@@ -6,8 +6,8 @@ Verified 2026-10-27 01:10 with polaris_job_status: jobs 4058, 4059, 4060, 4064, 
 
 | id | kind | name | owner | rating | rationale | gpu_slot | state | queued_since | updated | log |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| showcase-videos-delivery | agent | showcase videos delivery | showcase-videos-agent | 5 | normal 3; user target "ready by morning" within 24 h +2; user rule equal priority with experiments; pinned by user | 2 | running | 2026-10-27 00:50 | 2026-10-27 01:10 | - |
-| 4081 | job | showcase 100k black hole learned model with kpad ext vs exact | showcase-videos-agent | 5 | inherits showcase 5; short (minutes) | 2 | running | 2026-10-28 19:26 | 2026-10-28 19:26 | showcase kpad ext reruns (to be written) |
+| showcase-videos-delivery | agent | showcase videos delivery | showcase-videos-agent | 5 | normal 3; user target "ready by morning" within 24 h +2; user rule equal priority with experiments; pinned by user | 2 | done | 2026-10-27 00:50 | 2026-10-27 01:10 | - |
+| 4081 | job | showcase 100k black hole learned model with kpad ext vs exact | showcase-videos-agent | 5 | inherits showcase 5; short (minutes) | 2 | done | 2026-10-28 19:26 | 2026-10-28 19:43 | showcase kpad ext reruns |
 | priority-system-build | agent | priority rating system | supervisor | 5 | normal 3; user deadline morning +2; no GPU needed | none | running | 2026-10-27 01:00 | 2026-10-27 01:10 | - |
 | energy-drift-audit | agent | energy drift metric audit and energy-similarity test | energy-drift-audit-agent | 4 | normal 3; answer decides whether tiled drift is real +1; gates the tiled fine-tune lines +1; capped at 4 without a user deadline | 1 | running | 2026-10-27 00:36 | 2026-10-27 01:10 | - |
 | 4063 | job | unidentified Polaris job on gpu01 | unknown | 3 | provisional default 3; name, owner and script not identified (no job-name access from the tools in this pass); presumably the GPU 1 energy drift audit | unknown | running | 2026-10-26 22:58 | 2026-10-27 01:10 | - |
