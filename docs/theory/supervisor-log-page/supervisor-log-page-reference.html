@@ -193,7 +193,7 @@ td.n { font-family: var(--data); font-size: 0.8125rem; font-variant-numeric: tab
   #     #   #     #  #  #     #   #     #  #  #   # #  ##     #     #   # #   #
   #   ##### ##### #   # ##### ####      #   #  ###  #   #     #####  ###   ### </pre><h1 class="ah">Tiered Run Log</h1><p class="lede">Supervisor sheet for the heterogeneous-tiered architecture run on Augur. Which agents ran, what passed, what was killed, what is still open.</p></div>
 <div><span class="k">run started</span><span class="v2">2026-10-24 14:10 PDT</span></div>
-<div><span class="k">log current through</span><span class="v2">2026-10-27 01:15 PDT</span></div>
+<div><span class="k">log current through</span><span class="v2">2026-10-28 19:10 PDT</span></div>
 <div><span class="k">source</span><span class="v2">docs/theory/supervisor-log.md</span></div>
 <div class="wide"><span class="k">naming rule, 2026-10-26</span>Experiments, arms and agents carry descriptive names that say what changes. The old letter labels appear once after each name in small type, for traceability. Names follow the glossary in docs/theory/experiment-naming.md (merged to master at ed036be). Where the glossary has no entry (dt-0.0125 retrain, cached-pair-substeps retrain, far-field-target-10x-data, contact-head-arms) the name is mine.</div>
 </div>
@@ -220,73 +220,104 @@ td.n { font-family: var(--data); font-size: 0.8125rem; font-variant-numeric: tab
 <tr>
 <th>Agent</th>
 <th>State</th>
-<th>Status at 01:15 10-27</th>
+<th>Priority</th>
+<th>Status at 19:10 10-28</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>tier-k lever continuation</strong></td>
 <td>finished</td>
+<td>-</td>
 <td>no-velocity retrain KILL on both seeds (jobs 4050, 4051); follow-ups ran as the agents below</td>
 </tr>
 <tr>
 <td><strong>planetesimal-disk solar-system test</strong></td>
 <td>finished</td>
+<td>-</td>
 <td>out of range for our models (unit-mass only); proxy KILL; reference numbers logged (0f19cf5)</td>
 </tr>
 <tr>
 <td><strong>loss analysis and error-distribution diagnostic</strong></td>
 <td>finished</td>
-<td>tail terms dropped for tiered arms; local work-bias loss term recommended (75d8622)</td>
+<td>-</td>
+<td>tail terms dropped for tiered arms; local work-bias loss term recommended (75d8622); not yet run</td>
 </tr>
 <tr>
 <td><strong>local work-bias loss term test</strong></td>
 <td>finished</td>
+<td>-</td>
 <td>both loss terms KILL on both seeds, no gain over control (6336ef3)</td>
 </tr>
 <tr>
 <td><strong>residual corrector test</strong></td>
 <td>finished</td>
+<td>-</td>
 <td>KILL: head did not help, held-out error slightly worse (a57452c)</td>
 </tr>
 <tr>
 <td><strong>tiled closed-loop tier 0 with halo exchange</strong></td>
 <td>finished</td>
+<td>-</td>
 <td>KILL on two of four lines, but position error now beats the tiled baseline (e44b796); energy drift still about 4x</td>
 </tr>
 <tr>
 <td><strong>energy drift metric audit and energy-similarity test</strong></td>
 <td>finished</td>
+<td>high (4)</td>
 <td>drift metric valid; energy-similarity term failed on both seeds (7c6d709); GPU 1 released</td>
+</tr>
+<tr>
+<td><strong>close-pair potential-energy loss fix</strong></td>
+<td><span class="v m">RUNNING</span></td>
+<td>not yet rated</td>
+<td>resumed 19:10 10-28 (agent a7d93c7e2762337f1); reserved GPU 1; target dE@100 at most 2.5x baseline and tiled err@20 at most 1.25x baseline</td>
+</tr>
+<tr>
+<td><strong>priority rating system</strong></td>
+<td>finished</td>
+<td>urgent (5)</td>
+<td>rating scale 1 background to 5 urgent, registry docs/debugging/priority-registry.md, checker scripts/check_priority_registry.py (3bd037f); agent aadd3ccf798b0fba2</td>
 </tr>
 <tr>
 <td><strong>showcase videos delivery</strong></td>
 <td><span class="v m">RUNNING</span></td>
-<td>downloading and rendering the overnight outputs, edge-artifact check on black-hole, collapse and solar-system videos, 1e10 render, reviewer per video; target ready by morning; reserved GPU 2</td>
+<td>urgent (5)</td>
+<td>resumed 19:10 10-28 (agent a666c8418b53fd81c); reserved GPU 2; downloading and rendering the overnight outputs, edge-artifact check on black-hole, collapse and solar-system videos, 1e10 render, reviewer per video</td>
+</tr>
+<tr>
+<td><strong>supervisor log page republish</strong></td>
+<td>finished</td>
+<td>-</td>
+<td>page republished through 01:15 10-27 to both writable copies (c68e330)</td>
 </tr>
 <tr>
 <td><strong>planetesimal-disk video and per-body-mass support</strong></td>
 <td>finished</td>
+<td>-</td>
 <td>video rendered and reviewed; mass-conditioning design, curriculum trainer and 10 CPU tests committed (0f1c7d8, 79a6c70); not trained, queued for a free GPU</td>
 </tr>
 <tr>
 <td><strong>recruiter README and overnight showcase renders</strong></td>
 <td>finished</td>
+<td>-</td>
 <td>README committed (f906210); render jobs 4053-4056 completed overnight (exit 0), outputs on Polaris under augur-showcase/results, not yet downloaded, rendered or reviewed</td>
 </tr>
 <tr>
 <td><strong>comparison videos</strong></td>
 <td>finished</td>
+<td>-</td>
 <td>six videos in videos/, reviewed by fresh reviewers, logged (0220a18)</td>
 </tr>
 <tr>
 <td><strong>all earlier agents (hole-1, tier-0 extensions, upper-tier module, naming, page restyle, sandbox wrapper)</strong></td>
 <td>finished or stopped</td>
+<td>-</td>
 <td>results are in the Log</td>
 </tr>
 </tbody>
 </table>
-<p>Running now: showcase videos delivery (started 01:10, GPU 2). Rule since 01:10: showcase videos have equal priority and GPU share with experiments, one reserved Polaris GPU per running agent. Render jobs 4053-4056 finished (exit code 0); the showcase agent is downloading, rendering and reviewing them. The energy drift audit finished at 01:15 and released GPU 1.</p>
+<p>Running now: close-pair potential-energy loss fix (GPU 1) and showcase videos delivery (GPU 2). Four agents stopped on the weekly usage limit at about 01:05 on 10-27 and were resumed at 19:10 on 10-28. The priority rating system is done (3bd037f): ratings 1 background to 5 urgent, registry in docs/debugging/priority-registry.md. Showcase videos keep equal priority and GPU share with experiments.</p>
 <div class="verdicts">
 <div class="s">
 <h3>Settled</h3>
@@ -623,6 +654,8 @@ td.n { font-family: var(--data); font-size: 0.8125rem; font-variant-numeric: tab
 <p class="e g-tier0"><time>00:50</time><span class="t"><b class="who">tier0-extensions</b>Tiled closed-loop tier 0 with halo exchange of the recurrent field (job 4060, fine-tune of the matched-60k tier 0 inside the 4x4 tiling, closed-loop rollouts to 28 ticks, 1.35 h on one GPU, seed 4738; e44b796 on branch tier0-tiled-closed-loop) <span class="v k">KILL</span> on two of four pre-registered lines, but the first lever to beat the tiled baseline on position error. Tiled error at tick 20 on held-out seeds 9100/9200/9300: 0.82x / 0.82x / 0.75x baseline (line at most 1.25x; matched-60k was 1.66-1.82x) <span class="v p">PASS</span>; plain error at tick 20 0.67x matched-60k (line at most 1.10x) <span class="v p">PASS</span>; drift at tick 100 4.10x / 4.75x / 3.89x baseline (line at most 2.5x; matched-60k about 4.1x) <span class="v k">FAIL</span>; mid-density bias -0.153 in the 8-16 bin (limit plus or minus 0.15, fails by 0.003) and -0.050 in 16-32. Own-state force error 0.039-0.041, below the baseline's 0.052. Same weights evaluated without the halo exchange are 1.0-1.2x worse at tick 20, so the exchange belongs to the tier-0 definition. Reading: the visited-state effect and the missing halo exchange explain the position-error gap, but not the energy drift, which stays about 4x baseline even with force error below baseline. Single seed; no frame review (no renderer for the tiled hierarchy). Not tried: energy-similarity term in this setting, horizons beyond 28 ticks, longer training, the stateless variant. Next dispatched: check that the drift metric compares like with like (truth's own drift under the same tiling measure) and test an energy-similarity term.</span></p>
 <p class="e g-sup"><time>01:10</time><span class="t"><b class="who">supervisor</b>New user rule: showcase videos have equal priority, attention and GPU share with experiments; each running agent has one Polaris GPU reserved (the account has two), and may release its slot to others. Reservation table in docs/debugging/gpu-reservations.md: GPU 1 experiments (energy drift audit and energy-similarity test), GPU 2 showcase videos. Showcase videos agent started to deliver by morning: download and locally render the outputs of jobs 4053-4056, verify the edge force artifact is absent from the black-hole, clumpy-collapse and solar-system videos (re-render if affected), produce the 1e10 density video (no render job existed), fresh reviewer per video, and update docs/showcase-videos.md with source path and verification status per item.</span></p>
 <p class="e g-tier0"><time>01:15</time><span class="t"><b class="who">tier0-extensions</b>Energy drift metric audit and energy-similarity test finished (jobs 4064, 4065, 4067; 7c6d709 on the tiled closed-loop branch, 913ac72 on master for the reservation file). Metric audit, seeds 9100/9200/9300: drift at tick 100 is the mean over scenes of |E_model(100) - E_truth(0)| / |E_truth(0)| with global pair energy over all particles, so tiling enters only through forces; truth's own drift under this measure is 0.0002 and fewer than 0.1 particles per scene leave the domain, so the metric is valid. The tiled baseline's 0.010 is flattered: exact pairwise force through the same dt 0.1 Verlet step drifts 0.016-0.019, and the baseline's kinetic and potential errors cancel (seed 9200: -0.026 and +0.024 of |E0|). The new tiled closed-loop model drifts 0.033-0.038 (3.3-3.7x baseline on these rollouts; the logged 3.9-4.8x came from the eval's own run), a systematic loss of about -0.035 on every seed growing roughly linearly after tick 20, located in close-pair potential energy; the matched-60k tier 0's drift is sign-mixed instead. Energy-similarity arm (loss compares model energy with truth energy at the same tick, never initial energy; weight 1; early-stop gates at iteration 750): seed 4738 halved drift at tick 40 (0.0061 vs 0.0121 init) but tick-20 error 1.29x init and plain 1.28x init; seed 4739 drift at tick 40 1.69x init (worse), tick-20 error 1.62x, plain 1.87x. Both stopped at the gates <span class="v k">KILL</span>, held-out evals not run, so the four pre-registered lines are unscored; not tried: a smaller weight, applying the term only beyond tick 28, the local work-bias arm in this setting. No frame review. GPU 1 released; the energy-drift question is now narrowed to a systematic close-pair potential-energy loss in free rollout.</span></p>
+<p class="e g-sup"><time>01:20</time><span class="t"><b class="who">supervisor</b>Priority rating system added (docs/debugging/priority-system.md, priority-registry.md, scripts/check_priority_registry.py): ratings 1 background to 5 urgent, equal-share rule for showcase videos kept, Priority column added to Live status.</span></p>
+<p class="e g-sup"><time>19:10 (10-28)</time><span class="t"><b class="who">supervisor</b>The priority rating system agent finished (3bd037f). Four agents (energy drift audit follow-up, priority rating system, showcase videos delivery, supervisor log page republish) stopped on the weekly usage limit at about 01:05 on 10-27 and were resumed at 19:10 on 10-28. Running now: close-pair potential-energy loss fix (GPU 1; target drift at tick 100 at most 2.5x baseline, tiled error at tick 20 at most 1.25x baseline), priority rating system, showcase videos delivery (GPU 2).</span></p>
 </div>
 </div>
 </div>
