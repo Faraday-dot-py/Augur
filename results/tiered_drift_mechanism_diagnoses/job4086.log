@@ -1,0 +1,56 @@
+PASS conservative central force has zero loop work R=1.0  3.59e-18
+PASS rotational field loop-work ratio is 1 R=1.0  0.998795
+PASS conservative central force has zero loop work R=4.0  3.59e-18
+PASS rotational field loop-work ratio is 1 R=4.0  0.998795
+PASS regression recovers drag, gain and inward coefficients
+PASS regression work shares sum to one
+PASS pure drag error gives drag work share 1  1.000000
+PASS slope of a line
+PASS probe force equals exact force at the ring
+PASS exact-force control loop work is small  2.04e-07
+PASS per-particle potential sums to the pair potential
+PASS densest third selects about a third of the masked particles  [6, 5, 4]
+ALL PASSED
+/home/adamwebb/.local/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+9100 done
+9200 done
+9300 done
+{
+ "virial-and-loop-work-decomposition": {
+  "virial_rel_diff_tick100_dense_third": -0.0037809897700554463,
+  "loop_work_ratio_model": 0.00289845532590053,
+  "loop_work_ratio_exact_control": 2.757646712195473e-05,
+  "drag_work_share_ticks60-100_dense_third": 1.022036336895242,
+  "verdict": "INCONCLUSIVE"
+ },
+ "restart-from-truth-drift-rate": {
+  "slopes_by_start": {
+   "28": {
+    "continuing": -0.00016327354630144933,
+    "truth_state_warm_hidden": -0.00018759868786825487,
+    "model_state_reset_hidden": -0.0001646987560282772,
+    "truth_state_rollout_hidden": -0.00020311783494738242
+   },
+   "60": {
+    "continuing": -0.0009508286408769587,
+    "truth_state_warm_hidden": -0.0001463492662878707,
+    "model_state_reset_hidden": -0.0009520136324378351,
+    "truth_state_rollout_hidden": -0.00016764066579829281
+   }
+  },
+  "cause_by_start60": "visited-state"
+ },
+ "integrator-compensation-test": {
+  "relative_change_dE100_by_variant": {
+   "model_dt0.05_hidden_per_substep": 2.55515538172135,
+   "model_dt0.05_hidden_per_tick": 1.6160974539584096
+  },
+  "primary_variant": "model_dt0.05_hidden_per_tick",
+  "oracle_dPE_dense_third_dt0.1": 0.02394370126024724,
+  "oracle_dPE_dense_third_dt0.05": 0.00288791605333785,
+  "verdict": "PASS"
+ }
+}
+SECONDS 108
+ALLDONE
