@@ -42,7 +42,7 @@ def main():
     r = dg.regress_force_error(e, v, at, u)
     check("pure drag error gives drag work share 1", abs(r["work_share_drag"] - 1.0) < 1e-6, f"{r['work_share_drag']:.6f}")
     check("slope of a line", abs(dg.slope(torch.arange(21, dtype=torch.float64) * -0.002) + 0.002) < 1e-12)
-    S, N = 3, 40
+    S, N = 3, 100
     gen = torch.Generator().manual_seed(4738)
     pos = torch.zeros(S, N, 2, dtype=torch.float64)
     pos[:, :12] = torch.randn(S, 12, 2, generator=gen, dtype=torch.float64) * 2
