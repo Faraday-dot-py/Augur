@@ -156,6 +156,10 @@ def test_trainer(dev):
     check("early-stop probe writes EARLY_KILL on a violated gate", os.path.exists(os.path.join(tmp, "k.EARLY_KILL")) and "EARLY_KILL" in r3.stdout, r3.stderr[-300:])
     r5 = run_train(base + ["--tag", "en", "--iters", "2", "--w-energy", "1.0", "--gate1-dE", "100", "--probe-at", "1"], env)
     check("energy-similarity trainer runs and logs the term", r5.returncode == 0 and '"energy"' in r5.stdout and os.path.exists(os.path.join(tmp, "en.pt")), r5.stderr[-400:])
+    r6 = run_train(base + ["--tag", "rp", "--iters", "4", "--replay-rounds", "2", "--replay-scenes", "2", "--replay-steps", "12", "--replay-start", "4",
+                           "--replay-stride", "4", "--replay-batch", "1", "--probe-at"], env)
+    check("visited-state replay trainer builds two rounds and logs the term", r6.returncode == 0 and r6.stdout.count("replay round") == 2 and '"replay"' in r6.stdout
+          and os.path.exists(os.path.join(tmp, "rp.TRAIN_DONE")), (r6.stdout + r6.stderr)[-500:])
     r4 = run_train(base + ["--tag", "e", "--iters", "3", "--est"], env)
     check("--est exits without training", r4.returncode == 0 and not os.path.exists(os.path.join(tmp, "e.pt")), r4.stderr[-300:])
 

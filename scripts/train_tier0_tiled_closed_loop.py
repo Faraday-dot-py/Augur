@@ -120,6 +120,43 @@ def reference(model, tt, d, dh, iso, a, dev, g_seed):
     return ref
 
 
+@torch.no_grad()
+def build_replay(model, tt, dr, a):
+    """Closed-loop roll of the replay scenes with the current model, no gradient; stores what the force call sees at ticks replay_start, +stride, ... up to
+    the last tick (positions, velocities as passed to the force, the incoming recurrent field) with the exact direct-sum force as label (training scenes only)."""
+    model.eval()
+    m, mk = dr["M"].float(), dr["mask"].float()
+    pos, vel = dr["P"][:, 0].float(), dr["V"][:, 0].float()
+    fld = tt.init_state(len(m))
+    a_prev, fld = tt.force(pos, vel, m, mk, fld)
+    keep = {"pos": [], "vel": [], "fld": [], "at": []}
+    for t in range(1, dr["P"].shape[1]):
+        pn = pos + tc.DT * vel + 0.5 * tc.DT ** 2 * a_prev
+        vin = vel + tc.DT * a_prev
+        if t >= a.replay_start and (t - a.replay_start) % a.replay_stride == 0:
+            keep["pos"].append(pn.cpu())
+            keep["vel"].append(vin.cpu())
+            keep["fld"].append(fld.cpu())
+            keep["at"].append(ttr.true_acc(pn, m, mk).cpu())
+        a_new, fld = tt.force(pn, vin, m, mk, fld)
+        pos, vel, a_prev = pn, vel + 0.5 * tc.DT * (a_prev + a_new), a_new
+    model.train()
+    return {k: torch.stack(v) for k, v in keep.items()}
+
+
+def replay_loss(tt, rp, dr, g, a, dev):
+    """One-step force regression at stored visited states: sum |a_model - a_exact|^2 over the batch / sum |a_exact|^2."""
+    J, S = rp["pos"].shape[:2]
+    j = torch.randint(J, (a.replay_batch,), generator=g)
+    s = torch.randint(S, (a.replay_batch,), generator=g)
+    pos, vel, at = (rp[k][j, s].to(dev) for k in ("pos", "vel", "at"))
+    fld = torch.cat([rp["fld"][jj].view(S, tc.NW, *rp["fld"].shape[2:])[ss] for jj, ss in zip(j.tolist(), s.tolist())]).to(dev)
+    sd = s.to(dev)
+    m, mk = dr["M"][sd].float(), dr["mask"][sd].float()
+    acc, _ = tt.force(pos, vel, m, mk, fld)
+    return (((acc - at) ** 2).sum(-1) * mk).sum() / ((at ** 2).sum(-1) * mk).sum().clamp_min(1e-12)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--init", required=True)
@@ -147,6 +184,13 @@ def main():
     ap.add_argument("--energy-scale", type=float, default=0.02, help="relative energy error that counts as 1 in the energy-similarity term")
     ap.add_argument("--gate1-dE", type=float, default=None, help="probe 1: kill if dE@40 exceeds this multiple of the initial model's")
     ap.add_argument("--gate2-dE", type=float, default=None, help="probe 2: same")
+    ap.add_argument("--replay-rounds", type=int, default=0, help="visited-state label replay: rounds of no-grad rollouts of fresh training scenes labelled with exact force (0 = off)")
+    ap.add_argument("--replay-weight", type=float, default=0.6)
+    ap.add_argument("--replay-scenes", type=int, default=24)
+    ap.add_argument("--replay-steps", type=int, default=100)
+    ap.add_argument("--replay-start", type=int, default=20)
+    ap.add_argument("--replay-stride", type=int, default=5)
+    ap.add_argument("--replay-batch", type=int, default=4)
     ap.add_argument("--w-harvest", type=float, default=0.2)
     ap.add_argument("--w-iso", type=float, default=0.2)
     ap.add_argument("--k-plain", type=int, default=16)
@@ -238,11 +282,22 @@ def main():
         log(f"ESTIMATE tiled part of {a.iters} iters = {tot / 3600:.2f} h (plain terms add about 30-50 percent)")
         return
     probes = {}
+    rp, dr, ref_replay, round_now = None, None, None, -1
+    round_len = max(1, a.iters // max(1, a.replay_rounds))
     while it < a.iters:
         if STOP:
             save(path, model, opt, it, a)
             log(f"SIGTERM: saved it {it}")
             return
+        if a.replay_rounds and min(it // round_len, a.replay_rounds - 1) != round_now:
+            round_now = min(it // round_len, a.replay_rounds - 1)
+            t_rp = time.time()
+            dr = ttr.make_scenes(a.replay_scenes, a.replay_steps, a.seed + 1000 + round_now, dev)
+            rp = build_replay(model, tt, dr, a)
+            with torch.no_grad():
+                gr = torch.Generator().manual_seed(a.seed + round_now)
+                ref_replay = float(np.mean([float(replay_loss(tt, rp, dr, gr, a, dev)) for _ in range(a.calib_batches * 2)]))
+            log(f"replay round {round_now} built in {time.time() - t_rp:.0f}s: {rp['pos'].shape[0]} ticks x {rp['pos'].shape[1]} scenes, field {tuple(rp['fld'].shape[2:])}, reference one-step force loss {ref_replay:.5f}")
         k, lr = schedule(a, it, a.iters)
         for pg in opt.param_groups:
             pg["lr"] = lr
@@ -260,6 +315,10 @@ def main():
             lt = a.w_tiled * lt + a.w_energy * le
         else:
             lt = a.w_tiled * lt
+        if rp is not None:
+            lrp = replay_loss(tt, rp, dr, g, a, dev) / ref_replay
+            lt = lt + a.replay_weight * lrp
+            parts["replay"] = float(lrp.detach())
         lt.backward()
         ok = bool(torch.isfinite(lt))
         if dh is not None:
