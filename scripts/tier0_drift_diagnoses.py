@@ -45,7 +45,7 @@ def densest_third(pos20, mask):
     sel = torch.zeros_like(mask, dtype=torch.bool)
     for s in range(len(mask)):
         c = cnt[s][mask[s] > 0]
-        sel[s] = (cnt[s] > torch.quantile(c, 2 / 3)) & (mask[s] > 0)
+        sel[s] = (cnt[s] >= torch.quantile(c, 2 / 3)) & (mask[s] > 0)
     return sel
 
 
