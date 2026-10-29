@@ -5,6 +5,6 @@ Rule (user, 2026-10-27): showcase videos have equal priority, attention and GPU 
 | Slot | Owner | State | Since |
 | --- | --- | --- | --- |
 | GPU 1 | experiments | reserved | 2026-10-29 13:05 (tiered-drift-mechanism-agent, diagnostics job) |
-| GPU 2 | showcase videos | released | 2026-10-29 13:54 (neuron-graph-smoke-agent done, nothing queued) |
+| GPU 2 | experiments | reserved | 2026-10-29 14:13 (neuron-graph-smoke-agent, loss diagnostic job) |
 
 Priority registry: `docs/debugging/priority-registry.md` (design in `priority-system.md`). Every slot change and every job submission also updates the registry in the same turn. Check with `python3 scripts/check_priority_registry.py`; it flags unrated running items, starving items (waiting over 12 h), one owner on both GPUs, idle slots and stale rows. A released slot goes to the highest effective rating among waiters.
