@@ -11,12 +11,17 @@ from model.neuron_graph import Graph, SPIKE_POS_WEIGHT, normalize_state
 from scripts.neuron_circuit_teacher import simulate
 from scripts.train_neuron_graph_smoke import (
     EVAL_HORIZON, EVAL_SIZES, EVAL_STARTS, KS, NEURAL_ARMS, SEG_TRAIN, TRAIN_SIZES, build_arm, free_rollout,
-    make_heldout_data, make_train_data, raw_state, sample_batch,
+    make_heldout_data, make_train_data, sample_batch,
 )
+from model.neuron_graph import U_SCALE, U_SHIFT, denormalize_voltage
 
 REGIMES = ("spike-tick", "refractory", "near-threshold", "subthreshold")
 NEAR_V = -55.0
 TERMS = ("voltage", "adaptation", "synaptic", "spike")
+
+
+def full_raw_state(xn):
+    return torch.stack([denormalize_voltage(xn[..., 0]), xn[..., 1] * U_SCALE - U_SHIFT, xn[..., 2], xn[..., 3]], dim=-1)
 
 
 def sequence_terms(model, graph, st, ex, rollout):
@@ -264,7 +269,7 @@ def main():
         code = regime_flags(truth)
         x0 = normalize_state(truth[:, 0])
         row = {"regime_fractions_all_ticks": {nm: float((code == i).float().mean()) for i, nm in enumerate(REGIMES)}}
-        preds = {name: raw_state(free_rollout(m, x0, ex, graph, EVAL_HORIZON)) for name, m in arms.items()}
+        preds = {name: full_raw_state(free_rollout(m, x0, ex, graph, EVAL_HORIZON)) for name, m in arms.items()}
         cw = {k: v[idx] for k, v in circ.items()}
         g = torch.Generator(device="cpu").manual_seed(args.seed)
         s0 = truth[:, 0].clone()
