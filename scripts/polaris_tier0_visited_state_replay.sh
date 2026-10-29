@@ -27,7 +27,7 @@ INIT=$HOME/augur_tiled_closed_loop/results/tier0_tiled_closed_loop/tier0-tiled-c
 REF=$HOME/augur_tiled_closed_loop/results/tier0_tiled_closed_loop/tier0-tiled-closed-loop-halo_eval.json
 TAG=tier0-visited-state-label-replay-seed$SEED
 T0=$(date +%s)
-[ -f $O/tests.done ] || { python scripts/tier0_tiled_closed_loop_tests.py --device cuda > $O/tests.log 2>&1 && touch $O/tests.done || { echo "TESTS FAILED"; tail -20 $O/tests.log; exit 1; }; }
+[ -f $O/tests.done ] || { python scripts/tier0_tiled_closed_loop_tests.py --device cpu > $O/tests.log 2>&1 && touch $O/tests.done || { echo "TESTS FAILED"; tail -20 $O/tests.log; exit 1; }; }
 trap 'kill -TERM $PID 2>/dev/null; wait $PID; exit 143' TERM
 if [ ! -f $O/$TAG.TRAIN_DONE ] && [ ! -f $O/$TAG.EARLY_KILL ]; then
   python scripts/train_tier0_tiled_closed_loop.py --init $INIT --data $HOME/t0n/data4 --pattern "hv3_s*.npz" --tier0 $E --tag $TAG --out-dir $O \
