@@ -144,6 +144,31 @@ def build_replay(model, tt, dr, a):
     return {k: torch.stack(v) for k, v in keep.items()}
 
 
+@torch.no_grad()
+def build_replay_truth(model, tt, dr, a):
+    """Control for build_replay: same ticks, labels and recurrent-field warm-up, but positions and velocities come from the exact trajectory (teacher forcing) instead of the model's own rollout."""
+    model.eval()
+    m, mk = dr["M"].float(), dr["mask"].float()
+    P, V = dr["P"].float(), dr["V"].float()
+    fld = tt.init_state(len(m))
+    a_prev, fld = tt.force(P[:, 0], V[:, 0], m, mk, fld)
+    a_true_prev = ttr.true_acc(P[:, 0], m, mk)
+    keep = {"pos": [], "vel": [], "fld": [], "at": []}
+    for t in range(1, P.shape[1]):
+        pn = P[:, t]
+        vin = V[:, t - 1] + tc.DT * a_true_prev
+        at = ttr.true_acc(pn, m, mk)
+        if t >= a.replay_start and (t - a.replay_start) % a.replay_stride == 0:
+            keep["pos"].append(pn.cpu())
+            keep["vel"].append(vin.cpu())
+            keep["fld"].append(fld.cpu())
+            keep["at"].append(at.cpu())
+        _, fld = tt.force(pn, vin, m, mk, fld)
+        a_true_prev = at
+    model.train()
+    return {k: torch.stack(v) for k, v in keep.items()}
+
+
 def replay_loss(tt, rp, dr, g, a, dev):
     """One-step force regression at stored visited states: sum |a_model - a_exact|^2 over the batch / sum |a_exact|^2."""
     J, S = rp["pos"].shape[:2]
@@ -185,6 +210,7 @@ def main():
     ap.add_argument("--gate1-dE", type=float, default=None, help="probe 1: kill if dE@40 exceeds this multiple of the initial model's")
     ap.add_argument("--gate2-dE", type=float, default=None, help="probe 2: same")
     ap.add_argument("--replay-rounds", type=int, default=0, help="visited-state label replay: rounds of no-grad rollouts of fresh training scenes labelled with exact force (0 = off)")
+    ap.add_argument("--replay-source", choices=["model", "truth"], default="model", help="states of the replay set: the model's own rollout (visited states) or the exact trajectory (control)")
     ap.add_argument("--replay-weight", type=float, default=0.6)
     ap.add_argument("--replay-scenes", type=int, default=24)
     ap.add_argument("--replay-steps", type=int, default=100)
@@ -293,7 +319,7 @@ def main():
             round_now = min(it // round_len, a.replay_rounds - 1)
             t_rp = time.time()
             dr = ttr.make_scenes(a.replay_scenes, a.replay_steps, a.seed + 1000 + round_now, dev)
-            rp = build_replay(model, tt, dr, a)
+            rp = (build_replay if a.replay_source == "model" else build_replay_truth)(model, tt, dr, a)
             with torch.no_grad():
                 gr = torch.Generator().manual_seed(a.seed + round_now)
                 ref_replay = float(np.mean([float(replay_loss(tt, rp, dr, gr, a, dev)) for _ in range(a.calib_batches * 2)]))
