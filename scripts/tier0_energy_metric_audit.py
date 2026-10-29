@@ -54,6 +54,22 @@ def roll(force_fn, init_state, d, T):
     return {k: torch.stack([r[k] for r in rec], 1) for k in rec[0]}
 
 
+@torch.no_grad()
+def roll_states(force_fn, init_state, d, T):
+    m, mk = d["M"].float(), d["mask"].float()
+    pos, vel = d["P"][:, 0].float(), d["V"][:, 0].float()
+    st = init_state(len(pos))
+    a_prev, st = force_fn(pos, vel, m, mk, st)
+    P, V = [pos], [vel]
+    for t in range(1, T + 1):
+        pn = pos + DT * vel + 0.5 * DT ** 2 * a_prev
+        a_new, st = force_fn(pn, vel + DT * a_prev, m, mk, st)
+        pos, vel, a_prev = pn, vel + 0.5 * DT * (a_prev + a_new), a_new
+        P.append(pos)
+        V.append(vel)
+    return torch.stack(P, 1), torch.stack(V, 1)
+
+
 def summarise(rec, truth, ticks=(10, 20, 50, 100)):
     E0 = truth["E"][:, 0]
     out = {}
