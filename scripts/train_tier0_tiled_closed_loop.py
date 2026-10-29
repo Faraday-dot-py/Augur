@@ -143,6 +143,7 @@ def main():
     ap.add_argument("--p-start0", type=float, default=0.5)
     ap.add_argument("--w-tiled", type=float, default=0.6)
     ap.add_argument("--w-energy", type=float, default=0.0, help="weight of the energy-similarity closed-loop term (0 = off)")
+    ap.add_argument("--energy-kind", default="total", choices=["total", "pebin"], help="total: scene and cluster energy; pebin: pair potential energy by separation bin")
     ap.add_argument("--energy-scale", type=float, default=0.02, help="relative energy error that counts as 1 in the energy-similarity term")
     ap.add_argument("--gate1-dE", type=float, default=None, help="probe 1: kill if dE@40 exceeds this multiple of the initial model's")
     ap.add_argument("--gate2-dE", type=float, default=None, help="probe 2: same")
@@ -248,7 +249,7 @@ def main():
         opt.zero_grad()
         idx, t0s = sample(g, S, T, k, a.batch, a.p_start0, dev)
         if a.w_energy > 0:
-            p, v, e = tc.rollout_terms(tt, d, idx, t0s, k, a.tb, energy=True)
+            p, v, e = tc.rollout_terms(tt, d, idx, t0s, k, a.tb, energy=a.energy_kind)
         else:
             p, v = tc.rollout_terms(tt, d, idx, t0s, k, a.tb)
         lt = tc.closed_loop_loss(p, v, ref_p, ref_v, omega)

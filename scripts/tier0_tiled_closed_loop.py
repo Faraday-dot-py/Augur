@@ -103,6 +103,20 @@ def similarity_energy_terms(pos, vel, Pt, Vt, m, mk, lab):
     return 0.5 * (tot + cl / n.clamp_min(1.0))
 
 
+def pebin_terms(pos, Pt, m, mk, edges=(0.0, 0.5, 1.0, 2.0, 4.0)):
+    """Potential-energy similarity by pair separation: for each separation bin (edges, last bin open) the model state's pair potential energy minus the
+    truth state's at the same tick, relative to the truth total potential energy; mean of the squared bin errors."""
+    def bins(p):
+        d = p[:, None] - p[:, :, None]
+        r = ((d ** 2).sum(-1) + 1e-12).sqrt()
+        w = -0.5 * (m[:, :, None] * m[:, None, :]) * (mk[:, :, None] * mk[:, None, :]) / torch.sqrt(r ** 2 + EPS ** 2)
+        w = w * (1 - torch.eye(p.shape[1], device=p.device))
+        hi = list(edges[1:]) + [1e9]
+        return torch.stack([(w * ((r >= lo) & (r < up)).float()).sum((-1, -2)) for lo, up in zip(edges, hi)], 1)
+    bt = bins(Pt)
+    return (((bins(pos) - bt) / bt.sum(1, keepdim=True).abs().clamp_min(1e-6)) ** 2).mean()
+
+
 def rollout_terms(tt, d, idx, t0s, k, tb=0, grad=True, energy=False):
     """Closed-loop rollout of k ticks from the truth state at t0s (per scene); returns per-tick mean squared position and velocity errors
     (lists of 0-dim tensors, differentiable when grad). tb > 0 truncates backprop (detach state) every tb ticks. energy=True also returns the
@@ -123,7 +137,7 @@ def rollout_terms(tt, d, idx, t0s, k, tb=0, grad=True, energy=False):
         lp.append((((pos - Pw[:, s + 1]) ** 2) * w).sum() / denom)
         lv.append((((vel - Vw[:, s + 1]) ** 2) * w).sum() / denom)
         if energy:
-            le.append(similarity_energy_terms(pos, vel, Pw[:, s + 1], Vw[:, s + 1], m, mk, lab))
+            le.append(pebin_terms(pos, Pw[:, s + 1], m, mk) if energy == "pebin" else similarity_energy_terms(pos, vel, Pw[:, s + 1], Vw[:, s + 1], m, mk, lab))
         if tb and (s + 1) % tb == 0:
             pos, vel, a_prev, fld = pos.detach(), vel.detach(), a_prev.detach(), fld.detach()
     return (lp, lv, le) if energy else (lp, lv)
