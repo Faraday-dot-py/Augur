@@ -46,6 +46,9 @@ def main():
     p.add_argument("--fps", type=int, default=20)
     p.add_argument("--steps", type=int, default=300)
     p.add_argument("--title", default="")
+    p.add_argument("--label-model", default="full model")
+    p.add_argument("--label-ablation", default="no-message ablation")
+    p.add_argument("--panel-model", default="LEARNED MODEL (free rollout)")
     a = p.parse_args()
     d = np.load(a.npz)
     truth, pred, abl = d["truth"][a.window][: a.steps], d["pred"][a.window][: a.steps], d["ablation"][a.window][: a.steps]
@@ -65,7 +68,7 @@ def main():
 
     fig = plt.figure(figsize=(12.8, 7.2), dpi=100, facecolor="#101418")
     axes, scatters = [], []
-    for i, (name, data) in enumerate((("TEACHER (truth)", truth), ("LEARNED MODEL (free rollout)", pred))):
+    for i, (name, data) in enumerate((("TEACHER (truth)", truth), (a.panel_model, pred))):
         ax = fig.add_axes([0.02 + 0.49 * i, 0.30, 0.47, 0.53])
         ax.set_facecolor("#101418")
         ax.set_xlim(-1.25, 1.25)
@@ -90,8 +93,8 @@ def main():
              color="#9aa5b1", ha="center", va="top", fontsize=9)
     readout = fig.text(0.5, 0.285, "", color="#e8edf2", ha="center", va="top", fontsize=12, family="monospace")
     axp = fig.add_axes([0.07, 0.07, 0.88, 0.15], facecolor="#171d23")
-    axp.plot(rmse_abl, color="#6b7682", lw=1.0, label="no-message ablation")
-    axp.plot(rmse, color="#ffb454", lw=1.6, label="full model")
+    axp.plot(rmse_abl, color="#6b7682", lw=1.0, label=a.label_ablation)
+    axp.plot(rmse, color="#ffb454", lw=1.6, label=a.label_model)
     axp.set_xlim(0, len(rmse) - 1)
     axp.set_ylim(0, max(rmse.max(), rmse_abl.max()) * 1.1)
     axp.set_xlabel("rollout tick (1 tick = 1 ms)", color="#9aa5b1")
