@@ -31,3 +31,7 @@ Note: in the first use the agent did not spawn subagents despite permission, and
 ## Naming rule (add to every dispatched prompt)
 
 Never name an experiment, arm, agent, branch, worktree, job, result file or script flag with a single letter or letter-number (`A`, `A2`, `S+J`, `H3`). Use a descriptive kebab-case name that says what changed and against what, e.g. `tier0-from-scratch-density-stratified-harvest`. Use the exact string given to you; do not abbreviate it in reports, commits or filenames. Job id, seed and date go in metadata, not the name. Return exact names and artifact paths. See docs/theory/experiment-naming.md; `python scripts/check_experiment_names.py --commits` must pass before you commit.
+
+## Priority and GPU slot (add to every dispatched prompt)
+
+Your row in `docs/debugging/priority-registry.md` gives your rating (1 background to 5 urgent) and GPU slot (`docs/debugging/gpu-reservations.md`). Read `docs/debugging/priority-system.md`. Before every `sbatch`: confirm the slot is yours or released, add a registry row for the job (rating from the rubric, `--nice` from the mapping table, `--requeue` and a checkpoint for jobs over 1 h), update `updated` when state changes, set `done` when finished with the experiment-log entry named in `log`. Never hold both GPUs unless the other class has nothing runnable; release an idle slot after 2 h; do not end your turn or poll in a loop while a job is pending. Run `python3 scripts/check_priority_registry.py` after edits and fix every ERROR.

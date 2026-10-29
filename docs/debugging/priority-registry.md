@@ -1,0 +1,14 @@
+# Priority registry
+
+Design and rating scale: `docs/debugging/priority-system.md`. Check with `python3 scripts/check_priority_registry.py`. Edit the table in the same turn you start, submit, finish or re-rate anything; set `updated`; times are PDT. Rating: 5 urgent, 4 high, 3 normal, 2 low, 1 background. Terminal rows (`done`) are deleted after 24 h; history lives in the supervisor log and experiment log.
+
+Verified 2026-10-27 01:10 with polaris_job_status: jobs 4058, 4059, 4060, 4064, 4065, 4067 COMPLETED; 4061 FAILED (0 s); 4062 TIMEOUT; 4066 CANCELLED; 4063 RUNNING (2 h 05 min on gpu01); 4068 does not exist. No other job id is known to be pending.
+
+| id | kind | name | owner | rating | rationale | gpu_slot | state | queued_since | updated | log |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| showcase-videos-delivery | agent | showcase videos delivery | showcase-videos-agent | 5 | normal 3; user target "ready by morning" within 24 h +2; user rule equal priority with experiments; pinned by user | 2 | running | 2026-10-27 00:50 | 2026-10-27 01:10 | - |
+| priority-system-build | agent | priority rating system | supervisor | 5 | normal 3; user deadline morning +2; no GPU needed | none | running | 2026-10-27 01:00 | 2026-10-27 01:10 | - |
+| energy-drift-audit | agent | energy drift metric audit and energy-similarity test | energy-drift-audit-agent | 4 | normal 3; answer decides whether tiled drift is real +1; gates the tiled fine-tune lines +1; capped at 4 without a user deadline | 1 | running | 2026-10-27 00:36 | 2026-10-27 01:10 | - |
+| 4063 | job | unidentified Polaris job on gpu01 | unknown | 3 | provisional default 3; name, owner and script not identified (no job-name access from the tools in this pass); presumably the GPU 1 energy drift audit | unknown | running | 2026-10-26 22:58 | 2026-10-27 01:10 | - |
+| planetesimal-mass-conditioned-training | agent | planetesimal-disk mass-conditioned curriculum training | supervisor | 2 | normal 3; exploratory, model range extension not requested by user -1; code and 10 CPU tests committed (0f1c7d8, 79a6c70), not trained | none | pending | 2026-10-27 00:30 | 2026-10-27 01:10 | - |
+| cold-collapse-scoping | agent | cold-collapse scoping | supervisor | 2 | normal 3; scoping only, waits on retrain result -1; not dispatched | none | pending | 2026-10-27 00:30 | 2026-10-27 01:10 | - |
