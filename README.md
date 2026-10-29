@@ -18,10 +18,10 @@ Videos are hosted on YouTube (links pending upload). Each one says whether it is
 A cloud of 1 billion bodies collapses into a dense core while the background stars bend around it, as light would near a black hole. Model rollout: scatter-field network, 300 ticks, the lensing is a rendering effect computed from the body density, not part of the physics model. Speed and stability result only.
 
 [![10 billion bodies, density at three zoom levels](thumbnail-pending)](https://www.youtube.com/watch?v=PENDING)
-The same collapse with 10 billion bodies, shown as density at three zoom levels. Model rollout: scatter-field network, 100 ticks, 88 GB peak memory on one GPU. Speed and memory result only. The bright frame around the full-box panel is consistent with bodies piled on the clipped edge of the starting cloud.
+The same collapse with 10 billion bodies, shown as density at three zoom levels. Model rollout: scatter-field network, 100 ticks, a median 13.4 s per tick and 87 GB peak memory on one GPU. Speed and memory result only. The bright frame around the full-box panel is consistent with bodies piled on the clipped edge of the starting cloud.
 
 [![100,000 bodies: learned model next to exact simulation, lensed](thumbnail-pending)](https://www.youtube.com/watch?v=PENDING)
-The 100,000-body version, with the exact direct simulation beside the model. Model rollout against an exact reference: they agree for roughly the first 20 ticks and then drift apart, which is the honest picture at this size (position error 1.33 at tick 20, 8.1 at tick 50).
+The 100,000-body version, with the exact direct simulation beside the model. Model rollout against an exact reference: they agree for roughly the first 20 ticks and then drift apart, which is the honest picture at this size (position error 1.33 at tick 20, 8.3 at tick 50, 18.9 at tick 100).
 
 **Galactic collapse**
 
@@ -34,7 +34,7 @@ A smaller scene with 1 million bodies where clumps pull together, merge, and fli
 **Solar systems**
 
 [![A star with 8 planets, a moon and a belt: exact versus learned model](thumbnail-pending)](https://www.youtube.com/watch?v=PENDING)
-A star, 8 planets, one moon and a belt of small bodies, exact simulation on the left and the learned scatter-field model on the right. Model rollout against an exact reference. The model keeps all 8 planets in orbit for about 1000 ticks, with a 19 percent error in orbital period, and loses 7 of 8 by tick 2000. This model was not designed for a heavy central star, and the video shows where it breaks.
+A star, 8 planets, one moon and a belt of small bodies, exact simulation on the left and the learned scatter-field model on the right. Model rollout against an exact reference. With the grid-edge fix, no planets are lost by tick 1000 (median orbital period error 17 percent), and 5 of 8 are lost by tick 2000. This model was not designed for a heavy central star, and the video shows where it breaks.
 
 [![Planetesimal disk around a star, direct simulation](thumbnail-pending)](https://www.youtube.com/watch?v=PENDING)
 A star with 1000 small bodies and one Jupiter-mass planet at 5 AU over 100 years, seen face-on and edge-on, with an in-range toy version beside a learned model. The top row is an exact direct N-body reference (gravity only, a toy: no gas, so it does not model how planets actually form). The bottom row is a learned model on a toy version with equal-mass bodies, and it fails: its error grows past the kill line after about 100 ticks. The learned models handle only equal-mass bodies today, so the real star-to-planetesimal mass ratio (1000 to 1) is out of range until per-body-mass support is trained.
@@ -54,9 +54,9 @@ Every design choice is judged against four requirements, and the project reports
 
 ![Measured cost scaling to 1 billion bodies](results/bench_scaling.png)
 
-![All 1e6 bodies at ticks 0, 11, 40 and 100, edge-artifact-free model: density, learned force, far-field potential](videos/scatter_bh_panels_frames_no_edge_artifact_1e6.png)
+![All 1 billion bodies at ticks 0, 11, 40 and 100, edge-artifact-free model: density, learned force, far-field potential](videos/scatter_bh_panels_frames_no_edge_artifact_1e9.png)
 
-The same scene with 1 million bodies (not 1 billion) and the grid-edge fix: the potential of the kernel term is taken one cell beyond each grid side, with the trained weights unchanged. The earlier version of this figure (1 billion bodies, `videos/scatter_bh_1b_panels_frames.png`) showed a bright frame in the force panel; that frame was an artificial force near the grid border, about 60 to 145 times the exact force within 2 units of the edge and about 1.5 times it elsewhere, and it is gone here (`videos/scatter_bh_edge_old_vs_fixed_force_1e6.png` shows the old and fixed force maps side by side). A 1-billion-body version of this figure is queued as Polaris job 4056 and will replace this one when it finishes. Bodies that leave the grid still feel no force.
+The same scene with 1 billion bodies and the grid-edge fix: the potential of the kernel term is taken one cell beyond each grid side, with the trained weights unchanged. The earlier version of this figure (1 billion bodies, `videos/scatter_bh_1b_panels_frames.png`) showed a bright frame in the force panel; that frame was an artificial force near the grid border, about 60 to 145 times the exact force within 2 units of the edge and about 1.5 times it elsewhere, and it is gone here, with no rim in the force panel at any of the four ticks (`videos/scatter_bh_edge_old_vs_fixed_force_1e6.png` shows the old and fixed force maps side by side, at 1 million bodies). Bodies that leave the grid still feel no force.
 
 **Browser.** A live site runs the models client-side with side-by-side ground truth and a view inside the network. A WebGPU port of the network passes its numerical check against the CPU path (maximum relative difference 2.4e-6 on one pass, 5.7e-6 over a 20-tick rollout). Its speed has not been measured on a real GPU, so there is no speedup claim yet.
 
