@@ -15,6 +15,7 @@ Polaris: connected 14:10 (adamwebb). Use both GPUs (student-pleiades QOS).
 | residual corrector test | finished | - | KILL: head did not help, held-out error slightly worse (a57452c) |
 | tiled closed-loop tier 0 with halo exchange | finished | - | KILL on two of four lines, but position error now beats the tiled baseline (e44b796); energy drift still about 4x |
 | energy drift metric audit and energy-similarity test | finished | high (4) | drift metric valid; energy-similarity term failed on both seeds (7c6d709); GPU 1 released |
+| close-pair potential-energy localisation and fix test | finished | normal (3) | loss is mid-range (r 0.5-4) over-contraction of dense clumps after tick 20, not close-pair softness; pair-potential-by-separation term KILL at probe 750 (job 4080); GPU 1 released |
 | close-pair potential-energy loss fix | running | not yet rated | resumed 19:10 10-28 (agent a7d93c7e2762337f1); reserved GPU 1; target dE@100 at most 2.5x baseline and tiled err@20 at most 1.25x baseline |
 | priority rating system | finished | urgent (5) | rating scale 1 background to 5 urgent, registry docs/debugging/priority-registry.md, checker scripts/check_priority_registry.py (3bd037f); agent aadd3ccf798b0fba2 |
 | showcase videos delivery | running | urgent (5) | resumed 19:10 10-28 (agent a666c8418b53fd81c); reserved GPU 2; downloading and rendering the overnight outputs, edge-artifact check on black-hole, collapse and solar-system videos, 1e10 render, reviewer per video |
@@ -26,6 +27,9 @@ Polaris: connected 14:10 (adamwebb). Use both GPUs (student-pleiades QOS).
 
 Pending on retrain result: frozen-base residual corrector test (user approved); cold-collapse scoping.
 ## Log
+
+- 20:20 (10-28) close-pair-energy-agent: localisation (job 4079, 2.5 min, no training; seeds 9100/9200/9300): teacher-forced force gain 0.98-1.02 at every nearest-neighbour distance and bound pairs do not evaporate (17.8% vs truth 17.6% still bound at tick 100), so softness and evaporation are falsified; the new model's dPE of -0.038 at tick 100 sits at r 0.5-4 (-0.012, -0.019, -0.007 of |E0|; 5-7% too many pairs), all in the densest third by local density; the exact force through dt 0.1 Verlet has the opposite sign (+0.0285), so integration error does not explain it. One fix tested: pair-potential-by-separation similarity term (job 4080, seed 4738) KILL at iteration-750 probe: dE@40 1.51x init, err@20 1.13x, plain 1.21x; seed 4739 and held-out lines not run. Details in experiment-log.md. GPU 1 released.
+
 - 14:10 Polaris connected.
 - 14:15 Dispatched agent lj-potential-gradient-agent (hole-1 potential-gradient fix on LJ solid/liquid; worktree, 1 GPU) and agent cutout-bias-and-seam-check-agent (hole-4 cutout bias, hole-5 teacher-forced vs rollout gap, hole-3 seam checks on existing ckpts; worktree, 1 GPU). Both told to pre-register criteria, log to experiment-log + theory doc, not push. (legacy: A, B)
 - Wakeup/completion: notified automatically on agent completion.
