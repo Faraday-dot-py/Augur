@@ -220,8 +220,9 @@ function editWeight(v) {
   refreshTrace();
 }
 
-function resetWeights(all) {
-  if (all) net.reset(); else net.reset(ws.name, ws.name === "gravity" ? -1 : ws.i);
+function resetWeights(all, randomize = false) {
+  if (randomize) net.randomize();
+  else if (all) net.reset(); else net.reset(ws.name, ws.name === "gravity" ? -1 : ws.i);
   lut = forceLut(net);
   st.eModel.length = st.eTruth.length = 0;
   view.setGravity(net.gx, net.gy);
@@ -236,6 +237,7 @@ wval.oninput = () => { if (wval.value !== "") editWeight(+wval.value); };
 wslide.oninput = () => editWeight(+wslide.value);
 $("w-reset").onclick = () => resetWeights(false);
 $("w-all").onclick = () => resetWeights(true);
+$("w-rand").onclick = () => resetWeights(true, true);
 
 function setPanel(on) {
   st.panel = on;

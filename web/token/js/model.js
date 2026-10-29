@@ -86,6 +86,17 @@ export class TokenNet {
     this.version++;
   }
 
+  // every MLP weight and bias redrawn as nn.Linear's default init,
+  // U(-1/sqrt(fan_in), 1/sqrt(fan_in)); gravity is left as trained
+  randomize(uniform = Math.random) {
+    for (const k of Object.keys(this.w)) {
+      if (k === "gravity") continue;
+      const bound = 1 / Math.sqrt(k.includes(".0.") ? 1 : W);
+      for (let i = 0; i < this.w[k].length; i++) this.w[k][i] = (2 * uniform() - 1) * bound;
+    }
+    this.version++;
+  }
+
   edited() {
     let n = 0;
     for (const k of Object.keys(this.w)) for (let i = 0; i < this.w[k].length; i++) if (this.w[k][i] !== this.trained[k][i]) n++;
