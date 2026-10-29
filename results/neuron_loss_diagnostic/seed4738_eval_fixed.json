@@ -1,0 +1,1845 @@
+{
+ "seed": 4738,
+ "eval": {
+  "10": {
+   "regime_fractions_all_ticks": {
+    "spike-tick": 0.02057916671037674,
+    "refractory": 0.06028750166296959,
+    "near-threshold": 0.04677916690707207,
+    "subthreshold": 0.8723541498184204
+   },
+   "channel_errors_vs_step": {
+    "full-synaptic-messages": {
+     "1": {
+      "voltage_rmse_mv": 3.524793863296509,
+      "adaptation_rmse": 0.3283372223377228,
+      "synaptic_rmse": 0.05105194076895714,
+      "spike_mismatch_frac": 0.0012499999720603228,
+      "true_spike_frac": 0.008750000037252903,
+      "pred_spike_frac": 0.009999999776482582
+     },
+     "5": {
+      "voltage_rmse_mv": 6.040764331817627,
+      "adaptation_rmse": 1.3938435316085815,
+      "synaptic_rmse": 0.0910499170422554,
+      "spike_mismatch_frac": 0.017500000074505806,
+      "true_spike_frac": 0.022499999031424522,
+      "pred_spike_frac": 0.03500000014901161
+     },
+     "10": {
+      "voltage_rmse_mv": 7.433252334594727,
+      "adaptation_rmse": 1.6835087537765503,
+      "synaptic_rmse": 0.134336456656456,
+      "spike_mismatch_frac": 0.027499999850988388,
+      "true_spike_frac": 0.017500000074505806,
+      "pred_spike_frac": 0.032499998807907104
+     },
+     "20": {
+      "voltage_rmse_mv": 9.337334632873535,
+      "adaptation_rmse": 2.594757556915283,
+      "synaptic_rmse": 0.18584313988685608,
+      "spike_mismatch_frac": 0.04124999791383743,
+      "true_spike_frac": 0.027499999850988388,
+      "pred_spike_frac": 0.028749998658895493
+     },
+     "50": {
+      "voltage_rmse_mv": 10.371076583862305,
+      "adaptation_rmse": 3.5489025115966797,
+      "synaptic_rmse": 0.2268858104944229,
+      "spike_mismatch_frac": 0.042500000447034836,
+      "true_spike_frac": 0.022499999031424522,
+      "pred_spike_frac": 0.022499999031424522
+     },
+     "100": {
+      "voltage_rmse_mv": 11.700034141540527,
+      "adaptation_rmse": 4.077874183654785,
+      "synaptic_rmse": 0.21872159838676453,
+      "spike_mismatch_frac": 0.026249999180436134,
+      "true_spike_frac": 0.017500000074505806,
+      "pred_spike_frac": 0.013749999925494194
+     },
+     "200": {
+      "voltage_rmse_mv": 11.161691665649414,
+      "adaptation_rmse": 3.9715993404388428,
+      "synaptic_rmse": 0.2451568990945816,
+      "spike_mismatch_frac": 0.026249999180436134,
+      "true_spike_frac": 0.022499999031424522,
+      "pred_spike_frac": 0.008750000037252903
+     },
+     "300": {
+      "voltage_rmse_mv": 9.682927131652832,
+      "adaptation_rmse": 4.094125747680664,
+      "synaptic_rmse": 0.2537772059440613,
+      "spike_mismatch_frac": 0.03125,
+      "true_spike_frac": 0.026249999180436134,
+      "pred_spike_frac": 0.009999999776482582
+     }
+    },
+    "no-message-ablation": {
+     "1": {
+      "voltage_rmse_mv": 3.6263787746429443,
+      "adaptation_rmse": 0.2983655035495758,
+      "synaptic_rmse": 0.029996301978826523,
+      "spike_mismatch_frac": 0.0012499999720603228,
+      "true_spike_frac": 0.008750000037252903,
+      "pred_spike_frac": 0.009999999776482582
+     },
+     "5": {
+      "voltage_rmse_mv": 7.741444110870361,
+      "adaptation_rmse": 1.611636757850647,
+      "synaptic_rmse": 0.12439598143100739,
+      "spike_mismatch_frac": 0.029999999329447746,
+      "true_spike_frac": 0.022499999031424522,
+      "pred_spike_frac": 0.03749999776482582
+     },
+     "10": {
+      "voltage_rmse_mv": 8.970795631408691,
+      "adaptation_rmse": 2.127559185028076,
+      "synaptic_rmse": 0.1734572947025299,
+      "spike_mismatch_frac": 0.019999999552965164,
+      "true_spike_frac": 0.017500000074505806,
+      "pred_spike_frac": 0.0024999999441206455
+     },
+     "20": {
+      "voltage_rmse_mv": 9.544402122497559,
+      "adaptation_rmse": 2.904282808303833,
+      "synaptic_rmse": 0.20753547549247742,
+      "spike_mismatch_frac": 0.027499999850988388,
+      "true_spike_frac": 0.027499999850988388,
+      "pred_spike_frac": 0.0024999999441206455
+     },
+     "50": {
+      "voltage_rmse_mv": 10.340205192565918,
+      "adaptation_rmse": 3.05036997795105,
+      "synaptic_rmse": 0.220341756939888,
+      "spike_mismatch_frac": 0.022499999031424522,
+      "true_spike_frac": 0.022499999031424522,
+      "pred_spike_frac": 0.0
+     },
+     "100": {
+      "voltage_rmse_mv": 10.798383712768555,
+      "adaptation_rmse": 3.2730860710144043,
+      "synaptic_rmse": 0.21012860536575317,
+      "spike_mismatch_frac": 0.017500000074505806,
+      "true_spike_frac": 0.017500000074505806,
+      "pred_spike_frac": 0.0
+     },
+     "200": {
+      "voltage_rmse_mv": 10.296551704406738,
+      "adaptation_rmse": 3.259317636489868,
+      "synaptic_rmse": 0.2313382476568222,
+      "spike_mismatch_frac": 0.022499999031424522,
+      "true_spike_frac": 0.022499999031424522,
+      "pred_spike_frac": 0.0
+     },
+     "300": {
+      "voltage_rmse_mv": 8.910257339477539,
+      "adaptation_rmse": 3.3268823623657227,
+      "synaptic_rmse": 0.2438911497592926,
+      "spike_mismatch_frac": 0.026249999180436134,
+      "true_spike_frac": 0.026249999180436134,
+      "pred_spike_frac": 0.0
+     }
+    },
+    "per-cell-mlp-no-token-no-messages": {
+     "1": {
+      "voltage_rmse_mv": 7.128807067871094,
+      "adaptation_rmse": 0.6463927030563354,
+      "synaptic_rmse": 0.10063960403203964,
+      "spike_mismatch_frac": 0.029999999329447746,
+      "true_spike_frac": 0.008750000037252903,
+      "pred_spike_frac": 0.038750000298023224
+     },
+     "5": {
+      "voltage_rmse_mv": 8.813462257385254,
+      "adaptation_rmse": 1.864231824874878,
+      "synaptic_rmse": 0.2012079507112503,
+      "spike_mismatch_frac": 0.02499999850988388,
+      "true_spike_frac": 0.022499999031424522,
+      "pred_spike_frac": 0.007499999832361937
+     },
+     "10": {
+      "voltage_rmse_mv": 9.563363075256348,
+      "adaptation_rmse": 2.400402307510376,
+      "synaptic_rmse": 0.20682361721992493,
+      "spike_mismatch_frac": 0.01874999888241291,
+      "true_spike_frac": 0.017500000074505806,
+      "pred_spike_frac": 0.0012499999720603228
+     },
+     "20": {
+      "voltage_rmse_mv": 9.762017250061035,
+      "adaptation_rmse": 2.9945871829986572,
+      "synaptic_rmse": 0.21385590732097626,
+      "spike_mismatch_frac": 0.027499999850988388,
+      "true_spike_frac": 0.027499999850988388,
+      "pred_spike_frac": 0.007499999832361937
+     },
+     "50": {
+      "voltage_rmse_mv": 10.577290534973145,
+      "adaptation_rmse": 3.0386252403259277,
+      "synaptic_rmse": 0.22713671624660492,
+      "spike_mismatch_frac": 0.023749999701976776,
+      "true_spike_frac": 0.022499999031424522,
+      "pred_spike_frac": 0.0012499999720603228
+     },
+     "100": {
+      "voltage_rmse_mv": 10.70247745513916,
+      "adaptation_rmse": 3.2214813232421875,
+      "synaptic_rmse": 0.21472696959972382,
+      "spike_mismatch_frac": 0.021250000223517418,
+      "true_spike_frac": 0.017500000074505806,
+      "pred_spike_frac": 0.0037499999161809683
+     },
+     "200": {
+      "voltage_rmse_mv": 10.532477378845215,
+      "adaptation_rmse": 3.2636282444000244,
+      "synaptic_rmse": 0.23583191633224487,
+      "spike_mismatch_frac": 0.022499999031424522,
+      "true_spike_frac": 0.022499999031424522,
+      "pred_spike_frac": 0.0
+     },
+     "300": {
+      "voltage_rmse_mv": 9.10785961151123,
+      "adaptation_rmse": 3.2558248043060303,
+      "synaptic_rmse": 0.24301385879516602,
+      "spike_mismatch_frac": 0.026249999180436134,
+      "true_spike_frac": 0.026249999180436134,
+      "pred_spike_frac": 0.0
+     }
+    },
+    "teacher-perturbed-0.01mV-floor": {
+     "1": {
+      "voltage_rmse_mv": 0.008150302805006504,
+      "adaptation_rmse": 0.00014889232988934964,
+      "synaptic_rmse": 0.0,
+      "spike_mismatch_frac": 0.0,
+      "true_spike_frac": 0.008750000037252903,
+      "pred_spike_frac": 0.008750000037252903
+     },
+     "5": {
+      "voltage_rmse_mv": 0.0529264472424984,
+      "adaptation_rmse": 0.013332313857972622,
+      "synaptic_rmse": 0.0,
+      "spike_mismatch_frac": 0.0,
+      "true_spike_frac": 0.022499999031424522,
+      "pred_spike_frac": 0.022499999031424522
+     },
+     "10": {
+      "voltage_rmse_mv": 3.3420965671539307,
+      "adaptation_rmse": 0.3335808515548706,
+      "synaptic_rmse": 0.03570352494716644,
+      "spike_mismatch_frac": 0.0012499999720603228,
+      "true_spike_frac": 0.017500000074505806,
+      "pred_spike_frac": 0.016249999403953552
+     },
+     "20": {
+      "voltage_rmse_mv": 0.8484609723091125,
+      "adaptation_rmse": 0.5448336005210876,
+      "synaptic_rmse": 0.028558839112520218,
+      "spike_mismatch_frac": 0.0,
+      "true_spike_frac": 0.027499999850988388,
+      "pred_spike_frac": 0.027499999850988388
+     },
+     "50": {
+      "voltage_rmse_mv": 4.361345291137695,
+      "adaptation_rmse": 1.3328289985656738,
+      "synaptic_rmse": 0.10067393630743027,
+      "spike_mismatch_frac": 0.007499999832361937,
+      "true_spike_frac": 0.022499999031424522,
+      "pred_spike_frac": 0.019999999552965164
+     },
+     "100": {
+      "voltage_rmse_mv": 10.788986206054688,
+      "adaptation_rmse": 2.6976258754730225,
+      "synaptic_rmse": 0.1915636658668518,
+      "spike_mismatch_frac": 0.021250000223517418,
+      "true_spike_frac": 0.017500000074505806,
+      "pred_spike_frac": 0.01874999888241291
+     },
+     "200": {
+      "voltage_rmse_mv": 11.119771957397461,
+      "adaptation_rmse": 3.6145057678222656,
+      "synaptic_rmse": 0.24142353236675262,
+      "spike_mismatch_frac": 0.038750000298023224,
+      "true_spike_frac": 0.022499999031424522,
+      "pred_spike_frac": 0.026249999180436134
+     },
+     "300": {
+      "voltage_rmse_mv": 12.666580200195312,
+      "adaptation_rmse": 3.7265071868896484,
+      "synaptic_rmse": 0.278914213180542,
+      "spike_mismatch_frac": 0.051249999552965164,
+      "true_spike_frac": 0.026249999180436134,
+      "pred_spike_frac": 0.03500000014901161
+     }
+    }
+   },
+   "rollout_error_by_regime": {
+    "full-synaptic-messages": {
+     "1": {
+      "spike-tick": {
+       "cell_step_fraction": 0.008750000037252903,
+       "voltage_rmse_mv": 9.189016342163086,
+       "share_of_voltage_sq_error": 0.05946735160615932
+      },
+      "refractory": {
+       "cell_step_fraction": 0.0,
+       "voltage_rmse_mv": null,
+       "share_of_voltage_sq_error": 0.0
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04749999940395355,
+       "voltage_rmse_mv": 13.917439460754395,
+       "share_of_voltage_sq_error": 0.7405336886397386
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.9437499642372131,
+       "voltage_rmse_mv": 1.6226284503936768,
+       "share_of_voltage_sq_error": 0.19999892905026803
+      }
+     },
+     "10": {
+      "spike-tick": {
+       "cell_step_fraction": 0.017500000074505806,
+       "voltage_rmse_mv": 12.974482536315918,
+       "share_of_voltage_sq_error": 0.05331634420491445
+      },
+      "refractory": {
+       "cell_step_fraction": 0.05874999985098839,
+       "voltage_rmse_mv": 12.835144996643066,
+       "share_of_voltage_sq_error": 0.17516673936696306
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04874999821186066,
+       "voltage_rmse_mv": 26.169553756713867,
+       "share_of_voltage_sq_error": 0.6042400297493855
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.875,
+       "voltage_rmse_mv": 3.250070810317993,
+       "share_of_voltage_sq_error": 0.1672768977251759
+      }
+     },
+     "20": {
+      "spike-tick": {
+       "cell_step_fraction": 0.027499999850988388,
+       "voltage_rmse_mv": 7.535660266876221,
+       "share_of_voltage_sq_error": 0.017911397374591
+      },
+      "refractory": {
+       "cell_step_fraction": 0.04749999940395355,
+       "voltage_rmse_mv": 10.114529609680176,
+       "share_of_voltage_sq_error": 0.05573642533771932
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.044999998062849045,
+       "voltage_rmse_mv": 35.76355743408203,
+       "share_of_voltage_sq_error": 0.6601583274229745
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8799999952316284,
+       "voltage_rmse_mv": 5.135474681854248,
+       "share_of_voltage_sq_error": 0.2661938323632579
+      }
+     },
+     "50": {
+      "spike-tick": {
+       "cell_step_fraction": 0.022499999031424522,
+       "voltage_rmse_mv": 9.61373519897461,
+       "share_of_voltage_sq_error": 0.01933388518826744
+      },
+      "refractory": {
+       "cell_step_fraction": 0.057499997317790985,
+       "voltage_rmse_mv": 13.576728820800781,
+       "share_of_voltage_sq_error": 0.09853951755872899
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.042500000447034836,
+       "voltage_rmse_mv": 37.577205657958984,
+       "share_of_voltage_sq_error": 0.5579434515827306
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8774999976158142,
+       "voltage_rmse_mv": 6.303699493408203,
+       "share_of_voltage_sq_error": 0.3241831626939588
+      }
+     },
+     "100": {
+      "spike-tick": {
+       "cell_step_fraction": 0.017500000074505806,
+       "voltage_rmse_mv": 7.587606906890869,
+       "share_of_voltage_sq_error": 0.007359926084440744
+      },
+      "refractory": {
+       "cell_step_fraction": 0.06749999523162842,
+       "voltage_rmse_mv": 15.27712631225586,
+       "share_of_voltage_sq_error": 0.11508345177357891
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.042500000447034836,
+       "voltage_rmse_mv": 43.705387115478516,
+       "share_of_voltage_sq_error": 0.5930408856227132
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8725000023841858,
+       "voltage_rmse_mv": 6.681247711181641,
+       "share_of_voltage_sq_error": 0.28451574543661734
+      }
+     }
+    },
+    "no-message-ablation": {
+     "1": {
+      "spike-tick": {
+       "cell_step_fraction": 0.008750000037252903,
+       "voltage_rmse_mv": 5.80985164642334,
+       "share_of_voltage_sq_error": 0.02245907067118785
+      },
+      "refractory": {
+       "cell_step_fraction": 0.0,
+       "voltage_rmse_mv": null,
+       "share_of_voltage_sq_error": 0.0
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04749999940395355,
+       "voltage_rmse_mv": 13.418484687805176,
+       "share_of_voltage_sq_error": 0.6503606241164245
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.9437499642372131,
+       "voltage_rmse_mv": 2.1351985931396484,
+       "share_of_voltage_sq_error": 0.32718036032707726
+      }
+     },
+     "10": {
+      "spike-tick": {
+       "cell_step_fraction": 0.017500000074505806,
+       "voltage_rmse_mv": 7.834800720214844,
+       "share_of_voltage_sq_error": 0.013348484794934773
+      },
+      "refractory": {
+       "cell_step_fraction": 0.05874999985098839,
+       "voltage_rmse_mv": 13.925942420959473,
+       "share_of_voltage_sq_error": 0.14157779381344343
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04874999821186066,
+       "voltage_rmse_mv": 33.042423248291016,
+       "share_of_voltage_sq_error": 0.6613882252249623
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.875,
+       "voltage_rmse_mv": 4.110213756561279,
+       "share_of_voltage_sq_error": 0.18368550280296167
+      }
+     },
+     "20": {
+      "spike-tick": {
+       "cell_step_fraction": 0.027499999850988388,
+       "voltage_rmse_mv": 4.417331695556641,
+       "share_of_voltage_sq_error": 0.00589054270576607
+      },
+      "refractory": {
+       "cell_step_fraction": 0.04749999940395355,
+       "voltage_rmse_mv": 9.322145462036133,
+       "share_of_voltage_sq_error": 0.045313536843696364
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.044999998062849045,
+       "voltage_rmse_mv": 37.29984664916992,
+       "share_of_voltage_sq_error": 0.6872727721026266
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8799999952316284,
+       "voltage_rmse_mv": 5.203103542327881,
+       "share_of_voltage_sq_error": 0.261523189386151
+      }
+     },
+     "50": {
+      "spike-tick": {
+       "cell_step_fraction": 0.022499999031424522,
+       "voltage_rmse_mv": 9.035789489746094,
+       "share_of_voltage_sq_error": 0.017181312989258072
+      },
+      "refractory": {
+       "cell_step_fraction": 0.057499997317790985,
+       "voltage_rmse_mv": 14.836737632751465,
+       "share_of_voltage_sq_error": 0.11838217476894063
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.042500000447034836,
+       "voltage_rmse_mv": 38.42983627319336,
+       "share_of_voltage_sq_error": 0.5870399054928793
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8774999976158142,
+       "voltage_rmse_mv": 5.813747882843018,
+       "share_of_voltage_sq_error": 0.27739660246754994
+      }
+     },
+     "100": {
+      "spike-tick": {
+       "cell_step_fraction": 0.017500000074505806,
+       "voltage_rmse_mv": 4.6779046058654785,
+       "share_of_voltage_sq_error": 0.0032841517650386144
+      },
+      "refractory": {
+       "cell_step_fraction": 0.06749999523162842,
+       "voltage_rmse_mv": 13.646728515625,
+       "share_of_voltage_sq_error": 0.10780610127230648
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.042500000447034836,
+       "voltage_rmse_mv": 42.002586364746094,
+       "share_of_voltage_sq_error": 0.6430184444994214
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8725000023841858,
+       "voltage_rmse_mv": 5.732546329498291,
+       "share_of_voltage_sq_error": 0.24589122591090623
+      }
+     }
+    },
+    "per-cell-mlp-no-token-no-messages": {
+     "1": {
+      "spike-tick": {
+       "cell_step_fraction": 0.008750000037252903,
+       "voltage_rmse_mv": 11.069519996643066,
+       "share_of_voltage_sq_error": 0.02109754383779497
+      },
+      "refractory": {
+       "cell_step_fraction": 0.0,
+       "voltage_rmse_mv": null,
+       "share_of_voltage_sq_error": 0.0
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04749999940395355,
+       "voltage_rmse_mv": 26.98838233947754,
+       "share_of_voltage_sq_error": 0.6807906464254028
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.9437499642372131,
+       "voltage_rmse_mv": 4.006618499755859,
+       "share_of_voltage_sq_error": 0.2981117782103119
+      }
+     },
+     "10": {
+      "spike-tick": {
+       "cell_step_fraction": 0.017500000074505806,
+       "voltage_rmse_mv": 7.158453941345215,
+       "share_of_voltage_sq_error": 0.009805171163394709
+      },
+      "refractory": {
+       "cell_step_fraction": 0.05874999985098839,
+       "voltage_rmse_mv": 14.727986335754395,
+       "share_of_voltage_sq_error": 0.13933919672116968
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04874999821186066,
+       "voltage_rmse_mv": 35.54984664916992,
+       "share_of_voltage_sq_error": 0.6736413209157088
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.875,
+       "voltage_rmse_mv": 4.303839683532715,
+       "share_of_voltage_sq_error": 0.17721435457798376
+      }
+     },
+     "20": {
+      "spike-tick": {
+       "cell_step_fraction": 0.027499999850988388,
+       "voltage_rmse_mv": 6.0081400871276855,
+       "share_of_voltage_sq_error": 0.010416784086751838
+      },
+      "refractory": {
+       "cell_step_fraction": 0.04749999940395355,
+       "voltage_rmse_mv": 8.731345176696777,
+       "share_of_voltage_sq_error": 0.03799940256660665
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.044999998062849045,
+       "voltage_rmse_mv": 38.3175163269043,
+       "share_of_voltage_sq_error": 0.6933110516979712
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8799999952316284,
+       "voltage_rmse_mv": 5.2885613441467285,
+       "share_of_voltage_sq_error": 0.2582727872675979
+      }
+     },
+     "50": {
+      "spike-tick": {
+       "cell_step_fraction": 0.022499999031424522,
+       "voltage_rmse_mv": 8.740893363952637,
+       "share_of_voltage_sq_error": 0.015365448432485617
+      },
+      "refractory": {
+       "cell_step_fraction": 0.057499997317790985,
+       "voltage_rmse_mv": 14.868340492248535,
+       "share_of_voltage_sq_error": 0.1136171554669182
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.042500000447034836,
+       "voltage_rmse_mv": 39.27027130126953,
+       "share_of_voltage_sq_error": 0.5858249061792263
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8774999976158142,
+       "voltage_rmse_mv": 6.030035495758057,
+       "share_of_voltage_sq_error": 0.28519241354496666
+      }
+     },
+     "100": {
+      "spike-tick": {
+       "cell_step_fraction": 0.017500000074505806,
+       "voltage_rmse_mv": 4.543094158172607,
+       "share_of_voltage_sq_error": 0.003153355369140534
+      },
+      "refractory": {
+       "cell_step_fraction": 0.06749999523162842,
+       "voltage_rmse_mv": 13.013599395751953,
+       "share_of_voltage_sq_error": 0.09979987987250628
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.042500000447034836,
+       "voltage_rmse_mv": 41.233673095703125,
+       "share_of_voltage_sq_error": 0.6308474871059035
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8725000023841858,
+       "voltage_rmse_mv": 5.911600112915039,
+       "share_of_voltage_sq_error": 0.2661992863113911
+      }
+     }
+    },
+    "teacher-perturbed-0.01mV-floor": {
+     "1": {
+      "spike-tick": {
+       "cell_step_fraction": 0.008750000037252903,
+       "voltage_rmse_mv": 0.0,
+       "share_of_voltage_sq_error": 0.0
+      },
+      "refractory": {
+       "cell_step_fraction": 0.0,
+       "voltage_rmse_mv": null,
+       "share_of_voltage_sq_error": 0.0
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04749999940395355,
+       "voltage_rmse_mv": 0.023875532671809196,
+       "share_of_voltage_sq_error": 0.40761696449201074
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.9437499642372131,
+       "voltage_rmse_mv": 0.006457234732806683,
+       "share_of_voltage_sq_error": 0.5923830355079892
+      }
+     },
+     "10": {
+      "spike-tick": {
+       "cell_step_fraction": 0.017500000074505806,
+       "voltage_rmse_mv": 25.100393295288086,
+       "share_of_voltage_sq_error": 0.9870997672714477
+      },
+      "refractory": {
+       "cell_step_fraction": 0.05874999985098839,
+       "voltage_rmse_mv": 0.9627304077148438,
+       "share_of_voltage_sq_error": 0.004875051672678411
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04874999821186066,
+       "voltage_rmse_mv": 1.1547343730926514,
+       "share_of_voltage_sq_error": 0.005819701576450428
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.875,
+       "voltage_rmse_mv": 0.16779111325740814,
+       "share_of_voltage_sq_error": 0.0022055044534130333
+      }
+     },
+     "20": {
+      "spike-tick": {
+       "cell_step_fraction": 0.027499999850988388,
+       "voltage_rmse_mv": 0.0,
+       "share_of_voltage_sq_error": 0.0
+      },
+      "refractory": {
+       "cell_step_fraction": 0.04749999940395355,
+       "voltage_rmse_mv": 0.18465986847877502,
+       "share_of_voltage_sq_error": 0.0022499604891110243
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.044999998062849045,
+       "voltage_rmse_mv": 0.2770676910877228,
+       "share_of_voltage_sq_error": 0.004798666187899348
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8799999952316284,
+       "voltage_rmse_mv": 0.9012691974639893,
+       "share_of_voltage_sq_error": 0.9929514428727523
+      }
+     },
+     "50": {
+      "spike-tick": {
+       "cell_step_fraction": 0.022499999031424522,
+       "voltage_rmse_mv": 11.100573539733887,
+       "share_of_voltage_sq_error": 0.1457580167209217
+      },
+      "refractory": {
+       "cell_step_fraction": 0.057499997317790985,
+       "voltage_rmse_mv": 12.468705177307129,
+       "share_of_voltage_sq_error": 0.4699694043392252
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.042500000447034836,
+       "voltage_rmse_mv": 5.326989650726318,
+       "share_of_voltage_sq_error": 0.06340327792315308
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8774999976158142,
+       "voltage_rmse_mv": 2.6373085975646973,
+       "share_of_voltage_sq_error": 0.32086925689605655
+      }
+     },
+     "100": {
+      "spike-tick": {
+       "cell_step_fraction": 0.017500000074505806,
+       "voltage_rmse_mv": 26.26050567626953,
+       "share_of_voltage_sq_error": 0.10367711534996009
+      },
+      "refractory": {
+       "cell_step_fraction": 0.06749999523162842,
+       "voltage_rmse_mv": 11.005395889282227,
+       "share_of_voltage_sq_error": 0.07023503035507603
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.042500000447034836,
+       "voltage_rmse_mv": 34.30704879760742,
+       "share_of_voltage_sq_error": 0.4297286953206772
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8725000023841858,
+       "voltage_rmse_mv": 7.2718071937561035,
+       "share_of_voltage_sq_error": 0.39635908556570915
+      }
+     }
+    }
+   },
+   "rate_statistics": {
+    "full-synaptic-messages": {
+     "100": {
+      "mean_true_hz": 19.399999618530273,
+      "mean_pred_hz": 21.799999237060547,
+      "ratio": 1.123711347579956,
+      "slope_pred_on_true": 0.48935312032699585,
+      "correlation": 0.4217373728752136,
+      "silent_cells_true": 0.08249999582767487,
+      "silent_cells_pred": 0.21249999105930328
+     },
+     "300": {
+      "mean_true_hz": 20.579166412353516,
+      "mean_pred_hz": 16.983335494995117,
+      "ratio": 0.8252683877944946,
+      "slope_pred_on_true": 0.153294637799263,
+      "correlation": 0.2360856533050537,
+      "silent_cells_true": 0.0,
+      "silent_cells_pred": 0.011249999515712261
+     }
+    },
+    "no-message-ablation": {
+     "100": {
+      "mean_true_hz": 19.399999618530273,
+      "mean_pred_hz": 2.8374998569488525,
+      "ratio": 0.14626288414001465,
+      "slope_pred_on_true": 0.12929558753967285,
+      "correlation": 0.27629315853118896,
+      "silent_cells_true": 0.08249999582767487,
+      "silent_cells_pred": 0.8075000047683716
+     },
+     "300": {
+      "mean_true_hz": 20.579166412353516,
+      "mean_pred_hz": 1.4666666984558105,
+      "ratio": 0.07126948982477188,
+      "slope_pred_on_true": 0.04416358470916748,
+      "correlation": 0.20048405230045319,
+      "silent_cells_true": 0.0,
+      "silent_cells_pred": 0.6974999904632568
+     }
+    },
+    "per-cell-mlp-no-token-no-messages": {
+     "100": {
+      "mean_true_hz": 19.399999618530273,
+      "mean_pred_hz": 2.362499952316284,
+      "ratio": 0.12177835404872894,
+      "slope_pred_on_true": 0.1202172189950943,
+      "correlation": 0.22597578167915344,
+      "silent_cells_true": 0.08249999582767487,
+      "silent_cells_pred": 0.9012500047683716
+     },
+     "300": {
+      "mean_true_hz": 20.579166412353516,
+      "mean_pred_hz": 1.3916666507720947,
+      "ratio": 0.0676250234246254,
+      "slope_pred_on_true": 0.052306026220321655,
+      "correlation": 0.19210968911647797,
+      "silent_cells_true": 0.0,
+      "silent_cells_pred": 0.8374999761581421
+     }
+    },
+    "teacher-perturbed-0.01mV-floor": {
+     "100": {
+      "mean_true_hz": 19.399999618530273,
+      "mean_pred_hz": 19.462499618530273,
+      "ratio": 1.0032216310501099,
+      "slope_pred_on_true": 0.9686890840530396,
+      "correlation": 0.9676633477210999,
+      "silent_cells_true": 0.08249999582767487,
+      "silent_cells_pred": 0.08624999970197678
+     },
+     "300": {
+      "mean_true_hz": 20.579166412353516,
+      "mean_pred_hz": 20.475000381469727,
+      "ratio": 0.9949382543563843,
+      "slope_pred_on_true": 0.9749155044555664,
+      "correlation": 0.9716334939002991,
+      "silent_cells_true": 0.0,
+      "silent_cells_pred": 0.0012499999720603228
+     }
+    }
+   },
+   "teacher_forced_one_step_by_regime": {
+    "full-synaptic-messages": {
+     "spike-tick": {
+      "cell_step_fraction": 0.019711539149284363,
+      "voltage_rmse_mv_one_step": 28.44953155517578,
+      "share_of_voltage_sq_error": 0.43298091167361646,
+      "bce_per_cell_step": 0.04767827317118645,
+      "share_of_bce": 0.013633429991951287,
+      "mean_predicted_spike_prob": 0.9539610147476196,
+      "true_spike_rate": 1.0
+     },
+     "refractory": {
+      "cell_step_fraction": 0.05846153944730759,
+      "voltage_rmse_mv_one_step": 5.7954206466674805,
+      "share_of_voltage_sq_error": 0.053289068464490386,
+      "bce_per_cell_step": 0.1765899956226349,
+      "share_of_bce": 0.14976158221988836,
+      "mean_predicted_spike_prob": 0.13409428298473358,
+      "true_spike_rate": 0.0
+     },
+     "near-threshold": {
+      "cell_step_fraction": 0.045625001192092896,
+      "voltage_rmse_mv_one_step": 19.453998565673828,
+      "share_of_voltage_sq_error": 0.468617621697316,
+      "bce_per_cell_step": 0.8356268405914307,
+      "share_of_bce": 0.5530690590430188,
+      "mean_predicted_spike_prob": 0.49488943815231323,
+      "true_spike_rate": 0.0
+     },
+     "subthreshold": {
+      "cell_step_fraction": 0.8762019276618958,
+      "voltage_rmse_mv_one_step": 1.3773579597473145,
+      "share_of_voltage_sq_error": 0.04511238797104515,
+      "bce_per_cell_step": 0.022306928411126137,
+      "share_of_bce": 0.28353590480077523,
+      "mean_predicted_spike_prob": 0.019423333927989006,
+      "true_spike_rate": 0.0
+     }
+    },
+    "no-message-ablation": {
+     "spike-tick": {
+      "cell_step_fraction": 0.019711539149284363,
+      "voltage_rmse_mv_one_step": 16.896093368530273,
+      "share_of_voltage_sq_error": 0.26935236637093174,
+      "bce_per_cell_step": 0.02642107754945755,
+      "share_of_bce": 0.0037111895662967228,
+      "mean_predicted_spike_prob": 0.9739412665367126,
+      "true_spike_rate": 1.0
+     },
+     "refractory": {
+      "cell_step_fraction": 0.05846153944730759,
+      "voltage_rmse_mv_one_step": 3.7338173389434814,
+      "share_of_voltage_sq_error": 0.039012520792177464,
+      "bce_per_cell_step": 0.19026023149490356,
+      "share_of_bce": 0.07926114954411514,
+      "mean_predicted_spike_prob": 0.12252772599458694,
+      "true_spike_rate": 0.0
+     },
+     "near-threshold": {
+      "cell_step_fraction": 0.045625001192092896,
+      "voltage_rmse_mv_one_step": 15.73021411895752,
+      "share_of_voltage_sq_error": 0.5403806559576915,
+      "bce_per_cell_step": 1.4151928424835205,
+      "share_of_bce": 0.46010888375333625,
+      "mean_predicted_spike_prob": 0.6553002595901489,
+      "true_spike_rate": 0.0
+     },
+     "subthreshold": {
+      "cell_step_fraction": 0.8762019276618958,
+      "voltage_rmse_mv_one_step": 1.8990576267242432,
+      "share_of_voltage_sq_error": 0.1512544344060287,
+      "bce_per_cell_step": 0.07318004220724106,
+      "share_of_bce": 0.45691873531579047,
+      "mean_predicted_spike_prob": 0.06781227886676788,
+      "true_spike_rate": 0.0
+     }
+    }
+   },
+   "gradient_conflict_trained_checkpoint": {
+    "full-synaptic-messages": {
+     "all": {
+      "cosine": -0.24856732785701752,
+      "grad_norm_voltage": 7.515203952789307,
+      "grad_norm_spike": 11.214239120483398
+     },
+     "near-threshold+spike-tick+refractory": {
+      "cosine": -0.21538123488426208,
+      "grad_norm_voltage": 76.06221008300781,
+      "grad_norm_spike": 67.4487075805664
+     },
+     "subthreshold": {
+      "cosine": -0.21225124597549438,
+      "grad_norm_voltage": 4.596004009246826,
+      "grad_norm_spike": 3.944040060043335
+     }
+    },
+    "no-message-ablation": {
+     "all": {
+      "cosine": -0.5573562383651733,
+      "grad_norm_voltage": 7.303505897521973,
+      "grad_norm_spike": 12.581938743591309
+     },
+     "near-threshold+spike-tick+refractory": {
+      "cosine": -0.6410301923751831,
+      "grad_norm_voltage": 57.782630920410156,
+      "grad_norm_spike": 50.24628448486328
+     },
+     "subthreshold": {
+      "cosine": -0.13815604150295258,
+      "grad_norm_voltage": 3.9472458362579346,
+      "grad_norm_spike": 8.439910888671875
+     }
+    }
+   }
+  },
+  "100": {
+   "regime_fractions_all_ticks": {
+    "spike-tick": 0.02008458413183689,
+    "refractory": 0.05860958248376846,
+    "near-threshold": 0.045471251010894775,
+    "subthreshold": 0.875834584236145
+   },
+   "channel_errors_vs_step": {
+    "full-synaptic-messages": {
+     "1": {
+      "voltage_rmse_mv": 4.344368934631348,
+      "adaptation_rmse": 0.5327958464622498,
+      "synaptic_rmse": 0.07101399451494217,
+      "spike_mismatch_frac": 0.002875000238418579,
+      "true_spike_frac": 0.017250001430511475,
+      "pred_spike_frac": 0.020125001668930054
+     },
+     "5": {
+      "voltage_rmse_mv": 7.041513919830322,
+      "adaptation_rmse": 1.3664724826812744,
+      "synaptic_rmse": 0.11008677631616592,
+      "spike_mismatch_frac": 0.026125000789761543,
+      "true_spike_frac": 0.020500000566244125,
+      "pred_spike_frac": 0.03987500071525574
+     },
+     "10": {
+      "voltage_rmse_mv": 8.213574409484863,
+      "adaptation_rmse": 1.8637356758117676,
+      "synaptic_rmse": 0.14167585968971252,
+      "spike_mismatch_frac": 0.033625002950429916,
+      "true_spike_frac": 0.020875001326203346,
+      "pred_spike_frac": 0.03750000149011612
+     },
+     "20": {
+      "voltage_rmse_mv": 10.305899620056152,
+      "adaptation_rmse": 2.634143590927124,
+      "synaptic_rmse": 0.20420438051223755,
+      "spike_mismatch_frac": 0.04787500202655792,
+      "true_spike_frac": 0.019500000402331352,
+      "pred_spike_frac": 0.039375003427267075
+     },
+     "50": {
+      "voltage_rmse_mv": 11.562716484069824,
+      "adaptation_rmse": 4.574635028839111,
+      "synaptic_rmse": 0.26104676723480225,
+      "spike_mismatch_frac": 0.036375001072883606,
+      "true_spike_frac": 0.02200000174343586,
+      "pred_spike_frac": 0.01612500101327896
+     },
+     "100": {
+      "voltage_rmse_mv": 11.831303596496582,
+      "adaptation_rmse": 5.087728977203369,
+      "synaptic_rmse": 0.2566148638725281,
+      "spike_mismatch_frac": 0.033250000327825546,
+      "true_spike_frac": 0.021375000476837158,
+      "pred_spike_frac": 0.013625000603497028
+     },
+     "200": {
+      "voltage_rmse_mv": 11.245955467224121,
+      "adaptation_rmse": 5.7842535972595215,
+      "synaptic_rmse": 0.2611546814441681,
+      "spike_mismatch_frac": 0.0338750034570694,
+      "true_spike_frac": 0.016625000163912773,
+      "pred_spike_frac": 0.019750000908970833
+     },
+     "300": {
+      "voltage_rmse_mv": 11.562564849853516,
+      "adaptation_rmse": 5.874382019042969,
+      "synaptic_rmse": 0.2599605321884155,
+      "spike_mismatch_frac": 0.03112500160932541,
+      "true_spike_frac": 0.01875000074505806,
+      "pred_spike_frac": 0.012625000439584255
+     }
+    },
+    "no-message-ablation": {
+     "1": {
+      "voltage_rmse_mv": 4.290020942687988,
+      "adaptation_rmse": 0.45653456449508667,
+      "synaptic_rmse": 0.03567182272672653,
+      "spike_mismatch_frac": 0.0021250001154839993,
+      "true_spike_frac": 0.017250001430511475,
+      "pred_spike_frac": 0.019375000149011612
+     },
+     "5": {
+      "voltage_rmse_mv": 8.76739501953125,
+      "adaptation_rmse": 1.5799987316131592,
+      "synaptic_rmse": 0.13677795231342316,
+      "spike_mismatch_frac": 0.03437500074505806,
+      "true_spike_frac": 0.020500000566244125,
+      "pred_spike_frac": 0.032875001430511475
+     },
+     "10": {
+      "voltage_rmse_mv": 9.841063499450684,
+      "adaptation_rmse": 2.516907215118408,
+      "synaptic_rmse": 0.19793064892292023,
+      "spike_mismatch_frac": 0.023000001907348633,
+      "true_spike_frac": 0.020875001326203346,
+      "pred_spike_frac": 0.0023750001564621925
+     },
+     "20": {
+      "voltage_rmse_mv": 10.57480525970459,
+      "adaptation_rmse": 3.155972480773926,
+      "synaptic_rmse": 0.21533167362213135,
+      "spike_mismatch_frac": 0.019500000402331352,
+      "true_spike_frac": 0.019500000402331352,
+      "pred_spike_frac": 0.0
+     },
+     "50": {
+      "voltage_rmse_mv": 10.973272323608398,
+      "adaptation_rmse": 3.731886148452759,
+      "synaptic_rmse": 0.240841805934906,
+      "spike_mismatch_frac": 0.02237500064074993,
+      "true_spike_frac": 0.02200000174343586,
+      "pred_spike_frac": 0.000375000003259629
+     },
+     "100": {
+      "voltage_rmse_mv": 11.100662231445312,
+      "adaptation_rmse": 3.6720824241638184,
+      "synaptic_rmse": 0.23125888407230377,
+      "spike_mismatch_frac": 0.022625001147389412,
+      "true_spike_frac": 0.021375000476837158,
+      "pred_spike_frac": 0.001500000013038516
+     },
+     "200": {
+      "voltage_rmse_mv": 10.29223346710205,
+      "adaptation_rmse": 3.5271108150482178,
+      "synaptic_rmse": 0.21939821541309357,
+      "spike_mismatch_frac": 0.016750000417232513,
+      "true_spike_frac": 0.016625000163912773,
+      "pred_spike_frac": 0.0001250000059371814
+     },
+     "300": {
+      "voltage_rmse_mv": 10.624037742614746,
+      "adaptation_rmse": 3.7266387939453125,
+      "synaptic_rmse": 0.23671050369739532,
+      "spike_mismatch_frac": 0.019750000908970833,
+      "true_spike_frac": 0.01875000074505806,
+      "pred_spike_frac": 0.0010000000474974513
+     }
+    },
+    "per-cell-mlp-no-token-no-messages": {
+     "1": {
+      "voltage_rmse_mv": 8.342585563659668,
+      "adaptation_rmse": 0.7851533889770508,
+      "synaptic_rmse": 0.10919183492660522,
+      "spike_mismatch_frac": 0.029750000685453415,
+      "true_spike_frac": 0.017250001430511475,
+      "pred_spike_frac": 0.04700000211596489
+     },
+     "5": {
+      "voltage_rmse_mv": 10.015166282653809,
+      "adaptation_rmse": 1.9984843730926514,
+      "synaptic_rmse": 0.2273297905921936,
+      "spike_mismatch_frac": 0.027000000700354576,
+      "true_spike_frac": 0.020500000566244125,
+      "pred_spike_frac": 0.006750000175088644
+     },
+     "10": {
+      "voltage_rmse_mv": 10.233924865722656,
+      "adaptation_rmse": 2.8260810375213623,
+      "synaptic_rmse": 0.2373494654893875,
+      "spike_mismatch_frac": 0.022625001147389412,
+      "true_spike_frac": 0.020875001326203346,
+      "pred_spike_frac": 0.0017500000540167093
+     },
+     "20": {
+      "voltage_rmse_mv": 10.858321189880371,
+      "adaptation_rmse": 3.2658638954162598,
+      "synaptic_rmse": 0.22708231210708618,
+      "spike_mismatch_frac": 0.020250000059604645,
+      "true_spike_frac": 0.019500000402331352,
+      "pred_spike_frac": 0.000750000006519258
+     },
+     "50": {
+      "voltage_rmse_mv": 11.208120346069336,
+      "adaptation_rmse": 3.6940081119537354,
+      "synaptic_rmse": 0.2527787685394287,
+      "spike_mismatch_frac": 0.02225000038743019,
+      "true_spike_frac": 0.02200000174343586,
+      "pred_spike_frac": 0.0002500000118743628
+     },
+     "100": {
+      "voltage_rmse_mv": 11.273458480834961,
+      "adaptation_rmse": 3.5436127185821533,
+      "synaptic_rmse": 0.24251511693000793,
+      "spike_mismatch_frac": 0.02175000123679638,
+      "true_spike_frac": 0.021375000476837158,
+      "pred_spike_frac": 0.0006250000442378223
+     },
+     "200": {
+      "voltage_rmse_mv": 10.411277770996094,
+      "adaptation_rmse": 3.4379758834838867,
+      "synaptic_rmse": 0.22777396440505981,
+      "spike_mismatch_frac": 0.017125001177191734,
+      "true_spike_frac": 0.016625000163912773,
+      "pred_spike_frac": 0.0005000000237487257
+     },
+     "300": {
+      "voltage_rmse_mv": 10.821139335632324,
+      "adaptation_rmse": 3.6124303340911865,
+      "synaptic_rmse": 0.2502184212207794,
+      "spike_mismatch_frac": 0.01900000125169754,
+      "true_spike_frac": 0.01875000074505806,
+      "pred_spike_frac": 0.0005000000237487257
+     }
+    },
+    "teacher-perturbed-0.01mV-floor": {
+     "1": {
+      "voltage_rmse_mv": 1.0616414546966553,
+      "adaptation_rmse": 0.022370316088199615,
+      "synaptic_rmse": 0.011180340312421322,
+      "spike_mismatch_frac": 0.0001250000059371814,
+      "true_spike_frac": 0.017250001430511475,
+      "pred_spike_frac": 0.017375001683831215
+     },
+     "5": {
+      "voltage_rmse_mv": 1.0972263813018799,
+      "adaptation_rmse": 0.1993054747581482,
+      "synaptic_rmse": 0.011416846886277199,
+      "spike_mismatch_frac": 0.0002500000118743628,
+      "true_spike_frac": 0.020500000566244125,
+      "pred_spike_frac": 0.020500000566244125
+     },
+     "10": {
+      "voltage_rmse_mv": 1.0141112804412842,
+      "adaptation_rmse": 0.30440661311149597,
+      "synaptic_rmse": 0.011688144877552986,
+      "spike_mismatch_frac": 0.000375000003259629,
+      "true_spike_frac": 0.020875001326203346,
+      "pred_spike_frac": 0.021000001579523087
+     },
+     "20": {
+      "voltage_rmse_mv": 1.6670478582382202,
+      "adaptation_rmse": 0.4355488717556,
+      "synaptic_rmse": 0.03124552220106125,
+      "spike_mismatch_frac": 0.0008750000270083547,
+      "true_spike_frac": 0.019500000402331352,
+      "pred_spike_frac": 0.019625000655651093
+     },
+     "50": {
+      "voltage_rmse_mv": 5.818357467651367,
+      "adaptation_rmse": 1.4965038299560547,
+      "synaptic_rmse": 0.10629039257764816,
+      "spike_mismatch_frac": 0.008500000461935997,
+      "true_spike_frac": 0.02200000174343586,
+      "pred_spike_frac": 0.023250000551342964
+     },
+     "100": {
+      "voltage_rmse_mv": 12.6060209274292,
+      "adaptation_rmse": 3.1032328605651855,
+      "synaptic_rmse": 0.2407466024160385,
+      "spike_mismatch_frac": 0.036375001072883606,
+      "true_spike_frac": 0.021375000476837158,
+      "pred_spike_frac": 0.023500001057982445
+     },
+     "200": {
+      "voltage_rmse_mv": 13.755311965942383,
+      "adaptation_rmse": 3.7173235416412354,
+      "synaptic_rmse": 0.2813607454299927,
+      "spike_mismatch_frac": 0.03500000014901161,
+      "true_spike_frac": 0.016625000163912773,
+      "pred_spike_frac": 0.019625000655651093
+     },
+     "300": {
+      "voltage_rmse_mv": 14.171549797058105,
+      "adaptation_rmse": 3.935096502304077,
+      "synaptic_rmse": 0.29800930619239807,
+      "spike_mismatch_frac": 0.03800000250339508,
+      "true_spike_frac": 0.01875000074505806,
+      "pred_spike_frac": 0.02175000123679638
+     }
+    }
+   },
+   "rollout_error_by_regime": {
+    "full-synaptic-messages": {
+     "1": {
+      "spike-tick": {
+       "cell_step_fraction": 0.017250001430511475,
+       "voltage_rmse_mv": 7.221522808074951,
+       "share_of_voltage_sq_error": 0.04766430944631171
+      },
+      "refractory": {
+       "cell_step_fraction": 0.0,
+       "voltage_rmse_mv": null,
+       "share_of_voltage_sq_error": 0.0
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.05687500163912773,
+       "voltage_rmse_mv": 15.93237590789795,
+       "share_of_voltage_sq_error": 0.7649430269496204
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.9258750677108765,
+       "voltage_rmse_mv": 1.9544600248336792,
+       "share_of_voltage_sq_error": 0.18739264096676347
+      }
+     },
+     "10": {
+      "spike-tick": {
+       "cell_step_fraction": 0.020875001326203346,
+       "voltage_rmse_mv": 11.542993545532227,
+       "share_of_voltage_sq_error": 0.04122863594163404
+      },
+      "refractory": {
+       "cell_step_fraction": 0.05650000274181366,
+       "voltage_rmse_mv": 13.850737571716309,
+       "share_of_voltage_sq_error": 0.1606681789583357
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04625000059604645,
+       "voltage_rmse_mv": 29.466943740844727,
+       "share_of_voltage_sq_error": 0.5952747804664121
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8763750195503235,
+       "voltage_rmse_mv": 3.9514052867889404,
+       "share_of_voltage_sq_error": 0.20282840463361812
+      }
+     },
+     "20": {
+      "spike-tick": {
+       "cell_step_fraction": 0.019500000402331352,
+       "voltage_rmse_mv": 8.997533798217773,
+       "share_of_voltage_sq_error": 0.014863112473409499
+      },
+      "refractory": {
+       "cell_step_fraction": 0.05925000458955765,
+       "voltage_rmse_mv": 15.357778549194336,
+       "share_of_voltage_sq_error": 0.13157500728204616
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.042625002562999725,
+       "voltage_rmse_mv": 35.9542121887207,
+       "share_of_voltage_sq_error": 0.5187906948690262
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8786250352859497,
+       "voltage_rmse_mv": 6.361480236053467,
+       "share_of_voltage_sq_error": 0.33477121870559057
+      }
+     },
+     "50": {
+      "spike-tick": {
+       "cell_step_fraction": 0.02200000174343586,
+       "voltage_rmse_mv": 8.40384292602539,
+       "share_of_voltage_sq_error": 0.011621407950265119
+      },
+      "refractory": {
+       "cell_step_fraction": 0.06287500262260437,
+       "voltage_rmse_mv": 13.854840278625488,
+       "share_of_voltage_sq_error": 0.09027371657100917
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04625000059604645,
+       "voltage_rmse_mv": 39.75503921508789,
+       "share_of_voltage_sq_error": 0.5467343807156372
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8688750267028809,
+       "voltage_rmse_mv": 7.3529863357543945,
+       "share_of_voltage_sq_error": 0.35137035050259624
+      }
+     },
+     "100": {
+      "spike-tick": {
+       "cell_step_fraction": 0.021375000476837158,
+       "voltage_rmse_mv": 8.491412162780762,
+       "share_of_voltage_sq_error": 0.011010342749949407
+      },
+      "refractory": {
+       "cell_step_fraction": 0.06337500363588333,
+       "voltage_rmse_mv": 14.035612106323242,
+       "share_of_voltage_sq_error": 0.0891898637559477
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04787500202655792,
+       "voltage_rmse_mv": 40.88762283325195,
+       "share_of_voltage_sq_error": 0.5717779124946993
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8673750162124634,
+       "voltage_rmse_mv": 7.275796413421631,
+       "share_of_voltage_sq_error": 0.3280218687906051
+      }
+     }
+    },
+    "no-message-ablation": {
+     "1": {
+      "spike-tick": {
+       "cell_step_fraction": 0.017250001430511475,
+       "voltage_rmse_mv": 8.529546737670898,
+       "share_of_voltage_sq_error": 0.068190245346753
+      },
+      "refractory": {
+       "cell_step_fraction": 0.0,
+       "voltage_rmse_mv": null,
+       "share_of_voltage_sq_error": 0.0
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.05687500163912773,
+       "voltage_rmse_mv": 14.578941345214844,
+       "share_of_voltage_sq_error": 0.6568323854742497
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.9258750677108765,
+       "voltage_rmse_mv": 2.337930917739868,
+       "share_of_voltage_sq_error": 0.27497736917899734
+      }
+     },
+     "10": {
+      "spike-tick": {
+       "cell_step_fraction": 0.020875001326203346,
+       "voltage_rmse_mv": 8.242024421691895,
+       "share_of_voltage_sq_error": 0.01464232966929959
+      },
+      "refractory": {
+       "cell_step_fraction": 0.05650000274181366,
+       "voltage_rmse_mv": 14.188783645629883,
+       "share_of_voltage_sq_error": 0.1174504628618281
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04625000059604645,
+       "voltage_rmse_mv": 36.56321716308594,
+       "share_of_voltage_sq_error": 0.638434714201496
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8763750195503235,
+       "voltage_rmse_mv": 5.0357279777526855,
+       "share_of_voltage_sq_error": 0.22947239495219401
+      }
+     },
+     "20": {
+      "spike-tick": {
+       "cell_step_fraction": 0.019500000402331352,
+       "voltage_rmse_mv": 6.811829566955566,
+       "share_of_voltage_sq_error": 0.008091283220666948
+      },
+      "refractory": {
+       "cell_step_fraction": 0.05925000458955765,
+       "voltage_rmse_mv": 13.913683891296387,
+       "share_of_voltage_sq_error": 0.1025717729046382
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.042625002562999725,
+       "voltage_rmse_mv": 40.95637130737305,
+       "share_of_voltage_sq_error": 0.6393852419131673
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8786250352859497,
+       "voltage_rmse_mv": 5.640254497528076,
+       "share_of_voltage_sq_error": 0.24995175981656295
+      }
+     },
+     "50": {
+      "spike-tick": {
+       "cell_step_fraction": 0.02200000174343586,
+       "voltage_rmse_mv": 7.676239490509033,
+       "share_of_voltage_sq_error": 0.010765827322376008
+      },
+      "refractory": {
+       "cell_step_fraction": 0.06287500262260437,
+       "voltage_rmse_mv": 13.115995407104492,
+       "share_of_voltage_sq_error": 0.08982727858131134
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04625000059604645,
+       "voltage_rmse_mv": 40.07415008544922,
+       "share_of_voltage_sq_error": 0.6168337082916338
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8688750267028809,
+       "voltage_rmse_mv": 6.257818222045898,
+       "share_of_voltage_sq_error": 0.2825731817496144
+      }
+     },
+     "100": {
+      "spike-tick": {
+       "cell_step_fraction": 0.021375000476837158,
+       "voltage_rmse_mv": 6.330426216125488,
+       "share_of_voltage_sq_error": 0.006951432361778639
+      },
+      "refractory": {
+       "cell_step_fraction": 0.06337500363588333,
+       "voltage_rmse_mv": 13.7944917678833,
+       "share_of_voltage_sq_error": 0.09786595859786375
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04787500202655792,
+       "voltage_rmse_mv": 39.448970794677734,
+       "share_of_voltage_sq_error": 0.6046198886802381
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8673750162124634,
+       "voltage_rmse_mv": 6.424885272979736,
+       "share_of_voltage_sq_error": 0.290562698566218
+      }
+     }
+    },
+    "per-cell-mlp-no-token-no-messages": {
+     "1": {
+      "spike-tick": {
+       "cell_step_fraction": 0.017250001430511475,
+       "voltage_rmse_mv": 11.466140747070312,
+       "share_of_voltage_sq_error": 0.03258534020576434
+      },
+      "refractory": {
+       "cell_step_fraction": 0.0,
+       "voltage_rmse_mv": null,
+       "share_of_voltage_sq_error": 0.0
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.05687500163912773,
+       "voltage_rmse_mv": 28.91073989868164,
+       "share_of_voltage_sq_error": 0.6830279780141476
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.9258750677108765,
+       "voltage_rmse_mv": 4.623589038848877,
+       "share_of_voltage_sq_error": 0.28438679403069245
+      }
+     },
+     "10": {
+      "spike-tick": {
+       "cell_step_fraction": 0.020875001326203346,
+       "voltage_rmse_mv": 8.12840747833252,
+       "share_of_voltage_sq_error": 0.013169006341409707
+      },
+      "refractory": {
+       "cell_step_fraction": 0.05650000274181366,
+       "voltage_rmse_mv": 14.378711700439453,
+       "share_of_voltage_sq_error": 0.11153314798641668
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04625000059604645,
+       "voltage_rmse_mv": 37.8858528137207,
+       "share_of_voltage_sq_error": 0.6338425935181143
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8763750195503235,
+       "voltage_rmse_mv": 5.37174654006958,
+       "share_of_voltage_sq_error": 0.2414552055326286
+      }
+     },
+     "20": {
+      "spike-tick": {
+       "cell_step_fraction": 0.019500000402331352,
+       "voltage_rmse_mv": 7.922553539276123,
+       "share_of_voltage_sq_error": 0.01038101045369471
+      },
+      "refractory": {
+       "cell_step_fraction": 0.05925000458955765,
+       "voltage_rmse_mv": 13.62722396850586,
+       "share_of_voltage_sq_error": 0.09332065939719322
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.042625002562999725,
+       "voltage_rmse_mv": 42.621063232421875,
+       "share_of_voltage_sq_error": 0.6567310746731858
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8786250352859497,
+       "voltage_rmse_mv": 5.6698899269104,
+       "share_of_voltage_sq_error": 0.23956724408714197
+      }
+     },
+     "50": {
+      "spike-tick": {
+       "cell_step_fraction": 0.02200000174343586,
+       "voltage_rmse_mv": 8.687575340270996,
+       "share_of_voltage_sq_error": 0.013217651889566973
+      },
+      "refractory": {
+       "cell_step_fraction": 0.06287500262260437,
+       "voltage_rmse_mv": 13.072379112243652,
+       "share_of_voltage_sq_error": 0.08553065030806095
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04625000059604645,
+       "voltage_rmse_mv": 40.70866394042969,
+       "share_of_voltage_sq_error": 0.6101265515768106
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8688750267028809,
+       "voltage_rmse_mv": 6.487748146057129,
+       "share_of_voltage_sq_error": 0.291125157886292
+      }
+     },
+     "100": {
+      "spike-tick": {
+       "cell_step_fraction": 0.021375000476837158,
+       "voltage_rmse_mv": 7.24557638168335,
+       "share_of_voltage_sq_error": 0.008829531632479246
+      },
+      "refractory": {
+       "cell_step_fraction": 0.06337500363588333,
+       "voltage_rmse_mv": 14.039487838745117,
+       "share_of_voltage_sq_error": 0.09828928071948521
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04787500202655792,
+       "voltage_rmse_mv": 39.76833724975586,
+       "share_of_voltage_sq_error": 0.5957571818539528
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8673750162124634,
+       "voltage_rmse_mv": 6.598155975341797,
+       "share_of_voltage_sq_error": 0.2971239942681267
+      }
+     }
+    },
+    "teacher-perturbed-0.01mV-floor": {
+     "1": {
+      "spike-tick": {
+       "cell_step_fraction": 0.017250001430511475,
+       "voltage_rmse_mv": 0.0,
+       "share_of_voltage_sq_error": 0.0
+      },
+      "refractory": {
+       "cell_step_fraction": 0.0,
+       "voltage_rmse_mv": null,
+       "share_of_voltage_sq_error": 0.0
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.05687500163912773,
+       "voltage_rmse_mv": 4.451537132263184,
+       "share_of_voltage_sq_error": 0.9999670748340285
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.9258750677108765,
+       "voltage_rmse_mv": 0.006361867301166058,
+       "share_of_voltage_sq_error": 3.3248026201156964e-05
+      }
+     },
+     "10": {
+      "spike-tick": {
+       "cell_step_fraction": 0.020875001326203346,
+       "voltage_rmse_mv": 0.0275872889906168,
+       "share_of_voltage_sq_error": 1.5448036254562556e-05
+      },
+      "refractory": {
+       "cell_step_fraction": 0.05650000274181366,
+       "voltage_rmse_mv": 1.2127399444580078,
+       "share_of_voltage_sq_error": 0.08080021872248833
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04625000059604645,
+       "voltage_rmse_mv": 4.093761444091797,
+       "share_of_voltage_sq_error": 0.7536775515140898
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8763750195503235,
+       "voltage_rmse_mv": 0.4407055079936981,
+       "share_of_voltage_sq_error": 0.1655067472570073
+      }
+     },
+     "20": {
+      "spike-tick": {
+       "cell_step_fraction": 0.019500000402331352,
+       "voltage_rmse_mv": 1.1670596599578857,
+       "share_of_voltage_sq_error": 0.009557066867929084
+      },
+      "refractory": {
+       "cell_step_fraction": 0.05925000458955765,
+       "voltage_rmse_mv": 1.3176382780075073,
+       "share_of_voltage_sq_error": 0.037015591058161115
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.042625002562999725,
+       "voltage_rmse_mv": 6.848201751708984,
+       "share_of_voltage_sq_error": 0.71931874096623
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8786250352859497,
+       "voltage_rmse_mv": 0.8605080246925354,
+       "share_of_voltage_sq_error": 0.23410853727884862
+      }
+     },
+     "50": {
+      "spike-tick": {
+       "cell_step_fraction": 0.02200000174343586,
+       "voltage_rmse_mv": 14.837034225463867,
+       "share_of_voltage_sq_error": 0.14305930405102904
+      },
+      "refractory": {
+       "cell_step_fraction": 0.06287500262260437,
+       "voltage_rmse_mv": 8.205904006958008,
+       "share_of_voltage_sq_error": 0.12506337665754336
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04625000059604645,
+       "voltage_rmse_mv": 17.699323654174805,
+       "share_of_voltage_sq_error": 0.4279808087288437
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8688750267028809,
+       "voltage_rmse_mv": 3.4409995079040527,
+       "share_of_voltage_sq_error": 0.3038965249860381
+      }
+     },
+     "100": {
+      "spike-tick": {
+       "cell_step_fraction": 0.021375000476837158,
+       "voltage_rmse_mv": 17.953880310058594,
+       "share_of_voltage_sq_error": 0.043357747145059765
+      },
+      "refractory": {
+       "cell_step_fraction": 0.06337500363588333,
+       "voltage_rmse_mv": 17.51639175415039,
+       "share_of_voltage_sq_error": 0.1223633044005454
+      },
+      "near-threshold": {
+       "cell_step_fraction": 0.04787500202655792,
+       "voltage_rmse_mv": 35.754451751708984,
+       "share_of_voltage_sq_error": 0.38513500957144753
+      },
+      "subthreshold": {
+       "cell_step_fraction": 0.8673750162124634,
+       "voltage_rmse_mv": 9.071253776550293,
+       "share_of_voltage_sq_error": 0.44914389893841444
+      }
+     }
+    }
+   },
+   "rate_statistics": {
+    "full-synaptic-messages": {
+     "100": {
+      "mean_true_hz": 20.17500114440918,
+      "mean_pred_hz": 22.146251678466797,
+      "ratio": 1.0977076292037964,
+      "slope_pred_on_true": 0.39842960238456726,
+      "correlation": 0.2996116280555725,
+      "silent_cells_true": 0.0676250010728836,
+      "silent_cells_pred": 0.21625001728534698
+     },
+     "300": {
+      "mean_true_hz": 20.084585189819336,
+      "mean_pred_hz": 15.528334617614746,
+      "ratio": 0.7731468677520752,
+      "slope_pred_on_true": 0.03442240133881569,
+      "correlation": 0.03915407508611679,
+      "silent_cells_true": 0.0012500000884756446,
+      "silent_cells_pred": 0.04775000363588333
+     }
+    },
+    "no-message-ablation": {
+     "100": {
+      "mean_true_hz": 20.17500114440918,
+      "mean_pred_hz": 2.6787500381469727,
+      "ratio": 0.1327757090330124,
+      "slope_pred_on_true": 0.13681471347808838,
+      "correlation": 0.27694591879844666,
+      "silent_cells_true": 0.0676250010728836,
+      "silent_cells_pred": 0.8188750147819519
+     },
+     "300": {
+      "mean_true_hz": 20.084585189819336,
+      "mean_pred_hz": 1.3883334398269653,
+      "ratio": 0.06912432610988617,
+      "slope_pred_on_true": 0.04749087244272232,
+      "correlation": 0.19618599116802216,
+      "silent_cells_true": 0.0012500000884756446,
+      "silent_cells_pred": 0.7145000100135803
+     }
+    },
+    "per-cell-mlp-no-token-no-messages": {
+     "100": {
+      "mean_true_hz": 20.17500114440918,
+      "mean_pred_hz": 2.2875001430511475,
+      "ratio": 0.11338289827108383,
+      "slope_pred_on_true": 0.14614833891391754,
+      "correlation": 0.1255805641412735,
+      "silent_cells_true": 0.0676250010728836,
+      "silent_cells_pred": 0.9207500219345093
+     },
+     "300": {
+      "mean_true_hz": 20.084585189819336,
+      "mean_pred_hz": 1.130833387374878,
+      "ratio": 0.05630354583263397,
+      "slope_pred_on_true": 0.05491514503955841,
+      "correlation": 0.11188208311796188,
+      "silent_cells_true": 0.0012500000884756446,
+      "silent_cells_pred": 0.8838750123977661
+     }
+    },
+    "teacher-perturbed-0.01mV-floor": {
+     "100": {
+      "mean_true_hz": 20.17500114440918,
+      "mean_pred_hz": 20.29625129699707,
+      "ratio": 1.0060099363327026,
+      "slope_pred_on_true": 0.9545825123786926,
+      "correlation": 0.9424740076065063,
+      "silent_cells_true": 0.0676250010728836,
+      "silent_cells_pred": 0.06725000590085983
+     },
+     "300": {
+      "mean_true_hz": 20.084585189819336,
+      "mean_pred_hz": 20.39750099182129,
+      "ratio": 1.0155799388885498,
+      "slope_pred_on_true": 0.9677282571792603,
+      "correlation": 0.957736611366272,
+      "silent_cells_true": 0.0012500000884756446,
+      "silent_cells_pred": 0.000750000006519258
+     }
+    }
+   },
+   "teacher_forced_one_step_by_regime": {
+    "full-synaptic-messages": {
+     "spike-tick": {
+      "cell_step_fraction": 0.01992548070847988,
+      "voltage_rmse_mv_one_step": 33.783714294433594,
+      "share_of_voltage_sq_error": 0.5171981682869424,
+      "bce_per_cell_step": 0.06463700532913208,
+      "share_of_bce": 0.019564660387780815,
+      "mean_predicted_spike_prob": 0.937879204750061,
+      "true_spike_rate": 1.0
+     },
+     "refractory": {
+      "cell_step_fraction": 0.05881490185856819,
+      "voltage_rmse_mv_one_step": 6.145632743835449,
+      "share_of_voltage_sq_error": 0.05051891206447777,
+      "bce_per_cell_step": 0.15322808921337128,
+      "share_of_bce": 0.13690144971155901,
+      "mean_predicted_spike_prob": 0.1184433177113533,
+      "true_spike_rate": 0.0
+     },
+     "near-threshold": {
+      "cell_step_fraction": 0.04548798128962517,
+      "voltage_rmse_mv_one_step": 19.231327056884766,
+      "share_of_voltage_sq_error": 0.38260315413098706,
+      "bce_per_cell_step": 0.8113337755203247,
+      "share_of_bce": 0.5606328049973379,
+      "mean_predicted_spike_prob": 0.48946648836135864,
+      "true_spike_rate": 0.0
+     },
+     "subthreshold": {
+      "cell_step_fraction": 0.8757716417312622,
+      "voltage_rmse_mv_one_step": 1.5793472528457642,
+      "share_of_voltage_sq_error": 0.04967975526718095,
+      "bce_per_cell_step": 0.021264804527163506,
+      "share_of_bce": 0.28290103141237843,
+      "mean_predicted_spike_prob": 0.01917308196425438,
+      "true_spike_rate": 0.0
+     }
+    },
+    "no-message-ablation": {
+     "spike-tick": {
+      "cell_step_fraction": 0.01992548070847988,
+      "voltage_rmse_mv_one_step": 16.826377868652344,
+      "share_of_voltage_sq_error": 0.23872644818295083,
+      "bce_per_cell_step": 0.027123283594846725,
+      "share_of_bce": 0.004006852869261491,
+      "mean_predicted_spike_prob": 0.973264753818512,
+      "true_spike_rate": 1.0
+     },
+     "refractory": {
+      "cell_step_fraction": 0.05881490185856819,
+      "voltage_rmse_mv_one_step": 4.314918518066406,
+      "share_of_voltage_sq_error": 0.04633862028546597,
+      "bce_per_cell_step": 0.2091207057237625,
+      "share_of_bce": 0.09118780259289355,
+      "mean_predicted_spike_prob": 0.13350863754749298,
+      "true_spike_rate": 0.0
+     },
+     "near-threshold": {
+      "cell_step_fraction": 0.04548798128962517,
+      "voltage_rmse_mv_one_step": 16.21787452697754,
+      "share_of_voltage_sq_error": 0.5062849772914627,
+      "bce_per_cell_step": 1.4004300832748413,
+      "share_of_bce": 0.4722918475563944,
+      "mean_predicted_spike_prob": 0.6536508202552795,
+      "true_spike_rate": 0.0
+     },
+     "subthreshold": {
+      "cell_step_fraction": 0.8757716417312622,
+      "voltage_rmse_mv_one_step": 2.3727850914001465,
+      "share_of_voltage_sq_error": 0.208649868411737,
+      "bce_per_cell_step": 0.066612608730793,
+      "share_of_bce": 0.432513465435976,
+      "mean_predicted_spike_prob": 0.061779193580150604,
+      "true_spike_rate": 0.0
+     }
+    }
+   },
+   "gradient_conflict_trained_checkpoint": {
+    "full-synaptic-messages": {
+     "all": {
+      "cosine": -0.07859271764755249,
+      "grad_norm_voltage": 12.583820343017578,
+      "grad_norm_spike": 18.048603057861328
+     },
+     "near-threshold+spike-tick+refractory": {
+      "cosine": -0.11695908010005951,
+      "grad_norm_voltage": 121.12029266357422,
+      "grad_norm_spike": 104.88846588134766
+     },
+     "subthreshold": {
+      "cosine": -0.2700212299823761,
+      "grad_norm_voltage": 4.485470294952393,
+      "grad_norm_spike": 6.658425807952881
+     }
+    },
+    "no-message-ablation": {
+     "all": {
+      "cosine": -0.5312206745147705,
+      "grad_norm_voltage": 6.476057052612305,
+      "grad_norm_spike": 11.647446632385254
+     },
+     "near-threshold+spike-tick+refractory": {
+      "cosine": -0.6017559766769409,
+      "grad_norm_voltage": 51.765869140625,
+      "grad_norm_spike": 48.696319580078125
+     },
+     "subthreshold": {
+      "cosine": -0.1440013200044632,
+      "grad_norm_voltage": 2.72212290763855,
+      "grad_norm_spike": 7.397618770599365
+     }
+    }
+   }
+  }
+ }
+}
