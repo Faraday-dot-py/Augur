@@ -47,7 +47,7 @@ A stack of identical-architecture grid models at geometrically increasing spatia
 - Design: `docs/theory/heterogeneous-tiered.md` (ten identified weak points, each walked through).
 
 ### Verified pros (experiments)
-- Matched-budget tier 0 closes the mid-density bias: plain err@20 1.13x/1.12x BL (two seeds), mid-density force-bias slope beta -0.118/-0.052 versus -1.46/-1.78 at 10k iterations, so the earlier bias was undertraining. [supervisor-log 10-26 10:27]
+- Matched-budget tier 0 closes the mid-density bias: plain err@20 1.13x/1.12x BL (one training seed, 4738; two evaluation figures), mid-density force-bias slope beta -0.118/-0.052 versus -1.46/-1.78 at 10k iterations, so the earlier bias was undertraining. [supervisor-log 10-26 10:27]
 - Upper tiers add little error: only +4 to +10% over an exact external field. [supervisor-log 10-26 10:25]
 - Closed-loop tiled tier 0 with halo exchange: tiled err@20 0.82x/0.82x/0.75x BL on held-out seeds 9100/9200/9300 (matched-60k alone was 1.66-1.82x); own-state force error 0.039-0.041 versus BL 0.052. Single training seed. [supervisor-log 10-27 00:50]
 - Seams are not the failure: particles changing owner window are 1.2-2.2% of particle-steps and carry 0.6-3% of the energy-work error; relative force error is flat across seam-distance bins (0.079-0.090 vs BL 0.052-0.057). [supervisor-log 10-26 18:25]
