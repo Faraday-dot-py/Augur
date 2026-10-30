@@ -4,10 +4,13 @@ Role: supervisor delegates; does no work itself. Concerns non-blocking unless mi
 Polaris: connected 14:10 (adamwebb). Use both GPUs (student-pleiades QOS).
 
 
-## Live status (updated 2026-10-28 19:30 PDT; the Log below is history, not current state)
+## Live status (updated 2026-10-29 22:43 PDT; the Log below is history, not current state)
 
 | Agent | State | Priority | Doing |
 | --- | --- | --- | --- |
+| tiered drift mechanism diagnoses and visited-state label replay | waiting on user | normal (3) | diagnoses (job 4086) said visited-state; replay fine-tune job 4089 (seed 4738) PASS, dE@100 1.78-2.29x BL (baseline BL; line at most 2.5x); seed-4739 validation job 4103 EARLY_KILL at the iteration-1500 probe (init-relative gates tripped, final lines unmeasured); truth-state control job 4104 mean dE@100 2.10x BL, so the generic later-tick reading fires and the visited-state claim is not supported for seed 4738; re-score job 4118 reproduces it, independently reviewed (22:43); one seed; arm 3 (more replay rounds), dt 0.05 fine-tune and curl/drag arm held |
+| unexplored-directions audit and triage | finished | - | contradictions pass done (17:30): registry corrected (934a600), dt 0.1 claim qualified (4997af2), 11 branch-only results backfilled into experiment-log.md (a6f47a8); drift-ratio discrepancy resolved (17:50); needs user: mass-conditioned rating, renaming labels in other branches' docs; the log does not record the triage ranking |
+| neuron-graph agent | not recorded in this log | - | the 16:20 10-29 entry says it holds GPU slot 2; no result or state entry for it exists here |
 | tier-k lever continuation | finished | - | no-velocity retrain KILL on both seeds (jobs 4050, 4051); follow-ups ran as the agents below |
 | planetesimal-disk solar-system test | finished | - | out of range for our models (unit-mass only); proxy KILL; reference numbers logged (0f19cf5) |
 | loss analysis and error-distribution diagnostic | finished | - | tail terms dropped for tiered arms; local work-bias loss term recommended (75d8622); not yet run |
