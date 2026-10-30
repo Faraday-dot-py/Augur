@@ -85,8 +85,8 @@ Counts (44 rows): NEVER-RUN 17, SCOPED-ONLY 16, RAN-BUT-INCONCLUSIVE 11. Priorit
 3. dt story: supervisor-log.md:18,128 and heterogeneous-tiered.md (last section) say dt 0.1 is not the cause; supervisor-log.md:104 shows halving dt cut gravity drift 3.5x (older model); supervisor-log.md:130 shows the inference-only dt/2 test cannot separate the cases. The dt 0.05 fine-tune (row 6) is the only test that can, and it is HELD.
 4. Seed count of matched-60k tier 0: architectures.md:50 says "two seeds"; supervisor-log.md:107 says "seed 4738 only, one seed".
 5. Already-tried lists are incomplete on master: supervisor-log.md has no "already tried" section although tiered-research-directions-2026-10-29.md:3 says the 10 proposals were checked against one (the only lever list is inline at supervisor-log.md:121). Master experiment-log.md has zero entries for near-field retrain, far-kernel / R1b, visited-state replay and lj scatter field; results sit in about 50 worktree branches (for example euclid-heads-full 02b55be, scatter-core-drift-armB d41785e, far-kernel-generalization b2a0522) and docs scatter-lj.md and scatter-tiling.md exist only on branches.
-6. Name collision: "R1-R4" means the close-pair proposals (close-pair-design) and, separately, the far-kernel round (R1b, R2b, "R3 killed", "R4 killed", commits 9ec53b8, b604497). A reader seeing "R3 killed" would wrongly conclude close-pair R3 (row 9) was tried.
-7. error-correction-plan.md "Rejected / already tried" lacks the R1 step 1 KILL (commit 12a309c) and the R1 step 0 pass; only branch worktree-agent-aaba3986bba03cec0 has them.
+6. Name collision: "R1-R4" meant the close-pair proposals (close-pair-design: exact-mesh-pair-complement, bounded-shape-normalised-pair-law, neighbour-context-pair-branch, reciprocal-neighbour-list) and, separately, the far-kernel round (far-kernel-retrain-exact-force-r1500, far-kernel-log-space-positive-tail, far-term-coarse-unet-residual "killed", far-term-nested-coarse-levels "killed", commits 9ec53b8, b604497). A reader seeing "R3 killed" would wrongly conclude the neighbour-context-pair-branch (row 9) was tried. Renamed, see the rename map below.
+7. error-correction-plan.md "Rejected / already tried" lacks the exact-mesh-pair-complement-in-frozen-model KILL (commit 12a309c, legacy: R1 step 1) and the attribution-probe pass (legacy: R1 step 0); only branch worktree-agent-aaba3986bba03cec0 has them.
 8. Drift ratio: 3.9-4.8x BL (eval run) versus 3.3-3.7x (metric audit) for the same checkpoint (supervisor-log.md:125); architectures.md carries the 3.9-4.75x figure.
 
 ## Appendix: excluded (killed with adequate evidence, out of scope, or already in flight); veto any line
@@ -110,3 +110,35 @@ Counts (44 rows): NEVER-RUN 17, SCOPED-ONLY 16, RAN-BUT-INCONCLUSIVE 11. Priorit
 - upper-tier dilated lever: skipped, upper tiers add 4-10% (supervisor-log.md:51).
 - planetesimal-disk proxy test: KILL on in-range proxy (supervisor-log.md:112); follow-up is row 12.
 - in flight, not unexplored: seed 4739 replay validation (job 4101), truth-state replay control (job 4102), neuron architecture / emission / 10x-seed follow-ups (neuron-graph-smoke-test 609fbc3), Polaris banner latency probe.
+
+## Resolution of the contradictions (2026-10-29 17:30, supervisor pass)
+
+| # | Item | Verdict | Evidence |
+| --- | --- | --- | --- |
+| 1 | Stale registry and log | RESOLVED | sacct via polaris_job_status, checked twice (worker and supervisor): 4089 COMPLETED 1h32m exit 0:0; 4101 FAILED 32 s exit 1:0; 4102 FAILED 33 s exit 1:0 (job 4101 slurm log not found, cause unread, UNVERIFIED). Registry rows set to done (commit 934a600). The 16:20 log entry and jobs 4101/4102 are on this branch (docs/theory/supervisor-log.md:134) but not on master (master ends 16:00). New finding: the 16:20 entry says arms 1 and 2 are running or pending, both failed within 33 s; logged. MEMORY.md "tiered diagnostics results unread" is a memory-file item outside the repo; not edited. |
+| 2 | Mass-conditioned job rating | NEEDS USER | No verbatim user words found anywhere. supervisor-log.md:114 is the assistant's paraphrase "User asked ... per-body-mass support"; priority-registry.md "not requested by user" has no supporting source. Rating left at 2 (registry) and row 12 at 3 (audit); user to say which is right. |
+| 3 | dt 0.1 not the cause | QUALIFIED | Claim rests on oracle force sign (supervisor-log.md:128) and rules out integration error as a direct source only; halving dt cut gravity drift 3.5x on the older model (supervisor-log.md:104); the inference-only dt/2 test cannot separate the cases. Edited in supervisor-log.md:18,128 and heterogeneous-tiered.md:204 (commit 4997af2). |
+| 4 | Matched-60k tier 0 seeds | RESOLVED | One training seed 4738 (job 4041; experiment-log launch record at commit c0240e0, supervisor-log.md:107); "two seeds" were two evaluation figures. architectures.md:50 corrected (4997af2). architectures.md:63 "two seeds" is the separate jobs 4050/4051 (seeds 4738, 4739; supervisor-log.md:118) and stands. |
+| 5 | Master experiment-log lacks entries | RESOLVED (partly) | 11 entries backfilled at experiment-log.md:3408-3461 from branch evidence, numbers checked against commit messages and committed result files (commit a6f47a8). Not backfilled: tier0 tiled halo KILL (e44b796), metric audit plus energy-similarity KILL (7c6d709), scatter-core-drift-armA PASS, and near-field raw numbers (on Polaris only). Still true: supervisor-log.md has no "already tried" section. |
+| 6 | R1-R4 name collision | RESOLVED for obvious names | Rename map below, applied on this branch (a6f47a8); branch docs keep old labels. Unclear: unsuffixed far-kernel "R2" (no run, only a rationale at scatter-far-kernel-fix.md:61), left unmapped. |
+| 7 | error-correction-plan Rejected list | RESOLVED | Both entries added at error-correction-plan.md:70-71 (4997af2), facts from commit 12a309c and branch r1-step0. |
+| 8 | Drift ratio 3.9-4.8x vs 3.3-3.7x | NOT IN SCOPE this pass | Left open. |
+
+Rename map (old to new; glossary rows in docs/theory/experiment-naming.md):
+
+| Old | New |
+| --- | --- |
+| R1 (close-pair) | exact-mesh-pair-complement |
+| R1 step 0 / step 1 | exact-mesh-pair-complement-attribution-probe / exact-mesh-pair-complement-in-frozen-model |
+| R2 (close-pair) | bounded-shape-normalised-pair-law |
+| R3 (close-pair) | neighbour-context-pair-branch |
+| R4 (close-pair) | reciprocal-neighbour-list |
+| R0 (far-kernel) | far-kernel-diagnostic-references |
+| R1 (far-kernel) | far-kernel-retrain-exact-force-r640 |
+| R1b | far-kernel-retrain-exact-force-r1500 |
+| R2b | far-kernel-log-space-positive-tail |
+| R3 (far-kernel) | far-term-coarse-unet-residual |
+| R4 (far-kernel) | far-term-nested-coarse-levels |
+| J1 / J2 | far-kernel-joint-finetune-free / far-kernel-joint-finetune-anchored |
+
+Needs-user list: (a) mass-conditioned rating; (b) renaming the old labels inside the other branches' docs (close-pair-design-proposals.md, scatter-far-kernel-fix.md and others, out of scope on a docs-only branch); (c) why jobs 4101 and 4102 failed (slurm logs not found; relaunch is a decision).
