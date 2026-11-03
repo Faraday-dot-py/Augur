@@ -17,6 +17,11 @@ from scripts.sae_interp import LAWS, eta2, mesh_acts
 KS = (1, 2, 5, 10, 20)
 
 
+def coarse_mask(m_, x):
+    s = m_.shape[0] // x.shape[-1]
+    return m_ if s == 1 else m_.reshape(x.shape[-2], s, x.shape[-1], s).any(3).any(1)
+
+
 def matched_draw(rng, top, live_idx, freq, taken_pool=10):
     pool = np.array([j for j in live_idx if j not in set(top.tolist())])
     lf = np.log(freq[pool] + 1e-9)
@@ -40,13 +45,18 @@ def main():
     ap.add_argument("--scenes", type=int, default=8)
     ap.add_argument("--pool-size", type=int, default=10)
     ap.add_argument("--act-scenes", type=int, default=12)
+    ap.add_argument("--heldout-rank", type=int, default=0)
     ap.add_argument("--laws", default=",".join(LAWS))
     a = ap.parse_args()
     dev = torch.device("cuda")
     model = sm.build().to(dev).eval()
     model.load_state_dict(torch.load(a.ckpt, map_location=dev, weights_only=False)["model"])
     S = {k: (v.to(dev) if torch.is_tensor(v) else v) for k, v in torch.load(a.sae, map_location="cpu")[a.key].items()}
-    X, lab, _, _ = mesh_acts(model, dev, a.act_scenes, 400, 3, a.seed, a.layer)
+    X, lab, _, sid = mesh_acts(model, dev, a.act_scenes, 400, 3, a.seed, a.layer)
+    if a.heldout_rank:
+        grp = sid % a.act_scenes
+        keep = grp > grp.max() - a.heldout_rank
+        X, lab = X[keep], lab[keep]
     Z = encode(S, (X.to(dev) - S["mu"]) / S["sc"])
     live_t = (Z > 0).any(0)
     e_law = eta2(Z, lab.to(dev), len(LAWS))
@@ -67,7 +77,7 @@ def main():
         if state["idx"] is None:
             return o
         x = o[0]
-        m_ = model._rho_mask
+        m_ = coarse_mask(model._rho_mask, x)
         z = encode(S, (x[:, m_].T - S["mu"]) / S["sc"])
         if state["idx"]:
             z[:, torch.tensor(state["idx"], device=dev)] = 0.0
@@ -77,7 +87,7 @@ def main():
         return y[None]
 
     model.net.dec[int(a.layer[3:])].register_forward_hook(hook)
-    out = {"ckpt": a.ckpt, "sae": a.sae, "key": a.key, "layer": a.layer, "ks": ks, "draws": a.draws, "n_live": len(live_idx), "pool_size_requested": a.pool_size,
+    out = {"ckpt": a.ckpt, "sae": a.sae, "key": a.key, "layer": a.layer, "ks": ks, "draws": a.draws, "n_live": len(live_idx), "pool_size_requested": a.pool_size, "heldout_rank": a.heldout_rank, "feature_freq": [round(float(f), 5) for f in freq], "n_scenes_force": a.scenes,
            "n_nontop_live_by_k": {str(k): len(live_idx) - k for k in ks}, "draw_members": {n: m for n, m in arms.items() if n.startswith("rand")},
            "top_features": {str(k): [{"feature": int(j), "eta2": float(e_law[j]), "freq": float(freq[j])} for j in order[:k]] for k in ks}, "errors": {}}
     for law in a.laws.split(","):
