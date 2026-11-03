@@ -20,6 +20,7 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--n", type=int, default=1024)
     ap.add_argument("--warm", type=int, default=6)
+    ap.add_argument("--seeds", default="4738,4739,4740")
     ap.add_argument("--models", default="mixed_s4738:ckpt/main_s4738.pt,mixed_s4739:ckpt/main_s4739.pt")
     a = ap.parse_args()
     dev = torch.device("cuda")
@@ -31,7 +32,7 @@ def main():
         for law in ("yuk8", "yuk32", "yuk128"):
             pt, et, lt = TRUTH[law]
             res[law] = {}
-            for seed in (4738, 4739, 4740):
+            for seed in [int(s) for s in a.seeds.split(",")]:
                 y, _ = raw_curves(model, dev, law, DISTS_BASE, a.n, a.warm, seed)
                 med = np.median(y, 1)
                 fits = {("inf" if not np.isfinite(c) else str(int(c))): fit(DISTS_BASE, med, c) for c in CANDS}
