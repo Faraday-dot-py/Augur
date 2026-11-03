@@ -27,3 +27,4 @@ temp.env
 .env
 *.env
 jupyterhub-sandbox/
+.superpowers/
