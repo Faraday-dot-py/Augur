@@ -16,7 +16,7 @@ for key in sorted(k[:-8] for k in a.files if k.endswith('_decoder')):
     if da.shape[1] != db.shape[1] and da.shape[0] == db.shape[1]:
         da, db = da.T, db.T
     ea, eb = a[key + '_law_eta2'], b[key + '_law_eta2']
-    la, lb = np.isfinite(ea), np.isfinite(eb)
+    la, lb = np.nan_to_num(ea) > 0, np.nan_to_num(eb) > 0
     ua, ub = unit(da)[la], unit(db)[lb]
     best = np.abs(ua @ ub.T).max(1)
     rnd = np.abs(unit(rng.standard_normal(ua.shape)) @ unit(rng.standard_normal(ub.shape)).T).max(1)
