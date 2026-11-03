@@ -18,14 +18,14 @@ from scripts import scatter_scaling_ops as ops
 EPS = 0.5
 LIM = 28.0
 FAMILIES = ("plummer", "two_clump", "exp_disk")
-NS = {300: 16, 500: 16, 1000: 16, 2000: 8, 10000: 3, 100000: 1}
+NS = {300: 16, 500: 16, 1000: 16, 2000: 8, 4000: 4, 10000: 3, 100000: 1}
 
 
 def _inside(p):
     return (np.abs(p) < LIM).all(1)
 
 
-def sample(family, n, rng):
+def sample(family, n, rng, scale=1.0):
     out = np.zeros((0, 2))
     while len(out) < n:
         m = 2 * n
@@ -54,6 +54,7 @@ def sample(family, n, rng):
         else:
             big = rng.random(m) < 2 / 3
             p = np.where(big[:, None], rng.normal(0, 4.0, (m, 2)) + [-9.0, 0.0], rng.normal(0, 3.0, (m, 2)) + [11.0, 0.0])
+        p = p * scale
         out = np.concatenate([out, p[_inside(p)]])
     out = out[:n]
     if family in ("two_clump", "three_clump"):
@@ -104,6 +105,7 @@ def main():
     ap.add_argument("--families", default=",".join(FAMILIES))
     ap.add_argument("--ns", default="300,1000,10000,100000")
     ap.add_argument("--scene-mult", type=int, default=1)
+    ap.add_argument("--density-scale", action="store_true")
     a = ap.parse_args()
     dev = torch.device("cuda")
     model = sf.ScatterField(grid=128, extent=64.0, net="unet", recurrent=True, hidden_ch=0, dt=0.1, momfix=True, in_scale=1.0, potential=True,
@@ -114,7 +116,7 @@ def main():
     for fam in a.families.split(","):
         for n in [int(x) for x in a.ns.split(",")]:
             ns = NS[n] * (a.scene_mult if n <= 1000 else 1)
-            pos = torch.tensor(np.stack([sample(fam, n, rng) for _ in range(ns)]), dtype=torch.float32, device=dev)
+            pos = torch.tensor(np.stack([sample(fam, n, rng, np.sqrt(n / 1000) if a.density_scale and n > 1000 else 1.0) for _ in range(ns)]), dtype=torch.float32, device=dev)
             if n >= 10000:
                 model.opt.add("adapt")
             vel = torch.zeros_like(pos)
