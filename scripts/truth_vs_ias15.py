@@ -110,15 +110,15 @@ def compare(name, pos, vel, m, steps, eps):
     Pt4, Vt4 = truth_rollout(pos, vel, m, steps, eps, 4)
     Pt16, Vt16 = truth_rollout(pos, vel, m, steps, eps, 16)
     Ei, sc = energy(Pi, Vi, m, eps)
-    E4, _ = energy(Pt4, Vt4, m, eps)
-    E16, _ = energy(Pt16, Vt16, m, eps)
+    energy_t4, _ = energy(Pt4, Vt4, m, eps)
+    energy_t16, _ = energy(Pt16, Vt16, m, eps)
     res = dict(name=name, N=len(m), steps=steps, eps=eps, ias15_s=ti,
                dE_ias15_max=float(np.abs(Ei - Ei[0]).max() / sc),
-               dE_t4_max=float(np.abs(E4 - E4[0]).max() / sc),
-               dE_t16_max=float(np.abs(E16 - E16[0]).max() / sc),
-               dE_t4_vs_ias15_max=float(np.abs(E4 - Ei).max() / sc),
-               dE_t16_vs_ias15_max=float(np.abs(E16 - Ei).max() / sc),
-               dE_t4_vs_t16_max=float(np.abs(E4 - E16).max() / sc),
+               dE_t4_max=float(np.abs(energy_t4 - energy_t4[0]).max() / sc),
+               dE_t16_max=float(np.abs(energy_t16 - energy_t16[0]).max() / sc),
+               dE_t4_vs_ias15_max=float(np.abs(energy_t4 - Ei).max() / sc),
+               dE_t16_vs_ias15_max=float(np.abs(energy_t16 - Ei).max() / sc),
+               dE_t4_vs_t16_max=float(np.abs(energy_t4 - energy_t16).max() / sc),
                pos_t4_vs_ias15_max=float(np.abs(Pt4 - Pi).max()),
                pos_t16_vs_ias15_max=float(np.abs(Pt16 - Pi).max()),
                pos_t4_vs_t16_max=float(np.abs(Pt4 - Pt16).max()))
