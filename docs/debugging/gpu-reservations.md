@@ -4,7 +4,7 @@ Rule (user, 2026-10-27): showcase videos have equal priority, attention and GPU 
 
 | Slot | Owner | State | Since |
 | --- | --- | --- | --- |
-| GPU 1 | experiments | reserved | 2026-11-03 02:08 (tiered-second-seed-agent, tiled closed-loop tier 0 second training seed; prior holder tiered-drift-mechanism-agent idle since 10-29) |
+| GPU 1 | experiments | released | 2026-11-03 08:36 (tiered-second-seed-agent finished job 4818; free) |
 | GPU 2 | experiments (interpretability-and-pm-baseline-agent) | reserved | 2026-11-03 (audit rows 2 and 1: PM baseline, rule recovery, SAE curiosity runs) |
 
 Priority registry: `docs/debugging/priority-registry.md` (design in `priority-system.md`). Every slot change and every job submission also updates the registry in the same turn. Check with `python3 scripts/check_priority_registry.py`; it flags unrated running items, starving items (waiting over 12 h), one owner on both GPUs, idle slots and stale rows. A released slot goes to the highest effective rating among waiters.
