@@ -1,0 +1,50 @@
+mesh acts (132667, 32)
+mesh input stats: nonfinite 0 channel std min/max 0.0 140.2375946044922 mean |x| 2.8716137409210205
+mesh 512 {'recon_nmse_train': 0.0002, 'recon_nmse_heldout': 0.0003, 'l0_heldout': 7.9989, 'dead_fraction': 0.1738, 'n_live_heldout': 122, 'heldout_dead_fraction': 0.7617, 'law_eta2_live_mean': 0.0957, 'law_eta2_live_max': 0.9491, 'n_live_law_eta2_gt_0.5': 13, 'log_cell_mass_abscorr_live_mean': 0.0093, 'log_cell_mass_abscorr_live_max': 0.0496, 'n_live_log_cell_mass_abscorr_gt_0.5': 0, 'radius_from_centre_abscorr_live_mean': 0.0189, 'radius_from_centre_abscorr_live_max': 0.121, 'n_live_radius_from_centre_abscorr_gt_0.5': 0}
+DONE
+STEP sae_dec0_512 0
+pow1 -> pow2 {'top1': 0.001, 'top5': 0.002, 'top10': 0.015, 'top20': 0.036, 'top50': 0.047} {'rand1_mean': 0.0, 'rand5_mean': 0.003, 'rand10_mean': 0.008, 'rand20_mean': 0.006, 'rand50_mean': 0.0} tgt_native_err 0.07 src_native_err_vs_tgt 5.124
+pow2 -> pow1 {'top1': -0.001, 'top5': -0.002, 'top10': 0.013, 'top20': 0.043, 'top50': 0.052} {'rand1_mean': -0.001, 'rand5_mean': 0.002, 'rand10_mean': 0.009, 'rand20_mean': 0.008, 'rand50_mean': 0.001} tgt_native_err 0.735 src_native_err_vs_tgt 0.874
+pow2 -> pow3 {'top1': 0.004, 'top5': 0.009, 'top10': -0.021, 'top20': -0.037, 'top50': -0.047} {'rand1_mean': 0.004, 'rand5_mean': -0.002, 'rand10_mean': -0.004, 'rand20_mean': -0.001, 'rand50_mean': 0.004} tgt_native_err 0.06 src_native_err_vs_tgt 0.582
+pow1 -> pow3 {'top1': 0.001, 'top5': 0.003, 'top10': 0.011, 'top20': 0.028, 'top50': 0.036} {'rand1_mean': 0.001, 'rand5_mean': 0.003, 'rand10_mean': 0.007, 'rand20_mean': 0.005, 'rand50_mean': 0.001} tgt_native_err 0.06 src_native_err_vs_tgt 5.556
+yuk8 -> yuk128 {'top1': -0.0, 'top5': 0.002, 'top10': -0.101, 'top20': -0.234, 'top50': -0.256} {'rand1_mean': -0.0, 'rand5_mean': -0.02, 'rand10_mean': -0.025, 'rand20_mean': -0.013, 'rand50_mean': -0.0} tgt_native_err 0.059 src_native_err_vs_tgt 0.324
+yuk128 -> yuk8 {'top1': -0.003, 'top5': 0.004, 'top10': -0.095, 'top20': -0.229, 'top50': -0.253} {'rand1_mean': -0.003, 'rand5_mean': -0.021, 'rand10_mean': -0.027, 'rand20_mean': -0.013, 'rand50_mean': -0.003} tgt_native_err 0.05 src_native_err_vs_tgt 0.387
+pow2 -> yuk32 {'top1': 0.002, 'top5': 0.007, 'top10': 0.017, 'top20': 0.109, 'top50': 0.146} {'rand1_mean': 0.002, 'rand5_mean': 0.011, 'rand10_mean': 0.024, 'rand20_mean': 0.011, 'rand50_mean': 0.002} tgt_native_err 0.077 src_native_err_vs_tgt 0.15
+pow1 -> lj {'top1': 0.009, 'top5': 0.043, 'top10': 0.243, 'top20': 0.294, 'top50': 0.323} {'rand1_mean': 0.005, 'rand5_mean': 0.075, 'rand10_mean': -0.013, 'rand20_mean': 0.015, 'rand50_mean': 0.008} tgt_native_err 0.321 src_native_err_vs_tgt 1.073
+pow1.5 -> lj {'top1': 0.03, 'top5': 0.054, 'top10': 0.281, 'top20': 0.343, 'top50': 0.351} {'rand1_mean': 0.005, 'rand5_mean': 0.087, 'rand10_mean': -0.011, 'rand20_mean': 0.013, 'rand50_mean': 0.009} tgt_native_err 0.321 src_native_err_vs_tgt 1.038
+pow2 -> lj {'top1': 0.029, 'top5': 0.059, 'top10': 0.288, 'top20': 0.347, 'top50': 0.355} {'rand1_mean': 0.005, 'rand5_mean': 0.091, 'rand10_mean': -0.01, 'rand20_mean': 0.013, 'rand50_mean': 0.009} tgt_native_err 0.321 src_native_err_vs_tgt 1.033
+pow3 -> lj {'top1': 0.028, 'top5': 0.055, 'top10': 0.289, 'top20': 0.354, 'top50': 0.365} {'rand1_mean': 0.005, 'rand5_mean': 0.093, 'rand10_mean': -0.008, 'rand20_mean': 0.015, 'rand50_mean': 0.009} tgt_native_err 0.321 src_native_err_vs_tgt 1.029
+yuk8 -> lj {'top1': 0.029, 'top5': 0.06, 'top10': 0.292, 'top20': 0.355, 'top50': 0.365} {'rand1_mean': 0.005, 'rand5_mean': 0.093, 'rand10_mean': -0.009, 'rand20_mean': 0.013, 'rand50_mean': 0.009} tgt_native_err 0.321 src_native_err_vs_tgt 1.027
+yuk32 -> lj {'top1': 0.03, 'top5': 0.06, 'top10': 0.289, 'top20': 0.347, 'top50': 0.355} {'rand1_mean': 0.005, 'rand5_mean': 0.091, 'rand10_mean': -0.011, 'rand20_mean': 0.013, 'rand50_mean': 0.009} tgt_native_err 0.321 src_native_err_vs_tgt 1.03
+yuk128 -> lj {'top1': 0.029, 'top5': 0.059, 'top10': 0.288, 'top20': 0.347, 'top50': 0.354} {'rand1_mean': 0.005, 'rand5_mean': 0.091, 'rand10_mean': -0.01, 'rand20_mean': 0.013, 'rand50_mean': 0.009} tgt_native_err 0.321 src_native_err_vs_tgt 1.032
+lj -> pow2 {'top1': 0.028, 'top5': -0.074, 'top10': 0.241, 'top20': 0.343, 'top50': 0.351} {'rand1_mean': -0.005, 'rand5_mean': 0.053, 'rand10_mean': 0.001, 'rand20_mean': 0.003, 'rand50_mean': -0.0} tgt_native_err 0.07 src_native_err_vs_tgt 17.668
+pow2 -> pow2 {'top1': 0.029, 'top5': 0.035, 'top10': 0.2, 'top20': 0.422, 'top50': 0.475} {'rand1_mean': 0.029, 'rand5_mean': 0.071, 'rand10_mean': 0.086, 'rand20_mean': 0.052, 'rand50_mean': 0.029} tgt_native_err 0.07 src_native_err_vs_tgt 0.07
+yuk32 -> yuk32 {'top1': -0.027, 'top5': -0.001, 'top10': 0.197, 'top20': 0.34, 'top50': 0.417} {'rand1_mean': -0.027, 'rand5_mean': 0.004, 'rand10_mean': 0.025, 'rand20_mean': 0.009, 'rand50_mean': -0.027} tgt_native_err 0.077 src_native_err_vs_tgt 0.078
+lj -> lj {'top1': 0.159, 'top5': 0.212, 'top10': 0.332, 'top20': 0.399, 'top50': 0.397} {'rand1_mean': -0.011, 'rand5_mean': 0.013, 'rand10_mean': -0.013, 'rand20_mean': -0.017, 'rand50_mean': -0.02} tgt_native_err 0.321 src_native_err_vs_tgt 0.322
+DONE
+STEP patch_dec0 0
+pow1 -> pow2 {'top1': -0.003, 'top5': -0.005, 'top10': -0.007, 'top20': -0.002} {'rand1_mean': -0.0, 'rand5_mean': 0.001, 'rand10_mean': 0.002, 'rand20_mean': 0.002} tgt_native_err 0.07 src_native_err_vs_tgt 5.124
+pow2 -> pow1 {'top1': 0.019, 'top5': 0.034, 'top10': 0.086, 'top20': 0.139} {'rand1_mean': 0.005, 'rand5_mean': 0.016, 'rand10_mean': 0.006, 'rand20_mean': 0.014} tgt_native_err 0.735 src_native_err_vs_tgt 0.874
+pow2 -> pow3 {'top1': -0.001, 'top5': -0.0, 'top10': -0.0, 'top20': -0.001} {'rand1_mean': 0.0, 'rand5_mean': -0.0, 'rand10_mean': -0.0, 'rand20_mean': -0.002} tgt_native_err 0.06 src_native_err_vs_tgt 0.582
+pow1 -> pow3 {'top1': -0.003, 'top5': -0.005, 'top10': -0.009, 'top20': -0.003} {'rand1_mean': -0.0, 'rand5_mean': 0.001, 'rand10_mean': 0.002, 'rand20_mean': 0.002} tgt_native_err 0.06 src_native_err_vs_tgt 5.556
+yuk8 -> yuk128 {'top1': 0.001, 'top5': 0.012, 'top10': 0.011, 'top20': 0.012} {'rand1_mean': 0.0, 'rand5_mean': -0.001, 'rand10_mean': -0.002, 'rand20_mean': -0.008} tgt_native_err 0.059 src_native_err_vs_tgt 0.324
+yuk128 -> yuk8 {'top1': 0.001, 'top5': 0.009, 'top10': 0.008, 'top20': 0.009} {'rand1_mean': -0.0, 'rand5_mean': -0.001, 'rand10_mean': -0.002, 'rand20_mean': -0.004} tgt_native_err 0.05 src_native_err_vs_tgt 0.387
+pow2 -> yuk32 {'top1': -0.002, 'top5': -0.003, 'top10': -0.003, 'top20': -0.002} {'rand1_mean': -0.001, 'rand5_mean': -0.001, 'rand10_mean': -0.0, 'rand20_mean': -0.001} tgt_native_err 0.077 src_native_err_vs_tgt 0.15
+pow1 -> lj {'top1': 0.005, 'top5': 0.004, 'top10': -0.002, 'top20': 0.006} {'rand1_mean': -0.0, 'rand5_mean': 0.0, 'rand10_mean': 0.001, 'rand20_mean': 0.001} tgt_native_err 0.321 src_native_err_vs_tgt 1.073
+pow1.5 -> lj {'top1': -0.002, 'top5': -0.003, 'top10': -0.012, 'top20': -0.013} {'rand1_mean': -0.001, 'rand5_mean': 0.0, 'rand10_mean': 0.0, 'rand20_mean': 0.0} tgt_native_err 0.321 src_native_err_vs_tgt 1.038
+pow2 -> lj {'top1': -0.002, 'top5': -0.003, 'top10': -0.013, 'top20': -0.014} {'rand1_mean': -0.001, 'rand5_mean': 0.0, 'rand10_mean': 0.0, 'rand20_mean': -0.0} tgt_native_err 0.321 src_native_err_vs_tgt 1.033
+pow3 -> lj {'top1': -0.002, 'top5': -0.002, 'top10': -0.013, 'top20': -0.013} {'rand1_mean': -0.001, 'rand5_mean': 0.0, 'rand10_mean': -0.0, 'rand20_mean': -0.0} tgt_native_err 0.321 src_native_err_vs_tgt 1.029
+yuk8 -> lj {'top1': -0.002, 'top5': -0.001, 'top10': -0.012, 'top20': -0.012} {'rand1_mean': -0.001, 'rand5_mean': 0.0, 'rand10_mean': 0.0, 'rand20_mean': 0.0} tgt_native_err 0.321 src_native_err_vs_tgt 1.027
+yuk32 -> lj {'top1': -0.003, 'top5': -0.003, 'top10': -0.013, 'top20': -0.014} {'rand1_mean': -0.001, 'rand5_mean': -0.0, 'rand10_mean': -0.0, 'rand20_mean': -0.0} tgt_native_err 0.321 src_native_err_vs_tgt 1.03
+yuk128 -> lj {'top1': -0.002, 'top5': -0.003, 'top10': -0.013, 'top20': -0.014} {'rand1_mean': -0.001, 'rand5_mean': -0.0, 'rand10_mean': -0.0, 'rand20_mean': -0.0} tgt_native_err 0.321 src_native_err_vs_tgt 1.032
+lj -> pow2 {'top1': 0.0, 'top5': 0.0, 'top10': 0.001, 'top20': 0.0} {'rand1_mean': -0.0, 'rand5_mean': 0.0, 'rand10_mean': 0.0, 'rand20_mean': 0.0} tgt_native_err 0.07 src_native_err_vs_tgt 17.668
+pow2 -> pow2 {'top1': -0.0, 'top5': 0.001, 'top10': -0.0, 'top20': -0.001} {'rand1_mean': 0.001, 'rand5_mean': 0.001, 'rand10_mean': 0.001, 'rand20_mean': 0.001} tgt_native_err 0.07 src_native_err_vs_tgt 0.07
+yuk32 -> yuk32 {'top1': 0.002, 'top5': 0.001, 'top10': 0.001, 'top20': 0.001} {'rand1_mean': 0.002, 'rand5_mean': 0.003, 'rand10_mean': 0.003, 'rand20_mean': 0.003} tgt_native_err 0.077 src_native_err_vs_tgt 0.078
+lj -> lj {'top1': 0.0, 'top5': 0.0, 'top10': -0.0, 'top20': 0.0} {'rand1_mean': 0.0, 'rand5_mean': 0.0, 'rand10_mean': 0.0, 'rand20_mean': 0.0} tgt_native_err 0.321 src_native_err_vs_tgt 0.322
+DONE
+STEP patch_dec1 0
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 200299 Nov  3 07:13 results/sae_activation_patching_native_reference_dec0_s4738_mesh_512.json
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 157839 Nov  3 07:19 results/sae_activation_patching_native_reference_dec1_s4738_mesh_64.json
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users   2671 Nov  3 07:06 results/sae_interp_lowdead_dec0_s4738_heldout16_512_dictionary.json
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 221042 Nov  3 07:06 results/sae_interp_lowdead_dec0_s4738_heldout16_512_dictionary.npz
+-rw-r----- 1 adamwebb Cal Poly Pomona Intranet Users 137017 Nov  3 07:06 results/sae_interp_lowdead_dec0_s4738_heldout16_512_dictionary_sae.pt
