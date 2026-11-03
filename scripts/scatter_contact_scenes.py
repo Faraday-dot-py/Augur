@@ -19,6 +19,7 @@ import torch
 
 from scripts import scatter_contact as sc
 from scripts import scatter_field as sf
+from scripts import scatter_tier0 as t0m
 from scripts import scatter_scenes as ss
 from scripts import train_scatter_field as tsf
 
@@ -137,7 +138,7 @@ def train_set(num, steps, dev):
     return scenes, data
 
 
-def build(name, dev, ckpt=None):
+def build(name, dev, ckpt=None, t0=""):
     if name == "E":
         return ss.build_model("E", DT, dev, ckpt)
     if name == "augur1":
@@ -146,6 +147,8 @@ def build(name, dev, ckpt=None):
     kw = dict(tsf.BASE)
     kw.update(tsf.VARIANTS["ms_kp_pot_v_g128"])
     model = sc.ContactScatterField(extent=cfg["extent"], dt=DT, in_scale=cfg["in_scale"], obstacle={"B": "sdf", "A": "kernel"}[name], **kw)
+    if t0:
+        t0m.attach_tier0(model, t0)
     if ckpt and ckpt != "none":
         sd = torch.load(ckpt, map_location=dev, weights_only=False)["model"]
         r = model.load_state_dict(sd, strict=False)
@@ -254,8 +257,11 @@ def run_eval(model, tag, args, dev):
 
 
 def run_train(args, dev):
-    model = build(args.model, dev, args.init)
+    model = build(args.model, dev, args.init, args.t0)
     model.train()
+    if args.head_only:
+        for n, p in model.named_parameters():
+            p.requires_grad_(n.startswith("t0.headnet"))
     for o in [x for x in args.opt.split(",") if x]:
         sf.apply_opt(model, o)
     t0 = time.time()
@@ -269,7 +275,7 @@ def run_train(args, dev):
     os.makedirs(CKPT, exist_ok=True)
     ckpt = f"{CKPT}/{args.tag}.pt"
     targs = types.SimpleNamespace(lr=args.lr, device=str(dev), seed=ss.TRAIN_SEED, opt=args.opt, time_budget=0, iters=args.iters, k_start=args.k_start, k_end=args.k_end,
-                                  steps=args.steps, batch=args.batch, log_every=args.log_every, loss_cap=args.loss_cap, batch_hook=lambda idx: model.set_scene(geom[idx], rad[idx]))
+                                  steps=args.steps, batch=args.batch, log_every=args.log_every, loss_cap=args.loss_cap, long_windows=0, long_k=0, lam_e=0.0, lam_l=0.0, head_pen=args.head_pen, head_pow=args.head_pow, batch_hook=lambda idx: model.set_scene(geom[idx], rad[idx]))
     n_it, secs = tsf.train(model, tensors, targs, ckpt, lambda s: print(s, flush=True))
     print(f"TRAIN DONE iters {n_it} secs {secs:.0f}", flush=True)
     model.set_scene(None, None)
@@ -299,6 +305,10 @@ def main():
     ap.add_argument("--init", default="checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt")
     ap.add_argument("--tag", default="B")
     ap.add_argument("--opt", default="")
+    ap.add_argument("--head-only", action="store_true", help="train only the tier-0 head (init from a frozen contact checkpoint via --init)")
+    ap.add_argument("--head-pow", type=float, default=0.0, help="weight of the one-sided soft penalty on positive head power mean(relu(a_head . v))")
+    ap.add_argument("--head-pen", type=float, default=0.0, help="weight of the soft penalty on the tier-0 head acceleration (mean square)")
+    ap.add_argument("--t0", default="", help="tier-0 extension spec (scatter_tier0), e.g. head=32")
     ap.add_argument("--iters", type=int, default=8000)
     ap.add_argument("--train", type=int, default=800)
     ap.add_argument("--steps", type=int, default=80)
@@ -325,7 +335,7 @@ def main():
         print(f"train truth cached t={time.time() - t0:.0f}s", flush=True)
         return
     if args.mode == "eval":
-        model = build(args.model, dev, args.ckpt)
+        model = build(args.model, dev, args.ckpt, args.t0)
     else:
         model = run_train(args, dev)
     for o in [x for x in args.eval_opt.split(",") if x]:

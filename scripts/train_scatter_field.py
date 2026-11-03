@@ -166,6 +166,12 @@ def train(model, tensors, args, ckpt_path, log):
         pos, vel = Pw[:, 0], Vw[:, 0]
         field = model.init_field(args.batch, args.device)
         lp = lv = lm = 0.0
+        hp = getattr(args, 'head_pen', 0.0) if model.t0 is not None and model.t0.cfg.head else 0.0
+        hw = getattr(args, 'head_pow', 0.0) if model.t0 is not None and model.t0.cfg.head else 0.0
+        if hp:
+            model.t0.pen_list = []
+        if hw:
+            model.t0.pow_list = []
         w = mk[:, :, None]
         denom = mk.sum() * 2 * k
         for s in range(k):
@@ -174,6 +180,12 @@ def train(model, tensors, args, ckpt_path, log):
             lp = lp + (((pos - Pw[:, s + 1]) ** 2) * w).sum() / denom
             lv = lv + (((vel - Vw[:, s + 1]) ** 2) * w).sum() / denom
         loss = lp + 0.1 * lv + lm
+        if hp:
+            loss = loss + hp * torch.stack(model.t0.pen_list).mean()
+            model.t0.pen_list = None
+        if hw:
+            loss = loss + hw * torch.stack(model.t0.pow_list).mean()
+            model.t0.pow_list = None
         opt.zero_grad()
         loss.backward()
         if args.long_windows > 0 and torch.isfinite(loss):
@@ -269,6 +281,7 @@ def main():
     ap.add_argument("--mode", choices=["train", "baseline", "summarize"], default="train")
     ap.add_argument("--opt", default="default", help="speed flags (see scatter_field.resolve_opt): default = cl,graphtrain; none = eager; -flag opts out")
     ap.add_argument("--baseline-ckpt", default=None)
+    ap.add_argument("--t0", default="", help="tier-0 extension spec (scripts/scatter_tier0.py), e.g. moments=2,vdisp,head=32; empty = off")
     ap.add_argument("--init-ckpt", default=None, help="warm-start model weights (optimizer and iteration reset)")
     ap.add_argument("--train", type=int, default=2000)
     ap.add_argument("--steps", type=int, default=30)
@@ -336,6 +349,10 @@ def main():
             log(f"skip {name} (done)")
             continue
         model = build(cfg, name, args.dt).to(dev)
+        if args.t0:
+            from scripts import scatter_tier0 as t0m
+
+            t0m.attach_tier0(model, args.t0)
         sf.apply_opts(model, args.opt, "train")
         if isinstance(model, sf.MultiLevelScatterField):
             r, rc, glob = 3, 3 * model.h0, True
@@ -343,7 +360,8 @@ def main():
             r, rc, glob = sf.receptive_field(model)
         log(f"=== {args.exp} {name} params {sum(p.numel() for p in model.parameters())} receptive field {r} cells = {rc:.1f} units global={glob}")
         if args.init_ckpt:
-            model.load_state_dict(torch.load(args.init_ckpt, map_location=dev, weights_only=False)["model"])
+            state = torch.load(args.init_ckpt, map_location=dev, weights_only=False)["model"]
+            sf.load_compat(model, state) if args.t0 else model.load_state_dict(state)
             log(f"warm start from {args.init_ckpt}")
         n_it, secs = train(model, tensors, args, f"{args.ckpt_dir}/{args.exp}_{name}.pt", log)
         res = {"train_iters": n_it, "train_seconds": secs, "variant": name, "cfg": {**BASE, **VARIANTS[name]}, "rf_cells": r, "rf_units": rc, "rf_global": glob,

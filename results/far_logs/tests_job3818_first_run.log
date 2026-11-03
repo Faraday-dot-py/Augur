@@ -1,0 +1,20 @@
+>           assert bool((sfar.force_of(fn, r) >= 0).all())
+E           assert False
+E            +  where False = bool(tensor(False))
+E            +    where tensor(False) = <built-in method all of Tensor object at 0x7f1585f649b0>()
+E            +      where <built-in method all of Tensor object at 0x7f1585f649b0> = tensor([-3.6254e-04, -9.0635e-05, -1.0071e-05]) >= 0.all
+E            +        where tensor([-3.6254e-04, -9.0635e-05, -1.0071e-05]) = <function force_of at 0x7f1586051080>(<function clamp_fn.<locals>.k at 0x7f1586075120>, tensor([ 50., 100., 300.]))
+E            +          where <function force_of at 0x7f1586051080> = sfar.force_of
+
+tests/test_scatter_far.py:59: AssertionError
+=============================== warnings summary ===============================
+tests/test_scatter_far.py::test_tail_kernel_interior_and_continuity
+  /home/adamwebb/augur_far/tests/test_scatter_far.py:26: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+  Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+    assert abs(float(k[1] - k[0])) < 1e-3
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_scatter_far.py::test_clamp_and_oracle_tails_are_attractive
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 3 passed, 1 warning in 2.77s

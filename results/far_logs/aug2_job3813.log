@@ -1,0 +1,97 @@
+/home/adamwebb/augur_far/scripts/scatter_far_train_kernel.py:72: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  print(f"it {it} logF mse {float(loss):.3e}", flush=True)
+it 0 logF mse 3.144e+01
+it 1000 logF mse 3.276e-05
+it 2000 logF mse 2.455e-06
+it 3000 logF mse 1.225e-06
+it 4000 logF mse 9.301e-07
+it 5000 logF mse 7.418e-07
+it 6000 logF mse 6.140e-07
+it 7000 logF mse 5.251e-07
+it 8000 logF mse 4.960e-07
+file:kern/r1_mlp.pt {"ratio_at": {"1": 0.985995352268219, "2": 0.7354151606559753, "4": 0.9337498545646667, "8": 0.9738115668296814, "16": 0.9816166758537292, "32": 0.9898335933685303, "40": 1.0262696743011475, "48": 0.9984947443008423, "64": 1.0142015218734741, "80": 0.9824870228767395, "100": 1.012491226196289, "150": 0.9900351762771606, "200": 1.0053865909576416, "256": 0.9883253574371338, "300": 1.0149481296539307, "400": 0.986958920955658, "512": 1.0131014585494995, "640": 1.0387755632400513, "800": 2.218384027481079, "1000": 4.36047887802124, "1500": 11.372660636901855}, "ratio_min_4_512": 0.9337698221206665, "ratio_max_4_512": 1.0262806415557861, "max_abs_dev_4_512": 0.0662301778793335, "ratio_min_4_1500": 0.9337698221206665, "ratio_max_4_1500": 11.36745548248291, "min_force_ge_4": 2.523826879041735e-06, "monotone_decay_ge32": false, "monotone_decay_32_512": true, "worst_force_increase_rel_per_step": 0.002565274480730295, "worst_increase_at_r": 750.1461791992188, "max_rel_dev_vs_old_4_32": 0.00508172158151865, "max_rel_dev_vs_old_1_32": 0.012061790563166142}
+file:kern/r1b_mlp.pt {"ratio_at": {"1": 0.985634982585907, "2": 0.7373524904251099, "4": 0.9329687356948853, "8": 0.977344274520874, "16": 0.9806283116340637, "32": 0.9859316349029541, "40": 1.004500389099121, "48": 0.9944454431533813, "64": 0.9911943674087524, "80": 0.9960681796073914, "100": 0.9978262782096863, "150": 0.9861889481544495, "200": 1.033839225769043, "256": 1.0077931880950928, "300": 1.024579405784607, "400": 1.0249865055084229, "512": 1.0589512586593628, "640": 1.034900188446045, "800": 1.0909299850463867, "1000": 1.0803463459014893, "1500": 1.111129641532898}, "ratio_min_4_512": 0.9330153465270996, "ratio_max_4_512": 1.0589455366134644, "max_abs_dev_4_512": 0.06698465347290039, "ratio_min_4_1500": 0.9330153465270996, "ratio_max_4_1500": 1.2005397081375122, "min_force_ge_4": 4.6557809696423647e-07, "monotone_decay_ge32": false, "monotone_decay_32_512": true, "worst_force_increase_rel_per_step": 0.0028369713108986616, "worst_increase_at_r": 1495.9915771484375, "max_rel_dev_vs_old_4_32": 0.005235143471509218, "max_rel_dev_vs_old_1_32": 0.006956093013286591}
+file:kern/r2b_tail.pt {"ratio_at": {"1": 0.9847758412361145, "2": 0.7358030676841736, "4": 0.9300938844680786, "8": 0.9772275686264038, "16": 0.9816684722900391, "32": 0.9887194633483887, "40": 0.999504029750824, "48": 0.9982010126113892, "64": 0.9988343715667725, "80": 1.0001038312911987, "100": 1.0015534162521362, "150": 1.001604437828064, "200": 0.9978957772254944, "256": 0.9983969926834106, "300": 0.9979045987129211, "400": 1.0003635883331299, "512": 1.0016369819641113, "640": 1.0026181936264038, "800": 1.0032814741134644, "1000": 0.9987745881080627, "1500": 0.9977163672447205}, "ratio_min_4_512": 0.9301437139511108, "ratio_max_4_512": 1.0035337209701538, "max_abs_dev_4_512": 0.06985628604888916, "ratio_min_4_1500": 0.9301437139511108, "ratio_max_4_1500": 1.0038282871246338, "min_force_ge_4": 3.9756827163728303e-07, "monotone_decay_ge32": false, "monotone_decay_32_512": true, "worst_force_increase_rel_per_step": 0.002469465835019946, "worst_increase_at_r": 1540.746826171875, "max_rel_dev_vs_old_4_32": 0.0, "max_rel_dev_vs_old_1_32": 0.0}
+{"seed": 4738, "spec": "file:kern/r2b_tail.pt", "variant": "single", "far_c": null, "force_vs_exact": 0.24521586298942566, "err": {"5": 0.01853129957007253, "10": 0.053383303746192504, "20": 0.16997507089885291}}
+{"seed": 4738, "spec": "file:kern/r2b_tail.pt", "ms_tick": 32.12066739797592, "variant": "far", "far_c": 4, "force_vs_exact": 0.24521857500076294, "force_vs_single": 0.0012287041172385216, "err": {"5": 0.01853345706182586, "10": 0.05335981156554688, "20": 0.1683424877584585}, "diff_single20": 0.003735221517216326, "dP": 4.536947380984202e-05, "finite": true}
+{"seed": 4738, "spec": "file:kern/r2b_tail.pt", "ms_tick": 345.1668592169881, "variant": "exactfar", "far_c": 4, "force_vs_exact": 0.2452804297208786, "force_vs_single": 0.001209094189107418, "err": {"5": 0.018538883713037115, "10": 0.05337697514787273, "20": 0.16845063093518395}, "diff_single20": 0.0050671744485595, "dP": 2.7390455215936527e-05, "finite": true}
+{"seed": 9000, "spec": "file:kern/r2b_tail.pt", "variant": "single", "far_c": null, "force_vs_exact": 0.24446232616901398, "err": {"5": 0.018202970586715835, "10": 0.053406216513601217, "20": 0.17104492709037483}}
+{"seed": 9000, "spec": "file:kern/r2b_tail.pt", "ms_tick": 33.23741643689573, "variant": "far", "far_c": 4, "force_vs_exact": 0.24445706605911255, "force_vs_single": 0.0012228857958689332, "err": {"5": 0.01820576997796013, "10": 0.053128663446394234, "20": 0.1693469845104723}, "diff_single20": 0.004038885380461636, "dP": 1.8351773178437725e-05, "finite": true}
+{"seed": 9000, "spec": "file:kern/r2b_tail.pt", "ms_tick": 344.69438400119543, "variant": "exactfar", "far_c": 4, "force_vs_exact": 0.2444934993982315, "force_vs_single": 0.001193131902255118, "err": {"5": 0.01821281760458685, "10": 0.05316351791902016, "20": 0.16945329835025402}, "diff_single20": 0.0051819189674301635, "dP": 0.00015239835192915052, "finite": true}
+{"seed": 12000, "spec": "file:kern/r2b_tail.pt", "variant": "single", "far_c": null, "force_vs_exact": 0.24178481101989746, "err": {"5": 0.01872609554705723, "10": 0.053503204270435825, "20": 0.1686644739660738}}
+{"seed": 12000, "spec": "file:kern/r2b_tail.pt", "ms_tick": 33.03932580165565, "variant": "far", "far_c": 4, "force_vs_exact": 0.2417813390493393, "force_vs_single": 0.0012168814428150654, "err": {"5": 0.018727711753975237, "10": 0.05350926646645617, "20": 0.16727432566089426}, "diff_single20": 0.003378004313707268, "dP": 0.0001522494712844491, "finite": true}
+{"seed": 12000, "spec": "file:kern/r2b_tail.pt", "ms_tick": 345.65131859853864, "variant": "exactfar", "far_c": 4, "force_vs_exact": 0.2418036013841629, "force_vs_single": 0.001196400262415409, "err": {"5": 0.01873740873276947, "10": 0.05354818797123752, "20": 0.16741945686260898}, "diff_single20": 0.004798414583683449, "dP": 0.00012947511277161539, "finite": true}
+{"seed": 4738, "spec": "file:kern/r1b_mlp.pt", "variant": "single", "far_c": null, "force_vs_exact": 0.18913865089416504, "err": {"5": 0.027576068638266723, "10": 0.07781403193799549, "20": 0.24575024530234313}}
+{"seed": 4738, "spec": "file:kern/r1b_mlp.pt", "ms_tick": 328.1787890009582, "variant": "exactfar", "far_c": 4, "force_vs_exact": 0.18802301585674286, "force_vs_single": 0.0028398409485816956, "err": {"5": 0.027381350048524974, "10": 0.07701310523093045, "20": 0.2406707644508623}, "diff_single20": 0.008865946362796714, "dP": 0.00020604958990588784, "finite": true}
+{"seed": 9000, "spec": "file:kern/r1b_mlp.pt", "variant": "single", "far_c": null, "force_vs_exact": 0.18578505516052246, "err": {"5": 0.026428960976623343, "10": 0.074345913849779, "20": 0.23995929561642496}}
+{"seed": 9000, "spec": "file:kern/r1b_mlp.pt", "ms_tick": 327.32291501015425, "variant": "exactfar", "far_c": 4, "force_vs_exact": 0.1857735961675644, "force_vs_single": 0.0010235793888568878, "err": {"5": 0.02644129205069197, "10": 0.07437692686338479, "20": 0.23703712350048686}, "diff_single20": 0.00688661271166447, "dP": 1.721709850244224e-05, "finite": true}
+{"seed": 12000, "spec": "file:kern/r1b_mlp.pt", "variant": "single", "far_c": null, "force_vs_exact": 0.18366363644599915, "err": {"5": 0.027023258856628093, "10": 0.07652705632730528, "20": 0.24305124162450786}}
+{"seed": 12000, "spec": "file:kern/r1b_mlp.pt", "ms_tick": 327.600245596841, "variant": "exactfar", "far_c": 4, "force_vs_exact": 0.18371090292930603, "force_vs_single": 0.000973605434410274, "err": {"5": 0.027015280345414977, "10": 0.07644515083420514, "20": 0.24099586399521658}, "diff_single20": 0.005575808871560215, "dP": 7.270785863511264e-05, "finite": true}
+{"seed": 4738, "spec": "file:kern/r1b_mlp.pt", "variant": "single", "far_c": null, "force_vs_exact": 0.3867549002170563, "err": {"5": 0.00687586860379005, "10": 0.018417909572776992, "20": 0.11241892298892883}}
+{"seed": 4738, "spec": "file:kern/r1b_mlp.pt", "ms_tick": 342.2693516127765, "variant": "exactfar", "far_c": 4, "force_vs_exact": 0.38678666949272156, "force_vs_single": 0.0025505893863737583, "err": {"5": 0.006877181071759538, "10": 0.018125195516944758, "20": 0.05252869919824018}, "diff_single20": 0.07050516990996313, "dP": 7.391899998765439e-06, "finite": true}
+{"seed": 9000, "spec": "file:kern/r1b_mlp.pt", "variant": "single", "far_c": null, "force_vs_exact": 0.3883737325668335, "err": {"5": 0.006413286364534763, "10": 0.01912421294538449, "20": 0.1321069772488458}}
+{"seed": 9000, "spec": "file:kern/r1b_mlp.pt", "ms_tick": 341.28163903951645, "variant": "exactfar", "far_c": 4, "force_vs_exact": 0.3883931040763855, "force_vs_single": 0.0026541370898485184, "err": {"5": 0.006411306366548483, "10": 0.01687223998266534, "20": 0.049479943140178825}, "diff_single20": 0.10786883020952394, "dP": 7.612473564222455e-05, "finite": true}
+{"seed": 12000, "spec": "file:kern/r1b_mlp.pt", "variant": "single", "far_c": null, "force_vs_exact": 0.38280048966407776, "err": {"5": 0.006710102839294943, "10": 0.023591989199731912, "20": 0.1631009668672412}}
+{"seed": 12000, "spec": "file:kern/r1b_mlp.pt", "ms_tick": 341.53826981782913, "variant": "exactfar", "far_c": 4, "force_vs_exact": 0.38282716274261475, "force_vs_single": 0.0025339678395539522, "err": {"5": 0.0067097589835132315, "10": 0.01746936913465922, "20": 0.0505937926561603}, "diff_single20": 0.13748659032728391, "dP": 5.45996444998309e-05, "finite": true}
+Traceback (most recent call last):
+  File "/home/adamwebb/augur_far/scripts/scatter_far_eval.py", line 274, in <module>
+    main()
+  File "/home/adamwebb/augur_far/scripts/scatter_far_eval.py", line 270, in main
+    phase_farerr(m, dev, specs, fars, a.out, seeds)
+  File "/home/adamwebb/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/augur_far/scripts/scatter_far_eval.py", line 214, in phase_farerr
+    far = T._far_acc(x[:, :1])
+          ^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/augur_far/scripts/scatter_tiling.py", line 123, in _far_acc
+    Rg[:, ty * gtc:(ty + 1) * gtc, tx * gtc:(tx + 1) * gtc] = rc[tx * n + ty, :, hgc:hgc + gtc, hgc:hgc + gtc]
+                                                              ~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: index 16 is out of bounds for dimension 0 with size 16
+{"seed": 4738, "spec": "file:kern/r1b_mlp.pt", "far_c": 4, "far_rel_err": 0.007641445106529917, "far_err_over_total_acc": 0.0008731183154312517, "far_over_total_acc": 0.11426088956461096, "by_edge_dist": {"16-24": 0.008165322265140515, "24-40": 0.006442003168028181, "40+": 0.005605230019642855}}
+{"seed": 4738, "spec": "file:kern/r2b_tail.pt", "far_c": 4, "far_rel_err": 0.007844556399600853, "far_err_over_total_acc": 0.0008963259924581552, "far_over_total_acc": 0.11426088956461096, "by_edge_dist": {"16-24": 0.008030454460352174, "24-40": 0.007440293649112742, "40+": 0.006411893766736324}}
+{"seed": 9000, "spec": "file:kern/r1b_mlp.pt", "far_c": 4, "far_rel_err": 0.007613835076602111, "far_err_over_total_acc": 0.0008697633139715456, "far_over_total_acc": 0.11423458811767459, "by_edge_dist": {"16-24": 0.008393051310721706, "24-40": 0.005806892922031185, "40+": 0.004567125072256758}}
+{"seed": 9000, "spec": "file:kern/r2b_tail.pt", "far_c": 4, "far_rel_err": 0.007285688405489963, "far_err_over_total_acc": 0.0008322776141548632, "far_over_total_acc": 0.11423458811767459, "by_edge_dist": {"16-24": 0.00785627985704567, "24-40": 0.0059667089215558865, "40+": 0.004925245789844947}}
+{"seed": 12000, "spec": "file:kern/r1b_mlp.pt", "far_c": 4, "far_rel_err": 0.0073842318806389435, "far_err_over_total_acc": 0.0008341506163027123, "far_over_total_acc": 0.11296376248554844, "by_edge_dist": {"16-24": 0.008028492658634383, "24-40": 0.005834156579056688, "40+": 0.00474754206959317}}
+{"seed": 12000, "spec": "file:kern/r2b_tail.pt", "far_c": 4, "far_rel_err": 0.00747821242209607, "far_err_over_total_acc": 0.0008447670118661383, "far_over_total_acc": 0.11296376248554844, "by_edge_dist": {"16-24": 0.007862793566419278, "24-40": 0.006555992108516014, "40+": 0.005791816778848728}}
+{"seed": 4738, "spec": "file:kern/r2b_tail.pt", "variant": "single", "far_c": null, "force_vs_exact": 0.31596019864082336, "err": {"5": 0.028713114079520898, "10": 0.0899752172763622, "20": 0.30694167699128855}}
+[W1020 20:29:49.604469801 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 11601444864 bytes (free: 1775828992, total: 150111715328).
+[W1020 20:29:50.334473886 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 11865686016 bytes (free: 6509101056, total: 150111715328).
+{"seed": 4738, "spec": "file:kern/r2b_tail.pt", "ms_tick": 223.72588580474257, "variant": "far", "far_c": 4, "force_vs_exact": 0.3159600496292114, "force_vs_single": 0.0018781940452754498, "err": {"5": 0.028714904144934, "10": 0.08998001703473607, "20": 0.3054898482850667}, "diff_single20": 0.003659246097854515, "dP": 0.00044966107816435397, "finite": true}
+{"seed": 9000, "spec": "file:kern/r2b_tail.pt", "variant": "single", "far_c": null, "force_vs_exact": 0.3125472068786621, "err": {"5": 0.028981573803566394, "10": 0.09009537629584813, "20": 0.3048675118283449}}
+{"seed": 9000, "spec": "file:kern/r2b_tail.pt", "ms_tick": 222.901275428012, "variant": "far", "far_c": 4, "force_vs_exact": 0.3125447928905487, "force_vs_single": 0.0018925211625173688, "err": {"5": 0.02898508283059399, "10": 0.0901033868119418, "20": 0.30488218520671795}, "diff_single20": 0.0019571206207415343, "dP": 0.00021803002164233476, "finite": true}
+{"seed": 12000, "spec": "file:kern/r2b_tail.pt", "variant": "single", "far_c": null, "force_vs_exact": 0.314400315284729, "err": {"5": 0.029045733882687132, "10": 0.09079383964625438, "20": 0.30899785678570035}}
+{"seed": 12000, "spec": "file:kern/r2b_tail.pt", "ms_tick": 222.99716579727829, "variant": "far", "far_c": 4, "force_vs_exact": 0.3143928647041321, "force_vs_single": 0.0018617096357047558, "err": {"5": 0.029046635791532972, "10": 0.09077800092306233, "20": 0.30733664259556104}, "diff_single20": 0.0041095131615681985, "dP": 1.470171264372766e-05, "finite": true}
+{"seed": 9000, "spec": "file:kern/r1b_mlp.pt", "variant": "single", "far_c": null, "force_vs_exact": 0.31261715292930603, "err": {"5": 0.028992622404220698, "10": 0.09013093680529816, "20": 0.3050610519692945}}
+[W1020 20:30:35.661054313 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 11442061312 bytes (free: 3547922432, total: 150111715328).
+[W1020 20:31:04.001723344 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 11649679360 bytes (free: 8658681856, total: 150111715328).
+[W1020 20:31:15.725172127 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 1258291200 bytes (free: 909705216, total: 150111715328).
+[W1020 20:31:16.758158669 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 1258291200 bytes (free: 945356800, total: 150111715328).
+Traceback (most recent call last):
+  File "/home/adamwebb/augur_far/scripts/scatter_far_eval.py", line 274, in <module>
+    main()
+  File "/home/adamwebb/augur_far/scripts/scatter_far_eval.py", line 268, in main
+    phase_wide(m, dev, specs, fars, a.out, a.variants.split(","), seeds, a.steps)
+  File "/home/adamwebb/augur_far/scripts/scatter_far_eval.py", line 178, in phase_wide
+    T.step(pos, vel, mass, ts)
+  File "/home/adamwebb/augur_far/scripts/scatter_tiling.py", line 172, in step
+    a_new, field = self.force(pn, vel + dt * a_prev, mass, field)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/augur_far/scripts/scatter_far_eval.py", line 110, in force
+    return orig(pos, vel, mass, field, tiles)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/augur_far/scripts/scatter_tiling.py", line 145, in force
+    ak = ak + self._far_acc(x[:, :1])
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/augur_far/scripts/scatter_far_eval.py", line 113, in far_acc
+    return exact_far_field(T, *cur["pm"])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adamwebb/augur_far/scripts/scatter_far_eval.py", line 98, in exact_far_field
+    w = ms[None, :] * ((d ** 2).sum(-1) + EPS ** 2) ** -1.5
+                        ~~^^~~
+  File "/home/adamwebb/.local/lib/python3.12/site-packages/torch/_tensor.py", line 39, in wrapped
+    return f(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 1.17 GiB. GPU 0 has a total capacity of 139.80 GiB of which 901.56 MiB is free. Including non-PyTorch memory, this process has 138.91 GiB memory in use. Of the allocated memory 132.64 GiB is allocated by PyTorch, and 5.59 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+DONE

@@ -1,0 +1,49 @@
+nr100 model B=64 N=100 10000 ticks (stopped 10000) 47.2s
+nr100 truth substeps 4 7.3s
+nr100 truth substeps 1 5.5s
+nr100 truth substeps 16 16.1s
+nr100 saved
+bh300 model B=64 N=300 10000 ticks (stopped 10000) 57.9s
+bh300 truth substeps 4 24.4s
+bh300 truth substeps 1 11.9s
+bh300 truth substeps 16 73.4s
+bh300 saved
+nr100 model B=64 N=100 10000 ticks (stopped 10000) 46.4s
+nr100 truth substeps 4 7.3s
+nr100 truth substeps 1 5.4s
+nr100 truth substeps 16 15.6s
+nr100 saved
+bh300 model B=64 N=300 10000 ticks (stopped 10000) 56.8s
+bh300 truth substeps 4 24.0s
+bh300 truth substeps 1 11.7s
+bh300 truth substeps 16 73.2s
+bh300 saved
+nr100 model B=64 N=100 10000 ticks (stopped 10000) 46.6s
+nr100 truth substeps 4 6.9s
+nr100 truth substeps 1 5.2s
+nr100 truth substeps 16 15.8s
+nr100 saved
+bh300 model B=64 N=300 10000 ticks (stopped 10000) 57.1s
+bh300 truth substeps 4 24.0s
+bh300 truth substeps 1 11.7s
+bh300 truth substeps 16 73.1s
+bh300 saved
+== control vs control rerun (noise floor)
+nr100  results/cons64_old B=64 t100: |dE| 0.004214 bound 1 vir 1.27  t1000: |dE| 0.02126 bound 0.91 vir 0.995  t10000: |dE| 1.058 bound 0.23 vir 3.9  vmax/c 1.076 nonfinite [-1]
+nr100  results/cons64_old2 B=64 t100: |dE| 0.004237 bound 1 vir 1.27  t1000: |dE| 0.01953 bound 0.9 vir 1.01  t10000: |dE| 1.165 bound 0.135 vir 11.9  vmax/c 1.108 nonfinite [-1]
+   t100: median ratio 1.006 (95% boot 0.886..1.099), paired median ratio 0.997, frac scenes B<A 0.52
+   t1000: median ratio 0.919 (95% boot 0.626..1.395), paired median ratio 0.984, frac scenes B<A 0.52
+bh300  results/cons64_old B=64 t100: |dE| 0.06091 bound 0.947 vir 1  t1000: |dE| 0.5903 bound 0.78 vir 0.961  t10000: |dE| 2.06 bound 0.00667 vir 418  vmax/c 0.957 nonfinite [-1]
+bh300  results/cons64_old2 B=64 t100: |dE| 0.06324 bound 0.947 vir 1.01  t1000: |dE| 0.6204 bound 0.792 vir 0.957  t10000: |dE| 2.06 bound 0.01 vir 428  vmax/c 0.957 nonfinite [-1]
+   t100: median ratio 1.038 (95% boot 0.981..1.169), paired median ratio 1.007, frac scenes B<A 0.48
+   t1000: median ratio 1.051 (95% boot 0.958..1.111), paired median ratio 1.070, frac scenes B<A 0.41
+== control vs r1
+nr100  results/cons64_old B=64 t100: |dE| 0.004214 bound 1 vir 1.27  t1000: |dE| 0.02126 bound 0.91 vir 0.995  t10000: |dE| 1.058 bound 0.23 vir 3.9  vmax/c 1.076 nonfinite [-1]
+nr100  results/cons64_r1  B=64 t100: |dE| 0.003825 bound 1 vir 1.27  t1000: |dE| 0.01377 bound 0.9 vir 0.998  t10000: |dE| 1.307 bound 0.09 vir 22.8  vmax/c 1.099 nonfinite [-1]
+   t100: median ratio 0.908 (95% boot 0.656..1.148), paired median ratio 0.956, frac scenes B<A 0.58
+   t1000: median ratio 0.648 (95% boot 0.459..1.113), paired median ratio 0.700, frac scenes B<A 0.59
+bh300  results/cons64_old B=64 t100: |dE| 0.06091 bound 0.947 vir 1  t1000: |dE| 0.5903 bound 0.78 vir 0.961  t10000: |dE| 2.06 bound 0.00667 vir 418  vmax/c 0.957 nonfinite [-1]
+bh300  results/cons64_r1  B=64 t100: |dE| 0.06199 bound 0.95 vir 1.02  t1000: |dE| 0.6155 bound 0.79 vir 0.962  t10000: |dE| 2.048 bound 0.01 vir 409  vmax/c 0.958 nonfinite [-1]
+   t100: median ratio 1.018 (95% boot 0.958..1.107), paired median ratio 1.028, frac scenes B<A 0.42
+   t1000: median ratio 1.043 (95% boot 0.990..1.093), paired median ratio 1.028, frac scenes B<A 0.45
+DONE

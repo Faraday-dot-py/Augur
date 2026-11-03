@@ -1,0 +1,167 @@
+force cold300 dev seed 4738/0 done
+force cold300 dev seed 4738/1 done
+force cold300 dev seed 4738/2 done
+force cold300 held seed 9000/0 done
+force cold300 held seed 9000/1 done
+force cold300 held seed 9000/2 done
+force cold300 held seed 12000/0 done
+force cold300 held seed 12000/1 done
+force cold300 held seed 12000/2 done
+force warm300 dev seed 4738/0 done
+force warm300 dev seed 4738/1 done
+force warm300 dev seed 4738/2 done
+force warm300 held seed 9000/0 done
+force warm300 held seed 9000/1 done
+force warm300 held seed 9000/2 done
+force warm300 held seed 12000/0 done
+force warm300 held seed 12000/1 done
+force warm300 held seed 12000/2 done
+force warm1200 dev seed 4738/0 done
+force warm1200 dev seed 4738/1 done
+force warm1200 dev seed 4738/2 done
+force warm1200 held seed 9000/0 done
+force warm1200 held seed 9000/1 done
+force warm1200 held seed 9000/2 done
+force warm1200 held seed 12000/0 done
+force warm1200 held seed 12000/1 done
+force warm1200 held seed 12000/2 done
+roll cold300 dev seed 4738/0: single=0.0615 naive=3.73 g16=0.0717 g16_fx=0.0716 g16_fx_far=0.0616 g8_fx=0.423 g8_fx_far=0.0656 g32_fx=0.0616 t32_naive=3.73 t32_g16_fx=0.0718 t32_g16_fx_far=0.0616
+roll cold300 dev seed 4738/1: single=0.0609 naive=3.85 g16=0.067 g16_fx=0.0671 g16_fx_far=0.0609 g8_fx=0.46 g8_fx_far=0.0641 g32_fx=0.061 t32_naive=3.85 t32_g16_fx=0.067 t32_g16_fx_far=0.0609
+roll cold300 dev seed 4738/2: single=0.0622 naive=3.7 g16=0.07 g16_fx=0.07 g16_fx_far=0.0622 g8_fx=0.44 g8_fx_far=0.0649 g32_fx=0.0622 t32_naive=3.7 t32_g16_fx=0.07 t32_g16_fx_far=0.0621
+roll cold300 held seed 9000/0: single=0.0672 naive=3.88 g16=0.0772 g16_fx=0.0773 g16_fx_far=0.0671 g8_fx=0.455 g8_fx_far=0.0691 g32_fx=0.0671 t32_naive=3.89 t32_g16_fx=0.0772 t32_g16_fx_far=0.067
+roll cold300 held seed 9000/1: single=0.0693 naive=3.89 g16=0.0807 g16_fx=0.0806 g16_fx_far=0.0691 g8_fx=0.495 g8_fx_far=0.0746 g32_fx=0.0693 t32_naive=3.89 t32_g16_fx=0.0807 t32_g16_fx_far=0.0693
+roll cold300 held seed 9000/2: single=0.065 naive=4.04 g16=0.0705 g16_fx=0.0705 g16_fx_far=0.0651 g8_fx=0.477 g8_fx_far=0.068 g32_fx=0.0651 t32_naive=4.04 t32_g16_fx=0.0705 t32_g16_fx_far=0.065
+roll cold300 held seed 12000/0: single=0.0571 naive=3.76 g16=0.0619 g16_fx=0.0619 g16_fx_far=0.057 g8_fx=0.426 g8_fx_far=0.0591 g32_fx=0.0571 t32_naive=3.76 t32_g16_fx=0.0618 t32_g16_fx_far=0.057
+roll cold300 held seed 12000/1: single=0.0692 naive=4.21 g16=0.0752 g16_fx=0.0753 g16_fx_far=0.0692 g8_fx=0.466 g8_fx_far=0.0708 g32_fx=0.0693 t32_naive=4.21 t32_g16_fx=0.0752 t32_g16_fx_far=0.0693
+roll cold300 held seed 12000/2: single=0.0596 naive=3.49 g16=0.0695 g16_fx=0.0696 g16_fx_far=0.0597 g8_fx=0.467 g8_fx_far=0.063 g32_fx=0.0595 t32_naive=3.49 t32_g16_fx=0.0695 t32_g16_fx_far=0.0596
+roll warm300 dev seed 4738/0: single=0.0665 naive=3.32 g16=0.0743 g16_fx=0.0743 g16_fx_far=0.0665 g8_fx=0.375 g8_fx_far=0.0684 g32_fx=0.0665 t32_naive=3.32 t32_g16_fx=0.0743 t32_g16_fx_far=0.0664
+roll warm300 dev seed 4738/1: single=0.069 naive=3.63 g16=0.0753 g16_fx=0.0754 g16_fx_far=0.069 g8_fx=0.408 g8_fx_far=0.0717 g32_fx=0.0691 t32_naive=3.63 t32_g16_fx=0.0754 t32_g16_fx_far=0.069
+roll warm300 dev seed 4738/2: single=0.066 naive=3.44 g16=0.0759 g16_fx=0.0759 g16_fx_far=0.0661 g8_fx=0.391 g8_fx_far=0.0701 g32_fx=0.066 t32_naive=3.44 t32_g16_fx=0.0759 t32_g16_fx_far=0.0661
+roll warm300 held seed 9000/0: single=0.0665 naive=3.43 g16=0.0776 g16_fx=0.0776 g16_fx_far=0.0663 g8_fx=0.392 g8_fx_far=0.0688 g32_fx=0.0664 t32_naive=3.43 t32_g16_fx=0.0776 t32_g16_fx_far=0.0663
+roll warm300 held seed 9000/1: single=0.0701 naive=3.53 g16=0.0767 g16_fx=0.0766 g16_fx_far=0.07 g8_fx=0.412 g8_fx_far=0.0735 g32_fx=0.07 t32_naive=3.53 t32_g16_fx=0.0767 t32_g16_fx_far=0.07
+roll warm300 held seed 9000/2: single=0.0736 naive=3.69 g16=0.0792 g16_fx=0.0793 g16_fx_far=0.0737 g8_fx=0.406 g8_fx_far=0.0761 g32_fx=0.0736 t32_naive=3.69 t32_g16_fx=0.0793 t32_g16_fx_far=0.0737
+roll warm300 held seed 12000/0: single=0.0713 naive=3.34 g16=0.0767 g16_fx=0.0766 g16_fx_far=0.0711 g8_fx=0.392 g8_fx_far=0.0732 g32_fx=0.0712 t32_naive=3.34 t32_g16_fx=0.0768 t32_g16_fx_far=0.0712
+roll warm300 held seed 12000/1: single=0.0765 naive=3.91 g16=0.0851 g16_fx=0.0851 g16_fx_far=0.0764 g8_fx=0.404 g8_fx_far=0.0794 g32_fx=0.0764 t32_naive=3.91 t32_g16_fx=0.0851 t32_g16_fx_far=0.0764
+roll warm300 held seed 12000/2: single=0.0651 naive=3.17 g16=0.0734 g16_fx=0.0735 g16_fx_far=0.0651 g8_fx=0.403 g8_fx_far=0.067 g32_fx=0.0651 t32_naive=3.17 t32_g16_fx=0.0739 t32_g16_fx_far=0.0652
+roll warm1200 dev seed 4738/0: single=0.118 naive=2.8 g16=0.399 g16_fx=0.399 g16_fx_far=0.114 g8_fx=1.09 g8_fx_far=0.118 g32_fx=0.118 t32_naive=3.04 t32_g16_fx=0.488 t32_g16_fx_far=0.114
+roll warm1200 dev seed 4738/1: single=0.109 naive=2.98 g16=0.42 g16_fx=0.42 g16_fx_far=0.108 g8_fx=1.15 g8_fx_far=0.114 g32_fx=0.11 t32_naive=3.17 t32_g16_fx=0.492 t32_g16_fx_far=0.107
+roll warm1200 dev seed 4738/2: single=0.117 naive=2.93 g16=0.402 g16_fx=0.402 g16_fx_far=0.116 g8_fx=1.14 g8_fx_far=0.12 g32_fx=0.117 t32_naive=3.17 t32_g16_fx=0.473 t32_g16_fx_far=0.115
+roll warm1200 held seed 9000/0: single=0.103 naive=2.62 g16=0.414 g16_fx=0.414 g16_fx_far=0.102 g8_fx=1.1 g8_fx_far=0.108 g32_fx=0.106 t32_naive=2.81 t32_g16_fx=0.491 t32_g16_fx_far=0.102
+roll warm1200 held seed 9000/1: single=0.132 naive=2.73 g16=0.435 g16_fx=0.435 g16_fx_far=0.112 g8_fx=1.07 g8_fx_far=0.118 g32_fx=0.117 t32_naive=2.93 t32_g16_fx=0.516 t32_g16_fx_far=0.112
+roll warm1200 held seed 9000/2: single=0.112 naive=2.47 g16=0.422 g16_fx=0.422 g16_fx_far=0.108 g8_fx=1.09 g8_fx_far=0.112 g32_fx=0.11 t32_naive=2.66 t32_g16_fx=0.495 t32_g16_fx_far=0.108
+roll warm1200 held seed 12000/0: single=0.106 naive=2.59 g16=0.424 g16_fx=0.424 g16_fx_far=0.105 g8_fx=1.04 g8_fx_far=0.107 g32_fx=0.108 t32_naive=2.8 t32_g16_fx=0.509 t32_g16_fx_far=0.104
+roll warm1200 held seed 12000/1: single=0.11 naive=2.54 g16=0.427 g16_fx=0.427 g16_fx_far=0.109 g8_fx=1.11 g8_fx_far=0.115 g32_fx=0.113 t32_naive=2.78 t32_g16_fx=0.508 t32_g16_fx_far=0.109
+roll warm1200 held seed 12000/2: single=0.115 naive=2.64 g16=0.426 g16_fx=0.426 g16_fx_far=0.11 g8_fx=1.08 g8_fx_far=0.114 g32_fx=0.113 t32_naive=2.86 t32_g16_fx=0.511 t32_g16_fx_far=0.109
+{'tiles': 1, 'n': 300, 'extent': 64.0, 'single_ms': 2.4031270295381546, 'single_peak_mb': 32.9443359375, 'single_grid': 128, 'ghost_fx_batched_ms': 2.8348079649731517, 'ghost_fx_stats': {'ghosts_mean': 0.0, 'own_mean': 300.0, 'nmax': 300}, 'ghost_fx_G': 128, 'ghost_fx_solo_ms_per_force': 2.729628002271056, 'ghost_fx_solo_peak_mb': 32.95263671875, 'ghost_fx_solo_stats': {'ghosts_mean': 0.0, 'own_mean': 300.0, 'nmax': 300}, 'ghost_fx_halo_cells_per_tile': 0, 'ghost_fx_ghost_bodies_per_tile': 0.0, 'ghost_fx_far_batched_ms': 2.7880381094291806, 'ghost_fx_far_stats': {'ghosts_mean': 0.0, 'own_mean': 300.0, 'nmax': 300}, 'ghost_fx_far_G': 128, 'ghost_fx_far_solo_ms_per_force': 2.7508181519806385, 'ghost_fx_far_solo_peak_mb': 32.95263671875, 'ghost_fx_far_solo_stats': {'ghosts_mean': 0.0, 'own_mean': 300.0, 'nmax': 300}, 'ghost_fx_far_halo_cells_per_tile': 0, 'ghost_fx_far_ghost_bodies_per_tile': 0.0, 'coarse_cells_total': 1024}
+{'tiles': 4, 'n': 1200, 'extent': 128.0, 'single_ms': 2.4720169603824615, 'single_peak_mb': 131.7724609375, 'single_grid': 256, 'ghost_fx_batched_ms': 4.033251549117267, 'ghost_fx_stats': {'ghosts_mean': 559.0, 'own_mean': 300.0, 'nmax': 875}, 'ghost_fx_G': 192, 'ghost_fx_solo_ms_per_force': 2.9344679787755013, 'ghost_fx_solo_peak_mb': 74.146484375, 'ghost_fx_solo_stats': {'ghosts_mean': 554.0, 'own_mean': 300.0, 'nmax': 854}, 'ghost_fx_halo_cells_per_tile': 20480, 'ghost_fx_ghost_bodies_per_tile': 554.0, 'ghost_fx_far_batched_ms': 4.661988583393395, 'ghost_fx_far_stats': {'ghosts_mean': 559.0, 'own_mean': 300.0, 'nmax': 875}, 'ghost_fx_far_G': 192, 'coarse_cells_total': 4096}
+{'tiles': 16, 'n': 4800, 'extent': 256.0, 'single_ms': 5.173565121367574, 'single_peak_mb': 538.67236328125, 'single_grid': 512, 'ghost_fx_batched_ms': 13.647109968587756, 'ghost_fx_stats': {'ghosts_mean': 378.8125, 'own_mean': 300.0, 'nmax': 2258}, 'ghost_fx_G': 192, 'ghost_fx_solo_ms_per_force': 3.073949133977294, 'ghost_fx_solo_peak_mb': 115.99609375, 'ghost_fx_solo_stats': {'ghosts_mean': 1143.0, 'own_mean': 1088.0, 'nmax': 2231}, 'ghost_fx_halo_cells_per_tile': 20480, 'ghost_fx_ghost_bodies_per_tile': 1143.0, 'ghost_fx_far_batched_ms': 14.324146322906017, 'ghost_fx_far_stats': {'ghosts_mean': 378.875, 'own_mean': 300.0, 'nmax': 2258}, 'ghost_fx_far_G': 192, 'coarse_cells_total': 16384}
+python: can't open file '/home/adamwebb/augur_far/scripts/summarize_scatter_tiling.py': [Errno 2] No such file or directory
+force cold300 dev seed 4738/0 done
+force cold300 dev seed 4738/1 done
+force cold300 dev seed 4738/2 done
+force cold300 held seed 9000/0 done
+force cold300 held seed 9000/1 done
+force cold300 held seed 9000/2 done
+force cold300 held seed 12000/0 done
+force cold300 held seed 12000/1 done
+force cold300 held seed 12000/2 done
+force warm300 dev seed 4738/0 done
+force warm300 dev seed 4738/1 done
+force warm300 dev seed 4738/2 done
+force warm300 held seed 9000/0 done
+force warm300 held seed 9000/1 done
+force warm300 held seed 9000/2 done
+force warm300 held seed 12000/0 done
+force warm300 held seed 12000/1 done
+force warm300 held seed 12000/2 done
+force warm1200 dev seed 4738/0 done
+force warm1200 dev seed 4738/1 done
+force warm1200 dev seed 4738/2 done
+force warm1200 held seed 9000/0 done
+force warm1200 held seed 9000/1 done
+force warm1200 held seed 9000/2 done
+force warm1200 held seed 12000/0 done
+force warm1200 held seed 12000/1 done
+force warm1200 held seed 12000/2 done
+roll cold300 dev seed 4738/0: single=0.0615 naive=3.73 g16=0.0721 g16_fx=0.0722 g16_fx_far=0.0615 g8_fx=0.423 g8_fx_far=0.062 g32_fx=0.0615 t32_naive=3.73 t32_g16_fx=0.0723 t32_g16_fx_far=0.0615
+roll cold300 dev seed 4738/1: single=0.0611 naive=3.85 g16=0.0675 g16_fx=0.0675 g16_fx_far=0.0611 g8_fx=0.461 g8_fx_far=0.0611 g32_fx=0.061 t32_naive=3.85 t32_g16_fx=0.0675 t32_g16_fx_far=0.0612
+roll cold300 dev seed 4738/2: single=0.0624 naive=3.7 g16=0.0705 g16_fx=0.0706 g16_fx_far=0.0623 g8_fx=0.441 g8_fx_far=0.0626 g32_fx=0.0623 t32_naive=3.7 t32_g16_fx=0.0706 t32_g16_fx_far=0.0623
+roll cold300 held seed 9000/0: single=0.0671 naive=3.88 g16=0.0777 g16_fx=0.0778 g16_fx_far=0.0671 g8_fx=0.456 g8_fx_far=0.0672 g32_fx=0.0672 t32_naive=3.89 t32_g16_fx=0.0778 t32_g16_fx_far=0.0672
+roll cold300 held seed 9000/1: single=0.0695 naive=3.89 g16=0.0813 g16_fx=0.0812 g16_fx_far=0.0693 g8_fx=0.496 g8_fx_far=0.0698 g32_fx=0.0696 t32_naive=3.89 t32_g16_fx=0.0813 t32_g16_fx_far=0.0693
+roll cold300 held seed 9000/2: single=0.065 naive=4.04 g16=0.0709 g16_fx=0.0709 g16_fx_far=0.0652 g8_fx=0.477 g8_fx_far=0.0652 g32_fx=0.0651 t32_naive=4.04 t32_g16_fx=0.0709 t32_g16_fx_far=0.0651
+roll cold300 held seed 12000/0: single=0.0571 naive=3.76 g16=0.0622 g16_fx=0.0621 g16_fx_far=0.0572 g8_fx=0.427 g8_fx_far=0.0577 g32_fx=0.0571 t32_naive=3.76 t32_g16_fx=0.0622 t32_g16_fx_far=0.0572
+roll cold300 held seed 12000/1: single=0.0692 naive=4.21 g16=0.0755 g16_fx=0.0757 g16_fx_far=0.0694 g8_fx=0.467 g8_fx_far=0.069 g32_fx=0.0692 t32_naive=4.21 t32_g16_fx=0.0756 t32_g16_fx_far=0.0693
+roll cold300 held seed 12000/2: single=0.0595 naive=3.49 g16=0.07 g16_fx=0.0702 g16_fx_far=0.0597 g8_fx=0.468 g8_fx_far=0.0598 g32_fx=0.0597 t32_naive=3.49 t32_g16_fx=0.0702 t32_g16_fx_far=0.0597
+roll warm300 dev seed 4738/0: single=0.0665 naive=3.32 g16=0.0747 g16_fx=0.0748 g16_fx_far=0.0666 g8_fx=0.376 g8_fx_far=0.0666 g32_fx=0.0667 t32_naive=3.32 t32_g16_fx=0.0748 t32_g16_fx_far=0.0665
+roll warm300 dev seed 4738/1: single=0.069 naive=3.63 g16=0.0757 g16_fx=0.0758 g16_fx_far=0.0691 g8_fx=0.408 g8_fx_far=0.069 g32_fx=0.0691 t32_naive=3.63 t32_g16_fx=0.0757 t32_g16_fx_far=0.069
+roll warm300 dev seed 4738/2: single=0.0662 naive=3.44 g16=0.0763 g16_fx=0.0764 g16_fx_far=0.0661 g8_fx=0.391 g8_fx_far=0.0658 g32_fx=0.0661 t32_naive=3.44 t32_g16_fx=0.0764 t32_g16_fx_far=0.066
+roll warm300 held seed 9000/0: single=0.0666 naive=3.43 g16=0.0781 g16_fx=0.0781 g16_fx_far=0.0666 g8_fx=0.393 g8_fx_far=0.0667 g32_fx=0.0665 t32_naive=3.43 t32_g16_fx=0.0781 t32_g16_fx_far=0.0664
+roll warm300 held seed 9000/1: single=0.07 naive=3.53 g16=0.0771 g16_fx=0.0771 g16_fx_far=0.07 g8_fx=0.412 g8_fx_far=0.0703 g32_fx=0.0701 t32_naive=3.53 t32_g16_fx=0.0771 t32_g16_fx_far=0.0701
+roll warm300 held seed 9000/2: single=0.0736 naive=3.69 g16=0.0797 g16_fx=0.0797 g16_fx_far=0.0737 g8_fx=0.407 g8_fx_far=0.0738 g32_fx=0.0737 t32_naive=3.69 t32_g16_fx=0.0796 t32_g16_fx_far=0.0737
+roll warm300 held seed 12000/0: single=0.0713 naive=3.34 g16=0.077 g16_fx=0.0769 g16_fx_far=0.0713 g8_fx=0.392 g8_fx_far=0.0713 g32_fx=0.0712 t32_naive=3.34 t32_g16_fx=0.0772 t32_g16_fx_far=0.0712
+roll warm300 held seed 12000/1: single=0.0765 naive=3.91 g16=0.0855 g16_fx=0.0855 g16_fx_far=0.0764 g8_fx=0.405 g8_fx_far=0.0766 g32_fx=0.0765 t32_naive=3.91 t32_g16_fx=0.0855 t32_g16_fx_far=0.0764
+roll warm300 held seed 12000/2: single=0.0652 naive=3.17 g16=0.0739 g16_fx=0.0739 g16_fx_far=0.0652 g8_fx=0.404 g8_fx_far=0.0654 g32_fx=0.0652 t32_naive=3.17 t32_g16_fx=0.0743 t32_g16_fx_far=0.0652
+roll warm1200 dev seed 4738/0: single=0.109 naive=2.8 g16=0.401 g16_fx=0.401 g16_fx_far=0.106 g8_fx=1.09 g8_fx_far=0.106 g32_fx=0.114 t32_naive=3.04 t32_g16_fx=0.491 t32_g16_fx_far=0.106
+roll warm1200 dev seed 4738/1: single=0.101 naive=2.98 g16=0.422 g16_fx=0.422 g16_fx_far=0.0992 g8_fx=1.15 g8_fx_far=0.0993 g32_fx=0.106 t32_naive=3.17 t32_g16_fx=0.494 t32_g16_fx_far=0.0993
+roll warm1200 dev seed 4738/2: single=0.108 naive=2.93 g16=0.404 g16_fx=0.404 g16_fx_far=0.108 g8_fx=1.14 g8_fx_far=0.108 g32_fx=0.113 t32_naive=3.17 t32_g16_fx=0.475 t32_g16_fx_far=0.108
+roll warm1200 held seed 9000/0: single=0.0942 naive=2.62 g16=0.416 g16_fx=0.416 g16_fx_far=0.0933 g8_fx=1.1 g8_fx_far=0.0933 g32_fx=0.101 t32_naive=2.81 t32_g16_fx=0.493 t32_g16_fx_far=0.0933
+roll warm1200 held seed 9000/1: single=0.119 naive=2.73 g16=0.436 g16_fx=0.437 g16_fx_far=0.104 g8_fx=1.07 g8_fx_far=0.104 g32_fx=0.112 t32_naive=2.93 t32_g16_fx=0.518 t32_g16_fx_far=0.104
+roll warm1200 held seed 9000/2: single=0.0998 naive=2.47 g16=0.423 g16_fx=0.423 g16_fx_far=0.0964 g8_fx=1.09 g8_fx_far=0.0963 g32_fx=0.103 t32_naive=2.66 t32_g16_fx=0.497 t32_g16_fx_far=0.0965
+roll warm1200 held seed 12000/0: single=0.0964 naive=2.59 g16=0.426 g16_fx=0.426 g16_fx_far=0.0963 g8_fx=1.04 g8_fx_far=0.0966 g32_fx=0.104 t32_naive=2.8 t32_g16_fx=0.511 t32_g16_fx_far=0.0963
+roll warm1200 held seed 12000/1: single=0.101 naive=2.54 g16=0.429 g16_fx=0.429 g16_fx_far=0.101 g8_fx=1.11 g8_fx_far=0.101 g32_fx=0.108 t32_naive=2.78 t32_g16_fx=0.51 t32_g16_fx_far=0.101
+roll warm1200 held seed 12000/2: single=0.106 naive=2.64 g16=0.428 g16_fx=0.428 g16_fx_far=0.1 g8_fx=1.08 g8_fx_far=0.101 g32_fx=0.108 t32_naive=2.86 t32_g16_fx=0.514 t32_g16_fx_far=0.1
+{'tiles': 1, 'n': 300, 'extent': 64.0, 'single_ms': 3.1232580076903105, 'single_peak_mb': 32.9443359375, 'single_grid': 128, 'ghost_fx_batched_ms': 3.62300593405962, 'ghost_fx_stats': {'ghosts_mean': 0.0, 'own_mean': 300.0, 'nmax': 300}, 'ghost_fx_G': 128, 'ghost_fx_solo_ms_per_force': 2.7717771008610725, 'ghost_fx_solo_peak_mb': 32.95263671875, 'ghost_fx_solo_stats': {'ghosts_mean': 0.0, 'own_mean': 300.0, 'nmax': 300}, 'ghost_fx_halo_cells_per_tile': 0, 'ghost_fx_ghost_bodies_per_tile': 0.0, 'ghost_fx_far_batched_ms': 2.8097430476918817, 'ghost_fx_far_stats': {'ghosts_mean': 0.0, 'own_mean': 300.0, 'nmax': 300}, 'ghost_fx_far_G': 128, 'ghost_fx_far_solo_ms_per_force': 2.754218177869916, 'ghost_fx_far_solo_peak_mb': 32.95263671875, 'ghost_fx_far_solo_stats': {'ghosts_mean': 0.0, 'own_mean': 300.0, 'nmax': 300}, 'ghost_fx_far_halo_cells_per_tile': 0, 'ghost_fx_far_ghost_bodies_per_tile': 0.0, 'coarse_cells_total': 1024}
+{'tiles': 4, 'n': 1200, 'extent': 128.0, 'single_ms': 2.594606950879097, 'single_peak_mb': 131.7724609375, 'single_grid': 256, 'ghost_fx_batched_ms': 4.066956578753889, 'ghost_fx_stats': {'ghosts_mean': 559.0, 'own_mean': 300.0, 'nmax': 875}, 'ghost_fx_G': 192, 'ghost_fx_solo_ms_per_force': 2.9477381613105536, 'ghost_fx_solo_peak_mb': 74.146484375, 'ghost_fx_solo_stats': {'ghosts_mean': 554.0, 'own_mean': 300.0, 'nmax': 854}, 'ghost_fx_halo_cells_per_tile': 20480, 'ghost_fx_ghost_bodies_per_tile': 554.0, 'ghost_fx_far_batched_ms': 4.702963982708752, 'ghost_fx_far_stats': {'ghosts_mean': 559.0, 'own_mean': 300.0, 'nmax': 875}, 'ghost_fx_far_G': 192, 'coarse_cells_total': 4096}
+{'tiles': 16, 'n': 4800, 'extent': 256.0, 'single_ms': 5.185154965147376, 'single_peak_mb': 538.67236328125, 'single_grid': 512, 'ghost_fx_batched_ms': 13.639970100484788, 'ghost_fx_stats': {'ghosts_mean': 378.75, 'own_mean': 300.0, 'nmax': 2258}, 'ghost_fx_G': 192, 'ghost_fx_solo_ms_per_force': 3.1079889740794897, 'ghost_fx_solo_peak_mb': 115.99609375, 'ghost_fx_solo_stats': {'ghosts_mean': 1143.0, 'own_mean': 1088.0, 'nmax': 2231}, 'ghost_fx_halo_cells_per_tile': 20480, 'ghost_fx_ghost_bodies_per_tile': 1143.0, 'ghost_fx_far_batched_ms': 14.5341424504295, 'ghost_fx_far_stats': {'ghosts_mean': 378.8125, 'own_mean': 300.0, 'nmax': 2258}, 'ghost_fx_far_G': 192, 'coarse_cells_total': 16384}
+python: can't open file '/home/adamwebb/augur_far/scripts/summarize_scatter_tiling.py': [Errno 2] No such file or directory
+nr100 model B=4 N=100 10000 ticks (stopped 10000) 14.2s
+nr100 truth substeps 4 7.2s
+nr100 truth substeps 1 5.4s
+nr100 truth substeps 16 14.2s
+nr100 saved
+bh300 model B=4 N=300 10000 ticks (stopped 10000) 13.4s
+bh300 truth substeps 4 8.7s
+bh300 truth substeps 1 6.1s
+bh300 truth substeps 16 18.6s
+bh300 saved
+nr2 model B=32 N=2 10000 ticks (stopped 10000) 26.8s
+nr2 truth substeps 4 7.0s
+nr2 truth substeps 1 5.2s
+nr2 truth substeps 16 14.0s
+nr2 saved
+nr10 model B=16 N=10 10000 ticks (stopped 10000) 18.3s
+nr10 truth substeps 4 7.1s
+nr10 truth substeps 1 5.3s
+nr10 truth substeps 16 14.1s
+nr10 saved
+nr100 model B=4 N=100 10000 ticks (stopped 10000) 12.5s
+nr100 truth substeps 4 7.1s
+nr100 truth substeps 1 5.3s
+nr100 truth substeps 16 14.1s
+nr100 saved
+nr300 model B=4 N=300 10000 ticks (stopped 10000) 12.9s
+nr300 truth substeps 4 7.3s
+nr300 truth substeps 1 5.3s
+nr300 truth substeps 16 13.9s
+nr300 saved
+bh10 model B=16 N=10 10000 ticks (stopped 10000) 17.5s
+bh10 truth substeps 4 8.5s
+bh10 truth substeps 1 6.0s
+bh10 truth substeps 16 18.4s
+bh10 saved
+bh100 model B=8 N=100 10000 ticks (stopped 10000) 15.2s
+bh100 truth substeps 4 8.6s
+bh100 truth substeps 1 6.1s
+bh100 truth substeps 16 18.6s
+bh100 saved
+bh300 model B=4 N=300 10000 ticks (stopped 10000) 12.3s
+bh300 truth substeps 4 8.5s
+bh300 truth substeps 1 6.0s
+bh300 truth substeps 16 18.4s
+bh300 saved
+bh1000 model B=4 N=1000 10000 ticks (stopped 10000) 18.9s
+bh1000 truth substeps 4 18.9s
+bh1000 saved
+python: can't open file '/home/adamwebb/augur_far/scripts/scatter_conservation_summarize.py': [Errno 2] No such file or directory
+python: can't open file '/home/adamwebb/augur_far/scripts/scatter_conservation_summarize.py': [Errno 2] No such file or directory
+DONE
