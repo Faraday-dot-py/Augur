@@ -2,7 +2,7 @@ import json
 import sys
 
 r = json.load(open(sys.argv[1]))
-for part in ("mesh", "pair"):
+for part in [p for p in ("mesh", "pair") if p in r]:
     for k, v in r[part].items():
         if k.startswith("dict_"):
             print(part, k, "nmse_heldout", v["recon_nmse_heldout"], "l0", round(v["l0_heldout"], 2), "heldout_dead", round(v["heldout_dead_fraction"], 3), "live", v["n_live_heldout"],
