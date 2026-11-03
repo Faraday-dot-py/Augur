@@ -3466,3 +3466,17 @@ Tried: tier-0 tiled closed-loop replay recipe of job 4089 with replay states tak
 Numbers (seeds 9100/9200/9300, over the frozen tiled baseline BL): mean dE@100 2.10x (2.40/2.35/1.55), err@20 0.774/0.766/0.706, force 0.58-0.61; 4089 model-state replay 1.99x, no-replay e44b796 4.25x. Kill not triggered.
 Verdict: generic later-tick signal explains the replay gain (reading at or below 2.5x); visited-state-specific claim not supported for seed 4738. One seed. Scoring script crashed on a missing baseline file (not in tarball, exit 0 hid it); scores recomputed by independent reviewer from eval.json and commit 16e7682.
 Rerun (job 4118, 2026-10-29, no retrain, 4 min): scoring completed with the baseline file in the tarball; numbers identical to the reviewer recompute above; independent reviewer confirmed against raw eval.json. Scorer PASS flag follows arm-1 lines; read arm 2 as "generic".
+
+### 2026-11-03 -- Plain same-grid particle-mesh baseline vs the pinned gravity model, static force error (audit row 2)
+Tried: pinned gravity model (kern/E_frozen.pt) vs plain PM (same G=128 grid, CIC deposit and gather, finite-difference gradient, analytic softened kernel, no U-Net, no pair term) on Plummer, two-clump, exponential disk; job 4823 (4822 OOM at N=100000 first), seed 4738, 16 scenes at N=1000.
+Numbers: PM/learned error ratios at N=1000 (median, p90): Plummer 2.29, 1.80; two-clump 3.68, 3.19; exp disk 4.60, 3.75. At N=10000 and 100000 plain PM beats the learned model on all families (learned out of training density range).
+Verdict: INCONCLUSIVE_PARTIAL (pass line 2x at median and p90 on all three; Plummer p90 misses). Independent reviewer reproduced all numbers. Open: more Plummer scenes, intermediate N, a PM with analytic near field.
+
+### 2026-11-03 -- Force-law recovery by full-model 2-body probing (audit row 1)
+Tried: radial force of two bodies vs separation 0.25-14, fitted to F = A d (d^2+eps^2)^-((p+1)/2) exp(-d/lam); job 4824, seed 4738, 128 placements per distance; mixed six-law checkpoints (ckpt/main_s4738.pt, main_s4739.pt on Polaris ~/augur_nfr), single-law comparators, pinned gravity model.
+Numbers: mixed_s4738 exponent/softening errors pow2 0.014/0.079, pow1 0.108/0.185, yuk8 0.059/0.007, yuk128 0.006/0.016. Held-out laws and seed 4739 worse (up to 0.28 exponent error on pow1; pow1.5 0.26, yuk32 0.26 on s4738). Pair-only near-field fits fail (exponent error > 1). Yuk8 and yuk32 both fit lam 5.28.
+Verdict: INCONCLUSIVE_PARTIAL (pow1 exponent 0.108 vs 0.10 line). Independent reviewer confirmed.
+
+### 2026-11-03 -- Sparse autoencoder on mesh-net and pair-MLP activations (curiosity, no verdict)
+Tried: ReLU SAE, unit-norm decoder, L1 adapted to hold L0 near 8, seed 4738, on mixed_s4738 (mesh dec[0] 32 ch; pair MLP 128-unit second layer). Job 4825 (fast controller, 6000 steps) overshot; job 4826 (slow controller, 20000 steps) is the reported run.
+Observed: mesh best law features (eta^2 ~0.88) fire on lj only; no feature tracks cell mass or radius (|corr| < 0.13). Pair: many features track log r (|corr| up to 0.8), law alignment weaker (eta^2 max 0.5-0.68); L0 not reached (31-241); reconstruction poor at mesh 2048 (nmse 0.81) and all pair sizes (0.42-0.48). Alignment numbers tentative; no plots rendered.
