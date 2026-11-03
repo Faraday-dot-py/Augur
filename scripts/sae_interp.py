@@ -81,7 +81,7 @@ def pair_acts(model, dev, amps, nr, layer):
     return torch.cat(X), torch.cat(lab), {"log_r": torch.cat(logr)}, torch.cat(grp)
 
 
-def train_sae(X, d_dict, method, target_l0, steps, seed, dev, bs=4096):
+def train_sae(X, d_dict, method, target_l0, steps, seed, dev, bs=4096, lr=1e-3, clip=0.0):
     g = torch.Generator(device=dev).manual_seed(seed)
     d = X.shape[1]
     W = torch.randn(d_dict, d, device=dev, generator=g)
@@ -89,7 +89,7 @@ def train_sae(X, d_dict, method, target_l0, steps, seed, dev, bs=4096):
     We = (W.detach().clone().T.contiguous()).requires_grad_()
     be = torch.zeros(d_dict, device=dev, requires_grad=True)
     bd = torch.zeros(d, device=dev, requires_grad=True)
-    opt = torch.optim.Adam([W, We, be, bd], lr=1e-3)
+    opt = torch.optim.Adam([W, We, be, bd], lr=lr)
     lam = 1e-3
     k = int(target_l0)
     fired = torch.zeros(d_dict, dtype=torch.bool, device=dev)
@@ -108,11 +108,15 @@ def train_sae(X, d_dict, method, target_l0, steps, seed, dev, bs=4096):
         z = act(x)
         rec = z @ Wn + bd
         loss = F.mse_loss(rec, x) + (lam * z.sum(-1).mean() if method == "relu_l1" else 0.0)
+        if not torch.isfinite(loss):
+            raise RuntimeError(f"non-finite SAE loss at step {it} (d_dict {d_dict}, lr {lr})")
         opt.zero_grad()
         loss.backward()
+        if clip > 0:
+            torch.nn.utils.clip_grad_norm_([W, We, be, bd], clip)
         opt.step()
         for gp in opt.param_groups:
-            gp["lr"] = 1e-3 * (1 - it / steps) + 1e-5
+            gp["lr"] = lr * (1 - it / steps) + 1e-5
         fired |= (z > 0).any(0)
         l0s.append((z > 0).float().sum(-1).mean().item())
         if method == "relu_l1" and it % 20 == 19:
@@ -168,6 +172,7 @@ def evaluate(sae, Xtr, Xte, lab_te, cont_te):
     live = (Zte > 0).any(0)
     e_law = eta2(Zte, lab_te, len(LAWS))
     out["n_live_heldout"] = int(live.sum())
+    out["heldout_dead_fraction"] = float(1 - live.float().mean())
     out["law_eta2_live_mean"] = float(e_law[live].mean()) if live.any() else None
     out["law_eta2_live_max"] = float(e_law[live].max()) if live.any() else None
     out["n_live_law_eta2_gt_0.5"] = int((e_law[live] > 0.5).sum())
@@ -186,14 +191,17 @@ def evaluate(sae, Xtr, Xte, lab_te, cont_te):
     return out, e_law.cpu().numpy(), cors, Zte
 
 
-def run(name, X, lab, cont, grp, sizes, a, dev, saved):
-    te = grp == grp.max()
+def run(name, X, lab, cont, grp, sizes, a, dev, saved, heldout=1):
+    te = grp > grp.max() - heldout
     mu, sc = X[~te].mean(0), X[~te].norm(dim=-1).mean() / np.sqrt(X.shape[1])
+    print(name, "input stats: nonfinite", int((~torch.isfinite(X)).sum()), "channel std min/max", float(X.std(0).min()), float(X.std(0).max()), "mean |x|", float(X.abs().mean()), flush=True)
+    if a.channel_norm:
+        sc = X[~te].std(0).clamp_min(1e-6)
     Xn = ((X - mu) / sc).to(dev)
     tr = (~te).to(dev)
     res, arrs = {"n_train": int(tr.sum()), "n_heldout": int(te.sum()), "d_input": X.shape[1]}, {}
     for d_dict in sizes:
-        sae = train_sae(Xn[tr], d_dict, a.sae, a.target_l0, a.steps, a.sae_seed, dev)
+        sae = train_sae(Xn[tr], d_dict, a.sae, a.target_l0, a.steps, a.sae_seed, dev, lr=a.lr, clip=a.clip)
         r, e_law, cors, Zte = evaluate(sae, Xn[tr], Xn[~tr], lab[te].to(dev), {k: v[te].to(dev) for k, v in cont.items()})
         res[f"dict_{d_dict}"] = r
         arrs[f"{name}_{d_dict}_law_eta2"] = e_law
@@ -204,7 +212,7 @@ def run(name, X, lab, cont, grp, sizes, a, dev, saved):
         arrs[f"{name}_{d_dict}_heldout_law"] = lab[te][:4000].numpy()
         for k, v in cont.items():
             arrs[f"{name}_{d_dict}_heldout_{k}"] = v[te][:4000].numpy()
-        saved[f"{name}_{d_dict}"] = {"W": sae[0].cpu(), "We": sae[1].cpu(), "be": sae[2].cpu(), "bd": sae[3].cpu(), "mu": mu, "sc": float(sc), "method": sae[5], "k": sae[6]}
+        saved[f"{name}_{d_dict}"] = {"W": sae[0].cpu(), "We": sae[1].cpu(), "be": sae[2].cpu(), "bd": sae[3].cpu(), "mu": mu, "sc": sc.cpu() if torch.is_tensor(sc) else float(sc), "method": sae[5], "k": sae[6]}
         print(name, d_dict, {k: (round(v, 4) if isinstance(v, float) else v) for k, v in r.items() if k != "top_law_features"}, flush=True)
     return res, arrs
 
@@ -224,6 +232,12 @@ def main():
     ap.add_argument("--scenes", type=int, default=12)
     ap.add_argument("--cells", type=int, default=400)
     ap.add_argument("--warm", type=int, default=3)
+    ap.add_argument("--mesh-sizes", default=",".join(map(str, MESH_SIZES)))
+    ap.add_argument("--pair-sizes", default=",".join(map(str, PAIR_SIZES)))
+    ap.add_argument("--heldout-scenes", type=int, default=1)
+    ap.add_argument("--lr", type=float, default=1e-3)
+    ap.add_argument("--clip", type=float, default=0.0)
+    ap.add_argument("--channel-norm", action="store_true")
     a = ap.parse_args()
     a.sae_seed = a.seed if a.sae_seed is None else a.sae_seed
     torch.manual_seed(a.sae_seed)
@@ -236,12 +250,12 @@ def main():
     if "mesh" in a.parts:
         X, lab, cont, sid = mesh_acts(model, dev, a.scenes, a.cells, a.warm, a.seed, a.layer)
         print("mesh acts", tuple(X.shape), flush=True)
-        out["mesh"], ar = run("mesh", X, lab, cont, sid % a.scenes, MESH_SIZES, a, dev, saved)
+        out["mesh"], ar = run("mesh", X, lab, cont, sid % a.scenes, [int(v) for v in a.mesh_sizes.split(",")], a, dev, saved, a.heldout_scenes)
         arrs.update(ar)
     if "pair" in a.parts:
         X, lab, cont, grp = pair_acts(model, dev, (0.3, 1.0, 3.0), 1000, a.pair_layer)
         print("pair acts", tuple(X.shape), flush=True)
-        out["pair"], ar = run("pair", X, lab, cont, grp, PAIR_SIZES, a, dev, saved)
+        out["pair"], ar = run("pair", X, lab, cont, grp, [int(v) for v in a.pair_sizes.split(",")], a, dev, saved)
         arrs.update(ar)
     json.dump(out, open(a.out, "w"), indent=1)
     np.savez_compressed(a.out.replace(".json", ".npz"), **arrs)
