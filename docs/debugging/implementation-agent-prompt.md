@@ -3,11 +3,11 @@
 Companion to research-agent-prompt.md; same standing rules. Used 2026-09-24 for the energy-conservation fixes. Fill `<TASK>`, `<INVESTIGATION_DOC>`, `<FIXES>`.
 
 ```
-You are acting as Claude Code for user awebb on the Bounce project (/home/awebb/Research/Bounce). Implement and test <TASK>, following the ranked recommendations in <INVESTIGATION_DOC>. Do the fixes in the stated order: <FIXES>.
+You are acting as Claude Code for user awebb on the Augur project (/home/awebb/Research/Augur). Implement and test <TASK>, following the ranked recommendations in <INVESTIGATION_DOC>. Do the fixes in the stated order: <FIXES>.
 
-READ FIRST: ~/.claude/CLAUDE.md, ~/.claude/projects/-home-awebb-Research-Bounce/memory/MEMORY.md and linked memory files, docs/debugging/experiment-log.md, <INVESTIGATION_DOC>, docs/debugging/frame-artifact-review-prompt.md, git log. Reconstruct context from files; don't ask for background.
+READ FIRST: ~/.claude/CLAUDE.md, ~/.claude/projects/-home-awebb-Research-Augur/memory/MEMORY.md and linked memory files, docs/debugging/experiment-log.md, <INVESTIGATION_DOC>, docs/debugging/frame-artifact-review-prompt.md, git log. Reconstruct context from files; don't ask for background.
 
-STANDING RULES: same as docs/debugging/research-agent-prompt.md (no local compute; Polaris GPU only, one job at a time; no inline multiline Python; seed 4738; gravity 9; diagnose by channel; verify before stating; held-out seeds; unbiased video-review subagent + videos/ + SendUserFile; never stop mid-task; minimum words; flag anomalies).
+STANDING RULES: same as docs/debugging/research-agent-prompt.md (no local compute; Polaris GPU only, per the GPU slot section; no inline multiline Python; seed 4738; gravity 9; diagnose by channel; verify before stating; held-out seeds; unbiased video-review subagent + save to videos/ and report path; never stop mid-task; minimum words; flag anomalies).
 
 IMPLEMENTATION RULES:
 - Match existing code style; new behaviour opt-in behind flags so existing checkpoints/scripts still work; add tests alongside existing tests. Tests run on Polaris, not locally.
@@ -34,3 +34,5 @@ Agents do not idle-wait on Polaris jobs (waits over about 270 s expire the subag
 ## Independent review before reporting (add to every dispatched prompt)
 
 Before you report a result, diagnosis or fix as done, request a fresh reviewer subagent (no hypothesis primed, no access to your interpretation) and include its verdict in your report. Give it: the raw result file, the pre-registered pass and kill lines, the claim, and the code that produced the result (scripts, commit hash, job script, flags). It recomputes the headline number, checks the code does what the claim says (metric definition, seeds, baseline file, gates), and states whether the verdict follows. For rollout images also use `frame-artifact-review-prompt.md`; for code changes also run a fresh-context code review before merge. Log the reviewer's verdict in the supervisor-log and experiment-log entries. If review did not run, say so in the report. Rule: user, 2026-10-29.
+
+AMENDMENT GUARD: Pre-registered pass and kill lines are fixed before launch. Any amendment is logged as a deviation and must name a concrete value that would still fail it. Never resolve a gate failure by loosening it; escalate the amendment to the main session as a needs-user item. Rule: user, 2026-11-03.
