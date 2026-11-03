@@ -169,9 +169,27 @@ def plummer_test(n, seed, steps, nrep, tol_scale):
     return res
 
 
+def substep_convergence(n, seeds, steps):
+    out = []
+    for seed in seeds:
+        pos, vel, m = plummer_ic(n, seed)
+        Pi, Vi = ias15_rollout(pos, vel, m, steps, EPS)
+        Ei, sc = energy(Pi, Vi, m, EPS)
+        Li = lagrangian(Pi, m)
+        for sub in (1, 2, 4, 8, 16, 32):
+            P, V = truth_rollout(pos, vel, m, steps, EPS, sub)
+            E, _ = energy(P, V, m, EPS)
+            L = lagrangian(P, m)
+            out.append(dict(n=n, seed=seed, substeps=sub, pos_vs_ias15_max=float(np.abs(P - Pi).max()),
+                            dE_vs_ias15_max=float(np.abs(E - Ei).max() / sc),
+                            lagrangian_abs_diff_final=[float(x) for x in np.abs(L[-1] - Li[-1])],
+                            lagrangian_rel_diff_final=[float(x) for x in np.abs(L[-1] - Li[-1]) / Li[-1]]))
+    return out
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--stage", choices=["force", "kepler", "plummer"], required=True)
+    ap.add_argument("--stage", choices=["force", "kepler", "plummer", "substep-convergence"], required=True)
     ap.add_argument("--n", type=int, default=300)
     ap.add_argument("--seed", type=int, default=4738)
     ap.add_argument("--steps", type=int, default=200)
@@ -188,6 +206,8 @@ if __name__ == "__main__":
             m3 = np.array([10.0, 0.3, 0.1])
             pos, vel = kepler_ics(m3, [5.0, 12.0], [0.5, 0.5])
             out.append(compare(f"kepler-e0.5-n3-eps{eps}", pos, vel, m3, 500, eps)[0])
+    elif a.stage == "substep-convergence":
+        out = substep_convergence(a.n, [a.seed + k for k in range(4)], a.steps)
     else:
         out = plummer_test(a.n, a.seed, a.steps, a.replicas, None)
     with open(a.out, "w") as f:
