@@ -109,6 +109,8 @@ def train_sae(X, d_dict, method, target_l0, steps, seed, dev, bs=4096, lr=1e-3, 
         rec = z @ Wn + bd
         loss = F.mse_loss(rec, x) + (lam * z.sum(-1).mean() if method == "relu_l1" else 0.0)
         if not torch.isfinite(loss):
+            print("non-finite loss: x max", float(x.abs().max()), "W nonfinite", int((~torch.isfinite(W)).sum()), "We nonfinite", int((~torch.isfinite(We)).sum()),
+                  "z max", float(z.abs().max()), "W min row norm", float(W.norm(dim=1).min()), flush=True)
             raise RuntimeError(f"non-finite SAE loss at step {it} (d_dict {d_dict}, lr {lr})")
         opt.zero_grad()
         loss.backward()
@@ -129,7 +131,9 @@ def train_sae(X, d_dict, method, target_l0, steps, seed, dev, bs=4096, lr=1e-3, 
                     pick = err.topk(min(int(dead.sum()), len(err))).indices
                     nd = dead.nonzero()[: len(pick), 0]
                     dirs = x[pick] - bd
-                    dirs = dirs / dirs.norm(dim=-1, keepdim=True).clamp_min(1e-8)
+                    zero = dirs.norm(dim=-1) < 1e-6
+                    dirs[zero] = torch.randn(int(zero.sum()), dirs.shape[1], device=dev, generator=g)
+                    dirs = dirs / dirs.norm(dim=-1, keepdim=True)
                     W[nd] = dirs
                     We[:, nd] = dirs.T * 0.2
                     be[nd] = 0.0
@@ -196,7 +200,8 @@ def run(name, X, lab, cont, grp, sizes, a, dev, saved, heldout=1):
     mu, sc = X[~te].mean(0), X[~te].norm(dim=-1).mean() / np.sqrt(X.shape[1])
     print(name, "input stats: nonfinite", int((~torch.isfinite(X)).sum()), "channel std min/max", float(X.std(0).min()), float(X.std(0).max()), "mean |x|", float(X.abs().mean()), flush=True)
     if a.channel_norm:
-        sc = X[~te].std(0).clamp_min(1e-6)
+        sd = X[~te].std(0)
+        sc = sd.clamp_min(1e-3 * float(sd.mean()))
     Xn = ((X - mu) / sc).to(dev)
     tr = (~te).to(dev)
     res, arrs = {"n_train": int(tr.sum()), "n_heldout": int(te.sum()), "d_input": X.shape[1]}, {}
