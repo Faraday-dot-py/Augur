@@ -69,7 +69,7 @@ Constraint check applies to all: a reactive optimizer changes only how weights a
 - Not applicable: an optimizer has no role at inference. An agent that watches a rollout and edits it would hard-code corrections (violates generalization, interpretability, and the no-hard-coded-forces rule) and costs LLM calls per run. The page's analysis-probe idea is already how our agent workflow operates (diagnostics by channel). Reject.
 
 ### Use E: static optimizer swap as the control
-- What: AdamW to Muon (or per-group rates) for matrix weights in the same closed-loop fine-tune, no agent. This is the page's most reproducible finding and tests whether the optimizer lever matters at all, for a fraction of the cost.
+- What: Adam to Muon (or per-group rates; the job 4060 baseline is plain Adam, not AdamW) for matrix weights in the same closed-loop fine-tune, no agent. This is the page's most reproducible finding and tests whether the optimizer lever matters at all, for a fraction of the cost.
 - Constraints: same as A, minus reproducibility loss.
 - Cheapest test: one arm, seed 4738, job 4060 budget.
 - Pass/kill: same line as Use A. If this control fails, skip A and B.
