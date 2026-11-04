@@ -13,6 +13,7 @@ from scripts import exp12_hier as h
 from scripts import train_tier0_ext as tte
 from scripts import train_tiered as ttr
 from scripts import tier0_tiled_closed_loop as tc
+from scripts import train_tier0_tiled_closed_loop as trn
 
 fails = []
 
@@ -133,6 +134,57 @@ def run_train(args, env):
     return subprocess.run([sys.executable, "scripts/train_tier0_tiled_closed_loop.py"] + args, env=env, capture_output=True, text=True)
 
 
+def test_flattened_muon():
+    def net():
+        torch.manual_seed(4738)
+        return torch.nn.Sequential(torch.nn.Conv2d(3, 8, 3, padding=1), torch.nn.GELU(), torch.nn.Conv2d(8, 8, 3, padding=1), torch.nn.Flatten(), torch.nn.Linear(8 * 25, 4))
+
+    def stepn(m, o, n):
+        for i in range(n):
+            o.zero_grad()
+            torch.manual_seed(100 + i)
+            m(torch.randn(2, 3, 5, 5)).square().mean().backward()
+            torch.nn.utils.clip_grad_norm_(m.parameters(), 1.0)
+            o.step()
+
+    m = net()
+    o = trn.HybridMuon(m.parameters(), 2e-4, conv=True)
+    w0 = [p.detach().clone() for p in m.parameters()]
+    stepn(m, o, 3)
+    names = [n for n, _ in m.named_parameters()]
+    check("flattened Muon updates every parameter incl. all conv weights", all(not torch.equal(a, p) for a, p in zip(w0, m.parameters())), str([n for n, a, p in zip(names, w0, m.parameters()) if torch.equal(a, p)]))
+    check("flattened Muon split counts: 4-D and 2-D under Muon, 1-D under Adam", o.split == {"muon_2d": 8 * 25 * 4, "muon_flattened_4d": 8 * 3 * 9 + 8 * 8 * 9, "adam": 8 + 8 + 4}, str(o.split))
+    check("flattened Muon proxies share storage with conv weights", all(v.data_ptr() == q.data_ptr() for q, v in zip(o.flat, o.views)))
+    o2 = trn.HybridMuon(m.parameters(), 2e-4, conv=False)
+    check("2-D-only mode leaves conv weights to Adam", o2.split["muon_flattened_4d"] == 0 and o2.split["adam"] == 8 * 3 * 9 + 8 * 8 * 9 + 8 + 8 + 4)
+    ref = net()
+    ro = trn.HybridMuon(ref.parameters(), 2e-4, conv=True)
+    stepn(ref, ro, 6)
+    a = net()
+    ao = trn.HybridMuon(a.parameters(), 2e-4, conv=True)
+    stepn(a, ao, 3)
+    b = net()
+    b.load_state_dict(a.state_dict())
+    bo = trn.HybridMuon(b.parameters(), 2e-4, conv=True)
+    bo.load_state_dict(ao.state_dict())
+
+    def stepk(m, o, lo, hi):
+        for i in range(lo, hi):
+            o.zero_grad()
+            torch.manual_seed(100 + i)
+            m(torch.randn(2, 3, 5, 5)).square().mean().backward()
+            torch.nn.utils.clip_grad_norm_(m.parameters(), 1.0)
+            o.step()
+
+    stepk(b, bo, 3, 6)
+    check("flattened Muon checkpoint state resumes bit-identically to an uninterrupted run", all(torch.equal(x, y) for x, y in zip(ref.parameters(), b.parameters())), str(max(float((x - y).abs().max()) for x, y in zip(ref.parameters(), b.parameters()))))
+    bad = net()
+    bo2 = trn.HybridMuon(bad.parameters(), 2e-4, conv=True)
+    bad(torch.randn(2, 3, 5, 5)).square().mean().backward()
+    bo2.zero_grad()
+    check("zero_grad clears conv weight grads", all(q.grad is None for q in bo2.flat))
+
+
 def test_trainer(dev):
     model = perturbed_model(dev)
     tmp = tempfile.mkdtemp()
@@ -163,6 +215,10 @@ def test_trainer(dev):
     r7 = run_train(base + ["--tag", "mu", "--iters", "4", "--optimizer", "muon-matrices-adam-rest", "--ckpt-every", "2"], env)
     r8 = run_train(base + ["--tag", "mu", "--iters", "6", "--optimizer", "muon-matrices-adam-rest", "--ckpt-every", "2", "--resume"], env)
     check("muon-matrices-adam-rest trainer runs, checkpoints and resumes", r7.returncode == 0 and r8.returncode == 0 and "resumed it" in r8.stdout and os.path.exists(os.path.join(tmp, "mu.pt")), (r7.stderr + r8.stderr)[-500:])
+    r9 = run_train(base + ["--tag", "mf", "--iters", "4", "--optimizer", "muon-conv-flattened-adam-rest", "--ckpt-every", "2"], env)
+    r10 = run_train(base + ["--tag", "mf", "--iters", "6", "--optimizer", "muon-conv-flattened-adam-rest", "--ckpt-every", "2", "--resume"], env)
+    check("muon-conv-flattened-adam-rest trainer logs the split, runs, checkpoints and resumes", r9.returncode == 0 and r10.returncode == 0 and "parameter split by optimizer" in r9.stdout and "resumed it" in r10.stdout
+          and os.path.exists(os.path.join(tmp, "mf.pt")), (r9.stdout + r9.stderr + r10.stderr)[-600:])
     r4 = run_train(base + ["--tag", "e", "--iters", "3", "--est"], env)
     check("--est exits without training", r4.returncode == 0 and not os.path.exists(os.path.join(tmp, "e.pt")), r4.stderr[-300:])
 
@@ -176,6 +232,7 @@ def main():
     test_exchange()
     test_weights()
     test_energy_term()
+    test_flattened_muon()
     test_model(dev)
     if not a.fast:
         test_trainer(dev)

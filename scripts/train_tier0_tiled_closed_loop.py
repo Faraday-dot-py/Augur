@@ -34,17 +34,25 @@ def clear_ext(model):
 
 
 class HybridMuon:
-    def __init__(self, params, lr):
+    def __init__(self, params, lr, conv=False):
         params = list(params)
-        self.opts = [torch.optim.Muon([q for q in params if q.ndim == 2], lr=lr, adjust_lr_fn="match_rms_adamw", weight_decay=0.0),
-                     torch.optim.Adam([q for q in params if q.ndim != 2], lr=lr)]
+        self.flat = [q for q in params if q.ndim == 4] if conv else []
+        self.views = [torch.nn.Parameter(q.data.view(q.shape[0], -1)) for q in self.flat]
+        muon = [q for q in params if q.ndim == 2] + self.views
+        adam = [q for q in params if q.ndim != 2 and not any(q is f for f in self.flat)]
+        self.opts = [torch.optim.Muon(muon, lr=lr, adjust_lr_fn="match_rms_adamw", weight_decay=0.0), torch.optim.Adam(adam, lr=lr)]
         self.param_groups = [g for o in self.opts for g in o.param_groups]
+        self.split = {"muon_2d": sum(q.numel() for q in params if q.ndim == 2), "muon_flattened_4d": sum(q.numel() for q in self.flat), "adam": sum(q.numel() for q in adam)}
 
     def zero_grad(self):
         for o in self.opts:
             o.zero_grad()
+        for q in self.flat:
+            q.grad = None
 
     def step(self):
+        for q, v in zip(self.flat, self.views):
+            v.grad = None if q.grad is None else q.grad.reshape(v.shape)
         for o in self.opts:
             o.step()
 
@@ -222,7 +230,7 @@ def main():
     ap.add_argument("--batch", type=int, default=2, help="tiled scenes per iteration (16 windows each)")
     ap.add_argument("--iters", type=int, default=5000)
     ap.add_argument("--lr", type=float, default=2e-4)
-    ap.add_argument("--optimizer", choices=["adam", "muon-matrices-adam-rest"], default="adam")
+    ap.add_argument("--optimizer", choices=["adam", "muon-matrices-adam-rest", "muon-conv-flattened-adam-rest"], default="adam")
     ap.add_argument("--k-start", type=int, default=8)
     ap.add_argument("--k-end", type=int, default=28)
     ap.add_argument("--tb", type=int, default=0)
@@ -270,7 +278,8 @@ def main():
     sf.load_compat(model, torch.load(a.init, map_location=dev, weights_only=False)["model"])
     model.train()
     tt = tc.TiledTier0(model, dev, chunk=a.chunk, exchange=a.exchange)
-    opt = torch.optim.Adam(model.parameters(), lr=a.lr) if a.optimizer == "adam" else HybridMuon(model.parameters(), a.lr)
+    opt = torch.optim.Adam(model.parameters(), lr=a.lr) if a.optimizer == "adam" else HybridMuon(model.parameters(), a.lr, conv=a.optimizer == "muon-conv-flattened-adam-rest")
+    log(f"optimizer {a.optimizer} parameter split by optimizer: {getattr(opt, 'split', {'adam': sum(q.numel() for q in model.parameters())})} total {sum(q.numel() for q in model.parameters())}")
     path = os.path.join(a.out_dir, a.tag + ".pt")
     ref_path = os.path.join(a.out_dir, a.tag + "_reference.json")
     it = 0
