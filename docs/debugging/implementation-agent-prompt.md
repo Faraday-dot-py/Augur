@@ -31,6 +31,8 @@ Your row in `docs/debugging/priority-registry.md` gives your rating (1 backgroun
 
 Agents do not idle-wait on Polaris jobs (waits over about 270 s expire the subagent prompt cache and force a full context re-write). After submitting a job, record job id, expected runtime, log path and exact resume steps in the supervisor-log or your report, then stop. The main session watches with a Monitor until-loop on sacct and resumes you (SendMessage) or starts a fresh agent. Check sacct once shortly after submit for fast failures.
 
+PRE-SUBMIT INPUT CHECK: Before sbatch, run `tar -tzf` on the code tarball and confirm every path the job script's input check lists is present. Run the script's CPU-test stage first, locally or on the sandbox 1080 Ti. A job that fails in its first 2 minutes costs a full queue wait (jobs 4977 and 5031, 2026-11-03/04). Rule: user, 2026-11-04.
+
 ## Independent review before reporting (add to every dispatched prompt)
 
 Before you report a result, diagnosis or fix as done, request a fresh reviewer subagent (no hypothesis primed, no access to your interpretation) and include its verdict in your report. Give it: the raw result file, the pre-registered pass and kill lines, the claim, and the code that produced the result (scripts, commit hash, job script, flags). It recomputes the headline number, checks the code does what the claim says (metric definition, seeds, baseline file, gates), and states whether the verdict follows. For rollout images also use `frame-artifact-review-prompt.md`; for code changes also run a fresh-context code review before merge. Log the reviewer's verdict in the supervisor-log and experiment-log entries. If review did not run, say so in the report. Rule: user, 2026-10-29.
