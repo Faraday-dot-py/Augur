@@ -160,6 +160,9 @@ def test_trainer(dev):
                            "--replay-stride", "4", "--replay-batch", "1", "--probe-at"], env)
     check("visited-state replay trainer builds two rounds and logs the term", r6.returncode == 0 and r6.stdout.count("replay round") == 2 and '"replay"' in r6.stdout
           and os.path.exists(os.path.join(tmp, "rp.TRAIN_DONE")), (r6.stdout + r6.stderr)[-500:])
+    r7 = run_train(base + ["--tag", "mu", "--iters", "4", "--optimizer", "muon-matrices-adam-rest", "--ckpt-every", "2"], env)
+    r8 = run_train(base + ["--tag", "mu", "--iters", "6", "--optimizer", "muon-matrices-adam-rest", "--ckpt-every", "2", "--resume"], env)
+    check("muon-matrices-adam-rest trainer runs, checkpoints and resumes", r7.returncode == 0 and r8.returncode == 0 and "resumed it" in r8.stdout and os.path.exists(os.path.join(tmp, "mu.pt")), (r7.stderr + r8.stderr)[-500:])
     r4 = run_train(base + ["--tag", "e", "--iters", "3", "--est"], env)
     check("--est exits without training", r4.returncode == 0 and not os.path.exists(os.path.join(tmp, "e.pt")), r4.stderr[-300:])
 

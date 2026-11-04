@@ -33,6 +33,29 @@ def clear_ext(model):
     model.t0.ext_grid = model.t0.ext_poly = model.t0.ext_high = None
 
 
+class HybridMuon:
+    def __init__(self, params, lr):
+        params = list(params)
+        self.opts = [torch.optim.Muon([q for q in params if q.ndim == 2], lr=lr, adjust_lr_fn="match_rms_adamw", weight_decay=0.0),
+                     torch.optim.Adam([q for q in params if q.ndim != 2], lr=lr)]
+        self.param_groups = [g for o in self.opts for g in o.param_groups]
+
+    def zero_grad(self):
+        for o in self.opts:
+            o.zero_grad()
+
+    def step(self):
+        for o in self.opts:
+            o.step()
+
+    def state_dict(self):
+        return {"hybrid": [o.state_dict() for o in self.opts]}
+
+    def load_state_dict(self, sd):
+        for o, x in zip(self.opts, sd["hybrid"]):
+            o.load_state_dict(x)
+
+
 def save(path, model, opt, it, args):
     tte.save(path, model, opt, it, args)
 
@@ -199,6 +222,7 @@ def main():
     ap.add_argument("--batch", type=int, default=2, help="tiled scenes per iteration (16 windows each)")
     ap.add_argument("--iters", type=int, default=5000)
     ap.add_argument("--lr", type=float, default=2e-4)
+    ap.add_argument("--optimizer", choices=["adam", "muon-matrices-adam-rest"], default="adam")
     ap.add_argument("--k-start", type=int, default=8)
     ap.add_argument("--k-end", type=int, default=28)
     ap.add_argument("--tb", type=int, default=0)
@@ -246,7 +270,7 @@ def main():
     sf.load_compat(model, torch.load(a.init, map_location=dev, weights_only=False)["model"])
     model.train()
     tt = tc.TiledTier0(model, dev, chunk=a.chunk, exchange=a.exchange)
-    opt = torch.optim.Adam(model.parameters(), lr=a.lr)
+    opt = torch.optim.Adam(model.parameters(), lr=a.lr) if a.optimizer == "adam" else HybridMuon(model.parameters(), a.lr)
     path = os.path.join(a.out_dir, a.tag + ".pt")
     ref_path = os.path.join(a.out_dir, a.tag + "_reference.json")
     it = 0
