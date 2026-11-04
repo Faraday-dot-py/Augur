@@ -37,6 +37,8 @@ class HybridMuon:
     def __init__(self, params, lr, conv=False):
         params = list(params)
         self.flat = [q for q in params if q.ndim == 4] if conv else []
+        for q in self.flat:
+            q.data = q.data.contiguous()
         self.views = [torch.nn.Parameter(q.data.view(q.shape[0], -1)) for q in self.flat]
         muon = [q for q in params if q.ndim == 2] + self.views
         adam = [q for q in params if q.ndim != 2 and not any(q is f for f in self.flat)]
