@@ -7,7 +7,7 @@
 #SBATCH --qos=student-pleiades
 #SBATCH --time=08:00:00
 #SBATCH --requeue
-#SBATCH --nice=0
+#SBATCH --nice=1000
 #SBATCH --signal=B:TERM@120
 #SBATCH --output=/home/adamwebb/augur-tiered-muon-swap-static-optimizer-%j.log
 # Job 4060 recipe (matched-60k init, tiled closed-loop halo fine-tune, 5000 iterations, default probes and seeds) with only the optimizer changed:
