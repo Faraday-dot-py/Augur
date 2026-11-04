@@ -1,0 +1,31 @@
+tiled 9100 {"force_rel": 0.04004, "com_err": 0.25275, "force_rel_free_rollout": 0.03831, "err@10": 0.01235, "err@20": 0.0511, "err@50": 0.65369, "err@100": 3.38702, "dE_model": 0.03771}
+tiled 9200 {"force_rel": 0.0379, "com_err": 0.23188, "force_rel_free_rollout": 0.03912, "err@10": 0.013, "err@20": 0.05227, "err@50": 0.69887, "err@100": 3.42618, "dE_model": 0.03548}
+tiled 9300 {"force_rel": 0.03998, "com_err": 0.22088, "force_rel_free_rollout": 0.04015, "err@10": 0.01323, "err@20": 0.05402, "err@50": 0.73416, "err@100": 3.35829, "dE_model": 0.03764}
+tiled_no_exchange 9100 {"force_rel": 0.0425, "com_err": 0.43699, "force_rel_free_rollout": 0.04202, "err@10": 0.01524, "err@20": 0.06748, "err@50": 0.7951, "err@100": 3.92839, "dE_model": 0.03162}
+tiled_no_exchange 9200 {"force_rel": 0.04014, "com_err": 0.48485, "force_rel_free_rollout": 0.04116, "err@10": 0.0172, "err@20": 0.07964, "err@50": 0.89815, "err@100": 4.06441, "dE_model": 0.02584}
+tiled_no_exchange 9300 {"force_rel": 0.04218, "com_err": 0.42095, "force_rel_free_rollout": 0.04335, "err@10": 0.01626, "err@20": 0.07175, "err@50": 0.91782, "err@100": 4.1897, "dE_model": 0.03983}
+Traceback (most recent call last):
+  File "/home/jovyan/muon_eval2/scripts/eval_tier0_tiled_closed_loop.py", line 60, in <module>
+    main()
+  File "/home/jovyan/muon_eval2/scripts/eval_tier0_tiled_closed_loop.py", line 54, in main
+    res["plain"] = tte.plain_eval(model, argparse.Namespace(dt=0.1, eps=0.5), dev, log, "plain")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jovyan/muon_eval2/scripts/train_tier0_ext.py", line 151, in plain_eval
+    m, _ = tsf.evaluate_model(model, data, dev, args.dt, args.eps)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jovyan/muon_eval2/scripts/train_scatter_field.py", line 221, in evaluate_model
+    out = sf.traj_metrics(Pm, Vm, P, V, M, mask, eps)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jovyan/muon_eval2/scripts/scatter_field.py", line 715, in traj_metrics
+    E = energy(P, V, Mx, Kx, eps)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jovyan/muon_eval2/scripts/scatter_field.py", line 607, in energy
+    r = torch.sqrt((d ** 2).sum(-1) + eps ** 2)
+                    ~~^^~~
+  File "/opt/conda/lib/python3.11/site-packages/torch/_tensor.py", line 41, in wrapped
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 5.99 GiB. GPU 0 has a total capacity of 10.90 GiB of which 4.59 GiB is free. Process 155348 has 6.31 GiB memory in use. Of the allocated memory 6.10 GiB is allocated by PyTorch, and 40.85 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
