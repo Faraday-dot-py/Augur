@@ -56,7 +56,7 @@ for f in results/loss_term_arms/baseline_hier_eval_matched60k.json results/loss_
 done
 ls $D/hv3_s*.npz > /dev/null || { echo "MISSING harvest shards"; exit 2; }
 T0=$(date +%s)
-[ -f $F/tests.done ] || { python scripts/tier0_tiled_closed_loop_tests.py --device cpu > $F/tests.log 2>&1 && touch $F/tests.done || { echo "TESTS FAILED"; tail -20 $F/tests.log; exit 1; }; }
+[ -f $F/tests.done ] || { CUDA_VISIBLE_DEVICES= python scripts/tier0_tiled_closed_loop_tests.py --device cpu > $F/tests.log 2>&1 && touch $F/tests.done || { echo "TESTS FAILED"; tail -20 $F/tests.log; exit 1; }; }
 FB="ext=6,extapply,taper=8,bnd,halo=8"
 trap 'kill -TERM $PID 2>/dev/null; wait $PID; exit 143' TERM
 if [ ! -f $O/${BASE}_eval.json ]; then
