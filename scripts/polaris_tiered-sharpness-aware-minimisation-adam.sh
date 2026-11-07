@@ -38,6 +38,7 @@ dlrun() {
   past_deadline && [ $rc -ne 0 ] && { echo "DEADLINE_STOP: $* rc=$rc"; exit 4; }
   return $rc
 }
+PID=
 W=$HOME/augur_tiered_sharpness_aware_minimisation_adam
 mkdir -p $W && cd $W && tar xzf $HOME/tiered_overnight_code.tgz
 export PYTHONPATH=$W
