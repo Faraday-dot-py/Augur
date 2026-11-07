@@ -1,0 +1,498 @@
+"""Fine-tune the matched-60k tier 0 inside the tiled hierarchy: closed-loop rollouts over the 4x4 tiling of 64-unit windows with the exact external
+field and halo exchange of the recurrent field (scripts/tier0_tiled_closed_loop.py), horizon growing to --k-end, per-tick loss normalised to the
+reference model's own error at that tick and weighted to the tick-20 scale. Plain single-window loss terms (harvested windows with external field,
+isolated Exp E scenes) are mixed in so the plain tier-0 accuracy does not regress. Every loss component is divided by the initial model's value.
+
+  PYTHONPATH=. python scripts/train_tier0_tiled_closed_loop.py --init results/tier0_ext/tier0-matched-60k-iterations.pt --data $HOME/t0n/data4 \
+      --pattern "hv3_s*.npz" --tier0 $HOME/E_ms_kp_pot_v_g128.pt --tag tier0-tiled-closed-loop-halo --resume
+
+Early-stop probes (--probe-at 1000 2500): rolls 20 ticks on held-out validation scenes (seed 4739) and compares with the initial model; on failure
+writes <tag>.EARLY_KILL and exits 0. --resume restarts from <out-dir>/<tag>.pt (full state: model, optimizer, iteration); SIGTERM saves and exits."""
+import argparse
+import json
+import os
+import signal
+import time
+
+import numpy as np
+import torch
+
+from scripts import exp12_hier as h
+from scripts import scatter_field as sf
+from scripts import scatter_tier0 as t0m
+from scripts import train_scatter_field as tsf
+from scripts import train_tier0_ext as tte
+from scripts import train_tier0_harvest as th
+from scripts import train_tiered as ttr
+from scripts import tier0_tiled_closed_loop as tc
+
+STOP = []
+
+
+def clear_ext(model):
+    model.t0.ext_grid = model.t0.ext_poly = model.t0.ext_high = None
+
+
+class HybridMuon:
+    def __init__(self, params, lr, conv=False):
+        params = list(params)
+        self.flat = [q for q in params if q.ndim == 4] if conv else []
+        for q in self.flat:
+            q.data = q.data.contiguous()
+        self.views = [torch.nn.Parameter(q.data.view(q.shape[0], -1)) for q in self.flat]
+        muon = [q for q in params if q.ndim == 2] + self.views
+        adam = [q for q in params if q.ndim != 2 and not any(q is f for f in self.flat)]
+        self.opts = [torch.optim.Muon(muon, lr=lr, adjust_lr_fn="match_rms_adamw", weight_decay=0.0), torch.optim.Adam(adam, lr=lr)]
+        self.param_groups = [g for o in self.opts for g in o.param_groups]
+        self.split = {"muon_2d": sum(q.numel() for q in params if q.ndim == 2), "muon_flattened_4d": sum(q.numel() for q in self.flat), "adam": sum(q.numel() for q in adam)}
+
+    def zero_grad(self):
+        for o in self.opts:
+            o.zero_grad()
+        for q in self.flat:
+            q.grad = None
+
+    def step(self):
+        for q, v in zip(self.flat, self.views):
+            v.grad = None if q.grad is None else q.grad.reshape(v.shape)
+        for o in self.opts:
+            o.step()
+
+    def state_dict(self):
+        return {"hybrid": [o.state_dict() for o in self.opts]}
+
+    def load_state_dict(self, sd):
+        for o, x in zip(self.opts, sd["hybrid"]):
+            o.load_state_dict(x)
+
+
+class SamAdam:
+    def __init__(self, params, lr):
+        self.params = list(params)
+        self.opt = torch.optim.Adam(self.params, lr=lr)
+        self.eps = []
+
+    @property
+    def param_groups(self):
+        return self.opt.param_groups
+
+    def zero_grad(self):
+        self.opt.zero_grad()
+
+    def ascend(self, rho):
+        qs = [q for q in self.params if q.grad is not None]
+        gn = torch.sqrt(sum((q.grad.float() ** 2).sum() for q in qs))
+        if not torch.isfinite(gn):
+            return False
+        scale = rho / (gn + 1e-12)
+        self.eps = [(q, q.grad * scale) for q in qs]
+        with torch.no_grad():
+            for q, e in self.eps:
+                q.add_(e)
+        return True
+
+    def restore(self):
+        with torch.no_grad():
+            for q, e in self.eps:
+                q.sub_(e)
+        self.eps = []
+
+    def step(self):
+        self.opt.step()
+
+    def state_dict(self):
+        return self.opt.state_dict()
+
+    def load_state_dict(self, sd):
+        self.opt.load_state_dict(sd)
+
+
+def save(path, model, opt, it, args):
+    tte.save(path, model, opt, it, args)
+
+
+@torch.no_grad()
+def plain_err20(model, dev, seed=9000, n=16):
+    clear_ext(model)
+    model.t0.set_material(None)
+    data = tsf.make_data(tsf.EXPS["E"], n, 21, seed, dev, 0.1, 0.5)
+    m, _ = tsf.evaluate_model(model, data, dev, 0.1, 0.5)
+    return float(m["err"][19])
+
+
+@torch.no_grad()
+def tiled_metrics(tt, dval):
+    r = h.eval_generic(lambda p, v, m, k, st: tt.force(p, v, m, k, st), tt.init_state, dval, ticks=(10, 20, 40))
+    return {k: r[k] for k in ("force_rel", "force_rel_free_rollout", "err@10", "err@20", "dE_model")}
+
+
+def probe_metrics(model, tt, dval, dev):
+    model.eval()
+    out = tiled_metrics(tt, dval)
+    out["plain_err20"] = plain_err20(model, dev)
+    model.train()
+    return out
+
+
+def gate(m, ref, bl, after, a):
+    """Pre-registered early-stop gates; returns the list of violated conditions."""
+    bad = []
+    if not all(np.isfinite(v) for v in m.values()):
+        bad.append("non-finite probe metric")
+    if m["plain_err20"] > a.gate_plain * ref["plain_err20"]:
+        bad.append(f"plain err@20 {m['plain_err20'] / ref['plain_err20']:.3f}x init > {a.gate_plain}")
+    if after <= a.probe_at[0]:
+        if m["err@20"] > a.gate1_err * ref["err@20"]:
+            bad.append(f"tiled err@20 {m['err@20'] / ref['err@20']:.3f}x init > {a.gate1_err}")
+        if m["force_rel_free_rollout"] > a.gate1_force * ref["force_rel_free_rollout"]:
+            bad.append(f"own-state force error {m['force_rel_free_rollout'] / ref['force_rel_free_rollout']:.3f}x init > {a.gate1_force}")
+    else:
+        if m["err@20"] > a.gate2_err * ref["err@20"]:
+            bad.append(f"tiled err@20 {m['err@20'] / ref['err@20']:.3f}x init > {a.gate2_err}")
+        if bl is not None and m["err@20"] > a.gate2_bl * bl["err@20"]:
+            bad.append(f"tiled err@20 {m['err@20'] / bl['err@20']:.3f}x baseline > {a.gate2_bl}")
+    lim = a.gate1_dE if after <= a.probe_at[0] else a.gate2_dE
+    if lim is not None and m["dE_model"] > lim * ref["dE_model"]:
+        bad.append(f"dE@40 {m['dE_model'] / ref['dE_model']:.3f}x init > {lim}")
+    return bad
+
+
+def sample(g, S, T, k, batch, p0, dev):
+    idx = torch.randint(S, (batch,), generator=g).to(dev)
+    t0s = torch.randint(0, T - k, (batch,), generator=g).to(dev)
+    return idx, torch.where(torch.rand(batch, generator=g).to(dev) < p0, torch.zeros_like(t0s), t0s)
+
+
+def schedule(a, it, iters):
+    frac = it / max(1, iters - 1)
+    return int(round(a.k_start + (a.k_end - a.k_start) * frac)), a.lr * (0.05 + 0.95 * 0.5 * (1 + np.cos(np.pi * frac)))
+
+
+@torch.no_grad()
+def reference(model, tt, d, dh, iso, a, dev, g_seed):
+    """Initial model's per-tick closed-loop errors (loss normalisers), plain loss values at k-plain, and the early-stop reference metrics."""
+    g = torch.Generator(device="cpu").manual_seed(g_seed)
+    S, T = d["P"].shape[:2]
+    lp, lv = [], []
+    for _ in range(a.calib_batches):
+        idx, t0s = sample(g, S, T, a.k_end, a.batch, a.p_start0, dev)
+        p, v = tc.rollout_terms(tt, d, idx, t0s, a.k_end, grad=False)
+        lp.append(torch.stack(p))
+        lv.append(torch.stack(v))
+    ref = {"ref_p": torch.stack(lp).mean(0).tolist(), "ref_v": torch.stack(lv).mean(0).tolist()}
+    if dh is not None:
+        S2, T2 = dh["pos"].shape[:2]
+        vals = []
+        for _ in range(a.calib_batches):
+            idx = torch.randint(S2, (a.batch_plain,), generator=g).to(dev)
+            t0s = torch.randint(0, T2 - a.k_plain, (a.batch_plain,), generator=g).to(dev)
+            vals.append(float(th.rollout_loss(model, dh, idx, t0s, a.k_plain)))
+        ref["L_harvest"] = float(np.mean(vals))
+    if iso is not None:
+        ref["L_iso"] = float(np.mean([float(th.iso_loss(model, iso, torch.randint(len(iso[0]), (a.batch_plain,), generator=g).to(dev), a.k_plain, g, dev))
+                                      for _ in range(a.calib_batches)]))
+    return ref
+
+
+@torch.no_grad()
+def build_replay(model, tt, dr, a):
+    """Closed-loop roll of the replay scenes with the current model, no gradient; stores what the force call sees at ticks replay_start, +stride, ... up to
+    the last tick (positions, velocities as passed to the force, the incoming recurrent field) with the exact direct-sum force as label (training scenes only)."""
+    model.eval()
+    m, mk = dr["M"].float(), dr["mask"].float()
+    pos, vel = dr["P"][:, 0].float(), dr["V"][:, 0].float()
+    fld = tt.init_state(len(m))
+    a_prev, fld = tt.force(pos, vel, m, mk, fld)
+    keep = {"pos": [], "vel": [], "fld": [], "at": []}
+    for t in range(1, dr["P"].shape[1]):
+        pn = pos + tc.DT * vel + 0.5 * tc.DT ** 2 * a_prev
+        vin = vel + tc.DT * a_prev
+        if t >= a.replay_start and (t - a.replay_start) % a.replay_stride == 0:
+            keep["pos"].append(pn.cpu())
+            keep["vel"].append(vin.cpu())
+            keep["fld"].append(fld.cpu())
+            keep["at"].append(ttr.true_acc(pn, m, mk).cpu())
+        a_new, fld = tt.force(pn, vin, m, mk, fld)
+        pos, vel, a_prev = pn, vel + 0.5 * tc.DT * (a_prev + a_new), a_new
+    model.train()
+    return {k: torch.stack(v) for k, v in keep.items()}
+
+
+@torch.no_grad()
+def build_replay_truth(model, tt, dr, a):
+    """Control for build_replay: same ticks, labels and recurrent-field warm-up, but positions and velocities come from the exact trajectory (teacher forcing) instead of the model's own rollout."""
+    model.eval()
+    m, mk = dr["M"].float(), dr["mask"].float()
+    P, V = dr["P"].float(), dr["V"].float()
+    fld = tt.init_state(len(m))
+    a_prev, fld = tt.force(P[:, 0], V[:, 0], m, mk, fld)
+    a_true_prev = ttr.true_acc(P[:, 0], m, mk)
+    keep = {"pos": [], "vel": [], "fld": [], "at": []}
+    for t in range(1, P.shape[1]):
+        pn = P[:, t]
+        vin = V[:, t - 1] + tc.DT * a_true_prev
+        at = ttr.true_acc(pn, m, mk)
+        if t >= a.replay_start and (t - a.replay_start) % a.replay_stride == 0:
+            keep["pos"].append(pn.cpu())
+            keep["vel"].append(vin.cpu())
+            keep["fld"].append(fld.cpu())
+            keep["at"].append(at.cpu())
+        _, fld = tt.force(pn, vin, m, mk, fld)
+        a_true_prev = at
+    model.train()
+    return {k: torch.stack(v) for k, v in keep.items()}
+
+
+def replay_loss(tt, rp, dr, g, a, dev):
+    """One-step force regression at stored visited states: sum |a_model - a_exact|^2 over the batch / sum |a_exact|^2."""
+    J, S = rp["pos"].shape[:2]
+    j = torch.randint(J, (a.replay_batch,), generator=g)
+    s = torch.randint(S, (a.replay_batch,), generator=g)
+    pos, vel, at = (rp[k][j, s].to(dev) for k in ("pos", "vel", "at"))
+    fld = torch.cat([rp["fld"][jj].view(S, tc.NW, *rp["fld"].shape[2:])[ss] for jj, ss in zip(j.tolist(), s.tolist())]).to(dev)
+    sd = s.to(dev)
+    m, mk = dr["M"][sd].float(), dr["mask"][sd].float()
+    acc, _ = tt.force(pos, vel, m, mk, fld)
+    return (((acc - at) ** 2).sum(-1) * mk).sum() / ((at ** 2).sum(-1) * mk).sum().clamp_min(1e-12)
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--init", required=True)
+    ap.add_argument("--data", default=None, help="harvested windows directory (train_tier0_harvest); omit to drop that loss component")
+    ap.add_argument("--pattern", default="hv3_s*.npz")
+    ap.add_argument("--tier0", default=None, help="Exp E checkpoint: also scores the tiled baseline at the probes")
+    ap.add_argument("--tag", required=True)
+    ap.add_argument("--out-dir", default="results/tier0_tiled_closed_loop")
+    ap.add_argument("--t0", default="ext=6,extapply,taper=8,bnd,halo=8")
+    ap.add_argument("--exchange", choices=["halo", "zero", "none"], default="halo")
+    ap.add_argument("--scenes", type=int, default=480)
+    ap.add_argument("--steps", type=int, default=64)
+    ap.add_argument("--val-scenes", type=int, default=8)
+    ap.add_argument("--val-steps", type=int, default=40)
+    ap.add_argument("--batch", type=int, default=2, help="tiled scenes per iteration (16 windows each)")
+    ap.add_argument("--iters", type=int, default=5000)
+    ap.add_argument("--lr", type=float, default=2e-4)
+    ap.add_argument("--optimizer", choices=["adam", "muon-matrices-adam-rest", "muon-conv-flattened-adam-rest", "sam-adam"], default="adam")
+    ap.add_argument("--sam-rho", type=float, default=0.05, help="sam-adam: radius of the ascent step along the normalised gradient")
+    ap.add_argument("--k-start", type=int, default=8)
+    ap.add_argument("--k-end", type=int, default=28)
+    ap.add_argument("--tb", type=int, default=0)
+    ap.add_argument("--p-start0", type=float, default=0.5)
+    ap.add_argument("--w-tiled", type=float, default=0.6)
+    ap.add_argument("--w-energy", type=float, default=0.0, help="weight of the energy-similarity closed-loop term (0 = off)")
+    ap.add_argument("--energy-kind", default="total", choices=["total", "pebin"], help="total: scene and cluster energy; pebin: pair potential energy by separation bin")
+    ap.add_argument("--energy-scale", type=float, default=0.02, help="relative energy error that counts as 1 in the energy-similarity term")
+    ap.add_argument("--gate1-dE", type=float, default=None, help="probe 1: kill if dE@40 exceeds this multiple of the initial model's")
+    ap.add_argument("--gate2-dE", type=float, default=None, help="probe 2: same")
+    ap.add_argument("--replay-rounds", type=int, default=0, help="visited-state label replay: rounds of no-grad rollouts of fresh training scenes labelled with exact force (0 = off)")
+    ap.add_argument("--replay-source", choices=["model", "truth"], default="model", help="states of the replay set: the model's own rollout (visited states) or the exact trajectory (control)")
+    ap.add_argument("--replay-weight", type=float, default=0.6)
+    ap.add_argument("--replay-scenes", type=int, default=24)
+    ap.add_argument("--replay-steps", type=int, default=100)
+    ap.add_argument("--replay-start", type=int, default=20)
+    ap.add_argument("--replay-stride", type=int, default=5)
+    ap.add_argument("--replay-batch", type=int, default=4)
+    ap.add_argument("--w-harvest", type=float, default=0.2)
+    ap.add_argument("--w-iso", type=float, default=0.2)
+    ap.add_argument("--k-plain", type=int, default=16)
+    ap.add_argument("--batch-plain", type=int, default=8)
+    ap.add_argument("--n-iso", type=int, default=1500)
+    ap.add_argument("--calib-batches", type=int, default=6)
+    ap.add_argument("--chunk", type=int, default=32)
+    ap.add_argument("--probe-at", type=int, nargs="*", default=[1000, 2500])
+    ap.add_argument("--gate1-err", type=float, default=0.92)
+    ap.add_argument("--gate1-force", type=float, default=0.95)
+    ap.add_argument("--gate2-err", type=float, default=0.85)
+    ap.add_argument("--gate2-bl", type=float, default=1.45)
+    ap.add_argument("--gate-plain", type=float, default=1.10)
+    ap.add_argument("--seed", type=int, default=4738)
+    ap.add_argument("--val-seed", type=int, default=4739)
+    ap.add_argument("--log-every", type=int, default=25)
+    ap.add_argument("--ckpt-every", type=int, default=250)
+    ap.add_argument("--resume", action="store_true")
+    ap.add_argument("--est", action="store_true")
+    a = ap.parse_args()
+    dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    os.makedirs(a.out_dir, exist_ok=True)
+    signal.signal(signal.SIGTERM, lambda *_: STOP.append(1))
+    torch.manual_seed(a.seed)
+    log = lambda s: print(s, flush=True)
+    model = tte.build(argparse.Namespace(t0=a.t0, dt=0.1), dev)
+    sf.load_compat(model, torch.load(a.init, map_location=dev, weights_only=False)["model"])
+    model.train()
+    tt = tc.TiledTier0(model, dev, chunk=a.chunk, exchange=a.exchange)
+    if a.optimizer == "adam":
+        opt = torch.optim.Adam(model.parameters(), lr=a.lr)
+    elif a.optimizer == "sam-adam":
+        opt = SamAdam(model.parameters(), a.lr)
+    else:
+        opt = HybridMuon(model.parameters(), a.lr, conv=a.optimizer == "muon-conv-flattened-adam-rest")
+    log(f"optimizer {a.optimizer} parameter split by optimizer: {getattr(opt, 'split', {'adam': sum(q.numel() for q in model.parameters())})} total {sum(q.numel() for q in model.parameters())}")
+    path = os.path.join(a.out_dir, a.tag + ".pt")
+    ref_path = os.path.join(a.out_dir, a.tag + "_reference.json")
+    it = 0
+    if a.resume and os.path.exists(path):
+        st = torch.load(path, map_location=dev, weights_only=False)
+        model.load_state_dict(st["model"])
+        opt.load_state_dict(st["opt"])
+        it = st["it"]
+        log(f"resumed it {it}")
+    t_gen = time.time()
+    d = ttr.make_scenes(a.scenes if not a.est else 16, a.steps, a.seed, dev)
+    dval = ttr.make_scenes(a.val_scenes, a.val_steps, a.val_seed, dev)
+    dh = th.load_data(a.data, dev, a.pattern)[0] if a.data and a.w_harvest > 0 else None
+    iso = None
+    if a.w_iso > 0:
+        iso = [t.float() for t in sf.to_tensors(tsf.make_data(tsf.EXPS["E"], a.n_iso if not a.est else 64, 40, a.seed + 77, dev, 0.1, 0.5), dev)]
+    log(f"data ready in {time.time() - t_gen:.0f}s tiled scenes {len(d['P'])} harvest {None if dh is None else len(dh['pos'])} iso {None if iso is None else len(iso[0])} dev {dev}")
+    if os.path.exists(ref_path):
+        ref = json.load(open(ref_path))
+    else:
+        assert it == 0, "reference file missing on resume"
+        t_ref = time.time()
+        init_model_state = {k: v.clone() for k, v in model.state_dict().items()}
+        ref = reference(model, tt, d, dh, iso, a, dev, a.seed)
+        model.eval()
+        ref["probe"] = probe_metrics(model, tt, dval, dev)
+        if a.tier0:
+            from scripts import tiered_adapters as ta
+
+            bl = ta.load_tiled(f"{a.tier0},nt=4,tile=32,halo=16,far=1", dev)
+            ref["probe_baseline"] = {k: v for k, v in h.eval_generic(lambda p, v, m, k, st: bl.force(p, v, m, k, st), lambda S: bl.init_state(S, dev), dval,
+                                                                     ticks=(10, 20, 40)).items() if k in ("force_rel", "force_rel_free_rollout", "err@10", "err@20", "dE_model")}
+        model.load_state_dict(init_model_state)
+        model.train()
+        json.dump(ref, open(ref_path, "w"), indent=1)
+        log(f"reference in {time.time() - t_ref:.0f}s: {json.dumps({k: v for k, v in ref.items() if k.startswith(('L_', 'probe'))})}")
+    ref_p, ref_v = torch.tensor(ref["ref_p"]), torch.tensor(ref["ref_v"])
+    omega = tc.step_weights(a.k_end)
+    S, T = d["P"].shape[:2]
+    g = torch.Generator(device="cpu").manual_seed(a.seed + it)
+    t_start, it_start, skipped, streak = time.time(), it, 0, 0
+    if a.est:
+        per = {}
+        for k in (a.k_start, (a.k_start + a.k_end) // 2, a.k_end):
+            for rep in range(4):
+                if rep == 1:
+                    torch.cuda.synchronize() if dev.type == "cuda" else None
+                    t_k = time.time()
+                idx, t0s = sample(g, S, T, k, a.batch, a.p_start0, dev)
+                p, v = tc.rollout_terms(tt, d, idx, t0s, k, a.tb)
+                loss = tc.closed_loop_loss(p, v, ref_p, ref_v, omega)
+                opt.zero_grad()
+                loss.backward()
+            torch.cuda.synchronize() if dev.type == "cuda" else None
+            per[k] = (time.time() - t_k) / 3
+            log(f"k {k}: {per[k]:.2f} s/it tiled part, peak mem {torch.cuda.max_memory_allocated() / 2 ** 30 if dev.type == 'cuda' else 0:.1f} GB")
+        ks = sorted(per)
+        tot = sum(np.interp(schedule(a, i, a.iters)[0], ks, [per[k] for k in ks]) for i in range(a.iters))
+        log(f"ESTIMATE tiled part of {a.iters} iters = {tot / 3600:.2f} h (plain terms add about 30-50 percent)")
+        return
+    probes = {}
+    rp, dr, ref_replay, round_now = None, None, None, -1
+    round_len = max(1, a.iters // max(1, a.replay_rounds))
+
+    def fwd_bwd(k):
+        idx, t0s = sample(g, S, T, k, a.batch, a.p_start0, dev)
+        if a.w_energy > 0:
+            p, v, e = tc.rollout_terms(tt, d, idx, t0s, k, a.tb, energy=a.energy_kind)
+        else:
+            p, v = tc.rollout_terms(tt, d, idx, t0s, k, a.tb)
+        lt = tc.closed_loop_loss(p, v, ref_p, ref_v, omega)
+        parts = {"tiled": float(lt.detach())}
+        if a.w_energy > 0:
+            le = (torch.stack(e) * omega[:k].to(dev)).sum() / omega[:k].sum() / a.energy_scale ** 2
+            parts["energy"] = float(le.detach())
+            lt = a.w_tiled * lt + a.w_energy * le
+        else:
+            lt = a.w_tiled * lt
+        if rp is not None:
+            lrp = replay_loss(tt, rp, dr, g, a, dev) / ref_replay
+            lt = lt + a.replay_weight * lrp
+            parts["replay"] = float(lrp.detach())
+        lt.backward()
+        ok = bool(torch.isfinite(lt))
+        if dh is not None:
+            S2, T2 = dh["pos"].shape[:2]
+            idx2 = torch.randint(S2, (a.batch_plain,), generator=g).to(dev)
+            t2 = torch.randint(0, T2 - a.k_plain, (a.batch_plain,), generator=g).to(dev)
+            lh = th.rollout_loss(model, dh, idx2, t2, a.k_plain) / ref["L_harvest"]
+            (a.w_harvest * lh).backward()
+            parts["harvest"] = float(lh)
+            ok = ok and bool(torch.isfinite(lh))
+        if iso is not None:
+            li = th.iso_loss(model, iso, torch.randint(len(iso[0]), (a.batch_plain,), generator=g).to(dev), a.k_plain, g, dev) / ref["L_iso"]
+            (a.w_iso * li).backward()
+            parts["iso"] = float(li)
+            ok = ok and bool(torch.isfinite(li))
+        return parts, ok
+
+    while it < a.iters:
+        if STOP:
+            save(path, model, opt, it, a)
+            log(f"SIGTERM: saved it {it}")
+            return
+        if a.replay_rounds and min(it // round_len, a.replay_rounds - 1) != round_now:
+            round_now = min(it // round_len, a.replay_rounds - 1)
+            t_rp = time.time()
+            dr = ttr.make_scenes(a.replay_scenes, a.replay_steps, a.seed + 1000 + round_now, dev)
+            rp = (build_replay if a.replay_source == "model" else build_replay_truth)(model, tt, dr, a)
+            with torch.no_grad():
+                gr = torch.Generator().manual_seed(a.seed + round_now)
+                ref_replay = float(np.mean([float(replay_loss(tt, rp, dr, gr, a, dev)) for _ in range(a.calib_batches * 2)]))
+            log(f"replay round {round_now} built in {time.time() - t_rp:.0f}s: {rp['pos'].shape[0]} ticks x {rp['pos'].shape[1]} scenes, field {tuple(rp['fld'].shape[2:])}, reference one-step force loss {ref_replay:.5f}")
+        k, lr = schedule(a, it, a.iters)
+        for pg in opt.param_groups:
+            pg["lr"] = lr
+        opt.zero_grad()
+        g_state = g.get_state() if a.optimizer == "sam-adam" else None
+        parts, ok = fwd_bwd(k)
+        if g_state is not None and ok:
+            if opt.ascend(a.sam_rho):
+                g.set_state(g_state)
+                opt.zero_grad()
+                parts, ok2 = fwd_bwd(k)
+                opt.restore()
+                ok = ok and ok2
+            else:
+                ok = False
+        gn = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        if ok and torch.isfinite(gn):
+            opt.step()
+            streak = 0
+        else:
+            opt.zero_grad()
+            skipped += 1
+            streak += 1
+            if streak >= 20 and os.path.exists(path):
+                st = torch.load(path, map_location=dev, weights_only=False)
+                model.load_state_dict(st["model"])
+                opt.load_state_dict(st["opt"])
+                log(f"rolled back to {st['it']}")
+                streak = 0
+        it += 1
+        if it % a.log_every == 0:
+            el = time.time() - t_start
+            log(f"it {it} k {k} lr {lr:.2e} {json.dumps({n: round(x, 4) for n, x in parts.items()})} gn {float(gn):.3f} t {el:.0f}s eta {el / (it - it_start) * (a.iters - it):.0f}s skipped {skipped}")
+        if it in a.probe_at:
+            pm = probe_metrics(model, tt, dval, dev)
+            bad = gate(pm, ref["probe"], ref.get("probe_baseline"), it, a)
+            probes[it] = {"metrics": pm, "violations": bad}
+            log(f"probe it {it} {json.dumps({n: round(x, 5) for n, x in pm.items()})} ref {json.dumps({n: round(x, 5) for n, x in ref['probe'].items()})} violations {bad}")
+            json.dump({"it": it, "metrics": pm, "reference": ref["probe"], "baseline": ref.get("probe_baseline"), "violations": bad},
+                      open(os.path.join(a.out_dir, f"{a.tag}_probe_{it}.json"), "w"), indent=1)
+            if bad:
+                save(path, model, opt, it, a)
+                open(os.path.join(a.out_dir, a.tag + ".EARLY_KILL"), "w").write(json.dumps({"it": it, "violations": bad}))
+                log("EARLY_KILL")
+                return
+        if it % a.ckpt_every == 0 or it == a.iters:
+            if all(torch.isfinite(q).all() for q in model.parameters()):
+                save(path, model, opt, it, a)
+    open(os.path.join(a.out_dir, a.tag + ".TRAIN_DONE"), "w").write(str(it))
+    log("DONE")
+
+
+if __name__ == "__main__":
+    main()

@@ -89,6 +89,7 @@ class ScatterField(nn.Module):
         self._cap_now = None
         self.cell_cap_min = 16
         self.adapt_n = 50000
+        self.t0 = None
         self.cell_max_occ = None
         if pp:
             self.ppmlp = nn.Sequential(nn.Linear(ncol, 64), nn.GELU(), nn.Linear(64, 64), nn.GELU(), nn.Linear(64, 1))
@@ -307,7 +308,7 @@ class ScatterField(nn.Module):
         r = r_sel.clamp(max=1e5)
         return (self._pair_w(r, mj, ok)[..., None] * ds / r[..., None]).sum(1)
 
-    def pp_acc_adapt(self, pos, mass, mask, knn=16, cap=48, lmax=8, budget=2 ** 25):
+    def pp_acc_adapt(self, pos, mass, mask, knn=16, cap=48, lmax=8, budget=2 ** 25, qmask=None):
         """Exact top-knn pair term with an adaptive multilevel cell list: level l has cells pp/2^l; a query is resolved at the
         coarsest level whose window (3x3 cells at l=0, 5x5 after) holds few enough candidates, and for l>=2 only if its knn-th
         neighbour lies inside the window's guaranteed radius (else it goes finer, then to chunked all-pairs)."""
@@ -319,8 +320,13 @@ class ScatterField(nn.Module):
         pa, ma = pf[act], mm[act]
         ba = (act // N)
         k = min(knn, n - 1)
-        done = torch.zeros(n, dtype=torch.bool, device=dev)
+        if k <= 0:
+            return torch.zeros(B, N, 2, device=dev, dtype=pos.dtype)
+        corner = pa.min(0).values
+        span = float((pa.max(0).values - corner).max())
+        done = torch.zeros(n, dtype=torch.bool, device=dev) if qmask is None else ~(qmask.reshape(-1)[act] > 0)
         qs, accs = [], []
+        self.adapt_stats = {"levels": [], "fallback": 0}
         for l in range(lmax + 1):
             rem = (~done).nonzero()[:, 0]
             if rem.numel() == 0:
@@ -329,8 +335,8 @@ class ScatterField(nn.Module):
             R = 1 if l == 0 else 2
             W = (2 * R + 1) ** 2
             cover = R * s
-            C = int(math.ceil(self.extent / s))
-            cc = ((pa + self.extent / 2) / s).floor().clamp(0, C - 1).long().detach()
+            C = int(span / s) + 2
+            cc = ((pa - corner) / s).floor().long().detach()
             skey, order = torch.sort(ba * C * C + cc[:, 1] * C + cc[:, 0])
             qc, qb = cc[rem], ba[rem]
             sh = torch.arange(-R, R + 1, device=dev)
@@ -367,7 +373,9 @@ class ScatterField(nn.Module):
                         qs.append(qq[okq])
                         accs.append(self._pp_force(ds, r_sel[okq], mj))
                         done[qq[okq]] = True
+            self.adapt_stats["levels"].append((l, int(rem.numel()) - int((~done[rem]).sum())))
         rem = (~done).nonzero()[:, 0]
+        self.adapt_stats["fallback"] = int(rem.numel())
         if rem.numel():
             Q = max(1, budget // n)
             for c0 in range(0, rem.numel(), Q):
@@ -379,14 +387,16 @@ class ScatterField(nn.Module):
                 ds = torch.gather(d, 1, i[..., None].expand(-1, -1, 2))
                 qs.append(qq)
                 accs.append(self._pp_force(ds, r_sel, ma[i]))
+        if not qs:
+            return torch.zeros(B, N, 2, device=dev, dtype=pos.dtype)
         a_act = torch.zeros(n, 2, device=dev, dtype=pos.dtype).index_copy(0, torch.cat(qs), torch.cat(accs))
         return torch.zeros(B * N, 2, device=dev, dtype=pos.dtype).index_copy(0, act, a_act).reshape(B, N, 2)
 
-    def pp_acc(self, pos, mass, mask, knn=16):
+    def pp_acc(self, pos, mass, mask, knn=16, qmask=None):
         B, N = mask.shape
         mode = self.pp_mode(N)
         if mode == "adapt":
-            return self.pp_acc_adapt(pos, mass, mask, knn)
+            return self.pp_acc_adapt(pos, mass, mask, knn, qmask=qmask)
         if mode == "cell":
             static = "graph" in self.opt and not torch.is_grad_enabled()
             return self.pp_acc_cell(pos, mass, mask, knn, cap=(self._cap_now or self.cell_cap_min) if static else None)
@@ -440,7 +450,7 @@ class ScatterField(nn.Module):
         return (f, None) if self.verlet else f
 
     def force(self, pos, vel, mass, mask, field):
-        if "graph" in self.opt and not torch.is_grad_enabled() and not torch.cuda.is_current_stream_capturing() \
+        if "graph" in self.opt and self.t0 is None and not torch.is_grad_enabled() and not torch.cuda.is_current_stream_capturing() \
                 and self.pp_mode(pos.shape[1]) != "adapt":
             return self._graphed("force", self._force, pos, vel, mass, mask, field)
         return self._force(pos, vel, mass, mask, field)
@@ -470,7 +480,14 @@ class ScatterField(nn.Module):
         return tuple(o.clone() for o in out)
 
     def _force(self, pos, vel, mass, mask, field):
-        x = self.scatter(pos, vel, mass, mask)
+        ctx = None
+        spos, smass = pos, mass
+        if self.t0 is not None:
+            field, ctx = self.t0.begin(self, pos, vel, mass, mask, field)
+            spos, smass = ctx.pos, ctx.smass
+        x = self.scatter(spos, vel, smass, mask)
+        if ctx is not None:
+            x = self.t0.after_scatter(ctx, x)
         ns = self._nscale(x, mass, mask) if self.norm else None
         if ns is not None:
             x = x / ns
@@ -487,6 +504,8 @@ class ScatterField(nn.Module):
             x = torch.cat([x, x.new_full((x.shape[0], 1, self.grid, self.grid), math.log(self.eps_cur / EPS0))], 1)
         if self.massfeat:
             x = torch.cat([x, xm], 1)
+        if ctx is not None and ctx.extra is not None:
+            x = torch.cat([x, ctx.extra if ns is None else ctx.extra / ns], 1)
         if self.nonet:
             field = x.new_zeros(x.shape[0], self.cf, self.grid, self.grid)
         else:
@@ -501,10 +520,12 @@ class ScatterField(nn.Module):
                 field = field.float()
             else:
                 field = self.net(x)
+        if ctx is not None:
+            field = self.t0.after_net(field)
         acc = self.neg_grad(field[:, :1]) if self.potential else field[:, :2]
         if self.kernel:
             acc = acc + ak
-        a_tok = self.gather(acc, pos)
+        a_tok = self.gather(acc, spos)
         if ns is not None:
             a_tok = a_tok * ns.view(-1, 1, 1)
         if self.far:
@@ -512,10 +533,15 @@ class ScatterField(nn.Module):
             a_tok = a_tok * w + self.far_acc(pos, mass, mask) * (1 - w)
         if self.pp:
             a_tok = a_tok + self.pp_acc(pos, mass, mask, self.knn)
+        if ctx is not None:
+            a_tok = self.t0.head(self, ctx, a_tok, acc, vel, mass, mask)
         if self.momfix:
             mm = (mass * mask)[..., None]
             a_tok = a_tok - (mm * a_tok).sum(1, keepdim=True) / mm.sum(1, keepdim=True).clamp_min(1e-9)
-        return a_tok * mask[..., None], field
+        a_out = a_tok * mask[..., None]
+        if ctx is not None:
+            a_out, field = self.t0.finish(self, ctx, a_out, field, pos, mask)
+        return a_out, field
 
     def step(self, pos, vel, mass, mask, field):
         if self.substeps == 1:
@@ -1103,7 +1129,7 @@ def apply_opts(model, spec, kind="infer"):
 def _opt_ok(model, name):
     if type(model) is not ScatterField:
         return False
-    return name != "graphtrain" or model.verlet
+    return name != "graphtrain" or (model.verlet and model.t0 is None)
 
 
 def apply_opt(model, name):

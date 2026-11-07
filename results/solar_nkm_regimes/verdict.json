@@ -1,0 +1,194 @@
+{
+ "kill_line": 938.8926875,
+ "noise_floor": 97.29268749999989,
+ "moon_arm_rescore_mean": 861.3333333333334,
+ "k_alone_vs_moon_arm_rescore": 52.43666666666661,
+ "ranking": [
+  "n-and-k",
+  "n-and-m-and-k",
+  "k-alone",
+  "k-and-m",
+  "n-and-m",
+  "n-alone",
+  "m-alone",
+  "control-all-full"
+ ],
+ "arms": {
+  "n-alone": {
+   "arm": "n-alone",
+   "survival": 853.28,
+   "ci95": [
+    763.894625,
+    951.1781249999999
+   ],
+   "ci_width": 187.2834999999999,
+   "held_out_kept_mean": 0.678744939271255,
+   "original_solar_kept_confirm": {
+    "9300": 8.0,
+    "12000": 8.0
+   },
+   "guard_failures": 0,
+   "planets_kept_two_moons": 0.8274111675126904,
+   "verdict": "KILL",
+   "skipped_steps": 0,
+   "train_seconds": 6458.830703496933,
+   "recipe_diff_vs_moon_arm": {},
+   "vs_control_ci": "above",
+   "ci_overlap_control": true
+  },
+  "k-alone": {
+   "arm": "k-alone",
+   "survival": 913.77,
+   "ci95": [
+    824.125,
+    1011.8628749999999
+   ],
+   "ci_width": 187.73787499999992,
+   "held_out_kept_mean": 0.774966261808367,
+   "original_solar_kept_confirm": {
+    "9300": 8.0,
+    "12000": 7.0
+   },
+   "guard_failures": 0,
+   "planets_kept_two_moons": 0.8612521150592216,
+   "verdict": "KILL",
+   "skipped_steps": 0,
+   "train_seconds": 4634.192446231842,
+   "recipe_diff_vs_moon_arm": {},
+   "vs_control_ci": "above",
+   "ci_overlap_control": false
+  },
+  "m-alone": {
+   "arm": "m-alone",
+   "survival": 686.025,
+   "ci95": [
+    605.3307500000001,
+    775.877125
+   ],
+   "ci_width": 170.5463749999999,
+   "held_out_kept_mean": 0.5780026990553306,
+   "original_solar_kept_confirm": {
+    "9300": 5.0,
+    "12000": 7.0
+   },
+   "guard_failures": 2,
+   "planets_kept_two_moons": 0.7343485617597293,
+   "verdict": "KILL",
+   "skipped_steps": 0,
+   "train_seconds": 6456.083894729614,
+   "recipe_diff_vs_moon_arm": {},
+   "vs_control_ci": "inside",
+   "ci_overlap_control": true
+  },
+  "n-and-k": {
+   "arm": "n-and-k",
+   "survival": 1014.815,
+   "ci95": [
+    918.357625,
+    1109.9197499999998
+   ],
+   "ci_width": 191.5621249999998,
+   "held_out_kept_mean": 0.6149797570850202,
+   "original_solar_kept_confirm": {
+    "9300": 5.0,
+    "12000": 7.0
+   },
+   "guard_failures": 2,
+   "planets_kept_two_moons": 0.7800338409475466,
+   "verdict": "KILL",
+   "skipped_steps": 0,
+   "train_seconds": 4707.642373085022,
+   "recipe_diff_vs_moon_arm": {},
+   "vs_control_ci": "above",
+   "ci_overlap_control": false
+  },
+  "k-and-m": {
+   "arm": "k-and-m",
+   "survival": 897.21,
+   "ci95": [
+    806.632,
+    990.9852499999998
+   ],
+   "ci_width": 184.3532499999999,
+   "held_out_kept_mean": 0.6860998650472335,
+   "original_solar_kept_confirm": {
+    "9300": 8.0,
+    "12000": 8.0
+   },
+   "guard_failures": 0,
+   "planets_kept_two_moons": 0.7258883248730964,
+   "verdict": "KILL",
+   "skipped_steps": 0,
+   "train_seconds": 4707.671662330627,
+   "recipe_diff_vs_moon_arm": {},
+   "vs_control_ci": "above",
+   "ci_overlap_control": false
+  },
+  "n-and-m": {
+   "arm": "n-and-m",
+   "survival": 857.58,
+   "ci95": [
+    770.6135,
+    949.5752500000001
+   ],
+   "ci_width": 178.96175000000005,
+   "held_out_kept_mean": 0.7582995951417003,
+   "original_solar_kept_confirm": {
+    "9300": 5.0,
+    "12000": 7.0
+   },
+   "guard_failures": 1,
+   "planets_kept_two_moons": 0.9018612521150592,
+   "verdict": "KILL",
+   "skipped_steps": 0,
+   "train_seconds": 6459.152615308762,
+   "recipe_diff_vs_moon_arm": {},
+   "vs_control_ci": "above",
+   "ci_overlap_control": false
+  },
+  "n-and-m-and-k": {
+   "arm": "n-and-m-and-k",
+   "survival": 940.75,
+   "ci95": [
+    858.194375,
+    1031.9279999999999
+   ],
+   "ci_width": 173.73362499999985,
+   "held_out_kept_mean": 0.6704453441295546,
+   "original_solar_kept_confirm": {
+    "9300": 7.0,
+    "12000": 8.0
+   },
+   "guard_failures": 0,
+   "planets_kept_two_moons": 0.8020304568527918,
+   "verdict": "INCONCLUSIVE",
+   "skipped_steps": 0,
+   "train_seconds": 4709.041057348251,
+   "recipe_diff_vs_moon_arm": {},
+   "vs_control_ci": "above",
+   "ci_overlap_control": false
+  },
+  "control-all-full": {
+   "arm": "control-all-full",
+   "survival": 683.335,
+   "ci95": [
+    610.4765,
+    766.281625
+   ],
+   "ci_width": 155.80512499999998,
+   "held_out_kept_mean": 0.6418353576248313,
+   "original_solar_kept_confirm": {
+    "9300": 7.0,
+    "12000": 6.0
+   },
+   "guard_failures": 2,
+   "planets_kept_two_moons": 0.6835871404399323,
+   "verdict": "KILL",
+   "skipped_steps": 0,
+   "train_seconds": 6485.617312431335,
+   "recipe_diff_vs_moon_arm": {},
+   "vs_control_ci": "inside",
+   "ci_overlap_control": true
+  }
+ }
+}
