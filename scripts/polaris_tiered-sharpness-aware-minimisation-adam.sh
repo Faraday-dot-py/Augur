@@ -32,9 +32,9 @@ dlbg() {
 }
 dlrun() {
   local left=$((DEADLINE-$(date +%s)))
-  [ $left -le 300 ] && { echo "DEADLINE: skipping $*"; return 124; }
-  timeout -k 120 -s TERM $left "$@"
-  local rc=$?
+  [ $left -le 300 ] && { echo "DEADLINE_STOP: skipping $*"; exit 4; }
+  local rc=0
+  timeout -k 120 -s TERM $left "$@" || rc=$?
   past_deadline && [ $rc -ne 0 ] && { echo "DEADLINE_STOP: $* rc=$rc"; exit 4; }
   return $rc
 }
