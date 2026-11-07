@@ -18,6 +18,11 @@ DEADLINE=1794070800
 REMAIN=$((DEADLINE-$(date +%s)))
 [ $REMAIN -le 300 ] && { echo "DEADLINE 2026-11-07 09:00 PST: $REMAIN s left, not starting"; exit 3; }
 past_deadline() { [ $((DEADLINE-$(date +%s))) -le 300 ]; }
+dlbg() {
+  local left=$((DEADLINE-$(date +%s)))
+  [ $left -le 300 ] && { echo "DEADLINE: skipping $*"; exit 124; }
+  exec timeout -k 120 -s TERM $left "$@"
+}
 dlrun() {
   local left=$((DEADLINE-$(date +%s)))
   [ $left -le 300 ] && { echo "DEADLINE: skipping $*"; return 124; }
@@ -30,7 +35,7 @@ export PYTHONPATH=.
 GATE_CK=$HOME/augur_far/kern/E_frozen.pt
 DRIFT_CK=$HOME/edge_ck/ghost_lsq.pt
 for f in $GATE_CK $DRIFT_CK scripts/scatter_field.py scripts/scatter_conservation.py scripts/scatter_regress.py scripts/escape_roll.py scripts/armA_drift.py scripts/summarize_cons_compare.py scripts/scatter_core_drift_fresh_seeds.py scripts/scatter_core_drift_fresh_seeds_verdict.py tests/test_scatter_sym.py model/central_force.py results/far_kernels/r1b_mlp.pt; do test -f $f || { echo MISSING $f; exit 2; }; done
-grep -q symc4 scripts/scatter_field.py || { echo MISSING symc4 in scripts/scatter_field.py; exit 2; }
+grep -q SYM_OPS scripts/scatter_field.py || { echo "MISSING SYM_OPS (symmetrised potential) in scripts/scatter_field.py"; exit 2; }
 
 FAIL=0
 CHILD=
@@ -38,7 +43,7 @@ trap 'echo SIGTERM; [ -n "$CHILD" ] && kill -TERM $CHILD && wait $CHILD; exit 14
 step() {
   name=$1; shift
   if past_deadline; then echo STEP $name skipped, deadline; DEADLINED=1; return; fi
-  dlrun "$@" &
+  dlbg "$@" &
   CHILD=$!
   wait $CHILD
   rc=$?

@@ -23,6 +23,11 @@ DEADLINE=1794070800
 REMAIN=$((DEADLINE-$(date +%s)))
 [ $REMAIN -le 300 ] && { echo "DEADLINE 2026-11-07 09:00 PST: $REMAIN s left, not starting"; exit 3; }
 past_deadline() { [ $((DEADLINE-$(date +%s))) -le 300 ]; }
+dlbg() {
+  local left=$((DEADLINE-$(date +%s)))
+  [ $left -le 300 ] && { echo "DEADLINE: skipping $*"; exit 124; }
+  exec timeout -k 120 -s TERM $left "$@"
+}
 dlrun() {
   local left=$((DEADLINE-$(date +%s)))
   [ $left -le 300 ] && { echo "DEADLINE: skipping $*"; return 124; }
@@ -48,7 +53,7 @@ step() {
   [ -n "$TERMED" ] && return
   if [ -e $DONE ]; then echo "STEP $NAME skipped, $DONE exists"; return; fi
   if past_deadline; then echo "STEP $NAME skipped, deadline"; DEADLINED=1; return; fi
-  dlrun "$@" &
+  if declare -F $1 >/dev/null; then "$@" & else dlbg "$@" & fi
   CHILD=$!
   while kill -0 $CHILD 2>/dev/null; do wait $CHILD; done
   wait $CHILD
@@ -60,7 +65,7 @@ step() {
 }
 
 score() {
-  python "$1" $Y.json > "$2.tmp"
+  dlrun python "$1" $Y.json > "$2.tmp"
   RC=$?
   cat "$2.tmp"
   [ $RC -eq 0 ] && mv "$2.tmp" "$2"
@@ -73,15 +78,15 @@ match() {
     for ref in $R/sae_interp_lowdead_dec0_s4738.npz ${S}4739.npz; do
       test -f $S$new.npz || { echo MISSING $S$new.npz; return 2; }
       echo "== matching SAE seed $new against $ref (live features only, random-direction baseline)"
-      python scripts/match_lowdead_saes.py $S$new.npz $ref || rc=1
+      dlrun python scripts/match_lowdead_saes.py $S$new.npz $ref || rc=1
       echo "== matching SAE seed $new against $ref (dead rows included)"
-      python scripts/match_sae_seeds.py $S$new.npz $ref || rc=1
+      dlrun python scripts/match_sae_seeds.py $S$new.npz $ref || rc=1
     done
   done
   echo "== matching SAE seed 4740 against SAE seed 4741 (live features only, random-direction baseline)"
-  python scripts/match_lowdead_saes.py ${S}4740.npz ${S}4741.npz || rc=1
+  dlrun python scripts/match_lowdead_saes.py ${S}4740.npz ${S}4741.npz || rc=1
   echo "== matching SAE seed 4740 against SAE seed 4741 (dead rows included)"
-  python scripts/match_sae_seeds.py ${S}4740.npz ${S}4741.npz || rc=1
+  dlrun python scripts/match_sae_seeds.py ${S}4740.npz ${S}4741.npz || rc=1
   return $rc
 }
 

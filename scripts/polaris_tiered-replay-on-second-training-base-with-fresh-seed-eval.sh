@@ -26,10 +26,18 @@ REMAIN=$((DEADLINE-$(date +%s)))
 [ $REMAIN -le 300 ] && { echo "DEADLINE 2026-11-07 09:00 PST: $REMAIN s left, not starting"; exit 3; }
 past_deadline() { [ $((DEADLINE-$(date +%s))) -le 300 ]; }
 deadline_exit() { past_deadline && { echo "DEADLINE_STOP: unfinished, state saved by SIGTERM handler"; exit 4; }; }
+dlbg() {
+  local left=$((DEADLINE-$(date +%s)))
+  [ $left -le 300 ] && { echo "DEADLINE: skipping $*"; exit 124; }
+  exec timeout -k 120 -s TERM $left "$@"
+}
 dlrun() {
   local left=$((DEADLINE-$(date +%s)))
   [ $left -le 300 ] && { echo "DEADLINE: skipping $*"; return 124; }
   timeout -k 120 -s TERM $left "$@"
+  local rc=$?
+  past_deadline && [ $rc -ne 0 ] && { echo "DEADLINE_STOP: $* rc=$rc"; exit 4; }
+  return $rc
 }
 SEED=4739
 VAL_SEED=4740
@@ -62,7 +70,7 @@ echo "FRESH_EVAL_SECONDS $(( $(date +%s) - T0 ))"
 set +e
 trap 'kill -TERM $PID 2>/dev/null; wait $PID; exit 143' TERM
 if [ ! -f $O/$TAG.TRAIN_DONE ] && [ ! -f $O/$TAG.EARLY_KILL ]; then
-  dlrun python scripts/train_tier0_tiled_closed_loop.py --init $CK4818 --data $D --pattern "hv3_s*.npz" --tier0 $E --tag $TAG --out-dir $O \
+  dlbg python scripts/train_tier0_tiled_closed_loop.py --init $CK4818 --data $D --pattern "hv3_s*.npz" --tier0 $E --tag $TAG --out-dir $O \
     --exchange halo --iters 4500 --lr 1e-4 --k-start 16 --k-end 28 --replay-rounds 3 --seed $SEED --val-seed $VAL_SEED --probe-at --resume >> $O/$TAG.train.log 2>&1 &
   PID=$!
   wait $PID

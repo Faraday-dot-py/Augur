@@ -24,10 +24,18 @@ REMAIN=$((DEADLINE-$(date +%s)))
 [ $REMAIN -le 300 ] && { echo "DEADLINE 2026-11-07 09:00 PST: $REMAIN s left, not starting"; exit 3; }
 past_deadline() { [ $((DEADLINE-$(date +%s))) -le 300 ]; }
 deadline_exit() { past_deadline && { echo "DEADLINE_STOP: unfinished, state saved by SIGTERM handler"; exit 4; }; }
+dlbg() {
+  local left=$((DEADLINE-$(date +%s)))
+  [ $left -le 300 ] && { echo "DEADLINE: skipping $*"; exit 124; }
+  exec timeout -k 120 -s TERM $left "$@"
+}
 dlrun() {
   local left=$((DEADLINE-$(date +%s)))
   [ $left -le 300 ] && { echo "DEADLINE: skipping $*"; return 124; }
   timeout -k 120 -s TERM $left "$@"
+  local rc=$?
+  past_deadline && [ $rc -ne 0 ] && { echo "DEADLINE_STOP: $* rc=$rc"; exit 4; }
+  return $rc
 }
 SEED=4742
 VAL_SEED=4743
@@ -51,7 +59,7 @@ T0=$(date +%s)
 FB="ext=6,extapply,taper=8,bnd,halo=8"
 trap 'kill -TERM $PID 2>/dev/null; wait $PID; exit 143' TERM
 if [ ! -f $O/${BASE}_eval.json ]; then
-  dlrun python scripts/train_tier0_harvest.py --data $D --pattern "hv3_s*.npz" --replay 0.5 --lr 3e-4 --iters 60000 --t0 "$FB" --tag $BASE --out-dir $O --baseline $E --seed $SEED >> $O/$BASE.train.log 2>&1 &
+  dlbg python scripts/train_tier0_harvest.py --data $D --pattern "hv3_s*.npz" --replay 0.5 --lr 3e-4 --iters 60000 --t0 "$FB" --tag $BASE --out-dir $O --baseline $E --seed $SEED >> $O/$BASE.train.log 2>&1 &
   PID=$!
   wait $PID
   RC=$?
@@ -66,7 +74,7 @@ trap 'echo "STEP FAILED at line $LINENO"' ERR
 set +e
 trap 'kill -TERM $PID 2>/dev/null; wait $PID; exit 143' TERM
 if [ ! -f $F/$TAG.TRAIN_DONE ]; then
-  dlrun python scripts/train_tier0_tiled_closed_loop.py --init $O/$BASE.pt --data $D --pattern "hv3_s*.npz" --tier0 $E --tag $TAG --out-dir $F \
+  dlbg python scripts/train_tier0_tiled_closed_loop.py --init $O/$BASE.pt --data $D --pattern "hv3_s*.npz" --tier0 $E --tag $TAG --out-dir $F \
     --exchange halo --iters 5000 --seed $SEED --val-seed $VAL_SEED --probe-at --resume >> $F/$TAG.train.log 2>&1 &
   PID=$!
   wait $PID

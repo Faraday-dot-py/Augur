@@ -23,6 +23,11 @@ DEADLINE=1794070800
 REMAIN=$((DEADLINE-$(date +%s)))
 [ $REMAIN -le 300 ] && { echo "DEADLINE 2026-11-07 09:00 PST: $REMAIN s left, not starting"; exit 3; }
 past_deadline() { [ $((DEADLINE-$(date +%s))) -le 300 ]; }
+dlbg() {
+  local left=$((DEADLINE-$(date +%s)))
+  [ $left -le 300 ] && { echo "DEADLINE: skipping $*"; exit 124; }
+  exec timeout -k 120 -s TERM $left "$@"
+}
 dlrun() {
   local left=$((DEADLINE-$(date +%s)))
   [ $left -le 300 ] && { echo "DEADLINE: skipping $*"; return 124; }
@@ -52,7 +57,7 @@ step() {
   [ -n "$TERMED" ] && return
   if [ -e $DONE ]; then echo "STEP $NAME skipped, $DONE exists"; return; fi
   if past_deadline; then echo "STEP $NAME skipped, deadline"; DEADLINED=1; return; fi
-  dlrun "$@" &
+  dlbg "$@" &
   CHILD=$!
   while kill -0 $CHILD 2>/dev/null; do wait $CHILD; done
   wait $CHILD
