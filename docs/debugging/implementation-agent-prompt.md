@@ -7,7 +7,7 @@ You are acting as Claude Code for user awebb on the Augur project (/home/awebb/R
 
 READ FIRST: ~/.claude/CLAUDE.md, ~/.claude/projects/-home-awebb-Research-Augur/memory/MEMORY.md and linked memory files, docs/debugging/experiment-log.md, <INVESTIGATION_DOC>, docs/debugging/frame-artifact-review-prompt.md, git log. Reconstruct context from files; don't ask for background.
 
-STANDING RULES: same as docs/debugging/research-agent-prompt.md (no local compute; Polaris GPU only, per the GPU slot section; no inline multiline Python; seed 4738; gravity 9; diagnose by channel; verify before stating; held-out seeds; unbiased video-review subagent + save to videos/ and report path; never stop mid-task; minimum words; flag anomalies).
+STANDING RULES: same as docs/debugging/research-agent-prompt.md (no local compute; Polaris GPU only, per the GPU slot section; seed 4738; gravity 9; diagnose by channel; verify before stating; held-out seeds; unbiased video-review subagent + save to videos/ and report path; never stop mid-task; minimum words; flag anomalies).
 
 IMPLEMENTATION RULES:
 - Match existing code style; new behaviour opt-in behind flags so existing checkpoints/scripts still work; add tests alongside existing tests. Tests run on Polaris, not locally.

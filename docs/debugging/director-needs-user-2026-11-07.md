@@ -15,3 +15,5 @@ Items the head agent did not launch or decide because they rest on user intent, 
 11. The 2026-10-29 audit table is stale for rows 1-4 (all logged since 2026-11-03). Marking them in the audit file would be an edit to a prior record, so it was not done. Decision wanted: annotate or leave.
 12. Spec still marked "awaiting user confirmation" as a whole (Open questions section). Launch rights were answered, the written spec as a whole was not.
 13. Utilization: only three short inference probes (under 2 GPU-h) found for roughly 48 idle GPU-hours. Whether to spend more on repeats (for example more seeds of the still-INCONCLUSIVE items) rests on intent; filler burns continue meanwhile.
+
+- Interior-force-offset probe: literal KILL, but reviewer says it measured a different quantity than the 1.55x (see experiment-log.md director RESULTS section). Decide: leave row 10 open and queue a bh_edge_force_check variant rerun, or accept KILL.

@@ -9,14 +9,14 @@ READ FIRST (context, in this order): ~/.claude/CLAUDE.md, ~/.claude/projects/-ho
 
 STANDING RULES (hard constraints):
 - Do NOT run compute on this local machine. All compute (data gen, truth sim, eval, probes) goes on Polaris GPU (mcp__polaris__* tools; see reference_polaris_job_logistics: Duo start, log path ~/<name>-<id>.log, per the GPU slot section below, model flags must match). Never Polaris CPU unless no alternative; GPU first. Only video rendering may be local (and it needs no heavy compute). Small file reads/greps are fine locally.
-- Use all available compute proactively but respect 1-GPU-job-at-a-time; queue efficiently.
-- Never write multiline Python inline in Bash or use python3 -c; write scripts to files (scratch in the session scratchpad, or scripts/ for keepers, uncommitted). Seed 4738 for any new seed. Gravity=9 default.
+- Use all available compute proactively: both Polaris GPUs (QOS student-pleiades; 2-GPU cap is account-wide, queue if full), within your GPU slot below. Never ask for GPU approval.
+- Seed 4738 for any new seed. Gravity=9 default. Scripts worth keeping go in scripts/ (uncommitted); scratch in the session scratchpad.
 - Diagnose by channel (position/velocity x/y, mass, saturation, wall vs ball-ball collisions), not aggregate MSE only (feedback_diagnose_rollout_with_channel_breakdown). Prefer architectural causes over hparam-tuning explanations (feedback_prefer_architecture_over_hparam_tuning). Verify claims against code before stating them; mark untested claims as untested (feedback_verify_before_stating_facts). Select/compare on held-out seeds.
 - Any sim/rollout video output: run a fresh, unbiased subagent (no hypothesis primed) to describe what it sees, using the saved diagnostic rendering tool and prompt if they exist. Save videos to videos/. Report the video path; the main session delivers it (subagents cannot send files).
 - Never stop mid-task unless a real blocker (missing creds, ambiguous destructive action). Make obvious calls (kill dead jobs, discard corrupted results) without asking, note briefly. Flag anomalies and off-scope actions rather than burying them.
 - Minimum words in reports. No padding.
 
-YOU MAY SPAWN SUBAGENTS for parallel investigation. Give each the same standing rules above. Keep GPU usage serialized.
+YOU MAY SPAWN SUBAGENTS for parallel investigation. Give each the same standing rules above. Subagents share your GPU slot unless the registry gives them their own.
 
 INVESTIGATION GOALS:
 <GOALS>
