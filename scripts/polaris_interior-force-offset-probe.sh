@@ -14,7 +14,7 @@
 #SBATCH --output=augur-interior-force-offset-probe-%j.log
 # Feasibility probe, audit row 10: attributes the ~1.55x interior force offset at 1e6 bodies (learned vs exact point sum) to mass density, pair term or grid kernel.
 # Pre-registration: docs/debugging/director-feasibility-2026-11-07.md. Seed 4738. Inference only, estimate under 1 GPU-h (exact fp64 sum at N=1e5, sampled targets at 1e6; not timed).
-# Needs in $HOME/augur_nfr: kern/E_frozen.pt, scripts/scatter_field.py, scripts/scatter_scaling_ops.py, scripts/pm_baseline_force_error.py (from earlier jobs) and the new
+# Needs in $HOME/augur_probe (current scatter_field.py; augur_nfr copy is stale; kern symlinked from augur_nfr): kern/E_frozen.pt, scripts/scatter_field.py, scripts/scatter_scaling_ops.py, scripts/pm_baseline_force_error.py (from earlier jobs) and the new
 # scripts/interior_force_offset_probe.py (upload it there). Per-cell results are saved after each cell and skipped on rerun: sbatch this script again to resume.
 # Usage: sbatch this.sh
 set -uo pipefail
@@ -28,7 +28,7 @@ dlbg() {
   exec timeout -k 120 -s TERM $left "$@"
 }
 PID=
-cd $HOME/augur_nfr || { echo "MISSING $HOME/augur_nfr"; exit 2; }
+ln -sfn $HOME/augur_nfr/kern $HOME/augur_probe/kern; cd $HOME/augur_probe || { echo "MISSING $HOME/augur_probe"; exit 2; }
 export PYTHONPATH=.
 for f in kern/E_frozen.pt scripts/scatter_field.py scripts/scatter_scaling_ops.py scripts/pm_baseline_force_error.py scripts/interior_force_offset_probe.py; do
   [ -e $f ] || { echo "MISSING $f"; exit 2; }

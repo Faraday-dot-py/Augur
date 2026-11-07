@@ -28,7 +28,7 @@ dlbg() {
   exec timeout -k 120 -s TERM $left "$@"
 }
 PID=
-cd $HOME/augur_nfr || { echo "MISSING $HOME/augur_nfr"; exit 2; }
+ln -sfn $HOME/augur_nfr/kern $HOME/augur_probe/kern; cd $HOME/augur_probe || { echo "MISSING $HOME/augur_probe"; exit 2; }
 export PYTHONPATH=.
 for f in kern/E_frozen.pt scripts/scatter_field.py scripts/scatter_scaling_ops.py scripts/pm_baseline_force_error.py scripts/collapsed_pair_term_scaling_probe.py; do
   [ -e $f ] || { echo "MISSING $f"; exit 2; }

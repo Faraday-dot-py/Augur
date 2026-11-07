@@ -14,7 +14,7 @@
 #SBATCH --output=augur-reciprocal-neighbour-list-step0-%j.log
 # Feasibility probe, audit row 32 (close-pair proposal R4 step 0): frozen model, union neighbour list vs top-16 list on nn<1 force error, 3 families x 16 scenes at N=1000, seed 4738.
 # Pre-registration: docs/debugging/director-feasibility-2026-11-07.md. Inference only, estimate under 0.2 GPU-h (not timed).
-# Needs in $HOME/augur_nfr: kern/E_frozen.pt, scripts/scatter_field.py, scripts/scatter_scaling_ops.py, scripts/pm_baseline_force_error.py and the new
+# Needs in $HOME/augur_probe (current scatter_field.py; augur_nfr copy is stale; kern symlinked from augur_nfr): kern/E_frozen.pt, scripts/scatter_field.py, scripts/scatter_scaling_ops.py, scripts/pm_baseline_force_error.py and the new
 # scripts/reciprocal_neighbour_list_step0.py (upload it there). Output is saved per family and the job is skipped if the result exists: sbatch again to resume.
 # Usage: sbatch this.sh
 set -uo pipefail
@@ -28,7 +28,7 @@ dlbg() {
   exec timeout -k 120 -s TERM $left "$@"
 }
 PID=
-cd $HOME/augur_nfr || { echo "MISSING $HOME/augur_nfr"; exit 2; }
+ln -sfn $HOME/augur_nfr/kern $HOME/augur_probe/kern; cd $HOME/augur_probe || { echo "MISSING $HOME/augur_probe"; exit 2; }
 export PYTHONPATH=.
 for f in kern/E_frozen.pt scripts/scatter_field.py scripts/scatter_scaling_ops.py scripts/pm_baseline_force_error.py scripts/reciprocal_neighbour_list_step0.py; do
   [ -e $f ] || { echo "MISSING $f"; exit 2; }
