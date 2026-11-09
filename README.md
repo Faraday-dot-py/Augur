@@ -10,33 +10,22 @@ Augur is a research project by Adam Webb (Cal Poly Pomona, GitHub: Faraday-dot-p
 
 ## Showcase
 
-Videos are hosted on YouTube (links pending upload). Each one says whether it is a model rollout or a reference simulation. None of them is an accuracy claim: at 1 billion bodies and above there is no exact reference, so those videos show that the model runs and stays stable, not that it is right.
+Videos are hosted on YouTube. Each one says whether it is a model rollout or a reference simulation. None of them is an accuracy claim: at 1 billion bodies and above there is no exact reference, so those videos show that the model runs and stays stable, not that it is right.
 
 **Black holes**
 
-[![1 billion bodies falling into a black-hole-like core, lensed](thumbnail-pending)](https://www.youtube.com/watch?v=PENDING)
+[![1 billion bodies falling into a black hole-like core](https://img.youtube.com/vi/QKrhDOiUdoA/hqdefault.jpg)](https://youtu.be/QKrhDOiUdoA)
 A cloud of 1 billion bodies collapses into a dense core while the background stars bend around it, as light would near a black hole. Model rollout: scatter-field network, 300 ticks, the lensing is a rendering effect computed from the body density, not part of the physics model. Speed and stability result only.
 
-[![10 billion bodies, density at three zoom levels](thumbnail-pending)](https://www.youtube.com/watch?v=PENDING)
+[![10 billion body gravity collapse at three zoom levels](https://img.youtube.com/vi/i-HQeElSLnY/hqdefault.jpg)](https://youtu.be/i-HQeElSLnY)
 The same collapse with 10 billion bodies, shown as density at three zoom levels. Model rollout: scatter-field network, 100 ticks, a median 13.4 s per tick and 87 GB peak memory on one GPU. Speed and memory result only. The bright frame around the full-box panel is consistent with bodies piled on the clipped edge of the starting cloud.
-
-[![100,000 bodies: learned model next to exact simulation, lensed](thumbnail-pending)](https://www.youtube.com/watch?v=PENDING)
-The 100,000-body version, with the exact direct simulation beside the model. Model rollout against an exact reference: they agree for roughly the first 20 ticks and then drift apart, which is the honest picture at this size (position error 1.33 at tick 20, 8.3 at tick 50, 18.9 at tick 100).
-
-**Galactic collapse**
-
-[![1 billion bodies in 30 clumps falling together, lensed](thumbnail-pending)](https://www.youtube.com/watch?v=PENDING)
-Thirty small clumps of bodies fall toward each other and merge into one central mass. Model rollout: scatter-field network, 1 billion bodies, 200 ticks. Speed and stability result only.
-
-[![1 million bodies in clumps merging over 5000 steps](thumbnail-pending)](https://www.youtube.com/watch?v=PENDING)
-A smaller scene with 1 million bodies where clumps pull together, merge, and fling stragglers outward. This one is a reference-style simulation (analytic gravity with an adaptive far-field estimate), not a neural-network rollout.
 
 **Solar systems**
 
-[![A star with 8 planets, a moon and a belt: exact versus learned model](thumbnail-pending)](https://www.youtube.com/watch?v=PENDING)
+[![A star, 8 planets, a moon and a belt - exact vs learned](https://img.youtube.com/vi/sjKpVZJndvk/hqdefault.jpg)](https://youtu.be/sjKpVZJndvk)
 A star, 8 planets, one moon and a belt of small bodies, exact simulation on the left and the learned scatter-field model on the right. Model rollout against an exact reference. With the grid-edge fix, no planets are lost by tick 1000 (median orbital period error 17 percent), and 5 of 8 are lost by tick 2000. This model was not designed for a heavy central star, and the video shows where it breaks.
 
-[![Planetesimal disk around a star, direct simulation](thumbnail-pending)](https://www.youtube.com/watch?v=PENDING)
+[![Planetesimal disk around a star](https://img.youtube.com/vi/JATcW5RJXYY/hqdefault.jpg)](https://youtu.be/JATcW5RJXYY)
 A star with 1000 small bodies and one Jupiter-mass planet at 5 AU over 100 years, seen face-on and edge-on, with an in-range toy version beside a learned model. The top row is an exact direct N-body reference (gravity only, a toy: no gas, so it does not model how planets actually form). The bottom row is a learned model on a toy version with equal-mass bodies, and it fails: its error grows past the kill line after about 100 ticks. The learned models handle only equal-mass bodies today, so the real star-to-planetesimal mass ratio (1000 to 1) is out of range until per-body-mass support is trained.
 
 ## The through-line: four requirements
@@ -98,10 +87,6 @@ Many results are negative, and that is part of the method. Pre-registered kill l
 - **A loss-function analysis** showed the error is not driven by a few outlier particles, so the tail-focused loss idea was dropped and a local energy-bias term was proposed instead.
 
 Results are logged with the numbers that decide them, so a reader can see which claims are strong (linear cost, tier-0 gravity, the energy diagnosis) and which are one seed or untested.
-
-## Comparison videos
-
-Six rendered comparison videos cover gravity clusters, multi-clump scenes, successive model generations, wall contact, and liquid-argon-style molecular dynamics. A separate 500-frame disk video also exists, and the showcase above lists the headline runs. The video files are large and are not stored in the repository; they are being uploaded to YouTube and the links above will be filled in.
 
 ## Who this is for
 
