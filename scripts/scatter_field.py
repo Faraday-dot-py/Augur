@@ -1,4 +1,5 @@
 import math
+import time
 
 import numpy as np
 import torch
@@ -327,7 +328,15 @@ class ScatterField(nn.Module):
         done = torch.zeros(n, dtype=torch.bool, device=dev) if qmask is None else ~(qmask.reshape(-1)[act] > 0)
         qs, accs = [], []
         self.adapt_stats = {"levels": [], "fallback": 0}
-        for l in range(lmax + 1):
+        prof = getattr(self, "adapt_profile", False)
+        wl = 8 if "adaptwide128" in self.opt else 7 if "adaptwide64" in self.opt else 6
+        lm = max(lmax, 14) if "adaptdeep" in self.opt else lmax
+        if prof:
+            self.adapt_stats.update({"over_cap": [], "level_s": [], "fallback_chunks": 0, "fallback_s": 0.0, "cap": {"level0": 64, "finer": 32 << (wl - 6)}})
+            if pos.is_cuda:
+                torch.cuda.synchronize()
+            t_lvl = time.time()
+        for l in range(lm + 1):
             rem = (~done).nonzero()[:, 0]
             if rem.numel() == 0:
                 break
@@ -347,7 +356,9 @@ class ScatterField(nn.Module):
             lo = torch.searchsorted(skey, nk, right=False).view(-1, W)
             cnt = (torch.searchsorted(skey, nk, right=True).view(-1, W) - lo) * inside
             mc = cnt.max(1).values
-            for m in (1, 2, 4, 8, 16, 32, 64)[: 7 if l == 0 else 6]:
+            if prof:
+                self.adapt_stats["over_cap"].append((l, int((mc > (64 if l == 0 else 32 << (wl - 6))).sum())))
+            for m in (1, 2, 4, 8, 16, 32, 64, 128)[: 7 if l == 0 else wl]:
                 sel = ((mc <= m) & (mc > m // 2)).nonzero()[:, 0]
                 if sel.numel():
                     ql = rem[sel]
@@ -374,9 +385,18 @@ class ScatterField(nn.Module):
                         accs.append(self._pp_force(ds, r_sel[okq], mj))
                         done[qq[okq]] = True
             self.adapt_stats["levels"].append((l, int(rem.numel()) - int((~done[rem]).sum())))
+            if prof:
+                if pos.is_cuda:
+                    torch.cuda.synchronize()
+                self.adapt_stats["level_s"].append((l, time.time() - t_lvl))
+                t_lvl = time.time()
         rem = (~done).nonzero()[:, 0]
         self.adapt_stats["fallback"] = int(rem.numel())
+        if prof and getattr(self, "adapt_keep_idx", False):
+            self.adapt_stats["fallback_idx"] = act[rem]
         if rem.numel():
+            if prof:
+                self.adapt_stats["fallback_chunks"] = -(-int(rem.numel()) // max(1, budget // n))
             Q = max(1, budget // n)
             for c0 in range(0, rem.numel(), Q):
                 qq = rem[c0:c0 + Q]
@@ -387,6 +407,10 @@ class ScatterField(nn.Module):
                 ds = torch.gather(d, 1, i[..., None].expand(-1, -1, 2))
                 qs.append(qq)
                 accs.append(self._pp_force(ds, r_sel, ma[i]))
+            if prof:
+                if pos.is_cuda:
+                    torch.cuda.synchronize()
+                self.adapt_stats["fallback_s"] = time.time() - t_lvl
         if not qs:
             return torch.zeros(B, N, 2, device=dev, dtype=pos.dtype)
         a_act = torch.zeros(n, 2, device=dev, dtype=pos.dtype).index_copy(0, torch.cat(qs), torch.cat(accs))
