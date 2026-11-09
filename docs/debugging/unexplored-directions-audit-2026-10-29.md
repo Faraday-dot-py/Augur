@@ -1,5 +1,7 @@
 # Unexplored research directions audit (2026-10-29)
 
+Note 2026-11-08: rows 1-4 below were logged after this audit (experiment-log.md from 2026-11-03; row 4 also by the third and fourth training seeds, 2026-11-07). The table is left as written on 2026-10-29. Row 10 stays open pending a corrected interior-force-offset rerun.
+
 Read-only audit. No GPU job, no code change, no push. Goal: list every direction that was proposed but never run (or only scoped, or run too thinly to rule out) so the breadth-first sweep can be checked for gaps.
 
 ## Definitions (first use)

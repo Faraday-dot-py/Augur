@@ -66,3 +66,24 @@ Verdict so far: feasible and exact on CPU emulation. GPU time at the real 3e6 ag
 GPU job: scripts/polaris_pair-term-adaptive-depth-fix.sh (dependency afterany:7193 inside the script, 1:30 limit, three cells: collapsed 1e6 with head bit-identity, reference 3e6, collapsed 3e6). Files are uploaded to ~/augur_probe_deep on Polaris. Submit FAILED: QOSMaxSubmitJobPerUserLimit (account job submit limit). Not worked around. Not on the slot chain. Resume: when the submit limit clears, re-read gpu-slot-chains.md, set the dependency line to the then-current slot-2 tail, and submit script_path pairterm_deep/polaris_pair-term-adaptive-depth-fix.sh (the uploads persist). Results land in ~/augur_probe_deep/results/pair_term_adaptive_depth_fix/*.json.
 
 Review of section 7 (fresh reviewer, no hypothesis primed): ran. Agreed: default path unchanged and bit-identical to HEAD (rerun printed True); flags only add levels or longer ladders and keep the guaranteed-radius exactness test; no new all-pairs path; fallback 13,837 vs 10 and max error 4.8e-7 recomputed. Notes: the longer ladder at 64 alone leaves 3,556 bodies (11.9%), so deeper levels are required; at 14 levels cell indices stay exact in float32 (below 2^24) but edge rounding was not stress-tested; the max-error column is a weak discriminator (identical across variants), the diff to default is the better evidence. scripts/scatter_field_head.py is only a staged copy of git HEAD scatter_field.py (not in the repo); it is already uploaded to Polaris. The job script has not run.
+
+## 8. Job 7187 results (collapsed-pair-term-fallback-chase, curiosity, no pass/kill)
+
+Job 7187 completed 0:0 in 25 min; all 8 cells present (collapsed and reference at N 1e6, 1.5e6, 2e6, 3e6; 3 timed calls plus a profiled call each). Raw: ~/augur_probe/results/collapsed_pair_term_fallback_chase/chase.json on Polaris (local copy in the session scratchpad chase.json). Seed 4738.
+
+| N | collapsed fallback bodies | collapsed s per call | reference s per call |
+| --- | --- | --- | --- |
+| 1e6 | 6,447 (0.64%) | 0.523 | 0.134 |
+| 1.5e6 | 206,632 (13.8%) | 18.77 | 0.194 |
+| 2e6 | 511,032 (25.6%) | 62.28 | 0.256 |
+| 3e6 | 1,192,555 (39.75%) | 220.49 | 0.395 |
+
+- Fallback equals the over-cap count at the finest level in every collapsed cell (3e6: 1,192,555 = 1,192,555), so the trigger is the candidate cap (64 at level 0, 32 finer), not the guaranteed-radius test.
+- Fallback time is 99.7% of the call at 3e6 (219.9 of 220.5 s). Warm-up equals steady (220.52 vs 220.49 s): no compile or cache effect.
+- Reference cloud fallback is 0 at every N.
+- The profiled call is bit-identical to the plain call (max diff 0.0), so the counters are numerics-neutral.
+- The 1e6 collapsed cell is the exception: fallback 6,447 with over-cap 0 at level 8, so cover or short-list failures dominate there (see reviewer note below).
+
+The chase was labelled curiosity, so there is no pass or kill verdict. The pass/kill test is the adaptive-depth job 7235 (section 7).
+
+Review of section 8 (fresh reviewer, no hypothesis primed): ran. Agreed: fallback equals over-cap at level 8 exactly at 1.5e6, 2e6, 3e6 (scatter_field.py:344-360, fallback is whatever remains after the loop at :393-394); excess cost 0.0599, 0.0607, 0.0615 ns per body-pair (flat within 3%, fallback loop at :401-410); warm-up equals steady; reference fallback 0 everywhere. Corrections: (a) the equality is empirical, not a code guarantee: cover failures (:376-380) and short candidate lists can also add fallback, so fallback is at least over-cap. (b) The N=1e6 collapsed cell breaks equality (fallback 6,447, over-cap at level 8 is 0) and records cap as the integer 64, so it likely came from an older version of the profiling code. Do not cite the 1e6 cell as evidence for the cap trigger; there cover or short-list failures dominate (6,447 bodies, 0.64%). This also explains the difference from job 6240 (2,380) being unresolved.
