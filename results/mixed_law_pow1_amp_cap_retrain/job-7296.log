@@ -1,0 +1,8 @@
+b37d01caa07c424fa10d5547b57bee59  scripts/scatter_field.py
+7b96aec0dc1536da94126dd7a8699953  scripts/scatter_multi.py
+d031ab6c12f4ad8d4e3df8c59bb58183  scripts/train_scatter_multi.py
+9b3cb8bb1de47eb6ebf5f708d98e94b7  kern/E_frozen.pt
+name, memory.total [MiB]
+NVIDIA H200 NVL, 143771 MiB
+TOTAL_SECONDS 21214
+ALLDONE

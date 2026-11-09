@@ -1,0 +1,76 @@
+{
+ "per_width": {
+  "4": {
+   "force_rel_l2_by_seed": [
+    0.0847238315817695,
+    0.1282944183684192
+   ],
+   "mean_force_rel_l2": 0.10650912497509435,
+   "ratio_of_means_vs_32": 1.0997423962205912,
+   "ratio_by_seed_vs_32": [
+    1.109242610069153,
+    1.093557303581873
+   ]
+  },
+  "8": {
+   "force_rel_l2_by_seed": [
+    0.07005441402933993,
+    0.09090795538331115
+   ],
+   "mean_force_rel_l2": 0.08048118470632554,
+   "ratio_of_means_vs_32": 0.8309951935132592,
+   "ratio_by_seed_vs_32": [
+    0.9171839801623283,
+    0.774882179812636
+   ]
+  },
+  "16": {
+   "force_rel_l2_by_seed": [
+    0.06822854871334824,
+    0.0943666012605412
+   ],
+   "mean_force_rel_l2": 0.08129757498694472,
+   "ratio_of_means_vs_32": 0.8394246966536641,
+   "ratio_by_seed_vs_32": [
+    0.8932789280544021,
+    0.8043630216734794
+   ]
+  },
+  "32": {
+   "force_rel_l2_by_seed": [
+    0.07637989274184806,
+    0.11731842304760758
+   ],
+   "mean_force_rel_l2": 0.09684915789472781,
+   "ratio_of_means_vs_32": 1.0,
+   "ratio_by_seed_vs_32": [
+    1.0,
+    1.0
+   ]
+  },
+  "64": {
+   "force_rel_l2_by_seed": [
+    0.09324253739009321,
+    0.13139401173653503
+   ],
+   "mean_force_rel_l2": 0.11231827456331411,
+   "ratio_of_means_vs_32": 1.1597238118002098,
+   "ratio_by_seed_vs_32": [
+    1.22077334810142,
+    1.1199776499145033
+   ]
+  }
+ },
+ "line_down": 1.1,
+ "line_up": 0.9,
+ "reference_width": 32,
+ "downscale_status": {
+  "4": "SPLIT",
+  "8": "QUALIFY",
+  "16": "QUALIFY"
+ },
+ "upscale_status": "FAIL",
+ "label": "INCONCLUSIVE",
+ "smallest_width": 4,
+ "also_capacity_limited": false
+}

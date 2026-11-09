@@ -1,0 +1,263 @@
+"""Train MultiScatterField on mixed-interaction scenes (docs/debugging/scatter-nearfield-retrain.md).
+
+Scenes: 6 radial shapes (pow1 pow2 pow3 yuk8 yuk128 lj; p=1.5 and lam=32 held out) x structures (single species, charges, predator-prey),
+amplitude 10^U(-1,1), fp64 direct-sum truth generated on the GPU at start (deterministic in --seed). Loss, k-ramp, lr schedule and the
+clip-1.0 / skip-nonfinite rules are those of train_scatter_field.py (Exp E). Full-state checkpoint every --ckpt-every iterations (atomic
+rename), SIGTERM saves and exits 143, --resume continues bit-for-bit in schedule (batch sampling is seeded by iteration).
+"""
+import argparse
+import json
+import os
+import signal
+import sys
+import time
+
+import numpy as np
+import torch
+
+from scripts import scatter_field as sf
+from scripts import scatter_multi as sm
+
+STOP = {"flag": False}
+
+
+def on_term(*_):
+    STOP["flag"] = True
+
+
+def make_cases(args):
+    cases, labels = [], []
+    if args.only:
+        for spec in args.only.split(","):
+            shape, st = spec.split(":")
+            cases += [(shape, st, None)] * args.per_shape
+            labels += [f"{shape}:{st}"] * args.per_shape
+        return cases, labels
+    rng = np.random.default_rng(args.seed)
+    amp_rng = np.random.default_rng([args.seed, 7])
+    for shape in sm.TRAIN_SHAPES:
+        al = sm.allowed(shape)
+        w = np.array([sm.STRUCT_W[s] for s in al])
+        st = rng.choice(al, args.per_shape, p=w / w.sum())
+        if shape == "pow1" and args.pow1_amp_max > 0:
+            amps = 10 ** amp_rng.uniform(-1, np.log10(args.pow1_amp_max), len(st))
+        else:
+            amps = [None] * len(st)
+        cases += [(shape, s, a) for s, a in zip(st, amps)]
+        labels += [f"{shape}:{s}" for s in st]
+    return cases, labels
+
+
+def gen_two_body(n_total, seed, dev, steps, chunk=64):
+    rng = np.random.default_rng([seed, 11])
+    t = lambda a: torch.tensor(a, device=dev, dtype=torch.float64)
+    got = {k: [] for k in ("P", "V", "typ", "mask", "cond", "params")}
+    labels = []
+    have = 0
+    while have < n_total:
+        B = min(chunk, n_total - have)
+        pos0 = np.zeros((B, sm.N_PAD, 2))
+        vel0 = np.zeros((B, sm.N_PAD, 2))
+        mask = np.zeros((B, sm.N_PAD))
+        cond = np.zeros((B, sm.DC))
+        par = np.zeros((B, 7, 4))
+        lab = []
+        for b in range(B):
+            shape = sm.TRAIN_SHAPES[int(rng.integers(len(sm.TRAIN_SHAPES)))]
+            slots = sm.slots_for("single", shape, 10 ** rng.uniform(-1, 1))
+            sep = np.exp(rng.uniform(np.log(0.25), np.log(14.0)))
+            th = rng.uniform(0, 2 * np.pi)
+            u = np.array([np.cos(th), np.sin(th)])
+            c = rng.uniform(-2.0, 2.0, 2)
+            pos0[b, :2] = [c - 0.5 * sep * u, c + 0.5 * sep * u]
+            v = rng.normal(0.0, 0.5, 2)
+            vel0[b, :2] = [v, -v]
+            mask[b, :2] = 1.0
+            cond[b], par[b] = sm.cond_of(slots), sm.params_of(slots)
+            lab.append(f"twobody:{shape}")
+        P, V = sm.simulate(t(pos0), t(vel0), t(np.zeros((B, sm.N_PAD))), t(mask), t(par), steps)
+        out = (P.abs().amax(-1) > 32.0) & (t(mask)[:, None, :] > 0)
+        frac = out.any(1).double().sum(1) / t(mask).sum(1)
+        ok = torch.isfinite(P).all(-1).all(-1).all(-1) & torch.isfinite(V).all(-1).all(-1).all(-1) & (frac <= 0.05)
+        keep = ok.cpu().numpy()
+        for k, v_ in (("P", P.float()), ("V", V.float()), ("typ", torch.zeros(B, sm.N_PAD, device=dev)), ("mask", t(mask).float()),
+                      ("cond", t(cond).float()), ("params", t(par))):
+            got[k].append(v_[ok])
+        labels += [l for l, kp in zip(lab, keep) if kp]
+        have += int(keep.sum())
+    return {k: torch.cat(v) for k, v in got.items()}, labels
+
+
+def build_data(args, dev, log):
+    cases, labels = make_cases(args)
+    t0 = time.time()
+    d = sm.gen_cases(cases, args.seed, dev, args.steps, tag=1)
+    d["label"] = [labels[i] for i in d["sid"].tolist()]
+    log(f"data: {len(d['label'])}/{len(cases)} scenes accepted in {time.time() - t0:.0f}s, "
+        f"gpu mem {torch.cuda.memory_allocated() / 2 ** 30:.1f} GB")
+    if args.two_body_frac > 0:
+        n2 = int(round(len(d["label"]) * args.two_body_frac / (1 - args.two_body_frac)))
+        e, el = gen_two_body(n2, args.seed, dev, args.steps)
+        for k in e:
+            d[k] = torch.cat([d[k], e[k]])
+        d["n"] = torch.cat([d["n"], torch.full((len(el),), 2, dtype=d["n"].dtype)])
+        d["label"] += el
+        log(f"two-body: {len(el)} scenes added ({len(el) / len(d['label']):.3f} of {len(d['label'])})")
+    return d
+
+
+def save(path, model, opt, it, args, extra):
+    tmp = path + ".tmp"
+    torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it, "args": vars(args), **extra}, tmp)
+    os.replace(tmp, path)
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--tag", required=True)
+    ap.add_argument("--seed", type=int, default=4738)
+    ap.add_argument("--iters", type=int, default=100000)
+    ap.add_argument("--batch", type=int, default=16)
+    ap.add_argument("--steps", type=int, default=50)
+    ap.add_argument("--k-start", type=int, default=2)
+    ap.add_argument("--k-ramp", type=float, default=0.8, help="fraction of iterations over which k ramps k-start -> k-end")
+    ap.add_argument("--huber", type=float, default=2.0, help="position error (units) beyond which the loss is linear")
+    ap.add_argument("--k-end", type=int, default=30)
+    ap.add_argument("--lr", type=float, default=5e-4)
+    ap.add_argument("--per-shape", type=int, default=12000)
+    ap.add_argument("--sample-cap", type=float, default=100.0, help="drop a sample from the batch loss when its own loss exceeds this (rollout blow-up)")
+    ap.add_argument("--gate-every", type=int, default=250)
+    ap.add_argument("--only", default="", help="comparator mode: shape:structure,... (single-law training)")
+    ap.add_argument("--init-ckpt", default="kern/E_frozen.pt")
+    ap.add_argument("--ckpt-dir", default="ckpt")
+    ap.add_argument("--ckpt-every", type=int, default=500)
+    ap.add_argument("--snap-every", type=int, default=10000)
+    ap.add_argument("--log-every", type=int, default=100)
+    ap.add_argument("--resume", action="store_true")
+    ap.add_argument("--pow1-amp-max", type=float, default=0.0, help="if > 0, pow1 scene amplitudes are 10^U(-1, log10(value)) instead of 10^U(-1, 1)")
+    ap.add_argument("--two-body-frac", type=float, default=0.0, help="if > 0, add N=2 scenes (separation log-uniform 0.25-14, single structure) so they are this fraction of the training set")
+    ap.add_argument("--init-multi", default="", help="warm start from a MultiScatterField checkpoint written by this trainer (overrides --init-ckpt)")
+    ap.add_argument("--device", default="cuda")
+    args = ap.parse_args()
+    dev = torch.device(args.device)
+    os.makedirs(args.ckpt_dir, exist_ok=True)
+    path = f"{args.ckpt_dir}/{args.tag}.pt"
+    signal.signal(signal.SIGTERM, on_term)
+
+    def log(s):
+        print(f"[{time.strftime('%H:%M:%S')}] {s}", flush=True)
+
+    if os.path.exists(f"{args.ckpt_dir}/{args.tag}.done"):
+        log("done marker present, nothing to do")
+        return
+    torch.manual_seed(args.seed)
+    model = sm.build().to(dev)
+    opt = torch.optim.Adam(model.parameters(), lr=args.lr)
+    it0, elapsed0, kgate = 0, 0.0, args.k_start
+    if args.resume and os.path.exists(path):
+        st = torch.load(path, map_location=dev, weights_only=False)
+        model.load_state_dict(st["model"])
+        opt.load_state_dict(st["opt"])
+        it0, elapsed0, kgate = st["it"], st.get("elapsed", 0.0), st.get("kgate", args.k_start)
+        log(f"resumed from it {it0} (elapsed {elapsed0:.0f}s)")
+    elif args.init_multi:
+        model.load_state_dict(torch.load(args.init_multi, map_location=dev, weights_only=False)["model"])
+        log(f"warm start from multi checkpoint {args.init_multi}")
+    elif args.init_ckpt:
+        model.init_from_e(torch.load(args.init_ckpt, map_location=dev, weights_only=False)["model"])
+        log(f"warm start from {args.init_ckpt}")
+    log(f"params {sum(p.numel() for p in model.parameters())}")
+    data = build_data(args, dev, log)
+    S = data["P"].shape[0]
+    labels = sorted(set(data["label"]))
+    lab_id = torch.tensor([labels.index(x) for x in data["label"]], device=dev)
+    nsc = data["n"].to(dev)
+    acc_sum = torch.zeros(len(labels), device=dev)
+    acc_cnt = torch.zeros(len(labels), device=dev)
+    drop_by = torch.zeros(len(labels), device=dev)
+    t_start, skipped, dropped, dropped_prev = time.time(), 0, 0, 0
+    it = it0
+    hist = []
+    while it < args.iters:
+        frac = it / max(1, args.iters - 1)
+        k = min(int(round(args.k_start + (args.k_end - args.k_start) * min(1.0, frac / args.k_ramp))), kgate)
+        lr = args.lr * (0.05 + 0.95 * 0.5 * (1 + np.cos(np.pi * frac)))
+        for pg in opt.param_groups:
+            pg["lr"] = lr
+        g = torch.Generator(device="cpu").manual_seed(args.seed * 1000003 + it)
+        idx = torch.randint(S, (args.batch,), generator=g).to(dev)
+        t0 = torch.randint(0, args.steps - k + 1, (args.batch,), generator=g).to(dev)
+        tt = t0[:, None] + torch.arange(k + 1, device=dev)[None]
+        Nb = int(nsc[idx].max())
+        Pw = data["P"][idx[:, None], tt][:, :, :Nb]
+        Vw = data["V"][idx[:, None], tt][:, :, :Nb]
+        mk, typ, cond = data["mask"][idx][:, :Nb], data["typ"][idx][:, :Nb], data["cond"][idx]
+        model.set_law(cond, typ)
+        m = torch.ones_like(mk)
+        pos, vel = Pw[:, 0], Vw[:, 0]
+        field = model.init_field(args.batch, dev)
+        w = mk[:, :, None]
+        denom = mk.sum() * 2 * k
+        eps_l, evs_l = [], []
+        for s in range(k):
+            pos, vel, _, field, _ = sf._step_m(model, pos, vel, m, mk, field)
+            pos, vel = pos.clamp(-1e3, 1e3), vel.clamp(-1e3, 1e3)
+            dd = (pos - Pw[:, s + 1]).norm(dim=-1, keepdim=True)
+            hub = torch.where(dd <= args.huber, dd ** 2, args.huber * (2 * dd - args.huber))
+            ep = (hub * w).sum((1, 2)) / denom
+            eps_l.append(ep)
+            evs_l.append((((vel - Vw[:, s + 1]) ** 2) * w).sum((1, 2)) / denom)
+        per_g = torch.stack(eps_l).sum(0)
+        per = per_g.detach()
+        keep = ((per * args.batch < args.sample_cap) & torch.isfinite(per)).float()
+        dropped += int(args.batch - keep.sum())
+        drop_by.index_add_(0, lab_id[idx], 1.0 - keep)
+        loss = (torch.nan_to_num(per_g + 0.1 * torch.stack(evs_l).sum(0)) * keep).sum()
+        opt.zero_grad()
+        loss.backward()
+        gn = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        if torch.isfinite(loss) and torch.isfinite(gn) and keep.sum() >= 1:
+            opt.step()
+            acc_sum.index_add_(0, lab_id[idx], torch.nan_to_num(per) * keep)
+            acc_cnt.index_add_(0, lab_id[idx], keep)
+        else:
+            opt.zero_grad()
+            skipped += 1
+            if skipped % 50 == 1:
+                log(f"it {it} loss {loss.item():.3g} non-finite or above cap, step skipped ({skipped} total)")
+        it += 1
+        if it % args.log_every == 0:
+            log(f"it {it} k {k} lr {lr:.2e} loss {loss.item():.6f} dropped {dropped}/{(it - it0) * args.batch} {(time.time() - t_start) / (it - it0):.3f}s/it")
+        if it % args.gate_every == 0:
+            wd = (dropped - dropped_prev) / (args.gate_every * args.batch)
+            dropped_prev = dropped
+            if wd < 0.05:
+                kgate = min(args.k_end, kgate + 1)
+            elif wd > 0.25:
+                kgate = max(args.k_start, kgate - 2)
+            log(f"gate: window drop rate {wd:.3f} -> kgate {kgate}")
+        if it % 1000 == 0:
+            bd = {labels[j]: round(float(acc_sum[j] / acc_cnt[j].clamp_min(1)), 6) for j in range(len(labels))}
+            log("by-law " + json.dumps(bd))
+            log("dropped-by-law " + json.dumps({labels[j]: int(drop_by[j]) for j in range(len(labels))}))
+            drop_by.zero_()
+            hist.append({"it": it, "loss_by_law": bd})
+            acc_sum.zero_()
+            acc_cnt.zero_()
+        stop = STOP["flag"]
+        if stop or it % args.ckpt_every == 0 or it == args.iters:
+            if all(torch.isfinite(p).all() for p in model.parameters()):
+                save(path, model, opt, it, args, {"elapsed": elapsed0 + time.time() - t_start, "kgate": kgate})
+                if it % args.snap_every == 0:
+                    save(f"{path}.it{it}", model, opt, it, args, {"elapsed": elapsed0 + time.time() - t_start, "kgate": kgate})
+            else:
+                log("non-finite parameters, checkpoint NOT written")
+        if stop:
+            log(f"SIGTERM: saved at it {it}, exiting 143")
+            sys.exit(143)
+    open(f"{args.ckpt_dir}/{args.tag}.done", "w").write(json.dumps({"it": it, "elapsed": elapsed0 + time.time() - t_start}))
+    log(f"trained to it {it} in {elapsed0 + time.time() - t_start:.0f}s total")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,80 @@
+name, memory.total [MiB]
+NVIDIA H200 NVL, 143771 MiB
+model mixed_s4738 done
+model mixed_s4739 done
+model pinned_gravity_E_frozen done
+sae results/sae_interp_lowdead_dec0_s4738_heldout16_512_dictionary_sae.pt mesh_512 l0 8.0 nmse 0.00029203345184214413 0.0002920334809459746
+sae results/sae_interp_lowdead_dec0_s4738_heldout16_large_dictionaries_sae.pt mesh_128 l0 7.95 nmse 3.1563886295771226e-05 3.156380262225866e-05
+sae results/sae_interp_lowdead_dec0_s4738_heldout16_large_dictionaries_sae.pt mesh_256 l0 7.91 nmse 3.6177283618599176e-05 3.6177236324874684e-05
+sae results/sae_interp_lowdead_dec0_s4738_large_dictionaries_sae.pt mesh_128 l0 7.96 nmse 0.0014997486723586917 0.001499748439528048
+sae results/sae_interp_lowdead_dec0_s4738_large_dictionaries_sae.pt mesh_256 l0 7.99 nmse 0.0007490309071727097 0.000749030732549727
+sae results/sae_interp_lowdead_dec0_s4738_sae.pt mesh_16 l0 7.83 nmse 8.966456516645849e-05 8.96644196473062e-05
+sae results/sae_interp_lowdead_dec0_s4738_sae.pt mesh_32 l0 7.99 nmse 0.0004743440367747098 0.0004743440367747098
+sae results/sae_interp_lowdead_dec0_s4738_sae.pt mesh_64 l0 7.99 nmse 0.00018234946765005589 0.00018234939489047974
+sae results/sae_interp_lowdead_dec0_s4738_sae.pt pair_32 l0 7.98 nmse 0.000543103669770062 0.000543103669770062
+sae results/sae_interp_lowdead_dec0_s4738_sae.pt pair_64 l0 7.99 nmse 0.0001662225549807772 0.0001662225549807772
+sae results/sae_interp_lowdead_dec0_s4738_sae.pt pair_128 l0 7.99 nmse 0.00010141736856894568 0.00010141736856894568
+sae results/sae_interp_lowdead_dec0_s4738_saeseed4739_sae.pt mesh_16 l0 7.99 nmse 8.124805026454851e-05 8.124789746943861e-05
+sae results/sae_interp_lowdead_dec0_s4738_saeseed4739_sae.pt mesh_32 l0 7.99 nmse 0.0003738578234333545 0.00037385779432952404
+sae results/sae_interp_lowdead_dec0_s4738_saeseed4739_sae.pt mesh_64 l0 7.99 nmse 9.104812488658354e-05 9.104809578275308e-05
+sae results/sae_interp_lowdead_dec0_s4738_saeseed4739_sae.pt pair_32 l0 7.99 nmse 0.0005994684179313481 0.0005994684179313481
+sae results/sae_interp_lowdead_dec0_s4738_saeseed4739_sae.pt pair_64 l0 7.99 nmse 0.0001723130262689665 0.0001723130262689665
+sae results/sae_interp_lowdead_dec0_s4738_saeseed4739_sae.pt pair_128 l0 7.99 nmse 0.00014602266310248524 0.00014602266310248524
+sae results/sae_interp_lowdead_dec0_s4738_saeseed4740_sae.pt mesh_16 l0 7.24 nmse 0.0005836656782776117 0.0005836655618622899
+sae results/sae_interp_lowdead_dec0_s4738_saeseed4740_sae.pt mesh_32 l0 8.0 nmse 0.0001172647243947722 0.00011726469529094175
+sae results/sae_interp_lowdead_dec0_s4738_saeseed4740_sae.pt mesh_64 l0 7.26 nmse 0.00019188763690181077 0.0001918875059345737
+sae results/sae_interp_lowdead_dec0_s4738_saeseed4741_sae.pt mesh_16 l0 8.0 nmse 0.00011654444097075611 0.00011654434638330713
+sae results/sae_interp_lowdead_dec0_s4738_saeseed4741_sae.pt mesh_32 l0 7.99 nmse 8.107703615678474e-05 8.107700705295429e-05
+sae results/sae_interp_lowdead_dec0_s4738_saeseed4741_sae.pt mesh_64 l0 8.0 nmse 0.00014549131446983665 0.00014549127081409097
+sae results/sae_interp_lowdead_dec0_s4739checkpoint_sae.pt mesh_16 l0 8.0 nmse 1.8469749193172902e-05 1.846819395723287e-05
+sae results/sae_interp_lowdead_dec0_s4739checkpoint_sae.pt mesh_32 l0 7.99 nmse 2.8399337679729797e-05 2.839930311893113e-05
+sae results/sae_interp_lowdead_dec0_s4739checkpoint_sae.pt mesh_64 l0 8.0 nmse 4.111630187253468e-05 4.111522503080778e-05
+sae results/sae_interp_lowdead_dec0_s4739checkpoint_sae.pt pair_32 l0 7.99 nmse 0.00018899014685302973 0.00018899014685302973
+sae results/sae_interp_lowdead_dec0_s4739checkpoint_sae.pt pair_64 l0 7.97 nmse 8.861293463269249e-05 8.861293463269249e-05
+sae results/sae_interp_lowdead_dec0_s4739checkpoint_sae.pt pair_128 l0 7.96 nmse 6.299166852841154e-05 6.299166852841154e-05
+sae results/sae_interp_lowdead_dec1_s4738_sae.pt mesh_16 l0 8.0 nmse 0.003298155264928937 0.003298153867945075
+sae results/sae_interp_lowdead_dec1_s4738_sae.pt mesh_32 l0 8.0 nmse 0.0004035616875626147 0.0004035618621855974
+sae results/sae_interp_lowdead_dec1_s4738_sae.pt mesh_64 l0 7.99 nmse 0.0007860126788727939 0.0007860101177357137
+sae results/sae_interp_lowdead_dec2_s4739checkpoint_large_dictionaries_sae.pt mesh_128 l0 8.0 nmse 0.000584833265747875 0.0005848340224474669
+sae results/sae_interp_lowdead_dec2_s4739checkpoint_large_dictionaries_sae.pt mesh_256 l0 7.98 nmse 0.0005351952859200537 0.0005351963918656111
+sae results/sae_interp_lowdead_dec2_s4739checkpoint_sae.pt mesh_16 l0 8.0 nmse 0.00045241674524731934 0.0004524171235971153
+sae results/sae_interp_lowdead_dec2_s4739checkpoint_sae.pt mesh_32 l0 8.0 nmse 0.0004919178900308907 0.0004919180064462125
+sae results/sae_interp_lowdead_dec2_s4739checkpoint_sae.pt mesh_64 l0 7.99 nmse 0.00046746269799768925 0.0004674627271015197
+sae results/sae_interp_lowdead_dec3_channelnorm_s4738_sae.pt mesh_16 l0 7.74 nmse 0.0009132263949140906 0.0009132252307608724
+sae results/sae_interp_lowdead_dec3_channelnorm_s4738_sae.pt mesh_32 l0 7.97 nmse 0.0003647796402219683 0.00036477847606875
+sae results/sae_interp_lowdead_dec3_channelnorm_s4738_sae.pt mesh_64 l0 7.98 nmse 0.015210668556392193 0.015210502780973911
+sae results/sae_interp_lowdead_dec3_channelnorm_s4739checkpoint_sae.pt mesh_16 l0 8.0 nmse 0.1013849601149559 0.1013849601149559
+sae results/sae_interp_lowdead_dec3_channelnorm_s4739checkpoint_sae.pt mesh_32 l0 8.0 nmse 0.1297660768032074 0.1297660768032074
+sae results/sae_interp_lowdead_dec3_channelnorm_s4739checkpoint_sae.pt mesh_64 l0 8.0 nmse 0.15265212953090668 0.15265212953090668
+sae results/sae_interp_lowdead_dec3_s4738_sae.pt mesh_16 l0 7.98 nmse 0.00015396374510601163 0.00015396310482174158
+sae results/sae_interp_lowdead_dec3_s4738_sae.pt mesh_32 l0 7.96 nmse 6.921035674167797e-05 6.921000021975487e-05
+sae results/sae_interp_lowdead_dec3_s4738_sae.pt mesh_64 l0 7.88 nmse 7.091702718753368e-05 7.091691804816946e-05
+sae results/sae_interp_topk_dec0_s4738_sae.pt mesh_128 l0 8.0 nmse 0.0006475838017649949 0.0006475838017649949
+sae results/sae_interp_topk_dec0_s4738_sae.pt mesh_512 l0 7.95 nmse 0.00907355360686779 0.00907355360686779
+sae results/sae_interp_topk_dec0_s4738_sae.pt mesh_2048 l0 8.0 nmse 0.029644254595041275 0.029644254595041275
+sae results/sae_interp_topk_dec0_s4738_sae.pt pair_256 l0 7.97 nmse 8.942846761783585e-05 8.942846761783585e-05
+sae results/sae_interp_topk_dec0_s4738_sae.pt pair_1024 l0 8.0 nmse 0.00010293068044120446 0.00010293068044120446
+sae results/sae_interp_topk_dec0_s4738_sae.pt pair_4096 l0 7.99 nmse 9.697860514279455e-05 9.697860514279455e-05
+sae results/sae_interp_topk_dec0_s4738_saeseed4739_sae.pt mesh_128 l0 7.96 nmse 0.006809984799474478 0.006809984799474478
+sae results/sae_interp_topk_dec0_s4738_saeseed4739_sae.pt mesh_512 l0 7.87 nmse 0.005381461698561907 0.005381461698561907
+sae results/sae_interp_topk_dec0_s4738_saeseed4739_sae.pt mesh_2048 l0 8.0 nmse 0.013672050088644028 0.013672050088644028
+sae results/sae_interp_topk_dec0_s4738_saeseed4739_sae.pt pair_256 l0 7.98 nmse 0.0001214413350680843 0.0001214413350680843
+sae results/sae_interp_topk_dec0_s4738_saeseed4739_sae.pt pair_1024 l0 7.95 nmse 9.635274182073772e-05 9.635274182073772e-05
+sae results/sae_interp_topk_dec0_s4738_saeseed4739_sae.pt pair_4096 l0 7.98 nmse 9.875550313154235e-05 9.875550313154235e-05
+sae results/sae_interp_topk_dec0_s4739checkpoint_sae.pt mesh_128 l0 7.99 nmse 5.950546619715169e-05 5.950546619715169e-05
+sae results/sae_interp_topk_dec0_s4739checkpoint_sae.pt mesh_512 l0 7.99 nmse 0.0002053566713584587 0.0002053566713584587
+sae results/sae_interp_topk_dec0_s4739checkpoint_sae.pt mesh_2048 l0 8.0 nmse 0.0005491675692610443 0.0005491675692610443
+sae results/sae_interp_topk_dec0_s4739checkpoint_sae.pt pair_256 l0 7.95 nmse 5.3731513617094606e-05 5.3731513617094606e-05
+sae results/sae_interp_topk_dec0_s4739checkpoint_sae.pt pair_1024 l0 7.99 nmse 6.0702925111399963e-05 6.0702925111399963e-05
+sae results/sae_interp_topk_dec0_s4739checkpoint_sae.pt pair_4096 l0 7.99 nmse 6.451673107221723e-05 6.451673107221723e-05
+sae results/sae_interp_topk_dec2_s4738_sae.pt mesh_128 l0 0.0 nmse nan nan
+sae results/sae_interp_topk_dec2_s4738_sae.pt mesh_512 l0 0.0 nmse nan nan
+sae results/sae_interp_topk_dec2_s4738_sae.pt mesh_2048 l0 0.0 nmse nan nan
+sae results/sae_interp_topk_enc4_s4738_sae.pt mesh_128 l0 7.7 nmse 0.00015715327754151076 0.00015715330664534122
+sae results/sae_interp_topk_enc4_s4738_sae.pt mesh_512 l0 7.99 nmse 6.721280806232244e-05 6.721285171806812e-05
+sae results/sae_interp_topk_enc4_s4738_sae.pt mesh_2048 l0 7.99 nmse 9.857590339379385e-05 9.857593977358192e-05
+sae results/sae_interp_topk_pairl1_s4738_sae.pt pair_256 l0 7.96 nmse 6.187777034938335e-05 6.187777034938335e-05
+sae results/sae_interp_topk_pairl1_s4738_sae.pt pair_1024 l0 8.0 nmse 6.032412056811154e-05 6.032412056811154e-05
+sae results/sae_interp_topk_pairl1_s4738_sae.pt pair_4096 l0 8.0 nmse 6.283957918640226e-05 6.283957918640226e-05
+DONE
+network_utilization exit 0

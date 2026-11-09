@@ -9,7 +9,7 @@ READ FIRST (context, in this order): ~/.claude/CLAUDE.md, ~/.claude/projects/-ho
 
 STANDING RULES (hard constraints):
 - Do NOT run compute on this local machine. All compute (data gen, truth sim, eval, probes) goes on Polaris GPU (mcp__polaris__* tools; see reference_polaris_job_logistics: Duo start, log path ~/<name>-<id>.log, per the GPU slot section below, model flags must match). Never Polaris CPU unless no alternative; GPU first. Only video rendering may be local (and it needs no heavy compute). Small file reads/greps are fine locally.
-- Use all available compute proactively: both Polaris GPUs (QOS student-pleiades; 2-GPU cap is account-wide, queue if full), within your GPU slot below. Never ask for GPU approval.
+- Polaris GPU limit: treat the account as having 2 GPUs. Never use more than 2 at once across the main session and all agents; never try to exceed it. Chain jobs with `--dependency=afterany:<id>` so at most 2 run at once. No filler jobs. If the per-user submit limit refuses a job, record that in your report and stop; do not retry in a loop. Use your GPU slot below proactively; never ask for GPU approval. Rule: user, 2026-11-08.
 - Seed 4738 for any new seed. Gravity=9 default. Scripts worth keeping go in scripts/ (uncommitted); scratch in the session scratchpad.
 - Diagnose by channel (position/velocity x/y, mass, saturation, wall vs ball-ball collisions), not aggregate MSE only (feedback_diagnose_rollout_with_channel_breakdown). Prefer architectural causes over hparam-tuning explanations (feedback_prefer_architecture_over_hparam_tuning). Verify claims against code before stating them; mark untested claims as untested (feedback_verify_before_stating_facts). Select/compare on held-out seeds.
 - Any sim/rollout video output: run a fresh, unbiased subagent (no hypothesis primed) to describe what it sees, using the saved diagnostic rendering tool and prompt if they exist. Save videos to videos/. Report the video path; the main session delivers it (subagents cannot send files).
@@ -34,11 +34,13 @@ Never name an experiment, arm, agent, branch, worktree, job, result file or scri
 
 ## Priority and GPU slot (add to every dispatched prompt)
 
-Your row in `docs/debugging/priority-registry.md` gives your rating (1 background to 5 urgent) and GPU slot (`docs/debugging/gpu-reservations.md`). Read `docs/debugging/priority-system.md`. Before every `sbatch`: confirm the slot is yours or released, add a registry row for the job (rating from the rubric, `--nice` from the mapping table, `--requeue` and a checkpoint for jobs over 1 h), update `updated` when state changes, set `done` when finished with the experiment-log entry named in `log`. Never hold both GPUs unless the other class has nothing runnable; release an idle slot after 2 h; do not end your turn or poll in a loop while a job is pending. Run `python3 scripts/check_priority_registry.py` after edits and fix every ERROR.
+Your row in `docs/debugging/priority-registry.md` gives your rating (1 background to 5 urgent) and GPU slot (`docs/debugging/gpu-reservations.md`). Read `docs/debugging/priority-system.md`. Before every `sbatch`: confirm the slot is yours or released, add a registry row for the job (rating from the rubric, `--nice` from the mapping table, `--requeue` and a checkpoint for jobs over 1 h), update `updated` when state changes, set `done` when finished with the experiment-log entry named in `log`. Never hold more GPUs than your slot allows (2 in total across everyone); release an idle slot after 2 h; do not end your turn or poll in a loop while a job is pending. Run `python3 scripts/check_priority_registry.py` after edits and fix every ERROR.
 
 ## Polaris waits (token cost)
 
 Agents do not idle-wait on Polaris jobs (waits over about 270 s expire the subagent prompt cache and force a full context re-write). After submitting a job, record job id, expected runtime, log path and exact resume steps in the supervisor-log or your report, then stop. The main session watches with a Monitor until-loop on sacct and resumes you (SendMessage) or starts a fresh agent. Check sacct once shortly after submit for fast failures.
+
+PRE-SUBMIT INPUT CHECK: Before any sbatch, run the script's CPU or dry stage and confirm every file the job script's input check needs is in the tarball (`tar -tzf`). A job that dies in its first minute costs a full queue wait (jobs 7162 and 7191, 2026-11-08). If a job fails, rerun the full check on any rewritten resubmit script before submitting again. Rule: user, 2026-11-09.
 
 ## Independent review before reporting (add to every dispatched prompt)
 

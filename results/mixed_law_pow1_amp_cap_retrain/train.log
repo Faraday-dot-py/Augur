@@ -1,0 +1,1381 @@
+[00:37:46] warm start from kern/E_frozen.pt
+[00:37:46] params 298730
+[00:49:28] data: 71825/72000 scenes accepted in 702s, gpu mem 16.6 GB
+[00:49:33] it 100 k 2 lr 5.00e-04 loss 0.115314 dropped 0/1600 0.047s/it
+[00:49:37] it 200 k 2 lr 5.00e-04 loss 0.027909 dropped 0/3200 0.046s/it
+[00:49:39] gate: window drop rate 0.000 -> kgate 3
+[00:49:42] it 300 k 2 lr 5.00e-04 loss 0.187499 dropped 0/4800 0.045s/it
+[00:49:46] it 400 k 2 lr 5.00e-04 loss 0.022882 dropped 0/6400 0.045s/it
+[00:49:50] it 500 k 2 lr 5.00e-04 loss 0.056994 dropped 0/8000 0.045s/it
+[00:49:50] gate: window drop rate 0.000 -> kgate 4
+[00:49:55] it 600 k 2 lr 5.00e-04 loss 0.269222 dropped 0/9600 0.045s/it
+[00:49:59] it 700 k 2 lr 5.00e-04 loss 0.017011 dropped 0/11200 0.045s/it
+[00:50:02] gate: window drop rate 0.000 -> kgate 5
+[00:50:04] it 800 k 2 lr 5.00e-04 loss 0.035334 dropped 0/12800 0.045s/it
+[00:50:08] it 900 k 2 lr 5.00e-04 loss 0.004312 dropped 0/14400 0.045s/it
+[00:50:13] it 1000 k 2 lr 5.00e-04 loss 0.013721 dropped 0/16000 0.045s/it
+[00:50:13] gate: window drop rate 0.000 -> kgate 6
+[00:50:13] by-law {"lj:single": 0.00055, "pow1:charge": 1.3e-05, "pow1:predprey": 3e-06, "pow1:single": 0.001614, "pow2:charge": 2.2e-05, "pow2:predprey": 5e-06, "pow2:single": 0.000391, "pow3:charge": 3.5e-05, "pow3:predprey": 1e-05, "pow3:single": 0.000515, "yuk128:charge": 2e-05, "yuk128:single": 0.000394, "yuk8:charge": 1.7e-05, "yuk8:single": 0.0003}
+[00:50:13] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[00:50:17] it 1100 k 2 lr 5.00e-04 loss 0.028293 dropped 0/17600 0.045s/it
+[00:50:23] it 1200 k 3 lr 5.00e-04 loss 0.033449 dropped 0/19200 0.045s/it
+[00:50:26] gate: window drop rate 0.000 -> kgate 7
+[00:50:29] it 1300 k 3 lr 5.00e-04 loss 0.034775 dropped 0/20800 0.047s/it
+[00:50:34] it 1400 k 3 lr 5.00e-04 loss 0.013296 dropped 0/22400 0.047s/it
+[00:50:40] it 1500 k 3 lr 5.00e-04 loss 0.093265 dropped 0/24000 0.048s/it
+[00:50:40] gate: window drop rate 0.000 -> kgate 8
+[00:50:47] it 1600 k 3 lr 5.00e-04 loss 0.073099 dropped 0/25600 0.049s/it
+[00:50:53] it 1700 k 3 lr 4.99e-04 loss 0.012980 dropped 0/27200 0.050s/it
+[00:50:55] gate: window drop rate 0.000 -> kgate 9
+[00:50:58] it 1800 k 3 lr 4.99e-04 loss 0.011676 dropped 0/28800 0.050s/it
+[00:51:04] it 1900 k 3 lr 4.99e-04 loss 0.022819 dropped 0/30400 0.051s/it
+[00:51:10] it 2000 k 3 lr 4.99e-04 loss 0.049099 dropped 0/32000 0.051s/it
+[00:51:10] gate: window drop rate 0.000 -> kgate 10
+[00:51:10] by-law {"lj:single": 0.000423, "pow1:charge": 2.5e-05, "pow1:predprey": 7e-06, "pow1:single": 0.003105, "pow2:charge": 2.5e-05, "pow2:predprey": 9e-06, "pow2:single": 0.000757, "pow3:charge": 5.3e-05, "pow3:predprey": 2.2e-05, "pow3:single": 0.000907, "yuk128:charge": 2.2e-05, "yuk128:single": 0.000606, "yuk8:charge": 2e-05, "yuk8:single": 0.000567}
+[00:51:10] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[00:51:16] it 2100 k 3 lr 4.99e-04 loss 0.037926 dropped 0/33600 0.052s/it
+[00:51:22] it 2200 k 3 lr 4.99e-04 loss 0.028442 dropped 0/35200 0.052s/it
+[00:51:25] gate: window drop rate 0.000 -> kgate 11
+[00:51:28] it 2300 k 3 lr 4.99e-04 loss 0.021276 dropped 0/36800 0.052s/it
+[00:51:34] it 2400 k 3 lr 4.99e-04 loss 0.051834 dropped 0/38400 0.053s/it
+[00:51:40] it 2500 k 3 lr 4.99e-04 loss 0.018112 dropped 0/40000 0.053s/it
+[00:51:40] gate: window drop rate 0.000 -> kgate 12
+[00:51:46] it 2600 k 3 lr 4.99e-04 loss 0.025623 dropped 0/41600 0.053s/it
+[00:51:52] it 2700 k 3 lr 4.99e-04 loss 0.089429 dropped 0/43200 0.053s/it
+[00:51:55] gate: window drop rate 0.000 -> kgate 13
+[00:51:58] it 2800 k 3 lr 4.99e-04 loss 0.024131 dropped 0/44800 0.054s/it
+[00:52:04] it 2900 k 3 lr 4.98e-04 loss 0.072365 dropped 0/46400 0.054s/it
+[00:52:10] it 3000 k 3 lr 4.98e-04 loss 0.016429 dropped 0/48000 0.054s/it
+[00:52:10] gate: window drop rate 0.000 -> kgate 14
+[00:52:10] by-law {"lj:single": 0.000738, "pow1:charge": 2.9e-05, "pow1:predprey": 6e-06, "pow1:single": 0.00302, "pow2:charge": 2.3e-05, "pow2:predprey": 8e-06, "pow2:single": 0.000904, "pow3:charge": 4.9e-05, "pow3:predprey": 1.8e-05, "pow3:single": 0.001216, "yuk128:charge": 2e-05, "yuk128:single": 0.000659, "yuk8:charge": 2.1e-05, "yuk8:single": 0.000767}
+[00:52:10] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[00:52:16] it 3100 k 3 lr 4.98e-04 loss 0.074586 dropped 0/49600 0.054s/it
+[00:52:22] it 3200 k 3 lr 4.98e-04 loss 0.037499 dropped 0/51200 0.054s/it
+[00:52:25] gate: window drop rate 0.000 -> kgate 15
+[00:52:28] it 3300 k 3 lr 4.98e-04 loss 0.018830 dropped 0/52800 0.055s/it
+[00:52:35] it 3400 k 3 lr 4.98e-04 loss 0.051183 dropped 0/54400 0.055s/it
+[00:52:42] it 3500 k 4 lr 4.98e-04 loss 0.070566 dropped 0/56000 0.055s/it
+[00:52:42] gate: window drop rate 0.000 -> kgate 16
+[00:52:50] it 3600 k 4 lr 4.98e-04 loss 0.174561 dropped 0/57600 0.056s/it
+[00:52:57] it 3700 k 4 lr 4.97e-04 loss 0.030573 dropped 0/59200 0.057s/it
+[00:53:01] gate: window drop rate 0.000 -> kgate 17
+[00:53:05] it 3800 k 4 lr 4.97e-04 loss 0.448004 dropped 0/60800 0.057s/it
+[00:53:12] it 3900 k 4 lr 4.97e-04 loss 0.060176 dropped 0/62400 0.058s/it
+[00:53:20] it 4000 k 4 lr 4.97e-04 loss 0.043980 dropped 0/64000 0.058s/it
+[00:53:20] gate: window drop rate 0.000 -> kgate 18
+[00:53:20] by-law {"lj:single": 0.000803, "pow1:charge": 3.4e-05, "pow1:predprey": 1.2e-05, "pow1:single": 0.003239, "pow2:charge": 3.1e-05, "pow2:predprey": 1.2e-05, "pow2:single": 0.000878, "pow3:charge": 8e-05, "pow3:predprey": 3.2e-05, "pow3:single": 0.001031, "yuk128:charge": 3.3e-05, "yuk128:single": 0.000824, "yuk8:charge": 3.6e-05, "yuk8:single": 0.000679}
+[00:53:20] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[00:53:28] it 4100 k 4 lr 4.97e-04 loss 0.041771 dropped 0/65600 0.058s/it
+[00:53:35] it 4200 k 4 lr 4.97e-04 loss 0.017688 dropped 0/67200 0.059s/it
+[00:53:39] gate: window drop rate 0.000 -> kgate 19
+[00:53:43] it 4300 k 4 lr 4.97e-04 loss 0.072811 dropped 0/68800 0.059s/it
+[00:53:51] it 4400 k 4 lr 4.96e-04 loss 0.024147 dropped 0/70400 0.060s/it
+[00:53:58] it 4500 k 4 lr 4.96e-04 loss 0.026017 dropped 0/72000 0.060s/it
+[00:53:58] gate: window drop rate 0.000 -> kgate 20
+[00:54:06] it 4600 k 4 lr 4.96e-04 loss 0.043513 dropped 0/73600 0.060s/it
+[00:54:14] it 4700 k 4 lr 4.96e-04 loss 0.452827 dropped 0/75200 0.061s/it
+[00:54:17] gate: window drop rate 0.000 -> kgate 21
+[00:54:21] it 4800 k 4 lr 4.96e-04 loss 0.009596 dropped 0/76800 0.061s/it
+[00:54:29] it 4900 k 4 lr 4.96e-04 loss 0.032123 dropped 0/78400 0.061s/it
+[00:54:37] it 5000 k 4 lr 4.95e-04 loss 0.018661 dropped 0/80000 0.062s/it
+[00:54:37] gate: window drop rate 0.000 -> kgate 22
+[00:54:37] by-law {"lj:single": 0.000792, "pow1:charge": 4.3e-05, "pow1:predprey": 1.4e-05, "pow1:single": 0.004542, "pow2:charge": 3.1e-05, "pow2:predprey": 1.5e-05, "pow2:single": 0.000995, "pow3:charge": 8.5e-05, "pow3:predprey": 3.7e-05, "pow3:single": 0.001255, "yuk128:charge": 2.8e-05, "yuk128:single": 0.00086, "yuk8:charge": 2.8e-05, "yuk8:single": 0.000656}
+[00:54:37] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[00:54:44] it 5100 k 4 lr 4.95e-04 loss 0.057861 dropped 0/81600 0.062s/it
+[00:54:52] it 5200 k 4 lr 4.95e-04 loss 0.161501 dropped 0/83200 0.062s/it
+[00:54:56] gate: window drop rate 0.000 -> kgate 23
+[00:55:00] it 5300 k 4 lr 4.95e-04 loss 0.057338 dropped 0/84800 0.063s/it
+[00:55:07] it 5400 k 4 lr 4.95e-04 loss 0.022125 dropped 0/86400 0.063s/it
+[00:55:15] it 5500 k 4 lr 4.94e-04 loss 0.028297 dropped 0/88000 0.063s/it
+[00:55:15] gate: window drop rate 0.000 -> kgate 24
+[00:55:22] it 5600 k 4 lr 4.94e-04 loss 0.037999 dropped 0/89600 0.063s/it
+[00:55:30] it 5700 k 4 lr 4.94e-04 loss 0.019976 dropped 0/91200 0.064s/it
+[00:55:34] gate: window drop rate 0.000 -> kgate 25
+[00:55:39] it 5800 k 5 lr 4.94e-04 loss 0.018071 dropped 0/92800 0.064s/it
+[00:55:48] it 5900 k 5 lr 4.94e-04 loss 0.022195 dropped 0/94400 0.064s/it
+[00:55:57] it 6000 k 5 lr 4.93e-04 loss 0.076247 dropped 0/96000 0.065s/it
+[00:55:57] gate: window drop rate 0.000 -> kgate 26
+[00:55:57] by-law {"lj:single": 0.001022, "pow1:charge": 4.5e-05, "pow1:predprey": 1.4e-05, "pow1:single": 0.003998, "pow2:charge": 3.1e-05, "pow2:predprey": 1.6e-05, "pow2:single": 0.001021, "pow3:charge": 6.7e-05, "pow3:predprey": 3.7e-05, "pow3:single": 0.001249, "yuk128:charge": 3.6e-05, "yuk128:single": 0.000822, "yuk8:charge": 2.8e-05, "yuk8:single": 0.000946}
+[00:55:57] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[00:56:07] it 6100 k 5 lr 4.93e-04 loss 0.093988 dropped 0/97600 0.065s/it
+[00:56:16] it 6200 k 5 lr 4.93e-04 loss 0.015339 dropped 0/99200 0.066s/it
+[00:56:20] gate: window drop rate 0.000 -> kgate 27
+[00:56:25] it 6300 k 5 lr 4.93e-04 loss 0.141099 dropped 0/100800 0.066s/it
+[00:56:34] it 6400 k 5 lr 4.93e-04 loss 0.034940 dropped 0/102400 0.067s/it
+[00:56:43] it 6500 k 5 lr 4.92e-04 loss 0.045369 dropped 0/104000 0.067s/it
+[00:56:43] gate: window drop rate 0.000 -> kgate 28
+[00:56:53] it 6600 k 5 lr 4.92e-04 loss 1.000311 dropped 0/105600 0.067s/it
+[00:57:02] it 6700 k 5 lr 4.92e-04 loss 0.001951 dropped 0/107200 0.068s/it
+[00:57:06] gate: window drop rate 0.000 -> kgate 29
+[00:57:11] it 6800 k 5 lr 4.92e-04 loss 0.282606 dropped 0/108800 0.068s/it
+[00:57:20] it 6900 k 5 lr 4.91e-04 loss 0.016662 dropped 0/110400 0.068s/it
+[00:57:29] it 7000 k 5 lr 4.91e-04 loss 0.008967 dropped 0/112000 0.069s/it
+[00:57:29] gate: window drop rate 0.000 -> kgate 30
+[00:57:29] by-law {"lj:single": 0.001446, "pow1:charge": 5.8e-05, "pow1:predprey": 2.2e-05, "pow1:single": 0.005491, "pow2:charge": 3.8e-05, "pow2:predprey": 1.7e-05, "pow2:single": 0.00133, "pow3:charge": 9.8e-05, "pow3:predprey": 4.3e-05, "pow3:single": 0.001942, "yuk128:charge": 4e-05, "yuk128:single": 0.001112, "yuk8:charge": 3.5e-05, "yuk8:single": 0.001047}
+[00:57:29] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[00:57:38] it 7100 k 5 lr 4.91e-04 loss 0.026703 dropped 0/113600 0.069s/it
+[00:57:48] it 7200 k 5 lr 4.91e-04 loss 0.078311 dropped 0/115200 0.069s/it
+[00:57:52] gate: window drop rate 0.000 -> kgate 30
+[00:57:57] it 7300 k 5 lr 4.90e-04 loss 0.098138 dropped 0/116800 0.070s/it
+[00:58:06] it 7400 k 5 lr 4.90e-04 loss 0.176980 dropped 0/118400 0.070s/it
+[00:58:15] it 7500 k 5 lr 4.90e-04 loss 0.020175 dropped 0/120000 0.070s/it
+[00:58:15] gate: window drop rate 0.000 -> kgate 30
+[00:58:24] it 7600 k 5 lr 4.90e-04 loss 0.078720 dropped 0/121600 0.071s/it
+[00:58:34] it 7700 k 5 lr 4.89e-04 loss 0.024620 dropped 0/123200 0.071s/it
+[00:58:38] gate: window drop rate 0.000 -> kgate 30
+[00:58:43] it 7800 k 5 lr 4.89e-04 loss 0.007354 dropped 0/124800 0.071s/it
+[00:58:52] it 7900 k 5 lr 4.89e-04 loss 0.062056 dropped 0/126400 0.071s/it
+[00:59:01] it 8000 k 5 lr 4.88e-04 loss 0.014112 dropped 0/128000 0.072s/it
+[00:59:01] gate: window drop rate 0.000 -> kgate 30
+[00:59:01] by-law {"lj:single": 0.001299, "pow1:charge": 5.2e-05, "pow1:predprey": 1.8e-05, "pow1:single": 0.003882, "pow2:charge": 3.2e-05, "pow2:predprey": 1.2e-05, "pow2:single": 0.001572, "pow3:charge": 8.4e-05, "pow3:predprey": 2.1e-05, "pow3:single": 0.001669, "yuk128:charge": 3.2e-05, "yuk128:single": 0.001109, "yuk8:charge": 2.6e-05, "yuk8:single": 0.000913}
+[00:59:01] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[00:59:12] it 8100 k 6 lr 4.88e-04 loss 0.085284 dropped 0/129600 0.072s/it
+[00:59:22] it 8200 k 6 lr 4.88e-04 loss 0.416106 dropped 0/131200 0.072s/it
+[00:59:28] gate: window drop rate 0.000 -> kgate 30
+[00:59:33] it 8300 k 6 lr 4.87e-04 loss 0.012770 dropped 0/132800 0.073s/it
+[00:59:44] it 8400 k 6 lr 4.87e-04 loss 0.024952 dropped 0/134400 0.073s/it
+[00:59:54] it 8500 k 6 lr 4.87e-04 loss 0.127207 dropped 0/136000 0.074s/it
+[00:59:54] gate: window drop rate 0.000 -> kgate 30
+[01:00:05] it 8600 k 6 lr 4.87e-04 loss 0.022761 dropped 0/137600 0.074s/it
+[01:00:16] it 8700 k 6 lr 4.86e-04 loss 0.057593 dropped 0/139200 0.074s/it
+[01:00:21] gate: window drop rate 0.000 -> kgate 30
+[01:00:27] it 8800 k 6 lr 4.86e-04 loss 0.017058 dropped 0/140800 0.075s/it
+[01:00:37] it 8900 k 6 lr 4.86e-04 loss 0.026804 dropped 0/142400 0.075s/it
+[01:00:48] it 9000 k 6 lr 4.85e-04 loss 0.012660 dropped 0/144000 0.076s/it
+[01:00:48] gate: window drop rate 0.000 -> kgate 30
+[01:00:48] by-law {"lj:single": 0.002011, "pow1:charge": 9.8e-05, "pow1:predprey": 3e-05, "pow1:single": 0.006449, "pow2:charge": 5.1e-05, "pow2:predprey": 2e-05, "pow2:single": 0.002371, "pow3:charge": 0.000126, "pow3:predprey": 3e-05, "pow3:single": 0.002588, "yuk128:charge": 3.9e-05, "yuk128:single": 0.001817, "yuk8:charge": 4e-05, "yuk8:single": 0.001677}
+[01:00:48] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[01:00:59] it 9100 k 6 lr 4.85e-04 loss 0.006336 dropped 0/145600 0.076s/it
+[01:01:10] it 9200 k 6 lr 4.85e-04 loss 0.176825 dropped 0/147200 0.076s/it
+[01:01:15] gate: window drop rate 0.000 -> kgate 30
+[01:01:20] it 9300 k 6 lr 4.84e-04 loss 0.005056 dropped 0/148800 0.077s/it
+[01:01:31] it 9400 k 6 lr 4.84e-04 loss 0.010694 dropped 0/150400 0.077s/it
+[01:01:42] it 9500 k 6 lr 4.84e-04 loss 0.015444 dropped 0/152000 0.077s/it
+[01:01:42] gate: window drop rate 0.000 -> kgate 30
+[01:01:52] it 9600 k 6 lr 4.83e-04 loss 0.021455 dropped 0/153600 0.078s/it
+[01:02:03] it 9700 k 6 lr 4.83e-04 loss 0.139688 dropped 0/155200 0.078s/it
+[01:02:08] gate: window drop rate 0.000 -> kgate 30
+[01:02:14] it 9800 k 6 lr 4.83e-04 loss 0.028647 dropped 0/156800 0.078s/it
+[01:02:24] it 9900 k 6 lr 4.82e-04 loss 0.068013 dropped 0/158400 0.078s/it
+[01:02:35] it 10000 k 6 lr 4.82e-04 loss 0.132638 dropped 0/160000 0.079s/it
+[01:02:35] gate: window drop rate 0.000 -> kgate 30
+[01:02:35] by-law {"lj:single": 0.00186, "pow1:charge": 8.4e-05, "pow1:predprey": 2.5e-05, "pow1:single": 0.005833, "pow2:charge": 3.9e-05, "pow2:predprey": 1.6e-05, "pow2:single": 0.002096, "pow3:charge": 0.000125, "pow3:predprey": 1.8e-05, "pow3:single": 0.002834, "yuk128:charge": 4.2e-05, "yuk128:single": 0.001662, "yuk8:charge": 4.1e-05, "yuk8:single": 0.001413}
+[01:02:35] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[01:02:46] it 10100 k 6 lr 4.82e-04 loss 0.018383 dropped 0/161600 0.079s/it
+[01:02:56] it 10200 k 6 lr 4.81e-04 loss 0.072273 dropped 0/163200 0.079s/it
+[01:03:02] gate: window drop rate 0.000 -> kgate 30
+[01:03:07] it 10300 k 7 lr 4.81e-04 loss 0.534266 dropped 0/164800 0.080s/it
+[01:03:20] it 10400 k 7 lr 4.80e-04 loss 0.024477 dropped 0/166400 0.080s/it
+[01:03:32] it 10500 k 7 lr 4.80e-04 loss 0.331472 dropped 0/168000 0.080s/it
+[01:03:32] gate: window drop rate 0.000 -> kgate 30
+[01:03:44] it 10600 k 7 lr 4.80e-04 loss 0.183748 dropped 0/169600 0.081s/it
+[01:03:56] it 10700 k 7 lr 4.79e-04 loss 0.082641 dropped 0/171200 0.081s/it
+[01:04:02] gate: window drop rate 0.000 -> kgate 30
+[01:04:09] it 10800 k 7 lr 4.79e-04 loss 0.137810 dropped 0/172800 0.082s/it
+[01:04:21] it 10900 k 7 lr 4.79e-04 loss 0.043433 dropped 0/174400 0.082s/it
+[01:04:33] it 11000 k 7 lr 4.78e-04 loss 0.106213 dropped 0/176000 0.082s/it
+[01:04:33] gate: window drop rate 0.000 -> kgate 30
+[01:04:33] by-law {"lj:single": 0.002661, "pow1:charge": 0.000114, "pow1:predprey": 3.8e-05, "pow1:single": 0.0069, "pow2:charge": 5.5e-05, "pow2:predprey": 2.5e-05, "pow2:single": 0.002122, "pow3:charge": 0.00013, "pow3:predprey": 2.8e-05, "pow3:single": 0.003484, "yuk128:charge": 5.2e-05, "yuk128:single": 0.00211, "yuk8:charge": 5.4e-05, "yuk8:single": 0.001656}
+[01:04:33] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[01:04:45] it 11100 k 7 lr 4.78e-04 loss 0.123990 dropped 0/177600 0.083s/it
+[01:04:58] it 11200 k 7 lr 4.77e-04 loss 0.015322 dropped 0/179200 0.083s/it
+[01:05:04] gate: window drop rate 0.000 -> kgate 30
+[01:05:10] it 11300 k 7 lr 4.77e-04 loss 0.116720 dropped 0/180800 0.083s/it
+[01:05:22] it 11400 k 7 lr 4.77e-04 loss 0.082066 dropped 0/182400 0.084s/it
+[01:05:34] it 11500 k 7 lr 4.76e-04 loss 0.004874 dropped 0/184000 0.084s/it
+[01:05:34] gate: window drop rate 0.000 -> kgate 30
+[01:05:47] it 11600 k 7 lr 4.76e-04 loss 0.144588 dropped 0/185600 0.084s/it
+[01:05:59] it 11700 k 7 lr 4.75e-04 loss 0.075878 dropped 0/187200 0.085s/it
+[01:06:05] gate: window drop rate 0.000 -> kgate 30
+[01:06:11] it 11800 k 7 lr 4.75e-04 loss 0.012510 dropped 0/188800 0.085s/it
+[01:06:23] it 11900 k 7 lr 4.75e-04 loss 0.025861 dropped 0/190400 0.085s/it
+[01:06:35] it 12000 k 7 lr 4.74e-04 loss 0.034822 dropped 0/192000 0.086s/it
+[01:06:35] gate: window drop rate 0.000 -> kgate 30
+[01:06:35] by-law {"lj:single": 0.002877, "pow1:charge": 0.000132, "pow1:predprey": 4.3e-05, "pow1:single": 0.007575, "pow2:charge": 6.2e-05, "pow2:predprey": 2.5e-05, "pow2:single": 0.003083, "pow3:charge": 0.000133, "pow3:predprey": 2.5e-05, "pow3:single": 0.004046, "yuk128:charge": 6e-05, "yuk128:single": 0.002063, "yuk8:charge": 0.000262, "yuk8:single": 0.002087}
+[01:06:35] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[01:06:48] it 12100 k 7 lr 4.74e-04 loss 0.035774 dropped 0/193600 0.086s/it
+[01:07:00] it 12200 k 7 lr 4.73e-04 loss 0.182275 dropped 0/195200 0.086s/it
+[01:07:06] gate: window drop rate 0.000 -> kgate 30
+[01:07:12] it 12300 k 7 lr 4.73e-04 loss 0.011105 dropped 0/196800 0.087s/it
+[01:07:25] it 12400 k 7 lr 4.72e-04 loss 0.145187 dropped 0/198400 0.087s/it
+[01:07:37] it 12500 k 7 lr 4.72e-04 loss 0.022825 dropped 0/200000 0.087s/it
+[01:07:37] gate: window drop rate 0.000 -> kgate 30
+[01:07:49] it 12600 k 8 lr 4.72e-04 loss 0.062348 dropped 0/201600 0.087s/it
+[01:08:03] it 12700 k 8 lr 4.71e-04 loss 0.306135 dropped 0/203200 0.088s/it
+[01:08:10] gate: window drop rate 0.000 -> kgate 30
+[01:08:17] it 12800 k 8 lr 4.71e-04 loss 0.274448 dropped 0/204800 0.088s/it
+[01:08:31] it 12900 k 8 lr 4.70e-04 loss 0.022557 dropped 0/206400 0.089s/it
+[01:08:44] it 13000 k 8 lr 4.70e-04 loss 0.065438 dropped 0/208000 0.089s/it
+[01:08:44] gate: window drop rate 0.000 -> kgate 30
+[01:08:44] by-law {"lj:single": 0.003548, "pow1:charge": 0.000131, "pow1:predprey": 5.1e-05, "pow1:single": 0.008842, "pow2:charge": 6.7e-05, "pow2:predprey": 2.9e-05, "pow2:single": 0.003228, "pow3:charge": 0.00014, "pow3:predprey": 3e-05, "pow3:single": 0.003494, "yuk128:charge": 7.6e-05, "yuk128:single": 0.002531, "yuk8:charge": 5.2e-05, "yuk8:single": 0.002249}
+[01:08:44] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[01:08:58] it 13100 k 8 lr 4.69e-04 loss 0.061413 dropped 0/209600 0.089s/it
+[01:09:12] it 13200 k 8 lr 4.69e-04 loss 0.455052 dropped 0/211200 0.090s/it
+[01:09:19] gate: window drop rate 0.000 -> kgate 30
+[01:09:26] it 13300 k 8 lr 4.68e-04 loss 0.013688 dropped 0/212800 0.090s/it
+[01:09:40] it 13400 k 8 lr 4.68e-04 loss 0.146338 dropped 0/214400 0.090s/it
+[01:09:54] it 13500 k 8 lr 4.67e-04 loss 0.222306 dropped 0/216000 0.091s/it
+[01:09:54] gate: window drop rate 0.000 -> kgate 30
+[01:10:07] it 13600 k 8 lr 4.67e-04 loss 0.048348 dropped 0/217600 0.091s/it
+[01:10:21] it 13700 k 8 lr 4.66e-04 loss 0.010661 dropped 0/219200 0.091s/it
+[01:10:28] gate: window drop rate 0.000 -> kgate 30
+[01:10:35] it 13800 k 8 lr 4.66e-04 loss 0.019028 dropped 0/220800 0.092s/it
+[01:10:49] it 13900 k 8 lr 4.65e-04 loss 0.030889 dropped 0/222400 0.092s/it
+[01:11:02] it 14000 k 8 lr 4.65e-04 loss 0.005833 dropped 0/224000 0.092s/it
+[01:11:02] gate: window drop rate 0.000 -> kgate 30
+[01:11:02] by-law {"lj:single": 0.003956, "pow1:charge": 0.000185, "pow1:predprey": 6.8e-05, "pow1:single": 0.009474, "pow2:charge": 7.2e-05, "pow2:predprey": 3.7e-05, "pow2:single": 0.004186, "pow3:charge": 0.000228, "pow3:predprey": 3.1e-05, "pow3:single": 0.004296, "yuk128:charge": 7.5e-05, "yuk128:single": 0.003522, "yuk8:charge": 7.2e-05, "yuk8:single": 0.003103}
+[01:11:02] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[01:11:16] it 14100 k 8 lr 4.65e-04 loss 0.046525 dropped 0/225600 0.093s/it
+[01:11:30] it 14200 k 8 lr 4.64e-04 loss 0.195822 dropped 0/227200 0.093s/it
+[01:11:37] gate: window drop rate 0.000 -> kgate 30
+[01:11:44] it 14300 k 8 lr 4.64e-04 loss 0.168666 dropped 0/228800 0.093s/it
+[01:11:58] it 14400 k 8 lr 4.63e-04 loss 0.021682 dropped 0/230400 0.094s/it
+[01:12:11] it 14500 k 8 lr 4.63e-04 loss 0.052689 dropped 0/232000 0.094s/it
+[01:12:11] gate: window drop rate 0.000 -> kgate 30
+[01:12:25] it 14600 k 8 lr 4.62e-04 loss 0.354791 dropped 0/233600 0.094s/it
+[01:12:39] it 14700 k 8 lr 4.62e-04 loss 0.042014 dropped 0/235200 0.095s/it
+[01:12:46] gate: window drop rate 0.000 -> kgate 30
+[01:12:53] it 14800 k 8 lr 4.61e-04 loss 0.240211 dropped 0/236800 0.095s/it
+[01:13:07] it 14900 k 9 lr 4.60e-04 loss 0.025343 dropped 0/238400 0.095s/it
+[01:13:22] it 15000 k 9 lr 4.60e-04 loss 0.484632 dropped 0/240000 0.096s/it
+[01:13:22] gate: window drop rate 0.000 -> kgate 30
+[01:13:22] by-law {"lj:single": 0.00448, "pow1:charge": 0.000203, "pow1:predprey": 7.4e-05, "pow1:single": 0.010874, "pow2:charge": 9.3e-05, "pow2:predprey": 4.2e-05, "pow2:single": 0.004436, "pow3:charge": 0.000219, "pow3:predprey": 3.6e-05, "pow3:single": 0.005551, "yuk128:charge": 0.000105, "yuk128:single": 0.003039, "yuk8:charge": 6.4e-05, "yuk8:single": 0.00279}
+[01:13:22] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[01:13:38] it 15100 k 9 lr 4.59e-04 loss 0.144379 dropped 0/241600 0.096s/it
+[01:13:53] it 15200 k 9 lr 4.59e-04 loss 0.194436 dropped 0/243200 0.096s/it
+[01:14:01] gate: window drop rate 0.000 -> kgate 30
+[01:14:08] it 15300 k 9 lr 4.58e-04 loss 0.053623 dropped 0/244800 0.097s/it
+[01:14:24] it 15400 k 9 lr 4.58e-04 loss 0.019924 dropped 0/246400 0.097s/it
+[01:14:39] it 15500 k 9 lr 4.57e-04 loss 0.028760 dropped 0/248000 0.097s/it
+[01:14:39] gate: window drop rate 0.000 -> kgate 30
+[01:14:54] it 15600 k 9 lr 4.57e-04 loss 0.055830 dropped 0/249600 0.098s/it
+[01:15:10] it 15700 k 9 lr 4.56e-04 loss 0.091413 dropped 0/251200 0.098s/it
+[01:15:17] gate: window drop rate 0.000 -> kgate 30
+[01:15:25] it 15800 k 9 lr 4.56e-04 loss 0.270539 dropped 0/252800 0.099s/it
+[01:15:40] it 15900 k 9 lr 4.55e-04 loss 0.023627 dropped 0/254400 0.099s/it
+[01:15:56] it 16000 k 9 lr 4.55e-04 loss 0.025993 dropped 0/256000 0.099s/it
+[01:15:56] gate: window drop rate 0.000 -> kgate 30
+[01:15:56] by-law {"lj:single": 0.006414, "pow1:charge": 0.000226, "pow1:predprey": 0.000109, "pow1:single": 0.011811, "pow2:charge": 0.000137, "pow2:predprey": 6e-05, "pow2:single": 0.00534, "pow3:charge": 0.000367, "pow3:predprey": 4.6e-05, "pow3:single": 0.009652, "yuk128:charge": 0.000119, "yuk128:single": 0.004323, "yuk8:charge": 9.1e-05, "yuk8:single": 0.004512}
+[01:15:56] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[01:16:11] it 16100 k 9 lr 4.54e-04 loss 0.042128 dropped 0/257600 0.100s/it
+[01:16:26] it 16200 k 9 lr 4.54e-04 loss 0.136793 dropped 0/259200 0.100s/it
+[01:16:34] gate: window drop rate 0.000 -> kgate 30
+[01:16:42] it 16300 k 9 lr 4.53e-04 loss 0.320731 dropped 0/260800 0.100s/it
+[01:16:57] it 16400 k 9 lr 4.52e-04 loss 0.415670 dropped 0/262400 0.101s/it
+[01:17:12] it 16500 k 9 lr 4.52e-04 loss 0.148148 dropped 0/264000 0.101s/it
+[01:17:12] gate: window drop rate 0.000 -> kgate 30
+[01:17:27] it 16600 k 9 lr 4.51e-04 loss 0.103541 dropped 0/265600 0.101s/it
+[01:17:43] it 16700 k 9 lr 4.51e-04 loss 0.037223 dropped 0/267200 0.101s/it
+[01:17:50] gate: window drop rate 0.000 -> kgate 30
+[01:17:58] it 16800 k 9 lr 4.50e-04 loss 0.045971 dropped 0/268800 0.102s/it
+[01:18:13] it 16900 k 9 lr 4.50e-04 loss 0.024257 dropped 0/270400 0.102s/it
+[01:18:29] it 17000 k 9 lr 4.49e-04 loss 0.224670 dropped 0/272000 0.102s/it
+[01:18:29] gate: window drop rate 0.000 -> kgate 30
+[01:18:29] by-law {"lj:single": 0.005683, "pow1:charge": 0.000239, "pow1:predprey": 8.7e-05, "pow1:single": 0.012262, "pow2:charge": 0.000101, "pow2:predprey": 5.2e-05, "pow2:single": 0.006214, "pow3:charge": 0.00027, "pow3:predprey": 4.5e-05, "pow3:single": 0.013087, "yuk128:charge": 0.000107, "yuk128:single": 0.004192, "yuk8:charge": 6.4e-05, "yuk8:single": 0.004285}
+[01:18:29] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[01:18:44] it 17100 k 9 lr 4.48e-04 loss 0.018419 dropped 0/273600 0.103s/it
+[01:19:00] it 17200 k 10 lr 4.48e-04 loss 0.039278 dropped 0/275200 0.103s/it
+[01:19:09] gate: window drop rate 0.000 -> kgate 30
+[01:19:17] it 17300 k 10 lr 4.47e-04 loss 0.111193 dropped 0/276800 0.103s/it
+[01:19:34] it 17400 k 10 lr 4.47e-04 loss 0.100795 dropped 0/278400 0.104s/it
+[01:19:51] it 17500 k 10 lr 4.46e-04 loss 0.305307 dropped 0/280000 0.104s/it
+[01:19:51] gate: window drop rate 0.000 -> kgate 30
+[01:20:08] it 17600 k 10 lr 4.46e-04 loss 0.037566 dropped 0/281600 0.105s/it
+[01:20:24] it 17700 k 10 lr 4.45e-04 loss 0.134539 dropped 0/283200 0.105s/it
+[01:20:33] gate: window drop rate 0.000 -> kgate 30
+[01:20:41] it 17800 k 10 lr 4.44e-04 loss 0.464660 dropped 0/284800 0.105s/it
+[01:20:58] it 17900 k 10 lr 4.44e-04 loss 0.333068 dropped 0/286400 0.106s/it
+[01:21:15] it 18000 k 10 lr 4.43e-04 loss 0.022269 dropped 0/288000 0.106s/it
+[01:21:15] gate: window drop rate 0.000 -> kgate 30
+[01:21:15] by-law {"lj:single": 0.007889, "pow1:charge": 0.000398, "pow1:predprey": 0.000154, "pow1:single": 0.026171, "pow2:charge": 0.000215, "pow2:predprey": 9.4e-05, "pow2:single": 0.007671, "pow3:charge": 0.000659, "pow3:predprey": 7.5e-05, "pow3:single": 0.011069, "yuk128:charge": 0.000169, "yuk128:single": 0.008272, "yuk8:charge": 0.000151, "yuk8:single": 0.005293}
+[01:21:15] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[01:21:32] it 18100 k 10 lr 4.42e-04 loss 0.023751 dropped 0/289600 0.106s/it
+[01:21:48] it 18200 k 10 lr 4.42e-04 loss 0.153886 dropped 0/291200 0.107s/it
+[01:21:57] gate: window drop rate 0.000 -> kgate 30
+[01:22:05] it 18300 k 10 lr 4.41e-04 loss 0.075469 dropped 0/292800 0.107s/it
+[01:22:22] it 18400 k 10 lr 4.41e-04 loss 0.552292 dropped 0/294400 0.107s/it
+[01:22:39] it 18500 k 10 lr 4.40e-04 loss 0.093672 dropped 0/296000 0.108s/it
+[01:22:39] gate: window drop rate 0.000 -> kgate 30
+[01:22:56] it 18600 k 10 lr 4.39e-04 loss 0.266558 dropped 0/297600 0.108s/it
+[01:23:12] it 18700 k 10 lr 4.39e-04 loss 0.068220 dropped 0/299200 0.108s/it
+[01:23:21] gate: window drop rate 0.000 -> kgate 30
+[01:23:29] it 18800 k 10 lr 4.38e-04 loss 0.093012 dropped 0/300800 0.109s/it
+[01:23:46] it 18900 k 10 lr 4.38e-04 loss 0.066503 dropped 0/302400 0.109s/it
+[01:24:03] it 19000 k 10 lr 4.37e-04 loss 0.202677 dropped 0/304000 0.109s/it
+[01:24:03] gate: window drop rate 0.000 -> kgate 30
+[01:24:03] by-law {"lj:single": 0.007118, "pow1:charge": 0.000316, "pow1:predprey": 0.000154, "pow1:single": 0.016833, "pow2:charge": 0.000158, "pow2:predprey": 7.6e-05, "pow2:single": 0.011366, "pow3:charge": 0.000358, "pow3:predprey": 6.2e-05, "pow3:single": 0.02923, "yuk128:charge": 0.000161, "yuk128:single": 0.006482, "yuk8:charge": 9.2e-05, "yuk8:single": 0.00421}
+[01:24:03] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[01:24:20] it 19100 k 10 lr 4.36e-04 loss 0.020741 dropped 0/305600 0.110s/it
+[01:24:36] it 19200 k 10 lr 4.36e-04 loss 0.091616 dropped 0/307200 0.110s/it
+[01:24:45] gate: window drop rate 0.000 -> kgate 30
+[01:24:53] it 19300 k 10 lr 4.35e-04 loss 0.057861 dropped 0/308800 0.110s/it
+[01:25:10] it 19400 k 10 lr 4.34e-04 loss 0.293828 dropped 0/310400 0.110s/it
+[01:25:28] it 19500 k 11 lr 4.34e-04 loss 0.116316 dropped 0/312000 0.111s/it
+[01:25:28] gate: window drop rate 0.000 -> kgate 30
+[01:25:46] it 19600 k 11 lr 4.33e-04 loss 0.006625 dropped 0/313600 0.111s/it
+[01:26:04] it 19700 k 11 lr 4.32e-04 loss 0.131564 dropped 0/315200 0.111s/it
+[01:26:13] gate: window drop rate 0.000 -> kgate 30
+[01:26:23] it 19800 k 11 lr 4.32e-04 loss 0.179656 dropped 2/316800 0.112s/it
+[01:26:41] it 19900 k 11 lr 4.31e-04 loss 0.080205 dropped 2/318400 0.112s/it
+[01:26:59] it 20000 k 11 lr 4.30e-04 loss 0.346609 dropped 2/320000 0.113s/it
+[01:26:59] gate: window drop rate 0.000 -> kgate 30
+[01:26:59] by-law {"lj:single": 0.008969, "pow1:charge": 0.000408, "pow1:predprey": 0.000176, "pow1:single": 0.020643, "pow2:charge": 0.000202, "pow2:predprey": 7.9e-05, "pow2:single": 0.02085, "pow3:charge": 0.000381, "pow3:predprey": 6.2e-05, "pow3:single": 0.042922, "yuk128:charge": 0.000221, "yuk128:single": 0.012954, "yuk8:charge": 0.000127, "yuk8:single": 0.007611}
+[01:26:59] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 1, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 1, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[01:27:18] it 20100 k 11 lr 4.30e-04 loss 0.187784 dropped 2/321600 0.113s/it
+[01:27:36] it 20200 k 11 lr 4.29e-04 loss 0.005743 dropped 2/323200 0.113s/it
+[01:27:45] gate: window drop rate 0.000 -> kgate 30
+[01:27:54] it 20300 k 11 lr 4.28e-04 loss 0.041025 dropped 2/324800 0.114s/it
+[01:28:12] it 20400 k 11 lr 4.28e-04 loss 0.247215 dropped 3/326400 0.114s/it
+[01:28:30] it 20500 k 11 lr 4.27e-04 loss 0.021685 dropped 3/328000 0.114s/it
+[01:28:30] gate: window drop rate 0.000 -> kgate 30
+[01:28:49] it 20600 k 11 lr 4.26e-04 loss 0.117755 dropped 4/329600 0.115s/it
+[01:29:07] it 20700 k 11 lr 4.26e-04 loss 1.139008 dropped 5/331200 0.115s/it
+[01:29:16] gate: window drop rate 0.001 -> kgate 30
+[01:29:25] it 20800 k 11 lr 4.25e-04 loss 0.236063 dropped 7/332800 0.115s/it
+[01:29:43] it 20900 k 11 lr 4.24e-04 loss 0.272485 dropped 8/334400 0.116s/it
+[01:30:01] it 21000 k 11 lr 4.24e-04 loss 0.065324 dropped 8/336000 0.116s/it
+[01:30:01] gate: window drop rate 0.001 -> kgate 30
+[01:30:01] by-law {"lj:single": 0.009774, "pow1:charge": 0.00034, "pow1:predprey": 0.000175, "pow1:single": 0.020325, "pow2:charge": 0.000154, "pow2:predprey": 9.4e-05, "pow2:single": 0.047285, "pow3:charge": 0.000577, "pow3:predprey": 6.7e-05, "pow3:single": 0.079259, "yuk128:charge": 0.000179, "yuk128:single": 0.026428, "yuk8:charge": 0.000135, "yuk8:single": 0.020094}
+[01:30:01] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 3, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 1, "yuk128:charge": 0, "yuk128:single": 1, "yuk8:charge": 0, "yuk8:single": 1}
+[01:30:19] it 21100 k 11 lr 4.23e-04 loss 1.024556 dropped 8/337600 0.116s/it
+[01:30:38] it 21200 k 11 lr 4.22e-04 loss 0.087969 dropped 10/339200 0.116s/it
+[01:30:47] gate: window drop rate 0.001 -> kgate 30
+[01:30:56] it 21300 k 11 lr 4.22e-04 loss 9.351958 dropped 11/340800 0.117s/it
+[01:31:14] it 21400 k 11 lr 4.21e-04 loss 3.562341 dropped 12/342400 0.117s/it
+[01:31:32] it 21500 k 11 lr 4.20e-04 loss 0.211595 dropped 13/344000 0.117s/it
+[01:31:32] gate: window drop rate 0.001 -> kgate 30
+[01:31:50] it 21600 k 11 lr 4.20e-04 loss 0.022820 dropped 13/345600 0.118s/it
+[01:32:08] it 21700 k 11 lr 4.19e-04 loss 18.254696 dropped 15/347200 0.118s/it
+[01:32:18] gate: window drop rate 0.001 -> kgate 30
+[01:32:28] it 21800 k 12 lr 4.18e-04 loss 0.761864 dropped 18/348800 0.118s/it
+[01:32:47] it 21900 k 12 lr 4.17e-04 loss 0.099147 dropped 22/350400 0.119s/it
+[01:33:07] it 22000 k 12 lr 4.17e-04 loss 3.301080 dropped 22/352000 0.119s/it
+[01:33:07] gate: window drop rate 0.002 -> kgate 30
+[01:33:07] by-law {"lj:single": 0.01192, "pow1:charge": 0.000635, "pow1:predprey": 0.000271, "pow1:single": 0.030294, "pow2:charge": 0.000334, "pow2:predprey": 0.000179, "pow2:single": 0.058662, "pow3:charge": 0.000813, "pow3:predprey": 0.000165, "pow3:single": 0.102381, "yuk128:charge": 0.000297, "yuk128:single": 0.041648, "yuk8:charge": 0.000404, "yuk8:single": 0.055066}
+[01:33:07] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 5, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 6, "yuk128:charge": 0, "yuk128:single": 2, "yuk8:charge": 0, "yuk8:single": 1}
+[01:33:27] it 22100 k 12 lr 4.16e-04 loss 0.267744 dropped 24/353600 0.119s/it
+[01:33:46] it 22200 k 12 lr 4.15e-04 loss 0.132307 dropped 24/355200 0.120s/it
+[01:33:56] gate: window drop rate 0.001 -> kgate 30
+[01:34:06] it 22300 k 12 lr 4.15e-04 loss 0.405312 dropped 24/356800 0.120s/it
+[01:34:25] it 22400 k 12 lr 4.14e-04 loss 2.110966 dropped 25/358400 0.120s/it
+[01:34:45] it 22500 k 12 lr 4.13e-04 loss 0.272141 dropped 25/360000 0.121s/it
+[01:34:45] gate: window drop rate 0.000 -> kgate 30
+[01:35:05] it 22600 k 12 lr 4.12e-04 loss 1.334989 dropped 25/361600 0.121s/it
+[01:35:25] it 22700 k 12 lr 4.12e-04 loss 0.274963 dropped 39/363200 0.121s/it
+[01:35:34] gate: window drop rate 0.009 -> kgate 30
+[01:35:44] it 22800 k 12 lr 4.11e-04 loss 0.208618 dropped 63/364800 0.122s/it
+[01:36:04] it 22900 k 12 lr 4.10e-04 loss 4.840691 dropped 65/366400 0.122s/it
+[01:36:24] it 23000 k 12 lr 4.10e-04 loss 0.080528 dropped 70/368000 0.122s/it
+[01:36:24] gate: window drop rate 0.002 -> kgate 30
+[01:36:24] by-law {"lj:single": 0.013467, "pow1:charge": 0.000655, "pow1:predprey": 0.000341, "pow1:single": 0.038295, "pow2:charge": 0.000358, "pow2:predprey": 0.000151, "pow2:single": 0.065852, "pow3:charge": 0.000774, "pow3:predprey": 0.000109, "pow3:single": 0.088556, "yuk128:charge": 0.000336, "yuk128:single": 0.058768, "yuk8:charge": 0.00028, "yuk8:single": 0.09286}
+[01:36:24] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 11, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 8, "yuk128:charge": 0, "yuk128:single": 16, "yuk8:charge": 0, "yuk8:single": 13}
+[01:36:44] it 23100 k 12 lr 4.09e-04 loss 0.042470 dropped 87/369600 0.123s/it
+[01:37:03] it 23200 k 12 lr 4.08e-04 loss 0.069085 dropped 88/371200 0.123s/it
+[01:37:13] gate: window drop rate 0.009 -> kgate 30
+[01:37:23] it 23300 k 12 lr 4.07e-04 loss 0.367085 dropped 107/372800 0.123s/it
+[01:37:42] it 23400 k 12 lr 4.07e-04 loss 3.261023 dropped 124/374400 0.124s/it
+[01:38:02] it 23500 k 12 lr 4.06e-04 loss 0.846208 dropped 128/376000 0.124s/it
+[01:38:02] gate: window drop rate 0.005 -> kgate 30
+[01:38:22] it 23600 k 12 lr 4.05e-04 loss 0.834466 dropped 130/377600 0.124s/it
+[01:38:41] it 23700 k 12 lr 4.04e-04 loss 0.490385 dropped 130/379200 0.125s/it
+[01:38:51] gate: window drop rate 0.001 -> kgate 30
+[01:39:01] it 23800 k 12 lr 4.04e-04 loss 3.571585 dropped 130/380800 0.125s/it
+[01:39:21] it 23900 k 12 lr 4.03e-04 loss 0.289405 dropped 130/382400 0.125s/it
+[01:39:41] it 24000 k 12 lr 4.02e-04 loss 1.215795 dropped 130/384000 0.126s/it
+[01:39:41] gate: window drop rate 0.000 -> kgate 30
+[01:39:41] by-law {"lj:single": 0.012092, "pow1:charge": 0.000604, "pow1:predprey": 0.000253, "pow1:single": 0.040141, "pow2:charge": 0.000292, "pow2:predprey": 0.000131, "pow2:single": 0.075259, "pow3:charge": 0.000622, "pow3:predprey": 0.000132, "pow3:single": 0.046788, "yuk128:charge": 0.000283, "yuk128:single": 0.068443, "yuk8:charge": 0.000168, "yuk8:single": 0.050771}
+[01:39:41] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 21, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 12, "yuk128:charge": 0, "yuk128:single": 17, "yuk8:charge": 0, "yuk8:single": 10}
+[01:40:02] it 24100 k 13 lr 4.01e-04 loss 1.956581 dropped 145/385600 0.126s/it
+[01:40:24] it 24200 k 13 lr 4.01e-04 loss 0.157671 dropped 197/387200 0.126s/it
+[01:40:34] gate: window drop rate 0.021 -> kgate 30
+[01:40:45] it 24300 k 13 lr 4.00e-04 loss 0.071290 dropped 215/388800 0.127s/it
+[01:41:06] it 24400 k 13 lr 3.99e-04 loss 4.949183 dropped 216/390400 0.127s/it
+[01:41:28] it 24500 k 13 lr 3.98e-04 loss 1.664850 dropped 223/392000 0.127s/it
+[01:41:28] gate: window drop rate 0.003 -> kgate 30
+[01:41:49] it 24600 k 13 lr 3.98e-04 loss 0.095895 dropped 226/393600 0.128s/it
+[01:42:10] it 24700 k 13 lr 3.97e-04 loss 2.934050 dropped 229/395200 0.128s/it
+[01:42:21] gate: window drop rate 0.009 -> kgate 30
+[01:42:32] it 24800 k 13 lr 3.96e-04 loss 2.952629 dropped 282/396800 0.128s/it
+[01:42:53] it 24900 k 13 lr 3.95e-04 loss 0.063388 dropped 282/398400 0.129s/it
+[01:43:15] it 25000 k 13 lr 3.94e-04 loss 0.017283 dropped 282/400000 0.129s/it
+[01:43:15] gate: window drop rate 0.006 -> kgate 30
+[01:43:15] by-law {"lj:single": 0.017147, "pow1:charge": 0.00109, "pow1:predprey": 0.00061, "pow1:single": 0.150195, "pow2:charge": 0.001859, "pow2:predprey": 0.000305, "pow2:single": 0.167673, "pow3:charge": 0.003026, "pow3:predprey": 0.00027, "pow3:single": 0.101329, "yuk128:charge": 0.000589, "yuk128:single": 0.113011, "yuk8:charge": 0.000356, "yuk8:single": 0.082771}
+[01:43:15] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 23, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 28, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 33, "yuk128:charge": 0, "yuk128:single": 39, "yuk8:charge": 0, "yuk8:single": 29}
+[01:43:36] it 25100 k 13 lr 3.94e-04 loss 8.726902 dropped 282/401600 0.129s/it
+[01:43:46] it 25145 loss 0.0241 non-finite or above cap, step skipped (1 total)
+[01:43:58] it 25200 k 13 lr 3.93e-04 loss 0.050890 dropped 354/403200 0.130s/it
+[01:44:05] it 25234 loss 0.259 non-finite or above cap, step skipped (51 total)
+[01:44:08] gate: window drop rate 0.037 -> kgate 30
+[01:44:19] it 25300 k 13 lr 3.92e-04 loss 0.392628 dropped 506/404800 0.130s/it
+[01:44:20] it 25305 loss 0.0957 non-finite or above cap, step skipped (101 total)
+[01:44:35] it 25375 loss 0.0509 non-finite or above cap, step skipped (151 total)
+[01:44:40] it 25400 k 13 lr 3.91e-04 loss 0.082180 dropped 670/406400 0.130s/it
+[01:44:49] it 25440 loss 0.0527 non-finite or above cap, step skipped (201 total)
+[01:45:02] it 25500 k 13 lr 3.91e-04 loss 0.032072 dropped 776/408000 0.131s/it
+[01:45:02] gate: window drop rate 0.086 -> kgate 30
+[01:45:06] it 25520 loss 0.0528 non-finite or above cap, step skipped (251 total)
+[01:45:22] it 25596 loss 0.0382 non-finite or above cap, step skipped (301 total)
+[01:45:23] it 25600 k 13 lr 3.90e-04 loss 0.088232 dropped 893/409600 0.131s/it
+[01:45:44] it 25700 k 13 lr 3.89e-04 loss 0.170100 dropped 1027/411200 0.131s/it
+[01:45:46] it 25709 loss 0.176 non-finite or above cap, step skipped (351 total)
+[01:45:55] gate: window drop rate 0.072 -> kgate 30
+[01:46:06] it 25800 k 13 lr 3.88e-04 loss 0.105824 dropped 1102/412800 0.132s/it
+[01:46:08] it 25809 loss 0.056 non-finite or above cap, step skipped (401 total)
+[01:46:24] it 25888 loss 0.194 non-finite or above cap, step skipped (451 total)
+[01:46:27] it 25900 k 13 lr 3.87e-04 loss 0.170061 dropped 1193/414400 0.132s/it
+[01:46:45] it 25982 loss 0.0146 non-finite or above cap, step skipped (501 total)
+[01:46:48] it 26000 k 13 lr 3.87e-04 loss 0.124007 dropped 1276/416000 0.132s/it
+[01:46:48] gate: window drop rate 0.053 -> kgate 30
+[01:46:48] by-law {"lj:single": 0.017285, "pow1:charge": 0.010247, "pow1:predprey": 0.008134, "pow1:single": 0.110102, "pow2:charge": 0.004741, "pow2:predprey": 0.011311, "pow2:single": 0.09082, "pow3:charge": 0.000778, "pow3:predprey": 0.011708, "pow3:single": 0.101533, "yuk128:charge": 0.000981, "yuk128:single": 0.087174, "yuk8:charge": 0.000293, "yuk8:single": 0.055432}
+[01:46:48] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 467, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 136, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 172, "yuk128:charge": 0, "yuk128:single": 139, "yuk8:charge": 0, "yuk8:single": 80}
+[01:47:10] it 26100 k 13 lr 3.86e-04 loss 0.198788 dropped 1338/417600 0.133s/it
+[01:47:31] it 26200 k 13 lr 3.85e-04 loss 4.285428 dropped 1343/419200 0.133s/it
+[01:47:42] gate: window drop rate 0.018 -> kgate 30
+[01:47:53] it 26300 k 14 lr 3.84e-04 loss 7.942890 dropped 1350/420800 0.133s/it
+[01:48:16] it 26400 k 14 lr 3.83e-04 loss 1.623762 dropped 1355/422400 0.134s/it
+[01:48:39] it 26500 k 14 lr 3.83e-04 loss 0.141660 dropped 1356/424000 0.134s/it
+[01:48:39] gate: window drop rate 0.003 -> kgate 30
+[01:49:02] it 26600 k 14 lr 3.82e-04 loss 0.576968 dropped 1359/425600 0.134s/it
+[01:49:25] it 26700 k 14 lr 3.81e-04 loss 0.252638 dropped 1366/427200 0.135s/it
+[01:49:36] gate: window drop rate 0.005 -> kgate 30
+[01:49:48] it 26800 k 14 lr 3.80e-04 loss 0.034650 dropped 1380/428800 0.135s/it
+[01:50:11] it 26900 k 14 lr 3.79e-04 loss 0.442070 dropped 1383/430400 0.135s/it
+[01:50:34] it 27000 k 14 lr 3.79e-04 loss 0.533998 dropped 1383/432000 0.136s/it
+[01:50:34] gate: window drop rate 0.002 -> kgate 30
+[01:50:34] by-law {"lj:single": 0.018672, "pow1:charge": 0.001731, "pow1:predprey": 0.000506, "pow1:single": 0.141795, "pow2:charge": 0.000602, "pow2:predprey": 0.000322, "pow2:single": 0.104911, "pow3:charge": 0.001258, "pow3:predprey": 0.000248, "pow3:single": 0.086528, "yuk128:charge": 0.001239, "yuk128:single": 0.082194, "yuk8:charge": 0.000501, "yuk8:single": 0.082585}
+[01:50:34] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 61, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 13, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 12, "yuk128:charge": 0, "yuk128:single": 9, "yuk8:charge": 0, "yuk8:single": 12}
+[01:50:57] it 27100 k 14 lr 3.78e-04 loss 0.613128 dropped 1384/433600 0.136s/it
+[01:51:20] it 27200 k 14 lr 3.77e-04 loss 0.791574 dropped 1395/435200 0.136s/it
+[01:51:31] gate: window drop rate 0.006 -> kgate 30
+[01:51:43] it 27300 k 14 lr 3.76e-04 loss 1.103283 dropped 1419/436800 0.137s/it
+[01:52:06] it 27400 k 14 lr 3.75e-04 loss 0.183899 dropped 1434/438400 0.137s/it
+[01:52:29] it 27500 k 14 lr 3.74e-04 loss 0.183520 dropped 1437/440000 0.137s/it
+[01:52:29] gate: window drop rate 0.007 -> kgate 30
+[01:52:52] it 27600 k 14 lr 3.74e-04 loss 0.315215 dropped 1443/441600 0.138s/it
+[01:53:14] it 27700 k 14 lr 3.73e-04 loss 0.327507 dropped 1472/443200 0.138s/it
+[01:53:26] gate: window drop rate 0.012 -> kgate 30
+[01:53:37] it 27800 k 14 lr 3.72e-04 loss 0.412399 dropped 1495/444800 0.138s/it
+[01:54:00] it 27900 k 14 lr 3.71e-04 loss 1.690776 dropped 1514/446400 0.139s/it
+[01:54:23] it 28000 k 14 lr 3.70e-04 loss 0.019349 dropped 1560/448000 0.139s/it
+[01:54:23] gate: window drop rate 0.018 -> kgate 30
+[01:54:23] by-law {"lj:single": 0.020205, "pow1:charge": 0.000918, "pow1:predprey": 0.00047, "pow1:single": 0.067952, "pow2:charge": 0.000492, "pow2:predprey": 0.00022, "pow2:single": 0.051743, "pow3:charge": 0.001065, "pow3:predprey": 0.000157, "pow3:single": 0.066302, "yuk128:charge": 0.000494, "yuk128:single": 0.059738, "yuk8:charge": 0.000315, "yuk8:single": 0.05852}
+[01:54:23] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 15, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 44, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 25, "yuk128:charge": 0, "yuk128:single": 57, "yuk8:charge": 0, "yuk8:single": 36}
+[01:54:47] it 28100 k 14 lr 3.69e-04 loss 0.130716 dropped 1611/449600 0.139s/it
+[01:55:10] it 28200 k 14 lr 3.69e-04 loss 0.396803 dropped 1673/451200 0.140s/it
+[01:55:21] gate: window drop rate 0.035 -> kgate 30
+[01:55:33] it 28300 k 14 lr 3.68e-04 loss 0.539928 dropped 1732/452800 0.140s/it
+[01:55:55] it 28400 k 14 lr 3.67e-04 loss 0.474689 dropped 1789/454400 0.140s/it
+[01:56:18] it 28500 k 14 lr 3.66e-04 loss 0.741988 dropped 1861/456000 0.141s/it
+[01:56:18] gate: window drop rate 0.040 -> kgate 30
+[01:56:42] it 28600 k 15 lr 3.65e-04 loss 90.407524 dropped 1938/457600 0.141s/it
+[01:57:06] it 28700 k 15 lr 3.64e-04 loss 7.268963 dropped 2397/459200 0.141s/it
+[01:57:19] gate: window drop rate 0.136 -> kgate 30
+[01:57:31] it 28800 k 15 lr 3.64e-04 loss 273.136597 dropped 2505/460800 0.142s/it
+[01:57:34] it 28811 loss 8.81 non-finite or above cap, step skipped (551 total)
+[01:57:47] it 28863 loss 0.575 non-finite or above cap, step skipped (601 total)
+[01:57:55] it 28900 k 15 lr 3.63e-04 loss 0.239170 dropped 2899/462400 0.142s/it
+[01:58:00] it 28917 loss 0.157 non-finite or above cap, step skipped (651 total)
+[01:58:12] it 28967 loss 403 non-finite or above cap, step skipped (701 total)
+[01:58:20] it 29000 k 15 lr 3.62e-04 loss 0.077429 dropped 3296/464000 0.142s/it
+[01:58:20] gate: window drop rate 0.223 -> kgate 30
+[01:58:20] by-law {"lj:single": 0.022217, "pow1:charge": 0.004189, "pow1:predprey": 0.025188, "pow1:single": 0.21139, "pow2:charge": 0.03296, "pow2:predprey": 0.028047, "pow2:single": 0.241567, "pow3:charge": 0.003952, "pow3:predprey": 0.047332, "pow3:single": 0.21142, "yuk128:charge": 0.002197, "yuk128:single": 0.179885, "yuk8:charge": 0.001421, "yuk8:single": 0.100658}
+[01:58:20] dropped-by-law {"lj:single": 0, "pow1:charge": 20, "pow1:predprey": 20, "pow1:single": 290, "pow2:charge": 7, "pow2:predprey": 23, "pow2:single": 366, "pow3:charge": 8, "pow3:predprey": 16, "pow3:single": 296, "yuk128:charge": 12, "yuk128:single": 415, "yuk8:charge": 0, "yuk8:single": 263}
+[01:58:25] it 29020 loss 322 non-finite or above cap, step skipped (751 total)
+[01:58:37] it 29070 loss 0.104 non-finite or above cap, step skipped (801 total)
+[01:58:44] it 29100 k 15 lr 3.61e-04 loss 0.215278 dropped 3718/465600 0.143s/it
+[01:58:49] it 29120 loss 0.419 non-finite or above cap, step skipped (851 total)
+[01:59:02] it 29170 loss 236 non-finite or above cap, step skipped (901 total)
+[01:59:09] it 29200 k 15 lr 3.60e-04 loss 0.086561 dropped 4092/467200 0.143s/it
+[01:59:15] it 29223 loss 0.158 non-finite or above cap, step skipped (951 total)
+[01:59:21] gate: window drop rate 0.244 -> kgate 30
+[01:59:28] it 29276 loss 0.0954 non-finite or above cap, step skipped (1001 total)
+[01:59:33] it 29300 k 15 lr 3.59e-04 loss 0.525245 dropped 4465/468800 0.144s/it
+[01:59:40] it 29326 loss 0.0473 non-finite or above cap, step skipped (1051 total)
+[01:59:52] it 29377 loss 0.22 non-finite or above cap, step skipped (1101 total)
+[01:59:58] it 29400 k 15 lr 3.59e-04 loss 0.070024 dropped 4858/470400 0.144s/it
+[02:00:05] it 29428 loss 0.185 non-finite or above cap, step skipped (1151 total)
+[02:00:22] it 29500 k 15 lr 3.58e-04 loss 0.123772 dropped 5291/472000 0.144s/it
+[02:00:22] gate: window drop rate 0.255 -> kgate 28
+[02:00:47] it 29600 k 15 lr 3.57e-04 loss 244.938736 dropped 5706/473600 0.145s/it
+[02:01:11] it 29700 k 15 lr 3.56e-04 loss 66.766296 dropped 6585/475200 0.145s/it
+[02:01:23] gate: window drop rate 0.457 -> kgate 26
+[02:01:36] it 29800 k 15 lr 3.55e-04 loss 218.686523 dropped 7677/476800 0.145s/it
+[02:02:00] it 29900 k 15 lr 3.54e-04 loss 92.973259 dropped 8927/478400 0.146s/it
+[02:02:02] it 29907 loss 0.101 non-finite or above cap, step skipped (1201 total)
+[02:02:14] it 29957 loss 0 non-finite or above cap, step skipped (1251 total)
+[02:02:25] it 30000 k 15 lr 3.53e-04 loss 0.120499 dropped 10227/480000 0.146s/it
+[02:02:25] gate: window drop rate 0.777 -> kgate 24
+[02:02:25] by-law {"lj:single": 0.030179, "pow1:charge": 1.024521, "pow1:predprey": 0.824892, "pow1:single": 1.181331, "pow2:charge": 0.26353, "pow2:predprey": 0.4748, "pow2:single": 0.633414, "pow3:charge": 0.288632, "pow3:predprey": 0.440615, "pow3:single": 0.906479, "yuk128:charge": 0.60293, "yuk128:single": 0.817424, "yuk8:charge": 0.277207, "yuk8:single": 0.289483}
+[02:02:25] dropped-by-law {"lj:single": 0, "pow1:charge": 291, "pow1:predprey": 222, "pow1:single": 944, "pow2:charge": 274, "pow2:predprey": 260, "pow2:single": 898, "pow3:charge": 252, "pow3:predprey": 275, "pow3:single": 973, "yuk128:charge": 367, "yuk128:single": 1127, "yuk8:charge": 338, "yuk8:single": 710}
+[02:02:27] it 30007 loss 0.211 non-finite or above cap, step skipped (1301 total)
+[02:02:39] it 30057 loss 0.0212 non-finite or above cap, step skipped (1351 total)
+[02:02:49] it 30100 k 15 lr 3.53e-04 loss 0.060222 dropped 11546/481600 0.146s/it
+[02:02:51] it 30107 loss 0.142 non-finite or above cap, step skipped (1401 total)
+[02:03:03] it 30157 loss 0.21 non-finite or above cap, step skipped (1451 total)
+[02:03:14] it 30200 k 15 lr 3.52e-04 loss 0.050939 dropped 12876/483200 0.147s/it
+[02:03:16] it 30207 loss 0.0569 non-finite or above cap, step skipped (1501 total)
+[02:03:26] gate: window drop rate 0.829 -> kgate 22
+[02:03:28] it 30257 loss 0.0267 non-finite or above cap, step skipped (1551 total)
+[02:03:38] it 30300 k 15 lr 3.51e-04 loss 0.042901 dropped 14193/484800 0.147s/it
+[02:03:40] it 30307 loss 0 non-finite or above cap, step skipped (1601 total)
+[02:03:52] it 30357 loss 0.801 non-finite or above cap, step skipped (1651 total)
+[02:04:02] it 30400 k 15 lr 3.50e-04 loss 0.086831 dropped 15513/486400 0.147s/it
+[02:04:04] it 30407 loss 0 non-finite or above cap, step skipped (1701 total)
+[02:04:16] it 30457 loss 0.21 non-finite or above cap, step skipped (1751 total)
+[02:04:26] it 30500 k 15 lr 3.49e-04 loss 0.009295 dropped 16822/488000 0.147s/it
+[02:04:26] gate: window drop rate 0.820 -> kgate 20
+[02:04:28] it 30507 loss 0.0697 non-finite or above cap, step skipped (1801 total)
+[02:04:40] it 30557 loss 0.0354 non-finite or above cap, step skipped (1851 total)
+[02:04:51] it 30600 k 15 lr 3.48e-04 loss 0.055973 dropped 18138/489600 0.148s/it
+[02:04:53] it 30607 loss 0.568 non-finite or above cap, step skipped (1901 total)
+[02:05:05] it 30657 loss 0.103 non-finite or above cap, step skipped (1951 total)
+[02:05:15] it 30700 k 15 lr 3.47e-04 loss 0.297814 dropped 19468/491200 0.148s/it
+[02:05:17] it 30707 loss 0.211 non-finite or above cap, step skipped (2001 total)
+[02:05:27] gate: window drop rate 0.827 -> kgate 18
+[02:05:29] it 30757 loss 0.0459 non-finite or above cap, step skipped (2051 total)
+[02:05:39] it 30800 k 15 lr 3.46e-04 loss 0.001198 dropped 20784/492800 0.148s/it
+[02:05:41] it 30807 loss 0.00621 non-finite or above cap, step skipped (2101 total)
+[02:05:53] it 30857 loss 0.00171 non-finite or above cap, step skipped (2151 total)
+[02:06:04] it 30900 k 16 lr 3.46e-04 loss 0.030294 dropped 22101/494400 0.149s/it
+[02:06:06] it 30907 loss 0.00962 non-finite or above cap, step skipped (2201 total)
+[02:06:19] it 30957 loss 0.203 non-finite or above cap, step skipped (2251 total)
+[02:06:29] it 31000 k 16 lr 3.45e-04 loss 0.001040 dropped 23420/496000 0.149s/it
+[02:06:29] gate: window drop rate 0.823 -> kgate 16
+[02:06:29] by-law {"lj:single": 0.0, "pow1:charge": 0.0, "pow1:predprey": 0.0, "pow1:single": 0.0, "pow2:charge": 0.0, "pow2:predprey": 0.0, "pow2:single": 0.0, "pow3:charge": 0.0, "pow3:predprey": 0.0, "pow3:single": 0.0, "yuk128:charge": 0.0, "yuk128:single": 0.0, "yuk8:charge": 0.0, "yuk8:single": 0.0}
+[02:06:29] dropped-by-law {"lj:single": 0, "pow1:charge": 660, "pow1:predprey": 637, "pow1:single": 1295, "pow2:charge": 653, "pow2:predprey": 644, "pow2:single": 1346, "pow3:charge": 700, "pow3:predprey": 668, "pow3:single": 1336, "yuk128:charge": 933, "yuk128:single": 1703, "yuk8:charge": 832, "yuk8:single": 1786}
+[02:06:32] it 31007 loss 0.0308 non-finite or above cap, step skipped (2301 total)
+[02:06:44] it 31057 loss 0.0205 non-finite or above cap, step skipped (2351 total)
+[02:06:55] it 31100 k 16 lr 3.44e-04 loss 0.004252 dropped 24754/497600 0.149s/it
+[02:06:57] it 31107 loss 0.38 non-finite or above cap, step skipped (2401 total)
+[02:07:10] it 31157 loss 0.025 non-finite or above cap, step skipped (2451 total)
+[02:07:21] it 31200 k 16 lr 3.43e-04 loss 0.015359 dropped 26078/499200 0.150s/it
+[02:07:23] it 31207 loss 0.00325 non-finite or above cap, step skipped (2501 total)
+[02:07:34] gate: window drop rate 0.832 -> kgate 14
+[02:07:36] it 31258 loss 0.00207 non-finite or above cap, step skipped (2551 total)
+[02:07:45] it 31300 k 14 lr 3.42e-04 loss 0.013671 dropped 27417/500800 0.150s/it
+[02:07:47] it 31308 loss 0.0143 non-finite or above cap, step skipped (2601 total)
+[02:07:58] it 31358 loss 0.00317 non-finite or above cap, step skipped (2651 total)
+[02:08:08] it 31400 k 14 lr 3.41e-04 loss 0.000000 dropped 28758/502400 0.150s/it
+[02:08:10] it 31408 loss 0.0502 non-finite or above cap, step skipped (2701 total)
+[02:08:21] it 31458 loss 0.083 non-finite or above cap, step skipped (2751 total)
+[02:08:30] it 31500 k 14 lr 3.40e-04 loss 0.013751 dropped 30090/504000 0.151s/it
+[02:08:30] gate: window drop rate 0.836 -> kgate 12
+[02:08:33] it 31514 loss 0.0976 non-finite or above cap, step skipped (2801 total)
+[02:08:43] it 31565 loss 0.0172 non-finite or above cap, step skipped (2851 total)
+[02:08:50] it 31600 k 12 lr 3.39e-04 loss 0.010441 dropped 31405/505600 0.151s/it
+[02:08:53] it 31615 loss 0.000777 non-finite or above cap, step skipped (2901 total)
+[02:09:03] it 31665 loss 0.106 non-finite or above cap, step skipped (2951 total)
+[02:09:09] it 31700 k 12 lr 3.39e-04 loss 0.000372 dropped 32752/507200 0.151s/it
+[02:09:12] it 31715 loss 0.0261 non-finite or above cap, step skipped (3001 total)
+[02:09:19] gate: window drop rate 0.834 -> kgate 10
+[02:09:27] it 31800 k 10 lr 3.38e-04 loss 0.000240 dropped 34089/508800 0.151s/it
+[02:09:44] it 31900 k 10 lr 3.37e-04 loss 337.491791 dropped 35346/510400 0.151s/it
+[02:10:01] it 32000 k 10 lr 3.36e-04 loss 2.739660 dropped 36048/512000 0.151s/it
+[02:10:01] gate: window drop rate 0.655 -> kgate 8
+[02:10:01] by-law {"lj:single": 0.009278, "pow1:charge": 0.437403, "pow1:predprey": 1.760853, "pow1:single": 1.227927, "pow2:charge": 0.787765, "pow2:predprey": 0.639311, "pow2:single": 1.000851, "pow3:charge": 0.599236, "pow3:predprey": 0.587289, "pow3:single": 0.899749, "yuk128:charge": 0.497084, "yuk128:single": 1.256715, "yuk8:charge": 0.344055, "yuk8:single": 1.369084}
+[02:10:01] dropped-by-law {"lj:single": 0, "pow1:charge": 628, "pow1:predprey": 567, "pow1:single": 1204, "pow2:charge": 648, "pow2:predprey": 608, "pow2:single": 1274, "pow3:charge": 649, "pow3:predprey": 631, "pow3:single": 1298, "yuk128:charge": 866, "yuk128:single": 1761, "yuk8:charge": 821, "yuk8:single": 1673}
+[02:10:14] it 32100 k 8 lr 3.35e-04 loss 3.489531 dropped 36235/513600 0.151s/it
+[02:10:28] it 32200 k 8 lr 3.34e-04 loss 0.319866 dropped 36235/515200 0.151s/it
+[02:10:34] gate: window drop rate 0.047 -> kgate 9
+[02:10:42] it 32300 k 9 lr 3.33e-04 loss 0.289869 dropped 36235/516800 0.151s/it
+[02:10:57] it 32400 k 9 lr 3.32e-04 loss 0.066901 dropped 36235/518400 0.151s/it
+[02:11:12] it 32500 k 9 lr 3.31e-04 loss 0.696832 dropped 36235/520000 0.151s/it
+[02:11:12] gate: window drop rate 0.000 -> kgate 10
+[02:11:29] it 32600 k 10 lr 3.31e-04 loss 0.033359 dropped 36235/521600 0.151s/it
+[02:11:45] it 32700 k 10 lr 3.30e-04 loss 1.249440 dropped 36235/523200 0.151s/it
+[02:11:54] gate: window drop rate 0.000 -> kgate 11
+[02:12:03] it 32800 k 11 lr 3.29e-04 loss 0.526556 dropped 36235/524800 0.151s/it
+[02:12:21] it 32900 k 11 lr 3.28e-04 loss 0.850045 dropped 36235/526400 0.151s/it
+[02:12:39] it 33000 k 11 lr 3.27e-04 loss 0.052312 dropped 36235/528000 0.151s/it
+[02:12:39] gate: window drop rate 0.000 -> kgate 12
+[02:12:39] by-law {"lj:single": 0.006789, "pow1:charge": 0.03097, "pow1:predprey": 0.034953, "pow1:single": 0.04935, "pow2:charge": 0.067364, "pow2:predprey": 0.050173, "pow2:single": 0.027367, "pow3:charge": 0.046869, "pow3:predprey": 0.03264, "pow3:single": 0.02082, "yuk128:charge": 0.059843, "yuk128:single": 0.031988, "yuk8:charge": 0.036124, "yuk8:single": 0.031173}
+[02:12:39] dropped-by-law {"lj:single": 0, "pow1:charge": 8, "pow1:predprey": 5, "pow1:single": 27, "pow2:charge": 5, "pow2:predprey": 18, "pow2:single": 16, "pow3:charge": 12, "pow3:predprey": 12, "pow3:single": 14, "yuk128:charge": 10, "yuk128:single": 15, "yuk8:charge": 20, "yuk8:single": 25}
+[02:12:59] it 33100 k 12 lr 3.26e-04 loss 0.341254 dropped 36235/529600 0.151s/it
+[02:13:18] it 33200 k 12 lr 3.25e-04 loss 0.349883 dropped 36235/531200 0.152s/it
+[02:13:28] gate: window drop rate 0.000 -> kgate 13
+[02:13:39] it 33300 k 13 lr 3.24e-04 loss 3.306785 dropped 36235/532800 0.152s/it
+[02:14:00] it 33400 k 13 lr 3.23e-04 loss 0.353322 dropped 36235/534400 0.152s/it
+[02:14:21] it 33500 k 13 lr 3.22e-04 loss 0.061037 dropped 36235/536000 0.152s/it
+[02:14:21] gate: window drop rate 0.000 -> kgate 14
+[02:14:44] it 33600 k 14 lr 3.22e-04 loss 0.103045 dropped 36235/537600 0.152s/it
+[02:15:07] it 33700 k 14 lr 3.21e-04 loss 0.057395 dropped 36235/539200 0.152s/it
+[02:15:18] gate: window drop rate 0.000 -> kgate 15
+[02:15:31] it 33800 k 15 lr 3.20e-04 loss 0.186173 dropped 36235/540800 0.153s/it
+[02:15:55] it 33900 k 15 lr 3.19e-04 loss 17.755648 dropped 36243/542400 0.153s/it
+[02:16:20] it 34000 k 15 lr 3.18e-04 loss 9.644033 dropped 36249/544000 0.153s/it
+[02:16:20] gate: window drop rate 0.004 -> kgate 16
+[02:16:20] by-law {"lj:single": 0.016936, "pow1:charge": 0.000895, "pow1:predprey": 0.000385, "pow1:single": 0.051221, "pow2:charge": 0.000451, "pow2:predprey": 0.000222, "pow2:single": 0.048386, "pow3:charge": 0.001106, "pow3:predprey": 0.000198, "pow3:single": 0.055517, "yuk128:charge": 0.000409, "yuk128:single": 0.075498, "yuk8:charge": 0.000335, "yuk8:single": 0.064988}
+[02:16:20] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 4, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 5, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 2, "yuk8:charge": 0, "yuk8:single": 3}
+[02:16:46] it 34100 k 16 lr 3.17e-04 loss 0.609936 dropped 36250/545600 0.154s/it
+[02:17:12] it 34200 k 16 lr 3.16e-04 loss 0.486359 dropped 36250/547200 0.154s/it
+[02:17:25] gate: window drop rate 0.001 -> kgate 17
+[02:17:39] it 34300 k 17 lr 3.15e-04 loss 1.245580 dropped 36252/548800 0.154s/it
+[02:18:06] it 34400 k 17 lr 3.14e-04 loss 0.263321 dropped 36252/550400 0.155s/it
+[02:18:33] it 34500 k 17 lr 3.13e-04 loss 1.414064 dropped 36253/552000 0.155s/it
+[02:18:33] gate: window drop rate 0.001 -> kgate 18
+[02:19:01] it 34600 k 17 lr 3.12e-04 loss 5.416479 dropped 36253/553600 0.155s/it
+[02:19:29] it 34700 k 17 lr 3.12e-04 loss 69.065895 dropped 36295/555200 0.156s/it
+[02:19:42] gate: window drop rate 0.025 -> kgate 19
+[02:19:56] it 34800 k 17 lr 3.11e-04 loss 64.893509 dropped 37003/556800 0.156s/it
+[02:20:24] it 34900 k 17 lr 3.10e-04 loss 2.372829 dropped 37157/558400 0.156s/it
+[02:20:51] it 35000 k 17 lr 3.09e-04 loss 0.747803 dropped 37157/560000 0.157s/it
+[02:20:51] gate: window drop rate 0.201 -> kgate 19
+[02:20:51] by-law {"lj:single": 0.075133, "pow1:charge": 0.04706, "pow1:predprey": 0.097132, "pow1:single": 0.314849, "pow2:charge": 0.01265, "pow2:predprey": 0.043412, "pow2:single": 0.193546, "pow3:charge": 0.01724, "pow3:predprey": 0.035856, "pow3:single": 0.143135, "yuk128:charge": 0.012899, "yuk128:single": 0.176653, "yuk8:charge": 0.017312, "yuk8:single": 0.187099}
+[02:20:51] dropped-by-law {"lj:single": 29, "pow1:charge": 46, "pow1:predprey": 37, "pow1:single": 103, "pow2:charge": 36, "pow2:predprey": 36, "pow2:single": 107, "pow3:charge": 42, "pow3:predprey": 36, "pow3:single": 67, "yuk128:charge": 49, "yuk128:single": 132, "yuk8:charge": 54, "yuk8:single": 134}
+[02:21:19] it 35100 k 17 lr 3.08e-04 loss 2.317406 dropped 37162/561600 0.157s/it
+[02:21:47] it 35200 k 17 lr 3.07e-04 loss 0.199826 dropped 37167/563200 0.157s/it
+[02:22:01] gate: window drop rate 0.003 -> kgate 20
+[02:22:14] it 35300 k 17 lr 3.06e-04 loss 4.490948 dropped 37167/564800 0.158s/it
+[02:22:42] it 35400 k 17 lr 3.05e-04 loss 1631.456543 dropped 37553/566400 0.158s/it
+[02:23:10] it 35500 k 18 lr 3.04e-04 loss 4.155017 dropped 37742/568000 0.158s/it
+[02:23:10] gate: window drop rate 0.144 -> kgate 20
+[02:23:39] it 35600 k 18 lr 3.03e-04 loss 1.965725 dropped 37742/569600 0.159s/it
+[02:24:08] it 35700 k 18 lr 3.02e-04 loss 4.629662 dropped 37750/571200 0.159s/it
+[02:24:23] gate: window drop rate 0.002 -> kgate 21
+[02:24:37] it 35800 k 18 lr 3.01e-04 loss 2.595293 dropped 37751/572800 0.159s/it
+[02:25:07] it 35900 k 18 lr 3.01e-04 loss 19.667196 dropped 37767/574400 0.160s/it
+[02:25:36] it 36000 k 18 lr 3.00e-04 loss 17.466755 dropped 37785/576000 0.160s/it
+[02:25:36] gate: window drop rate 0.009 -> kgate 22
+[02:25:36] by-law {"lj:single": 0.056637, "pow1:charge": 0.134307, "pow1:predprey": 0.068011, "pow1:single": 0.612796, "pow2:charge": 0.089492, "pow2:predprey": 0.083686, "pow2:single": 0.347052, "pow3:charge": 0.053976, "pow3:predprey": 0.102097, "pow3:single": 0.237445, "yuk128:charge": 0.064945, "yuk128:single": 0.365546, "yuk8:charge": 0.082006, "yuk8:single": 0.447085}
+[02:25:36] dropped-by-law {"lj:single": 0, "pow1:charge": 12, "pow1:predprey": 3, "pow1:single": 131, "pow2:charge": 16, "pow2:predprey": 13, "pow2:single": 97, "pow3:charge": 11, "pow3:predprey": 12, "pow3:single": 51, "yuk128:charge": 15, "yuk128:single": 124, "yuk8:charge": 20, "yuk8:single": 123}
+[02:26:05] it 36100 k 18 lr 2.99e-04 loss 8.693264 dropped 37798/577600 0.161s/it
+[02:26:34] it 36200 k 18 lr 2.98e-04 loss 5.888651 dropped 37798/579200 0.161s/it
+[02:26:49] gate: window drop rate 0.003 -> kgate 23
+[02:27:03] it 36300 k 18 lr 2.97e-04 loss 5.052526 dropped 37798/580800 0.161s/it
+[02:27:32] it 36400 k 18 lr 2.96e-04 loss 3.817972 dropped 37798/582400 0.162s/it
+[02:28:01] it 36500 k 18 lr 2.95e-04 loss 3.932929 dropped 37798/584000 0.162s/it
+[02:28:01] gate: window drop rate 0.000 -> kgate 24
+[02:28:30] it 36600 k 18 lr 2.94e-04 loss 0.186707 dropped 37798/585600 0.162s/it
+[02:28:59] it 36700 k 18 lr 2.93e-04 loss 0.391870 dropped 37798/587200 0.163s/it
+[02:29:14] gate: window drop rate 0.000 -> kgate 25
+[02:29:29] it 36800 k 18 lr 2.92e-04 loss 8.202641 dropped 37798/588800 0.163s/it
+[02:29:58] it 36900 k 18 lr 2.91e-04 loss 3.603606 dropped 37798/590400 0.163s/it
+[02:30:27] it 37000 k 18 lr 2.90e-04 loss 2.767515 dropped 37798/592000 0.164s/it
+[02:30:27] gate: window drop rate 0.000 -> kgate 26
+[02:30:27] by-law {"lj:single": 0.070769, "pow1:charge": 0.006997, "pow1:predprey": 0.00701, "pow1:single": 0.423608, "pow2:charge": 0.005543, "pow2:predprey": 0.006453, "pow2:single": 0.227235, "pow3:charge": 0.004894, "pow3:predprey": 0.00439, "pow3:single": 0.164425, "yuk128:charge": 0.005406, "yuk128:single": 0.202855, "yuk8:charge": 0.00489, "yuk8:single": 0.27299}
+[02:30:27] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 5, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 2, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 3, "yuk8:charge": 0, "yuk8:single": 3}
+[02:30:56] it 37100 k 18 lr 2.89e-04 loss 0.536727 dropped 37798/593600 0.164s/it
+[02:31:25] it 37200 k 18 lr 2.89e-04 loss 7.653579 dropped 37798/595200 0.164s/it
+[02:31:40] gate: window drop rate 0.000 -> kgate 27
+[02:31:54] it 37300 k 18 lr 2.88e-04 loss 3.904459 dropped 37798/596800 0.165s/it
+[02:32:23] it 37400 k 18 lr 2.87e-04 loss 0.785548 dropped 37798/598400 0.165s/it
+[02:32:52] it 37500 k 18 lr 2.86e-04 loss 1.947415 dropped 37798/600000 0.165s/it
+[02:32:52] gate: window drop rate 0.000 -> kgate 28
+[02:33:22] it 37600 k 18 lr 2.85e-04 loss 0.339432 dropped 37798/601600 0.166s/it
+[02:33:51] it 37700 k 18 lr 2.84e-04 loss 1.336768 dropped 37798/603200 0.166s/it
+[02:34:06] gate: window drop rate 0.000 -> kgate 29
+[02:34:21] it 37800 k 19 lr 2.83e-04 loss 3.202328 dropped 37798/604800 0.166s/it
+[02:34:52] it 37900 k 19 lr 2.82e-04 loss 0.882018 dropped 37798/606400 0.167s/it
+[02:35:22] it 38000 k 19 lr 2.81e-04 loss 1.328738 dropped 37798/608000 0.167s/it
+[02:35:22] gate: window drop rate 0.000 -> kgate 30
+[02:35:22] by-law {"lj:single": 0.05246, "pow1:charge": 0.004011, "pow1:predprey": 0.001943, "pow1:single": 0.387638, "pow2:charge": 0.003136, "pow2:predprey": 0.001166, "pow2:single": 0.169862, "pow3:charge": 0.003582, "pow3:predprey": 0.000852, "pow3:single": 0.107197, "yuk128:charge": 0.002955, "yuk128:single": 0.159162, "yuk8:charge": 0.002994, "yuk8:single": 0.20725}
+[02:35:22] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[02:35:53] it 38100 k 19 lr 2.80e-04 loss 6.891654 dropped 37798/609600 0.168s/it
+[02:36:24] it 38200 k 19 lr 2.79e-04 loss 1.578752 dropped 37798/611200 0.168s/it
+[02:36:39] gate: window drop rate 0.000 -> kgate 30
+[02:36:54] it 38300 k 19 lr 2.78e-04 loss 7.383706 dropped 37798/612800 0.168s/it
+[02:37:25] it 38400 k 19 lr 2.77e-04 loss 4.873698 dropped 37799/614400 0.169s/it
+[02:37:56] it 38500 k 19 lr 2.76e-04 loss 4.289803 dropped 37802/616000 0.169s/it
+[02:37:56] gate: window drop rate 0.001 -> kgate 30
+[02:38:26] it 38600 k 19 lr 2.76e-04 loss 8.303265 dropped 37816/617600 0.169s/it
+[02:38:57] it 38700 k 19 lr 2.75e-04 loss 6.236266 dropped 37830/619200 0.170s/it
+[02:39:12] gate: window drop rate 0.008 -> kgate 30
+[02:39:27] it 38800 k 19 lr 2.74e-04 loss 1.573926 dropped 37834/620800 0.170s/it
+[02:39:57] it 38900 k 19 lr 2.73e-04 loss 4.365643 dropped 37835/622400 0.170s/it
+[02:40:28] it 39000 k 19 lr 2.72e-04 loss 10.955484 dropped 37844/624000 0.171s/it
+[02:40:28] gate: window drop rate 0.003 -> kgate 30
+[02:40:28] by-law {"lj:single": 0.050149, "pow1:charge": 0.003615, "pow1:predprey": 0.001967, "pow1:single": 0.514153, "pow2:charge": 0.003356, "pow2:predprey": 0.001175, "pow2:single": 0.27466, "pow3:charge": 0.00445, "pow3:predprey": 0.001032, "pow3:single": 0.133819, "yuk128:charge": 0.003282, "yuk128:single": 0.25407, "yuk8:charge": 0.002667, "yuk8:single": 0.238033}
+[02:40:28] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 24, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 5, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 1, "yuk128:charge": 0, "yuk128:single": 10, "yuk8:charge": 0, "yuk8:single": 6}
+[02:40:58] it 39100 k 19 lr 2.71e-04 loss 15.368855 dropped 37933/625600 0.171s/it
+[02:41:28] it 39200 k 19 lr 2.70e-04 loss 0.214073 dropped 38180/627200 0.171s/it
+[02:41:43] gate: window drop rate 0.121 -> kgate 30
+[02:41:59] it 39300 k 19 lr 2.69e-04 loss 128.250397 dropped 38449/628800 0.172s/it
+[02:42:29] it 39400 k 19 lr 2.68e-04 loss 3.801008 dropped 38505/630400 0.172s/it
+[02:42:59] it 39500 k 19 lr 2.67e-04 loss 7.064858 dropped 38507/632000 0.172s/it
+[02:42:59] gate: window drop rate 0.044 -> kgate 30
+[02:43:30] it 39600 k 19 lr 2.66e-04 loss 0.873472 dropped 38507/633600 0.173s/it
+[02:44:00] it 39700 k 19 lr 2.65e-04 loss 1.632319 dropped 38507/635200 0.173s/it
+[02:44:15] gate: window drop rate 0.013 -> kgate 30
+[02:44:30] it 39800 k 19 lr 2.64e-04 loss 6.842781 dropped 38665/636800 0.173s/it
+[02:45:00] it 39900 k 19 lr 2.63e-04 loss 4.869204 dropped 38665/638400 0.174s/it
+[02:45:31] it 40000 k 19 lr 2.63e-04 loss 0.575219 dropped 38665/640000 0.174s/it
+[02:45:31] gate: window drop rate 0.026 -> kgate 30
+[02:45:31] by-law {"lj:single": 0.134143, "pow1:charge": 0.006367, "pow1:predprey": 0.005686, "pow1:single": 0.605026, "pow2:charge": 0.003616, "pow2:predprey": 0.024913, "pow2:single": 0.305261, "pow3:charge": 0.005035, "pow3:predprey": 0.00132, "pow3:single": 0.198414, "yuk128:charge": 0.004107, "yuk128:single": 0.295744, "yuk8:charge": 0.002291, "yuk8:single": 0.301783}
+[02:45:31] dropped-by-law {"lj:single": 42, "pow1:charge": 2, "pow1:predprey": 2, "pow1:single": 202, "pow2:charge": 0, "pow2:predprey": 3, "pow2:single": 126, "pow3:charge": 0, "pow3:predprey": 3, "pow3:single": 58, "yuk128:charge": 0, "yuk128:single": 168, "yuk8:charge": 0, "yuk8:single": 215}
+[02:46:03] it 40100 k 20 lr 2.62e-04 loss 4.101261 dropped 38665/641600 0.174s/it
+[02:46:35] it 40200 k 20 lr 2.61e-04 loss 2.982450 dropped 38665/643200 0.175s/it
+[02:46:51] gate: window drop rate 0.000 -> kgate 30
+[02:47:07] it 40300 k 20 lr 2.60e-04 loss 0.768818 dropped 38665/644800 0.175s/it
+[02:47:39] it 40400 k 20 lr 2.59e-04 loss 7.137545 dropped 38665/646400 0.176s/it
+[02:48:10] it 40500 k 20 lr 2.58e-04 loss 1.560225 dropped 38665/648000 0.176s/it
+[02:48:10] gate: window drop rate 0.000 -> kgate 30
+[02:48:43] it 40600 k 20 lr 2.57e-04 loss 8.089890 dropped 38665/649600 0.176s/it
+[02:49:14] it 40700 k 20 lr 2.56e-04 loss 1.920247 dropped 38665/651200 0.177s/it
+[02:49:30] gate: window drop rate 0.000 -> kgate 30
+[02:49:46] it 40800 k 20 lr 2.55e-04 loss 0.363846 dropped 38665/652800 0.177s/it
+[02:50:18] it 40900 k 20 lr 2.54e-04 loss 1.902649 dropped 38665/654400 0.177s/it
+[02:50:50] it 41000 k 20 lr 2.53e-04 loss 1.420979 dropped 38665/656000 0.178s/it
+[02:50:50] gate: window drop rate 0.000 -> kgate 30
+[02:50:50] by-law {"lj:single": 0.070592, "pow1:charge": 0.004646, "pow1:predprey": 0.002319, "pow1:single": 0.395883, "pow2:charge": 0.003586, "pow2:predprey": 0.001202, "pow2:single": 0.203227, "pow3:charge": 0.004785, "pow3:predprey": 0.001108, "pow3:single": 0.107951, "yuk128:charge": 0.003548, "yuk128:single": 0.172641, "yuk8:charge": 0.002644, "yuk8:single": 0.208696}
+[02:50:50] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[02:51:22] it 41100 k 20 lr 2.52e-04 loss 3.403424 dropped 38665/657600 0.178s/it
+[02:51:54] it 41200 k 20 lr 2.51e-04 loss 2.906176 dropped 38665/659200 0.178s/it
+[02:52:10] gate: window drop rate 0.000 -> kgate 30
+[02:52:26] it 41300 k 20 lr 2.50e-04 loss 0.958439 dropped 38665/660800 0.179s/it
+[02:52:58] it 41400 k 20 lr 2.49e-04 loss 6.663190 dropped 38665/662400 0.179s/it
+[02:53:30] it 41500 k 20 lr 2.49e-04 loss 10.714843 dropped 38665/664000 0.179s/it
+[02:53:30] gate: window drop rate 0.000 -> kgate 30
+[02:54:02] it 41600 k 20 lr 2.48e-04 loss 0.547353 dropped 38667/665600 0.180s/it
+[02:54:34] it 41700 k 20 lr 2.47e-04 loss 3.510507 dropped 38667/667200 0.180s/it
+[02:54:50] gate: window drop rate 0.001 -> kgate 30
+[02:55:06] it 41800 k 20 lr 2.46e-04 loss 0.997278 dropped 38667/668800 0.180s/it
+[02:55:38] it 41900 k 20 lr 2.45e-04 loss 2.516255 dropped 38667/670400 0.181s/it
+[02:56:10] it 42000 k 20 lr 2.44e-04 loss 3.051213 dropped 38667/672000 0.181s/it
+[02:56:10] gate: window drop rate 0.000 -> kgate 30
+[02:56:10] by-law {"lj:single": 0.058487, "pow1:charge": 0.005034, "pow1:predprey": 0.002167, "pow1:single": 0.380105, "pow2:charge": 0.003195, "pow2:predprey": 0.001209, "pow2:single": 0.184285, "pow3:charge": 0.006035, "pow3:predprey": 0.001094, "pow3:single": 0.110196, "yuk128:charge": 0.003698, "yuk128:single": 0.189535, "yuk8:charge": 0.002801, "yuk8:single": 0.29064}
+[02:56:10] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 1, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 1}
+[02:56:41] it 42100 k 20 lr 2.43e-04 loss 4.070863 dropped 38667/673600 0.181s/it
+[02:57:13] it 42200 k 20 lr 2.42e-04 loss 523.582031 dropped 38863/675200 0.182s/it
+[02:57:29] gate: window drop rate 0.050 -> kgate 30
+[02:57:46] it 42300 k 21 lr 2.41e-04 loss 3.655277 dropped 38867/676800 0.182s/it
+[02:58:19] it 42400 k 21 lr 2.40e-04 loss 1.592284 dropped 38867/678400 0.182s/it
+[02:58:52] it 42500 k 21 lr 2.39e-04 loss 2.385195 dropped 38867/680000 0.183s/it
+[02:58:52] gate: window drop rate 0.000 -> kgate 30
+[02:59:26] it 42600 k 21 lr 2.38e-04 loss 0.659461 dropped 38867/681600 0.183s/it
+[02:59:59] it 42700 k 21 lr 2.37e-04 loss 0.465259 dropped 38867/683200 0.183s/it
+[03:00:16] gate: window drop rate 0.000 -> kgate 30
+[03:00:33] it 42800 k 21 lr 2.36e-04 loss 1.342037 dropped 38867/684800 0.184s/it
+[03:01:06] it 42900 k 21 lr 2.36e-04 loss 3.301086 dropped 38867/686400 0.184s/it
+[03:01:40] it 43000 k 21 lr 2.35e-04 loss 0.422047 dropped 38867/688000 0.184s/it
+[03:01:40] gate: window drop rate 0.000 -> kgate 30
+[03:01:40] by-law {"lj:single": 0.075904, "pow1:charge": 0.06135, "pow1:predprey": 0.018493, "pow1:single": 0.374858, "pow2:charge": 0.047064, "pow2:predprey": 0.034637, "pow2:single": 0.161671, "pow3:charge": 0.012297, "pow3:predprey": 0.037318, "pow3:single": 0.143312, "yuk128:charge": 0.042472, "yuk128:single": 0.164097, "yuk8:charge": 0.007318, "yuk8:single": 0.236569}
+[03:01:40] dropped-by-law {"lj:single": 42, "pow1:charge": 14, "pow1:predprey": 11, "pow1:single": 15, "pow2:charge": 6, "pow2:predprey": 7, "pow2:single": 17, "pow3:charge": 10, "pow3:predprey": 13, "pow3:single": 12, "yuk128:charge": 16, "yuk128:single": 17, "yuk8:charge": 2, "yuk8:single": 18}
+[03:02:13] it 43100 k 21 lr 2.34e-04 loss 1.142339 dropped 38867/689600 0.185s/it
+[03:02:47] it 43200 k 21 lr 2.33e-04 loss 0.444684 dropped 38867/691200 0.185s/it
+[03:03:04] gate: window drop rate 0.000 -> kgate 30
+[03:03:20] it 43300 k 21 lr 2.32e-04 loss 2.214615 dropped 38867/692800 0.186s/it
+[03:03:54] it 43400 k 21 lr 2.31e-04 loss 24.330952 dropped 38867/694400 0.186s/it
+[03:04:27] it 43500 k 21 lr 2.30e-04 loss 3.520094 dropped 38869/696000 0.186s/it
+[03:04:27] gate: window drop rate 0.001 -> kgate 30
+[03:05:01] it 43600 k 21 lr 2.29e-04 loss 4.422411 dropped 38869/697600 0.187s/it
+[03:05:34] it 43700 k 21 lr 2.28e-04 loss 4.031206 dropped 38869/699200 0.187s/it
+[03:05:51] gate: window drop rate 0.000 -> kgate 30
+[03:06:07] it 43800 k 21 lr 2.27e-04 loss 3.631642 dropped 38870/700800 0.187s/it
+[03:06:41] it 43900 k 21 lr 2.26e-04 loss 6.794858 dropped 38872/702400 0.188s/it
+[03:07:14] it 44000 k 21 lr 2.25e-04 loss 6.837366 dropped 38875/704000 0.188s/it
+[03:07:14] gate: window drop rate 0.002 -> kgate 30
+[03:07:14] by-law {"lj:single": 0.063384, "pow1:charge": 0.005827, "pow1:predprey": 0.003015, "pow1:single": 0.61807, "pow2:charge": 0.004442, "pow2:predprey": 0.0014, "pow2:single": 0.328174, "pow3:charge": 0.004844, "pow3:predprey": 0.001322, "pow3:single": 0.204694, "yuk128:charge": 0.004422, "yuk128:single": 0.295576, "yuk8:charge": 0.002974, "yuk8:single": 0.354923}
+[03:07:14] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 7, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 1, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[03:07:48] it 44100 k 21 lr 2.24e-04 loss 722.498901 dropped 39020/705600 0.188s/it
+[03:08:21] it 44200 k 21 lr 2.24e-04 loss 238.480316 dropped 40054/707200 0.189s/it
+[03:08:38] gate: window drop rate 0.377 -> kgate 28
+[03:08:55] it 44300 k 21 lr 2.23e-04 loss 226.415833 dropped 40575/708800 0.189s/it
+[03:09:28] it 44400 k 21 lr 2.22e-04 loss 428.899933 dropped 41057/710400 0.189s/it
+[03:10:01] it 44500 k 21 lr 2.21e-04 loss 20.216595 dropped 41357/712000 0.190s/it
+[03:10:01] gate: window drop rate 0.243 -> kgate 28
+[03:10:35] it 44600 k 22 lr 2.20e-04 loss 31.942810 dropped 41414/713600 0.190s/it
+[03:11:10] it 44700 k 22 lr 2.19e-04 loss 6.448143 dropped 41425/715200 0.190s/it
+[03:11:28] gate: window drop rate 0.020 -> kgate 29
+[03:11:35] it 44770 loss 0.291 non-finite or above cap, step skipped (3051 total)
+[03:11:45] it 44800 k 22 lr 2.18e-04 loss 0.736316 dropped 41812/716800 0.191s/it
+[03:11:53] it 44820 loss 271 non-finite or above cap, step skipped (3101 total)
+[03:12:10] it 44870 loss 5.25 non-finite or above cap, step skipped (3151 total)
+[03:12:20] it 44900 k 22 lr 2.17e-04 loss 1.620102 dropped 42862/718400 0.191s/it
+[03:12:27] it 44920 loss 0.819 non-finite or above cap, step skipped (3201 total)
+[03:12:45] it 44970 loss 0.928 non-finite or above cap, step skipped (3251 total)
+[03:12:55] it 45000 k 22 lr 2.16e-04 loss 0.111492 dropped 43939/720000 0.191s/it
+[03:12:55] gate: window drop rate 0.625 -> kgate 27
+[03:12:55] by-law {"lj:single": 0.091101, "pow1:charge": 0.141579, "pow1:predprey": 0.147473, "pow1:single": 1.582769, "pow2:charge": 0.256533, "pow2:predprey": 0.130141, "pow2:single": 0.952109, "pow3:charge": 0.351814, "pow3:predprey": 0.138214, "pow3:single": 0.638937, "yuk128:charge": 0.294223, "yuk128:single": 0.922889, "yuk8:charge": 0.117895, "yuk8:single": 1.061657}
+[03:12:55] dropped-by-law {"lj:single": 29, "pow1:charge": 235, "pow1:predprey": 150, "pow1:single": 789, "pow2:charge": 252, "pow2:predprey": 225, "pow2:single": 627, "pow3:charge": 218, "pow3:predprey": 207, "pow3:single": 463, "yuk128:charge": 304, "yuk128:single": 771, "yuk8:charge": 63, "yuk8:single": 731}
+[03:13:02] it 45020 loss 0.775 non-finite or above cap, step skipped (3301 total)
+[03:13:20] it 45070 loss 1.03 non-finite or above cap, step skipped (3351 total)
+[03:13:30] it 45100 k 22 lr 2.15e-04 loss 0.678182 dropped 45009/721600 0.192s/it
+[03:13:37] it 45120 loss 0.028 non-finite or above cap, step skipped (3401 total)
+[03:13:55] it 45170 loss 0.845 non-finite or above cap, step skipped (3451 total)
+[03:14:05] it 45200 k 22 lr 2.14e-04 loss 2.179071 dropped 46068/723200 0.192s/it
+[03:14:12] it 45220 loss 1.26 non-finite or above cap, step skipped (3501 total)
+[03:14:22] gate: window drop rate 0.660 -> kgate 25
+[03:14:29] it 45270 loss 0.0811 non-finite or above cap, step skipped (3551 total)
+[03:14:40] it 45300 k 22 lr 2.13e-04 loss 0.157425 dropped 47110/724800 0.192s/it
+[03:14:47] it 45320 loss 0.229 non-finite or above cap, step skipped (3601 total)
+[03:15:04] it 45370 loss 1.37 non-finite or above cap, step skipped (3651 total)
+[03:15:14] it 45400 k 22 lr 2.13e-04 loss 0.540292 dropped 48174/726400 0.193s/it
+[03:15:22] it 45420 loss 0.0581 non-finite or above cap, step skipped (3701 total)
+[03:15:39] it 45470 loss 274 non-finite or above cap, step skipped (3751 total)
+[03:15:49] it 45500 k 22 lr 2.12e-04 loss 0.589632 dropped 49243/728000 0.193s/it
+[03:15:49] gate: window drop rate 0.666 -> kgate 23
+[03:15:57] it 45520 loss 0.587 non-finite or above cap, step skipped (3801 total)
+[03:16:14] it 45570 loss 0.235 non-finite or above cap, step skipped (3851 total)
+[03:16:24] it 45600 k 22 lr 2.11e-04 loss 0.122746 dropped 50343/729600 0.193s/it
+[03:16:32] it 45620 loss 0.107 non-finite or above cap, step skipped (3901 total)
+[03:16:49] it 45670 loss 173 non-finite or above cap, step skipped (3951 total)
+[03:16:59] it 45700 k 22 lr 2.10e-04 loss 1.015354 dropped 51373/731200 0.194s/it
+[03:17:06] it 45720 loss 1.75 non-finite or above cap, step skipped (4001 total)
+[03:17:17] gate: window drop rate 0.662 -> kgate 21
+[03:17:24] it 45770 loss 0.992 non-finite or above cap, step skipped (4051 total)
+[03:17:33] it 45800 k 21 lr 2.09e-04 loss 3.276131 dropped 52418/732800 0.194s/it
+[03:17:40] it 45820 loss 0.529 non-finite or above cap, step skipped (4101 total)
+[03:17:57] it 45870 loss 0.582 non-finite or above cap, step skipped (4151 total)
+[03:18:07] it 45900 k 21 lr 2.08e-04 loss 1.831533 dropped 53528/734400 0.194s/it
+[03:18:13] it 45920 loss 0.334 non-finite or above cap, step skipped (4201 total)
+[03:18:30] it 45970 loss 0.853 non-finite or above cap, step skipped (4251 total)
+[03:18:40] it 46000 k 21 lr 2.07e-04 loss 0.018154 dropped 54608/736000 0.195s/it
+[03:18:40] gate: window drop rate 0.679 -> kgate 19
+[03:18:40] by-law {"lj:single": 0.0, "pow1:charge": 0.0, "pow1:predprey": 0.0, "pow1:single": 0.0, "pow2:charge": 0.0, "pow2:predprey": 0.0, "pow2:single": 0.0, "pow3:charge": 0.0, "pow3:predprey": 0.0, "pow3:single": 0.0, "yuk128:charge": 0.0, "yuk128:single": 0.0, "yuk8:charge": 0.0, "yuk8:single": 0.0}
+[03:18:40] dropped-by-law {"lj:single": 0, "pow1:charge": 685, "pow1:predprey": 653, "pow1:single": 1328, "pow2:charge": 675, "pow2:predprey": 616, "pow2:single": 997, "pow3:charge": 707, "pow3:predprey": 694, "pow3:single": 855, "yuk128:charge": 831, "yuk128:single": 1304, "yuk8:charge": 18, "yuk8:single": 1306}
+[03:18:46] it 46021 loss 417 non-finite or above cap, step skipped (4301 total)
+[03:19:02] it 46071 loss 194 non-finite or above cap, step skipped (4351 total)
+[03:19:10] it 46100 k 19 lr 2.06e-04 loss 398.706543 dropped 55686/737600 0.195s/it
+[03:19:17] it 46121 loss 111 non-finite or above cap, step skipped (4401 total)
+[03:19:32] it 46171 loss 0.355 non-finite or above cap, step skipped (4451 total)
+[03:19:40] it 46200 k 19 lr 2.05e-04 loss 224.340393 dropped 56789/739200 0.195s/it
+[03:19:47] it 46221 loss 149 non-finite or above cap, step skipped (4501 total)
+[03:19:55] gate: window drop rate 0.678 -> kgate 17
+[03:20:09] it 46300 k 17 lr 2.04e-04 loss 15.045319 dropped 57433/740800 0.195s/it
+[03:20:36] it 46400 k 17 lr 2.03e-04 loss 13.174978 dropped 57450/742400 0.195s/it
+[03:21:03] it 46500 k 17 lr 2.03e-04 loss 2.244591 dropped 57467/744000 0.196s/it
+[03:21:03] gate: window drop rate 0.037 -> kgate 18
+[03:21:32] it 46600 k 18 lr 2.02e-04 loss 14.484735 dropped 57477/745600 0.196s/it
+[03:22:01] it 46700 k 18 lr 2.01e-04 loss 0.840544 dropped 57484/747200 0.196s/it
+[03:22:15] gate: window drop rate 0.004 -> kgate 19
+[03:22:30] it 46800 k 19 lr 2.00e-04 loss 3.852549 dropped 57487/748800 0.196s/it
+[03:23:01] it 46900 k 19 lr 1.99e-04 loss 4.567601 dropped 57487/750400 0.196s/it
+[03:23:31] it 47000 k 19 lr 1.98e-04 loss 1.615797 dropped 57487/752000 0.197s/it
+[03:23:31] gate: window drop rate 0.001 -> kgate 20
+[03:23:31] by-law {"lj:single": 0.076858, "pow1:charge": 0.033769, "pow1:predprey": 0.023809, "pow1:single": 0.866426, "pow2:charge": 0.041534, "pow2:predprey": 0.048309, "pow2:single": 0.499512, "pow3:charge": 0.073021, "pow3:predprey": 0.046416, "pow3:single": 0.375169, "yuk128:charge": 0.036066, "yuk128:single": 0.425041, "yuk8:charge": 0.001949, "yuk8:single": 0.530997}
+[03:23:31] dropped-by-law {"lj:single": 65, "pow1:charge": 183, "pow1:predprey": 164, "pow1:single": 381, "pow2:charge": 169, "pow2:predprey": 180, "pow2:single": 255, "pow3:charge": 180, "pow3:predprey": 141, "pow3:single": 222, "yuk128:charge": 224, "yuk128:single": 369, "yuk8:charge": 7, "yuk8:single": 339}
+[03:24:03] it 47100 k 20 lr 1.97e-04 loss 4.840942 dropped 57487/753600 0.197s/it
+[03:24:35] it 47200 k 20 lr 1.96e-04 loss 5.841650 dropped 57487/755200 0.197s/it
+[03:24:51] gate: window drop rate 0.000 -> kgate 21
+[03:25:08] it 47300 k 21 lr 1.95e-04 loss 12.929996 dropped 57487/756800 0.197s/it
+[03:25:41] it 47400 k 21 lr 1.94e-04 loss 12.255093 dropped 57503/758400 0.198s/it
+[03:26:14] it 47500 k 21 lr 1.94e-04 loss 1169.207886 dropped 57829/760000 0.198s/it
+[03:26:14] gate: window drop rate 0.086 -> kgate 21
+[03:26:48] it 47600 k 21 lr 1.93e-04 loss 216.419479 dropped 58904/761600 0.198s/it
+[03:27:10] it 47664 loss 0 non-finite or above cap, step skipped (4551 total)
+[03:27:21] it 47700 k 21 lr 1.92e-04 loss 233.552765 dropped 60394/763200 0.199s/it
+[03:27:38] gate: window drop rate 0.824 -> kgate 19
+[03:27:53] it 47800 k 19 lr 1.91e-04 loss 73.643959 dropped 61700/764800 0.199s/it
+[03:28:24] it 47900 k 19 lr 1.90e-04 loss 210.935349 dropped 62814/766400 0.199s/it
+[03:28:54] it 48000 k 19 lr 1.89e-04 loss 0.000000 dropped 64198/768000 0.199s/it
+[03:28:54] gate: window drop rate 0.768 -> kgate 17
+[03:28:54] by-law {"lj:single": 0.833331, "pow1:charge": 0.706461, "pow1:predprey": 1.17855, "pow1:single": 1.042352, "pow2:charge": 0.730655, "pow2:predprey": 0.618133, "pow2:single": 0.831904, "pow3:charge": 0.861176, "pow3:predprey": 0.724473, "pow3:single": 0.643276, "yuk128:charge": 0.804485, "yuk128:single": 0.774463, "yuk8:charge": 0.405087, "yuk8:single": 0.861886}
+[03:28:54] dropped-by-law {"lj:single": 792, "pow1:charge": 276, "pow1:predprey": 157, "pow1:single": 696, "pow2:charge": 296, "pow2:predprey": 268, "pow2:single": 674, "pow3:charge": 279, "pow3:predprey": 260, "pow3:single": 669, "yuk128:charge": 352, "yuk128:single": 900, "yuk8:charge": 205, "yuk8:single": 887}
+[03:29:21] it 48100 k 17 lr 1.88e-04 loss 28.612827 dropped 64981/769600 0.199s/it
+[03:29:48] it 48200 k 17 lr 1.87e-04 loss 17.165092 dropped 64993/771200 0.200s/it
+[03:30:02] gate: window drop rate 0.200 -> kgate 17
+[03:30:16] it 48300 k 17 lr 1.86e-04 loss 15.873218 dropped 65000/772800 0.200s/it
+[03:30:43] it 48400 k 17 lr 1.86e-04 loss 6.958434 dropped 65001/774400 0.200s/it
+[03:31:10] it 48500 k 17 lr 1.85e-04 loss 5.911492 dropped 65004/776000 0.200s/it
+[03:31:10] gate: window drop rate 0.001 -> kgate 18
+[03:31:39] it 48600 k 18 lr 1.84e-04 loss 12.059060 dropped 65007/777600 0.200s/it
+[03:32:08] it 48700 k 18 lr 1.83e-04 loss 8.562516 dropped 65013/779200 0.200s/it
+[03:32:22] gate: window drop rate 0.002 -> kgate 19
+[03:32:37] it 48800 k 19 lr 1.82e-04 loss 3.962754 dropped 65013/780800 0.201s/it
+[03:33:08] it 48900 k 19 lr 1.81e-04 loss 322.623657 dropped 65031/782400 0.201s/it
+[03:33:38] it 49000 k 19 lr 1.80e-04 loss 18.312630 dropped 65065/784000 0.201s/it
+[03:33:38] gate: window drop rate 0.013 -> kgate 20
+[03:33:38] by-law {"lj:single": 0.16405, "pow1:charge": 0.106531, "pow1:predprey": 0.093882, "pow1:single": 1.058563, "pow2:charge": 0.124622, "pow2:predprey": 0.092653, "pow2:single": 0.862664, "pow3:charge": 0.128916, "pow3:predprey": 0.116524, "pow3:single": 0.726357, "yuk128:charge": 0.08854, "yuk128:single": 0.807034, "yuk8:charge": 0.05779, "yuk8:single": 1.033767}
+[03:33:38] dropped-by-law {"lj:single": 71, "pow1:charge": 29, "pow1:predprey": 12, "pow1:single": 112, "pow2:charge": 31, "pow2:predprey": 29, "pow2:single": 94, "pow3:charge": 44, "pow3:predprey": 30, "pow3:single": 94, "yuk128:charge": 33, "yuk128:single": 127, "yuk8:charge": 32, "yuk8:single": 129}
+[03:34:10] it 49100 k 20 lr 1.79e-04 loss 711.131409 dropped 65765/785600 0.201s/it
+[03:34:42] it 49200 k 20 lr 1.79e-04 loss 405.731567 dropped 66772/787200 0.202s/it
+[03:34:58] gate: window drop rate 0.471 -> kgate 18
+[03:35:12] it 49300 k 18 lr 1.78e-04 loss 10.795197 dropped 66948/788800 0.202s/it
+[03:35:41] it 49400 k 18 lr 1.77e-04 loss 913.338440 dropped 66984/790400 0.202s/it
+[03:36:10] it 49500 k 18 lr 1.76e-04 loss 18.392155 dropped 67231/792000 0.202s/it
+[03:36:10] gate: window drop rate 0.071 -> kgate 18
+[03:36:39] it 49600 k 18 lr 1.75e-04 loss 38.219616 dropped 67231/793600 0.202s/it
+[03:37:08] it 49700 k 18 lr 1.74e-04 loss 7.699306 dropped 67235/795200 0.202s/it
+[03:37:22] gate: window drop rate 0.001 -> kgate 19
+[03:37:37] it 49800 k 19 lr 1.73e-04 loss 28.863655 dropped 67235/796800 0.203s/it
+[03:38:07] it 49900 k 19 lr 1.72e-04 loss 140.156616 dropped 67260/798400 0.203s/it
+[03:38:38] it 50000 k 19 lr 1.72e-04 loss 23.373116 dropped 67261/800000 0.203s/it
+[03:38:38] gate: window drop rate 0.006 -> kgate 20
+[03:38:38] by-law {"lj:single": 0.435852, "pow1:charge": 0.361324, "pow1:predprey": 0.335828, "pow1:single": 1.348567, "pow2:charge": 0.338706, "pow2:predprey": 0.429532, "pow2:single": 1.183093, "pow3:charge": 0.326983, "pow3:predprey": 0.348748, "pow3:single": 1.116097, "yuk128:charge": 0.345406, "yuk128:single": 1.126048, "yuk8:charge": 0.301863, "yuk8:single": 1.444735}
+[03:38:38] dropped-by-law {"lj:single": 155, "pow1:charge": 43, "pow1:predprey": 44, "pow1:single": 337, "pow2:charge": 54, "pow2:predprey": 46, "pow2:single": 293, "pow3:charge": 48, "pow3:predprey": 49, "pow3:single": 254, "yuk128:charge": 82, "yuk128:single": 367, "yuk8:charge": 51, "yuk8:single": 373}
+[03:39:10] it 50100 k 20 lr 1.71e-04 loss 19.523661 dropped 67261/801600 0.203s/it
+[03:39:42] it 50200 k 20 lr 1.70e-04 loss 34.206230 dropped 67269/803200 0.203s/it
+[03:39:57] gate: window drop rate 0.003 -> kgate 21
+[03:40:14] it 50300 k 21 lr 1.69e-04 loss 43.641300 dropped 67283/804800 0.204s/it
+[03:40:48] it 50400 k 21 lr 1.68e-04 loss 26.141933 dropped 67361/806400 0.204s/it
+[03:41:21] it 50500 k 21 lr 1.67e-04 loss 15.683457 dropped 67364/808000 0.204s/it
+[03:41:21] gate: window drop rate 0.023 -> kgate 22
+[03:41:56] it 50600 k 22 lr 1.66e-04 loss 11.450896 dropped 67372/809600 0.205s/it
+[03:42:31] it 50700 k 22 lr 1.66e-04 loss 328.424622 dropped 67580/811200 0.205s/it
+[03:42:49] gate: window drop rate 0.186 -> kgate 22
+[03:43:06] it 50800 k 22 lr 1.65e-04 loss 0.003261 dropped 68814/812800 0.205s/it
+[03:43:18] it 50833 loss 0 non-finite or above cap, step skipped (4601 total)
+[03:43:41] it 50900 k 22 lr 1.64e-04 loss 146.751389 dropped 70303/814400 0.205s/it
+[03:43:58] it 50947 loss 0 non-finite or above cap, step skipped (4651 total)
+[03:44:16] it 51000 k 22 lr 1.63e-04 loss 110.515427 dropped 71828/816000 0.206s/it
+[03:44:16] gate: window drop rate 0.930 -> kgate 20
+[03:44:16] by-law {"lj:single": 0.441863, "pow1:charge": 0.328965, "pow1:predprey": 0.324477, "pow1:single": 1.604902, "pow2:charge": 0.273652, "pow2:predprey": 0.22389, "pow2:single": 1.539133, "pow3:charge": 0.225708, "pow3:predprey": 0.264546, "pow3:single": 1.398302, "yuk128:charge": 0.238524, "yuk128:single": 1.47552, "yuk8:charge": 0.103314, "yuk8:single": 1.738685}
+[03:44:16] dropped-by-law {"lj:single": 667, "pow1:charge": 168, "pow1:predprey": 93, "pow1:single": 505, "pow2:charge": 165, "pow2:predprey": 160, "pow2:single": 444, "pow3:charge": 146, "pow3:predprey": 153, "pow3:single": 426, "yuk128:charge": 234, "yuk128:single": 614, "yuk8:charge": 205, "yuk8:single": 587}
+[03:44:40] it 51076 loss 0 non-finite or above cap, step skipped (4701 total)
+[03:44:48] it 51100 k 20 lr 1.62e-04 loss 70.720993 dropped 73340/817600 0.206s/it
+[03:45:20] it 51200 k 20 lr 1.61e-04 loss 222.524399 dropped 74801/819200 0.206s/it
+[03:45:36] gate: window drop rate 0.919 -> kgate 18
+[03:45:50] it 51300 k 18 lr 1.61e-04 loss 977.411499 dropped 76079/820800 0.206s/it
+[03:46:19] it 51400 k 18 lr 1.60e-04 loss 544.702759 dropped 77332/822400 0.206s/it
+[03:46:47] it 51500 k 18 lr 1.59e-04 loss 15.669445 dropped 77379/824000 0.207s/it
+[03:46:47] gate: window drop rate 0.469 -> kgate 16
+[03:47:13] it 51600 k 16 lr 1.58e-04 loss 23.916447 dropped 77379/825600 0.207s/it
+[03:47:39] it 51700 k 16 lr 1.57e-04 loss 168.745285 dropped 77458/827200 0.207s/it
+[03:47:52] gate: window drop rate 0.053 -> kgate 16
+[03:48:05] it 51800 k 16 lr 1.56e-04 loss 575.041992 dropped 77923/828800 0.207s/it
+[03:48:30] it 51900 k 16 lr 1.56e-04 loss 961.910156 dropped 79007/830400 0.207s/it
+[03:48:56] it 52000 k 16 lr 1.55e-04 loss 19.880306 dropped 79058/832000 0.207s/it
+[03:48:56] gate: window drop rate 0.367 -> kgate 14
+[03:48:56] by-law {"lj:single": 0.910108, "pow1:charge": 0.844588, "pow1:predprey": 0.715275, "pow1:single": 1.373326, "pow2:charge": 0.659397, "pow2:predprey": 1.00201, "pow2:single": 1.505529, "pow3:charge": 0.783749, "pow3:predprey": 0.837627, "pow3:single": 1.477731, "yuk128:charge": 0.833424, "yuk128:single": 1.444035, "yuk8:charge": 0.634802, "yuk8:single": 1.596086}
+[03:48:56] dropped-by-law {"lj:single": 846, "pow1:charge": 250, "pow1:predprey": 133, "pow1:single": 774, "pow2:charge": 268, "pow2:predprey": 232, "pow2:single": 779, "pow3:charge": 255, "pow3:predprey": 258, "pow3:single": 700, "yuk128:charge": 356, "yuk128:single": 982, "yuk8:charge": 392, "yuk8:single": 1005}
+[03:49:19] it 52100 k 14 lr 1.54e-04 loss 16.009607 dropped 79059/833600 0.207s/it
+[03:49:42] it 52200 k 14 lr 1.53e-04 loss 23.980953 dropped 79059/835200 0.207s/it
+[03:49:53] gate: window drop rate 0.000 -> kgate 15
+[03:50:05] it 52300 k 15 lr 1.52e-04 loss 27.791763 dropped 79059/836800 0.207s/it
+[03:50:29] it 52400 k 15 lr 1.51e-04 loss 29.544109 dropped 79059/838400 0.207s/it
+[03:50:54] it 52500 k 15 lr 1.51e-04 loss 131.926819 dropped 79072/840000 0.207s/it
+[03:50:54] gate: window drop rate 0.003 -> kgate 16
+[03:51:19] it 52600 k 16 lr 1.50e-04 loss 19.779921 dropped 79075/841600 0.207s/it
+[03:51:45] it 52700 k 16 lr 1.49e-04 loss 92.073082 dropped 79093/843200 0.208s/it
+[03:51:58] gate: window drop rate 0.005 -> kgate 17
+[03:52:12] it 52800 k 17 lr 1.48e-04 loss 45.943886 dropped 79097/844800 0.208s/it
+[03:52:39] it 52900 k 17 lr 1.47e-04 loss 25.064943 dropped 79098/846400 0.208s/it
+[03:53:06] it 53000 k 17 lr 1.46e-04 loss 14.377245 dropped 79098/848000 0.208s/it
+[03:53:06] gate: window drop rate 0.001 -> kgate 18
+[03:53:06] by-law {"lj:single": 0.193984, "pow1:charge": 0.105654, "pow1:predprey": 0.033462, "pow1:single": 1.111627, "pow2:charge": 0.075671, "pow2:predprey": 0.061865, "pow2:single": 1.274867, "pow3:charge": 0.064568, "pow3:predprey": 0.069002, "pow3:single": 1.354873, "yuk128:charge": 0.067788, "yuk128:single": 1.275023, "yuk8:charge": 0.047981, "yuk8:single": 1.507407}
+[03:53:06] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 7, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 4, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 3, "yuk128:charge": 0, "yuk128:single": 6, "yuk8:charge": 0, "yuk8:single": 20}
+[03:53:35] it 53100 k 18 lr 1.46e-04 loss 37.828728 dropped 79099/849600 0.208s/it
+[03:54:04] it 53200 k 18 lr 1.45e-04 loss 56.182751 dropped 79102/851200 0.208s/it
+[03:54:18] gate: window drop rate 0.002 -> kgate 19
+[03:54:33] it 53300 k 19 lr 1.44e-04 loss 12.915241 dropped 79105/852800 0.208s/it
+[03:55:03] it 53400 k 19 lr 1.43e-04 loss 41.518661 dropped 79110/854400 0.209s/it
+[03:55:34] it 53500 k 19 lr 1.42e-04 loss 30.540760 dropped 79117/856000 0.209s/it
+[03:55:34] gate: window drop rate 0.003 -> kgate 20
+[03:56:06] it 53600 k 20 lr 1.42e-04 loss 41.826210 dropped 79117/857600 0.209s/it
+[03:56:38] it 53700 k 20 lr 1.41e-04 loss 26.776915 dropped 79117/859200 0.209s/it
+[03:56:54] gate: window drop rate 0.000 -> kgate 21
+[03:57:10] it 53800 k 21 lr 1.40e-04 loss 34.798042 dropped 79117/860800 0.209s/it
+[03:57:44] it 53900 k 21 lr 1.39e-04 loss 30.209942 dropped 79287/862400 0.210s/it
+[03:58:17] it 54000 k 21 lr 1.38e-04 loss 20.112286 dropped 79287/864000 0.210s/it
+[03:58:17] gate: window drop rate 0.043 -> kgate 22
+[03:58:17] by-law {"lj:single": 0.29858, "pow1:charge": 0.203413, "pow1:predprey": 0.065954, "pow1:single": 1.360037, "pow2:charge": 0.137557, "pow2:predprey": 0.126933, "pow2:single": 1.672678, "pow3:charge": 0.116318, "pow3:predprey": 0.122606, "pow3:single": 1.762883, "yuk128:charge": 0.12012, "yuk128:single": 1.70807, "yuk8:charge": 0.044886, "yuk8:single": 1.897915}
+[03:58:17] dropped-by-law {"lj:single": 2, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 35, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 24, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 27, "yuk128:charge": 0, "yuk128:single": 40, "yuk8:charge": 0, "yuk8:single": 61}
+[03:58:52] it 54100 k 22 lr 1.38e-04 loss 26.273174 dropped 79287/865600 0.210s/it
+[03:59:27] it 54200 k 22 lr 1.37e-04 loss 29.370394 dropped 79287/867200 0.210s/it
+[03:59:45] gate: window drop rate 0.000 -> kgate 23
+[04:00:03] it 54300 k 23 lr 1.36e-04 loss 35.504436 dropped 79288/868800 0.211s/it
+[04:00:39] it 54400 k 23 lr 1.35e-04 loss 25.996447 dropped 79288/870400 0.211s/it
+[04:01:16] it 54500 k 23 lr 1.34e-04 loss 18.257017 dropped 79288/872000 0.211s/it
+[04:01:16] gate: window drop rate 0.000 -> kgate 24
+[04:01:54] it 54600 k 24 lr 1.34e-04 loss 32.800255 dropped 79288/873600 0.211s/it
+[04:02:32] it 54700 k 24 lr 1.33e-04 loss 28.749384 dropped 79288/875200 0.212s/it
+[04:02:51] gate: window drop rate 0.000 -> kgate 25
+[04:03:11] it 54800 k 25 lr 1.32e-04 loss 27.118549 dropped 79288/876800 0.212s/it
+[04:03:51] it 54900 k 25 lr 1.31e-04 loss 34.650581 dropped 79288/878400 0.212s/it
+[04:04:31] it 55000 k 25 lr 1.31e-04 loss 34.123112 dropped 79288/880000 0.213s/it
+[04:04:31] gate: window drop rate 0.000 -> kgate 26
+[04:04:31] by-law {"lj:single": 0.474486, "pow1:charge": 0.197253, "pow1:predprey": 0.063644, "pow1:single": 1.379188, "pow2:charge": 0.160442, "pow2:predprey": 0.143448, "pow2:single": 1.573074, "pow3:charge": 0.145376, "pow3:predprey": 0.147722, "pow3:single": 1.758441, "yuk128:charge": 0.139575, "yuk128:single": 1.634605, "yuk8:charge": 0.071146, "yuk8:single": 1.837323}
+[04:04:31] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 1, "yuk8:charge": 0, "yuk8:single": 0}
+[04:05:12] it 55100 k 26 lr 1.30e-04 loss 41.176632 dropped 79304/881600 0.213s/it
+[04:05:53] it 55200 k 26 lr 1.29e-04 loss 24.643110 dropped 79305/883200 0.214s/it
+[04:06:14] gate: window drop rate 0.004 -> kgate 27
+[04:06:35] it 55300 k 26 lr 1.28e-04 loss 30.224020 dropped 79305/884800 0.214s/it
+[04:07:16] it 55400 k 26 lr 1.27e-04 loss 29.750275 dropped 79305/886400 0.214s/it
+[04:07:57] it 55500 k 26 lr 1.27e-04 loss 20.505066 dropped 79306/888000 0.215s/it
+[04:07:57] gate: window drop rate 0.000 -> kgate 28
+[04:08:38] it 55600 k 26 lr 1.26e-04 loss 22.526859 dropped 79311/889600 0.215s/it
+[04:09:20] it 55700 k 26 lr 1.25e-04 loss 10.108027 dropped 79358/891200 0.215s/it
+[04:09:40] gate: window drop rate 0.013 -> kgate 29
+[04:10:01] it 55800 k 26 lr 1.24e-04 loss 23.840824 dropped 79361/892800 0.216s/it
+[04:10:42] it 55900 k 26 lr 1.24e-04 loss 146.202118 dropped 79462/894400 0.216s/it
+[04:11:23] it 56000 k 26 lr 1.23e-04 loss 7.854965 dropped 80322/896000 0.216s/it
+[04:11:23] gate: window drop rate 0.240 -> kgate 29
+[04:11:23] by-law {"lj:single": 0.539823, "pow1:charge": 0.273987, "pow1:predprey": 0.127395, "pow1:single": 1.658359, "pow2:charge": 0.256559, "pow2:predprey": 0.257638, "pow2:single": 1.829084, "pow3:charge": 0.244195, "pow3:predprey": 0.270724, "pow3:single": 1.87159, "yuk128:charge": 0.245114, "yuk128:single": 1.792956, "yuk8:charge": 0.129631, "yuk8:single": 2.058304}
+[04:11:23] dropped-by-law {"lj:single": 16, "pow1:charge": 20, "pow1:predprey": 7, "pow1:single": 174, "pow2:charge": 14, "pow2:predprey": 20, "pow2:single": 162, "pow3:charge": 13, "pow3:predprey": 14, "pow3:single": 120, "yuk128:charge": 21, "yuk128:single": 216, "yuk8:charge": 21, "yuk8:single": 216}
+[04:12:06] it 56100 k 27 lr 1.22e-04 loss 118.043831 dropped 81369/897600 0.217s/it
+[04:12:49] it 56200 k 27 lr 1.21e-04 loss 150.009644 dropped 82172/899200 0.217s/it
+[04:13:10] gate: window drop rate 0.536 -> kgate 27
+[04:13:32] it 56300 k 27 lr 1.21e-04 loss 116.358528 dropped 82696/900800 0.217s/it
+[04:14:15] it 56400 k 27 lr 1.20e-04 loss 25.936413 dropped 82734/902400 0.218s/it
+[04:14:57] it 56500 k 27 lr 1.19e-04 loss 17.358864 dropped 82749/904000 0.218s/it
+[04:14:57] gate: window drop rate 0.070 -> kgate 27
+[04:15:40] it 56600 k 27 lr 1.18e-04 loss 48.771225 dropped 82794/905600 0.219s/it
+[04:16:23] it 56700 k 27 lr 1.18e-04 loss 77.430824 dropped 82821/907200 0.219s/it
+[04:16:44] gate: window drop rate 0.020 -> kgate 28
+[04:17:06] it 56800 k 27 lr 1.17e-04 loss 78.337227 dropped 82842/908800 0.219s/it
+[04:17:48] it 56900 k 27 lr 1.16e-04 loss 110.657852 dropped 82862/910400 0.220s/it
+[04:18:31] it 57000 k 27 lr 1.15e-04 loss 28.504311 dropped 83135/912000 0.220s/it
+[04:18:31] gate: window drop rate 0.077 -> kgate 28
+[04:18:31] by-law {"lj:single": 0.371994, "pow1:charge": 0.269264, "pow1:predprey": 0.157855, "pow1:single": 1.963373, "pow2:charge": 0.218682, "pow2:predprey": 0.273012, "pow2:single": 1.915556, "pow3:charge": 0.205045, "pow3:predprey": 0.271453, "pow3:single": 1.812953, "yuk128:charge": 0.177481, "yuk128:single": 1.793214, "yuk8:charge": 0.081644, "yuk8:single": 2.154814}
+[04:18:31] dropped-by-law {"lj:single": 42, "pow1:charge": 48, "pow1:predprey": 44, "pow1:single": 487, "pow2:charge": 46, "pow2:predprey": 60, "pow2:single": 427, "pow3:charge": 32, "pow3:predprey": 63, "pow3:single": 382, "yuk128:charge": 60, "yuk128:single": 499, "yuk8:charge": 43, "yuk8:single": 580}
+[04:19:14] it 57100 k 27 lr 1.15e-04 loss 34.996082 dropped 83177/913600 0.220s/it
+[04:19:57] it 57200 k 27 lr 1.14e-04 loss 10.436548 dropped 83202/915200 0.221s/it
+[04:20:18] gate: window drop rate 0.020 -> kgate 29
+[04:20:39] it 57300 k 27 lr 1.13e-04 loss 47.537029 dropped 83224/916800 0.221s/it
+[04:21:22] it 57400 k 27 lr 1.13e-04 loss 21.741924 dropped 83231/918400 0.222s/it
+[04:22:05] it 57500 k 27 lr 1.12e-04 loss 17.290852 dropped 83252/920000 0.222s/it
+[04:22:05] gate: window drop rate 0.009 -> kgate 30
+[04:22:48] it 57600 k 27 lr 1.11e-04 loss 19.759632 dropped 83257/921600 0.222s/it
+[04:23:31] it 57700 k 27 lr 1.10e-04 loss 26.100267 dropped 83258/923200 0.223s/it
+[04:23:52] gate: window drop rate 0.002 -> kgate 30
+[04:24:13] it 57800 k 27 lr 1.10e-04 loss 22.595413 dropped 83258/924800 0.223s/it
+[04:24:56] it 57900 k 27 lr 1.09e-04 loss 42.646004 dropped 83260/926400 0.223s/it
+[04:25:39] it 58000 k 27 lr 1.08e-04 loss 498.688995 dropped 83342/928000 0.224s/it
+[04:25:39] gate: window drop rate 0.021 -> kgate 30
+[04:25:39] by-law {"lj:single": 0.243692, "pow1:charge": 0.166389, "pow1:predprey": 0.068405, "pow1:single": 1.605687, "pow2:charge": 0.131294, "pow2:predprey": 0.146145, "pow2:single": 1.725663, "pow3:charge": 0.112063, "pow3:predprey": 0.15587, "pow3:single": 1.788701, "yuk128:charge": 0.116246, "yuk128:single": 1.715719, "yuk8:charge": 0.041827, "yuk8:single": 2.009071}
+[04:25:39] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 64, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 36, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 23, "yuk128:charge": 0, "yuk128:single": 48, "yuk8:charge": 0, "yuk8:single": 36}
+[04:26:22] it 58100 k 27 lr 1.08e-04 loss 94.936119 dropped 84085/929600 0.224s/it
+[04:27:04] it 58200 k 27 lr 1.07e-04 loss 104.449783 dropped 85074/931200 0.224s/it
+[04:27:26] gate: window drop rate 0.503 -> kgate 28
+[04:27:47] it 58300 k 28 lr 1.06e-04 loss 21.390423 dropped 85690/932800 0.225s/it
+[04:28:32] it 58400 k 28 lr 1.05e-04 loss 28.536968 dropped 86357/934400 0.225s/it
+[04:29:16] it 58500 k 28 lr 1.05e-04 loss 58.206520 dropped 86751/936000 0.225s/it
+[04:29:16] gate: window drop rate 0.349 -> kgate 26
+[04:29:57] it 58600 k 26 lr 1.04e-04 loss 58.374908 dropped 86766/937600 0.226s/it
+[04:30:39] it 58700 k 26 lr 1.03e-04 loss 122.202469 dropped 86837/939200 0.226s/it
+[04:30:59] gate: window drop rate 0.050 -> kgate 27
+[04:31:20] it 58800 k 27 lr 1.03e-04 loss 17.771009 dropped 87276/940800 0.226s/it
+[04:32:03] it 58900 k 27 lr 1.02e-04 loss 142.907654 dropped 88289/942400 0.227s/it
+[04:32:46] it 59000 k 27 lr 1.01e-04 loss 23.931004 dropped 89391/944000 0.227s/it
+[04:32:46] gate: window drop rate 0.611 -> kgate 25
+[04:32:46] by-law {"lj:single": 0.695957, "pow1:charge": 1.195195, "pow1:predprey": 0.676132, "pow1:single": 2.118432, "pow2:charge": 1.189816, "pow2:predprey": 1.234317, "pow2:single": 2.093323, "pow3:charge": 1.127828, "pow3:predprey": 1.243565, "pow3:single": 2.202311, "yuk128:charge": 1.211129, "yuk128:single": 2.26048, "yuk8:charge": 0.736456, "yuk8:single": 2.316677}
+[04:32:46] dropped-by-law {"lj:single": 405, "pow1:charge": 75, "pow1:predprey": 22, "pow1:single": 885, "pow2:charge": 55, "pow2:predprey": 62, "pow2:single": 903, "pow3:charge": 51, "pow3:predprey": 59, "pow3:single": 899, "yuk128:charge": 73, "yuk128:single": 1187, "yuk8:charge": 190, "yuk8:single": 1183}
+[04:33:26] it 59100 k 25 lr 1.01e-04 loss 217.119385 dropped 90603/945600 0.227s/it
+[04:33:33] it 59118 loss 0 non-finite or above cap, step skipped (4751 total)
+[04:34:05] it 59200 k 25 lr 9.99e-05 loss 141.160904 dropped 92009/947200 0.228s/it
+[04:34:25] gate: window drop rate 0.818 -> kgate 23
+[04:34:43] it 59300 k 23 lr 9.92e-05 loss 33.551315 dropped 93298/948800 0.228s/it
+[04:35:20] it 59400 k 23 lr 9.86e-05 loss 466.507324 dropped 94656/950400 0.228s/it
+[04:35:57] it 59500 k 23 lr 9.79e-05 loss 264.917236 dropped 95793/952000 0.228s/it
+[04:35:57] gate: window drop rate 0.783 -> kgate 21
+[04:36:30] it 59600 k 21 lr 9.72e-05 loss 78.799690 dropped 96608/953600 0.229s/it
+[04:37:04] it 59700 k 21 lr 9.66e-05 loss 271.727112 dropped 97767/955200 0.229s/it
+[04:37:20] gate: window drop rate 0.668 -> kgate 19
+[04:37:36] it 59800 k 19 lr 9.59e-05 loss 428.146027 dropped 99155/956800 0.229s/it
+[04:38:06] it 59900 k 19 lr 9.52e-05 loss 222.436661 dropped 100550/958400 0.229s/it
+[04:38:18] it 59941 loss 0 non-finite or above cap, step skipped (4801 total)
+[04:38:36] it 60000 k 19 lr 9.46e-05 loss 145.132355 dropped 102001/960000 0.229s/it
+[04:38:36] gate: window drop rate 0.884 -> kgate 17
+[04:38:36] by-law {"lj:single": 2.544232, "pow1:charge": 2.005606, "pow1:predprey": 1.449334, "pow1:single": 3.775062, "pow2:charge": 2.227113, "pow2:predprey": 2.213907, "pow2:single": 3.953298, "pow3:charge": 2.01167, "pow3:predprey": 2.112326, "pow3:single": 4.233956, "yuk128:charge": 2.038015, "yuk128:single": 4.333574, "yuk8:charge": 2.691389, "yuk8:single": 4.076292}
+[04:38:36] dropped-by-law {"lj:single": 1696, "pow1:charge": 441, "pow1:predprey": 187, "pow1:single": 1327, "pow2:charge": 382, "pow2:predprey": 378, "pow2:single": 1307, "pow3:charge": 417, "pow3:predprey": 422, "pow3:single": 1269, "yuk128:charge": 551, "yuk128:single": 1767, "yuk8:charge": 736, "yuk8:single": 1730}
+[04:39:03] it 60100 k 17 lr 9.39e-05 loss 206.573502 dropped 103205/961600 0.229s/it
+[04:39:30] it 60200 k 17 lr 9.32e-05 loss 428.226196 dropped 103947/963200 0.229s/it
+[04:39:44] gate: window drop rate 0.514 -> kgate 15
+[04:39:56] it 60300 k 15 lr 9.26e-05 loss 230.111847 dropped 104082/964800 0.229s/it
+[04:40:20] it 60400 k 15 lr 9.19e-05 loss 502.930786 dropped 104394/966400 0.229s/it
+[04:40:45] it 60500 k 15 lr 9.13e-05 loss 350.758850 dropped 105005/968000 0.229s/it
+[04:40:45] gate: window drop rate 0.237 -> kgate 15
+[04:41:09] it 60600 k 15 lr 9.07e-05 loss 508.448975 dropped 105152/969600 0.229s/it
+[04:41:33] it 60700 k 15 lr 9.00e-05 loss 97.905174 dropped 105169/971200 0.229s/it
+[04:41:45] gate: window drop rate 0.046 -> kgate 16
+[04:41:58] it 60800 k 16 lr 8.94e-05 loss 13.317407 dropped 105189/972800 0.229s/it
+[04:42:24] it 60900 k 16 lr 8.87e-05 loss 14.483566 dropped 105189/974400 0.229s/it
+[04:42:50] it 61000 k 16 lr 8.81e-05 loss 29.829739 dropped 105189/976000 0.230s/it
+[04:42:50] gate: window drop rate 0.000 -> kgate 17
+[04:42:50] by-law {"lj:single": 0.459211, "pow1:charge": 0.780112, "pow1:predprey": 0.434288, "pow1:single": 1.512912, "pow2:charge": 0.809896, "pow2:predprey": 0.789537, "pow2:single": 1.580661, "pow3:charge": 0.737286, "pow3:predprey": 0.835018, "pow3:single": 1.572853, "yuk128:charge": 0.791905, "yuk128:single": 1.56601, "yuk8:charge": 0.54644, "yuk8:single": 1.713451}
+[04:42:50] dropped-by-law {"lj:single": 206, "pow1:charge": 68, "pow1:predprey": 19, "pow1:single": 481, "pow2:charge": 76, "pow2:predprey": 47, "pow2:single": 432, "pow3:charge": 73, "pow3:predprey": 67, "pow3:single": 409, "yuk128:charge": 91, "yuk128:single": 599, "yuk8:charge": 44, "yuk8:single": 576}
+[04:43:17] it 61100 k 17 lr 8.75e-05 loss 40.240849 dropped 105189/977600 0.230s/it
+[04:43:44] it 61200 k 17 lr 8.68e-05 loss 31.772293 dropped 105189/979200 0.230s/it
+[04:43:58] gate: window drop rate 0.000 -> kgate 18
+[04:44:12] it 61300 k 18 lr 8.62e-05 loss 22.275089 dropped 105189/980800 0.230s/it
+[04:44:41] it 61400 k 18 lr 8.56e-05 loss 15.264603 dropped 105189/982400 0.230s/it
+[04:45:10] it 61500 k 18 lr 8.50e-05 loss 30.559956 dropped 105189/984000 0.230s/it
+[04:45:10] gate: window drop rate 0.000 -> kgate 19
+[04:45:41] it 61600 k 19 lr 8.44e-05 loss 25.150520 dropped 105189/985600 0.230s/it
+[04:46:11] it 61700 k 19 lr 8.37e-05 loss 31.491089 dropped 105189/987200 0.230s/it
+[04:46:26] gate: window drop rate 0.000 -> kgate 20
+[04:46:42] it 61800 k 20 lr 8.31e-05 loss 24.269634 dropped 105189/988800 0.230s/it
+[04:47:14] it 61900 k 20 lr 8.25e-05 loss 20.245047 dropped 105189/990400 0.230s/it
+[04:47:46] it 62000 k 20 lr 8.19e-05 loss 28.940893 dropped 105189/992000 0.231s/it
+[04:47:46] gate: window drop rate 0.000 -> kgate 21
+[04:47:46] by-law {"lj:single": 0.168671, "pow1:charge": 0.199025, "pow1:predprey": 0.057786, "pow1:single": 1.159003, "pow2:charge": 0.17599, "pow2:predprey": 0.172088, "pow2:single": 1.405241, "pow3:charge": 0.15502, "pow3:predprey": 0.201064, "pow3:single": 1.495055, "yuk128:charge": 0.145021, "yuk128:single": 1.405496, "yuk8:charge": 0.072266, "yuk8:single": 1.617757}
+[04:47:46] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 0, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 0, "yuk128:charge": 0, "yuk128:single": 0, "yuk8:charge": 0, "yuk8:single": 0}
+[04:48:19] it 62100 k 21 lr 8.13e-05 loss 26.815353 dropped 105189/993600 0.231s/it
+[04:48:53] it 62200 k 21 lr 8.07e-05 loss 36.224834 dropped 105189/995200 0.231s/it
+[04:49:10] gate: window drop rate 0.000 -> kgate 22
+[04:49:27] it 62300 k 22 lr 8.01e-05 loss 34.433250 dropped 105189/996800 0.231s/it
+[04:50:02] it 62400 k 22 lr 7.95e-05 loss 31.906982 dropped 105190/998400 0.231s/it
+[04:50:37] it 62500 k 22 lr 7.89e-05 loss 63.768585 dropped 105192/1000000 0.232s/it
+[04:50:37] gate: window drop rate 0.001 -> kgate 23
+[04:51:14] it 62600 k 23 lr 7.83e-05 loss 113.836395 dropped 105290/1001600 0.232s/it
+[04:51:50] it 62700 k 23 lr 7.77e-05 loss 73.797867 dropped 105292/1003200 0.232s/it
+[04:52:08] gate: window drop rate 0.036 -> kgate 24
+[04:52:27] it 62800 k 24 lr 7.71e-05 loss 39.199375 dropped 105422/1004800 0.232s/it
+[04:53:06] it 62900 k 24 lr 7.66e-05 loss 40.311291 dropped 105424/1006400 0.232s/it
+[04:53:44] it 63000 k 24 lr 7.60e-05 loss 34.259575 dropped 105424/1008000 0.233s/it
+[04:53:44] gate: window drop rate 0.022 -> kgate 25
+[04:53:44] by-law {"lj:single": 0.373595, "pow1:charge": 0.582914, "pow1:predprey": 0.224621, "pow1:single": 1.622766, "pow2:charge": 0.583678, "pow2:predprey": 0.548958, "pow2:single": 1.789975, "pow3:charge": 0.559365, "pow3:predprey": 0.625864, "pow3:single": 1.98242, "yuk128:charge": 0.5193, "yuk128:single": 1.825215, "yuk8:charge": 0.389406, "yuk8:single": 2.01074}
+[04:53:44] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 55, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 42, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 39, "yuk128:charge": 0, "yuk128:single": 52, "yuk8:charge": 0, "yuk8:single": 47}
+[04:54:24] it 63100 k 25 lr 7.54e-05 loss 60.321518 dropped 105426/1009600 0.233s/it
+[04:55:03] it 63200 k 25 lr 7.48e-05 loss 27.544506 dropped 105435/1011200 0.233s/it
+[04:55:23] gate: window drop rate 0.003 -> kgate 26
+[04:55:44] it 63300 k 26 lr 7.43e-05 loss 25.820217 dropped 105435/1012800 0.233s/it
+[04:56:25] it 63400 k 26 lr 7.37e-05 loss 36.816460 dropped 105435/1014400 0.234s/it
+[04:57:06] it 63500 k 26 lr 7.31e-05 loss 41.071236 dropped 105435/1016000 0.234s/it
+[04:57:06] gate: window drop rate 0.000 -> kgate 27
+[04:57:49] it 63600 k 27 lr 7.26e-05 loss 31.174774 dropped 105435/1017600 0.234s/it
+[04:58:32] it 63700 k 27 lr 7.20e-05 loss 36.580265 dropped 105435/1019200 0.235s/it
+[04:58:53] gate: window drop rate 0.000 -> kgate 28
+[04:59:15] it 63800 k 28 lr 7.15e-05 loss 39.942749 dropped 105435/1020800 0.235s/it
+[04:59:59] it 63900 k 28 lr 7.09e-05 loss 42.883331 dropped 105436/1022400 0.235s/it
+[05:00:44] it 64000 k 28 lr 7.04e-05 loss 20.046877 dropped 105437/1024000 0.236s/it
+[05:00:44] gate: window drop rate 0.001 -> kgate 29
+[05:00:44] by-law {"lj:single": 0.345231, "pow1:charge": 0.497691, "pow1:predprey": 0.180812, "pow1:single": 1.632285, "pow2:charge": 0.449331, "pow2:predprey": 0.456097, "pow2:single": 1.823877, "pow3:charge": 0.439829, "pow3:predprey": 0.471543, "pow3:single": 2.027038, "yuk128:charge": 0.394971, "yuk128:single": 1.894214, "yuk8:charge": 0.227487, "yuk8:single": 2.056791}
+[05:00:44] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 4, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 1, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 7, "yuk128:charge": 0, "yuk128:single": 1, "yuk8:charge": 0, "yuk8:single": 0}
+[05:01:30] it 64100 k 29 lr 6.98e-05 loss 362.939819 dropped 105679/1025600 0.236s/it
+[05:02:15] it 64200 k 29 lr 6.93e-05 loss 437.058380 dropped 106851/1027200 0.236s/it
+[05:02:38] gate: window drop rate 0.518 -> kgate 27
+[05:03:00] it 64300 k 27 lr 6.87e-05 loss 414.529877 dropped 108126/1028800 0.237s/it
+[05:03:42] it 64400 k 27 lr 6.82e-05 loss 0.000000 dropped 109400/1030400 0.237s/it
+[05:04:25] it 64500 k 27 lr 6.77e-05 loss 257.985748 dropped 110724/1032000 0.237s/it
+[05:04:25] gate: window drop rate 0.803 -> kgate 25
+[05:05:05] it 64600 k 25 lr 6.71e-05 loss 484.313324 dropped 112032/1033600 0.237s/it
+[05:05:45] it 64700 k 25 lr 6.66e-05 loss 206.564041 dropped 113217/1035200 0.238s/it
+[05:06:05] gate: window drop rate 0.700 -> kgate 23
+[05:06:23] it 64800 k 23 lr 6.61e-05 loss 28.137951 dropped 113524/1036800 0.238s/it
+[05:06:59] it 64900 k 23 lr 6.55e-05 loss 32.720924 dropped 113525/1038400 0.238s/it
+[05:07:36] it 65000 k 23 lr 6.50e-05 loss 36.317814 dropped 113525/1040000 0.238s/it
+[05:07:36] gate: window drop rate 0.001 -> kgate 24
+[05:07:36] by-law {"lj:single": 0.524344, "pow1:charge": 0.750492, "pow1:predprey": 0.805851, "pow1:single": 1.930124, "pow2:charge": 0.666452, "pow2:predprey": 0.771534, "pow2:single": 2.040287, "pow3:charge": 0.859404, "pow3:predprey": 0.674429, "pow3:single": 2.096389, "yuk128:charge": 0.609797, "yuk128:single": 2.081223, "yuk8:charge": 0.49871, "yuk8:single": 2.150864}
+[05:07:36] dropped-by-law {"lj:single": 483, "pow1:charge": 364, "pow1:predprey": 189, "pow1:single": 854, "pow2:charge": 334, "pow2:predprey": 340, "pow2:single": 839, "pow3:charge": 347, "pow3:predprey": 318, "pow3:single": 848, "yuk128:charge": 447, "yuk128:single": 1172, "yuk8:charge": 398, "yuk8:single": 1155}
+[05:08:14] it 65100 k 24 lr 6.45e-05 loss 38.886955 dropped 113527/1041600 0.238s/it
+[05:08:52] it 65200 k 24 lr 6.40e-05 loss 24.877674 dropped 113528/1043200 0.239s/it
+[05:09:11] gate: window drop rate 0.001 -> kgate 25
+[05:09:31] it 65300 k 25 lr 6.35e-05 loss 44.103542 dropped 113531/1044800 0.239s/it
+[05:10:11] it 65400 k 25 lr 6.30e-05 loss 46.492455 dropped 113541/1046400 0.239s/it
+[05:10:51] it 65500 k 25 lr 6.25e-05 loss 177.403152 dropped 113564/1048000 0.239s/it
+[05:10:51] gate: window drop rate 0.009 -> kgate 26
+[05:11:32] it 65600 k 26 lr 6.20e-05 loss 332.644958 dropped 113627/1049600 0.240s/it
+[05:12:13] it 65700 k 26 lr 6.15e-05 loss 56.821053 dropped 113808/1051200 0.240s/it
+[05:12:34] gate: window drop rate 0.067 -> kgate 26
+[05:12:54] it 65800 k 26 lr 6.10e-05 loss 72.618103 dropped 113841/1052800 0.240s/it
+[05:13:36] it 65900 k 26 lr 6.05e-05 loss 694.039917 dropped 113912/1054400 0.240s/it
+[05:14:17] it 66000 k 26 lr 6.00e-05 loss 846.734680 dropped 114478/1056000 0.241s/it
+[05:14:17] gate: window drop rate 0.162 -> kgate 26
+[05:14:17] by-law {"lj:single": 0.394956, "pow1:charge": 0.599379, "pow1:predprey": 0.251305, "pow1:single": 2.004686, "pow2:charge": 0.572159, "pow2:predprey": 0.590324, "pow2:single": 2.163341, "pow3:charge": 0.53106, "pow3:predprey": 0.562668, "pow3:single": 2.169912, "yuk128:charge": 0.568884, "yuk128:single": 2.113205, "yuk8:charge": 0.381533, "yuk8:single": 2.271785}
+[05:14:17] dropped-by-law {"lj:single": 6, "pow1:charge": 2, "pow1:predprey": 0, "pow1:single": 193, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 156, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 143, "yuk128:charge": 0, "yuk128:single": 225, "yuk8:charge": 2, "yuk8:single": 226}
+[05:14:58] it 66100 k 26 lr 5.95e-05 loss 55.415863 dropped 114831/1057600 0.241s/it
+[05:15:39] it 66200 k 26 lr 5.90e-05 loss 31.729342 dropped 114871/1059200 0.241s/it
+[05:16:00] gate: window drop rate 0.104 -> kgate 26
+[05:16:20] it 66300 k 26 lr 5.86e-05 loss 47.053513 dropped 114903/1060800 0.242s/it
+[05:17:02] it 66400 k 26 lr 5.81e-05 loss 110.110550 dropped 114964/1062400 0.242s/it
+[05:17:43] it 66500 k 26 lr 5.76e-05 loss 214.518784 dropped 115252/1064000 0.242s/it
+[05:17:43] gate: window drop rate 0.090 -> kgate 26
+[05:18:24] it 66600 k 26 lr 5.71e-05 loss 37.627171 dropped 115575/1065600 0.242s/it
+[05:19:05] it 66700 k 26 lr 5.67e-05 loss 70.966362 dropped 115680/1067200 0.243s/it
+[05:19:26] gate: window drop rate 0.114 -> kgate 26
+[05:19:47] it 66800 k 26 lr 5.62e-05 loss 40.349335 dropped 115748/1068800 0.243s/it
+[05:20:28] it 66900 k 26 lr 5.57e-05 loss 79.831879 dropped 115870/1070400 0.243s/it
+[05:21:09] it 67000 k 26 lr 5.53e-05 loss 19.144352 dropped 115961/1072000 0.243s/it
+[05:21:09] gate: window drop rate 0.064 -> kgate 26
+[05:21:09] by-law {"lj:single": 0.425636, "pow1:charge": 0.624618, "pow1:predprey": 0.250268, "pow1:single": 2.257976, "pow2:charge": 0.536534, "pow2:predprey": 0.584869, "pow2:single": 2.400568, "pow3:charge": 0.550205, "pow3:predprey": 0.605961, "pow3:single": 2.456635, "yuk128:charge": 0.51125, "yuk128:single": 2.332931, "yuk8:charge": 0.302193, "yuk8:single": 2.610305}
+[05:21:09] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 283, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 244, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 232, "yuk128:charge": 0, "yuk128:single": 367, "yuk8:charge": 0, "yuk8:single": 357}
+[05:21:50] it 67100 k 26 lr 5.48e-05 loss 40.236320 dropped 116016/1073600 0.244s/it
+[05:22:32] it 67200 k 26 lr 5.44e-05 loss 55.562889 dropped 116045/1075200 0.244s/it
+[05:22:52] gate: window drop rate 0.025 -> kgate 27
+[05:23:13] it 67300 k 27 lr 5.39e-05 loss 34.015247 dropped 116068/1076800 0.244s/it
+[05:23:56] it 67400 k 27 lr 5.35e-05 loss 39.173065 dropped 116083/1078400 0.244s/it
+[05:24:39] it 67500 k 27 lr 5.30e-05 loss 51.932716 dropped 116108/1080000 0.245s/it
+[05:24:39] gate: window drop rate 0.012 -> kgate 28
+[05:25:23] it 67600 k 28 lr 5.26e-05 loss 32.831303 dropped 116166/1081600 0.245s/it
+[05:26:08] it 67700 k 28 lr 5.22e-05 loss 25.522575 dropped 116260/1083200 0.245s/it
+[05:26:30] gate: window drop rate 0.044 -> kgate 29
+[05:26:53] it 67800 k 29 lr 5.17e-05 loss 14.297769 dropped 116338/1084800 0.245s/it
+[05:27:39] it 67900 k 29 lr 5.13e-05 loss 33.351494 dropped 116449/1086400 0.246s/it
+[05:28:24] it 68000 k 29 lr 5.09e-05 loss 57.707199 dropped 116545/1088000 0.246s/it
+[05:28:24] gate: window drop rate 0.065 -> kgate 29
+[05:28:24] by-law {"lj:single": 0.240599, "pow1:charge": 0.4008, "pow1:predprey": 0.149634, "pow1:single": 2.292869, "pow2:charge": 0.331428, "pow2:predprey": 0.336676, "pow2:single": 2.386191, "pow3:charge": 0.283549, "pow3:predprey": 0.381755, "pow3:single": 2.382593, "yuk128:charge": 0.290244, "yuk128:single": 2.38304, "yuk8:charge": 0.144859, "yuk8:single": 2.519746}
+[05:28:24] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 128, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 97, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 89, "yuk128:charge": 0, "yuk128:single": 131, "yuk8:charge": 0, "yuk8:single": 139}
+[05:29:10] it 68100 k 29 lr 5.05e-05 loss 46.654644 dropped 116640/1089600 0.246s/it
+[05:29:56] it 68200 k 29 lr 5.00e-05 loss 31.574566 dropped 116800/1091200 0.247s/it
+[05:30:19] gate: window drop rate 0.077 -> kgate 29
+[05:30:42] it 68300 k 29 lr 4.96e-05 loss 23.698250 dropped 116936/1092800 0.247s/it
+[05:31:28] it 68400 k 29 lr 4.92e-05 loss 52.898705 dropped 117053/1094400 0.247s/it
+[05:32:14] it 68500 k 29 lr 4.88e-05 loss 99.776947 dropped 117176/1096000 0.248s/it
+[05:32:14] gate: window drop rate 0.080 -> kgate 29
+[05:33:00] it 68600 k 29 lr 4.84e-05 loss 74.236107 dropped 117490/1097600 0.248s/it
+[05:33:46] it 68700 k 29 lr 4.80e-05 loss 382.984894 dropped 117869/1099200 0.248s/it
+[05:34:09] gate: window drop rate 0.238 -> kgate 29
+[05:34:32] it 68800 k 29 lr 4.76e-05 loss 1.477092 dropped 118656/1100800 0.249s/it
+[05:35:17] it 68900 k 29 lr 4.72e-05 loss 8.587576 dropped 119914/1102400 0.249s/it
+[05:36:03] it 69000 k 29 lr 4.68e-05 loss 224.781357 dropped 121113/1104000 0.249s/it
+[05:36:03] gate: window drop rate 0.746 -> kgate 27
+[05:36:03] by-law {"lj:single": 0.572776, "pow1:charge": 0.758471, "pow1:predprey": 0.510972, "pow1:single": 2.603482, "pow2:charge": 0.717898, "pow2:predprey": 0.773726, "pow2:single": 2.530879, "pow3:charge": 0.631925, "pow3:predprey": 0.790149, "pow3:single": 2.62698, "yuk128:charge": 0.661673, "yuk128:single": 2.610613, "yuk8:charge": 0.502615, "yuk8:single": 2.723966}
+[05:36:03] dropped-by-law {"lj:single": 139, "pow1:charge": 129, "pow1:predprey": 74, "pow1:single": 596, "pow2:charge": 140, "pow2:predprey": 138, "pow2:single": 573, "pow3:charge": 118, "pow3:predprey": 122, "pow3:single": 648, "yuk128:charge": 171, "yuk128:single": 790, "yuk8:charge": 131, "yuk8:single": 799}
+[05:36:46] it 69100 k 27 lr 4.64e-05 loss 458.263580 dropped 122265/1105600 0.249s/it
+[05:37:29] it 69200 k 27 lr 4.60e-05 loss 28.791977 dropped 123419/1107200 0.250s/it
+[05:37:50] gate: window drop rate 0.714 -> kgate 25
+[05:38:10] it 69300 k 25 lr 4.57e-05 loss 0.388999 dropped 124478/1108800 0.250s/it
+[05:38:50] it 69400 k 25 lr 4.53e-05 loss 175.412857 dropped 125527/1110400 0.250s/it
+[05:39:29] it 69500 k 25 lr 4.49e-05 loss 0.660436 dropped 126663/1112000 0.250s/it
+[05:39:29] gate: window drop rate 0.674 -> kgate 23
+[05:40:06] it 69600 k 23 lr 4.45e-05 loss 122.168320 dropped 127808/1113600 0.251s/it
+[05:40:43] it 69700 k 23 lr 4.42e-05 loss 0.050232 dropped 128946/1115200 0.251s/it
+[05:41:01] gate: window drop rate 0.710 -> kgate 21
+[05:41:18] it 69800 k 21 lr 4.38e-05 loss 72.849945 dropped 130032/1116800 0.251s/it
+[05:41:51] it 69900 k 21 lr 4.34e-05 loss 31.099510 dropped 131077/1118400 0.251s/it
+[05:42:25] it 70000 k 21 lr 4.31e-05 loss 63.529739 dropped 132156/1120000 0.251s/it
+[05:42:25] gate: window drop rate 0.663 -> kgate 19
+[05:42:25] by-law {"lj:single": 0.335659, "pow1:charge": 1.486819, "pow1:predprey": 1.072741, "pow1:single": 4.219207, "pow2:charge": 1.53953, "pow2:predprey": 1.319488, "pow2:single": 2.883648, "pow3:charge": 1.236145, "pow3:predprey": 1.519351, "pow3:single": 2.623123, "yuk128:charge": 1.68388, "yuk128:single": 3.454913, "yuk8:charge": 1.148135, "yuk8:single": 4.856878}
+[05:42:25] dropped-by-law {"lj:single": 217, "pow1:charge": 447, "pow1:predprey": 214, "pow1:single": 1282, "pow2:charge": 461, "pow2:predprey": 450, "pow2:single": 1275, "pow3:charge": 408, "pow3:predprey": 457, "pow3:single": 1273, "yuk128:charge": 626, "yuk128:single": 1770, "yuk8:charge": 355, "yuk8:single": 1808}
+[05:42:55] it 70100 k 19 lr 4.27e-05 loss 631.902649 dropped 133067/1121600 0.251s/it
+[05:43:26] it 70200 k 19 lr 4.24e-05 loss 190.420135 dropped 133826/1123200 0.251s/it
+[05:43:41] gate: window drop rate 0.512 -> kgate 17
+[05:43:54] it 70300 k 17 lr 4.20e-05 loss 150.512115 dropped 134544/1124800 0.251s/it
+[05:44:22] it 70400 k 17 lr 4.17e-05 loss 300.817322 dropped 135001/1126400 0.251s/it
+[05:44:49] it 70500 k 17 lr 4.13e-05 loss 476.029846 dropped 135520/1128000 0.251s/it
+[05:44:49] gate: window drop rate 0.329 -> kgate 15
+[05:45:13] it 70600 k 15 lr 4.10e-05 loss 696.729004 dropped 135792/1129600 0.251s/it
+[05:45:37] it 70700 k 15 lr 4.07e-05 loss 1085.054932 dropped 136127/1131200 0.251s/it
+[05:45:50] gate: window drop rate 0.210 -> kgate 15
+[05:46:02] it 70800 k 15 lr 4.03e-05 loss 298.047241 dropped 136617/1132800 0.251s/it
+[05:46:26] it 70900 k 15 lr 4.00e-05 loss 471.918976 dropped 137188/1134400 0.251s/it
+[05:46:50] it 71000 k 15 lr 3.97e-05 loss 9.019606 dropped 137806/1136000 0.251s/it
+[05:46:50] gate: window drop rate 0.361 -> kgate 13
+[05:46:50] by-law {"lj:single": 0.077482, "pow1:charge": 0.482188, "pow1:predprey": 0.238838, "pow1:single": 2.859063, "pow2:charge": 0.321207, "pow2:predprey": 0.469532, "pow2:single": 2.733699, "pow3:charge": 0.295723, "pow3:predprey": 0.549716, "pow3:single": 2.324513, "yuk128:charge": 0.319026, "yuk128:single": 2.470637, "yuk8:charge": 0.123844, "yuk8:single": 3.341187}
+[05:46:50] dropped-by-law {"lj:single": 6, "pow1:charge": 46, "pow1:predprey": 23, "pow1:single": 1056, "pow2:charge": 33, "pow2:predprey": 41, "pow2:single": 941, "pow3:charge": 25, "pow3:predprey": 53, "pow3:single": 784, "yuk128:charge": 33, "yuk128:single": 1212, "yuk8:charge": 8, "yuk8:single": 1389}
+[05:47:11] it 71100 k 13 lr 3.94e-05 loss 364.762238 dropped 138372/1137600 0.251s/it
+[05:47:32] it 71200 k 13 lr 3.90e-05 loss 701.847534 dropped 138833/1139200 0.251s/it
+[05:47:43] gate: window drop rate 0.316 -> kgate 11
+[05:47:52] it 71300 k 11 lr 3.87e-05 loss 428.847412 dropped 139192/1140800 0.251s/it
+[05:48:10] it 71400 k 11 lr 3.84e-05 loss 570.903320 dropped 139429/1142400 0.251s/it
+[05:48:28] it 71500 k 11 lr 3.81e-05 loss 601.285950 dropped 139703/1144000 0.251s/it
+[05:48:28] gate: window drop rate 0.159 -> kgate 11
+[05:48:46] it 71600 k 11 lr 3.78e-05 loss 739.791138 dropped 140062/1145600 0.251s/it
+[05:49:05] it 71700 k 11 lr 3.75e-05 loss 310.853851 dropped 140426/1147200 0.251s/it
+[05:49:14] gate: window drop rate 0.218 -> kgate 11
+[05:49:23] it 71800 k 11 lr 3.72e-05 loss 587.145630 dropped 140733/1148800 0.251s/it
+[05:49:41] it 71900 k 11 lr 3.69e-05 loss 397.552094 dropped 141034/1150400 0.251s/it
+[05:49:59] it 72000 k 11 lr 3.66e-05 loss 982.915710 dropped 141283/1152000 0.250s/it
+[05:49:59] gate: window drop rate 0.177 -> kgate 11
+[05:49:59] by-law {"lj:single": 0.033959, "pow1:charge": 0.015748, "pow1:predprey": 0.039243, "pow1:single": 2.809591, "pow2:charge": 0.009566, "pow2:predprey": 0.022379, "pow2:single": 2.505378, "pow3:charge": 0.004677, "pow3:predprey": 0.013348, "pow3:single": 1.974282, "yuk128:charge": 0.00563, "yuk128:single": 2.365056, "yuk8:charge": 0.003307, "yuk8:single": 3.078605}
+[05:49:59] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 1, "pow1:single": 620, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 593, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 441, "yuk128:charge": 0, "yuk128:single": 777, "yuk8:charge": 0, "yuk8:single": 1045}
+[05:50:17] it 72100 k 11 lr 3.63e-05 loss 158.313843 dropped 141587/1153600 0.250s/it
+[05:50:35] it 72200 k 11 lr 3.61e-05 loss 1129.803467 dropped 141913/1155200 0.250s/it
+[05:50:44] gate: window drop rate 0.188 -> kgate 11
+[05:50:53] it 72300 k 11 lr 3.58e-05 loss 269.541107 dropped 142193/1156800 0.250s/it
+[05:51:12] it 72400 k 11 lr 3.55e-05 loss 464.179138 dropped 142433/1158400 0.250s/it
+[05:51:30] it 72500 k 11 lr 3.52e-05 loss 340.145630 dropped 142607/1160000 0.250s/it
+[05:51:30] gate: window drop rate 0.143 -> kgate 11
+[05:51:48] it 72600 k 11 lr 3.50e-05 loss 10.158147 dropped 142822/1161600 0.250s/it
+[05:52:06] it 72700 k 11 lr 3.47e-05 loss 275.589752 dropped 143074/1163200 0.250s/it
+[05:52:15] gate: window drop rate 0.138 -> kgate 11
+[05:52:24] it 72800 k 11 lr 3.44e-05 loss 299.987244 dropped 143251/1164800 0.250s/it
+[05:52:42] it 72900 k 11 lr 3.42e-05 loss 499.098663 dropped 143477/1166400 0.250s/it
+[05:53:00] it 73000 k 11 lr 3.39e-05 loss 568.897339 dropped 143720/1168000 0.249s/it
+[05:53:00] gate: window drop rate 0.141 -> kgate 11
+[05:53:00] by-law {"lj:single": 0.031741, "pow1:charge": 0.007514, "pow1:predprey": 0.005293, "pow1:single": 2.350945, "pow2:charge": 0.003817, "pow2:predprey": 0.008111, "pow2:single": 2.182688, "pow3:charge": 0.003816, "pow3:predprey": 0.004795, "pow3:single": 1.884281, "yuk128:charge": 0.003235, "yuk128:single": 2.209221, "yuk8:charge": 0.003417, "yuk8:single": 2.663907}
+[05:53:00] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 453, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 386, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 299, "yuk128:charge": 0, "yuk128:single": 525, "yuk8:charge": 0, "yuk8:single": 774}
+[05:53:19] it 73100 k 11 lr 3.37e-05 loss 870.212097 dropped 143952/1169600 0.249s/it
+[05:53:37] it 73200 k 11 lr 3.34e-05 loss 265.327118 dropped 144107/1171200 0.249s/it
+[05:53:46] gate: window drop rate 0.107 -> kgate 11
+[05:53:55] it 73300 k 11 lr 3.32e-05 loss 340.389404 dropped 144192/1172800 0.249s/it
+[05:54:13] it 73400 k 11 lr 3.29e-05 loss 646.253296 dropped 144278/1174400 0.249s/it
+[05:54:31] it 73500 k 11 lr 3.27e-05 loss 483.118652 dropped 144418/1176000 0.249s/it
+[05:54:31] gate: window drop rate 0.068 -> kgate 11
+[05:54:49] it 73600 k 11 lr 3.25e-05 loss 230.186401 dropped 144475/1177600 0.249s/it
+[05:55:07] it 73700 k 11 lr 3.22e-05 loss 297.988770 dropped 144497/1179200 0.249s/it
+[05:55:16] gate: window drop rate 0.022 -> kgate 12
+[05:55:26] it 73800 k 12 lr 3.20e-05 loss 163.349304 dropped 144524/1180800 0.249s/it
+[05:55:46] it 73900 k 12 lr 3.18e-05 loss 238.852478 dropped 144549/1182400 0.249s/it
+[05:56:06] it 74000 k 12 lr 3.16e-05 loss 63.295891 dropped 144555/1184000 0.249s/it
+[05:56:06] gate: window drop rate 0.012 -> kgate 13
+[05:56:06] by-law {"lj:single": 0.031739, "pow1:charge": 0.007351, "pow1:predprey": 0.005487, "pow1:single": 1.754707, "pow2:charge": 0.003885, "pow2:predprey": 0.003856, "pow2:single": 1.655474, "pow3:charge": 0.00416, "pow3:predprey": 0.004167, "pow3:single": 1.447143, "yuk128:charge": 0.003505, "yuk128:single": 1.56203, "yuk8:charge": 0.003847, "yuk8:single": 1.98454}
+[05:56:06] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 150, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 130, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 103, "yuk128:charge": 0, "yuk128:single": 154, "yuk8:charge": 0, "yuk8:single": 298}
+[05:56:27] it 74100 k 13 lr 3.13e-05 loss 24.589100 dropped 144561/1185600 0.249s/it
+[05:56:48] it 74200 k 13 lr 3.11e-05 loss 17.136318 dropped 144562/1187200 0.249s/it
+[05:56:58] gate: window drop rate 0.002 -> kgate 14
+[05:57:10] it 74300 k 14 lr 3.09e-05 loss 25.177637 dropped 144562/1188800 0.248s/it
+[05:57:32] it 74400 k 14 lr 3.07e-05 loss 13.776917 dropped 144562/1190400 0.248s/it
+[05:57:55] it 74500 k 14 lr 3.05e-05 loss 19.538284 dropped 144562/1192000 0.248s/it
+[05:57:55] gate: window drop rate 0.000 -> kgate 15
+[05:58:19] it 74600 k 15 lr 3.03e-05 loss 43.172421 dropped 144562/1193600 0.248s/it
+[05:58:44] it 74700 k 15 lr 3.01e-05 loss 47.974094 dropped 144562/1195200 0.248s/it
+[05:58:56] gate: window drop rate 0.000 -> kgate 16
+[05:59:09] it 74800 k 16 lr 2.99e-05 loss 11.909195 dropped 144563/1196800 0.248s/it
+[05:59:35] it 74900 k 16 lr 2.97e-05 loss 55.154861 dropped 144567/1198400 0.248s/it
+[06:00:00] it 75000 k 16 lr 2.96e-05 loss 20.493414 dropped 144574/1200000 0.248s/it
+[06:00:00] gate: window drop rate 0.003 -> kgate 17
+[06:00:00] by-law {"lj:single": 0.050551, "pow1:charge": 0.017464, "pow1:predprey": 0.007999, "pow1:single": 1.195764, "pow2:charge": 0.010008, "pow2:predprey": 0.009039, "pow2:single": 1.217288, "pow3:charge": 0.008749, "pow3:predprey": 0.012024, "pow3:single": 1.198406, "yuk128:charge": 0.008676, "yuk128:single": 1.190495, "yuk8:charge": 0.008977, "yuk8:single": 1.461128}
+[06:00:00] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 0, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 1, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 2, "yuk128:charge": 0, "yuk128:single": 4, "yuk8:charge": 0, "yuk8:single": 12}
+[06:00:28] it 75100 k 17 lr 2.94e-05 loss 74.675613 dropped 144579/1201600 0.248s/it
+[06:00:55] it 75200 k 17 lr 2.92e-05 loss 41.674049 dropped 144586/1203200 0.248s/it
+[06:01:09] gate: window drop rate 0.003 -> kgate 18
+[06:01:23] it 75300 k 18 lr 2.90e-05 loss 41.456322 dropped 144587/1204800 0.249s/it
+[06:01:52] it 75400 k 18 lr 2.89e-05 loss 45.630833 dropped 144589/1206400 0.249s/it
+[06:02:20] it 75500 k 18 lr 2.87e-05 loss 77.624207 dropped 144595/1208000 0.249s/it
+[06:02:20] gate: window drop rate 0.002 -> kgate 19
+[06:02:51] it 75600 k 19 lr 2.85e-05 loss 72.691162 dropped 144614/1209600 0.249s/it
+[06:03:21] it 75700 k 19 lr 2.84e-05 loss 64.019279 dropped 144639/1211200 0.249s/it
+[06:03:36] gate: window drop rate 0.018 -> kgate 20
+[06:03:52] it 75800 k 20 lr 2.82e-05 loss 42.901409 dropped 144703/1212800 0.249s/it
+[06:04:24] it 75900 k 20 lr 2.81e-05 loss 69.423386 dropped 144786/1214400 0.249s/it
+[06:04:56] it 76000 k 20 lr 2.79e-05 loss 67.073410 dropped 144831/1216000 0.249s/it
+[06:04:56] gate: window drop rate 0.042 -> kgate 21
+[06:04:56] by-law {"lj:single": 0.076456, "pow1:charge": 0.036083, "pow1:predprey": 0.017541, "pow1:single": 1.701661, "pow2:charge": 0.022538, "pow2:predprey": 0.023238, "pow2:single": 1.809739, "pow3:charge": 0.024489, "pow3:predprey": 0.024923, "pow3:single": 1.707036, "yuk128:charge": 0.01942, "yuk128:single": 1.903592, "yuk8:charge": 0.01809, "yuk8:single": 2.095742}
+[06:04:56] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 37, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 35, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 41, "yuk128:charge": 0, "yuk128:single": 46, "yuk8:charge": 0, "yuk8:single": 98}
+[06:05:30] it 76100 k 21 lr 2.78e-05 loss 35.412239 dropped 144868/1217600 0.249s/it
+[06:06:03] it 76200 k 21 lr 2.76e-05 loss 44.085079 dropped 144898/1219200 0.249s/it
+[06:06:20] gate: window drop rate 0.022 -> kgate 22
+[06:06:38] it 76300 k 22 lr 2.75e-05 loss 69.647194 dropped 144948/1220800 0.249s/it
+[06:07:13] it 76400 k 22 lr 2.74e-05 loss 44.665901 dropped 144990/1222400 0.250s/it
+[06:07:48] it 76500 k 22 lr 2.72e-05 loss 34.478565 dropped 145024/1224000 0.250s/it
+[06:07:48] gate: window drop rate 0.026 -> kgate 23
+[06:08:24] it 76600 k 23 lr 2.71e-05 loss 37.326618 dropped 145048/1225600 0.250s/it
+[06:09:01] it 76700 k 23 lr 2.70e-05 loss 37.770607 dropped 145099/1227200 0.250s/it
+[06:09:19] gate: window drop rate 0.025 -> kgate 24
+[06:09:38] it 76800 k 24 lr 2.69e-05 loss 17.715363 dropped 145154/1228800 0.250s/it
+[06:10:16] it 76900 k 24 lr 2.68e-05 loss 94.565895 dropped 145226/1230400 0.250s/it
+[06:10:54] it 77000 k 24 lr 2.66e-05 loss 17.059679 dropped 145303/1232000 0.250s/it
+[06:10:54] gate: window drop rate 0.045 -> kgate 25
+[06:10:54] by-law {"lj:single": 0.103452, "pow1:charge": 0.068532, "pow1:predprey": 0.029597, "pow1:single": 2.103098, "pow2:charge": 0.043269, "pow2:predprey": 0.046569, "pow2:single": 2.149028, "pow3:charge": 0.040265, "pow3:predprey": 0.049104, "pow3:single": 2.10489, "yuk128:charge": 0.034039, "yuk128:single": 2.12255, "yuk8:charge": 0.031301, "yuk8:single": 2.376422}
+[06:10:54] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 76, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 70, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 70, "yuk128:charge": 0, "yuk128:single": 109, "yuk8:charge": 0, "yuk8:single": 147}
+[06:11:34] it 77100 k 25 lr 2.65e-05 loss 32.346024 dropped 145376/1233600 0.251s/it
+[06:12:14] it 77200 k 25 lr 2.64e-05 loss 11.440935 dropped 145467/1235200 0.251s/it
+[06:12:34] gate: window drop rate 0.056 -> kgate 25
+[06:12:54] it 77300 k 25 lr 2.63e-05 loss 65.667877 dropped 145577/1236800 0.251s/it
+[06:13:33] it 77400 k 25 lr 2.62e-05 loss 25.401844 dropped 145663/1238400 0.251s/it
+[06:14:13] it 77500 k 25 lr 2.61e-05 loss 30.575680 dropped 145752/1240000 0.251s/it
+[06:14:13] gate: window drop rate 0.056 -> kgate 25
+[06:14:53] it 77600 k 25 lr 2.61e-05 loss 39.282951 dropped 145828/1241600 0.252s/it
+[06:15:32] it 77700 k 25 lr 2.60e-05 loss 50.431400 dropped 145942/1243200 0.252s/it
+[06:15:52] gate: window drop rate 0.060 -> kgate 25
+[06:16:12] it 77800 k 25 lr 2.59e-05 loss 78.044220 dropped 146033/1244800 0.252s/it
+[06:16:52] it 77900 k 25 lr 2.58e-05 loss 64.922577 dropped 146107/1246400 0.252s/it
+[06:17:32] it 78000 k 25 lr 2.57e-05 loss 37.490456 dropped 146192/1248000 0.252s/it
+[06:17:32] gate: window drop rate 0.050 -> kgate 26
+[06:17:32] by-law {"lj:single": 0.123946, "pow1:charge": 0.083721, "pow1:predprey": 0.035538, "pow1:single": 2.153173, "pow2:charge": 0.056912, "pow2:predprey": 0.060799, "pow2:single": 2.176161, "pow3:charge": 0.055143, "pow3:predprey": 0.073126, "pow3:single": 2.113757, "yuk128:charge": 0.049467, "yuk128:single": 2.249726, "yuk8:charge": 0.040496, "yuk8:single": 2.528108}
+[06:17:32] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 155, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 152, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 142, "yuk128:charge": 0, "yuk128:single": 163, "yuk8:charge": 0, "yuk8:single": 277}
+[06:18:13] it 78100 k 26 lr 2.57e-05 loss 25.499924 dropped 146288/1249600 0.253s/it
+[06:18:54] it 78200 k 26 lr 2.56e-05 loss 55.451614 dropped 146395/1251200 0.253s/it
+[06:19:15] gate: window drop rate 0.071 -> kgate 26
+[06:19:35] it 78300 k 26 lr 2.55e-05 loss 56.658760 dropped 146546/1252800 0.253s/it
+[06:20:17] it 78400 k 26 lr 2.55e-05 loss 144.291611 dropped 146795/1254400 0.253s/it
+[06:20:58] it 78500 k 26 lr 2.54e-05 loss 22.023460 dropped 147058/1256000 0.253s/it
+[06:20:58] gate: window drop rate 0.145 -> kgate 26
+[06:21:39] it 78600 k 26 lr 2.54e-05 loss 77.975372 dropped 147272/1257600 0.254s/it
+[06:22:20] it 78700 k 26 lr 2.53e-05 loss 87.347214 dropped 147462/1259200 0.254s/it
+[06:22:41] gate: window drop rate 0.135 -> kgate 26
+[06:23:02] it 78800 k 26 lr 2.53e-05 loss 102.791496 dropped 147701/1260800 0.254s/it
+[06:23:43] it 78900 k 26 lr 2.52e-05 loss 12.332891 dropped 147908/1262400 0.254s/it
+[06:24:24] it 79000 k 26 lr 2.52e-05 loss 59.377728 dropped 148101/1264000 0.254s/it
+[06:24:24] gate: window drop rate 0.126 -> kgate 26
+[06:24:24] by-law {"lj:single": 0.129668, "pow1:charge": 0.097157, "pow1:predprey": 0.0435, "pow1:single": 2.411481, "pow2:charge": 0.061839, "pow2:predprey": 0.068097, "pow2:single": 2.483886, "pow3:charge": 0.069009, "pow3:predprey": 0.079666, "pow3:single": 2.266423, "yuk128:charge": 0.057461, "yuk128:single": 2.381663, "yuk8:charge": 0.044452, "yuk8:single": 2.657492}
+[06:24:24] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 329, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 333, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 281, "yuk128:charge": 0, "yuk128:single": 377, "yuk8:charge": 0, "yuk8:single": 589}
+[06:25:05] it 79100 k 26 lr 2.51e-05 loss 49.028481 dropped 148295/1265600 0.255s/it
+[06:25:47] it 79200 k 26 lr 2.51e-05 loss 16.271570 dropped 148440/1267200 0.255s/it
+[06:26:07] gate: window drop rate 0.108 -> kgate 26
+[06:26:28] it 79300 k 26 lr 2.51e-05 loss 35.897087 dropped 148634/1268800 0.255s/it
+[06:27:09] it 79400 k 26 lr 2.51e-05 loss 59.589272 dropped 148798/1270400 0.255s/it
+[06:27:50] it 79500 k 26 lr 2.50e-05 loss 52.035141 dropped 148915/1272000 0.255s/it
+[06:27:50] gate: window drop rate 0.095 -> kgate 26
+[06:28:32] it 79600 k 26 lr 2.50e-05 loss 33.328350 dropped 148992/1273600 0.256s/it
+[06:29:13] it 79700 k 26 lr 2.50e-05 loss 47.792503 dropped 149081/1275200 0.256s/it
+[06:29:33] gate: window drop rate 0.052 -> kgate 26
+[06:29:54] it 79800 k 26 lr 2.50e-05 loss 26.074242 dropped 149177/1276800 0.256s/it
+[06:30:35] it 79900 k 26 lr 2.50e-05 loss 17.045372 dropped 149262/1278400 0.256s/it
+[06:31:16] it 80000 k 26 lr 2.50e-05 loss 62.230209 dropped 149356/1280000 0.256s/it
+[06:31:16] gate: window drop rate 0.058 -> kgate 26
+[06:31:16] by-law {"lj:single": 0.125311, "pow1:charge": 0.10338, "pow1:predprey": 0.03974, "pow1:single": 2.408482, "pow2:charge": 0.06832, "pow2:predprey": 0.065364, "pow2:single": 2.327461, "pow3:charge": 0.062783, "pow3:predprey": 0.081982, "pow3:single": 2.197343, "yuk128:charge": 0.060661, "yuk128:single": 2.25421, "yuk8:charge": 0.047672, "yuk8:single": 2.49404}
+[06:31:16] dropped-by-law {"lj:single": 0, "pow1:charge": 0, "pow1:predprey": 0, "pow1:single": 207, "pow2:charge": 0, "pow2:predprey": 0, "pow2:single": 176, "pow3:charge": 0, "pow3:predprey": 0, "pow3:single": 184, "yuk128:charge": 0, "yuk128:single": 296, "yuk8:charge": 0, "yuk8:single": 392}
+[06:31:17] trained to it 80000 in 20509s total

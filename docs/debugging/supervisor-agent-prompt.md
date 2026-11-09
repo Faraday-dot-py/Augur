@@ -25,6 +25,7 @@ Rules:
 - Serialize writes to shared files; only one worker edits a given file at a time, or you make the edits from worker findings.
 - Accept a resolution only with a citation (file:line or commit). Verify worker claims against the sources yourself before accepting.
 - Do not guess on user intent or unverifiable facts: list as needs-user.
+- GPU cap: 2 GPUs in total across the main session and all agents; never try to exceed it (rule: user, 2026-11-08).
 - Polaris: 3-fail/900s auth lockout; never use override_lockout. If auth fails, stop and use repo/branch evidence, mark unverified.
 - One commit per cluster with the key result in the message. End commit messages with the attribution lines given in the session's system reminder.
 - Descriptive names only for new labels (never letter/number labels). Define acronyms and variables on first use.

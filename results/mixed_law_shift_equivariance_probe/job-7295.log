@@ -1,0 +1,79 @@
+name, memory.total [MiB]
+NVIDIA H200 NVL, 143771 MiB
+main_s4738|pow1|0.1 force_rel 1.9082 dec3 frac_zero 0.4234
+main_s4738|pow1|0.316 force_rel 0.2792 dec3 frac_zero 0.4188
+main_s4738|pow1|1.0 force_rel 0.3257 dec3 frac_zero 0.4179
+main_s4738|pow1|3.16 force_rel 0.3501 dec3 frac_zero 0.4135
+main_s4738|pow1|10.0 force_rel 0.6302 dec3 frac_zero 0.4149
+main_s4738|pow2|0.1 force_rel 1.727 dec3 frac_zero 0.423
+main_s4738|pow2|0.316 force_rel 0.3891 dec3 frac_zero 0.4233
+main_s4738|pow2|1.0 force_rel 0.4215 dec3 frac_zero 0.4235
+main_s4738|pow2|3.16 force_rel 0.648 dec3 frac_zero 0.4241
+main_s4738|pow2|10.0 force_rel 0.5377 dec3 frac_zero 0.4275
+main_s4738|pow3|0.1 force_rel 2.1868 dec3 frac_zero 0.4229
+main_s4738|pow3|0.316 force_rel 0.619 dec3 frac_zero 0.423
+main_s4738|pow3|1.0 force_rel 0.273 dec3 frac_zero 0.4231
+main_s4738|pow3|3.16 force_rel 0.8218 dec3 frac_zero 0.4231
+main_s4738|pow3|10.0 force_rel 0.6646 dec3 frac_zero 0.4234
+main_s4738|yuk8|0.1 force_rel 2.86 dec3 frac_zero 0.4232
+main_s4738|yuk8|0.316 force_rel 0.8099 dec3 frac_zero 0.4232
+main_s4738|yuk8|1.0 force_rel 0.2861 dec3 frac_zero 0.4233
+main_s4738|yuk8|3.16 force_rel 0.4072 dec3 frac_zero 0.4234
+main_s4738|yuk8|10.0 force_rel 1.12 dec3 frac_zero 0.4244
+main_s4738|yuk128|0.1 force_rel 1.3893 dec3 frac_zero 0.4231
+main_s4738|yuk128|0.316 force_rel 0.3635 dec3 frac_zero 0.4233
+main_s4738|yuk128|1.0 force_rel 0.4697 dec3 frac_zero 0.4233
+main_s4738|yuk128|3.16 force_rel 0.8162 dec3 frac_zero 0.4246
+main_s4738|yuk128|10.0 force_rel 0.5774 dec3 frac_zero 0.427
+main_s4738|lj|0.1 force_rel 0.2946 dec3 frac_zero 0.4218
+main_s4738|lj|0.316 force_rel 0.3456 dec3 frac_zero 0.4217
+main_s4738|lj|1.0 force_rel 0.4062 dec3 frac_zero 0.4217
+main_s4738|lj|3.16 force_rel 0.4252 dec3 frac_zero 0.422
+main_s4738|lj|10.0 force_rel 0.4514 dec3 frac_zero 0.4225
+main_s4739|pow1|0.1 force_rel 0.4517 dec3 frac_zero 0.0
+main_s4739|pow1|0.316 force_rel 0.2158 dec3 frac_zero 0.0
+main_s4739|pow1|1.0 force_rel 0.266 dec3 frac_zero 0.0
+main_s4739|pow1|3.16 force_rel 0.3382 dec3 frac_zero 0.0
+main_s4739|pow1|10.0 force_rel 0.6847 dec3 frac_zero 0.0
+main_s4739|pow2|0.1 force_rel 1.8787 dec3 frac_zero 0.0
+main_s4739|pow2|0.316 force_rel 0.6951 dec3 frac_zero 0.0
+main_s4739|pow2|1.0 force_rel 0.3334 dec3 frac_zero 0.0
+main_s4739|pow2|3.16 force_rel 0.2455 dec3 frac_zero 0.0
+main_s4739|pow2|10.0 force_rel 1.2354 dec3 frac_zero 0.0
+main_s4739|pow3|0.1 force_rel 5.0653 dec3 frac_zero 0.0
+main_s4739|pow3|0.316 force_rel 1.6131 dec3 frac_zero 0.0
+main_s4739|pow3|1.0 force_rel 0.5036 dec3 frac_zero 0.0
+main_s4739|pow3|3.16 force_rel 0.3264 dec3 frac_zero 0.0
+main_s4739|pow3|10.0 force_rel 0.5597 dec3 frac_zero 0.0
+main_s4739|yuk8|0.1 force_rel 1.9593 dec3 frac_zero 0.0
+main_s4739|yuk8|0.316 force_rel 0.6037 dec3 frac_zero 0.0
+main_s4739|yuk8|1.0 force_rel 0.2221 dec3 frac_zero 0.0
+main_s4739|yuk8|3.16 force_rel 0.152 dec3 frac_zero 0.0
+main_s4739|yuk8|10.0 force_rel 0.3806 dec3 frac_zero 0.0
+main_s4739|yuk128|0.1 force_rel 1.6738 dec3 frac_zero 0.0
+main_s4739|yuk128|0.316 force_rel 0.5773 dec3 frac_zero 0.0
+main_s4739|yuk128|1.0 force_rel 0.2897 dec3 frac_zero 0.0
+main_s4739|yuk128|3.16 force_rel 0.2049 dec3 frac_zero 0.0
+main_s4739|yuk128|10.0 force_rel 1.164 dec3 frac_zero 0.0
+main_s4739|lj|0.1 force_rel 0.2474 dec3 frac_zero 0.0
+main_s4739|lj|0.316 force_rel 0.296 dec3 frac_zero 0.0
+main_s4739|lj|1.0 force_rel 0.3999 dec3 frac_zero 0.0
+main_s4739|lj|3.16 force_rel 0.4701 dec3 frac_zero 0.0
+main_s4739|lj|10.0 force_rel 0.4429 dec3 frac_zero 0.0
+DONE
+dec3_activation exit 0
+main_s4738|pow1 zero 0.0 x 0.0415 y 0.03706 diag 0.05504 vs exact 0.19643
+main_s4738|pow2 zero 0.0 x 0.05044 y 0.04828 diag 0.06998 vs exact 0.18985
+main_s4738|pow3 zero 0.0 x 0.06601 y 0.06858 diag 0.09837 vs exact 0.31696
+main_s4738|yuk8 zero 0.0 x 0.05453 y 0.05023 diag 0.07784 vs exact 0.29356
+main_s4738|yuk128 zero 0.0 x 0.04991 y 0.05065 diag 0.06969 vs exact 0.23891
+main_s4738|lj zero 0.0 x 0.08211 y 0.08611 diag 0.12212 vs exact 0.40494
+main_s4739|pow1 zero 0.0 x 0.05498 y 0.05714 diag 0.07899 vs exact 0.23831
+main_s4739|pow2 zero 0.0 x 0.10931 y 0.10407 diag 0.14409 vs exact 0.31904
+main_s4739|pow3 zero 0.0 x 0.18703 y 0.18266 diag 0.24455 vs exact 0.62738
+main_s4739|yuk8 zero 0.0 x 0.07479 y 0.07816 diag 0.10704 vs exact 0.22363
+main_s4739|yuk128 zero 0.0 x 0.09405 y 0.09368 diag 0.12673 vs exact 0.28033
+main_s4739|lj zero 0.0 x 0.0696 y 0.06035 diag 0.09344 vs exact 0.40053
+{"main_s4738|x": {"laws_above": ["pow1", "pow2", "pow3", "yuk8", "yuk128", "lj"], "n_above": 6, "pass": true}, "main_s4738|y": {"laws_above": ["pow1", "pow2", "pow3", "yuk8", "yuk128", "lj"], "n_above": 6, "pass": true}, "main_s4738|diag": {"laws_above": ["pow1", "pow2", "pow3", "yuk8", "yuk128", "lj"], "n_above": 6, "pass": true}, "main_s4739|x": {"laws_above": ["pow1", "pow2", "pow3", "yuk8", "yuk128", "lj"], "n_above": 6, "pass": true}, "main_s4739|y": {"laws_above": ["pow1", "pow2", "pow3", "yuk8", "yuk128", "lj"], "n_above": 6, "pass": true}, "main_s4739|diag": {"laws_above": ["pow1", "pow2", "pow3", "yuk8", "yuk128", "lj"], "n_above": 6, "pass": true}, "combined": {"rule": "law counts only if median > PASS_MEDIAN for x, y and diag on every checkpoint", "laws_above": ["pow1", "pow2", "pow3", "yuk8", "yuk128", "lj"], "n_above": 6, "verdict": "PASS"}}
+DONE
+shift_equivariance exit 0
