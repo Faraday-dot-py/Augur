@@ -1,0 +1,328 @@
+model/neuron_graph.py: OK
+model/neuron_graph_slow_patch.py: OK
+scripts/neuron_circuit_teacher.py: OK
+scripts/train_neuron_graph_smoke.py: OK
+scripts/train_neuron_graph_loss_variants.py: OK
+scripts/train_neuron_graph_baseline_seed.py: OK
+scripts/train_neuron_graph_slow_patch.py: OK
+name, memory.total [MiB]
+NVIDIA H200 NVL, 143771 MiB
+restart count 0
+...........                                                              [100%]
+11 passed in 3.19s
+full-synaptic-messages seed 4738 teacher-forced it 250/1500 loss 0.1657 t 5s
+full-synaptic-messages seed 4738 teacher-forced it 500/1500 loss 0.0311 t 9s
+full-synaptic-messages seed 4738 teacher-forced it 750/1500 loss 0.0125 t 12s
+full-synaptic-messages seed 4738 teacher-forced it 1000/1500 loss 0.0080 t 16s
+full-synaptic-messages seed 4738 teacher-forced it 1250/1500 loss 0.0067 t 19s
+full-synaptic-messages seed 4738 teacher-forced it 1500/1500 loss 0.0059 t 23s
+full-synaptic-messages seed 4738 rollout-in-loop it 250/1500 loss 0.2197 t 27s
+full-synaptic-messages seed 4738 rollout-in-loop it 500/1500 loss 0.1935 t 31s
+full-synaptic-messages seed 4738 rollout-in-loop it 750/1500 loss 0.1650 t 36s
+full-synaptic-messages seed 4738 rollout-in-loop it 1000/1500 loss 0.1481 t 40s
+full-synaptic-messages seed 4738 rollout-in-loop it 1250/1500 loss 0.1336 t 44s
+full-synaptic-messages seed 4738 rollout-in-loop it 1500/1500 loss 0.1263 t 48s
+STEP baseline-rep1-seed4738 exit code 0
+baseline-architecture-48-tick-segments-control teacher-forced it 250/1500 loss 0.1701 t 11s
+baseline-architecture-48-tick-segments-control teacher-forced it 500/1500 loss 0.0216 t 21s
+baseline-architecture-48-tick-segments-control teacher-forced it 750/1500 loss 0.0101 t 31s
+baseline-architecture-48-tick-segments-control teacher-forced it 1000/1500 loss 0.0074 t 41s
+baseline-architecture-48-tick-segments-control teacher-forced it 1250/1500 loss 0.0061 t 51s
+baseline-architecture-48-tick-segments-control teacher-forced it 1500/1500 loss 0.0055 t 61s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 250/1500 loss 15.7706 t 73s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 500/1500 loss 0.4176 t 85s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 750/1500 loss 0.2713 t 97s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1000/1500 loss 0.2546 t 109s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1250/1500 loss 0.2521 t 121s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1500/1500 loss 0.2470 t 134s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 250/1500 loss 0.4587 t 13s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 500/1500 loss 0.2978 t 25s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 750/1500 loss 0.2566 t 38s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1000/1500 loss 0.2477 t 50s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1250/1500 loss 0.2401 t 63s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1500/1500 loss 0.2351 t 75s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 250/1500 loss 1.0402 t 90s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 500/1500 loss 0.5974 t 105s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 750/1500 loss 0.6016 t 119s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1000/1500 loss 0.5903 t 134s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1250/1500 loss 0.5665 t 149s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1500/1500 loss 0.5586 t 163s
+step-only loss (no count term, not part of the line) baseline-full-synaptic-messages: {'teacher-forced': 0.05919391382485628, 'rollout-in-loop': 0.24078691527247428}
+step-only loss (no count term, not part of the line) control-baseline-architecture-48-tick-segments-control: {'teacher-forced': 0.10278642736375332, 'rollout-in-loop': 0.2423265501856804}
+step-only loss (no count term, not part of the line) variant-full-synaptic-messages: {'teacher-forced': 0.11309894025325776, 'rollout-in-loop': 0.25578980445861815}
+N=10
+  baseline-full-synaptic-messages: err@20 9.43 f1@20 0.79 f1@100 0.37 div 21.4 rate300 ratio 0.62 slope 0.11 corr 0.19
+  control-baseline-architecture-48-tick-segments-control: err@20 8.94 f1@20 0.58 f1@100 0.22 div 18.5 rate300 ratio 0.10 slope 0.06 corr 0.29
+  variant-full-synaptic-messages: err@20 9.12 f1@20 0.58 f1@100 0.23 div 16.0 rate300 ratio 1.00 slope 0.83 corr 0.38
+N=100
+  baseline-full-synaptic-messages: err@20 10.18 f1@20 0.76 f1@100 0.33 div 21.3 rate300 ratio 0.33 slope 0.09 corr 0.17
+  control-baseline-architecture-48-tick-segments-control: err@20 9.93 f1@20 0.57 f1@100 0.20 div 19.9 rate300 ratio 0.10 slope 0.07 corr 0.28
+  variant-full-synaptic-messages: err@20 10.40 f1@20 0.51 f1@100 0.17 div 18.1 rate300 ratio 0.31 slope 0.36 corr 0.37
+VERDICT KILL
+{"10": {"values": {"slope300": 0.8298909664154053, "corr300": 0.37568822503089905, "ratio300": 1.0022271871566772, "err@20": 9.117278099060059, "f1@20": 0.5793362356673638}, "checks": {"slope300>=0.3": true, "corr300>=0.3": true, "rate_ratio300_in_0.7_1.3": true, "err@20_within_+3pct": true, "f1@20_within_0.03": false}}, "100": {"values": {"slope300": 0.3634288012981415, "corr300": 0.36708202958106995, "ratio300": 0.3095865547657013, "err@20": 10.400938034057617, "f1@20": 0.5059587068427752}, "checks": {"slope300>=0.3": true, "corr300>=0.3": true, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": true, "f1@20_within_0.03": false}}}
+STEP slow-patch-rep1-seed4738 exit code 0
+full-synaptic-messages seed 4739 teacher-forced it 250/1500 loss 0.1269 t 5s
+full-synaptic-messages seed 4739 teacher-forced it 500/1500 loss 0.0302 t 9s
+full-synaptic-messages seed 4739 teacher-forced it 750/1500 loss 0.0138 t 12s
+full-synaptic-messages seed 4739 teacher-forced it 1000/1500 loss 0.0078 t 16s
+full-synaptic-messages seed 4739 teacher-forced it 1250/1500 loss 0.0059 t 19s
+full-synaptic-messages seed 4739 teacher-forced it 1500/1500 loss 0.0050 t 23s
+full-synaptic-messages seed 4739 rollout-in-loop it 250/1500 loss 0.1899 t 27s
+full-synaptic-messages seed 4739 rollout-in-loop it 500/1500 loss 0.1589 t 32s
+full-synaptic-messages seed 4739 rollout-in-loop it 750/1500 loss 0.1623 t 36s
+full-synaptic-messages seed 4739 rollout-in-loop it 1000/1500 loss 0.1472 t 40s
+full-synaptic-messages seed 4739 rollout-in-loop it 1250/1500 loss 0.1319 t 44s
+full-synaptic-messages seed 4739 rollout-in-loop it 1500/1500 loss 0.1207 t 49s
+STEP baseline-rep1-seed4739 exit code 0
+baseline-architecture-48-tick-segments-control teacher-forced it 250/1500 loss 0.1445 t 11s
+baseline-architecture-48-tick-segments-control teacher-forced it 500/1500 loss 0.0246 t 21s
+baseline-architecture-48-tick-segments-control teacher-forced it 750/1500 loss 0.0115 t 31s
+baseline-architecture-48-tick-segments-control teacher-forced it 1000/1500 loss 0.0079 t 41s
+baseline-architecture-48-tick-segments-control teacher-forced it 1250/1500 loss 0.0065 t 51s
+baseline-architecture-48-tick-segments-control teacher-forced it 1500/1500 loss 0.0056 t 61s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 250/1500 loss 0.8395 t 73s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 500/1500 loss 0.2890 t 85s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 750/1500 loss 0.2703 t 98s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1000/1500 loss 0.2678 t 110s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1250/1500 loss 0.2595 t 122s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1500/1500 loss 0.2455 t 134s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 250/1500 loss 0.4007 t 13s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 500/1500 loss 0.2770 t 25s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 750/1500 loss 0.2483 t 38s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1000/1500 loss 0.2395 t 50s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1250/1500 loss 0.2357 t 63s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1500/1500 loss 0.2338 t 76s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 250/1500 loss 3.6894 t 90s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 500/1500 loss 0.6595 t 105s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 750/1500 loss 0.6161 t 120s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1000/1500 loss 0.5958 t 134s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1250/1500 loss 0.5862 t 149s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1500/1500 loss 0.5723 t 164s
+step-only loss (no count term, not part of the line) baseline-full-synaptic-messages: {'teacher-forced': 0.06160182598978281, 'rollout-in-loop': 0.24054798409342765}
+step-only loss (no count term, not part of the line) control-baseline-architecture-48-tick-segments-control: {'teacher-forced': 0.06740359738469123, 'rollout-in-loop': 0.23699268326163292}
+step-only loss (no count term, not part of the line) variant-full-synaptic-messages: {'teacher-forced': 0.10814110599458218, 'rollout-in-loop': 0.26931625232100487}
+N=10
+  baseline-full-synaptic-messages: err@20 9.00 f1@20 0.81 f1@100 0.30 div 21.2 rate300 ratio 0.18 slope 0.13 corr 0.36
+  control-baseline-architecture-48-tick-segments-control: err@20 9.32 f1@20 0.62 f1@100 0.26 div 20.6 rate300 ratio 0.12 slope 0.12 corr 0.44
+  variant-full-synaptic-messages: err@20 9.84 f1@20 0.43 f1@100 0.16 div 15.6 rate300 ratio 11.31 slope 1.86 corr 0.12
+N=100
+  baseline-full-synaptic-messages: err@20 9.13 f1@20 0.80 f1@100 0.27 div 22.4 rate300 ratio 0.11 slope 0.07 corr 0.11
+  control-baseline-architecture-48-tick-segments-control: err@20 9.51 f1@20 0.57 f1@100 0.19 div 19.3 rate300 ratio 0.07 slope 0.07 corr 0.27
+  variant-full-synaptic-messages: err@20 9.95 f1@20 0.36 f1@100 0.11 div 14.8 rate300 ratio 0.07 slope -0.04 corr -0.02
+VERDICT KILL
+{"10": {"values": {"slope300": 1.860087513923645, "corr300": 0.11948125809431076, "ratio300": 11.3053617477417, "err@20": 9.841543197631836, "f1@20": 0.4251328091923199}, "checks": {"slope300>=0.3": true, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}, "100": {"values": {"slope300": -0.03602617233991623, "corr300": -0.019813058897852898, "ratio300": 0.07140472531318665, "err@20": 9.95274829864502, "f1@20": 0.36042198468294884}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}}
+STEP slow-patch-rep1-seed4739 exit code 0
+full-synaptic-messages seed 4738 teacher-forced it 250/1500 loss 0.1657 t 5s
+full-synaptic-messages seed 4738 teacher-forced it 500/1500 loss 0.0314 t 8s
+full-synaptic-messages seed 4738 teacher-forced it 750/1500 loss 0.0122 t 12s
+full-synaptic-messages seed 4738 teacher-forced it 1000/1500 loss 0.0080 t 16s
+full-synaptic-messages seed 4738 teacher-forced it 1250/1500 loss 0.0067 t 19s
+full-synaptic-messages seed 4738 teacher-forced it 1500/1500 loss 0.0059 t 23s
+full-synaptic-messages seed 4738 rollout-in-loop it 250/1500 loss 0.2036 t 27s
+full-synaptic-messages seed 4738 rollout-in-loop it 500/1500 loss 0.1815 t 31s
+full-synaptic-messages seed 4738 rollout-in-loop it 750/1500 loss 0.1550 t 36s
+full-synaptic-messages seed 4738 rollout-in-loop it 1000/1500 loss 0.1404 t 40s
+full-synaptic-messages seed 4738 rollout-in-loop it 1250/1500 loss 0.1261 t 44s
+full-synaptic-messages seed 4738 rollout-in-loop it 1500/1500 loss 0.1229 t 48s
+STEP baseline-rep2-seed4738 exit code 0
+baseline-architecture-48-tick-segments-control teacher-forced it 250/1500 loss 0.1701 t 11s
+baseline-architecture-48-tick-segments-control teacher-forced it 500/1500 loss 0.0209 t 21s
+baseline-architecture-48-tick-segments-control teacher-forced it 750/1500 loss 0.0100 t 31s
+baseline-architecture-48-tick-segments-control teacher-forced it 1000/1500 loss 0.0074 t 41s
+baseline-architecture-48-tick-segments-control teacher-forced it 1250/1500 loss 0.0063 t 51s
+baseline-architecture-48-tick-segments-control teacher-forced it 1500/1500 loss 0.0055 t 61s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 250/1500 loss 4.7327 t 73s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 500/1500 loss 0.3414 t 85s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 750/1500 loss 0.2811 t 97s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1000/1500 loss 0.2614 t 110s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1250/1500 loss 0.2623 t 122s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1500/1500 loss 0.2550 t 134s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 250/1500 loss 0.4583 t 13s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 500/1500 loss 0.2953 t 25s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 750/1500 loss 0.2588 t 38s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1000/1500 loss 0.2481 t 50s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1250/1500 loss 0.2406 t 63s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1500/1500 loss 0.2356 t 76s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 250/1500 loss 1.3751 t 90s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 500/1500 loss 0.6853 t 105s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 750/1500 loss 0.6605 t 120s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1000/1500 loss 0.6071 t 134s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1250/1500 loss 0.5880 t 149s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1500/1500 loss 0.5667 t 163s
+step-only loss (no count term, not part of the line) baseline-full-synaptic-messages: {'teacher-forced': 0.05743190236389637, 'rollout-in-loop': 0.2654146090149879}
+step-only loss (no count term, not part of the line) control-baseline-architecture-48-tick-segments-control: {'teacher-forced': 0.10062507912516594, 'rollout-in-loop': 0.2524747133255005}
+step-only loss (no count term, not part of the line) variant-full-synaptic-messages: {'teacher-forced': 0.11825641170144081, 'rollout-in-loop': 0.2568514309823513}
+N=10
+  baseline-full-synaptic-messages: err@20 10.12 f1@20 0.77 f1@100 0.32 div 19.9 rate300 ratio 0.60 slope 0.05 corr 0.10
+  control-baseline-architecture-48-tick-segments-control: err@20 9.13 f1@20 0.55 f1@100 0.20 div 16.1 rate300 ratio 0.12 slope -0.01 corr -0.02
+  variant-full-synaptic-messages: err@20 9.23 f1@20 0.40 f1@100 0.12 div 16.0 rate300 ratio 0.04 slope 0.05 corr 0.33
+N=100
+  baseline-full-synaptic-messages: err@20 10.22 f1@20 0.80 f1@100 0.31 div 19.8 rate300 ratio 0.34 slope 0.05 corr 0.11
+  control-baseline-architecture-48-tick-segments-control: err@20 10.28 f1@20 0.52 f1@100 0.15 div 18.7 rate300 ratio 0.04 slope 0.04 corr 0.26
+  variant-full-synaptic-messages: err@20 10.28 f1@20 0.39 f1@100 0.10 div 17.9 rate300 ratio 0.03 slope 0.03 corr 0.22
+VERDICT KILL
+{"10": {"values": {"slope300": 0.05171484500169754, "corr300": 0.332663893699646, "ratio300": 0.04029155895113945, "err@20": 9.23063850402832, "f1@20": 0.3960578350857184}, "checks": {"slope300>=0.3": false, "corr300>=0.3": true, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": true, "f1@20_within_0.03": false}}, "100": {"values": {"slope300": 0.029136808589100838, "corr300": 0.222523495554924, "ratio300": 0.026346907019615173, "err@20": 10.27620792388916, "f1@20": 0.38992198633142017}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": true, "f1@20_within_0.03": false}}}
+STEP slow-patch-rep2-seed4738 exit code 0
+full-synaptic-messages seed 4739 teacher-forced it 250/1500 loss 0.1269 t 5s
+full-synaptic-messages seed 4739 teacher-forced it 500/1500 loss 0.0304 t 9s
+full-synaptic-messages seed 4739 teacher-forced it 750/1500 loss 0.0139 t 12s
+full-synaptic-messages seed 4739 teacher-forced it 1000/1500 loss 0.0078 t 16s
+full-synaptic-messages seed 4739 teacher-forced it 1250/1500 loss 0.0058 t 19s
+full-synaptic-messages seed 4739 teacher-forced it 1500/1500 loss 0.0050 t 23s
+full-synaptic-messages seed 4739 rollout-in-loop it 250/1500 loss 0.2462 t 27s
+full-synaptic-messages seed 4739 rollout-in-loop it 500/1500 loss 0.1937 t 31s
+full-synaptic-messages seed 4739 rollout-in-loop it 750/1500 loss 0.1778 t 36s
+full-synaptic-messages seed 4739 rollout-in-loop it 1000/1500 loss 0.1545 t 40s
+full-synaptic-messages seed 4739 rollout-in-loop it 1250/1500 loss 0.1372 t 44s
+full-synaptic-messages seed 4739 rollout-in-loop it 1500/1500 loss 0.1299 t 48s
+STEP baseline-rep2-seed4739 exit code 0
+baseline-architecture-48-tick-segments-control teacher-forced it 250/1500 loss 0.1440 t 11s
+baseline-architecture-48-tick-segments-control teacher-forced it 500/1500 loss 0.0250 t 21s
+baseline-architecture-48-tick-segments-control teacher-forced it 750/1500 loss 0.0115 t 31s
+baseline-architecture-48-tick-segments-control teacher-forced it 1000/1500 loss 0.0079 t 41s
+baseline-architecture-48-tick-segments-control teacher-forced it 1250/1500 loss 0.0065 t 51s
+baseline-architecture-48-tick-segments-control teacher-forced it 1500/1500 loss 0.0056 t 61s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 250/1500 loss 0.8407 t 73s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 500/1500 loss 0.3016 t 85s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 750/1500 loss 0.2763 t 97s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1000/1500 loss 0.2771 t 109s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1250/1500 loss 0.2688 t 121s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1500/1500 loss 0.2626 t 133s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 250/1500 loss 0.4007 t 12s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 500/1500 loss 0.2770 t 25s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 750/1500 loss 0.2488 t 37s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1000/1500 loss 0.2396 t 50s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1250/1500 loss 0.2357 t 63s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1500/1500 loss 0.2338 t 75s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 250/1500 loss 12.6483 t 90s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 500/1500 loss 0.8542 t 104s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 750/1500 loss 0.6292 t 119s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1000/1500 loss 0.6253 t 133s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1250/1500 loss 0.5919 t 148s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1500/1500 loss 0.5653 t 162s
+step-only loss (no count term, not part of the line) baseline-full-synaptic-messages: {'teacher-forced': 0.06460622195154428, 'rollout-in-loop': 0.23676851242780686}
+step-only loss (no count term, not part of the line) control-baseline-architecture-48-tick-segments-control: {'teacher-forced': 0.09921571761369705, 'rollout-in-loop': 0.2590248793363571}
+step-only loss (no count term, not part of the line) variant-full-synaptic-messages: {'teacher-forced': 0.09163268469274044, 'rollout-in-loop': 0.2609107576310635}
+N=10
+  baseline-full-synaptic-messages: err@20 9.37 f1@20 0.75 f1@100 0.34 div 22.9 rate300 ratio 0.24 slope 0.15 corr 0.43
+  control-baseline-architecture-48-tick-segments-control: err@20 9.49 f1@20 0.34 f1@100 0.10 div 17.9 rate300 ratio 0.04 slope 0.05 corr 0.38
+  variant-full-synaptic-messages: err@20 9.90 f1@20 0.48 f1@100 0.19 div 15.7 rate300 ratio 0.68 slope 0.71 corr 0.16
+N=100
+  baseline-full-synaptic-messages: err@20 9.51 f1@20 0.78 f1@100 0.32 div 21.7 rate300 ratio 0.18 slope 0.12 corr 0.34
+  control-baseline-architecture-48-tick-segments-control: err@20 9.68 f1@20 0.36 f1@100 0.11 div 17.2 rate300 ratio 0.05 slope 0.05 corr 0.25
+  variant-full-synaptic-messages: err@20 9.81 f1@20 0.45 f1@100 0.13 div 15.5 rate300 ratio 0.22 slope 0.02 corr 0.02
+VERDICT KILL
+{"10": {"values": {"slope300": 0.7054048180580139, "corr300": 0.15953542292118073, "ratio300": 0.678127110004425, "err@20": 9.895258903503418, "f1@20": 0.48430552297437873}, "checks": {"slope300>=0.3": true, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}, "100": {"values": {"slope300": 0.023015497252345085, "corr300": 0.019176525995135307, "ratio300": 0.21824002265930176, "err@20": 9.813875198364258, "f1@20": 0.450193367890121}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}}
+STEP slow-patch-rep2-seed4739 exit code 0
+full-synaptic-messages seed 4738 teacher-forced it 250/1500 loss 0.1657 t 5s
+full-synaptic-messages seed 4738 teacher-forced it 500/1500 loss 0.0318 t 8s
+full-synaptic-messages seed 4738 teacher-forced it 750/1500 loss 0.0123 t 12s
+full-synaptic-messages seed 4738 teacher-forced it 1000/1500 loss 0.0079 t 16s
+full-synaptic-messages seed 4738 teacher-forced it 1250/1500 loss 0.0066 t 19s
+full-synaptic-messages seed 4738 teacher-forced it 1500/1500 loss 0.0058 t 23s
+full-synaptic-messages seed 4738 rollout-in-loop it 250/1500 loss 0.2361 t 27s
+full-synaptic-messages seed 4738 rollout-in-loop it 500/1500 loss 0.1991 t 31s
+full-synaptic-messages seed 4738 rollout-in-loop it 750/1500 loss 0.1936 t 36s
+full-synaptic-messages seed 4738 rollout-in-loop it 1000/1500 loss 0.1550 t 40s
+full-synaptic-messages seed 4738 rollout-in-loop it 1250/1500 loss 0.1347 t 44s
+full-synaptic-messages seed 4738 rollout-in-loop it 1500/1500 loss 0.1287 t 48s
+STEP baseline-rep3-seed4738 exit code 0
+baseline-architecture-48-tick-segments-control teacher-forced it 250/1500 loss 0.1701 t 11s
+baseline-architecture-48-tick-segments-control teacher-forced it 500/1500 loss 0.0216 t 21s
+baseline-architecture-48-tick-segments-control teacher-forced it 750/1500 loss 0.0103 t 31s
+baseline-architecture-48-tick-segments-control teacher-forced it 1000/1500 loss 0.0075 t 41s
+baseline-architecture-48-tick-segments-control teacher-forced it 1250/1500 loss 0.0063 t 52s
+baseline-architecture-48-tick-segments-control teacher-forced it 1500/1500 loss 0.0056 t 62s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 250/1500 loss 15.8151 t 74s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 500/1500 loss 0.3928 t 86s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 750/1500 loss 0.2701 t 98s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1000/1500 loss 0.2563 t 111s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1250/1500 loss 0.2494 t 123s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1500/1500 loss 0.2384 t 135s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 250/1500 loss 0.4585 t 13s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 500/1500 loss 0.2973 t 25s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 750/1500 loss 0.2569 t 38s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1000/1500 loss 0.2478 t 51s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1250/1500 loss 0.2401 t 64s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1500/1500 loss 0.2353 t 76s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 250/1500 loss 1.9388 t 91s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 500/1500 loss 0.6407 t 106s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 750/1500 loss 0.6061 t 121s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1000/1500 loss 0.5879 t 136s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1250/1500 loss 0.5743 t 150s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1500/1500 loss 0.5663 t 165s
+step-only loss (no count term, not part of the line) baseline-full-synaptic-messages: {'teacher-forced': 0.05389417950063944, 'rollout-in-loop': 0.27751334086060525}
+step-only loss (no count term, not part of the line) control-baseline-architecture-48-tick-segments-control: {'teacher-forced': 0.0839837422594428, 'rollout-in-loop': 0.24072560667991638}
+step-only loss (no count term, not part of the line) variant-full-synaptic-messages: {'teacher-forced': 0.1091299220919609, 'rollout-in-loop': 0.2585589274764061}
+N=10
+  baseline-full-synaptic-messages: err@20 10.17 f1@20 0.78 f1@100 0.36 div 19.7 rate300 ratio 0.56 slope 0.09 corr 0.18
+  control-baseline-architecture-48-tick-segments-control: err@20 8.93 f1@20 0.73 f1@100 0.27 div 19.4 rate300 ratio 0.11 slope 0.07 corr 0.28
+  variant-full-synaptic-messages: err@20 9.06 f1@20 0.57 f1@100 0.28 div 18.1 rate300 ratio 1.32 slope -0.16 corr -0.09
+N=100
+  baseline-full-synaptic-messages: err@20 10.62 f1@20 0.79 f1@100 0.32 div 19.0 rate300 ratio 0.59 slope 0.07 corr 0.11
+  control-baseline-architecture-48-tick-segments-control: err@20 10.15 f1@20 0.71 f1@100 0.24 div 20.0 rate300 ratio 0.09 slope 0.07 corr 0.27
+  variant-full-synaptic-messages: err@20 10.27 f1@20 0.49 f1@100 0.18 div 18.0 rate300 ratio 0.77 slope -0.02 corr -0.02
+VERDICT KILL
+{"10": {"values": {"slope300": -0.15736539661884308, "corr300": -0.09264571964740753, "ratio300": 1.315448522567749, "err@20": 9.06418514251709, "f1@20": 0.5736831853696728}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": true, "f1@20_within_0.03": false}}, "100": {"values": {"slope300": -0.020308898761868477, "corr300": -0.015833843499422073, "ratio300": 0.7721303105354309, "err@20": 10.268392562866211, "f1@20": 0.48820276514491434}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": true, "err@20_within_+3pct": true, "f1@20_within_0.03": false}}}
+STEP slow-patch-rep3-seed4738 exit code 0
+full-synaptic-messages seed 4739 teacher-forced it 250/1500 loss 0.1269 t 5s
+full-synaptic-messages seed 4739 teacher-forced it 500/1500 loss 0.0304 t 9s
+full-synaptic-messages seed 4739 teacher-forced it 750/1500 loss 0.0139 t 12s
+full-synaptic-messages seed 4739 teacher-forced it 1000/1500 loss 0.0078 t 16s
+full-synaptic-messages seed 4739 teacher-forced it 1250/1500 loss 0.0059 t 19s
+full-synaptic-messages seed 4739 teacher-forced it 1500/1500 loss 0.0050 t 23s
+full-synaptic-messages seed 4739 rollout-in-loop it 250/1500 loss 0.1779 t 27s
+full-synaptic-messages seed 4739 rollout-in-loop it 500/1500 loss 0.1791 t 31s
+full-synaptic-messages seed 4739 rollout-in-loop it 750/1500 loss 0.1486 t 36s
+full-synaptic-messages seed 4739 rollout-in-loop it 1000/1500 loss 0.1377 t 40s
+full-synaptic-messages seed 4739 rollout-in-loop it 1250/1500 loss 0.1225 t 44s
+full-synaptic-messages seed 4739 rollout-in-loop it 1500/1500 loss 0.1174 t 48s
+STEP baseline-rep3-seed4739 exit code 0
+baseline-architecture-48-tick-segments-control teacher-forced it 250/1500 loss 0.1446 t 11s
+baseline-architecture-48-tick-segments-control teacher-forced it 500/1500 loss 0.0244 t 21s
+baseline-architecture-48-tick-segments-control teacher-forced it 750/1500 loss 0.0118 t 31s
+baseline-architecture-48-tick-segments-control teacher-forced it 1000/1500 loss 0.0085 t 41s
+baseline-architecture-48-tick-segments-control teacher-forced it 1250/1500 loss 0.0071 t 51s
+baseline-architecture-48-tick-segments-control teacher-forced it 1500/1500 loss 0.0061 t 61s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 250/1500 loss 1.0289 t 73s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 500/1500 loss 0.2786 t 85s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 750/1500 loss 0.2631 t 97s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1000/1500 loss 0.2556 t 109s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1250/1500 loss 0.2465 t 121s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1500/1500 loss 0.2391 t 134s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 250/1500 loss 0.4007 t 12s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 500/1500 loss 0.2771 t 25s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 750/1500 loss 0.2485 t 37s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1000/1500 loss 0.2395 t 50s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1250/1500 loss 0.2357 t 63s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1500/1500 loss 0.2338 t 75s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 250/1500 loss 4.0481 t 90s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 500/1500 loss 1.8650 t 104s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 750/1500 loss 0.6554 t 119s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1000/1500 loss 0.6159 t 134s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1250/1500 loss 0.5933 t 148s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1500/1500 loss 0.5733 t 163s
+step-only loss (no count term, not part of the line) baseline-full-synaptic-messages: {'teacher-forced': 0.056883726827800275, 'rollout-in-loop': 0.23555915728211402}
+step-only loss (no count term, not part of the line) control-baseline-architecture-48-tick-segments-control: {'teacher-forced': 0.0878356609493494, 'rollout-in-loop': 0.2436666779220104}
+step-only loss (no count term, not part of the line) variant-full-synaptic-messages: {'teacher-forced': 0.11369993612170219, 'rollout-in-loop': 0.27235500067472457}
+N=10
+  baseline-full-synaptic-messages: err@20 8.82 f1@20 0.85 f1@100 0.37 div 23.9 rate300 ratio 0.32 slope 0.14 corr 0.30
+  control-baseline-architecture-48-tick-segments-control: err@20 9.35 f1@20 0.58 f1@100 0.23 div 18.1 rate300 ratio 0.11 slope 0.10 corr 0.40
+  variant-full-synaptic-messages: err@20 10.00 f1@20 0.27 f1@100 0.08 div 8.5 rate300 ratio 0.12 slope 0.05 corr 0.10
+N=100
+  baseline-full-synaptic-messages: err@20 9.08 f1@20 0.79 f1@100 0.29 div 22.5 rate300 ratio 0.16 slope 0.08 corr 0.06
+  control-baseline-architecture-48-tick-segments-control: err@20 9.60 f1@20 0.58 f1@100 0.20 div 19.5 rate300 ratio 0.10 slope 0.08 corr 0.31
+  variant-full-synaptic-messages: err@20 9.88 f1@20 0.31 f1@100 0.08 div 14.5 rate300 ratio 0.03 slope 0.02 corr 0.12
+VERDICT KILL
+{"10": {"values": {"slope300": 0.049323346465826035, "corr300": 0.10244876891374588, "ratio300": 0.12191811949014664, "err@20": 9.995004653930664, "f1@20": 0.2731490290128792}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}, "100": {"values": {"slope300": 0.01945163682103157, "corr300": 0.11987794935703278, "ratio300": 0.028868243098258972, "err@20": 9.88005542755127, "f1@20": 0.307792713485071}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}}
+STEP slow-patch-rep3-seed4739 exit code 0
+rep1/seed4738 verdict KILL slope300 variant N=10 0.83 N=100 0.36 | baseline 0.11/0.09 | control 0.06/0.07 | rate head works True
+rep1/seed4739 verdict KILL slope300 variant N=10 1.86 N=100 -0.04 | baseline 0.13/0.07 | control 0.12/0.07 | rate head works False
+rep2/seed4738 verdict KILL slope300 variant N=10 0.05 N=100 0.03 | baseline 0.05/0.05 | control -0.01/0.04 | rate head works False
+rep2/seed4739 verdict KILL slope300 variant N=10 0.71 N=100 0.02 | baseline 0.15/0.12 | control 0.05/0.05 | rate head works False
+rep3/seed4738 verdict KILL slope300 variant N=10 -0.16 N=100 -0.02 | baseline 0.09/0.07 | control 0.07/0.07 | rate head works False
+rep3/seed4739 verdict KILL slope300 variant N=10 0.05 N=100 0.02 | baseline 0.14/0.08 | control 0.10/0.08 | rate head works False
+runs 6 rate head works (slope300 >= 0.3 at N=10 and N=100) 1
+REPRODUCTION FAIL (pass line: >= 3 of 6)
+STEP score exit code 0
+ALLDONE
