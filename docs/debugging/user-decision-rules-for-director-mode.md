@@ -69,6 +69,6 @@ How awebb decides after an experiment or job result, drawn from past prompts and
 ## Ambiguous areas (no clear user statement found)
 
 - Whether a thin PASS should trigger an automatic third seed (rule 6): no evidence.
-- Whether an INCONCLUSIVE verdict is to be re-run, amended, or left: Row 1 tie-aware Yukawa protocol was left undecided ("User has NOT yet decided whether to adopt the tie-aware protocol", memory/project_overnight_results_2026_11_03.md). Treat as needs-user.
+- Whether an INCONCLUSIVE verdict is to be re-run, amended, or left: Row 1 tie-aware Yukawa protocol was left undecided ("User has NOT yet decided whether to adopt the tie-aware protocol", memory/project_overnight_results_2026_11_03.md). Treat as needs-user. RESOLVED 2026-11-09: user adopted the tie-aware 4841 line (2% tie tolerance) as the Yukawa lambda scorer; the literal 4832 line is kept at lower priority as a recorded alternative (experiment-log "Yukawa lambda scorer decision").
 - Which kills warrant further investigation versus dropping (rule 3): depends on his interest, not on result type.
 - Pass/kill amendments requested by an agent versus the user's rule "state a concrete value that would still fail it" (global CLAUDE.md): only one instance of the approval flow.
