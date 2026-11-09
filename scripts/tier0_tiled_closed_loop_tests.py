@@ -112,7 +112,7 @@ def test_model(dev):
         lp, lv = tc.rollout_terms(t, d, torch.zeros(1, dtype=torch.long, device=dev), torch.zeros(1, dtype=torch.long, device=dev), 2)
         (sum(lp) + sum(lv)).backward()
         grads[ck] = torch.cat([q.grad.flatten() for q in model.parameters() if q.grad is not None])
-    check("checkpointed and plain gradients agree", torch.allclose(grads[True], grads[False], rtol=1e-3, atol=1e-8), f"max rel {float((grads[True] - grads[False]).abs().max() / grads[False].abs().max()):.2e}")
+    check("checkpointed and plain gradients agree", float((grads[True] - grads[False]).abs().max()) <= 1e-5 * float(grads[False].abs().max()), f"max rel {float((grads[True] - grads[False]).abs().max() / grads[False].abs().max()):.2e}")
     check("closed-loop gradients are finite and non-zero", bool(torch.isfinite(grads[True]).all()) and float(grads[True].abs().max()) > 0)
     t = tc.TiledTier0(model, dev, chunk=16, exchange="halo")
     lp, lv = tc.rollout_terms(t, d, torch.zeros(1, dtype=torch.long, device=dev), torch.zeros(1, dtype=torch.long, device=dev), 3, tb=2, grad=True)
