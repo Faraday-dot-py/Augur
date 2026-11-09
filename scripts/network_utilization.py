@@ -377,7 +377,7 @@ def sae_part(pt_path, dev, seed, cache, scene_opts=(12, 24, 48), heldout_opts=(1
              "train": feature_stats(Ztr), "heldout": feature_stats(Zte),
              "nmse_train_recomputed": nmse(s, Xn[tr]), "nmse_heldout_recomputed": nmse(s, Xn[te]),
              "nmse_heldout_json": jr["recon_nmse_heldout"], "nmse_train_json": jr["recon_nmse_train"], "l0_heldout_json": jr["l0_heldout"],
-             "dead_fraction_json_last_window": jr["dead_fraction"], "heldout_dead_fraction_json": jr["heldout_dead_fraction"]}
+             "dead_fraction_json_last_window": jr["dead_fraction"], "heldout_dead_fraction_json": jr.get("heldout_dead_fraction")}
         if abs(e["nmse_heldout_recomputed"] - e["nmse_heldout_json"]) > 0.02 * abs(e["nmse_heldout_json"]) + 1e-6:
             e["MISMATCH_vs_json"] = True
         res["entries"][key] = e
