@@ -1,0 +1,67 @@
+b37d01caa07c424fa10d5547b57bee59  scripts/scatter_field.py
+7b96aec0dc1536da94126dd7a8699953  scripts/scatter_multi.py
+c0de49a46c56a788403914568dbcab71  scripts/train_scatter_multi.py
+2ce22fc60edb28951bc32876a3e69a3e  scripts/scatter_multi_eval.py
+718713fefde06be17d1868c95f0f0c11  scripts/two_body_curve_scenes_finetune_eval.py
+a3802b1926862fcf5fbdc8302d21d93e  scripts/rule_free_force_discovery.py
+c14fbfdca993133a3e067ab8df4d9159  scripts/score_two_body_curve_scenes_finetune.py
+1f22ffc759273ffd6728f3447eabcef0  /home/adamwebb/augur_nfr/ckpt/main_s4739.pt
+name, memory.total [MiB]
+NVIDIA H200 NVL, 143771 MiB
+base pow1 fit med [0.7493 0.6157 0.4716 0.3576 0.149  0.072 ] truth [0.8    0.9938 0.6893 0.3463 0.1588 0.0713]
+base pow3 fit med [ 1.9536e+00  1.8911e+00  3.8500e-01 -1.9000e-03  4.7000e-03 -4.0000e-04] truth [2.560e+00 1.766e+00 3.798e-01 4.290e-02 4.000e-03 4.000e-04]
+base lj fit med [-1.48197e+01 -1.72009e+01 -2.00874e+01  1.13070e+00  9.29000e-02
+ -6.60000e-03] truth [-2.000e+01 -2.000e+01 -2.000e+01  8.383e-01  4.100e-03  0.000e+00]
+control pow1 fit med [0.7795 0.6768 0.5205 0.3561 0.152  0.0711] truth [0.8    0.9938 0.6893 0.3463 0.1588 0.0713]
+control pow3 fit med [ 1.9468e+00  1.8993e+00  3.8720e-01  1.6000e-03  5.8000e-03 -1.3000e-03] truth [2.560e+00 1.766e+00 3.798e-01 4.290e-02 4.000e-03 4.000e-04]
+control lj fit med [-1.38199e+01 -1.59998e+01 -1.88471e+01  1.13200e+00  9.71000e-02
+ -7.20000e-03] truth [-2.000e+01 -2.000e+01 -2.000e+01  8.383e-01  4.100e-03  0.000e+00]
+treatment pow1 fit med [0.7485 0.6446 0.4478 0.3653 0.1469 0.0712] truth [0.8    0.9938 0.6893 0.3463 0.1588 0.0713]
+treatment pow3 fit med [ 1.9207e+00  1.9280e+00  3.6740e-01 -1.4700e-02  4.4000e-03 -3.0000e-04] truth [2.560e+00 1.766e+00 3.798e-01 4.290e-02 4.000e-03 4.000e-04]
+treatment lj fit med [-1.46477e+01 -1.69724e+01 -1.93957e+01  1.04380e+00  9.67000e-02
+ -5.00000e-03] truth [-2.000e+01 -2.000e+01 -2.000e+01  8.383e-01  4.100e-03  0.000e+00]
+DONE
+base pow1 {'e_curve': 0.34169143141245706, 'S': 0.016851218425133346, 'ratio': 20.276957000499696}
+base pow3 {'e_curve': 1.3018596050146483, 'S': 0.27235809536658184, 'ratio': 4.779955606835932}
+base lj {'e_curve': 1.3526381573860273, 'S': 0.15236445477331229, 'ratio': 8.877649051404289}
+control pow1 {'e_curve': 0.2690580845355089, 'S': 0.01637672609043934, 'ratio': 16.42929624942459}
+control pow3 {'e_curve': 1.0085153837233403, 'S': 0.28542582663035, 'ratio': 3.5333711585583}
+control lj {'e_curve': 1.3854142899875814, 'S': 0.19273496305247645, 'ratio': 7.1881835451431355}
+treatment pow1 {'e_curve': 0.32932190967366126, 'S': 0.014229175492123424, 'ratio': 23.14413156658007}
+treatment pow3 {'e_curve': 2.0020940435127765, 'S': 0.2237240583961762, 'ratio': 8.948943881428335}
+treatment lj {'e_curve': 1.3646095658188098, 'S': 0.17100828357938186, 'ratio': 7.97978634283736}
+base grav {'9000': (0.2856, 0.102), '12000': (0.2663, 0.1107)}
+control grav {'9000': (0.2841, 0.1034), '12000': (0.2696, 0.1103)}
+treatment grav {'9000': (0.2875, 0.0992), '12000': (0.2771, 0.1087)}
+{
+ "e_curve_ratio": {
+  "pow1": 1.223980726103025,
+  "pow3": 1.98518939405886,
+  "lj": 0.9849830304775057
+ },
+ "e_curve_control": {
+  "pow1": 0.2690580845355089,
+  "pow3": 1.0085153837233403,
+  "lj": 1.3854142899875814
+ },
+ "e_curve_treatment": {
+  "pow1": 0.32932190967366126,
+  "pow3": 2.0020940435127765,
+  "lj": 1.3646095658188098
+ },
+ "gravity_err20_control": 0.10685528442263603,
+ "gravity_err20_treatment": 0.10396042838692665,
+ "gravity_err20_ratio": 0.9729086301033125,
+ "gravity_err20_control_per_seed": [
+  0.10340025275945663,
+  0.11031031608581543
+ ],
+ "gravity_err20_treatment_per_seed": [
+  0.09921066462993622,
+  0.10871019214391708
+ ],
+ "verdict": "KILL"
+}
+VERDICT KILL
+TOTAL_SECONDS 5485
+ALLDONE
