@@ -1,0 +1,80 @@
+{
+ "ckpt": "/home/adamwebb/augur-mixed-law-pow1-amp-cap-baseline-scatter-field/ckpt/mixed_pow1ampcap_s4738.pt",
+ "enc0": {
+  "mean_abs": 24.73287582397461,
+  "frac_exact_zero": 0.7110986709594727,
+  "dead_channels": 0,
+  "channels": 32,
+  "max_abs": 4094.609130859375
+ },
+ "enc1": {
+  "mean_abs": 64.32017517089844,
+  "frac_exact_zero": 0.9120202660560608,
+  "dead_channels": 7,
+  "channels": 32,
+  "max_abs": 17081.87890625
+ },
+ "enc2": {
+  "mean_abs": 116.89066314697266,
+  "frac_exact_zero": 0.7362442016601562,
+  "dead_channels": 0,
+  "channels": 32,
+  "max_abs": 34289.4140625
+ },
+ "enc3": {
+  "mean_abs": 1724.0308837890625,
+  "frac_exact_zero": 0.44779837131500244,
+  "dead_channels": 3,
+  "channels": 32,
+  "max_abs": 89342.6953125
+ },
+ "enc4": {
+  "mean_abs": 12557.9873046875,
+  "frac_exact_zero": 0.5269407629966736,
+  "dead_channels": 2,
+  "channels": 32,
+  "max_abs": 368498.125
+ },
+ "enc5": {
+  "mean_abs": 18741.24609375,
+  "frac_exact_zero": 0.6860566735267639,
+  "dead_channels": 4,
+  "channels": 32,
+  "max_abs": 657562.3125
+ },
+ "dec0": {
+  "mean_abs": 17.371288299560547,
+  "frac_exact_zero": 0.944607138633728,
+  "dead_channels": 18,
+  "channels": 32,
+  "max_abs": 8548.1533203125
+ },
+ "dec1": {
+  "mean_abs": 0.09752796590328217,
+  "frac_exact_zero": 0.0,
+  "dead_channels": 0,
+  "channels": 32,
+  "max_abs": 0.3365132808685303
+ },
+ "dec2": {
+  "mean_abs": 16912990.0,
+  "frac_exact_zero": 0.8125147819519043,
+  "dead_channels": 26,
+  "channels": 32,
+  "max_abs": 1494227328.0
+ },
+ "dec3": {
+  "mean_abs": 2604334.75,
+  "frac_exact_zero": 0.6875118017196655,
+  "dead_channels": 20,
+  "channels": 32,
+  "max_abs": 101203864.0
+ },
+ "dec4": {
+  "mean_abs": 252502.25,
+  "frac_exact_zero": 0.6524968147277832,
+  "dead_channels": 14,
+  "channels": 32,
+  "max_abs": 9206686.0
+ }
+}

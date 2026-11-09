@@ -1,0 +1,60 @@
+7b96aec0dc1536da94126dd7a8699953  scripts/scatter_multi.py
+2ce22fc60edb28951bc32876a3e69a3e  scripts/scatter_multi_eval.py
+355adf608182265eff86ad0b1560c18e  scripts/layer_activation_stats.py
+22e67fc82673f215c4e02aec1d6d9d59  scripts/render_multi_rollout_grid.py
+a2f0273545942f2a5eb1c2947a08508c  /home/adamwebb/augur-mixed-law-pow1-amp-cap-baseline-scatter-field/ckpt/mixed_pow1ampcap_s4738.pt
+1f22ffc759273ffd6728f3447eabcef0  /home/adamwebb/augur_nfr/ckpt/main_s4739.pt
+name, memory.total [MiB]
+NVIDIA H200 NVL, 143771 MiB
+pow1cap_s4738 grav {'9000': (41.9608, 31.1281), '12000': (41.8552, 35.0271)}
+pow1cap_s4738 pow1 {'9000': (7.2044, 29.9883), '12000': (7.0823, 34.8771)}
+pow1cap_s4738 pow3 {'9000': (48.9604, 27.7577), '12000': (48.2637, 31.4129)}
+pow1cap_s4738 yuk8 {'9000': (70.1078, 35.5771), '12000': (72.4908, 39.1272)}
+pow1cap_s4738 yuk128 {'9000': (43.6112, 31.2714), '12000': (43.5738, 34.4583)}
+pow1cap_s4738 lj {'9000': (0.6227, 4.9596), '12000': (0.6181, 5.3318)}
+pow1cap_s4738 charge_pow2 {'9000': (1.0086, 1.3712), '12000': (0.9809, 1.2655)}
+pow1cap_s4738 pp_pow2 {'9000': (1.7291, 1.7789), '12000': (1.7005, 1.5993)}
+pow1cap_s4738 HELD_pow1.5 {'9000': (21.3309, 32.0921), '12000': (21.0063, 35.1601)}
+pow1cap_s4738 HELD_yuk32 {'9000': (49.0253, 31.5112), '12000': (49.2329, 35.4491)}
+pow1cap_s4738 HELD_charge_yuk32 {'9000': (0.8813, 1.1172), '12000': (0.8519, 1.0276)}
+pow1cap_s4738 HELD_pp_pow1.5 {'9000': (1.197, 2.223), '12000': (1.2134, 2.0664)}
+main_s4739 grav {'9000': (0.2856, 0.102), '12000': (0.2663, 0.1107)}
+main_s4739 pow1 {'9000': (0.2455, 0.7876), '12000': (0.2298, 0.6697)}
+main_s4739 pow3 {'9000': (0.4554, 0.1314), '12000': (0.4453, 0.1366)}
+main_s4739 yuk8 {'9000': (0.2003, 0.069), '12000': (0.1902, 0.0776)}
+main_s4739 yuk128 {'9000': (0.2534, 0.1003), '12000': (0.2354, 0.1092)}
+main_s4739 lj {'9000': (0.4219, 2.902), '12000': (0.4123, 3.3282)}
+main_s4739 charge_pow2 {'9000': (0.1558, 0.0776), '12000': (0.1556, 0.0728)}
+main_s4739 pp_pow2 {'9000': (0.2476, 0.0581), '12000': (0.2508, 0.0571)}
+main_s4739 HELD_pow1.5 {'9000': (0.256, 1.0253), '12000': (0.2458, 1.3335)}
+main_s4739 HELD_yuk32 {'9000': (0.2213, 0.1697), '12000': (0.2097, 0.1799)}
+main_s4739 HELD_charge_yuk32 {'9000': (0.1989, 0.1143), '12000': (0.2097, 0.1134)}
+main_s4739 HELD_pp_pow1.5 {'9000': (0.2618, 0.2216), '12000': (0.2812, 0.2132)}
+E grav {'9000': (0.1788, 0.0385), '12000': (0.1725, 0.0429)}
+STEP scatter_multi_eval 0
+enc 0 {'mean_abs': 24.73287582397461, 'frac_exact_zero': 0.7110986709594727, 'dead_channels': 0, 'channels': 32, 'max_abs': 4094.609130859375}
+enc 1 {'mean_abs': 64.32017517089844, 'frac_exact_zero': 0.9120202660560608, 'dead_channels': 7, 'channels': 32, 'max_abs': 17081.87890625}
+enc 2 {'mean_abs': 116.89066314697266, 'frac_exact_zero': 0.7362442016601562, 'dead_channels': 0, 'channels': 32, 'max_abs': 34289.4140625}
+enc 3 {'mean_abs': 1724.0308837890625, 'frac_exact_zero': 0.44779837131500244, 'dead_channels': 3, 'channels': 32, 'max_abs': 89342.6953125}
+enc 4 {'mean_abs': 12557.9873046875, 'frac_exact_zero': 0.5269407629966736, 'dead_channels': 2, 'channels': 32, 'max_abs': 368498.125}
+enc 5 {'mean_abs': 18741.24609375, 'frac_exact_zero': 0.6860566735267639, 'dead_channels': 4, 'channels': 32, 'max_abs': 657562.3125}
+dec 0 {'mean_abs': 17.371288299560547, 'frac_exact_zero': 0.944607138633728, 'dead_channels': 18, 'channels': 32, 'max_abs': 8548.1533203125}
+dec 1 {'mean_abs': 0.09752796590328217, 'frac_exact_zero': 0.0, 'dead_channels': 0, 'channels': 32, 'max_abs': 0.3365132808685303}
+dec 2 {'mean_abs': 16912990.0, 'frac_exact_zero': 0.8125147819519043, 'dead_channels': 26, 'channels': 32, 'max_abs': 1494227328.0}
+dec 3 {'mean_abs': 2604334.75, 'frac_exact_zero': 0.6875118017196655, 'dead_channels': 20, 'channels': 32, 'max_abs': 101203864.0}
+dec 4 {'mean_abs': 252502.25, 'frac_exact_zero': 0.6524968147277832, 'dead_channels': 14, 'channels': 32, 'max_abs': 9206686.0}
+DONE
+STEP layer_stats 0
+grav pow1cap_s4738 bad 0 / 48 err20 31.26165199279785
+grav main_s4739 bad 0 / 48 err20 0.10200139135122299
+grav E bad 0 / 48 err20 0.03848860040307045
+pow1 pow1cap_s4738 bad 0 / 48 err20 30.24726104736328
+pow1 main_s4739 bad 0 / 48 err20 0.7876160740852356
+HELD_pow1.5 pow1cap_s4738 bad 0 / 48 err20 32.07975387573242
+HELD_pow1.5 main_s4739 bad 0 / 48 err20 1.0253266096115112
+HELD_yuk32 pow1cap_s4738 bad 0 / 48 err20 31.724218368530273
+HELD_yuk32 main_s4739 bad 0 / 48 err20 0.16974471509456635
+HELD_pp_pow1.5 pow1cap_s4738 bad 0 / 48 err20 2.2230241298675537
+HELD_pp_pow1.5 main_s4739 bad 0 / 48 err20 0.2215987890958786
+STEP rollout_dump 0
+ALLDONE
