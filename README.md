@@ -120,9 +120,9 @@ Work is done by a supervised team of AI agents. A supervisor agent delegates, re
 Many results are negative, and that is part of the method. Pre-registered kill lines mean a failed arm is recorded as a result, not tuned away. A selection of what did not work and what it taught:
 
 - **Upper tiers on a frozen tier 0** did not reduce far-field error. Several levers (higher-order moments, more data, longer training) were then tried one at a time, and the limit was the frozen base, not what the upper tiers pass up. (supervisor-log.md:46, 69, 76)
-- **Joint fine-tuning of all tiers** cut some errors but raised energy drift roughly 6x on the earlier tier 0, and added nothing over sequential training on two later runs. (supervisor-log.md:69, 110, 122)
-- **A molecular-dynamics scatter field** drifted in energy because of velocity and history inputs: zeroing them, with no other change, cut the drift to within about 0.013. On gravity the same input removal halved the energy drift but the end-to-end retrain with it was a KILL (see the table). (supervisor-log.md:62, 87)
-- **A six-law mixed-interaction model** is about 2.6x worse on gravity than the gravity-only model (err@20 0.106 against 0.041), and the retrain that capped the amplitude of power-1 scenes made it far worse. (experiment-log.md:3863-3865)
+- **Joint fine-tuning of all tiers** cut some errors and added nothing over sequential training on two later runs. (supervisor-log.md:110, 122)
+- **A molecular-dynamics scatter field** drifted in energy because of velocity and history inputs: zeroing them, with no other change, cut the drift. On gravity the same input removal halved the energy drift but the end-to-end retrain with it was a KILL (see the table). (supervisor-log.md:62, 87)
+- **A six-law mixed-interaction model** was retrained with the amplitude of power-1 scenes capped, which made it far worse. (experiment-log.md:3863-3865)
 - **A planetesimal-disk proxy** with the existing unit-mass model was killed, which is why per-body-mass support is being built rather than assumed. (supervisor-log.md:116)
 - **A loss-function analysis** showed the error is not driven by a few outlier particles, so the tail-focused loss idea was dropped for the tiered arms; the local energy-bias terms proposed instead were then killed too. (supervisor-log.md:117, 124)
 
