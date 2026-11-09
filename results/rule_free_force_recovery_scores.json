@@ -1,0 +1,648 @@
+{
+ "gate": 8,
+ "level1": {
+  "pass": 5,
+  "kill": 2
+ },
+ "level2": {
+  "pass": 2,
+  "kill": 8
+ },
+ "cells": [
+  {
+   "ckpt": "mixed_s4738",
+   "law": "pow1",
+   "held_out_from_training": false,
+   "level1_e_curve": 0.3752981520735193,
+   "level1_S": 0.10046335394653218,
+   "level1_ratio": 3.735672136461396,
+   "level1": "MARGINAL",
+   "bias_by_band": [
+    -0.09037867966013129,
+    -0.01577682331568099,
+    -0.19199975306438405
+   ],
+   "E_m": 0.18580693273057491,
+   "E_x": 4.481081986447259e-16,
+   "R": 18.58069327305749,
+   "level2": "KILL",
+   "selected": "two-power+sat",
+   "expr": "0.8035 tanh(F/0.8035), F = 0.1056 d^-0.05 + 2.752 d^-2.531",
+   "exact_run": "soft-power",
+   "exact_expr": "1 d (d^2+0.5^2)^-(1+1)/2",
+   "same_as_exact_run": false,
+   "same_family_as_true": false,
+   "params_within_20pct_of_truth": false,
+   "replicate_names": [
+    "two-power+sat",
+    "two-power+sat",
+    "two-power+sat"
+   ],
+   "replicate_param_spread": [
+    6.199346591612703e-12,
+    0.029482507495307085
+   ],
+   "replicate_E_held": [
+    0.18580693273057491,
+    0.18685560828541004,
+    0.1872075111615219
+   ],
+   "unidentifiable": false
+  },
+  {
+   "ckpt": "mixed_s4738",
+   "law": "pow1.5",
+   "held_out_from_training": true,
+   "level1_e_curve": 0.3144093220803193,
+   "level1_S": 0.0217643202885777,
+   "level1_ratio": 14.446089650928675,
+   "level1": "KILL",
+   "bias_by_band": [
+    0.02161606667827951,
+    0.027202229289981263,
+    -0.38986455643961154
+   ],
+   "E_m": 0.2851775260829259,
+   "E_x": 5.254534392573277e-16,
+   "R": 28.51775260829259,
+   "level2": "KILL",
+   "selected": "soft-power+sat",
+   "expr": "1.352 tanh(F/1.352), F = 1.408 d (d^2+0.518^2)^-(1.905+1)/2",
+   "exact_run": "soft-power",
+   "exact_expr": "1 d (d^2+0.5^2)^-(1.5+1)/2",
+   "same_as_exact_run": false,
+   "same_family_as_true": false,
+   "params_within_20pct_of_truth": false,
+   "replicate_names": [
+    "soft-power+sat",
+    "soft-power+sat",
+    "soft-power+sat"
+   ],
+   "replicate_param_spread": [
+    0.008439741655865269,
+    0.01609967111286127
+   ],
+   "replicate_E_held": [
+    0.2851775260829259,
+    0.2884001582959583,
+    0.2792036385523561
+   ],
+   "unidentifiable": false
+  },
+  {
+   "ckpt": "mixed_s4738",
+   "law": "pow2",
+   "held_out_from_training": false,
+   "level1_e_curve": 0.10152843839783564,
+   "level1_S": 0.01832411868434337,
+   "level1_ratio": 5.540699672753393,
+   "level1": "MARGINAL",
+   "bias_by_band": [
+    0.02012185015951193,
+    -0.052851713849656395,
+    -0.008427610734475673
+   ],
+   "E_m": 0.039721841385409865,
+   "E_x": 5.965600055286118e-16,
+   "R": 3.972184138540986,
+   "level2": "MARGINAL",
+   "selected": "soft-power",
+   "expr": "0.9108 d (d^2+0.456^2)^-(1.959+1)/2",
+   "exact_run": "soft-power",
+   "exact_expr": "1 d (d^2+0.5^2)^-(2+1)/2",
+   "same_as_exact_run": true,
+   "same_family_as_true": true,
+   "params_within_20pct_of_truth": true,
+   "replicate_names": [
+    "soft-power",
+    "soft-power",
+    "soft-power"
+   ],
+   "replicate_param_spread": [
+    0.004308947354790775,
+    0.006328322393498193
+   ],
+   "replicate_E_held": [
+    0.039721841385409865,
+    0.04059504023453586,
+    0.04090828164777661
+   ],
+   "unidentifiable": false
+  },
+  {
+   "ckpt": "mixed_s4738",
+   "law": "pow3",
+   "held_out_from_training": false,
+   "level1_e_curve": 0.206498739642629,
+   "level1_S": 0.050137134884549475,
+   "level1_ratio": 4.118678502832932,
+   "level1": "MARGINAL",
+   "bias_by_band": [
+    -0.00994670262672573,
+    0.05355059299712711,
+    -0.15308050684257554
+   ],
+   "E_m": 0.03292050055891978,
+   "E_x": 5.010421313676847e-16,
+   "R": 3.2920500558919774,
+   "level2": "MARGINAL",
+   "selected": "soft-power",
+   "expr": "1.106 d (d^2+0.532^2)^-(3.09+1)/2",
+   "exact_run": "soft-power",
+   "exact_expr": "1 d (d^2+0.5^2)^-(3+1)/2",
+   "same_as_exact_run": true,
+   "same_family_as_true": true,
+   "params_within_20pct_of_truth": true,
+   "replicate_names": [
+    "soft-power",
+    "soft-power",
+    "soft-power"
+   ],
+   "replicate_param_spread": [
+    0.0056281024236209945,
+    0.00948166558690756
+   ],
+   "replicate_E_held": [
+    0.03292050055891978,
+    0.031372630864929425,
+    0.03768192330221079
+   ],
+   "unidentifiable": false
+  },
+  {
+   "ckpt": "mixed_s4738",
+   "law": "yuk8",
+   "held_out_from_training": false,
+   "level1_e_curve": 0.10740607589325285,
+   "level1_S": 0.08477002726336144,
+   "level1_ratio": 1.267028917657019,
+   "level1": "PASS",
+   "bias_by_band": [
+    -0.016833639087984745,
+    0.018444254793453393,
+    -0.029718949554461103
+   ],
+   "E_m": 0.05062104610429639,
+   "E_x": 3.9266582440649724e-16,
+   "R": 5.062104610429639,
+   "level2": "MARGINAL",
+   "selected": "soft-power-exponential",
+   "expr": "1.133 d (d^2+0.566^2)^-(2.219+1)/2 exp(-d/10.57)",
+   "exact_run": "soft-power-exponential",
+   "exact_expr": "1 d (d^2+0.5^2)^-(2+1)/2 exp(-d/8)",
+   "same_as_exact_run": true,
+   "same_family_as_true": true,
+   "params_within_20pct_of_truth": false,
+   "replicate_names": [
+    "soft-power-exponential",
+    "soft-power-exponential",
+    "soft-power-exponential"
+   ],
+   "replicate_param_spread": [
+    0.03303498071371176,
+    0.031484707508236405,
+    0.14626657523789444
+   ],
+   "replicate_E_held": [
+    0.05062104610429639,
+    0.03933699884511002,
+    0.051381199791969236
+   ],
+   "unidentifiable": false
+  },
+  {
+   "ckpt": "mixed_s4738",
+   "law": "yuk32",
+   "held_out_from_training": true,
+   "level1_e_curve": 0.12875319576469943,
+   "level1_S": 0.06813232669224936,
+   "level1_ratio": 1.8897519285708793,
+   "level1": "PASS",
+   "bias_by_band": [
+    -0.08488251469028958,
+    0.019073666726815684,
+    -0.02558929212559793
+   ],
+   "E_m": 0.06381099052622383,
+   "E_x": 3.7155169009665004e-16,
+   "R": 6.381099052622383,
+   "level2": "MARGINAL",
+   "selected": "soft-power-exponential",
+   "expr": "1.006 d (d^2+0.508^2)^-(1.878+1)/2 exp(-d/14.55)",
+   "exact_run": "soft-power-exponential",
+   "exact_expr": "1 d (d^2+0.5^2)^-(2+1)/2 exp(-d/32)",
+   "same_as_exact_run": true,
+   "same_family_as_true": true,
+   "params_within_20pct_of_truth": false,
+   "replicate_names": [
+    "soft-power-exponential",
+    "soft-power-exponential",
+    "power-exponential+sat"
+   ],
+   "replicate_param_spread": null,
+   "replicate_E_held": [
+    0.06381099052622383,
+    0.06116879480539667,
+    0.09088142669973515
+   ],
+   "unidentifiable": true
+  },
+  {
+   "ckpt": "mixed_s4738",
+   "law": "yuk128",
+   "held_out_from_training": false,
+   "level1_e_curve": 0.07836097701422949,
+   "level1_S": 0.02434027739955739,
+   "level1_ratio": 3.219395396687403,
+   "level1": "MARGINAL",
+   "bias_by_band": [
+    0.002518959528235507,
+    -0.02371075645827035,
+    -0.0077692648215430685
+   ],
+   "E_m": 0.01459678968286919,
+   "E_x": 0.006426461151097138,
+   "R": 1.4596789682869191,
+   "level2": "PASS",
+   "selected": "soft-power",
+   "expr": "0.98 d (d^2+0.497^2)^-(2.024+1)/2",
+   "exact_run": "soft-power",
+   "exact_expr": "1.015 d (d^2+0.51^2)^-(2.038+1)/2",
+   "same_as_exact_run": true,
+   "same_family_as_true": false,
+   "params_within_20pct_of_truth": false,
+   "replicate_names": [
+    "soft-power",
+    "soft-power",
+    "soft-power"
+   ],
+   "replicate_param_spread": [
+    0.0014644314857365653,
+    0.0030362769702604055
+   ],
+   "replicate_E_held": [
+    0.01459678968286919,
+    0.015450932144168943,
+    0.015872119829459026
+   ],
+   "unidentifiable": false
+  },
+  {
+   "ckpt": "mixed_s4738",
+   "law": "lj",
+   "held_out_from_training": false,
+   "level1_e_curve": 1.2874242605013186,
+   "level1_S": 0.17414776011897498,
+   "level1_ratio": 7.392712140665897,
+   "level1": "MARGINAL",
+   "bias_by_band": [
+    0.20395517349243164,
+    0.08813610076904313,
+    0.09912045950721773
+   ],
+   "E_m": 1.076596346199676,
+   "E_x": 4.1230813981286063e-16,
+   "R": 107.65963461996759,
+   "level2": "KILL",
+   "selected": "two-power+sat",
+   "expr": "15.69 tanh(F/15.69), F = -6.944e+05 d^-14.87 + 290.7 d^-5.827",
+   "exact_run": "two-power+sat",
+   "exact_expr": "20 tanh(F/20), F = 1536 d^-7 + -1.966e+05 d^-13",
+   "same_as_exact_run": true,
+   "same_family_as_true": true,
+   "params_within_20pct_of_truth": true,
+   "replicate_names": [
+    "two-power+sat",
+    "two-power+sat",
+    "two-power+sat"
+   ],
+   "replicate_param_spread": [
+    0.23860445532666744,
+    0.07217172244576459
+   ],
+   "replicate_E_held": [
+    1.076596346199676,
+    1.0632993545301002,
+    1.0755882904423284
+   ],
+   "unidentifiable": true
+  },
+  {
+   "ckpt": "mixed_s4739",
+   "law": "pow1",
+   "held_out_from_training": false,
+   "level1_e_curve": 0.34169143141245706,
+   "level1_S": 0.016851218425133357,
+   "level1_ratio": 20.27695700049968,
+   "level1": "KILL",
+   "bias_by_band": [
+    -0.29111854708065066,
+    -0.03291531285645845,
+    -0.01819133132480544
+   ],
+   "E_m": 0.2903583292234264,
+   "E_x": 4.481081986447259e-16,
+   "R": 29.035832922342642,
+   "level2": "KILL",
+   "selected": "power-exponential",
+   "expr": "0.5519 d^-0.2924 exp(-d/9.751)",
+   "exact_run": "soft-power",
+   "exact_expr": "1 d (d^2+0.5^2)^-(1+1)/2",
+   "same_as_exact_run": false,
+   "same_family_as_true": false,
+   "params_within_20pct_of_truth": false,
+   "replicate_names": [
+    "power-exponential",
+    "power-exponential",
+    "power-exponential"
+   ],
+   "replicate_param_spread": [
+    0.017874706073043985,
+    0.03498815012303737
+   ],
+   "replicate_E_held": [
+    0.2903583292234264,
+    0.2925562186599339,
+    0.29210696606226727
+   ],
+   "unidentifiable": false
+  },
+  {
+   "ckpt": "mixed_s4739",
+   "law": "pow1.5",
+   "held_out_from_training": true,
+   "level1_e_curve": 0.21365552116717826,
+   "level1_S": 0.0267064372691649,
+   "level1_ratio": 8.00015063835803,
+   "level1": "MARGINAL",
+   "bias_by_band": [
+    0.05907510382318009,
+    -1.4998939205126961e-05,
+    -0.16134535633915995
+   ],
+   "E_m": 0.20283171204375347,
+   "E_x": 5.254534392573277e-16,
+   "R": 20.283171204375346,
+   "level2": "KILL",
+   "selected": "soft-power-exponential",
+   "expr": "0.9857 d (d^2+0.425^2)^-(1.277+1)/2 exp(-d/10.75)",
+   "exact_run": "soft-power",
+   "exact_expr": "1 d (d^2+0.5^2)^-(1.5+1)/2",
+   "same_as_exact_run": false,
+   "same_family_as_true": false,
+   "params_within_20pct_of_truth": false,
+   "replicate_names": [
+    "soft-power-exponential",
+    "soft-power-exponential",
+    "soft-power-exponential"
+   ],
+   "replicate_param_spread": [
+    0.017009246724664143,
+    0.015522870465854025,
+    0.053110784492376335
+   ],
+   "replicate_E_held": [
+    0.20283171204375347,
+    0.20270976723179884,
+    0.20072271479395407
+   ],
+   "unidentifiable": false
+  },
+  {
+   "ckpt": "mixed_s4739",
+   "law": "pow2",
+   "held_out_from_training": false,
+   "level1_e_curve": 0.06406972546198526,
+   "level1_S": 0.03718624023244386,
+   "level1_ratio": 1.722941740318409,
+   "level1": "PASS",
+   "bias_by_band": [
+    0.02227619280889639,
+    0.02299738493935986,
+    -0.005376292375831334
+   ],
+   "E_m": 0.026082060007751182,
+   "E_x": 5.965600055286118e-16,
+   "R": 2.608206000775118,
+   "level2": "PASS",
+   "selected": "soft-power-exponential",
+   "expr": "0.9649 d (d^2+0.465^2)^-(1.873+1)/2 exp(-d/35.86)",
+   "exact_run": "soft-power",
+   "exact_expr": "1 d (d^2+0.5^2)^-(2+1)/2",
+   "same_as_exact_run": false,
+   "same_family_as_true": false,
+   "params_within_20pct_of_truth": false,
+   "replicate_names": [
+    "soft-power-exponential",
+    "soft-power",
+    "soft-power"
+   ],
+   "replicate_param_spread": null,
+   "replicate_E_held": [
+    0.026082060007751182,
+    0.013405691653695748,
+    0.011476135048293175
+   ],
+   "unidentifiable": true
+  },
+  {
+   "ckpt": "mixed_s4739",
+   "law": "pow3",
+   "held_out_from_training": false,
+   "level1_e_curve": 1.3018596050146483,
+   "level1_S": 0.27235809536658184,
+   "level1_ratio": 4.779955606835932,
+   "level1": "MARGINAL",
+   "bias_by_band": [
+    -0.04875518770039955,
+    -0.2609718274718331,
+    -1.0175261715654105
+   ],
+   "E_m": 1.2203452360648046,
+   "E_x": 5.010421313676847e-16,
+   "R": 122.03452360648046,
+   "level2": "KILL",
+   "selected": "soft-power",
+   "expr": "7.987e+04 d (d^2+1.87^2)^-(14.1+1)/2",
+   "exact_run": "soft-power",
+   "exact_expr": "1 d (d^2+0.5^2)^-(3+1)/2",
+   "same_as_exact_run": true,
+   "same_family_as_true": true,
+   "params_within_20pct_of_truth": false,
+   "replicate_names": [
+    "soft-power",
+    "soft-power",
+    "soft-power"
+   ],
+   "replicate_param_spread": [
+    0.12388167273143132,
+    0.0844962527328552
+   ],
+   "replicate_E_held": [
+    1.2203452360648046,
+    1.2441087665940087,
+    1.2544968485312893
+   ],
+   "unidentifiable": false
+  },
+  {
+   "ckpt": "mixed_s4739",
+   "law": "yuk8",
+   "held_out_from_training": false,
+   "level1_e_curve": 0.11179588739166096,
+   "level1_S": 0.12816098876698995,
+   "level1_ratio": 0.8723082465828783,
+   "level1": "PASS",
+   "bias_by_band": [
+    -0.02158136888903643,
+    0.03992385864307502,
+    0.055129850635906766
+   ],
+   "E_m": 0.07788461368503173,
+   "E_x": 3.9266582440649724e-16,
+   "R": 7.788461368503173,
+   "level2": "MARGINAL",
+   "selected": "power-exponential+clamp+sat",
+   "expr": "1.597 tanh(F/1.597), F = [d -> max(d,0.476)] 0.8292 d^-1.437 exp(-d/4.004)",
+   "exact_run": "soft-power-exponential",
+   "exact_expr": "1 d (d^2+0.5^2)^-(2+1)/2 exp(-d/8)",
+   "same_as_exact_run": false,
+   "same_family_as_true": false,
+   "params_within_20pct_of_truth": false,
+   "replicate_names": [
+    "power-exponential+clamp+sat",
+    "soft-power-exponential",
+    "power-exponential+sat"
+   ],
+   "replicate_param_spread": null,
+   "replicate_E_held": [
+    0.07788461368503173,
+    0.06849861656381614,
+    0.07406102441835694
+   ],
+   "unidentifiable": true
+  },
+  {
+   "ckpt": "mixed_s4739",
+   "law": "yuk32",
+   "held_out_from_training": true,
+   "level1_e_curve": 0.11630210368276682,
+   "level1_S": 0.03359825809279382,
+   "level1_ratio": 3.4615515888221413,
+   "level1": "MARGINAL",
+   "bias_by_band": [
+    -0.05805171409183994,
+    0.09105187041375172,
+    0.12953731381220057
+   ],
+   "E_m": 0.10594185176297441,
+   "E_x": 3.7155169009665004e-16,
+   "R": 10.59418517629744,
+   "level2": "KILL",
+   "selected": "soft-power-exponential",
+   "expr": "0.9144 d (d^2+0.434^2)^-(1.628+1)/2 exp(-d/10.27)",
+   "exact_run": "soft-power-exponential",
+   "exact_expr": "1 d (d^2+0.5^2)^-(2+1)/2 exp(-d/32)",
+   "same_as_exact_run": true,
+   "same_family_as_true": true,
+   "params_within_20pct_of_truth": false,
+   "replicate_names": [
+    "soft-power-exponential",
+    "soft-power-exponential",
+    "soft-power-exponential"
+   ],
+   "replicate_param_spread": [
+    0.03679547578929545,
+    0.030857753240119707,
+    0.17149024543061508
+   ],
+   "replicate_E_held": [
+    0.10594185176297441,
+    0.09633015476710886,
+    0.10220646575393731
+   ],
+   "unidentifiable": false
+  },
+  {
+   "ckpt": "mixed_s4739",
+   "law": "yuk128",
+   "held_out_from_training": false,
+   "level1_e_curve": 0.06713725863225616,
+   "level1_S": 0.034726117753368646,
+   "level1_ratio": 1.9333361451192865,
+   "level1": "PASS",
+   "bias_by_band": [
+    -0.009551120004933668,
+    0.040046094785835366,
+    0.026005595467200927
+   ],
+   "E_m": 0.03813333752581255,
+   "E_x": 0.006426461151097138,
+   "R": 3.8133337525812547,
+   "level2": "MARGINAL",
+   "selected": "soft-power-exponential",
+   "expr": "0.9614 d (d^2+0.465^2)^-(1.826+1)/2 exp(-d/23.63)",
+   "exact_run": "soft-power",
+   "exact_expr": "1.015 d (d^2+0.51^2)^-(2.038+1)/2",
+   "same_as_exact_run": false,
+   "same_family_as_true": true,
+   "params_within_20pct_of_truth": false,
+   "replicate_names": [
+    "soft-power-exponential",
+    "soft-power-exponential",
+    "soft-power-exponential"
+   ],
+   "replicate_param_spread": [
+    0.021147575757943838,
+    0.01809024986613019,
+    0.23067543824000303
+   ],
+   "replicate_E_held": [
+    0.03813333752581255,
+    0.030769985701205108,
+    0.031029175638437684
+   ],
+   "unidentifiable": true
+  },
+  {
+   "ckpt": "mixed_s4739",
+   "law": "lj",
+   "held_out_from_training": false,
+   "level1_e_curve": 1.3526381573860273,
+   "level1_S": 0.15236445477331229,
+   "level1_ratio": 8.877649051404289,
+   "level1": "MARGINAL",
+   "bias_by_band": [
+    0.16197576522827148,
+    0.06422004699706167,
+    0.3919305792618889
+   ],
+   "E_m": 1.2513099147221123,
+   "E_x": 4.1230813981286063e-16,
+   "R": 125.13099147221122,
+   "level2": "KILL",
+   "selected": "two-power+sat",
+   "expr": "16.79 tanh(F/16.79), F = -9.625e+04 d^-12.32 + 110.5 d^-4.7",
+   "exact_run": "two-power+sat",
+   "exact_expr": "20 tanh(F/20), F = 1536 d^-7 + -1.966e+05 d^-13",
+   "same_as_exact_run": true,
+   "same_family_as_true": true,
+   "params_within_20pct_of_truth": false,
+   "replicate_names": [
+    "two-power+sat",
+    "two-power+sat",
+    "two-power+sat"
+   ],
+   "replicate_param_spread": [
+    0.08366424069412104,
+    0.0448496563626166
+   ],
+   "replicate_E_held": [
+    1.2513099147221123,
+    1.2410312991002852,
+    1.2606524389046436
+   ],
+   "unidentifiable": false
+  }
+ ]
+}
