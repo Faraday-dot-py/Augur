@@ -13,6 +13,7 @@ from scripts import exp12_hier as h
 from scripts import train_tier0_ext as tte
 from scripts import train_tiered as ttr
 from scripts import tier0_tiled_closed_loop as tc
+from scripts import train_tier0_tiled_closed_loop as trn
 
 fails = []
 
@@ -133,6 +134,117 @@ def run_train(args, env):
     return subprocess.run([sys.executable, "scripts/train_tier0_tiled_closed_loop.py"] + args, env=env, capture_output=True, text=True)
 
 
+def test_flattened_muon():
+    def net():
+        torch.manual_seed(4738)
+        return torch.nn.Sequential(torch.nn.Conv2d(3, 8, 3, padding=1), torch.nn.GELU(), torch.nn.Conv2d(8, 8, 3, padding=1), torch.nn.Flatten(), torch.nn.Linear(8 * 25, 4))
+
+    def stepn(m, o, n):
+        for i in range(n):
+            o.zero_grad()
+            torch.manual_seed(100 + i)
+            m(torch.randn(2, 3, 5, 5)).square().mean().backward()
+            torch.nn.utils.clip_grad_norm_(m.parameters(), 1.0)
+            o.step()
+
+    m = net()
+    o = trn.HybridMuon(m.parameters(), 2e-4, conv=True)
+    w0 = [p.detach().clone() for p in m.parameters()]
+    stepn(m, o, 3)
+    names = [n for n, _ in m.named_parameters()]
+    check("flattened Muon updates every parameter incl. all conv weights", all(not torch.equal(a, p) for a, p in zip(w0, m.parameters())), str([n for n, a, p in zip(names, w0, m.parameters()) if torch.equal(a, p)]))
+    check("flattened Muon split counts: 4-D and 2-D under Muon, 1-D under Adam", o.split == {"muon_2d": 8 * 25 * 4, "muon_flattened_4d": 8 * 3 * 9 + 8 * 8 * 9, "adam": 8 + 8 + 4}, str(o.split))
+    check("flattened Muon proxies share storage with conv weights", all(v.data_ptr() == q.data_ptr() for q, v in zip(o.flat, o.views)))
+    o2 = trn.HybridMuon(m.parameters(), 2e-4, conv=False)
+    check("2-D-only mode leaves conv weights to Adam", o2.split["muon_flattened_4d"] == 0 and o2.split["adam"] == 8 * 3 * 9 + 8 * 8 * 9 + 8 + 8 + 4)
+    ref = net()
+    ro = trn.HybridMuon(ref.parameters(), 2e-4, conv=True)
+    stepn(ref, ro, 6)
+    a = net()
+    ao = trn.HybridMuon(a.parameters(), 2e-4, conv=True)
+    stepn(a, ao, 3)
+    b = net()
+    b.load_state_dict(a.state_dict())
+    bo = trn.HybridMuon(b.parameters(), 2e-4, conv=True)
+    bo.load_state_dict(ao.state_dict())
+
+    def stepk(m, o, lo, hi):
+        for i in range(lo, hi):
+            o.zero_grad()
+            torch.manual_seed(100 + i)
+            m(torch.randn(2, 3, 5, 5)).square().mean().backward()
+            torch.nn.utils.clip_grad_norm_(m.parameters(), 1.0)
+            o.step()
+
+    stepk(b, bo, 3, 6)
+    check("flattened Muon checkpoint state resumes bit-identically to an uninterrupted run", all(torch.equal(x, y) for x, y in zip(ref.parameters(), b.parameters())), str(max(float((x - y).abs().max()) for x, y in zip(ref.parameters(), b.parameters()))))
+    bad = net()
+    bo2 = trn.HybridMuon(bad.parameters(), 2e-4, conv=True)
+    bad(torch.randn(2, 3, 5, 5)).square().mean().backward()
+    bo2.zero_grad()
+    check("zero_grad clears conv weight grads", all(q.grad is None for q in bo2.flat))
+
+
+def test_sam_adam():
+    def net():
+        torch.manual_seed(4738)
+        return torch.nn.Sequential(torch.nn.Conv2d(3, 8, 3, padding=1), torch.nn.GELU(), torch.nn.Conv2d(8, 8, 3, padding=1), torch.nn.Flatten(), torch.nn.Linear(8 * 25, 4))
+
+    def stepk(m, o, lo, hi):
+        for i in range(lo, hi):
+            torch.manual_seed(100 + i)
+            x = torch.randn(2, 3, 5, 5)
+            o.zero_grad()
+            m(x).square().mean().backward()
+            check_ascent = o.ascend(0.05)
+            o.zero_grad()
+            m(x).square().mean().backward()
+            o.restore()
+            torch.nn.utils.clip_grad_norm_(m.parameters(), 1.0)
+            o.step()
+        return check_ascent
+
+    m = net()
+    o = trn.SamAdam(m.parameters(), 2e-4)
+    w0 = [q.detach().clone() for q in m.parameters()]
+    stepk(m, o, 0, 3)
+    names = [n for n, _ in m.named_parameters()]
+    check("sam-adam updates every parameter", all(not torch.equal(a, q) for a, q in zip(w0, m.parameters())), str([n for n, a, q in zip(names, w0, m.parameters()) if torch.equal(a, q)]))
+    m2 = net()
+    o2 = trn.SamAdam(m2.parameters(), 2e-4)
+    torch.manual_seed(100)
+    x = torch.randn(2, 3, 5, 5)
+    o2.zero_grad()
+    m2(x).square().mean().backward()
+    base = [q.detach().clone() for q in m2.parameters()]
+    gn = torch.sqrt(sum((q.grad ** 2).sum() for q in m2.parameters()))
+    o2.ascend(0.05)
+    shift = torch.sqrt(sum(((q.detach() - b) ** 2).sum() for q, b in zip(m2.parameters(), base)))
+    check("sam-adam ascent moves the weights by rho along the gradient", abs(float(shift) - 0.05) < 1e-6 and float(gn) > 0, f"shift {float(shift):.8f}")
+    o2.restore()
+    check("sam-adam restore returns the weights", all(torch.allclose(q.detach(), b, atol=1e-7, rtol=0) for q, b in zip(m2.parameters(), base)))
+    o2.zero_grad()
+    bad = net()
+    ob = trn.SamAdam(bad.parameters(), 2e-4)
+    bad(x).square().mean().mul(float("nan")).backward()
+    check("sam-adam ascend refuses a non-finite gradient and leaves the weights", ob.ascend(0.05) is False and all(torch.equal(q, r) for q, r in zip(bad.parameters(), net().parameters())))
+    ref = net()
+    ro = trn.SamAdam(ref.parameters(), 2e-4)
+    stepk(ref, ro, 0, 6)
+    a = net()
+    ao = trn.SamAdam(a.parameters(), 2e-4)
+    stepk(a, ao, 0, 3)
+    b = net()
+    b.load_state_dict(a.state_dict())
+    bo = trn.SamAdam(b.parameters(), 2e-4)
+    bo.load_state_dict(ao.state_dict())
+    bo.param_groups[0]["lr"] = 1.234e-5
+    check("sam-adam lr writes reach the optimizer after a state load", bo.opt.param_groups[0]["lr"] == 1.234e-5)
+    bo.param_groups[0]["lr"] = 2e-4
+    stepk(b, bo, 3, 6)
+    check("sam-adam checkpoint state resumes bit-identically to an uninterrupted run", all(torch.equal(x_, y_) for x_, y_ in zip(ref.parameters(), b.parameters())), str(max(float((x_ - y_).abs().max()) for x_, y_ in zip(ref.parameters(), b.parameters()))))
+
+
 def test_trainer(dev):
     model = perturbed_model(dev)
     tmp = tempfile.mkdtemp()
@@ -160,8 +272,52 @@ def test_trainer(dev):
                            "--replay-stride", "4", "--replay-batch", "1", "--probe-at"], env)
     check("visited-state replay trainer builds two rounds and logs the term", r6.returncode == 0 and r6.stdout.count("replay round") == 2 and '"replay"' in r6.stdout
           and os.path.exists(os.path.join(tmp, "rp.TRAIN_DONE")), (r6.stdout + r6.stderr)[-500:])
+    r7 = run_train(base + ["--tag", "mu", "--iters", "4", "--optimizer", "muon-matrices-adam-rest", "--ckpt-every", "2"], env)
+    r8 = run_train(base + ["--tag", "mu", "--iters", "6", "--optimizer", "muon-matrices-adam-rest", "--ckpt-every", "2", "--resume"], env)
+    check("muon-matrices-adam-rest trainer runs, checkpoints and resumes", r7.returncode == 0 and r8.returncode == 0 and "resumed it" in r8.stdout and os.path.exists(os.path.join(tmp, "mu.pt")), (r7.stderr + r8.stderr)[-500:])
+    r9 = run_train(base + ["--tag", "mf", "--iters", "4", "--optimizer", "muon-conv-flattened-adam-rest", "--ckpt-every", "2"], env)
+    r10 = run_train(base + ["--tag", "mf", "--iters", "6", "--optimizer", "muon-conv-flattened-adam-rest", "--ckpt-every", "2", "--resume"], env)
+    check("muon-conv-flattened-adam-rest trainer logs the split, runs, checkpoints and resumes", r9.returncode == 0 and r10.returncode == 0 and "parameter split by optimizer" in r9.stdout and "resumed it" in r10.stdout
+          and os.path.exists(os.path.join(tmp, "mf.pt")), (r9.stdout + r9.stderr + r10.stderr)[-600:])
+    r11 = run_train(base + ["--tag", "sam", "--iters", "4", "--optimizer", "sam-adam", "--ckpt-every", "2"], env)
+    r12 = run_train(base + ["--tag", "sam", "--iters", "6", "--optimizer", "sam-adam", "--ckpt-every", "2", "--resume"], env)
+    check("sam-adam trainer runs, checkpoints and resumes", r11.returncode == 0 and r12.returncode == 0 and "resumed it" in r12.stdout and os.path.exists(os.path.join(tmp, "sam.pt")), (r11.stdout + r11.stderr + r12.stderr)[-600:])
     r4 = run_train(base + ["--tag", "e", "--iters", "3", "--est"], env)
     check("--est exits without training", r4.returncode == 0 and not os.path.exists(os.path.join(tmp, "e.pt")), r4.stderr[-300:])
+
+
+def test_fresh_seed_eval(dev):
+    from scripts import eval_tier0_fresh_seed_checkpoints as fe
+    from scripts import score_tier0_fresh_seed_checkpoints as sc
+
+    model = perturbed_model(dev)
+    tmp = tempfile.mkdtemp()
+    ck = os.path.join(tmp, "m.pt")
+    torch.save({"model": model.state_dict(), "t0": model.t0_spec}, ck)
+
+    class Stand:
+        def __init__(self):
+            self.t = tc.TiledTier0(fe.load(ck, dev), dev, chunk=16, exchange="halo")
+
+        def init_state(self, S, device):
+            return self.t.init_state(S)
+
+        def force(self, p, v, m, k, st):
+            return self.t.force(p, v, m, k, st)
+
+    fe.ta.load_tiled = lambda spec, device, dt=0.1: Stand()
+    out = os.path.join(tmp, "fresh.json")
+    sys.argv = ["x", "--tier0", "unused", "--ckpt", f"a={ck}", f"b={ck}", "--seeds", "12000", "12100", "--eval-scenes", "2", "--eval-steps", "21", "--chunk", "16", "--out", out]
+    fe.main()
+    ev = json.load(open(out))
+    check("fresh-seed eval writes BL and every named checkpoint on every seed", sorted(ev) == ["BL", "a", "b", "seeds"] and all(sorted(ev[n]) == ["12000", "12100"] for n in ("BL", "a", "b")))
+    r = sc.score(ev)
+    same = all(abs(r["err20_over_BL"]["a"][x] - 1.0) < 1e-6 for x in ("12000", "12100"))
+    check("fresh-seed scorer: checkpoint identical to the stand-in baseline scores 1.0x and PASS", same and r["verdict"] == "PASS", json.dumps(r["err20_over_BL"]))
+    ev["b"]["12100"]["err@20"] = ev["BL"]["12100"]["err@20"] * 1.3
+    check("fresh-seed scorer: 1.3x on one (checkpoint, seed) is KILL", sc.score(ev)["verdict"] == "KILL")
+    ev["b"]["12100"]["err@20"] = ev["BL"]["12100"]["err@20"] * 1.1
+    check("fresh-seed scorer: 1.1x on one (checkpoint, seed) is INCONCLUSIVE", sc.score(ev)["verdict"] == "INCONCLUSIVE")
 
 
 def main():
@@ -173,9 +329,12 @@ def main():
     test_exchange()
     test_weights()
     test_energy_term()
+    test_flattened_muon()
+    test_sam_adam()
     test_model(dev)
     if not a.fast:
         test_trainer(dev)
+        test_fresh_seed_eval(dev)
     print("FAILED: " + ", ".join(fails) if fails else "ALL PASSED")
     sys.exit(1 if fails else 0)
 

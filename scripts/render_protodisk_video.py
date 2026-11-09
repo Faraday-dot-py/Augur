@@ -122,7 +122,7 @@ def render(args):
     tk = np.arange(nf) * int(X["ticks_per_frame"])
     bg, fg, dim = "#10161a", "#c9d4cf", "#6f7f79"
     fig = plt.figure(figsize=(16, 9), dpi=args.dpi, facecolor=bg)
-    gs = GridSpec(2, 3, figure=fig, left=0.04, right=0.98, top=0.9, bottom=0.07, wspace=0.18, hspace=0.3)
+    gs = GridSpec(2, 3, figure=fig, left=0.04, right=0.93, top=0.9, bottom=0.12, wspace=0.22, hspace=0.3)
     ax = {k: fig.add_subplot(gs[i // 3, i % 3]) for i, k in enumerate(["face", "edge", "ts_real", "ref", "model", "ts_proxy"])}
     for a_ in ax.values():
         a_.set_facecolor(bg)
@@ -147,7 +147,7 @@ def render(args):
     ax["edge"].set_xlim(-L, L)
     ax["edge"].set_ylim(-1.5, 1.5)
     ax["edge"].set_title("REAL DESIGN reference, edge-on (AU, z stretched 20x)", color=fg, fontsize=10)
-    ax["ts_real"].set_title("real reference: dE/E0 (Jupiter a, median disk e below)", color=fg, fontsize=10)
+    ax["ts_real"].set_title("real reference: dE/E0 (Jupiter a, median disk e below)", color=fg, fontsize=10, pad=24)
     ax["ts_real"].plot(tyr[:nf], np.abs(R["dE"][:nf]) + 1e-12, color="#7fb7a0", lw=1)
     ax["ts_real"].set_yscale("log")
     ax["ts_real"].set_ylabel("|dE/E0| (energy drift)", color=dim, fontsize=10)
@@ -156,7 +156,7 @@ def render(args):
     t2.plot(tyr[:nf], med_e[:nf], color="#d9a35f", lw=1, label="median disk e")
     t2.plot(tyr[:nf], jup_a[:nf] / 5.0 - 1 + 0.05, color="#e8736a", lw=1, label="Jupiter a/5AU-0.95")
     t2.tick_params(colors=dim, labelsize=10)
-    t2.legend(loc="upper left", fontsize=9, facecolor=bg, labelcolor=fg, frameon=False)
+    t2.legend(loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=2, fontsize=9, facecolor=bg, labelcolor=fg, frameon=False, borderaxespad=0.2)
     cur_r = ax["ts_real"].axvline(0, color=fg, lw=0.8)
     PR, PM = X["ref"][0], X["model"][0]
     pcol = np.array(["#6fa58f"] * ncore + ["#8aa9d6"] * (len(PR) - ncore))

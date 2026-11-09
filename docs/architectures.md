@@ -47,7 +47,7 @@ A stack of identical-architecture grid models at geometrically increasing spatia
 - Design: `docs/theory/heterogeneous-tiered.md` (ten identified weak points, each walked through).
 
 ### Verified pros (experiments)
-- Matched-budget tier 0 closes the mid-density bias: plain err@20 1.13x/1.12x BL (two seeds), mid-density force-bias slope beta -0.118/-0.052 versus -1.46/-1.78 at 10k iterations, so the earlier bias was undertraining. [supervisor-log 10-26 10:27]
+- Matched-budget tier 0 closes the mid-density bias: plain err@20 1.13x/1.12x BL (one training seed, 4738; two evaluation figures), mid-density force-bias slope beta -0.118/-0.052 versus -1.46/-1.78 at 10k iterations, so the earlier bias was undertraining. [supervisor-log 10-26 10:27]
 - Upper tiers add little error: only +4 to +10% over an exact external field. [supervisor-log 10-26 10:25]
 - Closed-loop tiled tier 0 with halo exchange: tiled err@20 0.82x/0.82x/0.75x BL on held-out seeds 9100/9200/9300 (matched-60k alone was 1.66-1.82x); own-state force error 0.039-0.041 versus BL 0.052. Single training seed. [supervisor-log 10-27 00:50]
 - Seams are not the failure: particles changing owner window are 1.2-2.2% of particle-steps and carry 0.6-3% of the energy-work error; relative force error is flat across seam-distance bins (0.079-0.090 vs BL 0.052-0.057). [supervisor-log 10-26 18:25]
@@ -57,7 +57,7 @@ A stack of identical-architecture grid models at geometrically increasing spatia
 - Gravity half-timestep retrain cut err@20 about 40% and drift 3.5x (0.0149 to 0.0043) at 1.9x training cost. [supervisor-log 10-26 02:30]
 
 ### Verified cons (experiments)
-- Energy drift stays high. Closed-loop tiled tier 0: dE@100 3.9-4.75x BL (pass line 2.5x); absolute 0.033-0.038. The exact pairwise reference itself drifts 0.016-0.019, so the real gap is about 2x truth, not 4x. [supervisor-log 10-27 00:50, energy-drift audit]
+- Energy drift stays high. Closed-loop tiled tier 0: dE@100 (relative energy drift at tick 100) 3.9-4.75x BL (job 4060 eval, divided by the frozen tiled-baseline file results/loss_term_arms/baseline_hier_eval_matched60k.json; this is the figure the 2.5x pass line was scored on; 3.3-3.7x when divided by a baseline re-rolled in the 10-27 metric audit; both fail); absolute 0.033-0.038. The exact pairwise reference itself drifts 0.016-0.019, so the real gap is about 2x truth, not 4x. [supervisor-log 10-27 00:50, energy-drift audit]
 - End-to-end hierarchy with the matched-60k tier 0: 1.5-1.7x BL err@20 even with the exact external field, drift 4-5x. [supervisor-log 10-26 11:30]
 - Upper tiers on a frozen tier 0: force error +28-29%, err@50 +4/+3/-1%. Joint fine-tune: energy drift 0.06-0.07 versus 0.01 (6x), nothing gained over sequential. Rollout-in-loop training: no gain, bias check |z| about 6. [supervisor-log 10-25 20:15, 10-26]
 - Removing velocity and recurrent inputs from tier 0 (two seeds, 6 h each): err@20 1.56-1.85x, drift 6.0-7.3x, even though teacher-forced force error was within 6-12% of BL. [supervisor-log 10-26 18:10]

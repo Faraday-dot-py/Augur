@@ -1,0 +1,39 @@
+sae_ablation_dose_response_dec2_s4739checkpoint_mesh_128 n_live 50 ks [1, 2, 5, 10, 20] scenes 32 heldout_rank 6
+ k=1 distinct_draws=10 top>all_random in 0/8 laws; top/native ratio median 1.00; rand_mean/native median 1.00
+ k=2 distinct_draws=10 top>all_random in 2/8 laws; top/native ratio median 1.00; rand_mean/native median 1.05
+ k=5 distinct_draws=10 top>all_random in 4/8 laws; top/native ratio median 1.01; rand_mean/native median 1.00
+ k=10 distinct_draws=10 top>all_random in 5/8 laws; top/native ratio median 1.01; rand_mean/native median 1.00
+ k=20 distinct_draws=10 top>all_random in 4/8 laws; top/native ratio median 1.00; rand_mean/native median 1.00
+ top features k=5: [(30, 0.991, 0.392), (10, 0.987, 0.633), (116, 0.986, 0.633), (89, 0.986, 0.633), (117, 0.986, 0.632)]
+sae_ablation_dose_response_dec2_s4739checkpoint_mesh_256 n_live 65 ks [1, 2, 5, 10, 20] scenes 32 heldout_rank 6
+ k=1 distinct_draws=9 top>all_random in 7/8 laws; top/native ratio median 1.21; rand_mean/native median 1.00
+ k=2 distinct_draws=9 top>all_random in 6/8 laws; top/native ratio median 1.25; rand_mean/native median 1.01
+ k=5 distinct_draws=10 top>all_random in 6/8 laws; top/native ratio median 1.16; rand_mean/native median 1.01
+ k=10 distinct_draws=10 top>all_random in 7/8 laws; top/native ratio median 1.42; rand_mean/native median 1.01
+ k=20 distinct_draws=10 top>all_random in 7/8 laws; top/native ratio median 1.42; rand_mean/native median 1.00
+ top features k=5: [(188, 0.989, 0.746), (177, 0.985, 0.558), (116, 0.983, 0.633), (131, 0.983, 0.632), (248, 0.983, 0.632)]
+sae_ablation_dose_response_dec0_s4738_heldout16_mesh_256 n_live 88 ks [1, 2, 5, 10, 20] scenes 32 heldout_rank 16
+ k=1 distinct_draws=9 top>all_random in 1/8 laws; top/native ratio median 1.05; rand_mean/native median 1.44
+ k=2 distinct_draws=9 top>all_random in 1/8 laws; top/native ratio median 1.05; rand_mean/native median 3.12
+ k=5 distinct_draws=10 top>all_random in 1/8 laws; top/native ratio median 1.04; rand_mean/native median 4.46
+ k=10 distinct_draws=10 top>all_random in 8/8 laws; top/native ratio median 9.45; rand_mean/native median 1.54
+ k=20 distinct_draws=10 top>all_random in 8/8 laws; top/native ratio median 26.31; rand_mean/native median 1.86
+ top features k=5: [(244, 0.957, 0.141), (48, 0.91, 0.136), (56, 0.889, 0.134), (238, 0.865, 0.137), (193, 0.841, 0.134)]
+sae_activation_patching_dec2_s4739checkpoint_mesh_256 n_live 65 scenes 16
+  pow1->pow2 k1 top -0.004 rand mean +0.000 [-0.000,+0.001] | k5 top -0.004 rand mean -0.000 [-0.002,+0.002] | k20 top -0.003 rand mean +0.000 [-0.000,+0.001] | tgt_native err to tgt/src 0.075 0.854 src_native err to tgt 4.205
+  pow2->pow1 k1 top -0.002 rand mean +0.000 [-0.000,+0.003] | k5 top +0.000 rand mean +0.001 [-0.002,+0.006] | k20 top +0.004 rand mean +0.002 [+0.000,+0.009] | tgt_native err to tgt/src 0.084 4.205 src_native err to tgt 0.854
+  pow2->pow3 k1 top -0.008 rand mean +0.000 [+0.000,+0.005] | k5 top -0.010 rand mean +0.004 [-0.001,+0.020] | k20 top +0.012 rand mean -0.000 [-0.001,-0.000] | tgt_native err to tgt/src 0.136 0.549 src_native err to tgt 0.605
+  pow1->pow3 k1 top -0.002 rand mean +0.000 [-0.000,+0.001] | k5 top -0.003 rand mean +0.000 [-0.000,+0.001] | k20 top -0.001 rand mean +0.000 [-0.000,+0.002] | tgt_native err to tgt/src 0.136 0.965 src_native err to tgt 5.091
+  yuk8->yuk128 k1 top -0.034 rand mean +0.002 [+0.000,+0.021] | k5 top -0.018 rand mean +0.013 [-0.002,+0.067] | k20 top +0.055 rand mean -0.000 [-0.001,+0.001] | tgt_native err to tgt/src 0.07 0.431 src_native err to tgt 0.288
+  yuk128->yuk8 k1 top -0.021 rand mean +0.001 [+0.000,+0.008] | k5 top -0.037 rand mean +0.011 [-0.001,+0.056] | k20 top +0.019 rand mean -0.000 [-0.002,+0.002] | tgt_native err to tgt/src 0.081 0.288 src_native err to tgt 0.431
+  pow2->yuk32 k1 top -0.015 rand mean +0.001 [+0.000,+0.007] | k5 top -0.007 rand mean +0.002 [-0.003,+0.009] | k20 top -0.001 rand mean +0.000 [-0.001,+0.002] | tgt_native err to tgt/src 0.1 0.127 src_native err to tgt 0.169
+  pow2->lj k1 top -0.000 rand mean +0.000 [-0.000,+0.000] | k5 top -0.003 rand mean -0.001 [-0.004,+0.001] | k20 top -0.004 rand mean -0.000 [-0.001,+0.000] | tgt_native err to tgt/src 0.301 19.122 src_native err to tgt 1.033
+sae_activation_patching_dec0_s4738_mesh_256 n_live 88 scenes 16
+  pow1->pow2 k1 top +0.000 rand mean +0.000 [-0.000,+0.001] | k5 top +0.000 rand mean -0.001 [-0.019,+0.006] | k20 top +0.006 rand mean +0.009 [-0.007,+0.040] | tgt_native err to tgt/src 0.074 0.857 src_native err to tgt 4.843
+  pow2->pow1 k1 top +0.000 rand mean +0.001 [-0.000,+0.004] | k5 top +0.002 rand mean +0.000 [-0.020,+0.036] | k20 top +0.045 rand mean +0.011 [+0.000,+0.036] | tgt_native err to tgt/src 0.847 4.843 src_native err to tgt 0.857
+  pow2->pow3 k1 top +0.000 rand mean -0.000 [-0.002,+0.000] | k5 top +0.000 rand mean -0.005 [-0.046,+0.000] | k20 top -0.047 rand mean -0.001 [-0.004,-0.000] | tgt_native err to tgt/src 0.066 0.568 src_native err to tgt 0.559
+  pow1->pow3 k1 top +0.000 rand mean +0.000 [-0.001,+0.001] | k5 top +0.000 rand mean -0.001 [-0.018,+0.008] | k20 top +0.007 rand mean +0.007 [-0.006,+0.027] | tgt_native err to tgt/src 0.066 0.967 src_native err to tgt 5.55
+  yuk8->yuk128 k1 top +0.000 rand mean -0.002 [-0.015,+0.000] | k5 top +0.000 rand mean -0.033 [-0.222,+0.011] | k20 top -0.269 rand mean -0.001 [-0.015,+0.008] | tgt_native err to tgt/src 0.062 0.38 src_native err to tgt 0.32
+  yuk128->yuk8 k1 top +0.000 rand mean -0.001 [-0.013,+0.000] | k5 top +0.000 rand mean -0.030 [-0.204,+0.007] | k20 top -0.254 rand mean -0.000 [-0.013,+0.006] | tgt_native err to tgt/src 0.049 0.32 src_native err to tgt 0.38
+  pow2->yuk32 k1 top +0.000 rand mean +0.003 [-0.000,+0.025] | k5 top +0.000 rand mean +0.009 [-0.012,+0.049] | k20 top +0.062 rand mean +0.010 [-0.001,+0.027] | tgt_native err to tgt/src 0.081 0.164 src_native err to tgt 0.15
+  pow2->lj k1 top +0.099 rand mean +0.008 [-0.001,+0.077] | k5 top +0.163 rand mean +0.029 [-0.003,+0.172] | k20 top +0.359 rand mean +0.013 [+0.000,+0.033] | tgt_native err to tgt/src 0.321 17.613 src_native err to tgt 1.033

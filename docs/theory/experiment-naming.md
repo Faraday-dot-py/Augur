@@ -97,6 +97,20 @@ Arms and runs.
 | S1, S2 (substep) | substep-uniform-kdk-unrolled / substep-symmetric-respa-slow-grid-fast-pair | docs/debugging/substep-theory.md |
 | S2 (tiling table) | strip-width-2 | experiment-log.md job 2989 entry |
 | H1-H7 (adaptive eval) | accuracy / efficiency / robustness / generalization / scaling / tileability / interpretability claims | adaptive-eval-agent-preamble.md |
+| R1 (close-pair family) | exact-mesh-pair-complement | close-pair-design-proposals.md:41 (branch close-pair-design) |
+| R1 step 0 | exact-mesh-pair-complement-attribution-probe | job 3646, PASS (branch r1-step0) |
+| R1 step 1 | exact-mesh-pair-complement-in-frozen-model | job 3754, commit 12a309c, KILL |
+| R2 (close-pair family) | bounded-shape-normalised-pair-law | close-pair-design-proposals.md:56 |
+| R3 (close-pair family) | neighbour-context-pair-branch | close-pair-design-proposals.md:67; never run |
+| R4 (close-pair family) | reciprocal-neighbour-list | close-pair-design-proposals.md:78; never run |
+| R1 (far-kernel family) | far-kernel-retrain-exact-force-r640 | scatter-far-kernel-fix.md:31 (branch far-kernel-generalization), job 3797, PASS; kernel file results/far_kernels/r1_mlp.pt |
+| R1b | far-kernel-retrain-exact-force-r1500 | scatter-far-kernel-fix.md:43, job 3803, commit b604497; shipped far kernel; r1b_mlp.pt |
+| R2b | far-kernel-log-space-positive-tail | scatter-far-kernel-fix.md:60, job 3813; r2b_tail.pt; PASS with 0% gain |
+| R3 (far-kernel family) | far-term-coarse-unet-residual | scatter-far-kernel-fix.md:65; KILL by oracle ceiling, nothing trained |
+| R4 (far-kernel family) | far-term-nested-coarse-levels | scatter-far-kernel-fix.md:71; KILL |
+| J1 / J2 (far kernel) | far-kernel-joint-finetune-free / far-kernel-joint-finetune-anchored | scatter-far-kernel-fix.md:75-76 |
+
+The close-pair R1-R4 and the far-kernel R1/R1b/R2b/R3/R4 are two unrelated families; a bare "R3 killed" is the far-kernel one. The unsuffixed far-kernel "R2" appears only as a rationale (fix.md:61), no run; left unmapped. The branch docs keep the old labels; this table is the mapping.
 
 Verification flags. Every descriptive name above was written by the naming audit; the legacy-label-to-experiment link is confirmed from a commit message or log text except for these rows, which are INFERRED [unverified]: JT, JM, JA, JL, ENMT, ENM, Exp 1, Exp 3 (Z, L, Er), Exp 10, Exp 11 NGa, gv_R, gv_EN, Fa, Fb, FbL, FbH3, Bh4, Bh5, Bh6, PH, O, A2 (contact), the D1-D6 and S1/S2 (substep) names, the S3 job number (4041 per the integration doc, "t0m" per the supervisor log).
 

@@ -1,0 +1,6 @@
+[one-million-unit-mass] tick 0 interior (edge>=8) ratio 1.0104 kernel-only 0.9590 median 0.9855
+[one-million-unit-mass] tick 11 interior (edge>=8) ratio 0.9596 kernel-only 0.9029 median 1.0064
+[one-million-unit-mass] tick 40 interior (edge>=8) ratio 1.0211 kernel-only 0.9174 median 0.9929
+[one-hundred-thousand-unit-mass] tick 0 interior (edge>=8) ratio 1.0111 kernel-only 0.9588 median 0.9883
+[one-hundred-thousand-mass-ten-same-total-mass] tick 0 interior (edge>=8) ratio 1.0029 kernel-only 0.9588 median 1.0219
+DONE

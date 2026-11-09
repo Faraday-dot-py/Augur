@@ -1,0 +1,289 @@
+{
+ "ckpt": "ckpt/main_s4738.pt",
+ "data_seed": 4738,
+ "sae_seed": 4738,
+ "sae": "topk",
+ "layer": "dec2",
+ "pair_layer": "l2",
+ "target_l0": 8.0,
+ "steps": 20000,
+ "laws": [
+  "pow1",
+  "pow1.5",
+  "pow2",
+  "pow3",
+  "yuk8",
+  "yuk32",
+  "yuk128",
+  "lj"
+ ],
+ "mesh": {
+  "n_train": 29974,
+  "n_heldout": 3137,
+  "d_input": 32,
+  "dict_128": {
+   "recon_nmse_train": NaN,
+   "recon_nmse_heldout": NaN,
+   "l0_heldout": 0.0,
+   "dead_fraction": 1.0,
+   "n_live_heldout": 0,
+   "law_eta2_live_mean": null,
+   "law_eta2_live_max": null,
+   "n_live_law_eta2_gt_0.5": 0,
+   "log_cell_mass_abscorr_live_mean": null,
+   "log_cell_mass_abscorr_live_max": null,
+   "n_live_log_cell_mass_abscorr_gt_0.5": 0,
+   "radius_from_centre_abscorr_live_mean": null,
+   "radius_from_centre_abscorr_live_max": null,
+   "n_live_radius_from_centre_abscorr_gt_0.5": 0,
+   "top_law_features": [
+    {
+     "feature": 0,
+     "eta2": NaN,
+     "mean_act_per_law": {
+      "pow1": NaN,
+      "pow1.5": NaN,
+      "pow2": NaN,
+      "pow3": NaN,
+      "yuk8": NaN,
+      "yuk32": NaN,
+      "yuk128": NaN,
+      "lj": NaN
+     }
+    },
+    {
+     "feature": 1,
+     "eta2": NaN,
+     "mean_act_per_law": {
+      "pow1": NaN,
+      "pow1.5": NaN,
+      "pow2": NaN,
+      "pow3": NaN,
+      "yuk8": NaN,
+      "yuk32": NaN,
+      "yuk128": NaN,
+      "lj": NaN
+     }
+    },
+    {
+     "feature": 2,
+     "eta2": NaN,
+     "mean_act_per_law": {
+      "pow1": NaN,
+      "pow1.5": NaN,
+      "pow2": NaN,
+      "pow3": NaN,
+      "yuk8": NaN,
+      "yuk32": NaN,
+      "yuk128": NaN,
+      "lj": NaN
+     }
+    },
+    {
+     "feature": 3,
+     "eta2": NaN,
+     "mean_act_per_law": {
+      "pow1": NaN,
+      "pow1.5": NaN,
+      "pow2": NaN,
+      "pow3": NaN,
+      "yuk8": NaN,
+      "yuk32": NaN,
+      "yuk128": NaN,
+      "lj": NaN
+     }
+    },
+    {
+     "feature": 4,
+     "eta2": NaN,
+     "mean_act_per_law": {
+      "pow1": NaN,
+      "pow1.5": NaN,
+      "pow2": NaN,
+      "pow3": NaN,
+      "yuk8": NaN,
+      "yuk32": NaN,
+      "yuk128": NaN,
+      "lj": NaN
+     }
+    }
+   ]
+  },
+  "dict_512": {
+   "recon_nmse_train": NaN,
+   "recon_nmse_heldout": NaN,
+   "l0_heldout": 0.0,
+   "dead_fraction": 1.0,
+   "n_live_heldout": 0,
+   "law_eta2_live_mean": null,
+   "law_eta2_live_max": null,
+   "n_live_law_eta2_gt_0.5": 0,
+   "log_cell_mass_abscorr_live_mean": null,
+   "log_cell_mass_abscorr_live_max": null,
+   "n_live_log_cell_mass_abscorr_gt_0.5": 0,
+   "radius_from_centre_abscorr_live_mean": null,
+   "radius_from_centre_abscorr_live_max": null,
+   "n_live_radius_from_centre_abscorr_gt_0.5": 0,
+   "top_law_features": [
+    {
+     "feature": 0,
+     "eta2": NaN,
+     "mean_act_per_law": {
+      "pow1": NaN,
+      "pow1.5": NaN,
+      "pow2": NaN,
+      "pow3": NaN,
+      "yuk8": NaN,
+      "yuk32": NaN,
+      "yuk128": NaN,
+      "lj": NaN
+     }
+    },
+    {
+     "feature": 1,
+     "eta2": NaN,
+     "mean_act_per_law": {
+      "pow1": NaN,
+      "pow1.5": NaN,
+      "pow2": NaN,
+      "pow3": NaN,
+      "yuk8": NaN,
+      "yuk32": NaN,
+      "yuk128": NaN,
+      "lj": NaN
+     }
+    },
+    {
+     "feature": 2,
+     "eta2": NaN,
+     "mean_act_per_law": {
+      "pow1": NaN,
+      "pow1.5": NaN,
+      "pow2": NaN,
+      "pow3": NaN,
+      "yuk8": NaN,
+      "yuk32": NaN,
+      "yuk128": NaN,
+      "lj": NaN
+     }
+    },
+    {
+     "feature": 3,
+     "eta2": NaN,
+     "mean_act_per_law": {
+      "pow1": NaN,
+      "pow1.5": NaN,
+      "pow2": NaN,
+      "pow3": NaN,
+      "yuk8": NaN,
+      "yuk32": NaN,
+      "yuk128": NaN,
+      "lj": NaN
+     }
+    },
+    {
+     "feature": 4,
+     "eta2": NaN,
+     "mean_act_per_law": {
+      "pow1": NaN,
+      "pow1.5": NaN,
+      "pow2": NaN,
+      "pow3": NaN,
+      "yuk8": NaN,
+      "yuk32": NaN,
+      "yuk128": NaN,
+      "lj": NaN
+     }
+    }
+   ]
+  },
+  "dict_2048": {
+   "recon_nmse_train": NaN,
+   "recon_nmse_heldout": NaN,
+   "l0_heldout": 0.0,
+   "dead_fraction": 1.0,
+   "n_live_heldout": 0,
+   "law_eta2_live_mean": null,
+   "law_eta2_live_max": null,
+   "n_live_law_eta2_gt_0.5": 0,
+   "log_cell_mass_abscorr_live_mean": null,
+   "log_cell_mass_abscorr_live_max": null,
+   "n_live_log_cell_mass_abscorr_gt_0.5": 0,
+   "radius_from_centre_abscorr_live_mean": null,
+   "radius_from_centre_abscorr_live_max": null,
+   "n_live_radius_from_centre_abscorr_gt_0.5": 0,
+   "top_law_features": [
+    {
+     "feature": 0,
+     "eta2": NaN,
+     "mean_act_per_law": {
+      "pow1": NaN,
+      "pow1.5": NaN,
+      "pow2": NaN,
+      "pow3": NaN,
+      "yuk8": NaN,
+      "yuk32": NaN,
+      "yuk128": NaN,
+      "lj": NaN
+     }
+    },
+    {
+     "feature": 1,
+     "eta2": NaN,
+     "mean_act_per_law": {
+      "pow1": NaN,
+      "pow1.5": NaN,
+      "pow2": NaN,
+      "pow3": NaN,
+      "yuk8": NaN,
+      "yuk32": NaN,
+      "yuk128": NaN,
+      "lj": NaN
+     }
+    },
+    {
+     "feature": 2,
+     "eta2": NaN,
+     "mean_act_per_law": {
+      "pow1": NaN,
+      "pow1.5": NaN,
+      "pow2": NaN,
+      "pow3": NaN,
+      "yuk8": NaN,
+      "yuk32": NaN,
+      "yuk128": NaN,
+      "lj": NaN
+     }
+    },
+    {
+     "feature": 3,
+     "eta2": NaN,
+     "mean_act_per_law": {
+      "pow1": NaN,
+      "pow1.5": NaN,
+      "pow2": NaN,
+      "pow3": NaN,
+      "yuk8": NaN,
+      "yuk32": NaN,
+      "yuk128": NaN,
+      "lj": NaN
+     }
+    },
+    {
+     "feature": 4,
+     "eta2": NaN,
+     "mean_act_per_law": {
+      "pow1": NaN,
+      "pow1.5": NaN,
+      "pow2": NaN,
+      "pow3": NaN,
+      "yuk8": NaN,
+      "yuk32": NaN,
+      "yuk128": NaN,
+      "lj": NaN
+     }
+    }
+   ]
+  }
+ }
+}

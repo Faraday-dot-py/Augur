@@ -27,3 +27,6 @@ temp.env
 .env
 *.env
 jupyterhub-sandbox/
+.superpowers/
+*.tgz
+*.tar.gz

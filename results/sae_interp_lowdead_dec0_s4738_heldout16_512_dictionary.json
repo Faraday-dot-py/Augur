@@ -1,0 +1,114 @@
+{
+ "ckpt": "ckpt/main_s4738.pt",
+ "data_seed": 4738,
+ "sae_seed": 4738,
+ "sae": "topk",
+ "layer": "dec0",
+ "pair_layer": "l2",
+ "target_l0": 8.0,
+ "steps": 20000,
+ "laws": [
+  "pow1",
+  "pow1.5",
+  "pow2",
+  "pow3",
+  "yuk8",
+  "yuk32",
+  "yuk128",
+  "lj"
+ ],
+ "mesh": {
+  "n_train": 87815,
+  "n_heldout": 44852,
+  "d_input": 32,
+  "dict_512": {
+   "recon_nmse_train": 0.00019747449550777674,
+   "recon_nmse_heldout": 0.0002920334809459746,
+   "l0_heldout": 7.998885154724121,
+   "dead_fraction": 0.173828125,
+   "n_live_heldout": 122,
+   "heldout_dead_fraction": 0.76171875,
+   "law_eta2_live_mean": 0.09565284103155136,
+   "law_eta2_live_max": 0.9491474032402039,
+   "n_live_law_eta2_gt_0.5": 13,
+   "log_cell_mass_abscorr_live_mean": 0.00930105336010456,
+   "log_cell_mass_abscorr_live_max": 0.049617037177085876,
+   "n_live_log_cell_mass_abscorr_gt_0.5": 0,
+   "radius_from_centre_abscorr_live_mean": 0.01890370436012745,
+   "radius_from_centre_abscorr_live_max": 0.12104782462120056,
+   "n_live_radius_from_centre_abscorr_gt_0.5": 0,
+   "top_law_features": [
+    {
+     "feature": 461,
+     "eta2": 0.9491474032402039,
+     "mean_act_per_law": {
+      "pow1": 0.009989735670387745,
+      "pow1.5": 3.0083543606451713e-05,
+      "pow2": 0.0009145357180386782,
+      "pow3": 0.0,
+      "yuk8": 0.0,
+      "yuk32": 0.0,
+      "yuk128": 0.0,
+      "lj": 8.526928901672363
+     }
+    },
+    {
+     "feature": 322,
+     "eta2": 0.9143717885017395,
+     "mean_act_per_law": {
+      "pow1": 0.0012228034902364016,
+      "pow1.5": 0.0,
+      "pow2": 0.0017887527355924249,
+      "pow3": 0.0,
+      "yuk8": 0.0,
+      "yuk32": 0.0,
+      "yuk128": 0.0,
+      "lj": 5.021121978759766
+     }
+    },
+    {
+     "feature": 429,
+     "eta2": 0.9131574630737305,
+     "mean_act_per_law": {
+      "pow1": 0.000873315439093858,
+      "pow1.5": 0.0,
+      "pow2": 0.00044244012678973377,
+      "pow3": 0.0,
+      "yuk8": 0.0,
+      "yuk32": 0.0,
+      "yuk128": 0.0,
+      "lj": 9.716024398803711
+     }
+    },
+    {
+     "feature": 40,
+     "eta2": 0.8902772665023804,
+     "mean_act_per_law": {
+      "pow1": 0.009633200243115425,
+      "pow1.5": 0.0,
+      "pow2": 0.002816028194501996,
+      "pow3": 0.0,
+      "yuk8": 0.0,
+      "yuk32": 0.0,
+      "yuk128": 0.0,
+      "lj": 6.713369369506836
+     }
+    },
+    {
+     "feature": 60,
+     "eta2": 0.8482416272163391,
+     "mean_act_per_law": {
+      "pow1": 0.40457215905189514,
+      "pow1.5": 0.5553438663482666,
+      "pow2": 0.5252134203910828,
+      "pow3": 0.5079789757728577,
+      "yuk8": 0.5170296430587769,
+      "yuk32": 0.5554562211036682,
+      "yuk128": 0.5517887473106384,
+      "lj": 0.0
+     }
+    }
+   ]
+  }
+ }
+}

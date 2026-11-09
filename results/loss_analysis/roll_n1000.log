@@ -1,0 +1,13 @@
+loaded /home/awebb/polaris-mcp-files/E_ms_kp_pot_v_g128.pt: missing [] unexpected []
+scene 0 baseline err@20 0.2960 7s
+scene 0 tier0 err@20 0.7757 6s
+scene 0 tier0_tiled err@20 0.5110 25s
+scene 1 baseline err@20 0.3122 7s
+scene 1 tier0 err@20 0.6777 7s
+scene 1 tier0_tiled err@20 0.5545 28s
+scene 2 baseline err@20 0.5650 6s
+scene 2 tier0 err@20 1.0544 7s
+scene 2 tier0_tiled err@20 0.8353 24s
+scene 3 baseline err@20 0.7202 6s
+scene 3 tier0 err@20 1.0331 7s
+scene 3 tier0_tiled err@20 1.0090 24s

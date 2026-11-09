@@ -46,6 +46,8 @@ def main():
             d = ttr.make_scenes(a.eval_scenes, a.eval_steps, sd, dev)
             res[name][str(sd)] = h.eval_generic(lambda p, v, m, k, st: tt.force(p, v, m, k, st), tt.init_state, d)
             log(f"{name} {sd} {json.dumps({k: round(v, 5) for k, v in res[name][str(sd)].items()})}")
+    del tt, d
+    torch.cuda.empty_cache()
     model.t0.ext_grid = model.t0.ext_poly = model.t0.ext_high = None
     model.t0.set_material(None)
     with torch.no_grad():

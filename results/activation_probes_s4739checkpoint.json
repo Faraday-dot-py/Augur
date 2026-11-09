@@ -1,0 +1,62 @@
+{
+ "ckpt": "ckpt/main_s4739.pt",
+ "seed": 4738,
+ "mesh": {
+  "enc0": {
+   "law_acc": 0.7532674670219421,
+   "law_chance": 0.125,
+   "law_acc_shuffled_label_control": 0.09180746227502823,
+   "log_cell_mass_r2": 0.4145306348800659,
+   "radius_from_centre_r2": 0.02541983127593994
+  },
+  "enc2": {
+   "law_acc": 0.8798215389251709,
+   "law_chance": 0.125,
+   "law_acc_shuffled_label_control": 0.14313039183616638,
+   "log_cell_mass_r2": -0.0045893192291259766,
+   "radius_from_centre_r2": 0.01816767454147339
+  },
+  "enc4": {
+   "law_acc": 0.5788970589637756,
+   "law_chance": 0.125,
+   "law_acc_shuffled_label_control": 0.020720435306429863,
+   "log_cell_mass_r2": -0.01083827018737793,
+   "radius_from_centre_r2": 0.06616270542144775
+  },
+  "dec3": {
+   "law_acc": 0.1281479150056839,
+   "law_chance": 0.125,
+   "law_acc_shuffled_label_control": 0.12751036882400513,
+   "log_cell_mass_r2": -0.005984067916870117,
+   "radius_from_centre_r2": -0.13762915134429932
+  },
+  "dec1": {
+   "law_acc": 0.890022337436676,
+   "law_chance": 0.125,
+   "law_acc_shuffled_label_control": 0.1593879610300064,
+   "log_cell_mass_r2": -0.005681514739990234,
+   "radius_from_centre_r2": -0.09244287014007568
+  },
+  "dec0": {
+   "law_acc": 0.7013069987297058,
+   "law_chance": 0.125,
+   "law_acc_shuffled_label_control": 0.07395601272583008,
+   "log_cell_mass_r2": 0.045154571533203125,
+   "radius_from_centre_r2": -0.09684574604034424
+  }
+ },
+ "pair": {
+  "l1": {
+   "law_acc": 1.0,
+   "law_chance": 0.125,
+   "law_acc_shuffled_label_control": 0.07750582695007324,
+   "log_r_r2": 0.9999786615371704
+  },
+  "l2": {
+   "law_acc": 0.9449300765991211,
+   "law_chance": 0.125,
+   "law_acc_shuffled_label_control": 0.10168997943401337,
+   "log_r_r2": 0.9998806118965149
+  }
+ }
+}

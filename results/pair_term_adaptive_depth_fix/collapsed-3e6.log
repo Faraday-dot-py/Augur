@@ -1,0 +1,7 @@
+default {'steady_mean_s': None, 'fallback': None, 'fallback_frac': None, 'max_abs_err_vs_bruteforce': 9.085074452741537e-07, 'max_abs_diff_vs_default_all_bodies': 0.0}
+adaptdeep {'steady_mean_s': 0.41944122314453125, 'fallback': 0, 'fallback_frac': 0.0, 'max_abs_err_vs_bruteforce': 9.085074452741537e-07, 'max_abs_diff_vs_default_all_bodies': 0.013661785051226616}
+adaptwide64 {'steady_mean_s': 50.8695379892985, 'fallback': 271463, 'fallback_frac': 0.09048766666666666, 'max_abs_err_vs_bruteforce': 9.085074452741537e-07, 'max_abs_diff_vs_default_all_bodies': 0.013661785051226616}
+adaptwide128 {'steady_mean_s': 0.8854057788848877, 'fallback': 0, 'fallback_frac': 0.0, 'max_abs_err_vs_bruteforce': 9.085074452741537e-07, 'max_abs_diff_vs_default_all_bodies': 0.013661785051226616}
+adaptdeep-adaptwide64 {'steady_mean_s': 0.5839829444885254, 'fallback': 0, 'fallback_frac': 0.0, 'max_abs_err_vs_bruteforce': 9.085074452741537e-07, 'max_abs_diff_vs_default_all_bodies': 0.013661785051226616}
+adaptdeep-adaptwide128 {'steady_mean_s': 0.8844961325327555, 'fallback': 0, 'fallback_frac': 0.0, 'max_abs_err_vs_bruteforce': 9.085074452741537e-07, 'max_abs_diff_vs_default_all_bodies': 0.013661785051226616}
+DONE

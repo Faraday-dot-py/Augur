@@ -1,0 +1,88 @@
+
+== dec0_s4738_heldout16_mesh_256 live=88 draws=200 pool_size=50
+k  pool_avail  laws_top>p95  laws_inside(<95)  mean_rank  reading  top/recon  rand_med/recon  rand_p95/recon  outlier_draws(all laws)
+1  87          1             7                 44.2       any-removal-hurts       1.26       1.00            6.01            176
+2  86          1             7                 37.4       any-removal-hurts       1.28       1.00            20.32           261
+5  83          1             7                 29.5       any-removal-hurts       1.25       1.32            20.38           112
+10 78          1             7                 82.1       any-removal-hurts       9.98       1.47            20.34           328
+20 68          8             0                 100.0      special                 25.32      1.41            4.98            0
+worst random single features (k=1, law, mean error): {54: [('pow1.5', 0.441), ('pow2', 0.589), ('pow3', 0.565), ('yuk8', 0.7), ('yuk32', 0.651), ('yuk128', 0.611)], 249: [('pow1', 0.209)], 238: [('lj', 0.281)]}
+their activation frequencies: {249: 0.82364, 54: 0.82554, 238: 0.13723}
+top features k=1: [{'feature': 244, 'eta2': 0.9568127989768982, 'freq': 0.1405065506696701}]
+
+== dec0_s4738_mesh_128 live=84 draws=200 pool_size=50
+k  pool_avail  laws_top>p95  laws_inside(<95)  mean_rank  reading  top/recon  rand_med/recon  rand_p95/recon  outlier_draws(all laws)
+1  83          1             7                 52.9       any-removal-hurts       1.13       1.00            6.66            177
+2  82          1             7                 48.3       any-removal-hurts       1.23       1.00            14.02           324
+5  79          8             0                 99.8       special                 28.39      1.01            14.02           4
+10 74          8             0                 100.0      special                 29.72      1.15            11.85           2
+20 64          8             0                 100.0      special                 25.89      1.15            6.06            0
+worst random single features (k=1, law, mean error): {118: [('pow1', 0.365), ('pow1.5', 0.923), ('pow2', 1.696), ('pow3', 1.835), ('yuk8', 2.21), ('yuk32', 1.853), ('yuk128', 1.735)], 12: [('lj', 0.359)]}
+their activation frequencies: {118: 0.87145, 12: 0.12534}
+top features k=1: [{'feature': 40, 'eta2': 0.921768844127655, 'freq': 0.12459838390350342}]
+
+== dec0_s4738_mesh_256 live=115 draws=200 pool_size=50
+k  pool_avail  laws_top>p95  laws_inside(<95)  mean_rank  reading  top/recon  rand_med/recon  rand_p95/recon  outlier_draws(all laws)
+1  114         7             1                 92.9       special                 27.82      1.00            2.28            147
+2  113         8             0                 100.0      special                 27.97      1.00            3.92            236
+5  110         8             0                 100.0      special                 28.04      1.09            4.66            193
+10 105         8             0                 100.0      special                 26.95      1.36            4.37            132
+20 95          8             0                 100.0      special                 27.73      1.16            4.27            0
+worst random single features (k=1, law, mean error): {250: [('pow1', 0.325), ('pow1.5', 0.35), ('yuk32', 0.311), ('yuk128', 0.249)], 57: [('pow2', 0.231), ('pow3', 0.318), ('yuk8', 0.292)], 0: [('lj', 0.34)]}
+their activation frequencies: {250: 0.64232, 57: 0.77914, 0: 0.12357}
+top features k=1: [{'feature': 229, 'eta2': 0.9186574220657349, 'freq': 0.8686067461967468}]
+
+== dec0_s4738_mesh_64 live=58 draws=200 pool_size=50
+k  pool_avail  laws_top>p95  laws_inside(<95)  mean_rank  reading  top/recon  rand_med/recon  rand_p95/recon  outlier_draws(all laws)
+1  57          1             7                 50.4       any-removal-hurts       1.11       1.00            6.11            199
+2  56          1             7                 48.1       any-removal-hurts       1.25       1.00            9.17            200
+5  53          2             6                 88.6       any-removal-hurts       7.56       1.32            11.12           110
+10 48          2             6                 74.9       any-removal-hurts       4.80       1.38            11.51           38
+20 38          8             0                 100.0      special                 14.92      1.00            1.00            0
+worst random single features (k=1, law, mean error): {53: [('pow1.5', 0.477), ('pow2', 0.653), ('yuk32', 0.725), ('yuk128', 0.677)], 49: [('pow3', 0.716), ('yuk8', 0.797)], 39: [('pow1', 0.331)], 48: [('lj', 0.371)]}
+their activation frequencies: {39: 0.84516, 53: 0.85548, 49: 0.87065, 48: 0.12758}
+top features k=1: [{'feature': 40, 'eta2': 0.9263867139816284, 'freq': 0.12410644441843033}]
+
+== dec0_s4738_original_sae_mesh_512 live=184 draws=200 pool_size=50
+k  pool_avail  laws_top>p95  laws_inside(<95)  mean_rank  reading  top/recon  rand_med/recon  rand_p95/recon  outlier_draws(all laws)
+1  183         1             7                 45.4       any-removal-hurts       1.16       1.00            2.04            174
+2  182         8             0                 100.0      special                 41.27      1.00            1.94            237
+5  179         8             0                 100.0      special                 39.10      1.04            1.96            1
+10 174         8             0                 100.0      special                 39.95      1.04            2.10            38
+20 164         8             0                 100.0      special                 40.16      1.03            1.89            0
+worst random single features (k=1, law, mean error): {448: [('pow1', 0.529), ('pow1.5', 1.405), ('pow2', 2.52), ('pow3', 2.626), ('yuk8', 3.193), ('yuk32', 2.755), ('yuk128', 2.581)], 461: [('lj', 0.307)]}
+their activation frequencies: {448: 0.86764, 461: 0.12361}
+top features k=1: [{'feature': 322, 'eta2': 0.9307500123977661, 'freq': 0.1250288337469101}]
+
+== dec0_s4739checkpoint_mesh_64 live=43 draws=200 pool_size=50
+k  pool_avail  laws_top>p95  laws_inside(<95)  mean_rank  reading  top/recon  rand_med/recon  rand_p95/recon  outlier_draws(all laws)
+1  42          1             7                 71.7       any-removal-hurts       3.68       1.00            5.44            204
+2  41          2             6                 84.3       any-removal-hurts       8.46       1.00            7.83            119
+5  38          7             1                 98.6       special                 14.72      1.02            8.20            50
+10 33          8             0                 100.0      special                 15.56      2.31            8.70            0
+20 23          8             0                 100.0      special                 14.39      1.00            1.00            0
+worst random single features (k=1, law, mean error): {5: [('pow1', 0.186), ('pow1.5', 0.636), ('pow2', 0.877), ('yuk32', 0.808), ('yuk128', 0.875)], 60: [('pow3', 0.634), ('yuk8', 0.848)], 44: [('lj', 0.453)]}
+their activation frequencies: {5: 0.8723, 60: 0.88109, 44: 0.12687}
+top features k=1: [{'feature': 10, 'eta2': 0.8738585710525513, 'freq': 0.8796446323394775}]
+
+== dec2_s4739checkpoint_mesh_128 live=50 draws=200 pool_size=50
+k  pool_avail  laws_top>p95  laws_inside(<95)  mean_rank  reading  top/recon  rand_med/recon  rand_p95/recon  outlier_draws(all laws)
+1  49          0             8                 28.5       any-removal-hurts       0.98       1.00            1.04            22
+2  48          1             7                 48.3       any-removal-hurts       1.03       1.00            1.07            40
+5  45          3             5                 57.5       not-special(tie-break)  1.06       1.00            1.09            22
+10 40          4             4                 56.1       not-special(tie-break)  1.09       1.00            1.04            0
+20 30          4             4                 52.5       not-special(tie-break)  1.04       1.00            1.01            0
+worst random single features (k=1, law, mean error): {10: [('pow2', 0.066), ('pow3', 0.064), ('yuk8', 0.065), ('yuk32', 0.069), ('yuk128', 0.057)], 12: [('pow1', 0.126)], 76: [('pow1.5', 0.19)], 104: [('lj', 0.134)]}
+their activation frequencies: {12: 0.3667, 76: 0.50169, 10: 0.63292, 104: 0.36683}
+top features k=1: [{'feature': 30, 'eta2': 0.9914270639419556, 'freq': 0.3918817639350891}]
+
+== dec2_s4739checkpoint_mesh_256 live=65 draws=200 pool_size=50
+k  pool_avail  laws_top>p95  laws_inside(<95)  mean_rank  reading  top/recon  rand_med/recon  rand_p95/recon  outlier_draws(all laws)
+1  64          6             2                 92.0       special                 1.28       1.00            1.01            0
+2  63          6             2                 89.4       special                 1.31       1.00            1.03            0
+5  60          5             3                 85.3       not-special(tie-break)  1.27       1.00            1.04            0
+10 55          7             1                 95.2       special                 1.47       1.00            1.02            0
+20 45          7             1                 87.5       special                 1.46       1.00            1.01            0
+worst random single features (k=1, law, mean error): {248: [('yuk8', 0.064), ('yuk32', 0.074), ('yuk128', 0.06)], 94: [('pow1.5', 0.2), ('pow2', 0.069)], 78: [('pow1', 0.092)], 116: [('pow3', 0.061)]}
+their activation frequencies: {78: 0.36689, 94: 0.67652, 116: 0.63274, 248: 0.63249, 207: 0.36645}
+top features k=1: [{'feature': 188, 'eta2': 0.9891577363014221, 'freq': 0.7460536360740662}]

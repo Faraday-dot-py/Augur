@@ -33,6 +33,80 @@ def clear_ext(model):
     model.t0.ext_grid = model.t0.ext_poly = model.t0.ext_high = None
 
 
+class HybridMuon:
+    def __init__(self, params, lr, conv=False):
+        params = list(params)
+        self.flat = [q for q in params if q.ndim == 4] if conv else []
+        for q in self.flat:
+            q.data = q.data.contiguous()
+        self.views = [torch.nn.Parameter(q.data.view(q.shape[0], -1)) for q in self.flat]
+        muon = [q for q in params if q.ndim == 2] + self.views
+        adam = [q for q in params if q.ndim != 2 and not any(q is f for f in self.flat)]
+        self.opts = [torch.optim.Muon(muon, lr=lr, adjust_lr_fn="match_rms_adamw", weight_decay=0.0), torch.optim.Adam(adam, lr=lr)]
+        self.param_groups = [g for o in self.opts for g in o.param_groups]
+        self.split = {"muon_2d": sum(q.numel() for q in params if q.ndim == 2), "muon_flattened_4d": sum(q.numel() for q in self.flat), "adam": sum(q.numel() for q in adam)}
+
+    def zero_grad(self):
+        for o in self.opts:
+            o.zero_grad()
+        for q in self.flat:
+            q.grad = None
+
+    def step(self):
+        for q, v in zip(self.flat, self.views):
+            v.grad = None if q.grad is None else q.grad.reshape(v.shape)
+        for o in self.opts:
+            o.step()
+
+    def state_dict(self):
+        return {"hybrid": [o.state_dict() for o in self.opts]}
+
+    def load_state_dict(self, sd):
+        for o, x in zip(self.opts, sd["hybrid"]):
+            o.load_state_dict(x)
+
+
+class SamAdam:
+    def __init__(self, params, lr):
+        self.params = list(params)
+        self.opt = torch.optim.Adam(self.params, lr=lr)
+        self.eps = []
+
+    @property
+    def param_groups(self):
+        return self.opt.param_groups
+
+    def zero_grad(self):
+        self.opt.zero_grad()
+
+    def ascend(self, rho):
+        qs = [q for q in self.params if q.grad is not None]
+        gn = torch.sqrt(sum((q.grad.float() ** 2).sum() for q in qs))
+        if not torch.isfinite(gn):
+            return False
+        scale = rho / (gn + 1e-12)
+        self.eps = [(q, q.grad * scale) for q in qs]
+        with torch.no_grad():
+            for q, e in self.eps:
+                q.add_(e)
+        return True
+
+    def restore(self):
+        with torch.no_grad():
+            for q, e in self.eps:
+                q.sub_(e)
+        self.eps = []
+
+    def step(self):
+        self.opt.step()
+
+    def state_dict(self):
+        return self.opt.state_dict()
+
+    def load_state_dict(self, sd):
+        self.opt.load_state_dict(sd)
+
+
 def save(path, model, opt, it, args):
     tte.save(path, model, opt, it, args)
 
@@ -199,6 +273,8 @@ def main():
     ap.add_argument("--batch", type=int, default=2, help="tiled scenes per iteration (16 windows each)")
     ap.add_argument("--iters", type=int, default=5000)
     ap.add_argument("--lr", type=float, default=2e-4)
+    ap.add_argument("--optimizer", choices=["adam", "muon-matrices-adam-rest", "muon-conv-flattened-adam-rest", "sam-adam"], default="adam")
+    ap.add_argument("--sam-rho", type=float, default=0.05, help="sam-adam: radius of the ascent step along the normalised gradient")
     ap.add_argument("--k-start", type=int, default=8)
     ap.add_argument("--k-end", type=int, default=28)
     ap.add_argument("--tb", type=int, default=0)
@@ -246,7 +322,13 @@ def main():
     sf.load_compat(model, torch.load(a.init, map_location=dev, weights_only=False)["model"])
     model.train()
     tt = tc.TiledTier0(model, dev, chunk=a.chunk, exchange=a.exchange)
-    opt = torch.optim.Adam(model.parameters(), lr=a.lr)
+    if a.optimizer == "adam":
+        opt = torch.optim.Adam(model.parameters(), lr=a.lr)
+    elif a.optimizer == "sam-adam":
+        opt = SamAdam(model.parameters(), a.lr)
+    else:
+        opt = HybridMuon(model.parameters(), a.lr, conv=a.optimizer == "muon-conv-flattened-adam-rest")
+    log(f"optimizer {a.optimizer} parameter split by optimizer: {getattr(opt, 'split', {'adam': sum(q.numel() for q in model.parameters())})} total {sum(q.numel() for q in model.parameters())}")
     path = os.path.join(a.out_dir, a.tag + ".pt")
     ref_path = os.path.join(a.out_dir, a.tag + "_reference.json")
     it = 0
@@ -310,24 +392,8 @@ def main():
     probes = {}
     rp, dr, ref_replay, round_now = None, None, None, -1
     round_len = max(1, a.iters // max(1, a.replay_rounds))
-    while it < a.iters:
-        if STOP:
-            save(path, model, opt, it, a)
-            log(f"SIGTERM: saved it {it}")
-            return
-        if a.replay_rounds and min(it // round_len, a.replay_rounds - 1) != round_now:
-            round_now = min(it // round_len, a.replay_rounds - 1)
-            t_rp = time.time()
-            dr = ttr.make_scenes(a.replay_scenes, a.replay_steps, a.seed + 1000 + round_now, dev)
-            rp = (build_replay if a.replay_source == "model" else build_replay_truth)(model, tt, dr, a)
-            with torch.no_grad():
-                gr = torch.Generator().manual_seed(a.seed + round_now)
-                ref_replay = float(np.mean([float(replay_loss(tt, rp, dr, gr, a, dev)) for _ in range(a.calib_batches * 2)]))
-            log(f"replay round {round_now} built in {time.time() - t_rp:.0f}s: {rp['pos'].shape[0]} ticks x {rp['pos'].shape[1]} scenes, field {tuple(rp['fld'].shape[2:])}, reference one-step force loss {ref_replay:.5f}")
-        k, lr = schedule(a, it, a.iters)
-        for pg in opt.param_groups:
-            pg["lr"] = lr
-        opt.zero_grad()
+
+    def fwd_bwd(k):
         idx, t0s = sample(g, S, T, k, a.batch, a.p_start0, dev)
         if a.w_energy > 0:
             p, v, e = tc.rollout_terms(tt, d, idx, t0s, k, a.tb, energy=a.energy_kind)
@@ -360,6 +426,37 @@ def main():
             (a.w_iso * li).backward()
             parts["iso"] = float(li)
             ok = ok and bool(torch.isfinite(li))
+        return parts, ok
+
+    while it < a.iters:
+        if STOP:
+            save(path, model, opt, it, a)
+            log(f"SIGTERM: saved it {it}")
+            return
+        if a.replay_rounds and min(it // round_len, a.replay_rounds - 1) != round_now:
+            round_now = min(it // round_len, a.replay_rounds - 1)
+            t_rp = time.time()
+            dr = ttr.make_scenes(a.replay_scenes, a.replay_steps, a.seed + 1000 + round_now, dev)
+            rp = (build_replay if a.replay_source == "model" else build_replay_truth)(model, tt, dr, a)
+            with torch.no_grad():
+                gr = torch.Generator().manual_seed(a.seed + round_now)
+                ref_replay = float(np.mean([float(replay_loss(tt, rp, dr, gr, a, dev)) for _ in range(a.calib_batches * 2)]))
+            log(f"replay round {round_now} built in {time.time() - t_rp:.0f}s: {rp['pos'].shape[0]} ticks x {rp['pos'].shape[1]} scenes, field {tuple(rp['fld'].shape[2:])}, reference one-step force loss {ref_replay:.5f}")
+        k, lr = schedule(a, it, a.iters)
+        for pg in opt.param_groups:
+            pg["lr"] = lr
+        opt.zero_grad()
+        g_state = g.get_state() if a.optimizer == "sam-adam" else None
+        parts, ok = fwd_bwd(k)
+        if g_state is not None and ok:
+            if opt.ascend(a.sam_rho):
+                g.set_state(g_state)
+                opt.zero_grad()
+                parts, ok2 = fwd_bwd(k)
+                opt.restore()
+                ok = ok and ok2
+            else:
+                ok = False
         gn = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         if ok and torch.isfinite(gn):
             opt.step()

@@ -1,0 +1,8 @@
+default {'steady_mean_s': 0.5229666233062744, 'fallback': 6447, 'fallback_frac': 0.006447, 'max_abs_err_vs_bruteforce': 9.456534257878957e-07, 'max_abs_diff_vs_default_all_bodies': 0.0}
+adaptdeep {'steady_mean_s': 0.14193169275919595, 'fallback': 0, 'fallback_frac': 0.0, 'max_abs_err_vs_bruteforce': 9.456534257878957e-07, 'max_abs_diff_vs_default_all_bodies': 6.114132702350616e-07}
+adaptwide64 {'steady_mean_s': 0.18543259302775064, 'fallback': 0, 'fallback_frac': 0.0, 'max_abs_err_vs_bruteforce': 9.456534257878957e-07, 'max_abs_diff_vs_default_all_bodies': 9.5367431640625e-07}
+adaptwide128 {'steady_mean_s': 0.2976706027984619, 'fallback': 0, 'fallback_frac': 0.0, 'max_abs_err_vs_bruteforce': 9.456534257878957e-07, 'max_abs_diff_vs_default_all_bodies': 9.5367431640625e-07}
+adaptdeep-adaptwide64 {'steady_mean_s': 0.185898224512736, 'fallback': 0, 'fallback_frac': 0.0, 'max_abs_err_vs_bruteforce': 9.456534257878957e-07, 'max_abs_diff_vs_default_all_bodies': 9.5367431640625e-07}
+adaptdeep-adaptwide128 {'steady_mean_s': 0.2973031997680664, 'fallback': 0, 'fallback_frac': 0.0, 'max_abs_err_vs_bruteforce': 9.456534257878957e-07, 'max_abs_diff_vs_default_all_bodies': 9.5367431640625e-07}
+default bit identical to HEAD: True
+DONE

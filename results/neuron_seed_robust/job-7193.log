@@ -1,0 +1,862 @@
+name, memory.total [MiB]
+NVIDIA H200 NVL, 143771 MiB
+restart count 0
+................                                                         [100%]
+16 passed in 20.52s
+full-synaptic-messages seed 4738 teacher-forced it 250/1500 loss 0.1657 t 5s
+full-synaptic-messages seed 4738 teacher-forced it 500/1500 loss 0.0310 t 8s
+full-synaptic-messages seed 4738 teacher-forced it 750/1500 loss 0.0122 t 12s
+full-synaptic-messages seed 4738 teacher-forced it 1000/1500 loss 0.0078 t 15s
+full-synaptic-messages seed 4738 teacher-forced it 1250/1500 loss 0.0066 t 19s
+full-synaptic-messages seed 4738 teacher-forced it 1500/1500 loss 0.0058 t 22s
+full-synaptic-messages seed 4738 rollout-in-loop it 250/1500 loss 0.2068 t 27s
+full-synaptic-messages seed 4738 rollout-in-loop it 500/1500 loss 0.1727 t 31s
+full-synaptic-messages seed 4738 rollout-in-loop it 750/1500 loss 0.1736 t 35s
+full-synaptic-messages seed 4738 rollout-in-loop it 1000/1500 loss 0.1538 t 39s
+full-synaptic-messages seed 4738 rollout-in-loop it 1250/1500 loss 0.1332 t 43s
+full-synaptic-messages seed 4738 rollout-in-loop it 1500/1500 loss 0.1208 t 47s
+STEP baseline-seed4738 exit code 0
+baseline-architecture-48-tick-segments-control teacher-forced it 250/1500 loss 0.1701 t 11s
+baseline-architecture-48-tick-segments-control teacher-forced it 500/1500 loss 0.0209 t 20s
+baseline-architecture-48-tick-segments-control teacher-forced it 750/1500 loss 0.0100 t 30s
+baseline-architecture-48-tick-segments-control teacher-forced it 1000/1500 loss 0.0074 t 40s
+baseline-architecture-48-tick-segments-control teacher-forced it 1250/1500 loss 0.0062 t 50s
+baseline-architecture-48-tick-segments-control teacher-forced it 1500/1500 loss 0.0055 t 59s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 250/1500 loss 11.9401 t 71s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 500/1500 loss 5.4331 t 83s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 750/1500 loss 0.3581 t 95s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1000/1500 loss 0.3002 t 106s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1250/1500 loss 0.2886 t 118s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1500/1500 loss 0.2783 t 130s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 250/1500 loss 0.4588 t 12s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 500/1500 loss 0.2984 t 24s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 750/1500 loss 0.2572 t 36s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1000/1500 loss 0.2475 t 49s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1250/1500 loss 0.2400 t 61s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1500/1500 loss 0.2352 t 73s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 250/1500 loss 1.4575 t 87s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 500/1500 loss 0.6094 t 101s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 750/1500 loss 0.5881 t 116s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1000/1500 loss 0.5640 t 130s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1250/1500 loss 0.5454 t 144s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1500/1500 loss 0.5337 t 158s
+step-only loss (no count term, not part of the line) baseline-full-synaptic-messages: {'teacher-forced': 0.05787385925650597, 'rollout-in-loop': 0.2464406467974186}
+step-only loss (no count term, not part of the line) control-baseline-architecture-48-tick-segments-control: {'teacher-forced': 0.1481036901473999, 'rollout-in-loop': 0.278570818901062}
+step-only loss (no count term, not part of the line) variant-full-synaptic-messages: {'teacher-forced': 0.09596784859895706, 'rollout-in-loop': 0.2414503239095211}
+N=10
+  baseline-full-synaptic-messages: err@20 9.68 f1@20 0.81 f1@100 0.37 div 22.7 rate300 ratio 0.46 slope 0.11 corr 0.24
+  control-baseline-architecture-48-tick-segments-control: err@20 9.49 f1@20 0.16 f1@100 0.04 div 16.0 rate300 ratio 0.01 slope 0.01 corr 0.08
+  variant-full-synaptic-messages: err@20 8.76 f1@20 0.63 f1@100 0.23 div 17.8 rate300 ratio 1.72 slope -0.42 corr -0.15
+N=100
+  baseline-full-synaptic-messages: err@20 10.20 f1@20 0.81 f1@100 0.35 div 20.9 rate300 ratio 0.35 slope 0.09 corr 0.19
+  control-baseline-architecture-48-tick-segments-control: err@20 10.42 f1@20 0.18 f1@100 0.04 div 15.4 rate300 ratio 0.01 slope 0.01 corr 0.11
+  variant-full-synaptic-messages: err@20 10.08 f1@20 0.52 f1@100 0.16 div 19.2 rate300 ratio 2.53 slope -0.28 corr -0.09
+VERDICT KILL
+{"10": {"values": {"slope300": -0.419854998588562, "corr300": -0.14652524888515472, "ratio300": 1.7191739082336426, "err@20": 8.76328182220459, "f1@20": 0.6314885437480242}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": true, "f1@20_within_0.03": false}}, "100": {"values": {"slope300": -0.27680692076683044, "corr300": -0.09430265426635742, "ratio300": 2.5316057205200195, "err@20": 10.08463191986084, "f1@20": 0.5170033032372465}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": true, "f1@20_within_0.03": false}}}
+STEP slow-patch-seed4738 exit code 0
+data ready 3s
+plastic-synapse-state seed 4738 teacher-forced it 500/3000 loss 0.0047 t 11s
+plastic-synapse-state seed 4738 teacher-forced it 1000/3000 loss 0.0017 t 22s
+plastic-synapse-state seed 4738 teacher-forced it 1500/3000 loss 0.0012 t 32s
+plastic-synapse-state seed 4738 teacher-forced it 2000/3000 loss 0.0009 t 42s
+plastic-synapse-state seed 4738 teacher-forced it 2500/3000 loss 0.0009 t 52s
+plastic-synapse-state seed 4738 teacher-forced it 3000/3000 loss 0.0007 t 62s
+plastic-synapse-state seed 4738 rollout-in-loop it 500/3000 loss 0.0231 t 88s
+plastic-synapse-state seed 4738 rollout-in-loop it 1000/3000 loss 0.0164 t 113s
+plastic-synapse-state seed 4738 rollout-in-loop it 1500/3000 loss 0.0151 t 139s
+plastic-synapse-state seed 4738 rollout-in-loop it 2000/3000 loss 0.0154 t 164s
+plastic-synapse-state seed 4738 rollout-in-loop it 2500/3000 loss 0.0118 t 190s
+plastic-synapse-state seed 4738 rollout-in-loop it 3000/3000 loss 0.0084 t 215s
+fixed-synapse-no-mutable-state seed 4738 teacher-forced it 500/3000 loss 0.0045 t 8s
+fixed-synapse-no-mutable-state seed 4738 teacher-forced it 1000/3000 loss 0.0017 t 16s
+fixed-synapse-no-mutable-state seed 4738 teacher-forced it 1500/3000 loss 0.0012 t 24s
+fixed-synapse-no-mutable-state seed 4738 teacher-forced it 2000/3000 loss 0.0009 t 32s
+fixed-synapse-no-mutable-state seed 4738 teacher-forced it 2500/3000 loss 0.0008 t 40s
+fixed-synapse-no-mutable-state seed 4738 teacher-forced it 3000/3000 loss 0.0007 t 48s
+fixed-synapse-no-mutable-state seed 4738 rollout-in-loop it 500/3000 loss 0.0448 t 66s
+fixed-synapse-no-mutable-state seed 4738 rollout-in-loop it 1000/3000 loss 0.0121 t 84s
+fixed-synapse-no-mutable-state seed 4738 rollout-in-loop it 1500/3000 loss 0.0100 t 102s
+fixed-synapse-no-mutable-state seed 4738 rollout-in-loop it 2000/3000 loss 0.0088 t 121s
+fixed-synapse-no-mutable-state seed 4738 rollout-in-loop it 2500/3000 loss 0.0081 t 139s
+fixed-synapse-no-mutable-state seed 4738 rollout-in-loop it 3000/3000 loss 0.0073 t 157s
+N=10 probe1: plastic fwd/rev/none [0.27, -0.33, 0.1] teacher [2.03, -1.45, 0.01] fixed [-1.15, -1.17, -1.01] checks {'forward positive t>=2': False, 'reversed negative t>=2': True, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'forward >= 0.5 teacher': False, 'finite': True}
+N=10 probe2: plastic fwd/rev/none [0.26, -0.24, 0.1] teacher [6.5, -1.78, -0.17] fixed [-1.08, -1.08, -1.06] checks {'forward positive t>=2': False, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'persists >= 0.5 of probe 1': True, 'finite': True}
+N=100 probe1: plastic fwd/rev/none [0.42, -0.3, -0.18] teacher [4.24, -1.19, 0.23] fixed [-0.42, -0.42, -0.41] checks {'forward positive t>=2': True, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'forward >= 0.5 teacher': False, 'finite': True}
+N=100 probe2: plastic fwd/rev/none [1.03, -0.11, 0.04] teacher [4.93, -1.37, 0.15] fixed [-0.46, -0.46, -0.46] checks {'forward positive t>=2': True, 'reversed negative t>=2': False, 'no-induction small': True, 'fixed contrast <= 0.25 plastic': True, 'persists >= 0.5 of probe 1': True, 'finite': True}
+VERDICT PARTIAL
+STEP plasticity-seed4738 exit code 0
+full-synaptic-messages seed 4739 teacher-forced it 250/1500 loss 0.1269 t 5s
+full-synaptic-messages seed 4739 teacher-forced it 500/1500 loss 0.0303 t 8s
+full-synaptic-messages seed 4739 teacher-forced it 750/1500 loss 0.0141 t 12s
+full-synaptic-messages seed 4739 teacher-forced it 1000/1500 loss 0.0078 t 15s
+full-synaptic-messages seed 4739 teacher-forced it 1250/1500 loss 0.0059 t 19s
+full-synaptic-messages seed 4739 teacher-forced it 1500/1500 loss 0.0050 t 22s
+full-synaptic-messages seed 4739 rollout-in-loop it 250/1500 loss 0.2435 t 27s
+full-synaptic-messages seed 4739 rollout-in-loop it 500/1500 loss 0.1955 t 31s
+full-synaptic-messages seed 4739 rollout-in-loop it 750/1500 loss 0.1797 t 35s
+full-synaptic-messages seed 4739 rollout-in-loop it 1000/1500 loss 0.1573 t 39s
+full-synaptic-messages seed 4739 rollout-in-loop it 1250/1500 loss 0.1470 t 43s
+full-synaptic-messages seed 4739 rollout-in-loop it 1500/1500 loss 0.1380 t 47s
+STEP baseline-seed4739 exit code 0
+baseline-architecture-48-tick-segments-control teacher-forced it 250/1500 loss 0.1445 t 11s
+baseline-architecture-48-tick-segments-control teacher-forced it 500/1500 loss 0.0249 t 20s
+baseline-architecture-48-tick-segments-control teacher-forced it 750/1500 loss 0.0119 t 30s
+baseline-architecture-48-tick-segments-control teacher-forced it 1000/1500 loss 0.0080 t 40s
+baseline-architecture-48-tick-segments-control teacher-forced it 1250/1500 loss 0.0068 t 49s
+baseline-architecture-48-tick-segments-control teacher-forced it 1500/1500 loss 0.0058 t 59s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 250/1500 loss 10.4556 t 71s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 500/1500 loss 3.2723 t 82s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 750/1500 loss 0.4452 t 94s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1000/1500 loss 0.2900 t 106s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1250/1500 loss 0.2718 t 117s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1500/1500 loss 0.2573 t 129s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 250/1500 loss 0.4007 t 12s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 500/1500 loss 0.2771 t 24s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 750/1500 loss 0.2482 t 36s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1000/1500 loss 0.2396 t 48s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1250/1500 loss 0.2357 t 61s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1500/1500 loss 0.2338 t 73s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 250/1500 loss 3.9219 t 87s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 500/1500 loss 0.6839 t 101s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 750/1500 loss 0.5999 t 115s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1000/1500 loss 0.5947 t 129s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1250/1500 loss 0.5708 t 143s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1500/1500 loss 0.5582 t 157s
+step-only loss (no count term, not part of the line) baseline-full-synaptic-messages: {'teacher-forced': 0.08102641068398952, 'rollout-in-loop': 0.2418171599507332}
+step-only loss (no count term, not part of the line) control-baseline-architecture-48-tick-segments-control: {'teacher-forced': 0.10448637306690216, 'rollout-in-loop': 0.25833253338932993}
+step-only loss (no count term, not part of the line) variant-full-synaptic-messages: {'teacher-forced': 0.10405867993831634, 'rollout-in-loop': 0.2680181905627251}
+N=10
+  baseline-full-synaptic-messages: err@20 9.50 f1@20 0.78 f1@100 0.39 div 21.6 rate300 ratio 1.01 slope 0.12 corr 0.19
+  control-baseline-architecture-48-tick-segments-control: err@20 9.77 f1@20 0.38 f1@100 0.10 div 16.1 rate300 ratio 0.03 slope 0.03 corr 0.27
+  variant-full-synaptic-messages: err@20 10.13 f1@20 0.65 f1@100 0.31 div 16.8 rate300 ratio 0.62 slope 0.00 corr 0.00
+N=100
+  baseline-full-synaptic-messages: err@20 9.57 f1@20 0.76 f1@100 0.34 div 22.2 rate300 ratio 0.45 slope 0.19 corr 0.26
+  control-baseline-architecture-48-tick-segments-control: err@20 9.83 f1@20 0.32 f1@100 0.09 div 16.6 rate300 ratio 0.03 slope 0.03 corr 0.20
+  variant-full-synaptic-messages: err@20 10.34 f1@20 0.60 f1@100 0.26 div 16.2 rate300 ratio 0.37 slope 0.05 corr 0.05
+VERDICT KILL
+{"10": {"values": {"slope300": 0.00019338660058565438, "corr300": 0.0001732965320115909, "ratio300": 0.6172810792922974, "err@20": 10.130401611328125, "f1@20": 0.6516875229196042}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}, "100": {"values": {"slope300": 0.052212394773960114, "corr300": 0.053308382630348206, "ratio300": 0.3696509897708893, "err@20": 10.343685150146484, "f1@20": 0.6031705811618535}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}}
+STEP slow-patch-seed4739 exit code 0
+data ready 5s
+plastic-synapse-state seed 4739 teacher-forced it 500/3000 loss 0.0039 t 11s
+plastic-synapse-state seed 4739 teacher-forced it 1000/3000 loss 0.0018 t 22s
+plastic-synapse-state seed 4739 teacher-forced it 1500/3000 loss 0.0014 t 32s
+plastic-synapse-state seed 4739 teacher-forced it 2000/3000 loss 0.0008 t 42s
+plastic-synapse-state seed 4739 teacher-forced it 2500/3000 loss 0.0008 t 52s
+plastic-synapse-state seed 4739 teacher-forced it 3000/3000 loss 0.0007 t 63s
+plastic-synapse-state seed 4739 rollout-in-loop it 500/3000 loss 0.1569 t 88s
+plastic-synapse-state seed 4739 rollout-in-loop it 1000/3000 loss 0.0184 t 113s
+plastic-synapse-state seed 4739 rollout-in-loop it 1500/3000 loss 0.0137 t 139s
+plastic-synapse-state seed 4739 rollout-in-loop it 2000/3000 loss 0.0118 t 164s
+plastic-synapse-state seed 4739 rollout-in-loop it 2500/3000 loss 0.0108 t 190s
+plastic-synapse-state seed 4739 rollout-in-loop it 3000/3000 loss 0.0083 t 215s
+fixed-synapse-no-mutable-state seed 4739 teacher-forced it 500/3000 loss 0.0038 t 8s
+fixed-synapse-no-mutable-state seed 4739 teacher-forced it 1000/3000 loss 0.0018 t 16s
+fixed-synapse-no-mutable-state seed 4739 teacher-forced it 1500/3000 loss 0.0014 t 24s
+fixed-synapse-no-mutable-state seed 4739 teacher-forced it 2000/3000 loss 0.0008 t 32s
+fixed-synapse-no-mutable-state seed 4739 teacher-forced it 2500/3000 loss 0.0008 t 40s
+fixed-synapse-no-mutable-state seed 4739 teacher-forced it 3000/3000 loss 0.0007 t 47s
+fixed-synapse-no-mutable-state seed 4739 rollout-in-loop it 500/3000 loss 0.0449 t 66s
+fixed-synapse-no-mutable-state seed 4739 rollout-in-loop it 1000/3000 loss 0.0203 t 84s
+fixed-synapse-no-mutable-state seed 4739 rollout-in-loop it 1500/3000 loss 0.0126 t 102s
+fixed-synapse-no-mutable-state seed 4739 rollout-in-loop it 2000/3000 loss 0.0100 t 120s
+fixed-synapse-no-mutable-state seed 4739 rollout-in-loop it 2500/3000 loss 0.0092 t 139s
+fixed-synapse-no-mutable-state seed 4739 rollout-in-loop it 3000/3000 loss 0.0069 t 157s
+N=10 probe1: plastic fwd/rev/none [0.11, -0.22, -0.08] teacher [1.56, -1.46, 0.22] fixed [0.79, 0.7, 0.26] checks {'forward positive t>=2': False, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': False, 'forward >= 0.5 teacher': False, 'finite': True}
+N=10 probe2: plastic fwd/rev/none [0.24, 0.05, 0.1] teacher [4.78, -1.48, 0.14] fixed [0.37, 0.37, 0.37] checks {'forward positive t>=2': False, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'persists >= 0.5 of probe 1': True, 'finite': True}
+N=100 probe1: plastic fwd/rev/none [-0.17, -0.04, -0.31] teacher [1.22, -1.38, -0.27] fixed [0.32, 0.21, 0.11] checks {'forward positive t>=2': False, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': False, 'forward >= 0.5 teacher': False, 'finite': True}
+N=100 probe2: plastic fwd/rev/none [-0.2, -0.04, -0.16] teacher [3.59, -1.39, -0.04] fixed [0.19, 0.19, 0.2] checks {'forward positive t>=2': False, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': False, 'persists >= 0.5 of probe 1': False, 'finite': True}
+VERDICT PARTIAL
+STEP plasticity-seed4739 exit code 0
+full-synaptic-messages seed 4740 teacher-forced it 250/1500 loss 0.1180 t 5s
+full-synaptic-messages seed 4740 teacher-forced it 500/1500 loss 0.0216 t 8s
+full-synaptic-messages seed 4740 teacher-forced it 750/1500 loss 0.0112 t 12s
+full-synaptic-messages seed 4740 teacher-forced it 1000/1500 loss 0.0075 t 15s
+full-synaptic-messages seed 4740 teacher-forced it 1250/1500 loss 0.0064 t 19s
+full-synaptic-messages seed 4740 teacher-forced it 1500/1500 loss 0.0056 t 22s
+full-synaptic-messages seed 4740 rollout-in-loop it 250/1500 loss 0.2839 t 27s
+full-synaptic-messages seed 4740 rollout-in-loop it 500/1500 loss 0.1983 t 31s
+full-synaptic-messages seed 4740 rollout-in-loop it 750/1500 loss 0.1729 t 35s
+full-synaptic-messages seed 4740 rollout-in-loop it 1000/1500 loss 0.1602 t 39s
+full-synaptic-messages seed 4740 rollout-in-loop it 1250/1500 loss 0.1448 t 43s
+full-synaptic-messages seed 4740 rollout-in-loop it 1500/1500 loss 0.1327 t 47s
+STEP baseline-seed4740 exit code 0
+baseline-architecture-48-tick-segments-control teacher-forced it 250/1500 loss 0.1741 t 11s
+baseline-architecture-48-tick-segments-control teacher-forced it 500/1500 loss 0.0282 t 20s
+baseline-architecture-48-tick-segments-control teacher-forced it 750/1500 loss 0.0121 t 30s
+baseline-architecture-48-tick-segments-control teacher-forced it 1000/1500 loss 0.0083 t 40s
+baseline-architecture-48-tick-segments-control teacher-forced it 1250/1500 loss 0.0064 t 49s
+baseline-architecture-48-tick-segments-control teacher-forced it 1500/1500 loss 0.0056 t 59s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 250/1500 loss 3.0256 t 71s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 500/1500 loss 0.7126 t 82s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 750/1500 loss 0.3530 t 94s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1000/1500 loss 0.3066 t 106s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1250/1500 loss 0.2881 t 117s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1500/1500 loss 0.2722 t 129s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 250/1500 loss 0.3953 t 12s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 500/1500 loss 0.2791 t 24s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 750/1500 loss 0.2469 t 36s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1000/1500 loss 0.2442 t 49s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1250/1500 loss 0.2426 t 61s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1500/1500 loss 0.2359 t 73s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 250/1500 loss 2.0079 t 87s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 500/1500 loss 0.6248 t 101s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 750/1500 loss 0.5813 t 115s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1000/1500 loss 0.5892 t 129s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1250/1500 loss 0.5670 t 143s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1500/1500 loss 0.5348 t 157s
+step-only loss (no count term, not part of the line) baseline-full-synaptic-messages: {'teacher-forced': 0.0750949939712882, 'rollout-in-loop': 0.24860221669077873}
+step-only loss (no count term, not part of the line) control-baseline-architecture-48-tick-segments-control: {'teacher-forced': 0.14308434315025806, 'rollout-in-loop': 0.2754814513027668}
+step-only loss (no count term, not part of the line) variant-full-synaptic-messages: {'teacher-forced': 0.08748208507895469, 'rollout-in-loop': 0.24454016089439393}
+N=10
+  baseline-full-synaptic-messages: err@20 8.94 f1@20 0.81 f1@100 0.33 div 22.3 rate300 ratio 1.84 slope 0.12 corr 0.02
+  control-baseline-architecture-48-tick-segments-control: err@20 9.40 f1@20 0.14 f1@100 0.03 div 18.5 rate300 ratio 0.01 slope 0.01 corr 0.12
+  variant-full-synaptic-messages: err@20 8.76 f1@20 0.54 f1@100 0.23 div 19.7 rate300 ratio 0.84 slope -0.28 corr -0.28
+N=100
+  baseline-full-synaptic-messages: err@20 9.72 f1@20 0.80 f1@100 0.33 div 23.8 rate300 ratio 1.56 slope 0.42 corr 0.04
+  control-baseline-architecture-48-tick-segments-control: err@20 10.38 f1@20 0.15 f1@100 0.03 div 17.9 rate300 ratio 0.01 slope 0.01 corr 0.12
+  variant-full-synaptic-messages: err@20 10.04 f1@20 0.54 f1@100 0.22 div 20.0 rate300 ratio 0.44 slope -0.14 corr -0.18
+VERDICT KILL
+{"10": {"values": {"slope300": -0.28407347202301025, "corr300": -0.28397586941719055, "ratio300": 0.8352232575416565, "err@20": 8.762399673461914, "f1@20": 0.5386229273811507}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": true, "err@20_within_+3pct": true, "f1@20_within_0.03": false}}, "100": {"values": {"slope300": -0.13682422041893005, "corr300": -0.18269239366054535, "ratio300": 0.44034528732299805, "err@20": 10.03726863861084, "f1@20": 0.5371971997095706}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}}
+STEP slow-patch-seed4740 exit code 0
+data ready 2s
+plastic-synapse-state seed 4740 teacher-forced it 500/3000 loss 0.0040 t 12s
+plastic-synapse-state seed 4740 teacher-forced it 1000/3000 loss 0.0017 t 22s
+plastic-synapse-state seed 4740 teacher-forced it 1500/3000 loss 0.0014 t 32s
+plastic-synapse-state seed 4740 teacher-forced it 2000/3000 loss 0.0009 t 42s
+plastic-synapse-state seed 4740 teacher-forced it 2500/3000 loss 0.0006 t 52s
+plastic-synapse-state seed 4740 teacher-forced it 3000/3000 loss 0.0007 t 63s
+plastic-synapse-state seed 4740 rollout-in-loop it 500/3000 loss 0.0401 t 88s
+plastic-synapse-state seed 4740 rollout-in-loop it 1000/3000 loss 0.0181 t 114s
+plastic-synapse-state seed 4740 rollout-in-loop it 1500/3000 loss 0.0146 t 139s
+plastic-synapse-state seed 4740 rollout-in-loop it 2000/3000 loss 0.0132 t 165s
+plastic-synapse-state seed 4740 rollout-in-loop it 2500/3000 loss 0.0101 t 191s
+plastic-synapse-state seed 4740 rollout-in-loop it 3000/3000 loss 0.0099 t 216s
+fixed-synapse-no-mutable-state seed 4740 teacher-forced it 500/3000 loss 0.0038 t 8s
+fixed-synapse-no-mutable-state seed 4740 teacher-forced it 1000/3000 loss 0.0016 t 16s
+fixed-synapse-no-mutable-state seed 4740 teacher-forced it 1500/3000 loss 0.0013 t 24s
+fixed-synapse-no-mutable-state seed 4740 teacher-forced it 2000/3000 loss 0.0009 t 32s
+fixed-synapse-no-mutable-state seed 4740 teacher-forced it 2500/3000 loss 0.0006 t 40s
+fixed-synapse-no-mutable-state seed 4740 teacher-forced it 3000/3000 loss 0.0006 t 48s
+fixed-synapse-no-mutable-state seed 4740 rollout-in-loop it 500/3000 loss 0.0234 t 66s
+fixed-synapse-no-mutable-state seed 4740 rollout-in-loop it 1000/3000 loss 0.0088 t 85s
+fixed-synapse-no-mutable-state seed 4740 rollout-in-loop it 1500/3000 loss 0.0078 t 103s
+fixed-synapse-no-mutable-state seed 4740 rollout-in-loop it 2000/3000 loss 0.0074 t 121s
+fixed-synapse-no-mutable-state seed 4740 rollout-in-loop it 2500/3000 loss 0.0060 t 140s
+fixed-synapse-no-mutable-state seed 4740 rollout-in-loop it 3000/3000 loss 0.0060 t 158s
+N=10 probe1: plastic fwd/rev/none [-0.08, 0.15, 1.06] teacher [2.66, -1.41, 0.04] fixed [1.85, 2.45, 3.87] checks {'forward positive t>=2': False, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'forward >= 0.5 teacher': False, 'finite': True}
+N=10 probe2: plastic fwd/rev/none [-0.55, 0.38, 1.13] teacher [25.81, -1.57, 0.23] fixed [3.95, 3.96, 3.96] checks {'forward positive t>=2': False, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': False, 'persists >= 0.5 of probe 1': False, 'finite': True}
+N=100 probe1: plastic fwd/rev/none [-0.0, -0.33, 0.37] teacher [10.61, -1.36, 0.24] fixed [1.38, 1.7, 11.08] checks {'forward positive t>=2': False, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'forward >= 0.5 teacher': False, 'finite': True}
+N=100 probe2: plastic fwd/rev/none [0.05, 0.06, 0.35] teacher [18.46, -1.62, 0.26] fixed [10.62, 10.75, 3.64] checks {'forward positive t>=2': False, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'persists >= 0.5 of probe 1': True, 'finite': True}
+VERDICT PARTIAL
+STEP plasticity-seed4740 exit code 0
+full-synaptic-messages seed 4741 teacher-forced it 250/1500 loss 0.1833 t 5s
+full-synaptic-messages seed 4741 teacher-forced it 500/1500 loss 0.0428 t 8s
+full-synaptic-messages seed 4741 teacher-forced it 750/1500 loss 0.0136 t 12s
+full-synaptic-messages seed 4741 teacher-forced it 1000/1500 loss 0.0085 t 15s
+full-synaptic-messages seed 4741 teacher-forced it 1250/1500 loss 0.0064 t 19s
+full-synaptic-messages seed 4741 teacher-forced it 1500/1500 loss 0.0058 t 22s
+full-synaptic-messages seed 4741 rollout-in-loop it 250/1500 loss 0.2122 t 27s
+full-synaptic-messages seed 4741 rollout-in-loop it 500/1500 loss 0.1906 t 31s
+full-synaptic-messages seed 4741 rollout-in-loop it 750/1500 loss 0.1582 t 35s
+full-synaptic-messages seed 4741 rollout-in-loop it 1000/1500 loss 0.1474 t 39s
+full-synaptic-messages seed 4741 rollout-in-loop it 1250/1500 loss 0.1343 t 43s
+full-synaptic-messages seed 4741 rollout-in-loop it 1500/1500 loss 0.1210 t 47s
+STEP baseline-seed4741 exit code 0
+baseline-architecture-48-tick-segments-control teacher-forced it 250/1500 loss 0.1819 t 11s
+baseline-architecture-48-tick-segments-control teacher-forced it 500/1500 loss 0.0249 t 21s
+baseline-architecture-48-tick-segments-control teacher-forced it 750/1500 loss 0.0110 t 30s
+baseline-architecture-48-tick-segments-control teacher-forced it 1000/1500 loss 0.0077 t 40s
+baseline-architecture-48-tick-segments-control teacher-forced it 1250/1500 loss 0.0059 t 50s
+baseline-architecture-48-tick-segments-control teacher-forced it 1500/1500 loss 0.0052 t 59s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 250/1500 loss 3.9821 t 71s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 500/1500 loss 0.3482 t 83s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 750/1500 loss 0.2826 t 94s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1000/1500 loss 0.2636 t 106s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1250/1500 loss 0.2718 t 118s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1500/1500 loss 0.2631 t 129s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 250/1500 loss 0.4807 t 12s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 500/1500 loss 0.3058 t 24s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 750/1500 loss 0.2561 t 36s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1000/1500 loss 0.2440 t 49s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1250/1500 loss 0.2375 t 61s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1500/1500 loss 0.2429 t 73s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 250/1500 loss 1.3802 t 87s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 500/1500 loss 0.6222 t 101s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 750/1500 loss 0.5813 t 115s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1000/1500 loss 0.5856 t 129s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1250/1500 loss 0.5666 t 143s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1500/1500 loss 0.5583 t 157s
+step-only loss (no count term, not part of the line) baseline-full-synaptic-messages: {'teacher-forced': 0.054591914638876915, 'rollout-in-loop': 0.22809336036443711}
+step-only loss (no count term, not part of the line) control-baseline-architecture-48-tick-segments-control: {'teacher-forced': 0.1281445946544409, 'rollout-in-loop': 0.26199815422296524}
+step-only loss (no count term, not part of the line) variant-full-synaptic-messages: {'teacher-forced': 0.11883050613105298, 'rollout-in-loop': 0.2472834773361683}
+N=10
+  baseline-full-synaptic-messages: err@20 8.79 f1@20 0.84 f1@100 0.41 div 26.0 rate300 ratio 0.36 slope 0.11 corr 0.28
+  control-baseline-architecture-48-tick-segments-control: err@20 9.52 f1@20 0.44 f1@100 0.16 div 16.8 rate300 ratio 0.13 slope 0.05 corr 0.08
+  variant-full-synaptic-messages: err@20 9.08 f1@20 0.66 f1@100 0.27 div 19.9 rate300 ratio 0.21 slope -0.03 corr -0.03
+N=100
+  baseline-full-synaptic-messages: err@20 9.95 f1@20 0.80 f1@100 0.30 div 22.5 rate300 ratio 0.14 slope 0.08 corr 0.26
+  control-baseline-architecture-48-tick-segments-control: err@20 10.99 f1@20 0.44 f1@100 0.12 div 17.5 rate300 ratio 0.03 slope 0.03 corr 0.17
+  variant-full-synaptic-messages: err@20 10.53 f1@20 0.64 f1@100 0.21 div 18.6 rate300 ratio 0.13 slope 0.02 corr 0.02
+VERDICT KILL
+{"10": {"values": {"slope300": -0.028749074786901474, "corr300": -0.03335246443748474, "ratio300": 0.21127748489379883, "err@20": 9.07573127746582, "f1@20": 0.6633965258407513}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}, "100": {"values": {"slope300": 0.01637212559580803, "corr300": 0.01911085471510887, "ratio300": 0.12822015583515167, "err@20": 10.53327465057373, "f1@20": 0.6405504532268255}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}}
+STEP slow-patch-seed4741 exit code 0
+data ready 5s
+plastic-synapse-state seed 4741 teacher-forced it 500/3000 loss 0.0044 t 12s
+plastic-synapse-state seed 4741 teacher-forced it 1000/3000 loss 0.0017 t 22s
+plastic-synapse-state seed 4741 teacher-forced it 1500/3000 loss 0.0011 t 32s
+plastic-synapse-state seed 4741 teacher-forced it 2000/3000 loss 0.0010 t 43s
+plastic-synapse-state seed 4741 teacher-forced it 2500/3000 loss 0.0009 t 53s
+plastic-synapse-state seed 4741 teacher-forced it 3000/3000 loss 0.0007 t 63s
+plastic-synapse-state seed 4741 rollout-in-loop it 500/3000 loss 0.0710 t 89s
+plastic-synapse-state seed 4741 rollout-in-loop it 1000/3000 loss 0.0157 t 115s
+plastic-synapse-state seed 4741 rollout-in-loop it 1500/3000 loss 0.0107 t 141s
+plastic-synapse-state seed 4741 rollout-in-loop it 2000/3000 loss 0.0088 t 166s
+plastic-synapse-state seed 4741 rollout-in-loop it 2500/3000 loss 0.0071 t 192s
+plastic-synapse-state seed 4741 rollout-in-loop it 3000/3000 loss 0.0076 t 218s
+fixed-synapse-no-mutable-state seed 4741 teacher-forced it 500/3000 loss 0.0044 t 8s
+fixed-synapse-no-mutable-state seed 4741 teacher-forced it 1000/3000 loss 0.0016 t 16s
+fixed-synapse-no-mutable-state seed 4741 teacher-forced it 1500/3000 loss 0.0011 t 24s
+fixed-synapse-no-mutable-state seed 4741 teacher-forced it 2000/3000 loss 0.0010 t 32s
+fixed-synapse-no-mutable-state seed 4741 teacher-forced it 2500/3000 loss 0.0009 t 41s
+fixed-synapse-no-mutable-state seed 4741 teacher-forced it 3000/3000 loss 0.0008 t 49s
+fixed-synapse-no-mutable-state seed 4741 rollout-in-loop it 500/3000 loss 0.0212 t 67s
+fixed-synapse-no-mutable-state seed 4741 rollout-in-loop it 1000/3000 loss 0.0107 t 86s
+fixed-synapse-no-mutable-state seed 4741 rollout-in-loop it 1500/3000 loss 0.0089 t 104s
+fixed-synapse-no-mutable-state seed 4741 rollout-in-loop it 2000/3000 loss 0.0075 t 123s
+fixed-synapse-no-mutable-state seed 4741 rollout-in-loop it 2500/3000 loss 0.0066 t 142s
+fixed-synapse-no-mutable-state seed 4741 rollout-in-loop it 3000/3000 loss 0.0062 t 160s
+N=10 probe1: plastic fwd/rev/none [-0.04, -1.36, 1.39] teacher [9.73, -1.38, 1.63] fixed [-0.91, -0.92, -0.85] checks {'forward positive t>=2': False, 'reversed negative t>=2': True, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'forward >= 0.5 teacher': False, 'finite': True}
+N=10 probe2: plastic fwd/rev/none [0.9, -1.1, 1.11] teacher [12.47, -1.65, 6.74] fixed [-0.81, -0.81, -0.82] checks {'forward positive t>=2': False, 'reversed negative t>=2': True, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'persists >= 0.5 of probe 1': True, 'finite': True}
+N=100 probe1: plastic fwd/rev/none [-1.19, -1.74, 0.16] teacher [20.66, -1.18, 0.53] fixed [-1.18, -1.17, -0.98] checks {'forward positive t>=2': False, 'reversed negative t>=2': True, 'no-induction small': True, 'fixed contrast <= 0.25 plastic': True, 'forward >= 0.5 teacher': False, 'finite': True}
+N=100 probe2: plastic fwd/rev/none [-0.47, -1.28, -0.13] teacher [18.9, -1.42, 0.15] fixed [-1.07, -1.06, -1.05] checks {'forward positive t>=2': False, 'reversed negative t>=2': True, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'persists >= 0.5 of probe 1': True, 'finite': True}
+VERDICT PARTIAL
+STEP plasticity-seed4741 exit code 0
+full-synaptic-messages seed 4742 teacher-forced it 250/1500 loss 0.1749 t 5s
+full-synaptic-messages seed 4742 teacher-forced it 500/1500 loss 0.0266 t 8s
+full-synaptic-messages seed 4742 teacher-forced it 750/1500 loss 0.0119 t 12s
+full-synaptic-messages seed 4742 teacher-forced it 1000/1500 loss 0.0075 t 15s
+full-synaptic-messages seed 4742 teacher-forced it 1250/1500 loss 0.0060 t 19s
+full-synaptic-messages seed 4742 teacher-forced it 1500/1500 loss 0.0054 t 22s
+full-synaptic-messages seed 4742 rollout-in-loop it 250/1500 loss 0.2409 t 27s
+full-synaptic-messages seed 4742 rollout-in-loop it 500/1500 loss 0.1878 t 31s
+full-synaptic-messages seed 4742 rollout-in-loop it 750/1500 loss 0.1785 t 35s
+full-synaptic-messages seed 4742 rollout-in-loop it 1000/1500 loss 0.1505 t 39s
+full-synaptic-messages seed 4742 rollout-in-loop it 1250/1500 loss 0.1380 t 43s
+full-synaptic-messages seed 4742 rollout-in-loop it 1500/1500 loss 0.1275 t 47s
+STEP baseline-seed4742 exit code 0
+baseline-architecture-48-tick-segments-control teacher-forced it 250/1500 loss 0.1706 t 11s
+baseline-architecture-48-tick-segments-control teacher-forced it 500/1500 loss 0.0267 t 21s
+baseline-architecture-48-tick-segments-control teacher-forced it 750/1500 loss 0.0110 t 30s
+baseline-architecture-48-tick-segments-control teacher-forced it 1000/1500 loss 0.0080 t 40s
+baseline-architecture-48-tick-segments-control teacher-forced it 1250/1500 loss 0.0066 t 50s
+baseline-architecture-48-tick-segments-control teacher-forced it 1500/1500 loss 0.0058 t 59s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 250/1500 loss 0.4663 t 71s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 500/1500 loss 0.2819 t 83s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 750/1500 loss 0.2744 t 95s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1000/1500 loss 0.2557 t 106s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1250/1500 loss 0.2560 t 118s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1500/1500 loss 0.2465 t 130s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 250/1500 loss 0.4618 t 12s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 500/1500 loss 0.2914 t 24s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 750/1500 loss 0.2503 t 36s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1000/1500 loss 0.2383 t 49s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1250/1500 loss 0.2371 t 61s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1500/1500 loss 0.2311 t 73s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 250/1500 loss 1.8045 t 87s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 500/1500 loss 0.6836 t 101s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 750/1500 loss 0.6237 t 115s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1000/1500 loss 0.5841 t 129s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1250/1500 loss 0.5589 t 143s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1500/1500 loss 0.5476 t 157s
+step-only loss (no count term, not part of the line) baseline-full-synaptic-messages: {'teacher-forced': 0.08055403977632522, 'rollout-in-loop': 0.23635197877883912}
+step-only loss (no count term, not part of the line) control-baseline-architecture-48-tick-segments-control: {'teacher-forced': 0.07340064737945795, 'rollout-in-loop': 0.24381725192070008}
+step-only loss (no count term, not part of the line) variant-full-synaptic-messages: {'teacher-forced': 0.09965369403362274, 'rollout-in-loop': 0.2483645685017109}
+N=10
+  baseline-full-synaptic-messages: err@20 9.86 f1@20 0.80 f1@100 0.31 div 22.6 rate300 ratio 0.11 slope 0.08 corr 0.35
+  control-baseline-architecture-48-tick-segments-control: err@20 10.14 f1@20 0.61 f1@100 0.20 div 18.4 rate300 ratio 0.09 slope 0.08 corr 0.35
+  variant-full-synaptic-messages: err@20 10.47 f1@20 0.52 f1@100 0.14 div 16.6 rate300 ratio 0.48 slope 0.02 corr 0.02
+N=100
+  baseline-full-synaptic-messages: err@20 9.76 f1@20 0.77 f1@100 0.29 div 23.2 rate300 ratio 0.12 slope 0.09 corr 0.33
+  control-baseline-architecture-48-tick-segments-control: err@20 10.05 f1@20 0.56 f1@100 0.17 div 20.0 rate300 ratio 0.06 slope 0.04 corr 0.24
+  variant-full-synaptic-messages: err@20 10.09 f1@20 0.47 f1@100 0.13 div 19.2 rate300 ratio 0.27 slope -0.06 corr -0.07
+VERDICT KILL
+{"10": {"values": {"slope300": 0.02140657790005207, "corr300": 0.02159731462597847, "ratio300": 0.48354583978652954, "err@20": 10.472001075744629, "f1@20": 0.5242057438607246}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}, "100": {"values": {"slope300": -0.06476929783821106, "corr300": -0.07260583341121674, "ratio300": 0.26532313227653503, "err@20": 10.088045120239258, "f1@20": 0.4703017389064357}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}}
+STEP slow-patch-seed4742 exit code 0
+data ready 5s
+plastic-synapse-state seed 4742 teacher-forced it 500/3000 loss 0.0044 t 11s
+plastic-synapse-state seed 4742 teacher-forced it 1000/3000 loss 0.0018 t 22s
+plastic-synapse-state seed 4742 teacher-forced it 1500/3000 loss 0.0012 t 32s
+plastic-synapse-state seed 4742 teacher-forced it 2000/3000 loss 0.0008 t 42s
+plastic-synapse-state seed 4742 teacher-forced it 2500/3000 loss 0.0008 t 53s
+plastic-synapse-state seed 4742 teacher-forced it 3000/3000 loss 0.0007 t 63s
+plastic-synapse-state seed 4742 rollout-in-loop it 500/3000 loss 0.0235 t 89s
+plastic-synapse-state seed 4742 rollout-in-loop it 1000/3000 loss 0.0132 t 114s
+plastic-synapse-state seed 4742 rollout-in-loop it 1500/3000 loss 0.0099 t 140s
+plastic-synapse-state seed 4742 rollout-in-loop it 2000/3000 loss 0.0087 t 166s
+plastic-synapse-state seed 4742 rollout-in-loop it 2500/3000 loss 0.0071 t 191s
+plastic-synapse-state seed 4742 rollout-in-loop it 3000/3000 loss 0.0068 t 217s
+fixed-synapse-no-mutable-state seed 4742 teacher-forced it 500/3000 loss 0.0043 t 8s
+fixed-synapse-no-mutable-state seed 4742 teacher-forced it 1000/3000 loss 0.0018 t 16s
+fixed-synapse-no-mutable-state seed 4742 teacher-forced it 1500/3000 loss 0.0013 t 24s
+fixed-synapse-no-mutable-state seed 4742 teacher-forced it 2000/3000 loss 0.0008 t 32s
+fixed-synapse-no-mutable-state seed 4742 teacher-forced it 2500/3000 loss 0.0008 t 40s
+fixed-synapse-no-mutable-state seed 4742 teacher-forced it 3000/3000 loss 0.0007 t 48s
+fixed-synapse-no-mutable-state seed 4742 rollout-in-loop it 500/3000 loss 0.0911 t 66s
+fixed-synapse-no-mutable-state seed 4742 rollout-in-loop it 1000/3000 loss 0.0389 t 85s
+fixed-synapse-no-mutable-state seed 4742 rollout-in-loop it 1500/3000 loss 0.0220 t 103s
+fixed-synapse-no-mutable-state seed 4742 rollout-in-loop it 2000/3000 loss 0.0190 t 121s
+fixed-synapse-no-mutable-state seed 4742 rollout-in-loop it 2500/3000 loss 0.0167 t 140s
+fixed-synapse-no-mutable-state seed 4742 rollout-in-loop it 3000/3000 loss 0.0138 t 158s
+N=10 probe1: plastic fwd/rev/none [53.07, 61.94, 16.09] teacher [2.59, -1.33, -0.09] fixed [8.99, 34.88, 17.54] checks {'forward positive t>=2': True, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'forward >= 0.5 teacher': True, 'finite': True}
+N=10 probe2: plastic fwd/rev/none [91.03, 37.29, 75.69] teacher [11.76, -1.46, 0.06] fixed [9.73, 25.49, 0.87] checks {'forward positive t>=2': True, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'persists >= 0.5 of probe 1': True, 'finite': True}
+N=100 probe1: plastic fwd/rev/none [63.58, 71.83, 63.43] teacher [11.05, -1.36, 0.49] fixed [26.87, 36.19, 27.4] checks {'forward positive t>=2': True, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'forward >= 0.5 teacher': True, 'finite': True}
+N=100 probe2: plastic fwd/rev/none [55.01, 56.73, 64.67] teacher [19.74, -1.49, 0.23] fixed [18.22, 0.83, 19.9] checks {'forward positive t>=2': True, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': False, 'persists >= 0.5 of probe 1': True, 'finite': True}
+VERDICT PARTIAL
+STEP plasticity-seed4742 exit code 0
+full-synaptic-messages seed 4743 teacher-forced it 250/1500 loss 0.1046 t 5s
+full-synaptic-messages seed 4743 teacher-forced it 500/1500 loss 0.0198 t 8s
+full-synaptic-messages seed 4743 teacher-forced it 750/1500 loss 0.0100 t 12s
+full-synaptic-messages seed 4743 teacher-forced it 1000/1500 loss 0.0069 t 15s
+full-synaptic-messages seed 4743 teacher-forced it 1250/1500 loss 0.0060 t 19s
+full-synaptic-messages seed 4743 teacher-forced it 1500/1500 loss 0.0054 t 22s
+full-synaptic-messages seed 4743 rollout-in-loop it 250/1500 loss 0.2463 t 26s
+full-synaptic-messages seed 4743 rollout-in-loop it 500/1500 loss 0.1874 t 31s
+full-synaptic-messages seed 4743 rollout-in-loop it 750/1500 loss 0.1694 t 35s
+full-synaptic-messages seed 4743 rollout-in-loop it 1000/1500 loss 0.1447 t 39s
+full-synaptic-messages seed 4743 rollout-in-loop it 1250/1500 loss 0.1372 t 43s
+full-synaptic-messages seed 4743 rollout-in-loop it 1500/1500 loss 0.1229 t 47s
+STEP baseline-seed4743 exit code 0
+baseline-architecture-48-tick-segments-control teacher-forced it 250/1500 loss 0.1444 t 11s
+baseline-architecture-48-tick-segments-control teacher-forced it 500/1500 loss 0.0205 t 21s
+baseline-architecture-48-tick-segments-control teacher-forced it 750/1500 loss 0.0106 t 30s
+baseline-architecture-48-tick-segments-control teacher-forced it 1000/1500 loss 0.0076 t 40s
+baseline-architecture-48-tick-segments-control teacher-forced it 1250/1500 loss 0.0063 t 50s
+baseline-architecture-48-tick-segments-control teacher-forced it 1500/1500 loss 0.0055 t 59s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 250/1500 loss 0.5696 t 71s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 500/1500 loss 0.3270 t 83s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 750/1500 loss 0.3004 t 94s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1000/1500 loss 0.2685 t 106s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1250/1500 loss 0.2877 t 118s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1500/1500 loss 0.2624 t 130s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 250/1500 loss 0.4217 t 12s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 500/1500 loss 0.2796 t 24s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 750/1500 loss 0.2488 t 36s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1000/1500 loss 0.2437 t 49s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1250/1500 loss 0.2385 t 61s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1500/1500 loss 0.2340 t 73s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 250/1500 loss 0.8870 t 87s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 500/1500 loss 0.6033 t 101s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 750/1500 loss 0.5798 t 115s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1000/1500 loss 0.5642 t 130s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1250/1500 loss 0.5527 t 144s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1500/1500 loss 0.5547 t 158s
+step-only loss (no count term, not part of the line) baseline-full-synaptic-messages: {'teacher-forced': 0.05058646462857723, 'rollout-in-loop': 0.23348119333386422}
+step-only loss (no count term, not part of the line) control-baseline-architecture-48-tick-segments-control: {'teacher-forced': 0.10776451341807843, 'rollout-in-loop': 0.24811623319983483}
+step-only loss (no count term, not part of the line) variant-full-synaptic-messages: {'teacher-forced': 0.10917632617056369, 'rollout-in-loop': 0.24501700848340988}
+N=10
+  baseline-full-synaptic-messages: err@20 8.62 f1@20 0.85 f1@100 0.41 div 23.0 rate300 ratio 0.72 slope 0.19 corr 0.32
+  control-baseline-architecture-48-tick-segments-control: err@20 9.29 f1@20 0.59 f1@100 0.23 div 19.8 rate300 ratio 0.10 slope 0.07 corr 0.25
+  variant-full-synaptic-messages: err@20 9.14 f1@20 0.53 f1@100 0.20 div 17.8 rate300 ratio 0.09 slope 0.12 corr 0.28
+N=100
+  baseline-full-synaptic-messages: err@20 10.73 f1@20 0.80 f1@100 0.36 div 26.8 rate300 ratio 0.41 slope 0.16 corr 0.24
+  control-baseline-architecture-48-tick-segments-control: err@20 11.42 f1@20 0.51 f1@100 0.20 div 21.4 rate300 ratio 0.08 slope 0.07 corr 0.24
+  variant-full-synaptic-messages: err@20 11.43 f1@20 0.48 f1@100 0.16 div 23.2 rate300 ratio 0.07 slope 0.02 corr 0.08
+VERDICT KILL
+{"10": {"values": {"slope300": 0.122116819024086, "corr300": 0.2758272588253021, "ratio300": 0.09396517276763916, "err@20": 9.143796920776367, "f1@20": 0.5279926015242261}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}, "100": {"values": {"slope300": 0.021864749491214752, "corr300": 0.07621060311794281, "ratio300": 0.06767822057008743, "err@20": 11.427018165588379, "f1@20": 0.48261753373620825}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}}
+STEP slow-patch-seed4743 exit code 0
+data ready 5s
+plastic-synapse-state seed 4743 teacher-forced it 500/3000 loss 0.0073 t 12s
+plastic-synapse-state seed 4743 teacher-forced it 1000/3000 loss 0.0016 t 22s
+plastic-synapse-state seed 4743 teacher-forced it 1500/3000 loss 0.0011 t 32s
+plastic-synapse-state seed 4743 teacher-forced it 2000/3000 loss 0.0009 t 42s
+plastic-synapse-state seed 4743 teacher-forced it 2500/3000 loss 0.0008 t 53s
+plastic-synapse-state seed 4743 teacher-forced it 3000/3000 loss 0.0006 t 63s
+plastic-synapse-state seed 4743 rollout-in-loop it 500/3000 loss 0.0248 t 89s
+plastic-synapse-state seed 4743 rollout-in-loop it 1000/3000 loss 0.0535 t 114s
+plastic-synapse-state seed 4743 rollout-in-loop it 1500/3000 loss 0.0120 t 140s
+plastic-synapse-state seed 4743 rollout-in-loop it 2000/3000 loss 0.0100 t 166s
+plastic-synapse-state seed 4743 rollout-in-loop it 2500/3000 loss 0.0084 t 191s
+plastic-synapse-state seed 4743 rollout-in-loop it 3000/3000 loss 0.0100 t 217s
+fixed-synapse-no-mutable-state seed 4743 teacher-forced it 500/3000 loss 0.0071 t 8s
+fixed-synapse-no-mutable-state seed 4743 teacher-forced it 1000/3000 loss 0.0015 t 16s
+fixed-synapse-no-mutable-state seed 4743 teacher-forced it 1500/3000 loss 0.0010 t 24s
+fixed-synapse-no-mutable-state seed 4743 teacher-forced it 2000/3000 loss 0.0008 t 32s
+fixed-synapse-no-mutable-state seed 4743 teacher-forced it 2500/3000 loss 0.0007 t 40s
+fixed-synapse-no-mutable-state seed 4743 teacher-forced it 3000/3000 loss 0.0006 t 48s
+fixed-synapse-no-mutable-state seed 4743 rollout-in-loop it 500/3000 loss 0.0306 t 66s
+fixed-synapse-no-mutable-state seed 4743 rollout-in-loop it 1000/3000 loss 0.0160 t 84s
+fixed-synapse-no-mutable-state seed 4743 rollout-in-loop it 1500/3000 loss 0.0527 t 103s
+fixed-synapse-no-mutable-state seed 4743 rollout-in-loop it 2000/3000 loss 0.0093 t 121s
+fixed-synapse-no-mutable-state seed 4743 rollout-in-loop it 2500/3000 loss 0.0070 t 140s
+fixed-synapse-no-mutable-state seed 4743 rollout-in-loop it 3000/3000 loss 0.0073 t 158s
+N=10 probe1: plastic fwd/rev/none [0.48, 0.07, 0.2] teacher [10.65, -1.13, 0.41] fixed [-0.11, -0.13, 0.1] checks {'forward positive t>=2': True, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'forward >= 0.5 teacher': False, 'finite': True}
+N=10 probe2: plastic fwd/rev/none [0.18, -0.16, -0.01] teacher [11.35, -1.5, -0.02] fixed [-0.32, -0.32, -0.11] checks {'forward positive t>=2': True, 'reversed negative t>=2': True, 'no-induction small': True, 'fixed contrast <= 0.25 plastic': True, 'persists >= 0.5 of probe 1': False, 'finite': True}
+N=100 probe1: plastic fwd/rev/none [0.04, -0.3, -0.03] teacher [10.01, -1.52, -0.05] fixed [-0.09, -0.1, 0.28] checks {'forward positive t>=2': False, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'forward >= 0.5 teacher': False, 'finite': True}
+N=100 probe2: plastic fwd/rev/none [-0.07, -0.41, -0.32] teacher [19.49, -1.61, 4.07] fixed [-0.2, -0.2, 0.14] checks {'forward positive t>=2': False, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'persists >= 0.5 of probe 1': False, 'finite': True}
+VERDICT PARTIAL
+STEP plasticity-seed4743 exit code 0
+full-synaptic-messages seed 4744 teacher-forced it 250/1500 loss 0.1405 t 5s
+full-synaptic-messages seed 4744 teacher-forced it 500/1500 loss 0.0276 t 8s
+full-synaptic-messages seed 4744 teacher-forced it 750/1500 loss 0.0110 t 12s
+full-synaptic-messages seed 4744 teacher-forced it 1000/1500 loss 0.0071 t 15s
+full-synaptic-messages seed 4744 teacher-forced it 1250/1500 loss 0.0058 t 19s
+full-synaptic-messages seed 4744 teacher-forced it 1500/1500 loss 0.0052 t 22s
+full-synaptic-messages seed 4744 rollout-in-loop it 250/1500 loss 0.2331 t 26s
+full-synaptic-messages seed 4744 rollout-in-loop it 500/1500 loss 0.1813 t 31s
+full-synaptic-messages seed 4744 rollout-in-loop it 750/1500 loss 0.1621 t 35s
+full-synaptic-messages seed 4744 rollout-in-loop it 1000/1500 loss 0.1528 t 39s
+full-synaptic-messages seed 4744 rollout-in-loop it 1250/1500 loss 0.1360 t 43s
+full-synaptic-messages seed 4744 rollout-in-loop it 1500/1500 loss 0.1249 t 47s
+STEP baseline-seed4744 exit code 0
+baseline-architecture-48-tick-segments-control teacher-forced it 250/1500 loss 0.1928 t 11s
+baseline-architecture-48-tick-segments-control teacher-forced it 500/1500 loss 0.0287 t 20s
+baseline-architecture-48-tick-segments-control teacher-forced it 750/1500 loss 0.0115 t 30s
+baseline-architecture-48-tick-segments-control teacher-forced it 1000/1500 loss 0.0076 t 40s
+baseline-architecture-48-tick-segments-control teacher-forced it 1250/1500 loss 0.0063 t 49s
+baseline-architecture-48-tick-segments-control teacher-forced it 1500/1500 loss 0.0056 t 59s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 250/1500 loss 2.4251 t 71s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 500/1500 loss 0.3491 t 82s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 750/1500 loss 0.2733 t 94s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1000/1500 loss 0.2625 t 106s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1250/1500 loss 0.2505 t 117s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1500/1500 loss 0.2394 t 129s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 250/1500 loss 0.4905 t 12s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 500/1500 loss 0.2949 t 24s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 750/1500 loss 0.2528 t 36s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1000/1500 loss 0.2381 t 48s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1250/1500 loss 0.2358 t 60s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1500/1500 loss 0.2345 t 73s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 250/1500 loss 0.6839 t 86s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 500/1500 loss 0.5972 t 100s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 750/1500 loss 0.5760 t 114s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1000/1500 loss 0.5859 t 128s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1250/1500 loss 0.5362 t 142s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1500/1500 loss 0.5214 t 156s
+step-only loss (no count term, not part of the line) baseline-full-synaptic-messages: {'teacher-forced': 0.07542262598872185, 'rollout-in-loop': 0.23259035497903824}
+step-only loss (no count term, not part of the line) control-baseline-architecture-48-tick-segments-control: {'teacher-forced': 0.08133437745273113, 'rollout-in-loop': 0.24424117505550386}
+step-only loss (no count term, not part of the line) variant-full-synaptic-messages: {'teacher-forced': 0.07266199979931116, 'rollout-in-loop': 0.23481758162379265}
+N=10
+  baseline-full-synaptic-messages: err@20 8.68 f1@20 0.80 f1@100 0.43 div 25.8 rate300 ratio 0.47 slope 0.22 corr 0.44
+  control-baseline-architecture-48-tick-segments-control: err@20 8.79 f1@20 0.67 f1@100 0.35 div 22.0 rate300 ratio 0.24 slope 0.16 corr 0.42
+  variant-full-synaptic-messages: err@20 8.66 f1@20 0.67 f1@100 0.23 div 21.2 rate300 ratio 1.99 slope -0.00 corr -0.00
+N=100
+  baseline-full-synaptic-messages: err@20 10.15 f1@20 0.78 f1@100 0.32 div 23.9 rate300 ratio 0.33 slope 0.16 corr 0.37
+  control-baseline-architecture-48-tick-segments-control: err@20 10.37 f1@20 0.57 f1@100 0.26 div 20.5 rate300 ratio 0.18 slope 0.10 corr 0.28
+  variant-full-synaptic-messages: err@20 10.22 f1@20 0.62 f1@100 0.22 div 20.3 rate300 ratio 2.42 slope -0.54 corr -0.15
+VERDICT KILL
+{"10": {"values": {"slope300": -0.002606908557936549, "corr300": -0.0007131657912395895, "ratio300": 1.9931080341339111, "err@20": 8.657583236694336, "f1@20": 0.6667252150206814}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": true, "f1@20_within_0.03": false}}, "100": {"values": {"slope300": -0.5351086854934692, "corr300": -0.14843466877937317, "ratio300": 2.4172840118408203, "err@20": 10.217093467712402, "f1@20": 0.6181526342890399}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": true, "f1@20_within_0.03": false}}}
+STEP slow-patch-seed4744 exit code 0
+data ready 3s
+plastic-synapse-state seed 4744 teacher-forced it 500/3000 loss 0.0038 t 12s
+plastic-synapse-state seed 4744 teacher-forced it 1000/3000 loss 0.0018 t 22s
+plastic-synapse-state seed 4744 teacher-forced it 1500/3000 loss 0.0012 t 32s
+plastic-synapse-state seed 4744 teacher-forced it 2000/3000 loss 0.0009 t 42s
+plastic-synapse-state seed 4744 teacher-forced it 2500/3000 loss 0.0007 t 53s
+plastic-synapse-state seed 4744 teacher-forced it 3000/3000 loss 0.0007 t 63s
+plastic-synapse-state seed 4744 rollout-in-loop it 500/3000 loss 0.0485 t 89s
+plastic-synapse-state seed 4744 rollout-in-loop it 1000/3000 loss 0.0155 t 114s
+plastic-synapse-state seed 4744 rollout-in-loop it 1500/3000 loss 0.0124 t 140s
+plastic-synapse-state seed 4744 rollout-in-loop it 2000/3000 loss 0.0101 t 166s
+plastic-synapse-state seed 4744 rollout-in-loop it 2500/3000 loss 0.0083 t 191s
+plastic-synapse-state seed 4744 rollout-in-loop it 3000/3000 loss 0.0077 t 217s
+fixed-synapse-no-mutable-state seed 4744 teacher-forced it 500/3000 loss 0.0037 t 8s
+fixed-synapse-no-mutable-state seed 4744 teacher-forced it 1000/3000 loss 0.0018 t 16s
+fixed-synapse-no-mutable-state seed 4744 teacher-forced it 1500/3000 loss 0.0012 t 24s
+fixed-synapse-no-mutable-state seed 4744 teacher-forced it 2000/3000 loss 0.0008 t 32s
+fixed-synapse-no-mutable-state seed 4744 teacher-forced it 2500/3000 loss 0.0007 t 40s
+fixed-synapse-no-mutable-state seed 4744 teacher-forced it 3000/3000 loss 0.0007 t 48s
+fixed-synapse-no-mutable-state seed 4744 rollout-in-loop it 500/3000 loss 0.0244 t 67s
+fixed-synapse-no-mutable-state seed 4744 rollout-in-loop it 1000/3000 loss 0.0131 t 85s
+fixed-synapse-no-mutable-state seed 4744 rollout-in-loop it 1500/3000 loss 0.0113 t 104s
+fixed-synapse-no-mutable-state seed 4744 rollout-in-loop it 2000/3000 loss 0.0091 t 122s
+fixed-synapse-no-mutable-state seed 4744 rollout-in-loop it 2500/3000 loss 0.0084 t 140s
+fixed-synapse-no-mutable-state seed 4744 rollout-in-loop it 3000/3000 loss 0.0081 t 159s
+N=10 probe1: plastic fwd/rev/none [-0.87, -9.99, 0.76] teacher [10.2, -1.18, 0.28] fixed [0.03, -0.02, 0.18] checks {'forward positive t>=2': False, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'forward >= 0.5 teacher': False, 'finite': True}
+N=10 probe2: plastic fwd/rev/none [6.44, -10.14, -0.29] teacher [10.9, -1.34, -0.01] fixed [0.25, 0.25, 0.26] checks {'forward positive t>=2': False, 'reversed negative t>=2': False, 'no-induction small': True, 'fixed contrast <= 0.25 plastic': True, 'persists >= 0.5 of probe 1': True, 'finite': True}
+N=100 probe1: plastic fwd/rev/none [66.53, -1.82, 14.51] teacher [20.98, -1.82, 1.18] fixed [0.18, 0.13, -0.01] checks {'forward positive t>=2': True, 'reversed negative t>=2': True, 'no-induction small': True, 'fixed contrast <= 0.25 plastic': True, 'forward >= 0.5 teacher': True, 'finite': True}
+N=100 probe2: plastic fwd/rev/none [35.36, -1.81, 7.58] teacher [23.55, -1.83, 0.16] fixed [0.11, 0.11, 0.1] checks {'forward positive t>=2': True, 'reversed negative t>=2': True, 'no-induction small': True, 'fixed contrast <= 0.25 plastic': True, 'persists >= 0.5 of probe 1': True, 'finite': True}
+VERDICT PARTIAL
+STEP plasticity-seed4744 exit code 0
+full-synaptic-messages seed 4745 teacher-forced it 250/1500 loss 0.0870 t 5s
+full-synaptic-messages seed 4745 teacher-forced it 500/1500 loss 0.0173 t 8s
+full-synaptic-messages seed 4745 teacher-forced it 750/1500 loss 0.0088 t 12s
+full-synaptic-messages seed 4745 teacher-forced it 1000/1500 loss 0.0066 t 15s
+full-synaptic-messages seed 4745 teacher-forced it 1250/1500 loss 0.0057 t 19s
+full-synaptic-messages seed 4745 teacher-forced it 1500/1500 loss 0.0052 t 22s
+full-synaptic-messages seed 4745 rollout-in-loop it 250/1500 loss 0.2047 t 26s
+full-synaptic-messages seed 4745 rollout-in-loop it 500/1500 loss 0.1999 t 31s
+full-synaptic-messages seed 4745 rollout-in-loop it 750/1500 loss 0.1628 t 35s
+full-synaptic-messages seed 4745 rollout-in-loop it 1000/1500 loss 0.1590 t 39s
+full-synaptic-messages seed 4745 rollout-in-loop it 1250/1500 loss 0.1396 t 43s
+full-synaptic-messages seed 4745 rollout-in-loop it 1500/1500 loss 0.1247 t 47s
+STEP baseline-seed4745 exit code 0
+baseline-architecture-48-tick-segments-control teacher-forced it 250/1500 loss 0.0864 t 11s
+baseline-architecture-48-tick-segments-control teacher-forced it 500/1500 loss 0.0200 t 20s
+baseline-architecture-48-tick-segments-control teacher-forced it 750/1500 loss 0.0108 t 30s
+baseline-architecture-48-tick-segments-control teacher-forced it 1000/1500 loss 0.0072 t 40s
+baseline-architecture-48-tick-segments-control teacher-forced it 1250/1500 loss 0.0057 t 50s
+baseline-architecture-48-tick-segments-control teacher-forced it 1500/1500 loss 0.0051 t 59s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 250/1500 loss 6.1025 t 71s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 500/1500 loss 0.3456 t 83s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 750/1500 loss 0.2814 t 94s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1000/1500 loss 0.2593 t 106s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1250/1500 loss 0.2517 t 118s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1500/1500 loss 0.2428 t 129s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 250/1500 loss 0.3988 t 12s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 500/1500 loss 0.2798 t 24s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 750/1500 loss 0.2512 t 36s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1000/1500 loss 0.2473 t 48s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1250/1500 loss 0.2371 t 60s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1500/1500 loss 0.2394 t 73s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 250/1500 loss 15.0793 t 87s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 500/1500 loss 8.1310 t 101s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 750/1500 loss 11.4924 t 115s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1000/1500 loss 1.9029 t 129s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1250/1500 loss 0.7677 t 143s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1500/1500 loss 0.6664 t 157s
+step-only loss (no count term, not part of the line) baseline-full-synaptic-messages: {'teacher-forced': 0.06193071287125349, 'rollout-in-loop': 0.2760200686752796}
+step-only loss (no count term, not part of the line) control-baseline-architecture-48-tick-segments-control: {'teacher-forced': 0.0745896553620696, 'rollout-in-loop': 0.24316758736968042}
+step-only loss (no count term, not part of the line) variant-full-synaptic-messages: {'teacher-forced': 0.15823933333158494, 'rollout-in-loop': 0.3262739896774292}
+N=10
+  baseline-full-synaptic-messages: err@20 9.30 f1@20 0.85 f1@100 0.35 div 24.4 rate300 ratio 0.16 slope 0.08 corr 0.29
+  control-baseline-architecture-48-tick-segments-control: err@20 9.52 f1@20 0.64 f1@100 0.22 div 23.6 rate300 ratio 0.08 slope 0.05 corr 0.27
+  variant-full-synaptic-messages: err@20 11.31 f1@20 0.16 f1@100 0.07 div 13.6 rate300 ratio 2.70 slope 0.11 corr 0.02
+N=100
+  baseline-full-synaptic-messages: err@20 9.97 f1@20 0.81 f1@100 0.29 div 22.0 rate300 ratio 0.49 slope 0.36 corr 0.17
+  control-baseline-architecture-48-tick-segments-control: err@20 10.19 f1@20 0.66 f1@100 0.22 div 23.4 rate300 ratio 0.09 slope 0.08 corr 0.06
+  variant-full-synaptic-messages: err@20 11.34 f1@20 0.16 f1@100 0.03 div 14.6 rate300 ratio 0.15 slope -0.01 corr -0.00
+VERDICT KILL
+{"10": {"values": {"slope300": 0.11375407874584198, "corr300": 0.018385281786322594, "ratio300": 2.7043204307556152, "err@20": 11.312686920166016, "f1@20": 0.16008983995774004}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}, "100": {"values": {"slope300": -0.007833652198314667, "corr300": -0.004984566476196051, "ratio300": 0.15089602768421173, "err@20": 11.343734741210938, "f1@20": 0.15615588104562295}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}}
+STEP slow-patch-seed4745 exit code 0
+data ready 3s
+plastic-synapse-state seed 4745 teacher-forced it 500/3000 loss 0.0043 t 12s
+plastic-synapse-state seed 4745 teacher-forced it 1000/3000 loss 0.0014 t 22s
+plastic-synapse-state seed 4745 teacher-forced it 1500/3000 loss 0.0011 t 32s
+plastic-synapse-state seed 4745 teacher-forced it 2000/3000 loss 0.0008 t 42s
+plastic-synapse-state seed 4745 teacher-forced it 2500/3000 loss 0.0008 t 53s
+plastic-synapse-state seed 4745 teacher-forced it 3000/3000 loss 0.0006 t 63s
+plastic-synapse-state seed 4745 rollout-in-loop it 500/3000 loss 0.0234 t 89s
+plastic-synapse-state seed 4745 rollout-in-loop it 1000/3000 loss 0.0133 t 115s
+plastic-synapse-state seed 4745 rollout-in-loop it 1500/3000 loss 0.0103 t 140s
+plastic-synapse-state seed 4745 rollout-in-loop it 2000/3000 loss 0.0082 t 166s
+plastic-synapse-state seed 4745 rollout-in-loop it 2500/3000 loss 0.0074 t 192s
+plastic-synapse-state seed 4745 rollout-in-loop it 3000/3000 loss 0.0070 t 217s
+fixed-synapse-no-mutable-state seed 4745 teacher-forced it 500/3000 loss 0.0037 t 8s
+fixed-synapse-no-mutable-state seed 4745 teacher-forced it 1000/3000 loss 0.0014 t 16s
+fixed-synapse-no-mutable-state seed 4745 teacher-forced it 1500/3000 loss 0.0010 t 24s
+fixed-synapse-no-mutable-state seed 4745 teacher-forced it 2000/3000 loss 0.0008 t 32s
+fixed-synapse-no-mutable-state seed 4745 teacher-forced it 2500/3000 loss 0.0007 t 40s
+fixed-synapse-no-mutable-state seed 4745 teacher-forced it 3000/3000 loss 0.0006 t 48s
+fixed-synapse-no-mutable-state seed 4745 rollout-in-loop it 500/3000 loss 0.0122 t 66s
+fixed-synapse-no-mutable-state seed 4745 rollout-in-loop it 1000/3000 loss 0.0105 t 85s
+fixed-synapse-no-mutable-state seed 4745 rollout-in-loop it 1500/3000 loss 0.0084 t 103s
+fixed-synapse-no-mutable-state seed 4745 rollout-in-loop it 2000/3000 loss 0.0077 t 122s
+fixed-synapse-no-mutable-state seed 4745 rollout-in-loop it 2500/3000 loss 0.0065 t 140s
+fixed-synapse-no-mutable-state seed 4745 rollout-in-loop it 3000/3000 loss 0.0060 t 159s
+N=10 probe1: plastic fwd/rev/none [-0.85, -0.95, -0.88] teacher [17.11, -3.63, 8.13] fixed [-4.62, -4.63, -5.04] checks {'forward positive t>=2': False, 'reversed negative t>=2': True, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'forward >= 0.5 teacher': False, 'finite': True}
+N=10 probe2: plastic fwd/rev/none [-0.75, -0.89, -0.86] teacher [26.38, -3.8, 13.3] fixed [-4.9, -4.9, -4.9] checks {'forward positive t>=2': False, 'reversed negative t>=2': True, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'persists >= 0.5 of probe 1': False, 'finite': True}
+N=100 probe1: plastic fwd/rev/none [-0.35, -0.68, -0.31] teacher [1.89, -1.27, 0.06] fixed [1.48, 1.46, 1.34] checks {'forward positive t>=2': False, 'reversed negative t>=2': True, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'forward >= 0.5 teacher': False, 'finite': True}
+N=100 probe2: plastic fwd/rev/none [8.3, -0.31, 0.1] teacher [9.97, -1.23, 0.41] fixed [1.61, 1.61, 1.55] checks {'forward positive t>=2': False, 'reversed negative t>=2': True, 'no-induction small': True, 'fixed contrast <= 0.25 plastic': True, 'persists >= 0.5 of probe 1': True, 'finite': True}
+VERDICT PARTIAL
+STEP plasticity-seed4745 exit code 0
+full-synaptic-messages seed 4746 teacher-forced it 250/1500 loss 0.1480 t 5s
+full-synaptic-messages seed 4746 teacher-forced it 500/1500 loss 0.0281 t 8s
+full-synaptic-messages seed 4746 teacher-forced it 750/1500 loss 0.0121 t 12s
+full-synaptic-messages seed 4746 teacher-forced it 1000/1500 loss 0.0078 t 15s
+full-synaptic-messages seed 4746 teacher-forced it 1250/1500 loss 0.0062 t 19s
+full-synaptic-messages seed 4746 teacher-forced it 1500/1500 loss 0.0055 t 23s
+full-synaptic-messages seed 4746 rollout-in-loop it 250/1500 loss 0.1945 t 27s
+full-synaptic-messages seed 4746 rollout-in-loop it 500/1500 loss 0.1618 t 31s
+full-synaptic-messages seed 4746 rollout-in-loop it 750/1500 loss 0.1463 t 35s
+full-synaptic-messages seed 4746 rollout-in-loop it 1000/1500 loss 0.1257 t 39s
+full-synaptic-messages seed 4746 rollout-in-loop it 1250/1500 loss 0.1276 t 43s
+full-synaptic-messages seed 4746 rollout-in-loop it 1500/1500 loss 0.1127 t 48s
+STEP baseline-seed4746 exit code 0
+baseline-architecture-48-tick-segments-control teacher-forced it 250/1500 loss 0.1898 t 11s
+baseline-architecture-48-tick-segments-control teacher-forced it 500/1500 loss 0.0369 t 20s
+baseline-architecture-48-tick-segments-control teacher-forced it 750/1500 loss 0.0107 t 30s
+baseline-architecture-48-tick-segments-control teacher-forced it 1000/1500 loss 0.0068 t 40s
+baseline-architecture-48-tick-segments-control teacher-forced it 1250/1500 loss 0.0056 t 50s
+baseline-architecture-48-tick-segments-control teacher-forced it 1500/1500 loss 0.0049 t 59s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 250/1500 loss 2.3070 t 71s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 500/1500 loss 0.2962 t 83s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 750/1500 loss 0.2633 t 94s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1000/1500 loss 0.2554 t 106s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1250/1500 loss 0.2425 t 118s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1500/1500 loss 0.2329 t 129s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 250/1500 loss 0.5022 t 12s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 500/1500 loss 0.3046 t 24s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 750/1500 loss 0.2499 t 37s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1000/1500 loss 0.2413 t 49s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1250/1500 loss 0.2338 t 61s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1500/1500 loss 0.2314 t 73s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 250/1500 loss 0.7473 t 87s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 500/1500 loss 0.6471 t 101s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 750/1500 loss 0.6009 t 116s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1000/1500 loss 0.5764 t 130s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1250/1500 loss 0.5504 t 144s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1500/1500 loss 0.5371 t 158s
+step-only loss (no count term, not part of the line) baseline-full-synaptic-messages: {'teacher-forced': 0.050761664286255836, 'rollout-in-loop': 0.2196062311530113}
+step-only loss (no count term, not part of the line) control-baseline-architecture-48-tick-segments-control: {'teacher-forced': 0.07882063426077365, 'rollout-in-loop': 0.23364976570010185}
+step-only loss (no count term, not part of the line) variant-full-synaptic-messages: {'teacher-forced': 0.10722961761057377, 'rollout-in-loop': 0.24380150362849234}
+N=10
+  baseline-full-synaptic-messages: err@20 8.09 f1@20 0.86 f1@100 0.41 div 28.1 rate300 ratio 0.40 slope 0.16 corr 0.36
+  control-baseline-architecture-48-tick-segments-control: err@20 8.61 f1@20 0.74 f1@100 0.30 div 26.1 rate300 ratio 0.17 slope 0.13 corr 0.38
+  variant-full-synaptic-messages: err@20 8.75 f1@20 0.39 f1@100 0.09 div 25.0 rate300 ratio 0.19 slope 0.05 corr 0.11
+N=100
+  baseline-full-synaptic-messages: err@20 9.56 f1@20 0.82 f1@100 0.38 div 30.4 rate300 ratio 0.21 slope 0.12 corr 0.34
+  control-baseline-architecture-48-tick-segments-control: err@20 10.10 f1@20 0.73 f1@100 0.31 div 26.2 rate300 ratio 0.16 slope 0.14 corr 0.40
+  variant-full-synaptic-messages: err@20 10.16 f1@20 0.39 f1@100 0.10 div 23.8 rate300 ratio 0.06 slope 0.05 corr 0.19
+VERDICT KILL
+{"10": {"values": {"slope300": 0.048848412930965424, "corr300": 0.10548268258571625, "ratio300": 0.1866726279258728, "err@20": 8.745695114135742, "f1@20": 0.3877124444452516}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}, "100": {"values": {"slope300": 0.05377126857638359, "corr300": 0.192445769906044, "ratio300": 0.055378466844558716, "err@20": 10.164506912231445, "f1@20": 0.391651843543308}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}}
+STEP slow-patch-seed4746 exit code 0
+data ready 5s
+plastic-synapse-state seed 4746 teacher-forced it 500/3000 loss 0.0042 t 11s
+plastic-synapse-state seed 4746 teacher-forced it 1000/3000 loss 0.0016 t 22s
+plastic-synapse-state seed 4746 teacher-forced it 1500/3000 loss 0.0010 t 32s
+plastic-synapse-state seed 4746 teacher-forced it 2000/3000 loss 0.0008 t 42s
+plastic-synapse-state seed 4746 teacher-forced it 2500/3000 loss 0.0007 t 53s
+plastic-synapse-state seed 4746 teacher-forced it 3000/3000 loss 0.0007 t 63s
+plastic-synapse-state seed 4746 rollout-in-loop it 500/3000 loss 0.0728 t 89s
+plastic-synapse-state seed 4746 rollout-in-loop it 1000/3000 loss 0.0207 t 114s
+plastic-synapse-state seed 4746 rollout-in-loop it 1500/3000 loss 0.0196 t 140s
+plastic-synapse-state seed 4746 rollout-in-loop it 2000/3000 loss 0.0098 t 166s
+plastic-synapse-state seed 4746 rollout-in-loop it 2500/3000 loss 0.0112 t 191s
+plastic-synapse-state seed 4746 rollout-in-loop it 3000/3000 loss 0.0089 t 217s
+fixed-synapse-no-mutable-state seed 4746 teacher-forced it 500/3000 loss 0.0044 t 8s
+fixed-synapse-no-mutable-state seed 4746 teacher-forced it 1000/3000 loss 0.0015 t 16s
+fixed-synapse-no-mutable-state seed 4746 teacher-forced it 1500/3000 loss 0.0010 t 24s
+fixed-synapse-no-mutable-state seed 4746 teacher-forced it 2000/3000 loss 0.0008 t 32s
+fixed-synapse-no-mutable-state seed 4746 teacher-forced it 2500/3000 loss 0.0006 t 40s
+fixed-synapse-no-mutable-state seed 4746 teacher-forced it 3000/3000 loss 0.0007 t 48s
+fixed-synapse-no-mutable-state seed 4746 rollout-in-loop it 500/3000 loss 0.0164 t 66s
+fixed-synapse-no-mutable-state seed 4746 rollout-in-loop it 1000/3000 loss 0.0087 t 85s
+fixed-synapse-no-mutable-state seed 4746 rollout-in-loop it 1500/3000 loss 0.0072 t 103s
+fixed-synapse-no-mutable-state seed 4746 rollout-in-loop it 2000/3000 loss 0.0063 t 122s
+fixed-synapse-no-mutable-state seed 4746 rollout-in-loop it 2500/3000 loss 0.0065 t 141s
+fixed-synapse-no-mutable-state seed 4746 rollout-in-loop it 3000/3000 loss 0.0063 t 159s
+N=10 probe1: plastic fwd/rev/none [0.09, -1.25, 0.52] teacher [2.95, -0.87, 0.4] fixed [2.02, 1.86, 2.18] checks {'forward positive t>=2': False, 'reversed negative t>=2': True, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'forward >= 0.5 teacher': False, 'finite': True}
+N=10 probe2: plastic fwd/rev/none [-0.45, -0.44, 0.53] teacher [4.51, -1.04, 0.34] fixed [2.19, 2.19, 2.19] checks {'forward positive t>=2': False, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': False, 'persists >= 0.5 of probe 1': False, 'finite': True}
+N=100 probe1: plastic fwd/rev/none [-1.29, -1.59, -1.0] teacher [23.07, -3.23, 3.42] fixed [0.74, 0.49, 0.12] checks {'forward positive t>=2': False, 'reversed negative t>=2': True, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': False, 'forward >= 0.5 teacher': False, 'finite': True}
+N=100 probe2: plastic fwd/rev/none [-1.61, -1.46, -0.97] teacher [25.49, -3.34, -0.79] fixed [0.32, 0.32, 0.28] checks {'forward positive t>=2': False, 'reversed negative t>=2': True, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': False, 'persists >= 0.5 of probe 1': False, 'finite': True}
+VERDICT PARTIAL
+STEP plasticity-seed4746 exit code 0
+full-synaptic-messages seed 4747 teacher-forced it 250/1500 loss 0.1400 t 5s
+full-synaptic-messages seed 4747 teacher-forced it 500/1500 loss 0.0223 t 8s
+full-synaptic-messages seed 4747 teacher-forced it 750/1500 loss 0.0110 t 12s
+full-synaptic-messages seed 4747 teacher-forced it 1000/1500 loss 0.0071 t 15s
+full-synaptic-messages seed 4747 teacher-forced it 1250/1500 loss 0.0057 t 19s
+full-synaptic-messages seed 4747 teacher-forced it 1500/1500 loss 0.0053 t 23s
+full-synaptic-messages seed 4747 rollout-in-loop it 250/1500 loss 0.2010 t 27s
+full-synaptic-messages seed 4747 rollout-in-loop it 500/1500 loss 0.1727 t 31s
+full-synaptic-messages seed 4747 rollout-in-loop it 750/1500 loss 0.1424 t 35s
+full-synaptic-messages seed 4747 rollout-in-loop it 1000/1500 loss 0.1422 t 39s
+full-synaptic-messages seed 4747 rollout-in-loop it 1250/1500 loss 0.1218 t 44s
+full-synaptic-messages seed 4747 rollout-in-loop it 1500/1500 loss 0.1076 t 48s
+STEP baseline-seed4747 exit code 0
+baseline-architecture-48-tick-segments-control teacher-forced it 250/1500 loss 0.1731 t 11s
+baseline-architecture-48-tick-segments-control teacher-forced it 500/1500 loss 0.0224 t 20s
+baseline-architecture-48-tick-segments-control teacher-forced it 750/1500 loss 0.0098 t 30s
+baseline-architecture-48-tick-segments-control teacher-forced it 1000/1500 loss 0.0066 t 40s
+baseline-architecture-48-tick-segments-control teacher-forced it 1250/1500 loss 0.0051 t 50s
+baseline-architecture-48-tick-segments-control teacher-forced it 1500/1500 loss 0.0046 t 59s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 250/1500 loss 1.0251 t 71s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 500/1500 loss 0.3299 t 83s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 750/1500 loss 0.3166 t 95s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1000/1500 loss 0.2895 t 106s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1250/1500 loss 0.2785 t 118s
+baseline-architecture-48-tick-segments-control rollout-in-loop it 1500/1500 loss 0.2693 t 130s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 250/1500 loss 0.4982 t 12s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 500/1500 loss 0.3031 t 24s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 750/1500 loss 0.2530 t 37s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1000/1500 loss 0.2404 t 49s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1250/1500 loss 0.2310 t 61s
+slow-patch-rate-token-with-patch-count-head teacher-forced it 1500/1500 loss 0.2308 t 73s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 250/1500 loss 2.2706 t 87s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 500/1500 loss 0.6347 t 102s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 750/1500 loss 0.6042 t 116s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1000/1500 loss 0.5704 t 130s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1250/1500 loss 0.5635 t 144s
+slow-patch-rate-token-with-patch-count-head rollout-in-loop it 1500/1500 loss 0.5524 t 158s
+step-only loss (no count term, not part of the line) baseline-full-synaptic-messages: {'teacher-forced': 0.05609539747238159, 'rollout-in-loop': 0.21969670057296753}
+step-only loss (no count term, not part of the line) control-baseline-architecture-48-tick-segments-control: {'teacher-forced': 0.12237620055675506, 'rollout-in-loop': 0.26914958357810975}
+step-only loss (no count term, not part of the line) variant-full-synaptic-messages: {'teacher-forced': 0.10029109120368958, 'rollout-in-loop': 0.249359118193388}
+N=10
+  baseline-full-synaptic-messages: err@20 9.37 f1@20 0.84 f1@100 0.37 div 26.9 rate300 ratio 0.36 slope 0.12 corr 0.26
+  control-baseline-architecture-48-tick-segments-control: err@20 10.52 f1@20 0.48 f1@100 0.18 div 17.0 rate300 ratio 0.10 slope 0.06 corr 0.31
+  variant-full-synaptic-messages: err@20 10.30 f1@20 0.59 f1@100 0.25 div 16.9 rate300 ratio 1.96 slope 0.09 corr 0.15
+N=100
+  baseline-full-synaptic-messages: err@20 9.13 f1@20 0.81 f1@100 0.37 div 28.4 rate300 ratio 0.31 slope 0.22 corr 0.37
+  control-baseline-architecture-48-tick-segments-control: err@20 10.17 f1@20 0.38 f1@100 0.12 div 20.3 rate300 ratio 0.05 slope 0.04 corr 0.24
+  variant-full-synaptic-messages: err@20 9.79 f1@20 0.56 f1@100 0.21 div 21.7 rate300 ratio 0.63 slope 0.04 corr 0.06
+VERDICT KILL
+{"10": {"values": {"slope300": 0.09409616887569427, "corr300": 0.15193435549736023, "ratio300": 1.963881015777588, "err@20": 10.300895690917969, "f1@20": 0.5930111040761086}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}, "100": {"values": {"slope300": 0.041906360536813736, "corr300": 0.06172141432762146, "ratio300": 0.6335610747337341, "err@20": 9.792628288269043, "f1@20": 0.5552806854747512}, "checks": {"slope300>=0.3": false, "corr300>=0.3": false, "rate_ratio300_in_0.7_1.3": false, "err@20_within_+3pct": false, "f1@20_within_0.03": false}}}
+STEP slow-patch-seed4747 exit code 0
+data ready 2s
+plastic-synapse-state seed 4747 teacher-forced it 500/3000 loss 0.0039 t 11s
+plastic-synapse-state seed 4747 teacher-forced it 1000/3000 loss 0.0018 t 22s
+plastic-synapse-state seed 4747 teacher-forced it 1500/3000 loss 0.0012 t 32s
+plastic-synapse-state seed 4747 teacher-forced it 2000/3000 loss 0.0010 t 42s
+plastic-synapse-state seed 4747 teacher-forced it 2500/3000 loss 0.0007 t 53s
+plastic-synapse-state seed 4747 teacher-forced it 3000/3000 loss 0.0007 t 63s
+plastic-synapse-state seed 4747 rollout-in-loop it 500/3000 loss 0.0463 t 88s
+plastic-synapse-state seed 4747 rollout-in-loop it 1000/3000 loss 0.0190 t 114s
+plastic-synapse-state seed 4747 rollout-in-loop it 1500/3000 loss 0.0147 t 139s
+plastic-synapse-state seed 4747 rollout-in-loop it 2000/3000 loss 0.0106 t 164s
+plastic-synapse-state seed 4747 rollout-in-loop it 2500/3000 loss 0.0093 t 190s
+plastic-synapse-state seed 4747 rollout-in-loop it 3000/3000 loss 0.0089 t 215s
+fixed-synapse-no-mutable-state seed 4747 teacher-forced it 500/3000 loss 0.0040 t 8s
+fixed-synapse-no-mutable-state seed 4747 teacher-forced it 1000/3000 loss 0.0018 t 16s
+fixed-synapse-no-mutable-state seed 4747 teacher-forced it 1500/3000 loss 0.0012 t 24s
+fixed-synapse-no-mutable-state seed 4747 teacher-forced it 2000/3000 loss 0.0010 t 32s
+fixed-synapse-no-mutable-state seed 4747 teacher-forced it 2500/3000 loss 0.0007 t 40s
+fixed-synapse-no-mutable-state seed 4747 teacher-forced it 3000/3000 loss 0.0007 t 48s
+fixed-synapse-no-mutable-state seed 4747 rollout-in-loop it 500/3000 loss 0.0283 t 66s
+fixed-synapse-no-mutable-state seed 4747 rollout-in-loop it 1000/3000 loss 0.0154 t 85s
+fixed-synapse-no-mutable-state seed 4747 rollout-in-loop it 1500/3000 loss 0.0144 t 103s
+fixed-synapse-no-mutable-state seed 4747 rollout-in-loop it 2000/3000 loss 0.0088 t 121s
+fixed-synapse-no-mutable-state seed 4747 rollout-in-loop it 2500/3000 loss 0.0098 t 139s
+fixed-synapse-no-mutable-state seed 4747 rollout-in-loop it 3000/3000 loss 0.0079 t 157s
+N=10 probe1: plastic fwd/rev/none [-0.04, -0.35, -0.09] teacher [10.55, -1.12, 0.31] fixed [0.05, 0.0, -0.17] checks {'forward positive t>=2': False, 'reversed negative t>=2': True, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'forward >= 0.5 teacher': False, 'finite': True}
+N=10 probe2: plastic fwd/rev/none [0.03, -0.3, 0.08] teacher [19.72, -1.41, 0.32] fixed [-0.21, -0.28, -0.16] checks {'forward positive t>=2': False, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'persists >= 0.5 of probe 1': True, 'finite': True}
+N=100 probe1: plastic fwd/rev/none [-0.17, -0.43, 1.75] teacher [2.13, -1.23, 0.04] fixed [0.06, 0.05, -0.13] checks {'forward positive t>=2': False, 'reversed negative t>=2': True, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'forward >= 0.5 teacher': False, 'finite': True}
+N=100 probe2: plastic fwd/rev/none [6.86, 6.02, 13.96] teacher [11.55, -1.28, 0.3] fixed [0.12, 0.12, 0.1] checks {'forward positive t>=2': False, 'reversed negative t>=2': False, 'no-induction small': False, 'fixed contrast <= 0.25 plastic': True, 'persists >= 0.5 of probe 1': True, 'finite': True}
+VERDICT PARTIAL
+STEP plasticity-seed4747 exit code 0
+slow-patch seed 4738: KILL (earlier run: PARTIAL, same verdict False)
+slow-patch seed 4739: KILL (earlier run: PARTIAL, same verdict False)
+slow-patch seed 4740: KILL (earlier run: KILL, same verdict True)
+slow-patch seed 4741: KILL
+slow-patch seed 4742: KILL
+slow-patch seed 4743: KILL
+slow-patch seed 4744: KILL
+slow-patch seed 4745: KILL
+slow-patch seed 4746: KILL
+slow-patch seed 4747: KILL
+slow-patch: seeds completed 10 of 10, counts {'PASS': 0, 'PARTIAL': 0, 'KILL': 10}, AGGREGATE FAIL-KILL
+slow-patch: unseen seeds only (4741-4747) AGGREGATE FAIL-KILL, agrees with all-seed pass/fail class: True
+  N=10 err@20: baseline seed sd 0.553; variant-baseline mean +0.454 sd 0.767; variant-control mean +0.032 sd 0.720 (reported, not gating)
+  N=10 f1@20: baseline seed sd 0.027; variant-baseline mean -0.289 sd 0.174; variant-control mean +0.051 sd 0.308 (reported, not gating)
+  N=10 slope300: baseline seed sd 0.047; variant-baseline mean -0.165 sd 0.175; variant-control mean -0.099 sd 0.157 (reported, not gating)
+  N=100 err@20: baseline seed sd 0.437; variant-baseline mean +0.528 sd 0.415; variant-control mean +0.011 sd 0.494 (reported, not gating)
+  N=100 f1@20: baseline seed sd 0.020; variant-baseline mean -0.297 sd 0.151; variant-control mean +0.047 sd 0.294 (reported, not gating)
+  N=100 slope300: baseline seed sd 0.115; variant-baseline mean -0.273 sd 0.216; variant-control mean -0.139 sd 0.197 (reported, not gating)
+  seeds with rate signal at both N (slope300>=0.3 and corr300>=0.3): 0/10 (reported, not gating)
+plasticity seed 4738: PARTIAL (earlier run: KILL, same verdict False)
+plasticity seed 4739: PARTIAL (earlier run: PARTIAL, same verdict True)
+plasticity seed 4740: PARTIAL (earlier run: PARTIAL, same verdict True)
+plasticity seed 4741: PARTIAL
+plasticity seed 4742: PARTIAL
+plasticity seed 4743: PARTIAL
+plasticity seed 4744: PARTIAL
+plasticity seed 4745: PARTIAL
+plasticity seed 4746: PARTIAL
+plasticity seed 4747: PARTIAL
+plasticity: seeds completed 10 of 10, counts {'PASS': 0, 'PARTIAL': 10, 'KILL': 0}, AGGREGATE FAIL-PARTIAL
+plasticity: unseen seeds only (4741-4747) AGGREGATE FAIL-PARTIAL, agrees with all-seed pass/fail class: True
+  N=10 probe1: plastic contrast mean +0.44 sd 4.27 positive 8/10; fixed contrast mean -2.61 sd 8.18 (reported, not gating)
+  N=10 probe2: plastic contrast mean +7.29 sd 17.12 positive 8/10; fixed contrast mean -1.57 sd 4.99 (reported, not gating)
+  N=100 probe1: plastic contrast mean +6.28 sd 21.98 positive 8/10; fixed contrast mean -0.92 sd 2.95 (reported, not gating)
+  N=100 probe2: plastic contrast mean +4.69 sd 11.75 positive 6/10; fixed contrast mean +1.73 sd 5.50 (reported, not gating)
+STEP score exit code 0
+ALLDONE
