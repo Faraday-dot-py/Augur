@@ -1,4 +1,4 @@
-"""Shift-equivariance probe of the mixed-law scatter field (pass line: median relative force change above 2% on at least 3 of 6 laws, scored separately per checkpoint and shift).
+"""Shift-equivariance probe of the mixed-law scatter field (pass line: median relative force change above 2% on at least 3 of 6 laws; per-law decision requires x, y and diag on every checkpoint, per-cell scores also reported).
 Per (checkpoint, trained shape): 32 single-structure amplitude-1 scenes (seed 4738), tick-0 force from a zero field for the scene and for the scene shifted rigidly by half a grid cell
 (model.h / 2; x, y and diagonal). The force is translation-covariant so the shifted force is compared unchanged. Metric: median over bodies of |a_shift - a| / |a| for bodies with
 |a| above the 10th percentile of their scene. A zero shift gives the determinism floor; the model error against the fp64 exact force uses the same metric for scale.
@@ -18,7 +18,7 @@ from scripts.law_recovery_probe import load_multi
 
 SEED = 4738
 PASS_MEDIAN = 0.02
-PASS_LAWS = 4
+PASS_LAWS = 3
 MODELS = "main_s4738:ckpt/main_s4738.pt,main_s4739:ckpt/main_s4739.pt"
 
 stop = False
@@ -89,6 +89,9 @@ def score(res, names):
         for k in ("x", "y", "diag"):
             above = [s for s in sm.TRAIN_SHAPES if res["cells"][f"{name}|{s}"][k]["median"] > PASS_MEDIAN]
             out[f"{name}|{k}"] = {"laws_above": above, "n_above": len(above), "pass": len(above) >= PASS_LAWS}
+    strict = [s for s in sm.TRAIN_SHAPES if all(res["cells"][f"{name}|{s}"][k]["median"] > PASS_MEDIAN for name in names for k in ("x", "y", "diag"))]
+    out["combined"] = {"rule": "law counts only if median > PASS_MEDIAN for x, y and diag on every checkpoint", "laws_above": strict, "n_above": len(strict),
+                       "verdict": "PASS" if len(strict) >= PASS_LAWS else "KILL"}
     return out
 
 
