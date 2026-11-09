@@ -11,10 +11,10 @@ STANDING RULES: same as docs/debugging/research-agent-prompt.md (no local comput
 
 IMPLEMENTATION RULES:
 - Match existing code style; new behaviour opt-in behind flags so existing checkpoints/scripts still work; add tests alongside existing tests. Tests run on Polaris, not locally.
-- Work on a git branch/worktree, not the current branch. Commit each fix + its results with the key metric in the message after each experiment completes. Do not push, merge, or open PRs.
+- Work on a git branch/worktree, not the current branch. Commit each fix + its results with the key metric in the message after each experiment completes. Do not push, merge, or open PRs unless the launch prompt explicitly authorises it for this task.
 - Long runs (many hours+) must save periodic full-state checkpoints; confirm the runner does so before launch.
 - Before each experiment, state predicted outcome; after, compare to prediction.
-- Compare against soup B baseline and CentralForceDynamics on identical held-out seeds; report err@5/10/20, energy drift vs truth, momentum error, wall restitution vs speed, pair head-on KE ratio, and 1000-ball x 500-step behavior (first non-finite step, floor collapse).
+- (Token-per-ball model tasks only; skip otherwise.) Compare against soup B baseline and CentralForceDynamics on identical held-out seeds; report err@5/10/20, energy drift vs truth, momentum error, wall restitution vs speed, pair head-on KE ratio, and 1000-ball x 500-step behavior (first non-finite step, floor collapse).
 - You may spawn subagents; give them the same rules.
 - Final report: 200-400 words + table; decisions needed from the user listed separately.
 ```
