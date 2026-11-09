@@ -2,7 +2,7 @@
 
 **Learning particle simulators that scale, tile, and stay honest about what they get wrong.**
 
-Augur is a research project by Adam Webb (Cal Poly Pomona, GitHub: Faraday-dot-py) on neural surrogate simulators: models that learn the rules of a particle system from examples, then run it fast enough for real-time and very large scenes. The first commit is dated 2026-09-21; the repository has 705 commits as of 2026-11-09.
+Augur is a research project by Adam Webb (GitHub: Faraday-dot-py) on neural surrogate simulators: models that learn the rules of a particle system from examples, then run it fast enough for real-time and very large scenes. The first commit is dated 2026-09-21; the repository has 705 commits as of 2026-11-09.
 
 [Augur live demos](https://faraday-dot-py.github.io/Augur/) run in the browser.
 
@@ -134,4 +134,10 @@ Results are logged with the numbers that decide them, so a reader can see which 
 - **ML engineering and infrastructure:** O(N) design, tiling, 16-bit state for fitting 1 billion bodies on one GPU, GPU-side data generation, and a WebGPU port.
 - **Robotics and simulation:** learned surrogates for real-time simulation, contact dynamics, and mixed-mass systems.
 
-Author: Adam Webb, Cal Poly Pomona (CPP).
+## Compute
+
+Training and large-scale runs were done on the Polaris supercomputer cluster at Cal Poly Pomona (CPP). See CPP's page on [High-Performance Computing](https://www.cpp.edu/it/advanced-computing/high-performance-computing.shtml).
+
+## Contact
+
+awebb3124@gmail.com
