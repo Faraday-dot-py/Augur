@@ -29,6 +29,6 @@ PID=$!
 wait $PID
 rc=$?
 [ $rc -eq 0 ] || { echo "FAILED rc=$rc"; exit $rc; }
-grep -q "ALL DONE" augur-bit-output-encoding-fixes-${SLURM_JOB_ID}.log || { echo "MISSING completion marker"; exit 3; }
+grep -q "ALL DONE" $HOME/augur-bit-output-encoding-fixes-${SLURM_JOB_ID}.log || { echo "MISSING completion marker"; exit 3; }
 test -s results/bit_output_encoding_fixes/results.json || { echo "MISSING OUTPUT"; exit 3; }
 echo EXIT 0
