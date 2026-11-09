@@ -1,0 +1,7 @@
+47b903e757cf1221dd71d10f47b7377a  scripts/scatter_field.py
+7b96aec0dc1536da94126dd7a8699953  scripts/scatter_multi.py
+63b9866516b20f80a3bca1e5b0232eff  scripts/single_law_network_sizing.py
+name, memory.total [MiB]
+NVIDIA H200 NVL, 143771 MiB
+TOTAL_SECONDS 12448
+ALLDONE
