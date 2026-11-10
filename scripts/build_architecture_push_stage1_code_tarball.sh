@@ -10,5 +10,5 @@ for f in model/__init__.py model/ball_tree_attention.py model/sparse_voxel_scatt
   scripts/stage1_common.py scripts/stage1_preflight.py scripts/ball_tree_particle_attention.py scripts/three_dimensional_sparse_voxel_scatter_field.py scripts/finite_speed_local_field_medium.py; do
   grep -qx "$f" <<< "$LIST" || { echo "MISSING from tarball: $f"; exit 1; }
 done
-tar xzOf "$OUT" scripts/train_scatter_field.py | grep -q it_hook || { echo "tarball train_scatter_field.py has no it_hook"; exit 1; }
+tar xzOf "$OUT" scripts/train_scatter_field.py | grep it_hook >/dev/null || { echo "tarball train_scatter_field.py has no it_hook"; exit 1; }
 echo "$OUT $(wc -l <<< "$LIST") files $(du -h "$OUT" | cut -f1)"
