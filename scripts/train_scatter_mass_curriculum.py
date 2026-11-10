@@ -140,6 +140,8 @@ def train(args, log):
         results = st.get("results", {})
         val_hist = st.get("val_hist", [])
         log(f"resumed from it {start}")
+    if start > 0 and "init_by_seed" not in results:
+        raise SystemExit("resumed checkpoint has no init_by_seed baseline; the control cannot be rescored on a trained model, rerun from scratch")
     if "init_by_seed" not in results:
         results["init_by_seed"] = {str(sd): evaluate(model, dev, num=args.eval_scenes, seed=sd) for sd in EVAL_SEEDS}
         results["init"] = results["init_by_seed"][str(EVAL_SEEDS[0])]
