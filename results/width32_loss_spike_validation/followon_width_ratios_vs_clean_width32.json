@@ -1,0 +1,119 @@
+{
+ "label": "FOLLOW-ON OBSERVATION, not a verdict, not an amendment of the job 7256 line",
+ "same_quantity_checks": {
+  "script_md5_equal_to_7256": true,
+  "per_seed": {
+   "4739": {
+    "args_differing_from_7256_width32": [
+     "ckpt_dir",
+     "out_dir",
+     "seed",
+     "widths"
+    ],
+    "fp32_floor_bit_equal_to_7256_on_both_eval_seeds": true
+   },
+   "4740": {
+    "args_differing_from_7256_width32": [
+     "ckpt_dir",
+     "out_dir",
+     "seed",
+     "widths"
+    ],
+    "fp32_floor_bit_equal_to_7256_on_both_eval_seeds": true
+   },
+   "4741": {
+    "args_differing_from_7256_width32": [
+     "ckpt_dir",
+     "out_dir",
+     "seed",
+     "widths"
+    ],
+    "fp32_floor_bit_equal_to_7256_on_both_eval_seeds": true
+   }
+  }
+ },
+ "clean_train_seeds": [
+  "4739",
+  "4741"
+ ],
+ "width32_force_rel_l2_by_train_seed_7442": {
+  "4739": [
+   0.074067914452245,
+   0.1013738486313507
+  ],
+  "4740": [
+   0.08464929600778384,
+   0.1210567016362684
+  ],
+  "4741": [
+   0.07573117625518509,
+   0.10879167146531055
+  ]
+ },
+ "width32_force_rel_l2_7256_train_seed_4738": [
+  0.07637989274184806,
+  0.11731842304760758
+ ],
+ "clean_reference_by_eval_seed": [
+  0.07489954535371504,
+  0.10508276004833061
+ ],
+ "clean_reference_mean": 0.08999115270102283,
+ "per_width": {
+  "4": {
+   "force_rel_l2_by_seed": [
+    0.0847238315817695,
+    0.1282944183684192
+   ],
+   "ratio_of_means_vs_clean_32": 1.1835510689472897,
+   "ratio_by_seed_vs_clean_32": [
+    1.1311661663853767,
+    1.2208893096204636
+   ]
+  },
+  "8": {
+   "force_rel_l2_by_seed": [
+    0.07005441402933993,
+    0.09090795538331115
+   ],
+   "ratio_of_means_vs_clean_32": 0.8943233005772,
+   "ratio_by_seed_vs_clean_32": [
+    0.9353116056780605,
+    0.8651081808424135
+   ]
+  },
+  "16": {
+   "force_rel_l2_by_seed": [
+    0.06822854871334824,
+    0.0943666012605412
+   ],
+   "ratio_of_means_vs_clean_32": 0.9033951954925976,
+   "ratio_by_seed_vs_clean_32": [
+    0.9109340836601498,
+    0.8980217232316628
+   ]
+  },
+  "32": {
+   "force_rel_l2_by_seed": [
+    0.07637989274184806,
+    0.11731842304760758
+   ],
+   "ratio_of_means_vs_clean_32": 1.076207549163075,
+   "ratio_by_seed_vs_clean_32": [
+    1.0197644375695745,
+    1.1164383481519653
+   ]
+  },
+  "64": {
+   "force_rel_l2_by_seed": [
+    0.09324253739009321,
+    0.13139401173653503
+   ],
+   "ratio_of_means_vs_clean_32": 1.248103521203563,
+   "ratio_by_seed_vs_clean_32": [
+    1.244901246726571,
+    1.2503859974376683
+   ]
+  }
+ }
+}

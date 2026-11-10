@@ -1,0 +1,283 @@
+{
+ "n": 3000000,
+ "core_scale": 0.25,
+ "ckpt": "kern/E_frozen.pt",
+ "device": "cuda",
+ "seed": 4738,
+ "knn": 16,
+ "body": 1381234,
+ "tie_rel": 1e-06,
+ "default_call_s": 220.46689581871033,
+ "adaptdeep_call_s": 0.4212803840637207,
+ "argmax_body_this_run": 1381234,
+ "abs_diff_default_vs_adaptdeep_at_body": 0.014687406830489635,
+ "argmax_matches_body": true,
+ "fp64": {
+  "ranks": {
+   "14": {
+    "index": 2013468,
+    "r": 0.002590560991432441
+   },
+   "15": {
+    "index": 1710629,
+    "r": 0.002620109824610464
+   },
+   "16": {
+    "index": 627953,
+    "r": 0.002899337303943338
+   },
+   "17": {
+    "index": 849166,
+    "r": 0.0028993374496072547
+   },
+   "18": {
+    "index": 1519524,
+    "r": 0.003079204017627627
+   }
+  },
+  "gap_r17_minus_r16": 1.4566391669246226e-10,
+  "gap_rel_r17_minus_r16": 5.024041752380701e-08,
+  "top16": [
+   411003,
+   1509358,
+   1522229,
+   587970,
+   2953332,
+   669267,
+   924345,
+   2992529,
+   807221,
+   1298931,
+   2250559,
+   1995235,
+   2697074,
+   2013468,
+   1710629,
+   627953
+  ],
+  "tie_group_indices_within_tie_rel_of_r16": [
+   627953,
+   849166
+  ],
+  "tie_group_r": {
+   "627953": 0.002899337303943338,
+   "849166": 0.0028993374496072547
+  },
+  "tie_break_rule_used": "torch.argsort of fp64 r, no index key (strict distance order; lower index only matters at exactly equal fp64 r)",
+  "exactly_equal_r16_r17": false
+ },
+ "paths": {
+  "default": {
+   "top16": [
+    411003,
+    1509358,
+    1522229,
+    587970,
+    2953332,
+    669267,
+    924345,
+    2992529,
+    807221,
+    1298931,
+    2250559,
+    1995235,
+    2697074,
+    2013468,
+    1710629,
+    627953
+   ],
+   "ranks_r_fp32_as_selected": {
+    "14": 0.00259056081995368,
+    "15": 0.00262010982260108,
+    "16": 0.002899337327107787
+   },
+   "selected_16th_index": 627953,
+   "symmetric_difference_vs_fp64_set": [],
+   "sets_equal_to_fp64": true,
+   "sets_equal_up_to_ties": true,
+   "worst_rel_gap_in_difference": 0.0,
+   "qmask_call_force_equals_full_call_force": false,
+   "qmask_vs_full_force_abs_diff": 1.115071627945858e-07,
+   "full_call_err_vs_fp64_bruteforce_force": 2.2907335282848717e-07,
+   "adapt_stats_levels": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     6,
+     0
+    ],
+    [
+     7,
+     0
+    ],
+    [
+     8,
+     0
+    ]
+   ],
+   "adapt_stats_fallback_queries": 1
+  },
+  "adaptdeep": {
+   "top16": [
+    411003,
+    1509358,
+    1522229,
+    587970,
+    2953332,
+    669267,
+    924345,
+    2992529,
+    807221,
+    1298931,
+    2250559,
+    1995235,
+    2697074,
+    2013468,
+    1710629,
+    849166
+   ],
+   "ranks_r_fp32_as_selected": {
+    "14": 0.00259056081995368,
+    "15": 0.00262010982260108,
+    "16": 0.002899337327107787
+   },
+   "selected_16th_index": 849166,
+   "symmetric_difference_vs_fp64_set": [
+    {
+     "index": 627953,
+     "in_path_set": false,
+     "in_fp64_set": true,
+     "r_fp64": 0.002899337303943338,
+     "r_fp32": 0.002899337327107787,
+     "rel_gap_to_r16_fp64": 0.0,
+     "within_tie": true
+    },
+    {
+     "index": 849166,
+     "in_path_set": true,
+     "in_fp64_set": false,
+     "r_fp64": 0.0028993374496072547,
+     "r_fp32": 0.002899337327107787,
+     "rel_gap_to_r16_fp64": 5.024041752380701e-08,
+     "within_tie": true
+    }
+   ],
+   "sets_equal_to_fp64": false,
+   "sets_equal_up_to_ties": true,
+   "worst_rel_gap_in_difference": 5.024041752380701e-08,
+   "qmask_call_force_equals_full_call_force": false,
+   "qmask_vs_full_force_abs_diff": 1.1947093688565922e-07,
+   "full_call_err_vs_fp64_bruteforce_force": 0.014687567319000417,
+   "adapt_stats_levels": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     6,
+     0
+    ],
+    [
+     7,
+     0
+    ],
+    [
+     8,
+     0
+    ],
+    [
+     9,
+     1
+    ]
+   ],
+   "adapt_stats_fallback_queries": 0
+  }
+ },
+ "fp32_distance_ties_at_16th": {
+  "r_fp32_ranks": {
+   "14": {
+    "index": 2013468,
+    "r": 0.00259056081995368
+   },
+   "15": {
+    "index": 1710629,
+    "r": 0.00262010982260108
+   },
+   "16": {
+    "index": 627953,
+    "r": 0.002899337327107787
+   },
+   "17": {
+    "index": 849166,
+    "r": 0.002899337327107787
+   },
+   "18": {
+    "index": 1519524,
+    "r": 0.003079203888773918
+   }
+  },
+  "fp32_r16_equals_r17": true,
+  "count_bodies_with_fp32_r_equal_to_fp32_r16": 2,
+  "indices_with_fp32_r_equal_to_fp32_r16": [
+   627953,
+   849166
+  ]
+ },
+ "tie_break_reference": {
+  "rule": "lower body index wins on equal fp64 distance (applies within the tie group; fp64 distances in the group are not exactly equal, so the fp64 sort picks the strictly nearer member)",
+  "lower_index_member_of_tie_group": 627953,
+  "fp64_sort_picks": 627953,
+  "default_picks_16th": 627953,
+  "adaptdeep_picks_16th": 849166,
+  "adaptdeep_pick_is_lower_index_member": false,
+  "default_pick_is_lower_index_member": true,
+  "adaptdeep_pick_equals_fp64_pick": false
+ },
+ "verdict_input": {
+  "adaptdeep_sets_equal_up_to_ties": true,
+  "adaptdeep_worst_rel_gap_in_difference": 5.024041752380701e-08
+ },
+ "done": true
+}
