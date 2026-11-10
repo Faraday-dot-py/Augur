@@ -1,6 +1,6 @@
-"""Stage 1 of sampled-force-tier-0-scored-on-distributions-past-the-chaos-horizon: score the unchanged control (Exp E) on the distribution metric at tick 300.
+"""Stage 1 of sampled-force-tier-0-scored-on-distributions-past-the-chaos-horizon: score the unchanged control (single-law-gravity-control) on the distribution metric at tick 300.
 
-Scenes are Exp E's own training distribution (half box, half cluster). The control is rolled once (deterministic) from the unperturbed state; the exact reference is the
+Scenes are single-law-gravity-control's own training distribution (half box, half cluster). The control is rolled once (deterministic) from the unperturbed state; the exact reference is the
 perturbed float64 ensemble of scripts/scatter_distribution_ensemble.py. Primary perturbation rel is 1e-4; 1e-5 and 1e-3 are reported as sensitivity only. Seeds 9100/9200/9300
 are the pre-registered set; 12000/12100/12200 are the fresh confirmation set. One json per (seed, rel) is written and skipped on rerun.
 Usage: PYTHONPATH=. python scripts/score_scatter_distribution_control.py --ckpt ~/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt --out-dir results/scatter_distribution_control

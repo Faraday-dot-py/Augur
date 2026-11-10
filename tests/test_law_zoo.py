@@ -52,10 +52,10 @@ def test_encoder_shape_padding_permutation_and_gradient():
     mask[:, :n] = 1.0
     code = enc(P, V, mask)
     assert code.shape == (B, sm.DC) and torch.isfinite(code).all() and (code[:, lz.CODE_DIM:] == 0).all()
-    P2, V2 = P.clone(), V.clone()
-    P2[:, :, n:] = torch.randn(B, 6, N - n, 2) * 50
-    V2[:, :, n:] = torch.randn(B, 6, N - n, 2) * 50
-    assert torch.allclose(enc(P2, V2, mask), code, atol=1e-5)
+    Pb, Vb = P.clone(), V.clone()
+    Pb[:, :, n:] = torch.randn(B, 6, N - n, 2) * 50
+    Vb[:, :, n:] = torch.randn(B, 6, N - n, 2) * 50
+    assert torch.allclose(enc(Pb, Vb, mask), code, atol=1e-5)
     perm = torch.cat([torch.randperm(n), torch.arange(n, N)])
     assert torch.allclose(enc(P[:, :, perm], V[:, :, perm], mask), code, atol=1e-5)
     code.sum().backward()

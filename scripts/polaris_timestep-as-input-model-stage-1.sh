@@ -13,7 +13,7 @@
 #SBATCH --nice=100
 #SBATCH --signal=B:TERM@120
 #SBATCH --output=augur-timestep-as-input-model-stage-1-%j.log
-# Stage 1 of timestep-as-input-model: exact truth at step sizes 0.05/0.1/0.2 (train + eval) and 0.075 (eval only) on the Exp E scene distribution, then the frozen Exp E reference eval at each step size.
+# Stage 1 of timestep-as-input-model: exact truth at step sizes 0.05/0.1/0.2 (train + eval) and 0.075 (eval only) on the single-law-gravity-control scene distribution, then the frozen single-law-gravity-control reference eval at each step size.
 # Pre-registration: docs/debugging/architecture-push-prereg/timestep-as-input-model.md.
 # Estimate about 1.0 GPU-h (untimed; spec figure, 4500 train scenes + 576 eval scenes of float64 truth, then 4 x 3 frozen evals). Requeue-safe: every set is written atomically and skipped on rerun.
 # Code tarball: bash scripts/build_architecture_push_stage1_code_tarball.sh, upload to $HOME. Supervisor adds --dependency at submission.
@@ -23,7 +23,7 @@ W=$HOME/augur_architecture_push_stage1_timestep
 E=$HOME/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt
 T=$HOME/architecture_push_stage1_code.tgz
 [ -s $T ] || { echo "MISSING $T"; exit 2; }
-[ -s $E ] || { echo "MISSING Exp E checkpoint $E"; exit 2; }
+[ -s $E ] || { echo "MISSING single-law-gravity-control checkpoint $E"; exit 2; }
 mkdir -p $W && cd $W && tar xzf $T || { echo "EXTRACT FAILED"; exit 2; }
 export PYTHONPATH=$W
 for f in scripts/train_scatter_timestep.py scripts/scatter_field.py scripts/train_scatter_field.py scripts/gravity_sim.py; do

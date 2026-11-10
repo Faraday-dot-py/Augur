@@ -1,6 +1,6 @@
 """Step-size-as-input scatter field (experiment timestep-as-input-model): truth generation, frozen-control reference eval, training, evaluation.
-Modes: gen (truth at DT_TRAIN + DT_EVAL_ONLY on the Exp E scene distribution, saved as float32 tensors), frozen (Exp E weights, inference only, model.dt set per step size),
-train (variant ms_kp_pot_v_g128_dtin, mixed step sizes, Exp E recipe, resumable), eval (a checkpoint on the held-out sets).
+Modes: gen (truth at DT_TRAIN + DT_EVAL_ONLY on the single-law-gravity-control scene distribution, saved as float32 tensors), frozen (single-law-gravity-control weights, inference only, model.dt set per step size),
+train (variant ms_kp_pot_v_g128_dtin, mixed step sizes, single-law-gravity-control recipe, resumable), eval (a checkpoint on the held-out sets).
 Lines: docs/debugging/architecture-push-prereg/timestep-as-input-model.md."""
 import argparse
 import json
@@ -109,7 +109,7 @@ def build_model(variant, dev, init_ckpt=None):
 def frozen(args, log):
     dev = torch.device(args.device)
     model = build_model("ms_kp_pot_v_g128", dev, args.init_ckpt).eval()
-    res = {"ckpt": args.init_ckpt, "note": "Exp E weights, no step-size input; inference at each step size only"}
+    res = {"ckpt": args.init_ckpt, "note": "single-law-gravity-control weights, no step-size input; inference at each step size only"}
     for dt in DT_TRAIN + DT_EVAL_ONLY:
         res[tag(dt)] = evaluate(model, dt, load_eval(args, dt, dev), dev)
         log(f"frozen {tag(dt)} " + json.dumps({s: (round(v["err20"], 5), round(v["dE_vs_truth_100"], 5)) for s, v in res[tag(dt)].items()}))

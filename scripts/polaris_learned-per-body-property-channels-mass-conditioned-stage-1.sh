@@ -13,7 +13,7 @@
 #SBATCH --nice=100
 #SBATCH --signal=B:TERM@120
 #SBATCH --output=augur-learned-per-body-property-channels-mass-conditioned-stage-1-%j.log
-# Stage 1 of learned-per-body-property-channels: mass-conditioned curriculum, arm massfeat_curriculum, warm start from Exp E, seed 4738, verdict = worst over eval seeds 9100/9200/9300.
+# Stage 1 of learned-per-body-property-channels: mass-conditioned curriculum, arm massfeat_curriculum, warm start from single-law-gravity-control, seed 4738, verdict = worst over eval seeds 9100/9200/9300.
 # Pre-registration: docs/debugging/architecture-push-prereg/learned-per-body-property-channels.md.
 # Estimate 1.0 GPU-h (untimed; 4200 iterations at 0.315 s/it from the nearest logged run, plus validation, evaluation and scene generation). Requeue-safe: full state every 50 iterations and on SIGTERM, resumed automatically.
 # Code tarball: bash scripts/build_architecture_push_stage1_code_tarball.sh, upload to $HOME. Supervisor adds --dependency at submission.
@@ -23,7 +23,7 @@ W=$HOME/augur_architecture_push_stage1_mass
 E=$HOME/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt
 T=$HOME/architecture_push_stage1_code.tgz
 [ -s $T ] || { echo "MISSING $T"; exit 2; }
-[ -s $E ] || { echo "MISSING Exp E checkpoint $E"; exit 2; }
+[ -s $E ] || { echo "MISSING single-law-gravity-control checkpoint $E"; exit 2; }
 mkdir -p $W && cd $W && tar xzf $T || { echo "EXTRACT FAILED"; exit 2; }
 export PYTHONPATH=$W
 for f in scripts/scatter_field.py scripts/scatter_ft_data.py scripts/scatter_mass_curriculum_data.py scripts/train_scatter_mass_curriculum.py scripts/train_scatter_field.py; do

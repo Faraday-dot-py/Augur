@@ -2,12 +2,12 @@
 
 Written before any run. Spec: experiment 16, section 10a overriding. Priority 3.
 
-Definitions. dt: step size of one tick (0.1 is the training step). err@20: mean per-body position error at tick 20. dE@100: |E_model - E_truth| / |E_truth| at tick 100, truth energy at the same tick. Exp E: single-law gravity checkpoint, the control.
+Definitions. dt: step size of one tick (0.1 is the training step). err@20: mean per-body position error at tick 20. dE@100: |E_model - E_truth| / |E_truth| at tick 100, truth energy at the same tick. single-law-gravity-control: single-law gravity checkpoint, the control.
 
 ## Design
 Change: step size enters as one extra input (`dtin`: log(dt / substeps / 0.1), added to the kernel and pair features and as one extra U-Net channel); training mixes dt in {0.05, 0.1, 0.2} (uniform per iteration). Variant `ms_kp_pot_v_g128_dtin`; zero-padded columns make the warm start identical to the control at every dt (test_scatter_timestep_input.py). Not trained on: dt 0.075 (evaluation only).
-Control: Exp E, Polaris `~/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt` (verified). Warm start of the candidate: `~/augur/checkpoints/scatter_bh/init_B_ms_kp_pot_v_g128.pt` (verified, 3200305 bytes), the same warm start Exp E used. Recipe: Exp E (60000 iterations, lr 5e-4, batch 16, k 4 to 30), eager mode.
-Stage 1 (about 1 GPU-h): truth at three step sizes plus 0.075 for evaluation on the Exp E scene distribution, then the frozen Exp E reference at each dt (inference only). Full run (about 5 GPU-h): train and evaluate.
+Control: single-law-gravity-control, Polaris `~/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt` (verified). Warm start of the candidate: `~/augur/checkpoints/scatter_bh/init_B_ms_kp_pot_v_g128.pt` (verified, 3200305 bytes), the same warm start single-law-gravity-control used. Recipe: single-law-gravity-control (60000 iterations, lr 5e-4, batch 16, k 4 to 30), eager mode.
+Stage 1 (about 1 GPU-h): truth at three step sizes plus 0.075 for evaluation on the single-law-gravity-control scene distribution, then the frozen single-law-gravity-control reference at each dt (inference only). Full run (about 5 GPU-h): train and evaluate.
 
 ## Lines (verbatim, spec section 7 experiment 16)
 - "PASS at dt 0.1, err@20 at most 1.05x control; at dt 0.05, err@20 at most 0.70x and dE@100 at most 0.50x of control at dt 0.1; step sizes not trained on (0.075) interpolate within 15% of the line between neighbours. KILL err@20 at dt 0.1 above 1.15x. Fails pass: 0.80x at dt 0.05."
@@ -31,7 +31,7 @@ At dt 0.1 the ratio lands near 1.0-1.1x. At dt 0.05 err@20 about 0.6-0.8x (retra
 ## Constraints check
 - pp=2, knn=16 unchanged. No hard-wired conservation; dE against truth E(t). O(N): one extra channel; cost per unit simulated time falls with larger dt (the stated requirement).
 - Matched budget: 60000 iterations and the same recipe as the control.
-- Anomaly kept in notes at lower priority: truth at three step sizes is generated once (train scenes 1500 per dt, 50 ticks); training reuses them, so the candidate sees fixed scenes where Exp E regenerated them. If the control's data source differs, the comparison is not exactly matched.
+- Anomaly kept in notes at lower priority: truth at three step sizes is generated once (train scenes 1500 per dt, 50 ticks); training reuses them, so the candidate sees fixed scenes where single-law-gravity-control regenerated them. If the control's data source differs, the comparison is not exactly matched.
 
 ## Artifacts
 Stage 1: scripts/polaris_timestep-as-input-model-stage-1.sh (needs 15 truth sets: 3 train + 12 eval, checked). Full run skeleton, NOT YET AUTHORISED (exits 64 unless FULL_RUN_AUTHORISED=yes): scripts/polaris_timestep-as-input-model-full-run-not-yet-authorised.sh. Code: scripts/train_scatter_timestep.py. Tarball: `bash scripts/build_architecture_push_stage1_code_tarball.sh`. Estimates: stage 1 about 1.0 GPU-h, full about 5 GPU-h (spec figures, untimed).

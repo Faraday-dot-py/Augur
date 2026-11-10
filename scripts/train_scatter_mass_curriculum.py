@@ -248,7 +248,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--arm", choices=list(ARMS), required=True)
     ap.add_argument("--name", default=None)
-    ap.add_argument("--init-ckpt", required=True, help="Exp E / tier-0 checkpoint to warm start from (load_compat zero-pads the new input channels)")
+    ap.add_argument("--init-ckpt", required=True, help="single-law-gravity-control / tier-0 checkpoint to warm start from (load_compat zero-pads the new input channels)")
     ap.add_argument("--resume", action="store_true", help="accepted for clarity; an existing checkpoint is always resumed")
     ap.add_argument("--stage-iters", type=int, default=600)
     ap.add_argument("--scenes", type=int, default=300)

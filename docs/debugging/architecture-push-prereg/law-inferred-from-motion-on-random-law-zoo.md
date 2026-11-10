@@ -11,7 +11,7 @@ Held-out rule (builder-fixed): a law is excluded from training if its force-curv
 Encoder: DeepSets over bodies, 16 nearest neighbours, tokens (log r, radial component of the finite-difference acceleration, log(1+|a|)) over the first 4 observed ticks, 5-number code in the first theta slot, rest zero; output shape (B, 20) matches `MultiScatterField.set_law`. Dense `topk` neighbour search is used in stage 1 (O(N^2) per scene on 4 ticks); the full run must use the model's cell-list neighbour routine to keep O(N). Flagged, unverified.
 
 ## Control
-Experiment 11's model (law-blind-unet-trunk), or main_s4739 (mixed-law, control M) if experiment 11 is KILL. Neither checkpoint path is verified in stage 1: the supervisor must name which exists after experiment 11's result; main_s4739 path is to be confirmed with polaris_ls before the full run (unverified). Single-law comparators: the existing per-law models used in scatter_multi_eval.py.
+The model of law-blind-unet-trunk, or main_s4739 (the mixed-law control) if law-blind-unet-trunk is KILL. Neither checkpoint path is verified in stage 1: the supervisor must name which exists after law-blind-unet-trunk's result; main_s4739 path is to be confirmed with polaris_ls before the full run (unverified). Single-law comparators: the existing per-law models used in scatter_multi_eval.py.
 
 ## Lines (verbatim, spec experiment 12)
 - "PASS held-out pow1.5 tick-1 force at most 1.3x its single-law comparator AND held-out yuk32 at most 1.0x the control's own yuk32 error (the control already beats the yuk32 comparator) AND the code predicts the true exponent with R-squared at least 0.9 on held-out laws. KILL pow1.5 above 1.6x or yuk32 above 1.3x the control. Fails pass: pow1.5 1.45x."
