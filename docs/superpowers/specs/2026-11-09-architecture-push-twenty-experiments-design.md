@@ -1,6 +1,6 @@
 # Architecture push: twenty broad experiments (design spec, 2026-11-09)
 
-Status: DRAFT for user approval. Nothing here has been run, scripted or queued. No pass/kill line below is registered until the user approves it and it is copied into `docs/debugging/experiment-log.md`.
+Status: APPROVED by the user 2026-11-09 with the amendments in section 10a, which override the experiment text wherever they differ. Nineteen experiments (7 dropped). A pass/kill line is registered only once it is copied into `docs/debugging/experiment-log.md` before launch.
 
 ## 1. Intent
 
@@ -282,6 +282,20 @@ After wave 2: one capstone that combines the passes, with one ablation per combi
 6. Width for the single-law control S: 8 is assumed (smallest unambiguous in job 7256).
 7. Experiment 1 re-tests a design that was killed on 2026-10-01, with the three causes its own entry left untested. Keep it, or drop it as already decided?
 8. Experiment 7 covers one law of six. Keep it at low rank, or drop it?
+
+## 10a. User decisions (2026-11-09, walkthrough; these override sections 7, 8 and 10)
+
+1. Training length: keep the control's iteration count, with a plateau guard. If the candidate's validation loss is still falling at the end (slope threshold fixed in the pre-registration), the result is INCONCLUSIVE-undertrained, not KILL, and one extension at double length is allowed for candidate and control together.
+2. Experiment 7: DROPPED (user: "feels like hard structure, and doesn't generalize"). The list stays at 19; the slot is not refilled.
+3. Experiment 13: the split only. The power-matching term is not run; it may be proposed later only if the split shows the velocity-and-history branch does the leaking work. The split-only pass/kill line must be written before launch (the section 7 line was for split plus term).
+4. Experiment 15: stage 1 only, as a diagnostic on the frozen four-pass symmetrised model at seed 12300 (net force on the core with the U-Net, kernel and pair term each switched off in turn). Its line is pre-registered before launch. The steerable retrain is a user decision after the result.
+5. Experiment 4: stage 1 only, on its own branch `ball-tree-particle-attention-stage-1`, then report back. One network trained end to end; summed (not normalised) attention and mass-weighted pooling at each merge, stated in the pre-registration.
+6. Experiment 20: approved as CURIOSITY, capped at 1 GPU-hour, observations only, never a pass or kill.
+7. Single-law control S for experiments 17 and 18: width 8. Supported by job 7442's follow-on observation (width 8 ratio 0.894 against the clean width-32 seeds; experiment-log RESULT entry, commit 3446825).
+8. Experiment 1: stage 1 only, as a ceiling probe (exact force substituted inside the densest cells of the frozen replay checkpoint; how much drift and dense-bin error disappears). The full run is a user decision after the result.
+9. Reach of approval: all 19 are approved. A full run starts automatically when its first stage does not close it, EXCEPT experiments 1, 4 and 15 (report back after stage 1) and experiment 5 (report back before its full run, because of its size). Experiments 2, 3, 6, 8, 9, 10, 11, 12, 14, 16, 17, 18, 19 run as specified.
+10. Full-run order: 3, 11, 2, 6, then 17 and 18, 13, 10, then 16, 9, 8, 14, then 12; 5 last and only after the user's go.
+11. The user granted permission to spawn a supervisor agent to carry all 19 to a result for review.
 
 ## 11. Review
 
