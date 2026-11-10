@@ -9,6 +9,7 @@
 #SBATCH --qos=student-pleiades
 #SBATCH --time=01:30:00
 #SBATCH --requeue
+#SBATCH --dependency=afterany:7475
 #SBATCH --nice=100
 #SBATCH --signal=B:TERM@120
 #SBATCH --output=augur-width-32-loss-spike-instrumented-rerun-%j.log
