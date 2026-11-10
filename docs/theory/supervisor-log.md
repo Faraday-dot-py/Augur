@@ -334,3 +334,7 @@ KILL on held-out guard. Two-moons moon survival 1036 (CI 944-1129; truth 2000; b
 - Slots: slot 1 7802 running, slot 2 7838 running with 7839/7840 queued behind it: 2 GPU jobs at once. Full-run drafts remain unauthorised. The five single-law comparators are not trained (needs-user).
 - Anomaly: 7837 diagnostics COMPLETED 0:0 in 2:30 against est under 1.5 h; stage1.json (3708 B) and DONE exist in ~/augur_shift_core_diag/results/shift_average_stage1, and results/core_force_components/n2e4_s12300 exists. Not yet read or scored; needs download, scoring and a fresh reviewer.
 - Cluster 2 (body-properties, timestep, sampled-force, law-zoo; branch body-properties-timestep-sampling-law-zoo-stage1 eabf2c1) not merged or submitted: held by coordinator instruction.
+
+## 2026-11-10 RESULT gaussian-ladder-far-kernel-replacing-fft stage 1 (job 7838): KILL
+- Anomaly (46 s vs 0.5 GPU-h) checked first: all 10 cells in .done and log, n=48 per seed, finite, no errors; genuine. err@20 ratio 16.57 vs kill line 1.30; tiled 16.7% vs 4%; exponent error 50.8% vs 10%. Fresh reviewer PARTLY CONFIRMED (numbers reproduce; cause of the 16x gap untested). Full entry in experiment-log. 7838 done; slot 2 tail now 7839 (law-blind) running per queue; cap 2 with 7802.
+- Cluster 3 (single-law readability, neighbour pair branch, bit-output cell): no final report yet and nothing committed; work is uncommitted in worktree agent-a38a1cf0c6efaeb69 (4 preregs, 8 job scripts including full-run drafts, tests). Needs-user items not yet available. Merged nothing.

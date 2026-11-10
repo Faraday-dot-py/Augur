@@ -1,0 +1,17 @@
+{
+ "err20_ratio_vs_E": 16.565818123074518,
+ "err20_ratio_per_seed": [
+  16.651178713221817,
+  17.168945035664564,
+  15.877330620337169
+ ],
+ "E_noise_floor": 0.18449381465357953,
+ "tiled_rel_l1_diff": 0.1672582067283931,
+ "exponent_rel_err_pow2": 0.5078180645029047,
+ "fit_rel_err_E": 0.2867192431456793,
+ "verdict": "KILL",
+ "lines": {
+  "pass": "err@20 <= 1.15x E AND tiled <= 4% AND pow2 exponent within 10%",
+  "kill": "err@20 > 1.30x E"
+ }
+}
