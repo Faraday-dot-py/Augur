@@ -2,7 +2,7 @@
 
 Branch `ball-tree-particle-attention-stage-1`. Spec: `docs/superpowers/specs/2026-11-09-architecture-push-twenty-experiments-design.md` section 4, with user decision 5 in section 10a (stage 1 only, then report back). The full run happens only after the user reviews the stage 1 report.
 
-Definitions. N: body count. Tick: one step of dt 0.1. err@k: mean position error per body after k self-fed ticks against the exact fp64 simulation (softened gravity, G=1, eps 0.5, 4 substeps per tick). Cold family: Gaussian cloud sigma 8, velocity factor 0.3 (the regime Exp E was selected on); warm family: same with velocity factor 1.0. Exp E: the pinned gravity checkpoint `ms_kp_pot_v_g128` (grid 128, extent 64, FFT kernel, pair term). The spec calls the control "G"; the task assigns Exp E.
+Definitions. N: body count. Tick: one step of dt 0.1. err@k: mean position error per body after k self-fed ticks against the exact fp64 simulation (softened gravity, G=1, eps 0.5, 4 substeps per tick). Cold family: Gaussian cloud sigma 8, velocity factor 0.3 (the regime the scatter-field control (ms_kp_pot_v_g128) was selected on); warm family: same with velocity factor 1.0. the scatter-field control (ms_kp_pot_v_g128): the pinned gravity checkpoint `ms_kp_pot_v_g128` (grid 128, extent 64, FFT kernel, pair term). The spec calls the control "G"; the task assigns the scatter-field control (ms_kp_pot_v_g128).
 
 ## Model (stage 1)
 
@@ -19,7 +19,7 @@ Not loosened. Any amendment goes to the user as a proposal with a concrete value
 
 ## Measurement
 
-- Control: Exp E, Polaris `~/augur_nfr/kern/E_frozen.pt` (3,200,305 bytes, verified read-only 2026-11-10); identical file at `~/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt` (3,200,305 bytes). Loaded with the repo `scatter_scaling.load`, retargeted to grid 128, extent 64.
+- Control: the scatter-field control (ms_kp_pot_v_g128), Polaris `~/augur_nfr/kern/E_frozen.pt` (3,200,305 bytes, verified read-only 2026-11-10); identical file at `~/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt` (3,200,305 bytes). Loaded with the repo `scatter_scaling.load`, retargeted to grid 128, extent 64.
 - err@20 ratio = mean candidate err@20 over scenes divided by mean control err@20 over the same scenes. Primary family: cold, N=1000, held-out seeds 9100, 9200, 9300, 4 scenes per seed (12 scenes). Warm family reported alongside, not scored.
 - Cost exponent: log-log slope of ms/tick against N over N = 1000, 3162, 10000, 31623, 100000, 316228, 1000000 (the 1e3 to 1e6 slope only; the 1e4 and 1e5 slopes are reported, not scored). ns per body per tick at 1e6 is ms/tick over N, from the 1e6 cell. A missing 1e6 cell (OOM) gives INCONCLUSIVE-no-1e6-timing, never PASS.
 - Fresh seeds (copy the results directory, then rerun `--mode score --heldout 12000,12100,12200 --out <copy>`; score needs val_curve.json for the plateau guard): before a result is called real, rerun scoring with `--heldout 12000,12100,12200` on the same unchanged checkpoint. A PASS or KILL that flips on fresh seeds is reported as not real.

@@ -1,4 +1,4 @@
-"""Stage 1 of ball-tree-particle-attention-tier-0: train model/ball_tree_attention.py end to end on the Exp E recipe, score it against the frozen Exp E checkpoint in the same run, and time it from 1e3 to 1e6 bodies.
+"""Stage 1 of ball-tree-particle-attention-tier-0: train model/ball_tree_attention.py end to end on the the scatter-field control (ms_kp_pot_v_g128) recipe, score it against the frozen the scatter-field control (ms_kp_pot_v_g128) checkpoint in the same run, and time it from 1e3 to 1e6 bodies.
 Modes: train (resumable, SIGTERM-safe, validation curve for the plateau guard), score (err@5/20 at N=1000 cold and warm vs control, in-distribution cfg E, exact-reference floor), bench (ns/body/tick sweep), all.
 Usage: PYTHONPATH=. python scripts/ball_tree_particle_attention.py --mode all --control kern/E_frozen.pt --iters 6000 --device cuda --out results/ball_tree_particle_attention
 """
