@@ -11,7 +11,7 @@ The last three weeks of work on the scatter field and the tiered hierarchy were 
 - Tick: one simulation step (dt 0.1). Body: one particle.
 - err@k: mean position error per body after k self-fed ticks against the exact simulation. dE@k: relative energy drift at tick k, compared with the truth energy at the same tick E(t), never E(0).
 - Scatter field: the current model family. Bodies are deposited on a grid (CIC, cloud-in-cell, bilinear spreading), a U-Net (multi-level convolutional network) acts on the grid, forces are read back at each body. It also has an FFT kernel (a learned radial far-field kernel applied by fast Fourier transform) and a pair term (a small learned network over the 16 nearest neighbours inside radius 2; "pp=2, knn=16").
-- Exp E: the pinned single-law gravity checkpoint `ms_kp_pot_v_g128` (grid 128, extent 64, unit mass).
+- single-law-gravity-checkpoint-g128: the pinned single-law gravity checkpoint `ms_kp_pot_v_g128` (grid 128, extent 64, unit mass).
 - Tier 0: the finest tier of the tiered hierarchy, a scatter field run in 32-unit tiles with a 16-unit halo (overlap read from neighbours). BL: the tiled baseline that tier-0 results are divided by.
 - Replay checkpoint: tier 0 after visited-state label replay (job 4089), the best tiled model so far.
 - Mixed-law model: `MultiScatterField`, trained on six force laws (pow1, pow2, pow3, yuk8, yuk128, lj; pow1.5 and yuk32 held out) with a 20-number law descriptor "theta". Checkpoints main_s4738 and main_s4739.
@@ -22,10 +22,10 @@ The last three weeks of work on the scatter field and the tiered hierarchy were 
 
 | Axis | Best result | Open failure | Source |
 | --- | --- | --- | --- |
-| Single-law gravity | Exp E; 1e9 bodies at 1.33-1.39 s/tick, 1e10 at 13.4 s/tick | accuracy holds about 20 ticks at 1e5 bodies (err@20 1.33, err@100 18.9); unit mass only; planar only | architectures.md:114-115 |
+| Single-law gravity | single-law-gravity-checkpoint-g128; 1e9 bodies at 1.33-1.39 s/tick, 1e10 at 13.4 s/tick | accuracy holds about 20 ticks at 1e5 bodies (err@20 1.33, err@100 18.9); unit mass only; planar only | architectures.md:114-115 |
 | Tiled tier 0 | err@20 0.70-0.77x BL after replay (one base seed; second base 0.81-0.95x); the closed-loop model before replay passes the err@20 line on 4 of 4 training seeds | dE@100 still 1.78-2.29x BL; gain sits in dense bodies (at least 20 neighbours: 89-92% of the error reduction from 33% of bodies) | supervisor-log 10-29 16:00; experiment-log.md:3625-3655, 3778-3781 |
-| Mixed-law | main_s4739 gravity err@20 0.106 | Exp E is 0.0407; main_s4738 7.89 with a dead decoder level; held-out pow1.5 at 1.6-2.5x its single-law comparator (held-out yuk32 is 0.39-0.45x, against a weak comparator); amplitude-cap retrain KILL (33.08) | unexplored-directions-review-2026-11-09.md:10-11; experiment-log.md:3435 |
-| Sub-cell behaviour | pair term covers r below 2; its collapsed-cloud slowdown at 3e6 bodies was fixed by the adaptive-depth change (job 7235) | half-cell shift changes force 3.7-24.5% on 6 of 6 laws for the mixed checkpoints, 6-10% for Exp E; averaging four shifted passes of frozen Exp E at inference cut err@20 39% at 4x cost (dE not measured) | supervisor-log.md:274; error-correction-plan.md:53, 78; experiment-log.md:3765-3769 |
+| Mixed-law | main_s4739 gravity err@20 0.106 | single-law-gravity-checkpoint-g128 is 0.0407; main_s4738 7.89 with a dead decoder level; held-out pow1.5 at 1.6-2.5x its single-law comparator (held-out yuk32 is 0.39-0.45x, against a weak comparator); amplitude-cap retrain KILL (33.08) | unexplored-directions-review-2026-11-09.md:10-11; experiment-log.md:3435 |
+| Sub-cell behaviour | pair term covers r below 2; its collapsed-cloud slowdown at 3e6 bodies was fixed by the adaptive-depth change (job 7235) | half-cell shift changes force 3.7-24.5% on 6 of 6 laws for the mixed checkpoints, 6-10% for single-law-gravity-checkpoint-g128; averaging four shifted passes of frozen single-law-gravity-checkpoint-g128 at inference cut err@20 39% at 4x cost (dE not measured) | supervisor-log.md:274; error-correction-plan.md:53, 78; experiment-log.md:3765-3769 |
 | Hierarchy | upper tiers add 4-10% error over an exact external field | end-to-end KILL (1.5-1.7x BL); separate weights per tier; frozen sequential training | architectures.md:51-67 |
 | Interpretability | exponents recovered for pow2 and the long Yukawa law on one checkpoint; pow1 exponent error 0.108 against a 0.10 line | rule-free recovery KILL (2 of 16 cells); dictionary features only causal from 5 features up; single-law sizing INCONCLUSIVE (widths 8 and 16 qualify, 64 not better) | experiment-log.md:3477-3478; rule-free-force-recovery.md; supervisor-log.md:269 |
 | Chaos | none | err@100 is below the reference noise floor in black-hole scenes, so long-horizon accuracy has no usable metric | architectures.md:130 |
@@ -68,7 +68,7 @@ Anti-goals (a result that would count as failure even if numbers improve)
 ## 6. Shared scorecard
 
 Controls
-- G: Exp E, single-law gravity.
+- G: single-law-gravity-checkpoint-g128, single-law gravity.
 - T: the replay checkpoint (tier 0 tiled, job 4089 lineage).
 - M: main_s4739, mixed-law.
 - S: single-law gravity at width 8 (the smallest unambiguous width from job 7256), for the interpretability experiments.
@@ -109,10 +109,10 @@ Fields: change; why (evidence); already-tried check; target line with a value th
 
 **3. staggered-double-grid-with-quadratic-deposit** (control G)
 - Change: replace bilinear deposit and gather with a quadratic (three-cell) shape, and run two grids offset by half a cell through the same U-Net, averaging the gathered force. Trained that way, not only run that way.
-- Why: the model is not shift-consistent below a cell (half-cell shift changes force 6-10% on Exp E, 3.7-24.5% on the mixed checkpoints). Averaging four shifted passes of frozen Exp E at inference already cut err@20 39% and err@100 30%, at 4x cost and with dE not measured (error-correction-plan.md:78). Grid-origin jitter as data augmentation raised dE@1000 5.8x, so the data-side fix is closed. The pending shift-consistency loss is a loss term; this is the structural version, aiming for most of the four-pass gain at about 2x cost.
+- Why: the model is not shift-consistent below a cell (half-cell shift changes force 6-10% on single-law-gravity-checkpoint-g128, 3.7-24.5% on the mixed checkpoints). Averaging four shifted passes of frozen single-law-gravity-checkpoint-g128 at inference already cut err@20 39% and err@100 30%, at 4x cost and with dE not measured (error-correction-plan.md:78). Grid-origin jitter as data augmentation raised dE@1000 5.8x, so the data-side fix is closed. The pending shift-consistency loss is a loss term; this is the structural version, aiming for most of the four-pass gain at about 2x cost.
 - Already tried: the inference-only four-pass average above. A trained staggered or quadratic deposit never ran (scatter-correction-research.md:64, 130, marked untested).
 - Line: PASS err@20 at most 0.75x control AND shift-probe value at most 0.50x control AND dE@100 at most 1.10x AND cost at most 2.2x. KILL err@20 above 0.95x or dE@100 above 1.5x. Fails pass: err@20 0.85x.
-- Cost: 0.3 (two-pass and four-pass averaging of frozen Exp E with dE measured, which fills the gap in the earlier result) / 3 GPU-h. Requirements: Til (seams are sub-cell shifts), Gen.
+- Cost: 0.3 (two-pass and four-pass averaging of frozen single-law-gravity-checkpoint-g128 with dE measured, which fills the gap in the earlier result) / 3 GPU-h. Requirements: Til (seams are sub-cell shifts), Gen.
 
 **4. ball-tree-particle-attention-tier-0** (control G)
 - Change: no grid. Bodies are sorted into a ball tree; attention runs inside fixed-size balls, with coarsening and refinement between tree levels (the Erwin layout). Force is read per body.
@@ -171,10 +171,10 @@ Fields: change; why (evidence); already-tried check; target line with a value th
 ### Group D. How the force law enters
 
 **11. law-blind-unet-trunk** (control M)
-- Change: theta no longer enters the U-Net. The far kernel and the pair network stay conditioned on theta exactly as now; the U-Net sees only deposited fields and the kernel's output. Stage 1 is the never-run cheaper variant: Exp E frozen, with small per-law kernel and pair heads (audit row 16).
+- Change: theta no longer enters the U-Net. The far kernel and the pair network stay conditioned on theta exactly as now; the U-Net sees only deposited fields and the kernel's output. Stage 1 is the never-run cheaper variant: single-law-gravity-checkpoint-g128 frozen, with small per-law kernel and pair heads (audit row 16).
 - Why: in main_s4738 one decoder level is dead and another has activations near 3700; the amplitude-cap retrain made gravity worse (33.08). The U-Net is being asked to change behaviour with theta. If laws differ only in the two readable parts, the trunk cannot be destabilised by one law, and the law lives where it can be read.
 - Already tried: no model without theta in the U-Net; row 16 never run. Related KILL to keep in view: a theta-conditioned far kernel alone failed on held-out laws (commit b2a0522, yuk32 3.4x), so the kernel's conditioning is a known weak point that this experiment does not change.
-- Line: stage 1 (row 16): gravity err@20 at most 1.05x Exp E AND other laws within 2x their single-law comparators; KILL gravity above 1.15x. Full: PASS gravity err@20 at most 0.0509 on seeds 4738 and 4739 AND no dead decoder level AND every trained law's tick-1 force within 1.25x of M. KILL gravity above 0.106. Fails pass: 0.07.
+- Line: stage 1 (row 16): gravity err@20 at most 1.05x single-law-gravity-checkpoint-g128 AND other laws within 2x their single-law comparators; KILL gravity above 1.15x. Full: PASS gravity err@20 at most 0.0509 on seeds 4738 and 4739 AND no dead decoder level AND every trained law's tick-1 force within 1.25x of M. KILL gravity above 0.106. Fails pass: 0.07.
 - Cost: 3.5 / 7.5 GPU-h. Requirements: Gen, Int.
 
 **12. law-inferred-from-motion-on-random-law-zoo** (control: experiment 11's model, or M if 11 is KILL)
