@@ -14,15 +14,16 @@
 set -uo pipefail
 export PYTHONUNBUFFERED=1
 T0=$(date +%s)
-E_CK=$HOME/E_ms_kp_pot_v_g128.pt
+E_CK=$HOME/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt
 DRIFT_CK=$HOME/edge_ck/ghost_lsq.pt
 OLD=$HOME/augur_armA_fresh/results/armA_fresh/n2e4_s12300
 
-mkdir -p $HOME/augur_shift_core_diag/code_b $HOME/augur_shift_core_diag/code_c
+mkdir -p $HOME/augur_shift_core_diag/code_b
 cd $HOME/augur_shift_core_diag/code_b
 tar xzf $HOME/shift_core_diag_code.tgz
+[ -d $HOME/augur_shift_core_diag/code_c ] && [ ! -L $HOME/augur_shift_core_diag/code_c ] && mv $HOME/augur_shift_core_diag/code_c $HOME/augur_shift_core_diag/code_c.old.$$
+ln -sfn $HOME/augur_armA_fresh $HOME/augur_shift_core_diag/code_c
 cd $HOME/augur_shift_core_diag/code_c
-tar xzf $HOME/armA_fresh_code.tgz
 cp $HOME/augur_shift_core_diag/code_b/scripts/core_force_component_verdict.py scripts/
 export PYTHONPATH=.
 

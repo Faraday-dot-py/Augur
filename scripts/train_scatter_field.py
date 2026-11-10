@@ -37,6 +37,9 @@ VARIANTS = {
     "ms_kp_pot_g128": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, grid=128),
     "ms_kp_pot_v": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True),
     "ms_kp_pot_v_g128": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128),
+    "ms_kp_pot_v_g128_quad": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128, deposit="quad"),
+    "ms_kp_pot_v_g128_dual": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128, dual=True),
+    "ms_kp_pot_v_g128_quad_dual": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128, deposit="quad", dual=True),
     "ms_kp_pot_v_g128_prior": dict(net="unet", kernel=True, pp=2.0, split=True, potential=True, verlet=True, grid=128, prior=True),
     "ms_kp_pot_v_g128_pp8": dict(net="unet", kernel=True, pp=8.0, split=True, potential=True, verlet=True, grid=128, knn=48),
     "ms_kp_pot_v_g128_prior_pp8": dict(net="unet", kernel=True, pp=8.0, split=True, potential=True, verlet=True, grid=128, prior=True, knn=48),
@@ -125,11 +128,40 @@ def long_penalty(model, pos, vel, m, mk, field, args):
     return de_tot, dl_tot
 
 
-def train(model, tensors, args, ckpt_path, log):
+def save_atomic(obj, path):
+    torch.save(obj, path + ".tmp")
+    os.replace(path + ".tmp", path)
+
+
+@torch.no_grad()
+def val_loss(model, val, args):
+    P, V, M, mask = [t.float() for t in val]
+    k = args.k_end
+    tot, n = 0.0, 0
+    for t0 in (0, (args.steps - k) // 2, args.steps - k):
+        for i in range(0, P.shape[0], args.batch):
+            sl = slice(i, i + args.batch)
+            pos, vel, m, mk = P[sl, t0], V[sl, t0], M[sl], mask[sl]
+            field = model.init_field(pos.shape[0], args.device)
+            w, denom, lp, lv = mk[:, :, None], mk.sum() * 2 * k, 0.0, 0.0
+            for s in range(k):
+                pos, vel, m, field, _ = sf._step_m(model, pos, vel, m, mk, field)
+                lp = lp + (((pos - P[sl, t0 + s + 1]) ** 2) * w).sum() / denom
+                lv = lv + (((vel - V[sl, t0 + s + 1]) ** 2) * w).sum() / denom
+            tot, n = tot + float(lp + 0.1 * lv), n + 1
+    return tot / n
+
+
+def train(model, tensors, args, ckpt_path, log, val=None):
     P, V, M, mask = [t.float() for t in tensors]
     S = P.shape[0]
     opt = torch.optim.Adam(model.parameters(), lr=args.lr)
     start = 0
+    stop = []
+    if getattr(args, "save_on_sigterm", False):
+        import signal
+
+        signal.signal(signal.SIGTERM, lambda *_: stop.append(1))
     if os.path.exists(ckpt_path):
         st = torch.load(ckpt_path, map_location=args.device, weights_only=False)
         model.load_state_dict(st["model"])
@@ -202,11 +234,20 @@ def train(model, tensors, args, ckpt_path, log):
             extra = f" long dE {pen[0]:.4g} dL {pen[1]:.4g}" if args.long_windows > 0 and torch.isfinite(loss) else ""
             log(f"it {it} k {k} loss {loss.item():.6f} t {time.time() - t_start:.0f}s" + extra)
             if all(torch.isfinite(p).all() for p in model.parameters()):
-                torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, ckpt_path)
+                save_atomic({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, ckpt_path)
                 if it % 5000 == 0:
                     torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, f"{ckpt_path}.it{it}")
+        if val is not None and args.val_every > 0 and it % args.val_every == 0:
+            vl = val_loss(model, val, args)
+            log(f"val it {it} loss {vl:.6f}")
+            with open(f"{ckpt_path}.val.jsonl", "a") as f:
+                f.write(json.dumps({"it": it, "val_loss": vl}) + "\n")
+        if stop:
+            save_atomic({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, ckpt_path)
+            log(f"SIGTERM: checkpoint saved at it {it + 1}, exiting")
+            raise SystemExit(143)
     if all(torch.isfinite(p).all() for p in model.parameters()):
-        torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it}, ckpt_path)
+        save_atomic({"model": model.state_dict(), "opt": opt.state_dict(), "it": it}, ckpt_path)
     log(f"trained {it} iters in {time.time() - t_start:.0f}s")
     return it, time.time() - t_start
 
@@ -301,6 +342,9 @@ def main():
     ap.add_argument("--dt", type=float, default=0.1)
     ap.add_argument("--eps", type=float, default=0.5)
     ap.add_argument("--log-every", type=int, default=100)
+    ap.add_argument("--val-every", type=int, default=0, help="validation loss every N iterations on --val-scenes scenes from seed+1 (appends to <ckpt>.val.jsonl); 0 = off")
+    ap.add_argument("--val-scenes", type=int, default=32)
+    ap.add_argument("--save-on-sigterm", action="store_true", help="on SIGTERM save a full-state checkpoint after the current iteration and exit 143; rerun resumes from it")
     ap.add_argument("--device", default="cpu")
     ap.add_argument("--seed", type=int, default=4738)
     ap.add_argument("--out-dir", default="results/scatter_field")
@@ -341,6 +385,7 @@ def main():
         k = int(args.train * args.orbit_mix)
         train_data = train_data[k:] + sf.make_orbit_dataset(k, args.steps, args.seed, dd, dt=args.dt, eps=args.eps)
     tensors = sf.to_tensors(train_data, dev)
+    val = sf.to_tensors(make_data(cfg, args.val_scenes, args.steps, args.seed + 1, dd, args.dt, args.eps), dev) if args.val_every > 0 else None
     names = cfg["variants"] if args.variant == "all" else args.variant.split(",")
     eval_sets = {seed: make_data(cfg, args.eval_scenes, args.eval_steps, seed, dd, args.dt, args.eps) for seed in EVAL_SEEDS}
     for name in names:
@@ -363,7 +408,7 @@ def main():
             state = torch.load(args.init_ckpt, map_location=dev, weights_only=False)["model"]
             sf.load_compat(model, state) if args.t0 else model.load_state_dict(state)
             log(f"warm start from {args.init_ckpt}")
-        n_it, secs = train(model, tensors, args, f"{args.ckpt_dir}/{args.exp}_{name}.pt", log)
+        n_it, secs = train(model, tensors, args, f"{args.ckpt_dir}/{args.exp}_{name}.pt", log, val)
         res = {"train_iters": n_it, "train_seconds": secs, "variant": name, "cfg": {**BASE, **VARIANTS[name]}, "rf_cells": r, "rf_units": rc, "rf_global": glob,
                "args": vars(args), "self_force": sf.self_force_probe(model, dev)}
         for seed in EVAL_SEEDS:
