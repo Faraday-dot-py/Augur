@@ -1,0 +1,46 @@
+[10:56:26] data 2560 train + 64 x 2 held-out scenes in 12s
+[10:56:27] width 32 params {'unet': 258786, 'kernel_mlp': 19972, 'pair_mlp': 19972, 'total': 298730}
+[10:56:35] width 32 it 100/8000 k 2 lr 5.00e-04 loss 0.002801 dropped 0 0.080s/it
+[10:56:42] width 32 it 200/8000 k 2 lr 4.99e-04 loss 0.000770 dropped 0 0.077s/it
+[10:56:46] width 32 gate: window drop rate 0.000 -> kgate 3
+[10:56:51] width 32 it 300/8000 k 3 lr 4.98e-04 loss 0.001693 dropped 0 0.079s/it
+[10:57:00] width 32 it 400/8000 k 3 lr 4.97e-04 loss 0.001130 dropped 0 0.082s/it
+[10:57:09] width 32 it 500/8000 k 3 lr 4.95e-04 loss 0.001045 dropped 0 0.084s/it
+[10:57:09] width 32 gate: window drop rate 0.000 -> kgate 4
+[10:57:20] width 32 it 600/8000 k 4 lr 4.93e-04 loss 0.002300 dropped 0 0.088s/it
+[10:57:31] width 32 it 700/8000 k 4 lr 4.91e-04 loss 0.000569 dropped 0 0.091s/it
+[10:57:36] width 32 gate: window drop rate 0.000 -> kgate 5
+[10:57:42] width 32 it 800/8000 k 5 lr 4.88e-04 loss 0.001603 dropped 0 0.094s/it
+[10:57:55] width 32 it 900/8000 k 5 lr 4.85e-04 loss 0.002424 dropped 0 0.098s/it
+[10:58:07] width 32 it 1000/8000 k 5 lr 4.82e-04 loss 0.002616 dropped 0 0.100s/it
+[10:58:07] width 32 gate: window drop rate 0.000 -> kgate 6
+[10:58:22] width 32 it 1100/8000 k 6 lr 4.78e-04 loss 0.001190 dropped 0 0.104s/it
+[10:58:36] width 32 it 1200/8000 k 6 lr 4.74e-04 loss 0.001566 dropped 0 0.108s/it
+[10:58:43] width 32 gate: window drop rate 0.000 -> kgate 7
+[10:58:51] width 32 it 1300/8000 k 7 lr 4.70e-04 loss 0.009128 dropped 0 0.111s/it
+[10:59:07] width 32 it 1400/8000 k 7 lr 4.65e-04 loss 0.002891 dropped 0 0.114s/it
+[10:59:23] width 32 it 1500/8000 k 7 lr 4.60e-04 loss 0.002605 dropped 0 0.117s/it
+[10:59:23] width 32 gate: window drop rate 0.000 -> kgate 8
+[10:59:41] width 32 it 1600/8000 k 8 lr 4.55e-04 loss 0.001646 dropped 0 0.121s/it
+[10:59:58] width 32 it 1700/8000 k 8 lr 4.49e-04 loss 0.000683 dropped 0 0.124s/it
+[11:00:07] width 32 gate: window drop rate 0.000 -> kgate 9
+[11:00:17] width 32 it 1800/8000 k 9 lr 4.43e-04 loss 0.002675 dropped 0 0.128s/it
+[11:00:36] width 32 it 1900/8000 k 9 lr 4.37e-04 loss 0.000873 dropped 0 0.131s/it
+[11:00:55] width 32 it 2000/8000 k 9 lr 4.30e-04 loss 0.001877 dropped 0 0.134s/it
+[11:00:55] width 32 gate: window drop rate 0.000 -> kgate 10
+[11:01:17] width 32 it 2100/8000 k 10 lr 4.24e-04 loss 0.016399 dropped 0 0.138s/it
+[11:01:38] width 32 it 2200/8000 k 10 lr 4.17e-04 loss 0.008790 dropped 0 0.141s/it
+[11:01:48] width 32 gate: window drop rate 0.000 -> kgate 11
+[11:01:59] width 32 it 2300/8000 k 11 lr 4.10e-04 loss 0.004213 dropped 0 0.145s/it
+[11:02:22] width 32 it 2400/8000 k 11 lr 4.02e-04 loss 0.005460 dropped 0 0.148s/it
+[11:02:45] width 32 it 2500/8000 k 11 lr 3.95e-04 loss 0.002709 dropped 0 0.151s/it
+[11:02:45] width 32 gate: window drop rate 0.000 -> kgate 12
+[11:03:09] width 32 it 2600/8000 k 12 lr 3.87e-04 loss 0.004722 dropped 0 0.155s/it
+[11:03:34] width 32 it 2700/8000 k 12 lr 3.79e-04 loss 0.005430 dropped 0 0.158s/it
+[11:03:46] width 32 gate: window drop rate 0.000 -> kgate 13
+[11:03:59] width 32 it 2800/8000 k 13 lr 3.70e-04 loss 0.010030 dropped 0 0.161s/it
+[11:04:25] width 32 it 2900/8000 k 13 lr 3.62e-04 loss 0.012019 dropped 0 0.165s/it
+[11:04:51] width 32 it 3000/8000 k 13 lr 3.53e-04 loss 0.009435 dropped 0 0.168s/it
+[11:04:51] width 32 gate: window drop rate 0.000 -> kgate 14
+[11:04:51] width 32 reached --stop-at 3000, checkpoint saved, no evaluation
+ALL DONE
