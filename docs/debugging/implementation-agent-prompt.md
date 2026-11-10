@@ -16,7 +16,7 @@ IMPLEMENTATION RULES:
 - Before each experiment, state predicted outcome; after, compare to prediction.
 - (Token-per-ball model tasks only; skip otherwise.) Compare against soup B baseline and CentralForceDynamics on identical held-out seeds; report err@5/10/20, energy drift vs truth, momentum error, wall restitution vs speed, pair head-on KE ratio, and 1000-ball x 500-step behavior (first non-finite step, floor collapse).
 - You may spawn subagents; give them the same rules.
-- Final report: 200-400 words + table; decisions needed from the user listed separately.
+- Final report: 200-400 words + table; decisions needed from the user listed separately. Any counts (files, branches, jobs, seeds) must reconcile against the source: found, accepted, excluded with a reason for each excluded item.
 ```
 
 ## Naming rule (add to every dispatched prompt)
