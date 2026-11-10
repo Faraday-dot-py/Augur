@@ -1,0 +1,52 @@
+{
+ "n": 30000,
+ "core_scale": 0.25,
+ "largest_captured_call_rows": 8154,
+ "captured_calls": 17,
+ "pp_force_rechunked_vs_original_call_fp32": {
+  "1": {
+   "rows_compared": 4000,
+   "rows_bit_different": 0,
+   "max_abs_diff": 0.0
+  },
+  "2": {
+   "rows_compared": 4000,
+   "rows_bit_different": 3801,
+   "max_abs_diff": 8.642673492431641e-07
+  },
+  "7": {
+   "rows_compared": 4004,
+   "rows_bit_different": 3492,
+   "max_abs_diff": 1.043081283569336e-06
+  },
+  "64": {
+   "rows_compared": 4032,
+   "rows_bit_different": 639,
+   "max_abs_diff": 7.152557373046875e-07
+  },
+  "1000": {
+   "rows_compared": 4000,
+   "rows_bit_different": 0,
+   "max_abs_diff": 0.0
+  },
+  "8154": {
+   "rows_compared": 8154,
+   "rows_bit_different": 0,
+   "max_abs_diff": 0.0
+  }
+ },
+ "ppmlp_one_row_vs_batch_bit_different_rows": 16,
+ "sum_over_16_one_row_vs_batch_bit_different_rows": 0,
+ "qmask_vs_full_fp32": {
+  "bodies": 20,
+  "bit_different": 0,
+  "max_abs_diff": 0.0,
+  "median_abs_diff": 0.0,
+  "force_norm_median": 1.2130495309829712
+ },
+ "qmask_vs_full_fp64": {
+  "bodies": 50,
+  "bit_different": 19,
+  "max_abs_diff": 9.155133597044475e-16
+ }
+}

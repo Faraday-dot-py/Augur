@@ -1,0 +1,92 @@
+{
+ "synthetic": {
+  "rows": 2000,
+  "patched_picks_lowest_index_frac": 1.0,
+  "unpatched_picks_lowest_index_frac": 0.5195000171661377
+ },
+ "plummer": {
+  "default": {
+   "n": 100000,
+   "unpatched_s": 48.338637590408325,
+   "patched_s": 57.84004187583923,
+   "ratio": 1.1965592072730704,
+   "bodies_with_changed_output": 2,
+   "changed_bodies": [
+    {
+     "i": 61241,
+     "fp64_rel_gaps_r15_16_r16_17_r17_18": [
+      0.01404296186705539,
+      0.0284553795163586,
+      0.001577974563511764
+     ]
+    },
+    {
+     "i": 84671,
+     "fp64_rel_gaps_r15_16_r16_17_r17_18": [
+      0.04500017756983628,
+      8.371151946510142e-07,
+      0.00696673235134845
+     ]
+    }
+   ],
+   "bodies_with_fp64_rank16_17_within_tol": 4,
+   "changed_bodies_not_tie_bodies": 1,
+   "tie_stats": {
+    "rows": 100018,
+    "straddle": 4,
+    "overflow": 0
+   }
+  },
+  "adaptdeep": {
+   "n": 100000,
+   "unpatched_s": 60.12050676345825,
+   "patched_s": 71.82748198509216,
+   "ratio": 1.1947251587165515,
+   "bodies_with_changed_output": 2,
+   "changed_bodies": [
+    {
+     "i": 61241,
+     "fp64_rel_gaps_r15_16_r16_17_r17_18": [
+      0.01404296186705539,
+      0.0284553795163586,
+      0.001577974563511764
+     ]
+    },
+    {
+     "i": 84671,
+     "fp64_rel_gaps_r15_16_r16_17_r17_18": [
+      0.04500017756983628,
+      8.371151946510142e-07,
+      0.00696673235134845
+     ]
+    }
+   ],
+   "bodies_with_fp64_rank16_17_within_tol": 4,
+   "changed_bodies_not_tie_bodies": 1,
+   "tie_stats": {
+    "rows": 100036,
+    "straddle": 4,
+    "overflow": 0
+   }
+  }
+ },
+ "lattice": {
+  "n": 90000,
+  "('unpatched', 'default')_vs_('unpatched', 'adaptdeep')": {
+   "max_abs_diff": 0.0,
+   "bodies_diff_gt_1e-3_of_max_force": 0,
+   "bodies_bitdiff": 0
+  },
+  "('patched', 'default')_vs_('patched', 'adaptdeep')": {
+   "max_abs_diff": 0.0,
+   "bodies_diff_gt_1e-3_of_max_force": 0,
+   "bodies_bitdiff": 0
+  },
+  "('unpatched', 'default')_vs_('patched', 'default')": {
+   "max_abs_diff": 2.3735527992248535,
+   "bodies_diff_gt_1e-3_of_max_force": 61004,
+   "bodies_bitdiff": 83996
+  },
+  "force_scale_max": 5.715627193450928
+ }
+}

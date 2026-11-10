@@ -1,0 +1,11 @@
+{
+ "n": 3000000,
+ "body_1381234_gap_rel": 5.024041767338632e-08,
+ "bodies_rank16_17_gap_rel_le_0.0": 0,
+ "bodies_rank16_17_gap_rel_le_1e-08": 0,
+ "bodies_rank16_17_gap_rel_le_1e-07": 10,
+ "bodies_rank16_17_gap_rel_le_1e-06": 105,
+ "bodies_rank16_17_gap_rel_le_1e-05": 958,
+ "expected_if_gap_density_uniform_over_median_rel_gap": 0.02191138857723279,
+ "fraction_le_1e-6": 3.5e-05
+}
