@@ -143,6 +143,10 @@ def train(model, tensors, args, ckpt_path, log):
     it = start - 1
     while True:
         it += 1
+        stop = getattr(args, 'stop', None)
+        if stop is not None and stop():
+            log(f"stop requested at it {it}")
+            break
         if args.time_budget > 0:
             frac = (time.time() - t_start) / args.time_budget
             if frac >= 1.0:
@@ -205,6 +209,9 @@ def train(model, tensors, args, ckpt_path, log):
                 torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, ckpt_path)
                 if it % 5000 == 0:
                     torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, f"{ckpt_path}.it{it}")
+        cb = getattr(args, 'it_hook', None)
+        if cb:
+            cb(it)
     if all(torch.isfinite(p).all() for p in model.parameters()):
         torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it}, ckpt_path)
     log(f"trained {it} iters in {time.time() - t_start:.0f}s")
