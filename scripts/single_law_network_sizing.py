@@ -8,6 +8,7 @@ Usage: PYTHONPATH=. python scripts/single_law_network_sizing.py --out-dir result
 import argparse
 import json
 import os
+import shutil
 import signal
 import sys
 import time
@@ -103,6 +104,7 @@ def train(width, args, dev, data):
         denom = mk.sum() * 2 * k
         opt.zero_grad()
         tot, kept = 0.0, 0.0
+        tr = {"pos_all": [], "vel_all": [], "pos_kept": [], "vel_kept": [], "max_sample": []}
         for c0 in range(0, args.batch, args.micro):
             sl = slice(c0, c0 + args.micro)
             m = torch.ones_like(mk[sl])
@@ -122,11 +124,18 @@ def train(width, args, dev, data):
             keep = ((per * args.batch < args.sample_cap) & torch.isfinite(per)).float()
             dropped += int(keep.numel() - keep.sum())
             loss = (torch.nan_to_num(per_g + 0.1 * torch.stack(evs_l).sum(0)) * keep).sum()
+            if args.trace_file:
+                vper = torch.nan_to_num(0.1 * torch.stack(evs_l).sum(0).detach())
+                pper = torch.nan_to_num(per)
+                tr["pos_all"].append(pper.sum()); tr["vel_all"].append(vper.sum())
+                tr["pos_kept"].append((pper * keep).sum()); tr["vel_kept"].append((vper * keep).sum())
+                tr["max_sample"].append(pper.max() * args.batch)
             loss.backward()
             tot = tot + loss.detach()
             kept += float(keep.sum())
         gn = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-        if torch.isfinite(tot) and torch.isfinite(gn) and kept >= 1:
+        applied = bool(torch.isfinite(tot) and torch.isfinite(gn) and kept >= 1)
+        if applied:
             opt.step()
             run_loss += tot
         else:
@@ -134,6 +143,12 @@ def train(width, args, dev, data):
             skipped += 1
             if skipped % 50 == 1:
                 log(f"width {width} it {it} loss {float(tot):.3g} non-finite or above cap, step skipped ({skipped} total)")
+        if args.trace_file:
+            rec = {"it": it, "k": k, "lr": lr, "loss": float(tot), "grad_norm": float(gn), "applied": applied, "dropped_total": dropped,
+                   "scene_idx": idx.tolist(), "t0": t0.tolist(), "skipped_total": skipped,
+                   **{n: [float(x) for x in v] for n, v in tr.items()}}
+            with open(args.trace_file, "a") as tf:
+                tf.write(json.dumps(rec) + "\n")
         it += 1
         if it % args.log_every == 0:
             log(f"width {width} it {it}/{iters} k {k} lr {lr:.2e} loss {float(tot):.6f} dropped {dropped} {(time.time() - t_start) / (it - it0):.3f}s/it")
@@ -149,15 +164,21 @@ def train(width, args, dev, data):
             losses.append(float(run_loss) / per_epoch)
             run_loss.zero_()
         stop = STOP["flag"]
-        if stop or it % args.ckpt_every == 0 or it == iters:
+        halt = bool(args.stop_at) and it >= args.stop_at
+        if stop or halt or it % args.ckpt_every == 0 or it == iters:
             if all(torch.isfinite(p).all() for p in model.parameters()):
                 save(path, model, opt, it, args, {"elapsed": elapsed0 + time.time() - t_start, "kgate": kgate, "epoch_loss": losses,
                                                   "skipped": skipped, "dropped": dropped})
+                if it in args.keep_ckpt_at:
+                    shutil.copyfile(path, f"{args.ckpt_dir}/width{width}_it{it}.pt")
             else:
                 log(f"width {width} non-finite parameters, checkpoint NOT written")
         if stop:
             log(f"width {width} SIGTERM: saved at it {it}, exiting 143")
             sys.exit(143)
+        if halt:
+            log(f"width {width} reached --stop-at {args.stop_at}, checkpoint saved, no evaluation")
+            return None, None
     elapsed = elapsed0 + time.time() - t_start
     return model, {"iters": iters, "seconds": elapsed, "s_per_it_this_run": (time.time() - t_start) / max(1, it - it0), "skipped_steps": skipped,
                    "dropped_samples": dropped, "epoch_loss": losses, "kgate_final": kgate}
@@ -312,6 +333,9 @@ def main():
     ap.add_argument("--out-dir", required=True)
     ap.add_argument("--ckpt-dir", default="ckpt")
     ap.add_argument("--device", default="cuda")
+    ap.add_argument("--trace-file", default="")
+    ap.add_argument("--stop-at", type=int, default=0)
+    ap.add_argument("--keep-ckpt-at", type=int, nargs="*", default=[])
     args = ap.parse_args()
     dev = torch.device(args.device)
     widths = [int(x) for x in args.widths.split(",")]
@@ -333,6 +357,8 @@ def main():
             log(f"width {w} result present, skipped")
             continue
         model, info = train(w, args, dev, train_data)
+        if model is None:
+            continue
         model.set_law(torch.zeros(1, sm.DC, device=dev), None)
         ev = {str(s): evaluate(model, d, dev, args.steps) for s, d in evals.items()}
         res[w] = {"width": w, "levels": LEVELS, "params": count_params(model), "train": info, "eval": ev,
