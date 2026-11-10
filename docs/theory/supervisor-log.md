@@ -4,7 +4,7 @@ Role: supervisor delegates; does no work itself. Concerns non-blocking unless mi
 Polaris: connected 14:10 (adamwebb). Use both GPUs (student-pleiades QOS).
 
 
-## Live status (updated 2026-11-09 21:35 PST; the Log below is history, not current state)
+## Live status (updated 2026-11-10 11:55 PST; the Log below is history, not current state)
 
 | Agent | State | Priority | Doing |
 | --- | --- | --- | --- |
@@ -313,3 +313,5 @@ KILL on held-out guard. Two-moons moon survival 1036 (CI 944-1129; truth 2000; b
 - Submitted from tarball md5 dc743aec49161919cd3aed89a8db1cac, branch ball-tree-particle-attention-stage-1 commit 863522d; prereg copied into experiment-log first. Slots: 7415 and 7777 both COMPLETED at submit, so 7802 is the only GPU job running; slot 2 free.
 - Measured rate: s_per_it_first100=1.7640 (run.log, 562,659 params, batch 8), about 3.5x the 0.5 s/it the estimate assumed. 10,000 its is about 4.9 h of training against a 3 h limit: the job will hit TIMEOUT near 6,100 its (SIGTERM at 120 s saves the checkpoint, exit 143; --requeue does not cover a time-limit stop). A resume needs a new sbatch with a longer --time; cost is then about 5 GPU-h, not 1.7. A 60,000-iteration extension would be about 29 GPU-h at this rate. Needs-user: resume at a longer limit, and the 60k extension. The first-100 rate may include warmup (untested claim).
 - Resume steps: sbatch the same script with --time=03:00:00 and --dependency on 7802; it resumes from ckpt/ and does not delete train_done.json.
+
+- 2026-11-10 11:55 PST (supervisor-log-page republish): account changed again; https://claude.ai/artifact/Ub74UinSTQu35kU4jAYbCG and https://claude.ai/artifact/7FQpySdYjbec7QLWURg8Ju are no longer reachable. This account now owns https://claude.ai/artifact/Jb4ufo2BV3fucZKknc8p3w and https://claude.ai/artifact/DBwgufJJZGvp4a5apxjtgz (both stale, last updated 2026-10-30); page republished to both and docs/theory/supervisor-log-page/README.md updated. Readback sha256 comparison is reported in the commit report, not stored here.
