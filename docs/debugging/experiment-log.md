@@ -3927,3 +3927,168 @@ Tie-break rule: lower body index wins on equal fp64 distance. What each path act
 Prediction: PASS (tie is real: relative gap about 5e-8, fp32 r16 = r17 exactly; the adaptdeep set differs from fp64 only by the tied member). adaptdeep's choice is the fp32 artefact (picks by topk order among fp32-equal distances), not the fp64-nearest member and not necessarily the lower index; default picks the fp64-nearest member. The qmask single-query call should reproduce the full-call force of each path; if not, the tie choice depends on batch shape (reported as a finding, not a verdict input).
 Verdict is applied by hand from result.json keys paths.adaptdeep.sets_equal_up_to_ties and worst_rel_gap_in_difference; no scorer script.
 LAUNCH: job 7475 submitted 2026-11-09 (afterany:7442, slot 2, PENDING on dependency; slot 1 tail 7415 was COMPLETED and left untouched). Smoke test on CPU at n=30000 (body 5) ran: qmask single-query force equals full-call force for both paths. Log ~/polaris_mcp_jobs/slurm-7475.out, results ~/augur_probe_deep/results/adaptive_depth_3e6_argmax_body_brute_force/{result.json,DONE}. Resume: when 7475 COMPLETED, download result.json to results/adaptive_depth_3e6_argmax_body_brute_force/, apply pre-reg lines by hand, run fresh reviewer, log result here and in supervisor log, commit. Unscored.
+
+
+## three-dimensional-sparse-voxel-scatter-field stage 1 prereg (copied 2026-11-10 from branch ball-tree-particle-attention-stage-1 commit 863522d)
+
+# three-dimensional-sparse-voxel-scatter-field, stage 1 pre-registration (written 2026-11-10, before any run)
+
+Spec: `docs/superpowers/specs/2026-11-09-architecture-push-twenty-experiments-design.md` section 5 (cost 1.5 GPU-h stage 1, 20 GPU-h full run). Stage 1 reports back to the user before the full run starts.
+
+Definitions. N: body count. Tick: one step of dt 0.1. err@k: mean position error per body after k self-fed ticks against the exact fp64 simulation (softened gravity, G=1, eps 0.5, 4 substeps per tick). Voxel: a 3D grid cell. Halo: the one-voxel ring of empty neighbours stored around every occupied voxel. CIC: cloud-in-cell, trilinear spreading to 8 corners. Plummer sphere: the standard self-gravitating ball with an exact density profile and distribution function. the scatter-field control (ms_kp_pot_v_g128): the pinned 2D gravity checkpoint `ms_kp_pot_v_g128`.
+
+## Model (stage 1)
+
+- `model/sparse_voxel_scatter_field.py`: only occupied voxels plus a halo exist. Voxel coordinates are packed into int64 keys (19 bits per axis, batch index above bit 57), so memory is independent of the box size.
+- CIC deposit of mass and momentum to 8 corners. Sparse 3x3x3 convolutions through a searchsorted neighbour table. Coarsening by halving coordinates until at most 64 voxels per scene remain. Sparse U-Net up the levels. Potential output, central-difference gradient, trilinear gather.
+- Far field: a coarse learned radial kernel summed directly over the coarsest voxels (piecewise-constant, no FFT, no recurrence). Pair term: cell-list over cells of edge 2 (pp=2), 16 nearest neighbours (knn=16), cell capacity 32. Same `step` interface as `ScatterField`, momentum fix on, Verlet.
+- Training: the scatter-field control's scene mix in 3D (N in 10..200; half Plummer spheres, half cold balls), exact 3D truth, batch 8, k ramp 4 to 20, lr 5e-4, 10,000 iterations in stage 1 (user decision 2026-11-10; the control's count is 60,000, extension to 60,000 needs a separate user go and resumes the same checkpoint). Seed 4738.
+
+## Lines (copied from the spec)
+
+PASS 3D Plummer-sphere err@20 within 2x the 2D ratio to exact at equal N AND cost at most 12x the 2D model. KILL cost above 12x or err@20 above 4x. Fails pass: 3x.
+
+Not loosened. Any amendment goes to the user as a proposal with a concrete value that would still fail it.
+
+## Measurement and interpretations (stated now, flagged)
+
+- Control: the scatter-field control (ms_kp_pot_v_g128) (2D), Polaris `~/augur_nfr/kern/E_frozen.pt` (3,200,305 bytes, verified read-only 2026-11-10); same file at `~/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt`. Grid 128, extent 64.
+- Equal N: N=1000 for accuracy (a 2D Gaussian cloud, sigma 8, velocity factor 0.3, versus a 3D cold Plummer sphere, scale 8, velocities scaled by sqrt(0.3) of the virial distribution, about 0.55x; the two cold families are matched in regime, not in a shared definition).
+- "Ratio to exact" is read as err@20 divided by the zero-force error at tick 20 (norm of exact position at tick 20 minus initial position minus initial velocity times elapsed time, mean over bodies), on the same scene. This is an interpretation: the spec does not define it. The per-scene numbers are saved so another reading (for example error over the exact-vs-4x-substeps floor) can be recomputed without a rerun.
+- Accuracy pass test: ratio3 / ratio2 at most 2.0; KILL above 4.0 (3.0 is the spec's fails-pass point). Primary family: cold. A virial family (velocity factor 1.0) is reported, not scored.
+- Cost: ms per tick of the 3D model over ms per tick of the 2D control at the same N, measured at N=1e5 (also N=1e3 to 1e5 for the exponent, reported). Cost at 1e5 is the scored cost; 1e6 is not measured in stage 1.
+- Scoring seeds 9100, 9200, 9300, 4 scenes per seed. Fresh seeds 12000, 12100, 12200 (`--heldout`) before a result is called real, on the same unchanged checkpoint.
+
+## Tie-break rule
+
+PASS lines inclusive (ratio exactly 2.0, cost exactly 12.0 pass); KILL lines exclusive (4.0 and 12.0 do not kill). Order as coded in `verdict()`: cost above 12 is KILL; ratio above 4.0 is KILL unless the plateau guard fires (then INCONCLUSIVE-undertrained); ratio at most 2.0 with cost at most 12 is PASS; otherwise INCONCLUSIVE-undertrained when the guard fires, else INCONCLUSIVE-between-lines (3x is reported as a fail of pass, not a kill). A missing 1e5 timing is INCONCLUSIVE-no-1e5-timing.
+
+Stage 1 verdict rule (user decision 2026-11-10): at fewer than 60,000 iterations the accuracy outcome is INCONCLUSIVE-undertrained by design. The cost line is the stage 1 decider: cost above 12x is KILL; otherwise INCONCLUSIVE-undertrained with the cost reported against the line. KILL-nonfinite still applies.
+
+## Ratio to exact (worker's interpretation, user-accepted 2026-11-10)
+
+Ratio to exact = err@20 divided by zero-force err@20, the same quantity in 2D and 3D. Zero-force err@20 is the mean over bodies of |exact position at tick 20 - initial position - initial velocity x 0.1 x 20|.
+
+The 2D comparison value (the denominator of the PASS line, ratio2) is measured in the same job, not taken from a file (no earlier measurement exists for this control at N=1000): 2D Gaussian cloud, sigma 8, velocity factor 0.3, N=1000, `ss.make_scene`, eval seeds 9100, 9200, 9300 with 4 scenes each (12 scenes), control `~/augur_nfr/kern/E_frozen.pt` (md5 9b3cb8bb1de47eb6ebf5f708d98e94b7, verified on the Polaris copy 2026-11-10). Averaging: ratio of means, mean over the 12 scenes of err@20 divided by mean over the 12 scenes of zero-force err@20. The mean of per-scene ratios is also reported (`ratio2_mean_of_per_scene_ratios`), not scored. The 3D ratio uses the same ratio-of-means form over its 12 Plummer scenes. The scorer logs both on a line starting "2D control ratio to exact" and stores them with the control md5 in score.json.
+
+## Plateau guard
+
+Validation err@20 (48 3D scenes, seed 9400) logged 50 times. INCONCLUSIVE-undertrained if the mean validation loss over the last 10% of iterations is more than 3% below the mean over the preceding 10% window. Per user decision 10a.1, one extension at double length (120,000 iterations) is then allowed, candidate and control together. Control status: the 2D control is the frozen 60,000-iteration checkpoint, scored only; the extension needs it retrained at 120,000, a needs-user decision.
+
+Non-finite handling: a NaN or infinite ratio, or a non-finite candidate rollout, returns KILL-nonfinite. A CUDA out-of-memory error in the bench stops the job nonzero and records oom_at_n in bench.json.
+
+## Prediction (stated before running)
+
+PASS about 25%. Expected: cost ratio between 3x and 8x at N=1e5 (sparse bookkeeping dominates; untimed guess), ratio3/ratio2 between 1.5 and 4 after 10,000 iterations; the stage 1 outcome is INCONCLUSIVE-undertrained by rule, so the cost line decides (cost KILL about 20%). The coarse far-field kernel is the weak point at N=1000.
+
+## Constraints check (re-read 2026-11-10)
+
+- pp=2 knn=16 stays: yes, same pair-term radius and neighbour count as the 2D model.
+- Generalization: no force law hard-coded; the 2D-to-3D move is the generalization test. O(N): memory and cost scale with occupied voxels and bodies, not box volume (tested: node count independent of extent).
+- Tileable: not addressed in stage 1. Interpretability: unchanged from the scatter field.
+- No pairwise N^2 term: the pair term is the cell-list, bounded to 16 neighbours.
+
+## Known weaknesses (kept in the notes)
+
+- Stage 1 trains 10,000 iterations against 60,000 for the control (about 2 h untimed estimate). The control is frozen and scored only. Extending the same run to 60,000 restarts the cosine lr schedule (it depends on the iteration count), so the extended run is not identical to a fresh 60,000 run.
+- The far-field kernel is coarse and has no recurrence over scales.
+- Cost is measured at 1e5 only; the dense 3D comparison (audit row 33) is not run.
+- Full run (20 GPU-h): same script with batch 16, k-end 30 (stage 1 uses batch 8, k-end 20); needs periodic full-state checkpoints (already written every 100 iterations by `tsf.train`) and `--resume` via requeue. Needs the user's go-ahead after this report.
+
+## Files and run
+
+`scripts/three_dimensional_sparse_voxel_scatter_field.py` (modes train, score, bench, all; resumable; SIGTERM saves and exits 143). Job `scripts/polaris_three-dimensional-sparse-voxel-scatter-field.sh`. Tests `tests/test_sparse_voxel_scatter_field.py` (12). Estimate (untimed; no logged 3D rate): about 2 GPU-h at 10,000 iterations; the job logs s_per_it_first100= to measure the rate.
+
+
+## staggered-double-grid-with-quadratic-deposit prereg (copied 2026-11-10 from docs/debugging/architecture-push-prereg/staggered-double-grid-with-quadratic-deposit.md, merged commit d131607)
+
+# staggered-double-grid-with-quadratic-deposit (prereg)
+
+Status: stage 1 ready to run; FULL RUN NOT YET AUTHORISED until stage 1 is read by the supervisor (job script scripts/polaris_staggered-double-grid-with-quadratic-deposit-full.sh refuses to start without the file named in its header).
+
+## Spec lines (copied verbatim)
+
+Change: "replace bilinear deposit and gather with a quadratic (three-cell) shape, and run two grids offset by half a cell through the same U-Net, averaging the gathered force. Trained that way, not only run that way."
+
+Line: "PASS err@20 at most 0.75x control AND shift-probe value at most 0.50x control AND dE@100 at most 1.10x AND cost at most 2.2x. KILL err@20 above 0.95x or dE@100 above 1.5x. Fails pass: err@20 0.85x."
+
+Cost in spec: 0.3 GPU-h stage 1 / 3 GPU-h full. Worker estimate for full: about 5-6 GPU-h (two grids roughly double the 2.5 h the frozen single-law gravity checkpoint run; UNVERIFIED, from the logged the frozen single-law gravity checkpoint 9000 s budget). Flagged needs-user.
+
+Rules from the 2026-11-09 decisions: keep the control's iteration count (60769) with a plateau guard; if the candidate is still falling the result is INCONCLUSIVE-undertrained and one double-length extension is allowed for candidate and control together. Full run starts automatically if stage 1 does not close it.
+
+## Design
+
+Stage 1 (scripts/shift_average_stage1.py): frozen the frozen single-law gravity checkpoint, 1 / 2 / 4 passes (offsets 0; 0 and (0.5,0.5); 0, x, y, diagonal in half cells), each pass own recurrent field; measures err@5/20/100, dE@5/20/100, shift probes, sec per tick. 0.3 GPU-h.
+
+Full: ScatterField(deposit="quad", dual=True) via variant ms_kp_pot_v_g128_quad_dual: three-cell (TSC, triangular-shaped-cloud) weights 0.5(0.5-d)^2, 0.75-d^2, 0.5(0.5+d)^2 in each axis; second grid sees positions shifted by (h/2, h/2), h = cell size; gathered grid forces averaged; recurrent field holds 2*cf channels; pair term and momentum fix applied once on unshifted positions. Same recipe as the frozen single-law gravity checkpoint (init_B warm start, lr 5e-4, batch 16, k 4 to 30, 1500 scenes x 50 steps, seed 4738) but fixed 60769 iterations instead of the 9000 s time budget.
+Control: frozen the frozen single-law gravity checkpoint, ~/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt (3200305 B). Not retrained (same checkpoint on all seeds). Polaris path of candidate output: ~/augur_staggered_double_grid/ckpt/.
+
+## Seeds and tie-break
+
+Scenes: 9100/9200/9300 first, then fresh 12000/12100/12200 (expB 8 + cluster 4 scenes per seed). Training seed 4738. Ratios are pooled: mean over seeds of candidate divided by mean over seeds of control. Tie-break: a value exactly on a line counts as within the PASS line and as not over the KILL line (at most / above wording). Shift-probe value for the line = probe_half (median relative force change under half-cell x, y and diagonal shifts) (PROPOSED-BY-WORKER interpretation; probe_off is reported, not gated).
+Verdict on 9100/9200/9300 decides; 12000/12100/12200 confirms. If they disagree the report says so and the verdict is INCONCLUSIVE, not the better one.
+
+## Plateau guard
+
+INCONCLUSIVE-undertrained if the mean validation loss over the last 10% of iterations is more than 3% below the mean over the preceding 10% window (scripts/plateau_guard.py; validation loss logged to <ckpt>.val.jsonl every --val-every iterations on scenes seeded seed+1). A guard fires only on non-PASS verdicts.
+
+## Stage-1 closure rule (PROPOSED-BY-WORKER)
+
+Stage 1 closes the experiment (no full run) only if both the 2-pass and the 4-pass err@20 pooled ratios exceed 0.95 (the KILL value). A value that would still not close it: err@20 ratio 0.94 on either. Anything else proceeds to the full run automatically (spec 10a item 9). The spec does not define closure; the supervisor may amend.
+
+## Prediction
+
+Stated: probably INCONCLUSIVE (the shift-probe halving is plausible, but err@20 at most 0.75x is a large ask; the cost 2.2x is tight because two grids double the U-Net work). Rough: PASS 20 / INCONCLUSIVE 50 / KILL 30 (worker guess, not from the spec).
+
+## Constraints check
+
+- pp=2 with knn=16: unchanged (pair term kept, applied once).
+- No hard-wired conservation: none added; momentum fix is the existing optional one, off in the variant as in the frozen single-law gravity checkpoint.
+- O(N): deposit and gather are 9 cells per body each pass, two passes: constant per body.
+- Opt-in: default constructor stays deposit="cic", dual=False; existing checkpoints load unchanged.
+- One change per run: quad deposit and dual grid are one spec change; variants _quad and _dual exist for later separation, not run.
+- Checkpoint/resume/SIGTERM: train_scatter_field.py saves atomically every --log-every iterations (and a .itN snapshot every 5000), resumes from the checkpoint, and with --save-on-sigterm saves and exits 143.
+
+## Additions not in the spec line (disclosed)
+
+- Any non-finite candidate rollout counts as KILL.
+- The plateau guard downgrades any non-PASS verdict (including KILL) to INCONCLUSIVE-undertrained; PROPOSED-BY-WORKER, matches the 10a item 1 wording that an undertrained candidate is not a result.
+- A NO-DATA plateau guard (too few validation points) fails the job script loudly; it is never read as plateaued.
+
+
+## rotation-steerable-unet-weights prereg (copied 2026-11-10 from docs/debugging/architecture-push-prereg/rotation-steerable-unet-weights.md, merged commit d131607)
+
+# rotation-steerable-unet-weights (prereg, diagnostic only)
+
+Status: only the diagnostic (stage 1, spec 10a item 4) is run. The steerable retrain is NOT built and NOT authorised.
+
+## Spec line (copied verbatim)
+
+"Line (the core-drift line of experiment-log.md:3620, unchanged, plus a cost clause): seeds 12100/12200/12300; gates are core drift at most 0.007 per tick, err@20 at most 1.05x stock, black-hole-scene dE@1000 at most 1.15x stock. PASS all gates on every seed AND pooled dE ratio at most 1.095 AND cost at most 1.3x. KILL any value above 1.5x its gate. Fails pass: drift 0.009 on one seed."
+
+That line applies to the retrain, which is not run. Source line at experiment-log.md:3620 (scatter-core-drift-arm-a-fresh-held-out-seeds).
+
+## Diagnostic (what is run)
+
+Frozen four-pass symmetrised model (legacy arm name S1c4, on ~/edge_ck/ghost_lsq.pt) vs the stock arm (legacy: S1), seed 12300, n=20000, 1000 steps, probe ticks 100/200/300/500/1000; class core15 (bodies within 15 units of the arm's own centre, raw force, momentum fix off). scripts/core_force_component_verdict.py switches the U-Net, FFT kernel and pair term off in turn (mean removed) and reports which component carries the net core force. Inputs: ~/augur_armA_fresh/results/armA_fresh/n2e4_s12300/{truth.npz,truth.json}; control stock arm is the same run. Job script: scripts/polaris_shift-average-and-core-force-diagnostics.sh (shared with the shift-average stage 1; 1.5 h limit, 1 GPU). Seed set: 12300 only (a diagnostic of one existing failure; 9100/9200/9300 do not apply).
+
+## Diagnostic line (PROPOSED-BY-WORKER, derived from the core-drift line)
+
+Parameters in code: CARRY 0.5, FLOOR 0.10, STOCK_X 3.0, MAJ 2 of ticks 100/200/300, MIN_BODIES 100.
+- STOCK CHECK: median over the three ticks of |stock net force error| at least 3.0x |exact mean| (so the drift exists to be explained); otherwise INCONCLUSIVE.
+- PASS (steerable U-Net retrain is worth building): class UNET-CARRIES in at least 2 of 3 ticks, i.e. the U-Net mean, projected on the error direction, is at least 0.5 of |error|.
+- KILL (steerable retrain not justified): KERNEL-CARRIES or PAIR-CARRIES in at least 2 of 3 ticks.
+- Anything else (SHARED, CANCELLATION, NO-NET-FORCE, INCONCLUSIVE): no decision, goes to the user.
+Value that would still fail PASS: UNET-CARRIES in only 1 of 3 ticks, or a U-Net projection of 0.49 |error| at all three ticks. Tie-break: exactly 0.5 |error| carries.
+This is a diagnostic: its result is a class, reported as such. It does not count as a PASS of the retrain line above.
+
+## Prediction
+
+Stated: UNET-CARRIES most likely, because the symmetrisation acts on the U-Net only and the stock core drift has been attributed to the U-Net potential (symmetrised-potential history, experiment-log.md:3394); but if symmetrisation already removed the U-Net share the remainder is likely SHARED or NO-NET-FORCE. Rough guess: UNET-CARRIES 35 / SHARED-or-CANCELLATION 35 / KERNEL-or-PAIR 15 / NO-NET-FORCE 15 (worker guess).
+
+## Constraints check
+
+- pp=2 knn=16: untouched (diagnostic reads existing model).
+- No hard-wired conservation: none added.
+- O(N): diagnostic only; the retrain, if later approved, is a weight-sharing change with unchanged per-body cost.
+- No retrain is built here; cost clause of 1.3x is not evaluated.
