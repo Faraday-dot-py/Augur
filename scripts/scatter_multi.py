@@ -82,7 +82,7 @@ class PairNet(nn.Module):
 
 
 class MultiScatterField(sf.ScatterField):
-    def __init__(self, dt=DT, hidden=128):
+    def __init__(self, dt=DT, hidden=128, law_blind=False):
         super().__init__(grid=GRID, extent=EXTENT, net="unet", recurrent=True, hidden_ch=0, dt=dt, momfix=False, in_scale=1.0,
                          potential=True, kernel=True, pp=2.0, split=True, verlet=True)
         self.cf = 2
@@ -94,6 +94,7 @@ class MultiScatterField(sf.ScatterField):
         self.ppmlp.mlp = CondMLP(4, hidden)
         self.cond = torch.zeros(1, DC)
         self.typ = None
+        self.law_blind = law_blind
 
     def set_law(self, cond, typ=None):
         self.cond = cond
@@ -192,6 +193,8 @@ class MultiScatterField(sf.ScatterField):
         ak = self.kernel_acc_multi(rho - m1, m1)
         ak = torch.cat([ak[:, :2], ak[:, 2:] * has1], 1)
         cmap = self.cond.to(pos.device, pos.dtype).view(-1, DC, 1, 1).expand(B, DC, G, G)
+        if self.law_blind:
+            cmap = torch.zeros_like(cmap)
         field = self.net(torch.cat([x, m1, ak, field, cmap], 1))
         acc = torch.cat([self.neg_grad(field[:, :1]), self.neg_grad(field[:, 1:2])], 1) + ak
         a_tok = self.gather(acc[:, :2], pos)
@@ -201,8 +204,8 @@ class MultiScatterField(sf.ScatterField):
         return a_tok * mask[..., None], field
 
 
-def build(dt=DT):
-    return MultiScatterField(dt)
+def build(dt=DT, law_blind=False):
+    return MultiScatterField(dt, law_blind=law_blind)
 
 
 # ---------------------------------------------------------------- laws and scenes

@@ -1,3 +1,5 @@
+import math
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -70,7 +72,7 @@ class TieredField(nn.Module):
             n = n0 >> k
             self.layouts.append(TileLayout(n, G, halo, blend, h0 * 2 ** k, self.origin, periodic))
             ext = 3 if feedback and k < K else 0
-            cin = nfeat(disp, cross, order3) + child + net.hidden_ch + ext
+            cin = nfeat(disp, cross, order3) + child + net.hidden_ch + ext + getattr(net, 'scale_ch', 0)
             assert net.inp.in_channels == cin, (k, net.inp.in_channels, cin)
             child = net.summary_ch
 
@@ -117,6 +119,9 @@ class TieredField(nn.Module):
             ext = self._ext(k, prev, B, pos.device, pos.dtype)
             if ext is not None:
                 ch.append(ext)
+            if getattr(net, 'scale_ch', 0):
+                ch.append(torch.full_like(ch[0][:, :1], math.log2(L.h)))
+            kw = {'cell': L.h} if getattr(net, 'scale_ch', 0) else {}
             x = L.extract(torch.cat(ch, 1))
             T = L.T
             act = torch.ones(B, T, T, dtype=torch.bool, device=pos.device) if self.static else active_tiles(core_mass(mom[k], L), self.dilate, self.periodic)
@@ -124,10 +129,10 @@ class TieredField(nn.Module):
             summ = x.new_zeros(B, T, T, net.summary_ch, L.P, L.P)
             hnew = x.new_zeros(B, T, T, net.hidden_ch, L.P, L.P)
             if self.static:
-                c, s_, hh = net(x.flatten(0, 2))
+                c, s_, hh = net(x.flatten(0, 2), **kw)
                 coefs, summ, hnew = c.reshape_as(coefs), s_.reshape_as(summ), hh.reshape_as(hnew)
             elif act.any():
-                coefs[act], summ[act], hnew[act] = net(x[act])
+                coefs[act], summ[act], hnew[act] = net(x[act], **kw)
             phi, dphi, res = L.blend_eval(coefs, pos if at is None else at)
             a = -dphi + res
             a_t = remove_mean(a, mass, mask) if (self.mean_remove and at is None) else a

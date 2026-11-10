@@ -106,6 +106,27 @@ def build_data(args, dev, log):
     return d
 
 
+@torch.no_grad()
+def val_loss(model, vd, args, dev):
+    """Rollout position loss (Huber, as in training) at fixed k = --val-k on held-out scenes drawn from the training distribution."""
+    S, tot = vd["P"].shape[0], 0.0
+    for c0 in range(0, S, args.batch):
+        idx = torch.arange(c0, min(S, c0 + args.batch), device=dev)
+        Nb = int(vd["n"][idx.cpu()].max())
+        Pw, Vw = vd["P"][idx][:, :args.val_k + 1, :Nb], vd["V"][idx][:, :args.val_k + 1, :Nb]
+        mk, typ, cond = vd["mask"][idx][:, :Nb], vd["typ"][idx][:, :Nb], vd["cond"][idx]
+        model.set_law(cond, typ)
+        pos, vel = Pw[:, 0], Vw[:, 0]
+        field = model.init_field(len(idx), dev)
+        m = torch.ones_like(mk)
+        for s_ in range(args.val_k):
+            pos, vel, _, field, _ = sf._step_m(model, pos, vel, m, mk, field)
+            dd = (pos - Pw[:, s_ + 1]).norm(dim=-1)
+            hub = torch.where(dd <= args.huber, dd ** 2, args.huber * (2 * dd - args.huber))
+            tot += float((hub * mk).sum() / (mk.sum() * 2 * args.val_k) * len(idx))
+    return tot / S
+
+
 def save(path, model, opt, it, args, extra):
     tmp = path + ".tmp"
     torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it, "args": vars(args), **extra}, tmp)
@@ -137,6 +158,11 @@ def main():
     ap.add_argument("--pow1-amp-max", type=float, default=0.0, help="if > 0, pow1 scene amplitudes are 10^U(-1, log10(value)) instead of 10^U(-1, 1)")
     ap.add_argument("--two-body-frac", type=float, default=0.0, help="if > 0, add N=2 scenes (separation log-uniform 0.25-14, single structure) so they are this fraction of the training set")
     ap.add_argument("--init-multi", default="", help="warm start from a MultiScatterField checkpoint written by this trainer (overrides --init-ckpt)")
+    ap.add_argument("--law-blind", action="store_true", help="theta is not given to the U-Net (the kernel and pair networks still receive it)")
+    ap.add_argument("--freeze-trunk", action="store_true", help="U-Net parameters are not trained; only the kernel and pair networks are")
+    ap.add_argument("--val-every", type=int, default=0, help="if > 0, log validation loss on held-out training-distribution scenes every this many iterations (plateau guard)")
+    ap.add_argument("--val-per-shape", type=int, default=24)
+    ap.add_argument("--val-k", type=int, default=10)
     ap.add_argument("--device", default="cuda")
     args = ap.parse_args()
     dev = torch.device(args.device)
@@ -151,14 +177,19 @@ def main():
         log("done marker present, nothing to do")
         return
     torch.manual_seed(args.seed)
-    model = sm.build().to(dev)
-    opt = torch.optim.Adam(model.parameters(), lr=args.lr)
-    it0, elapsed0, kgate = 0, 0.0, args.k_start
+    model = sm.build(law_blind=args.law_blind).to(dev)
+    if args.freeze_trunk:
+        for p_ in model.net.parameters():
+            p_.requires_grad_(False)
+    train_params = [p_ for p_ in model.parameters() if p_.requires_grad]
+    opt = torch.optim.Adam(train_params, lr=args.lr)
+    it0, elapsed0, kgate, vhist = 0, 0.0, args.k_start, []
     if args.resume and os.path.exists(path):
         st = torch.load(path, map_location=dev, weights_only=False)
         model.load_state_dict(st["model"])
         opt.load_state_dict(st["opt"])
         it0, elapsed0, kgate = st["it"], st.get("elapsed", 0.0), st.get("kgate", args.k_start)
+        vhist = st.get("val", [])
         log(f"resumed from it {it0} (elapsed {elapsed0:.0f}s)")
     elif args.init_multi:
         model.load_state_dict(torch.load(args.init_multi, map_location=dev, weights_only=False)["model"])
@@ -168,6 +199,12 @@ def main():
         log(f"warm start from {args.init_ckpt}")
     log(f"params {sum(p.numel() for p in model.parameters())}")
     data = build_data(args, dev, log)
+    vd = None
+    if args.val_every > 0:
+        va = argparse.Namespace(**{**vars(args), "seed": args.seed + 5000, "per_shape": args.val_per_shape})
+        vcases, vlabels = make_cases(va)
+        vd = sm.gen_cases(vcases, va.seed, dev, args.steps, tag=3)
+        log(f"validation scenes: {vd['P'].shape[0]}/{len(vcases)} accepted (seed {va.seed})")
     S = data["P"].shape[0]
     labels = sorted(set(data["label"]))
     lab_id = torch.tensor([labels.index(x) for x in data["label"]], device=dev)
@@ -215,7 +252,7 @@ def main():
         loss = (torch.nan_to_num(per_g + 0.1 * torch.stack(evs_l).sum(0)) * keep).sum()
         opt.zero_grad()
         loss.backward()
-        gn = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        gn = torch.nn.utils.clip_grad_norm_(train_params, 1.0)
         if torch.isfinite(loss) and torch.isfinite(gn) and keep.sum() >= 1:
             opt.step()
             acc_sum.index_add_(0, lab_id[idx], torch.nan_to_num(per) * keep)
@@ -244,18 +281,23 @@ def main():
             hist.append({"it": it, "loss_by_law": bd})
             acc_sum.zero_()
             acc_cnt.zero_()
+        if vd is not None and it % args.val_every == 0:
+            model.eval()
+            vhist.append({"it": it, "val_loss": val_loss(model, vd, args, dev)})
+            model.train()
+            log(f"val it {it} loss {vhist[-1]['val_loss']:.6f}")
         stop = STOP["flag"]
         if stop or it % args.ckpt_every == 0 or it == args.iters:
             if all(torch.isfinite(p).all() for p in model.parameters()):
-                save(path, model, opt, it, args, {"elapsed": elapsed0 + time.time() - t_start, "kgate": kgate})
+                save(path, model, opt, it, args, {"elapsed": elapsed0 + time.time() - t_start, "kgate": kgate, "val": vhist})
                 if it % args.snap_every == 0:
-                    save(f"{path}.it{it}", model, opt, it, args, {"elapsed": elapsed0 + time.time() - t_start, "kgate": kgate})
+                    save(f"{path}.it{it}", model, opt, it, args, {"elapsed": elapsed0 + time.time() - t_start, "kgate": kgate, "val": vhist})
             else:
                 log("non-finite parameters, checkpoint NOT written")
         if stop:
             log(f"SIGTERM: saved at it {it}, exiting 143")
             sys.exit(143)
-    open(f"{args.ckpt_dir}/{args.tag}.done", "w").write(json.dumps({"it": it, "elapsed": elapsed0 + time.time() - t_start}))
+    open(f"{args.ckpt_dir}/{args.tag}.done", "w").write(json.dumps({"it": it, "elapsed": elapsed0 + time.time() - t_start, "val": vhist}))
     log(f"trained to it {it} in {elapsed0 + time.time() - t_start:.0f}s total")
 
 
