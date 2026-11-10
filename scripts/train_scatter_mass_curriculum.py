@@ -29,6 +29,8 @@ LINES = dict(
     disk=dict(pass_da=0.05, pass_de=0.05, pass_dE=0.05, kill_da=0.25, kill_dE=0.3),
     base_pass=1.15, base_kill=1.5, q1000_kill_da_planet=0.3,
 )
+PLATEAU_DROP = 0.03
+EVAL_SEEDS = (9100, 9200, 9300)
 stop = {"flag": False}
 
 
@@ -41,7 +43,7 @@ def build_model(arm, device, dt, init_ckpt=None):
     return sf.apply_opts(model, "none", "train")
 
 
-def base_errors(model, device, num=16, steps=50, seed=9000):
+def base_errors(model, device, num=16, steps=50, seed=EVAL_SEEDS[0]):
     data = fd.base(num, steps, seed, device)
     P, V, M, mask = [t.float() for t in sf.to_tensors(data, device)]
     with torch.no_grad():
@@ -53,8 +55,8 @@ def base_errors(model, device, num=16, steps=50, seed=9000):
     return out
 
 
-def evaluate(model, device, num=16, steps=100, seed=9000):
-    res = dict(planet={}, disk={}, base=base_errors(model, device))
+def evaluate(model, device, num=16, steps=100, seed=EVAL_SEEDS[0]):
+    res = dict(planet={}, disk={}, base=base_errors(model, device, seed=seed))
     for q in EVAL_Q:
         for kind in ("planet", "disk"):
             data = cd.scenes(num, steps, seed + q, device, q, kind)
@@ -84,6 +86,26 @@ def verdict(res, init):
     return ("KILL" if kill else "INCONCLUSIVE" if miss else "PASS"), kill + miss
 
 
+def still_falling(val_hist, total):
+    """Plateau guard: mean validation loss over the last 10% of iterations more than PLATEAU_DROP below the mean over the preceding 10% window."""
+    w = max(1, round(0.1 * total))
+    last = [v for i, v in val_hist if i > total - w]
+    prev = [v for i, v in val_hist if total - 2 * w < i <= total - w]
+    if not last or not prev:
+        return False
+    return float(np.mean(last)) < (1.0 - PLATEAU_DROP) * float(np.mean(prev))
+
+
+def worst_verdict(verdicts):
+    return "KILL" if "KILL" in verdicts else "INCONCLUSIVE" if "INCONCLUSIVE" in verdicts else "PASS"
+
+
+def apply_plateau(verdict_, reasons, falling):
+    if falling and verdict_ != "PASS":
+        return "INCONCLUSIVE-undertrained", reasons
+    return verdict_, reasons
+
+
 def groups_for(args, stage, device, log):
     if ARMS[args.arm]["curriculum"]:
         raw = cd.stage_groups(stage, args.scenes, args.steps, args.seed, device)
@@ -108,6 +130,7 @@ def train(args, log):
     ckpt = f"{args.ckpt_dir}/{args.name}.pt"
     start = 0
     results = {}
+    val_hist = []
     rpath = f"{args.out_dir}/{args.name}.json"
     if os.path.exists(ckpt):
         st = torch.load(ckpt, map_location=dev, weights_only=False)
@@ -115,19 +138,38 @@ def train(args, log):
         opt.load_state_dict(st["opt"])
         start = st["it"]
         results = st.get("results", {})
+        val_hist = st.get("val_hist", [])
         log(f"resumed from it {start}")
     if "init" not in results:
-        results["init"] = evaluate(model, dev)
+        results["init"] = evaluate(model, dev, num=args.eval_scenes)
         log(f"init eval {json.dumps(results['init'], default=float)}")
     nst = len(cd.STAGES) if ARMS[args.arm]["curriculum"] else 1
     total = args.stage_iters * nst
     skipped = 0
     cur_stage, groups = -1, None
+    vargs = argparse.Namespace(**{**vars(args), "seed": args.seed + 50000, "scenes": args.val_scenes})
+    vgroups = groups_for(vargs, nst - 1, dev, log)
+
+    def val_loss(k=20):
+        tot = 0.0
+        with torch.no_grad():
+            for x in vgroups:
+                P, V, M, mask = x["t"]
+                sl = slice(0, args.batch)
+                pos, vel, m, mk = P[sl, 0], V[sl, 0], M[sl], mask[sl]
+                field = model.init_field(pos.shape[0], dev)
+                lp = lv = 0.0
+                for s in range(k):
+                    pos, vel, m, field, _ = sf._step_m(model, pos, vel, m, mk, field)
+                    lp = lp + (((pos - P[sl, s + 1]) ** 2) * mk[:, :, None]).sum() / (mk.sum() * 2 * k)
+                    lv = lv + (((vel - V[sl, s + 1]) ** 2) * mk[:, :, None]).sum() / (mk.sum() * 2 * k)
+                tot += x["weight"] * float(lp + 0.1 * lv)
+        return tot / sum(x["weight"] for x in vgroups)
     last = {}
     t_start = time.time()
 
     def save(it):
-        atomic_save(dict(model=model.state_dict(), opt=opt.state_dict(), it=it, results=results, args=vars(args)), ckpt)
+        atomic_save(dict(model=model.state_dict(), opt=opt.state_dict(), it=it, results=results, val_hist=val_hist, args=vars(args)), ckpt)
 
     it = start
     while it < total:
@@ -174,17 +216,28 @@ def train(args, log):
             log(f"it {it} {groups[gi]['name']} loss {loss.item():.3g} non-finite or above cap, step skipped ({skipped} total)")
         last.setdefault(groups[gi]["name"], []).append(loss.item())
         it += 1
+        if it % args.val_every == 0:
+            val_hist.append((it, val_loss()))
         if it % args.log_every == 0:
             msg = " ".join(f"{n}:{np.mean(v[-20:]):.5f}" for n, v in last.items())
             log(f"it {it} stage {stage} k {k} [{msg}] t {time.time() - t_start:.0f}s")
         if it % args.ckpt_every == 0 and all(torch.isfinite(p).all() for p in model.parameters()):
             save(it)
         if it % args.stage_iters == 0 or it == total:
-            results[f"after_stage_{stage}"] = evaluate(model, dev)
+            results[f"after_stage_{stage}"] = evaluate(model, dev, num=args.eval_scenes)
             log(f"stage {stage} eval {json.dumps(results[f'after_stage_{stage}'], default=float)}")
             save(it)
-    results["final"] = evaluate(model, dev)
-    results["verdict"], results["verdict_reasons"] = verdict(results["final"], results["init"])
+    results["final"] = evaluate(model, dev, num=args.eval_scenes, seed=EVAL_SEEDS[0])
+    results["final_by_seed"] = {str(EVAL_SEEDS[0]): results["final"]}
+    verdicts = [verdict(results["final"], results["init"])]
+    for sd in EVAL_SEEDS[1:]:
+        results["final_by_seed"][str(sd)] = evaluate(model, dev, num=args.eval_scenes, seed=sd)
+        verdicts.append(verdict(results["final_by_seed"][str(sd)], results["init"]))
+    results["verdict"] = worst_verdict([v[0] for v in verdicts])
+    results["verdict_reasons"] = [r for v in verdicts for r in v[1]]
+    results["plateau_falling"] = still_falling(val_hist, total)
+    results["val_hist_tail"] = val_hist[-10:]
+    results["verdict"], results["verdict_reasons"] = apply_plateau(results["verdict"], results["verdict_reasons"], results["plateau_falling"])
     log(f"FINAL {results['verdict']} {results['verdict_reasons']}")
     save(it)
     json.dump(results, open(rpath, "w"), indent=1, default=float)
@@ -209,6 +262,9 @@ def main(argv=None):
     ap.add_argument("--dt", type=float, default=0.1)
     ap.add_argument("--ckpt-every", type=int, default=50)
     ap.add_argument("--log-every", type=int, default=50)
+    ap.add_argument("--eval-scenes", type=int, default=16)
+    ap.add_argument("--val-scenes", type=int, default=32)
+    ap.add_argument("--val-every", type=int, default=20)
     ap.add_argument("--seed", type=int, default=4738)
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--out-dir", default="results/scatter_mass_curriculum")

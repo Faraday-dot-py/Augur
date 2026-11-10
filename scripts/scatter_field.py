@@ -9,6 +9,7 @@ import torch.nn.functional as F
 CENTER = 500.0
 H0 = 0.5
 EPS0 = 0.5
+DT0 = 0.1
 
 
 class LocalNet(nn.Module):
@@ -67,7 +68,7 @@ class ScatterField(nn.Module):
 
     def __init__(self, grid=64, extent=64.0, net="local", recurrent=True, hidden_ch=0, dt=0.1, width=32, layers=8,
                  levels=5, momfix=True, in_scale=1.0, potential=False, kernel=False, pp=0.0, split=False, nonet=False, verlet=False,
-                 prior=False, knn=16, eps=0.5, cu=False, epsin=False, norm="", massfeat=False):
+                 prior=False, knn=16, eps=0.5, cu=False, epsin=False, norm="", massfeat=False, dtin=False):
         super().__init__()
         assert not prior or (kernel and pp and split)
         self.prior, self.knn, self.eps = prior, knn, eps
@@ -77,10 +78,11 @@ class ScatterField(nn.Module):
         self.kpad = "zero"
         self.cu, self.epsin, self.norm = cu, epsin, norm
         self.massfeat = massfeat
+        self.dtin = dtin
         self.mass_unit = None
         assert not massfeat or norm in ("mass", "gmean")
         self.eps_cur = EPS0
-        ncol = 2 + int(cu) + int(epsin)
+        ncol = 2 + int(cu) + int(epsin) + int(dtin)
         if norm == "dens":
             self.register_buffer("d0", torch.tensor(8.0))
         self.opt = set()
@@ -99,7 +101,7 @@ class ScatterField(nn.Module):
         self.grid, self.extent, self.h = grid, extent, extent / grid
         self.recurrent, self.dt, self.momfix, self.in_scale = recurrent, dt, momfix, in_scale
         self.cf = (1 if potential else 2) + hidden_ch
-        cin = 3 + (self.cf if recurrent else 0) + (2 if kernel else 0) + (1 if epsin else 0) + (2 if massfeat else 0)
+        cin = 3 + (self.cf if recurrent else 0) + (2 if kernel else 0) + (1 if epsin else 0) + (2 if massfeat else 0) + (1 if dtin else 0)
         if kernel:
             self.kmlp = nn.Sequential(nn.Linear(ncol, 64), nn.GELU(), nn.Linear(64, 64), nn.GELU(), nn.Linear(64, 1))
             nn.init.zeros_(self.kmlp[-1].weight)
@@ -122,7 +124,12 @@ class ScatterField(nn.Module):
             f = [r, torch.log(r + (h if kind == "k" else 0.05))]
         if self.epsin:
             f.append(torch.full_like(r, math.log(self.eps_cur / EPS0)))
+        if self.dtin:
+            f.append(torch.full_like(r, self.dt_feat()))
         return torch.stack(f, -1)
+
+    def dt_feat(self):
+        return math.log(self.dt / self.substeps / DT0)
 
     def _nscale(self, x, mass, mask):
         if self.norm == "gmean":
@@ -221,7 +228,7 @@ class ScatterField(nn.Module):
     def kernel_acc(self, rho):
         G = self.grid
         if "kcache" in self.opt and not torch.is_grad_enabled():
-            key = (rho.dtype, rho.device, self.grid, self.h, self.eps_cur, tuple(p._version for p in self.kmlp.parameters()))
+            key = (rho.dtype, rho.device, self.grid, self.h, self.eps_cur, self.dt, self.substeps, tuple(p._version for p in self.kmlp.parameters()))
             if self._kf is None or self._kf[0] != key:
                 self._kf = (key, self._kernel_fft(rho))
             Kf = self._kf[1]
@@ -480,7 +487,7 @@ class ScatterField(nn.Module):
         return self._force(pos, vel, mass, mask, field)
 
     def _graphed(self, name, fn, *args):
-        key = (name, self.grid, self.extent, self.eps_cur) + tuple((tuple(a.shape), a.dtype) for a in args)
+        key = (name, self.grid, self.extent, self.eps_cur, self.dt, self.substeps) + tuple((tuple(a.shape), a.dtype) for a in args)
         ent = self._graphs.get(key)
         if ent is None:
             static = [a.clone() for a in args]
@@ -528,6 +535,8 @@ class ScatterField(nn.Module):
             x = torch.cat([x, x.new_full((x.shape[0], 1, self.grid, self.grid), math.log(self.eps_cur / EPS0))], 1)
         if self.massfeat:
             x = torch.cat([x, xm], 1)
+        if self.dtin:
+            x = torch.cat([x, x.new_full((x.shape[0], 1, self.grid, self.grid), self.dt_feat())], 1)
         if ctx is not None and ctx.extra is not None:
             x = torch.cat([x, ctx.extra if ns is None else ctx.extra / ns], 1)
         if self.nonet:
