@@ -122,6 +122,7 @@ class LawEncoder(nn.Module):
 
     Each body i with its knn nearest bodies j gives tokens (log r_ij, a_i . e_ij, log(1 + |a_i|)) with a_i the finite-difference acceleration over a tick and e_ij the unit vector
     to j; tokens are embedded, mean-pooled over bodies, neighbours and ticks, and mapped to CODE_DIM numbers placed in the first slot, the other slots zero (single-law structure).
+    NOT O(N): the neighbour search below is a dense N x N distance matrix, acceptable for stage 1 only. The full run must replace it with the model's cell-list neighbour routine (not yet done).
     """
 
     def __init__(self, knn=16, t0=4, hidden=64, dt=0.1):
@@ -168,3 +169,24 @@ def exponent_probe(train_codes, train_exp, test_codes, test_exp):
     ss_res = float(((test_exp - pred) ** 2).sum())
     ss_tot = float(((test_exp - test_exp.mean()) ** 2).sum())
     return 1.0 - ss_res / max(ss_tot, 1e-12)
+
+
+def heldout_family(i):
+    return "pow1.5-like" if i % 2 == 0 else "yuk32-like"
+
+
+def exponent_probe_report(train_codes, train_exp, test_codes, test_exp, test_family):
+    """Pre-registered line: pooled R-squared over all held-out laws. Per-family R-squared (same fitted map) is information only, no line."""
+    X = np.concatenate([train_codes, np.ones((len(train_codes), 1))], 1)
+    w = np.linalg.lstsq(X, train_exp, rcond=None)[0]
+    pred = np.concatenate([test_codes, np.ones((len(test_codes), 1))], 1) @ w
+
+    def r2(sel):
+        e, p = test_exp[sel], pred[sel]
+        return 1.0 - float(((e - p) ** 2).sum()) / max(float(((e - e.mean()) ** 2).sum()), 1e-12)
+
+    fam = np.asarray(test_family)
+    out = dict(pooled=r2(np.ones(len(fam), dtype=bool)))
+    for name in sorted(set(fam.tolist())):
+        out[name] = r2(fam == name)
+    return out

@@ -93,3 +93,13 @@ def test_data_check_counts_reconcile_and_resume(tmp_path):
     mtime = (tmp_path / "chunk000.pt").stat().st_mtime
     assert dc.main(argv) == 0
     assert (tmp_path / "chunk000.pt").stat().st_mtime == mtime
+
+
+def test_exponent_probe_report_pooled_and_per_family():
+    rng = np.random.default_rng(4738)
+    e_tr, e_te = rng.uniform(1, 3.5, 200), rng.uniform(1.2, 2.8, 64)
+    f = lambda e: np.stack([e, e ** 2, np.sin(e), np.ones_like(e), e * 0.0], 1)
+    fam = [lz.heldout_family(i) for i in range(64)]
+    r = lz.exponent_probe_report(f(e_tr), e_tr, f(e_te) + 0.01 * rng.standard_normal((64, 5)), e_te, fam)
+    assert set(r) == {"pooled", "pow1.5-like", "yuk32-like"} and min(r.values()) > 0.9
+    assert abs(r["pooled"] - lz.exponent_probe(f(e_tr), e_tr, f(e_te), e_te)) < 0.01

@@ -35,3 +35,6 @@ At dt 0.1 the ratio lands near 1.0-1.1x. At dt 0.05 err@20 about 0.6-0.8x (retra
 
 ## Artifacts
 Stage 1: scripts/polaris_timestep-as-input-model-stage-1.sh (needs 15 truth sets: 3 train + 12 eval, checked). Full run skeleton, NOT YET AUTHORISED (exits 64 unless FULL_RUN_AUTHORISED=yes): scripts/polaris_timestep-as-input-model-full-run-not-yet-authorised.sh. Code: scripts/train_scatter_timestep.py. Tarball: `bash scripts/build_architecture_push_stage1_code_tarball.sh`. Estimates: stage 1 about 1.0 GPU-h, full about 5 GPU-h (spec figures, untimed).
+
+## User decisions (2026-11-10)
+- Amendment of the dt 0.1 line from 1.05x to 1.10x was proposed and DECLINED. The line stays at 1.05x as written in the spec. A one-seed pass at 4738 stays provisional until seed 4739.

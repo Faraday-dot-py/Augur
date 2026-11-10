@@ -66,7 +66,7 @@ def main(argv=None):
     train_d = [lz.held_out_distance(c[2]) for c in cases if c[0] == "train"]
     summary = dict(requested=len(cases), generated=total, accepted=accepted, rejected_by_truth_check=total - accepted, zoo_draws_excluded_by_heldout_rule=excluded,
                    train_min_heldout_distance=float(min(train_d)), heldout_max_distance=float(max(held_d)), shape_tol=lz.SHAPE_TOL,
-                   encoder_code_shape=list(code.shape), encoder_code_finite=bool(torch.isfinite(code).all()), seed=args.seed, steps=args.steps)
+                   encoder_code_shape=list(code.shape), encoder_code_finite=bool(torch.isfinite(code).all()), encoder_neighbour_search="dense-cdist-O(N^2)-stage-1-only", seed=args.seed, steps=args.steps)
     assert summary["generated"] == summary["requested"], summary
     assert summary["train_min_heldout_distance"] >= lz.SHAPE_TOL and summary["heldout_max_distance"] < lz.SHAPE_TOL, summary
     assert summary["encoder_code_finite"], summary
