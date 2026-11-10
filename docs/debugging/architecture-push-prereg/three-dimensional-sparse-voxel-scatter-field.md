@@ -9,7 +9,7 @@ Definitions. N: body count. Tick: one step of dt 0.1. err@k: mean position error
 - `model/sparse_voxel_scatter_field.py`: only occupied voxels plus a halo exist. Voxel coordinates are packed into int64 keys (19 bits per axis, batch index above bit 57), so memory is independent of the box size.
 - CIC deposit of mass and momentum to 8 corners. Sparse 3x3x3 convolutions through a searchsorted neighbour table. Coarsening by halving coordinates until at most 64 voxels per scene remain. Sparse U-Net up the levels. Potential output, central-difference gradient, trilinear gather.
 - Far field: a coarse learned radial kernel summed directly over the coarsest voxels (piecewise-constant, no FFT, no recurrence). Pair term: cell-list over cells of edge 2 (pp=2), 16 nearest neighbours (knn=16), cell capacity 32. Same `step` interface as `ScatterField`, momentum fix on, Verlet.
-- Training: the scatter-field control's scene mix in 3D (N in 10..200; half Plummer spheres, half cold balls), exact 3D truth, batch 8, k ramp 4 to 20, lr 5e-4, 60,000 iterations (the control's count, spec 10a.1). Seed 4738.
+- Training: the scatter-field control's scene mix in 3D (N in 10..200; half Plummer spheres, half cold balls), exact 3D truth, batch 8, k ramp 4 to 20, lr 5e-4, 10,000 iterations in stage 1 (user decision 2026-11-10; the control's count is 60,000, extension to 60,000 needs a separate user go and resumes the same checkpoint). Seed 4738.
 
 ## Lines (copied from the spec)
 
@@ -30,6 +30,14 @@ Not loosened. Any amendment goes to the user as a proposal with a concrete value
 
 PASS lines inclusive (ratio exactly 2.0, cost exactly 12.0 pass); KILL lines exclusive (4.0 and 12.0 do not kill). Order as coded in `verdict()`: cost above 12 is KILL; ratio above 4.0 is KILL unless the plateau guard fires (then INCONCLUSIVE-undertrained); ratio at most 2.0 with cost at most 12 is PASS; otherwise INCONCLUSIVE-undertrained when the guard fires, else INCONCLUSIVE-between-lines (3x is reported as a fail of pass, not a kill). A missing 1e5 timing is INCONCLUSIVE-no-1e5-timing.
 
+Stage 1 verdict rule (user decision 2026-11-10): at fewer than 60,000 iterations the accuracy outcome is INCONCLUSIVE-undertrained by design. The cost line is the stage 1 decider: cost above 12x is KILL; otherwise INCONCLUSIVE-undertrained with the cost reported against the line. KILL-nonfinite still applies.
+
+## Ratio to exact (worker's interpretation, user-accepted 2026-11-10)
+
+Ratio to exact = err@20 divided by zero-force err@20, the same quantity in 2D and 3D. Zero-force err@20 is the mean over bodies of |exact position at tick 20 - initial position - initial velocity x 0.1 x 20|.
+
+The 2D comparison value (the denominator of the PASS line, ratio2) is measured in the same job, not taken from a file (no earlier measurement exists for this control at N=1000): 2D Gaussian cloud, sigma 8, velocity factor 0.3, N=1000, `ss.make_scene`, eval seeds 9100, 9200, 9300 with 4 scenes each (12 scenes), control `~/augur_nfr/kern/E_frozen.pt` (md5 9b3cb8bb1de47eb6ebf5f708d98e94b7, verified on the Polaris copy 2026-11-10). Averaging: ratio of means, mean over the 12 scenes of err@20 divided by mean over the 12 scenes of zero-force err@20. The mean of per-scene ratios is also reported (`ratio2_mean_of_per_scene_ratios`), not scored. The 3D ratio uses the same ratio-of-means form over its 12 Plummer scenes. The scorer logs both on a line starting "2D control ratio to exact" and stores them with the control md5 in score.json.
+
 ## Plateau guard
 
 Validation err@20 (48 3D scenes, seed 9400) logged 50 times. INCONCLUSIVE-undertrained if the mean validation loss over the last 10% of iterations is more than 3% below the mean over the preceding 10% window. Per user decision 10a.1, one extension at double length (120,000 iterations) is then allowed, candidate and control together. Control status: the 2D control is the frozen 60,000-iteration checkpoint, scored only; the extension needs it retrained at 120,000, a needs-user decision.
@@ -38,7 +46,7 @@ Non-finite handling: a NaN or infinite ratio, or a non-finite candidate rollout,
 
 ## Prediction (stated before running)
 
-PASS about 25%. Expected: cost ratio between 3x and 8x at N=1e5 (sparse bookkeeping dominates; untimed guess), ratio3/ratio2 between 1.5 and 4 after 60,000 iterations, so most likely INCONCLUSIVE-undertrained or between-lines. The coarse far-field kernel is the weak point at N=1000.
+PASS about 25%. Expected: cost ratio between 3x and 8x at N=1e5 (sparse bookkeeping dominates; untimed guess), ratio3/ratio2 between 1.5 and 4 after 10,000 iterations; the stage 1 outcome is INCONCLUSIVE-undertrained by rule, so the cost line decides (cost KILL about 20%). The coarse far-field kernel is the weak point at N=1000.
 
 ## Constraints check (re-read 2026-11-10)
 
@@ -49,11 +57,11 @@ PASS about 25%. Expected: cost ratio between 3x and 8x at N=1e5 (sparse bookkeep
 
 ## Known weaknesses (kept in the notes)
 
-- Iteration count matched at 60,000 (about 10 GPU-h untimed estimate against the spec's 1.5 GPU-h stage 1 cost; ITERS=4000 reproduces 1.5 GPU-h but is not scorable). The control is frozen and scored only.
+- Stage 1 trains 10,000 iterations against 60,000 for the control (about 2 h untimed estimate). The control is frozen and scored only. Extending the same run to 60,000 restarts the cosine lr schedule (it depends on the iteration count), so the extended run is not identical to a fresh 60,000 run.
 - The far-field kernel is coarse and has no recurrence over scales.
 - Cost is measured at 1e5 only; the dense 3D comparison (audit row 33) is not run.
-- Full run (20 GPU-h): same script with ITERS=60000, batch 16, k-end 30; needs periodic full-state checkpoints (already written every 100 iterations by `tsf.train`) and `--resume` via requeue. Needs the user's go-ahead after this report.
+- Full run (20 GPU-h): same script with batch 16, k-end 30 (stage 1 uses batch 8, k-end 20); needs periodic full-state checkpoints (already written every 100 iterations by `tsf.train`) and `--resume` via requeue. Needs the user's go-ahead after this report.
 
 ## Files and run
 
-`scripts/three_dimensional_sparse_voxel_scatter_field.py` (modes train, score, bench, all; resumable; SIGTERM saves and exits 143). Job `scripts/polaris_three-dimensional-sparse-voxel-scatter-field.sh`. Tests `tests/test_sparse_voxel_scatter_field.py` (12). Estimate (untimed; no logged 3D rate): 1.0 to 1.5 GPU-h (spec: 1.5).
+`scripts/three_dimensional_sparse_voxel_scatter_field.py` (modes train, score, bench, all; resumable; SIGTERM saves and exits 143). Job `scripts/polaris_three-dimensional-sparse-voxel-scatter-field.sh`. Tests `tests/test_sparse_voxel_scatter_field.py` (12). Estimate (untimed; no logged 3D rate): about 2 GPU-h at 10,000 iterations; the job logs s_per_it_first100= to measure the rate.

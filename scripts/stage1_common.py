@@ -1,5 +1,6 @@
 import json
 import os
+import time
 from types import SimpleNamespace
 
 import numpy as np
@@ -16,8 +17,15 @@ def train_with_curve(model, tensors, val_fn, args, ckpt, out, stop, log, eps=0.5
     curve = {int(k): v for k, v in json.load(open(curve_path)).items()} if os.path.exists(curve_path) else {}
     every = max(1, args.iters // VAL_POINTS)
 
+    rate = {}
+
     def it_hook(it):
         n = it + 1
+        if "n0" not in rate:
+            rate["n0"], rate["t0"] = n, time.time()
+        elif "done" not in rate and n - rate["n0"] >= 100:
+            rate["done"] = True
+            log(f"s_per_it_first100={(time.time() - rate['t0']) / (n - rate['n0']):.4f}")
         if n % every == 0 and n not in curve:
             curve[n] = val_fn(model)
             json.dump({str(k): v for k, v in sorted(curve.items())}, open(curve_path, "w"))

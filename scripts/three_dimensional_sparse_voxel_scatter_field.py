@@ -1,9 +1,10 @@
 """Stage 1 of three-dimensional-sparse-voxel-scatter-field: train model/sparse_voxel_scatter_field.py on 3D scenes with exact 3D truth, score on 3D Plummer spheres at N=1000 against the
 frozen 2D the scatter-field control (ms_kp_pot_v_g128) (ratio of err@20 to constant-velocity err@20, same seeds, same N), and time both from 1e3 to 1e5 bodies.
 Modes: train (resumable, SIGTERM-safe, periodic full-state checkpoints), score, bench, all.
-Usage: PYTHONPATH=. python scripts/three_dimensional_sparse_voxel_scatter_field.py --mode all --control kern/E_frozen.pt --iters 60000 --device cuda --out results/three_dimensional_sparse_voxel_scatter_field
+Usage: PYTHONPATH=. python scripts/three_dimensional_sparse_voxel_scatter_field.py --mode all --control kern/E_frozen.pt --iters 10000 --device cuda --out results/three_dimensional_sparse_voxel_scatter_field
 """
 import argparse
+import hashlib
 import json
 import os
 import signal
@@ -122,6 +123,7 @@ def cv_err(pos0, vel0, Pt, k, dev):
     return float((Pt[k] - torch.tensor(pos0, device=dev) - torch.tensor(vel0, device=dev) * DT * k).norm(dim=-1).mean())
 
 
+STAGE_FULL_ITERS = 60000
 FAMILIES = {"cold": (8.0, 0.3), "virial": (8.0, 1.0)}
 
 
@@ -153,9 +155,14 @@ def score(args, dev):
     res = {"per_scene": per, "primary_family": "cold", "plateau": common.plateau(args.out)}
     ratio2 = float(np.mean([r["d2"]["20"] for r in per]) / np.mean([r["cv2_20"] for r in per]))
     res["ratio2_err20_over_constvel"] = ratio2
+    res["ratio2_mean_of_per_scene_ratios"] = float(np.mean([r["d2"]["20"] / r["cv2_20"] for r in per]))
+    res["control_md5"] = hashlib.md5(open(args.control, "rb").read()).hexdigest()
+    res["n_scenes"] = len(per)
+    log(f"2D control ratio to exact (err@20 over zero-force err@20, ratio of means over {len(per)} scenes, N={n}, seeds {list(HELD_OUT)}, control md5 {res['control_md5']}): {ratio2:.6g}; mean of per-scene ratios {res['ratio2_mean_of_per_scene_ratios']:.6g}")
     for fam in FAMILIES:
         r3 = float(np.mean([r[fam]["d3"]["20"] for r in per]) / np.mean([r[fam]["cv3_20"] for r in per]))
         res[fam] = {"ratio3_err20_over_constvel": r3, "ratio3_over_ratio2": r3 / ratio2, "all_finite": all(r[fam]["finite"] for r in per)}
+        log(f"3D {fam} ratio to exact (ratio of means) {r3:.6g}; 3D over 2D {r3 / ratio2:.6g}")
     res["ratio3_over_ratio2"] = res["cold"]["ratio3_over_ratio2"]
     json.dump(res, open(f"{args.out}/score.json", "w"), indent=1)
     return res
@@ -204,7 +211,7 @@ def bench(args, dev):
     return res
 
 
-def verdict(sc, bn):
+def verdict(sc, bn, iters):
     rr, c = sc["ratio3_over_ratio2"], bn["cost_ratio_at_1e5"]
     if not (np.isfinite(rr) and sc["cold"]["all_finite"]):
         return "KILL-nonfinite"
@@ -213,6 +220,8 @@ def verdict(sc, bn):
     under = sc["plateau"]["undertrained"]
     if c > 12.0:
         return "KILL"
+    if iters < STAGE_FULL_ITERS:
+        return "INCONCLUSIVE-undertrained"
     if rr > 4.0:
         return "INCONCLUSIVE-undertrained" if under else "KILL"
     if rr <= 2.0:
@@ -224,7 +233,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--mode", choices=["train", "score", "bench", "all"], default="all")
     ap.add_argument("--control", default="kern/E_frozen.pt")
-    ap.add_argument("--iters", type=int, default=60000)
+    ap.add_argument("--iters", type=int, default=10000)
     ap.add_argument("--train", type=int, default=1500)
     ap.add_argument("--steps", type=int, default=50)
     ap.add_argument("--batch", type=int, default=8)
@@ -256,8 +265,8 @@ def main():
     if args.mode in ("bench", "all"):
         bn = bench(args, dev)
     if args.mode == "all":
-        v = verdict(sc, bn)
-        json.dump({"verdict": v, "ratio3_over_ratio2": sc["ratio3_over_ratio2"], "cost_ratio_at_1e5": bn["cost_ratio_at_1e5"],
+        v = verdict(sc, bn, json.load(open(f"{args.out}/train_done.json"))["train_iters"])
+        json.dump({"verdict": v, "ratio3_over_ratio2": sc["ratio3_over_ratio2"], "cost_ratio_at_1e5": bn["cost_ratio_at_1e5"], "cost_line": "KILL" if bn["cost_ratio_at_1e5"] > 12.0 else "within 12x",
                    "undertrained": sc["plateau"]["undertrained"]}, open(f"{args.out}/summary.json", "w"), indent=1)
         log(f"VERDICT {v}")
         log("DONE")
