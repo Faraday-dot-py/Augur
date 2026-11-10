@@ -2,14 +2,14 @@
 
 Spec: `docs/superpowers/specs/2026-11-09-architecture-push-twenty-experiments-design.md` section 5 (cost 1.5 GPU-h stage 1, 20 GPU-h full run). Stage 1 reports back to the user before the full run starts.
 
-Definitions. N: body count. Tick: one step of dt 0.1. err@k: mean position error per body after k self-fed ticks against the exact fp64 simulation (softened gravity, G=1, eps 0.5, 4 substeps per tick). Voxel: a 3D grid cell. Halo: the one-voxel ring of empty neighbours stored around every occupied voxel. CIC: cloud-in-cell, trilinear spreading to 8 corners. Plummer sphere: the standard self-gravitating ball with an exact density profile and distribution function. Exp E: the pinned 2D gravity checkpoint `ms_kp_pot_v_g128`.
+Definitions. N: body count. Tick: one step of dt 0.1. err@k: mean position error per body after k self-fed ticks against the exact fp64 simulation (softened gravity, G=1, eps 0.5, 4 substeps per tick). Voxel: a 3D grid cell. Halo: the one-voxel ring of empty neighbours stored around every occupied voxel. CIC: cloud-in-cell, trilinear spreading to 8 corners. Plummer sphere: the standard self-gravitating ball with an exact density profile and distribution function. the scatter-field control (ms_kp_pot_v_g128): the pinned 2D gravity checkpoint `ms_kp_pot_v_g128`.
 
 ## Model (stage 1)
 
 - `model/sparse_voxel_scatter_field.py`: only occupied voxels plus a halo exist. Voxel coordinates are packed into int64 keys (19 bits per axis, batch index above bit 57), so memory is independent of the box size.
 - CIC deposit of mass and momentum to 8 corners. Sparse 3x3x3 convolutions through a searchsorted neighbour table. Coarsening by halving coordinates until at most 64 voxels per scene remain. Sparse U-Net up the levels. Potential output, central-difference gradient, trilinear gather.
 - Far field: a coarse learned radial kernel summed directly over the coarsest voxels (piecewise-constant, no FFT, no recurrence). Pair term: cell-list over cells of edge 2 (pp=2), 16 nearest neighbours (knn=16), cell capacity 32. Same `step` interface as `ScatterField`, momentum fix on, Verlet.
-- Training: Exp E's scene mix in 3D (N in 10..200; half Plummer spheres, half cold balls), exact 3D truth, batch 8, k ramp 4 to 20, lr 5e-4, 4000 iterations in stage 1. Seed 4738.
+- Training: the scatter-field control's scene mix in 3D (N in 10..200; half Plummer spheres, half cold balls), exact 3D truth, batch 8, k ramp 4 to 20, lr 5e-4, 4000 iterations in stage 1. Seed 4738.
 
 ## Lines (copied from the spec)
 
@@ -19,7 +19,7 @@ Not loosened. Any amendment goes to the user as a proposal with a concrete value
 
 ## Measurement and interpretations (stated now, flagged)
 
-- Control: Exp E (2D), Polaris `~/augur_nfr/kern/E_frozen.pt` (3,200,305 bytes, verified read-only 2026-11-10); same file at `~/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt`. Grid 128, extent 64.
+- Control: the scatter-field control (ms_kp_pot_v_g128) (2D), Polaris `~/augur_nfr/kern/E_frozen.pt` (3,200,305 bytes, verified read-only 2026-11-10); same file at `~/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt`. Grid 128, extent 64.
 - Equal N: N=1000 for accuracy (a 2D Gaussian cloud, sigma 8, velocity factor 0.3, versus a 3D cold Plummer sphere, scale 8, velocities scaled by sqrt(0.3) of the virial distribution, about 0.55x; the two cold families are matched in regime, not in a shared definition).
 - "Ratio to exact" is read as err@20 divided by the zero-force error at tick 20 (norm of exact position at tick 20 minus initial position minus initial velocity times elapsed time, mean over bodies), on the same scene. This is an interpretation: the spec does not define it. The per-scene numbers are saved so another reading (for example error over the exact-vs-4x-substeps floor) can be recomputed without a rerun.
 - Accuracy pass test: ratio3 / ratio2 at most 2.0; KILL above 4.0 (3.0 is the spec's fails-pass point). Primary family: cold. A virial family (velocity factor 1.0) is reported, not scored.

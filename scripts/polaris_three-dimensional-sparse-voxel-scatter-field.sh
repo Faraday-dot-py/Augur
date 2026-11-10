@@ -14,7 +14,7 @@
 #SBATCH --output=augur-three-dimensional-sparse-voxel-scatter-field-%j.log
 # --dependency=afterany:TAIL_JOB_ID  (placeholder: the supervisor passes it on the sbatch command line from the slot tail in docs/debugging/gpu-slot-chains.md; never submit without it)
 # Stage 1 of three-dimensional-sparse-voxel-scatter-field (spec cost 1.5 GPU-h): train ITERS its (default 4000, resumable, full-state checkpoint every 100 its), then score (cold and virial Plummer spheres vs exact 3D truth,
-# 2D Exp E control at equal N) and bench (cost per body-tick, 3D model vs 2D control). The 20 GPU-h full run uses this same script with ITERS and --batch raised and needs the user's go-ahead after the stage 1 report:
+# 2D the scatter-field control (ms_kp_pot_v_g128) control at equal N) and bench (cost per body-tick, 3D model vs 2D control). The 20 GPU-h full run uses this same script with ITERS and --batch raised and needs the user's go-ahead after the stage 1 report:
 # sbatch --export=ALL,ITERS=60000,BATCH=16,KEND=30 --time=<longer> this.sh; every requeue resumes from the checkpoint.
 # Pre-registration: docs/debugging/architecture-push-prereg/three-dimensional-sparse-voxel-scatter-field.md. Runtime estimate (untimed, no 3D rate is logged): the nearest logged rate is 0.28-0.31 s/it for the 2D width-32 model;
 # assuming up to 2x for sparse 3D at batch 8 gives 4000 its in about 40 min, plus validation, scoring and bench: 1.0-1.5 GPU-h; limit 4 h.

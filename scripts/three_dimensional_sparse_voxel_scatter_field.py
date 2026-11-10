@@ -1,5 +1,5 @@
 """Stage 1 of three-dimensional-sparse-voxel-scatter-field: train model/sparse_voxel_scatter_field.py on 3D scenes with exact 3D truth, score on 3D Plummer spheres at N=1000 against the
-frozen 2D Exp E (ratio of err@20 to constant-velocity err@20, same seeds, same N), and time both from 1e3 to 1e5 bodies.
+frozen 2D the scatter-field control (ms_kp_pot_v_g128) (ratio of err@20 to constant-velocity err@20, same seeds, same N), and time both from 1e3 to 1e5 bodies.
 Modes: train (resumable, SIGTERM-safe, periodic full-state checkpoints), score, bench, all.
 Usage: PYTHONPATH=. python scripts/three_dimensional_sparse_voxel_scatter_field.py --mode all --control kern/E_frozen.pt --iters 4000 --device cuda --out results/three_dimensional_sparse_voxel_scatter_field
 """
@@ -58,7 +58,7 @@ def cold_ball(n, radius, vfac, rng):
 
 
 def train_scenes(num, steps, seed, dev):
-    """Exp E's mix in 3D: n in [10, 200]; half Plummer spheres (a in [2, 6], q in [0.2, 1]), half cold balls (radius 5-10, vfac 0.1-0.6), exact truth, unit mass."""
+    """the scatter-field control's mix in 3D: n in [10, 200]; half Plummer spheres (a in [2, 6], q in [0.2, 1]), half cold balls (radius 5-10, vfac 0.1-0.6), exact truth, unit mass."""
     rng = np.random.default_rng(seed)
     Nmax = 200
     P = torch.zeros(num, steps + 1, Nmax, 3, dtype=torch.float64)
