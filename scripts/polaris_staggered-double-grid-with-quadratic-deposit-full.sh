@@ -27,9 +27,10 @@ cd $W && tar xzf $HOME/staggered_double_grid_code.tgz
 export PYTHONPATH=$W
 E=$HOME/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt
 INIT=$HOME/augur/checkpoints/scatter_bh/init_B_ms_kp_pot_v_g128.pt
+N=single-law-gravity-checkpoint-g128
 V=ms_kp_pot_v_g128_quad_dual
 ITERS=60769
-CK=$W/ckpt/E_$V.pt
+CK=$W/ckpt/${N}_$V.pt
 O=$W/results
 mkdir -p $W/ckpt $O
 for f in $E $INIT scripts/train_scatter_field.py scripts/staggered_double_grid_eval.py scripts/staggered_double_grid_verdict.py scripts/plateau_guard.py scripts/scatter_field.py model/__init__.py; do
@@ -54,7 +55,7 @@ step() {
 }
 
 if [ ! -e $O/TRAIN_DONE ]; then
-  if step train python scripts/train_scatter_field.py --exp E --variant $V --train 1500 --steps 50 --batch 16 --k-start 4 --k-end 30 --lr 5e-4 --iters $ITERS \
+  if step train python scripts/train_scatter_field.py --exp $N --variant $V --train 1500 --steps 50 --batch 16 --k-start 4 --k-end 30 --lr 5e-4 --iters $ITERS \
     --eval-steps 21 --eval-scenes 2 --log-every 100 --val-every 500 --val-scenes 32 --save-on-sigterm --device cuda --seed 4738 --init-ckpt $INIT --out-dir $O/trainer --ckpt-dir $W/ckpt; then touch $O/TRAIN_DONE; fi
 fi
 [ -e $O/TRAIN_DONE ] || { echo "TRAIN NOT DONE (iterations short of $ITERS or step failed)"; exit 1; }

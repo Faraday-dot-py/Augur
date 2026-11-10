@@ -158,3 +158,9 @@ def test_stage1_closure():
 
     assert vd.stage1({"seeds": {"9100": seed(0.7, 0.6)}})["closes_experiment"] is False
     assert vd.stage1({"seeds": {"9100": seed(0.97, 0.96)}})["closes_experiment"] is True
+
+
+def test_verdict_smoke_horizons_fall_back():
+    r = {"err@5": 1.0, "err@10": 1.0, "dE@10": 1.0, "probe_half": 1.0, "probe_off": 1.0, "sec_per_tick": 1.0, "finite": 1.0}
+    d = {"smoke": True, "seeds": {"9100": {"control": dict(r), "cand": dict(r)}}}
+    assert vd.full(d)["err@20"] == 1.0

@@ -1,4 +1,4 @@
-"""Which force component carries the net force on the black-hole core. Reads S1.json (stock) and S1c4.json (four-pass symmetrised) written by scripts/escape_roll.py with --probe-ticks.
+"""Which force component carries the net force on the black-hole core. Reads DIR/<stock>.json and DIR/<symmetrised>.json (stock and four-pass symmetrised arms, names given by --stock and --symmetrised) written by scripts/escape_roll.py with --probe-ticks.
 Per probe tick t in TICKS and arm, on the class core15 (bodies within 15 units of the arm's own centre; raw force, momentum fix off): e = mean(a_model - a_exact), and the mean vectors of the
 U-Net potential gradient u, the FFT kernel k and the pair term p. Switching a component off removes its mean: e_noU = e - u, e_noK = e - k, e_noP = e - p (reported).
 Component X carries the bias at a tick when its mean projected on the error direction, (m_X . e) / |e|, is at least CARRY * |e|.
@@ -6,7 +6,7 @@ Classes (symmetrised arm, decided per tick, then majority over TICKS):
   stock check: median over TICKS of |e_stock| must be at least STOCK_X times |exact mean|; else INCONCLUSIVE.
   NO-NET-FORCE: |e_sym| < FLOOR * |e_stock| at that tick.   one carrier: UNET-CARRIES / KERNEL-CARRIES / PAIR-CARRIES.   two or three carriers: SHARED.   none: CANCELLATION.
   No class with at least MAJ of the TICKS: INCONCLUSIVE.
-Usage: python scripts/core_force_component_verdict.py DIR [--out DIR/core_force_component_verdict.json]"""
+Usage: python scripts/core_force_component_verdict.py DIR --stock ARM --symmetrised ARM [--out DIR/core_force_component_verdict.json]"""
 import argparse
 import json
 from collections import Counter
@@ -76,9 +76,11 @@ def verdict(stock_doc, sym_doc):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("dir")
+    ap.add_argument("--stock", required=True)
+    ap.add_argument("--symmetrised", required=True)
     ap.add_argument("--out")
     args = ap.parse_args()
-    res = verdict(json.load(open(f"{args.dir}/S1.json")), json.load(open(f"{args.dir}/S1c4.json")))
+    res = verdict(json.load(open(f"{args.dir}/{args.stock}.json")), json.load(open(f"{args.dir}/{args.symmetrised}.json")))
     json.dump(res, open(args.out or f"{args.dir}/core_force_component_verdict.json", "w"), indent=1)
     print(json.dumps({k: res[k] for k in res if k != "per_tick"}))
     for t, r in res["per_tick"].items():

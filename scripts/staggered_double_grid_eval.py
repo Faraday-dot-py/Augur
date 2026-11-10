@@ -19,7 +19,7 @@ from scripts import train_scatter_field as tsf
 
 def build_candidate(variant, ckpt, dev):
     kw = {**tsf.BASE, **tsf.VARIANTS[variant]}
-    model = sf.ScatterField(extent=tsf.EXPS["E"]["extent"], dt=seg.DT, in_scale=tsf.EXPS["E"]["in_scale"], **kw)
+    model = sf.ScatterField(extent=tsf.EXPS["single-law-gravity-checkpoint-g128"]["extent"], dt=seg.DT, in_scale=tsf.EXPS["single-law-gravity-checkpoint-g128"]["in_scale"], **kw)
     sd = torch.load(ckpt, map_location=dev, weights_only=False)["model"]
     model.load_state_dict(sd)
     return model.to(dev).eval()
@@ -61,7 +61,7 @@ def main():
     control = ss.build_model("E", seg.DT, dev, args.control)
     cand = build_candidate(args.variant, args.cand, dev)
     seeds = [int(s) for s in args.seeds.split(",")]
-    out = {"control": args.control, "cand": args.cand, "variant": args.variant, "seeds": {}}
+    out = {"control": args.control, "cand": args.cand, "variant": args.variant, "smoke": args.smoke, "seeds": {}}
     with torch.no_grad():
         for seed in seeds[:1] if args.smoke else seeds:
             scenes = []

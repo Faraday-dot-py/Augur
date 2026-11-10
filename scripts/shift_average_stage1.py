@@ -1,4 +1,4 @@
-"""Stage 1 of staggered-double-grid-with-quadratic-deposit: inference-time shift averaging of frozen Exp E (E_ms_kp_pot_v_g128).
+"""Stage 1 of staggered-double-grid-with-quadratic-deposit: inference-time shift averaging of frozen single-law-gravity-checkpoint-g128 (E_ms_kp_pot_v_g128).
 1 pass (control), 2 passes (grid offset by half a cell on the diagonal), 4 passes (offsets 0, x, y, diagonal by half a cell), each pass with its own recurrent field.
 Per seed (scene seeds 9100/9200/9300): expB 8 scenes + cluster 4 scenes; free rollout 100 ticks vs fp64 truth; err@k = mean body position error, dE@k = |E_model - E_truth| / |E_truth| at the same tick.
 Shift probe: median over bodies of |a_shifted - a| / |a| (bodies above the scene's 10th |a| percentile), tick-0 force from a zero field, rigid shift of the scene.

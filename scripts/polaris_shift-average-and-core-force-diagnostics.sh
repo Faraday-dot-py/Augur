@@ -54,14 +54,15 @@ if [ ! -e $R/shift_average_stage1/DONE ]; then
 fi
 
 cd $HOME/augur_shift_core_diag/code_c
+STOCK_ARM=S1 SYMMETRISED_ARM=S1c4
 D=$R/core_force_components/n2e4_s12300
 mkdir -p $D
 cp -n $OLD/truth.npz $OLD/truth.json $D/
-step core_roll python scripts/escape_roll.py --ckpt $DRIFT_CK --n 20000 --seed 12300 --steps 1000 --arms S1,S1c4 --probe-ticks 100,200,300,500,1000 --resume --out $D
-step core_drift_reproduction bash -c "python scripts/armA_drift.py $D S1 S1c4 > $D/drift.txt && cat $D/drift.txt"
-step core_verdict python scripts/core_force_component_verdict.py $D
+step core_roll python scripts/escape_roll.py --ckpt $DRIFT_CK --n 20000 --seed 12300 --steps 1000 --arms $STOCK_ARM,$SYMMETRISED_ARM --probe-ticks 100,200,300,500,1000 --resume --out $D
+step core_drift_reproduction bash -c "python scripts/armA_drift.py $D $STOCK_ARM $SYMMETRISED_ARM > $D/drift.txt && cat $D/drift.txt"
+step core_verdict python scripts/core_force_component_verdict.py $D --stock $STOCK_ARM --symmetrised $SYMMETRISED_ARM
 
-for f in $R/shift_average_stage1/stage1.json $D/S1.json $D/S1c4.json $D/core_force_component_verdict.json; do [ -s $f ] || { echo OUTPUT MISSING $f; FAIL=1; }; done
+for f in $R/shift_average_stage1/stage1.json $D/$STOCK_ARM.json $D/$SYMMETRISED_ARM.json $D/core_force_component_verdict.json; do [ -s $f ] || { echo OUTPUT MISSING $f; FAIL=1; }; done
 echo TOTAL_SECONDS $(( $(date +%s) - T0 ))
 echo DONE FAIL=$FAIL
 exit $FAIL

@@ -69,6 +69,7 @@ EXPS = {
     "D": dict(n=(2, 2), scale=False, extent=32.0, in_scale=1.0, star=False, orbit=True,
               variants=["ss_rec", "ms_rec", "ml_rec", "ml_noquad", "ml_k4", "ml_nodm"]),
 }
+EXPS["single-law-gravity-checkpoint-g128"] = EXPS["E"]
 EVAL_SEEDS = (9000, 12000)
 
 

@@ -10,7 +10,7 @@ That line applies to the retrain, which is not run. Source line at experiment-lo
 
 ## Diagnostic (what is run)
 
-Frozen four-pass symmetrised model (arm S1c4 on ~/edge_ck/ghost_lsq.pt) vs the stock arm (S1), seed 12300, n=20000, 1000 steps, probe ticks 100/200/300/500/1000; class core15 (bodies within 15 units of the arm's own centre, raw force, momentum fix off). scripts/core_force_component_verdict.py switches the U-Net, FFT kernel and pair term off in turn (mean removed) and reports which component carries the net core force. Inputs: ~/augur_armA_fresh/results/armA_fresh/n2e4_s12300/{truth.npz,truth.json}; control stock arm is the same run. Job script: scripts/polaris_shift-average-and-core-force-diagnostics.sh (shared with the shift-average stage 1; 1.5 h limit, 1 GPU). Seed set: 12300 only (a diagnostic of one existing failure; 9100/9200/9300 do not apply).
+Frozen four-pass symmetrised model (legacy arm name S1c4, on ~/edge_ck/ghost_lsq.pt) vs the stock arm (legacy: S1), seed 12300, n=20000, 1000 steps, probe ticks 100/200/300/500/1000; class core15 (bodies within 15 units of the arm's own centre, raw force, momentum fix off). scripts/core_force_component_verdict.py switches the U-Net, FFT kernel and pair term off in turn (mean removed) and reports which component carries the net core force. Inputs: ~/augur_armA_fresh/results/armA_fresh/n2e4_s12300/{truth.npz,truth.json}; control stock arm is the same run. Job script: scripts/polaris_shift-average-and-core-force-diagnostics.sh (shared with the shift-average stage 1; 1.5 h limit, 1 GPU). Seed set: 12300 only (a diagnostic of one existing failure; 9100/9200/9300 do not apply).
 
 ## Diagnostic line (PROPOSED-BY-WORKER, derived from the core-drift line)
 
