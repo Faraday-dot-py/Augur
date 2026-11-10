@@ -52,6 +52,7 @@ for tag in $SH $CT; do
   [ -s ckpt/tiered_S$tag.pt ] || { echo "MISSING ckpt/tiered_S$tag.pt"; exit 1; }
   touch ckpt/$tag.trained
 done
+PID=
 ev() {
   [ -s results/$1.json ] && return 0
   python scripts/train_tiered.py --mode far --tag $2 --target far --tiers $3 --span $4 --width 32 --layers 6 --far-radius 20 --ckpt-dir ckpt --eval-batch 2 $5 --out results/$1.json >> $2.eval.log 2>&1 || { echo "eval $1 failed"; tail -20 $2.eval.log; exit 1; }

@@ -5,6 +5,7 @@ coarsened to its width (separable stencil of +-TAPS coarse-cell widths), then bi
 Here they are fitted to a frozen learned kernel by weighted least squares; they are not read from a force law. Cost per level is linear in
 the cell count of its coarsened grid, so the whole ladder is linear in grid cells (about 1.3x the finest-level cost).
 """
+import functools
 import math
 
 import torch
@@ -71,6 +72,7 @@ def _taps(sc, dtype, device):
     return k / k.sum(), R
 
 
+@functools.lru_cache(maxsize=None)
 def _fine_sum(s_cells):
     R = int(6 * s_cells)
     k = torch.exp(-torch.arange(-R, R + 1, dtype=torch.float64) ** 2 / (2 * s_cells ** 2)).sum()
