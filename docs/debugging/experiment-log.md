@@ -4092,3 +4092,181 @@ Stated: UNET-CARRIES most likely, because the symmetrisation acts on the U-Net o
 - No hard-wired conservation: none added.
 - O(N): diagnostic only; the retrain, if later approved, is a weight-sharing change with unchanged per-body cost.
 - No retrain is built here; cost clause of 1.3x is not evaluated.
+
+
+## gaussian-ladder-far-kernel-replacing-fft stage 1 prereg (copied 2026-11-10 from docs/debugging/architecture-push-prereg/gaussian-ladder-far-kernel-replacing-fft.md, branch commit 453778c)
+
+# gaussian-ladder-far-kernel-replacing-fft: stage 1 pre-registration
+
+Spec: docs/superpowers/specs/2026-11-09-architecture-push-twenty-experiments-design.md (sections 5, 6, 7; 10a overrides). Registered before launch; do not edit lines after launch.
+
+## Lines (copied from the spec)
+- PASS: err@20 (mean position error after 20 ticks) at most 1.15x the control AND tiled-versus-single-grid force difference at most 4% with no global term AND exponent read from the amplitudes within 10% on pow2 (potential of 1/r^2 force law).
+- KILL: err@20 above 1.30x the control.
+- Fails the pass line (INCONCLUSIVE): exponent error 15% (any value above 10% without a KILL is INCONCLUSIVE; 15% would fail).
+- Control: scatter-gravity-clustered-baseline (ScatterField with the FFT far kernel), `augur_nfr/kern/E_frozen.pt` (also `augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt`; both verified present on Polaris with polaris_ls). The multi-law model `augur_nfr/ckpt/main_s4739.pt` is fitted per law for kernel fit error and exponent only; it is not rolled out.
+
+## What is run
+- Ladder: K(r) = sum over l of a_l exp(-r^2 / 2 s_l^2), 7 levels, s_l = 0.5 x 2^l (units), amplitudes free in sign, fitted once by weighted least squares to the frozen learned kernel on the 2G x 2G lattice (weights 1/(|K| + 0.01 max|K|), r up to the lattice half-diagonal). Each level is a separable Gaussian blur, stencil plus or minus 4 coarse cells, on a grid coarsened by 2^max(l-1, 0), then bilinearly upsampled. No FFT. Fixed numbers: 7 levels, s0 0.5, 4 taps. None is tuned.
+- Exponent: slope of log|a_l| against log s_l over levels 2 to 6; force exponent = potential exponent + 1.
+- Tiled difference: kernel acceleration on 8 pow2 scenes (seed 9100) computed tile by tile (tile 64 cells, halo 32 cells, density outside tile+halo dropped, no global term) against the single grid; relative L1.
+- Rollout: scatter-gravity-clustered-baseline against scatter-gravity-clustered-baseline with the ladder replacing its kernel and the U-Net frozen at E's weights, 48 pow2 scenes per seed, 20 ticks, seeds 9100/9200/9300. No training.
+- Per-law kernel fit error and exponent for main_s4739 (pow1, pow2, pow3, yuk8, yuk128, lj): expected force exponents 1, 2, 3; yuk and lj report fit error only.
+
+## Seeds and reality rule
+Eval seeds 9100/9200/9300. Before a result is called real: fresh seeds 12000/12100/12200. A second training seed (4739) only after a pass (there is no training in stage 1).
+
+## Tie-break rule
+Ladder amplitudes are one closed-form fit (no argmin over candidates). If a selection among equal-valued options is ever needed, the lower index wins (lowest level, lowest seed).
+
+## Ratio lines against the reference noise floor
+Every ratio is the mean over seeds of ladder / E per seed, printed beside E's own seed spread (max - min) / mean. A ratio within that spread is reported as "inside the noise floor", not as a difference. The 1.15 and 1.30 lines are applied to the mean ratio as written.
+
+## Prediction (stated before launch)
+- Rollout ratio: likely near 1 to 1.2. Stated: PASS on err@20 is plausible but not certain.
+- Exponent on pow2: likely FAILS. A local probe on a 1/r potential read 1.60 against 2.0 (20% off) because the fit gives oscillating amplitudes with sign changes. Expected outcome is therefore INCONCLUSIVE, not PASS.
+- Tiled difference: at risk. The widest Gaussians (s up to 32 units) exceed the 16-unit halo, so the 4% line may fail.
+
+## Plateau guard (section 10a)
+No training in this stage, so not applicable. Stated for completeness: INCONCLUSIVE-undertrained if the mean validation loss over the last 10% of iterations is more than 3% below the mean over the preceding 10% window, keeping the control's iteration count.
+
+## Constraints check (spec section 5)
+- pp=2, knn=16 pair term: unchanged (same model, only the far kernel path is replaced). Satisfied.
+- No hard-wired conservation: none added. Satisfied.
+- One change against the frozen control: the far kernel only; the U-Net is frozen at E. Satisfied.
+- Matched training budget: no training. Satisfied.
+- No sweeps: levels, widths, taps, tile, halo fixed above. Satisfied.
+- Seed 4738 first; eval 9100/9200/9300 then 12000/12100/12200: stated above.
+- At most 2 GPUs: one GPU, about 0.5 GPU-h; supervisor chains it.
+- Requirements Til (tileable), Int (interpretable), O(N): ladder cost is linear in grid cells; amplitudes are readable. The tileability is what the 4% line tests.
+- Checkpoints: not needed (under 1 h, per-cell resume in the result json).
+- Rendered diagnostic and fresh reviewer: required when rollout output is produced; the supervisor runs them after the job.
+- Names: descriptive kebab-case.
+
+## Job
+scripts/polaris_gaussian-ladder-far-kernel-replacing-fft.sh (about 0.5 GPU-h). Full run: none authorised; no trainer for a ladder-kernel retrain is written.
+
+
+## law-blind-unet-trunk stage 1 prereg (copied 2026-11-10 from docs/debugging/architecture-push-prereg/law-blind-unet-trunk.md, branch commit 453778c)
+
+# law-blind-unet-trunk: stage 1 pre-registration
+
+Spec: docs/superpowers/specs/2026-11-09-architecture-push-twenty-experiments-design.md (sections 5, 6, 7; 10a overrides). Registered before launch.
+
+## Lines (copied from the spec)
+Stage 1 (audit row 16, the cheaper never-run variant: scatter-gravity-clustered-baseline frozen, small per-law kernel and pair heads):
+- PASS: gravity err@20 at most 1.05x scatter-gravity-clustered-baseline AND the other laws within 2x their single-law comparators.
+- KILL: gravity err@20 above 1.15x scatter-gravity-clustered-baseline.
+Full run (not authorised here): PASS gravity err@20 at most 0.0509 on seeds 4738 and 4739 AND no dead decoder level AND every trained law's tick-1 force within 1.25x of main_s4739. KILL gravity above 0.106. Fails the pass line: 0.07.
+
+## Control and checkpoints
+- Gravity control: scatter-gravity-clustered-baseline, `augur_nfr/kern/E_frozen.pt` (verified, 3200305 B).
+- Multi-law reference: `augur_nfr/ckpt/main_s4739.pt` (verified, 3659299 B).
+- Single-law comparators (verified): `augur_nfr/ckpt/cmp_pow1.5_single`, `cmp_yuk32_single` (held-out laws pow1.5 and yuk32 only).
+- Verified files: cmp_pow1.5_single.pt (3661021 B), cmp_yuk32_single.pt (3660775 B), main_s4739.pt (3659299 B), each with a .done marker.
+
+## What is run
+- Model: MultiScatterField with `--law-blind` (the law vector theta is zeroed on the U-Net input channel; kernel MLP and pair MLP still receive theta) and `--freeze-trunk` (U-Net weights not trained). Initialised from scatter-gravity-clustered-baseline with init_from_e. Trained: kernel MLP and pair MLP heads, width 128 (the existing size; fixed, not tuned).
+- Budget: 80000 iterations, the control's (main) count; same data and loss recipe as main (train_scatter_multi.py defaults), seed 4738.
+- Validation: every 1000 iterations, 24 scenes per shape, k=10 rollout, saved in the checkpoint and .done file.
+- Eval: scatter_multi_eval on seeds 9100/9200/9300, 48 scenes per case, cases grav, pow1, pow3, yuk8, yuk128, lj, HELD_pow1.5, HELD_yuk32, for candidate, main_s4739, comparators, and E on grav.
+
+## Seeds and reality rule
+Eval seeds 9100/9200/9300; fresh 12000/12100/12200 before a result is called real; second training seed 4739 only after a pass.
+
+## Tie-break rule
+No argmin selection. The reported checkpoint is the final one (iteration 80000); no best-of selection. Equal values: the lower seed index is reported first.
+
+## Ratio lines against the reference noise floor
+Gravity ratio = mean over seeds of candidate err@20 / E err@20 per seed, printed with E's own spread (max - min) / mean. Held-out ratios use force_rel against the matching comparator, with the comparator's spread. A ratio inside the spread is stated as such.
+
+## Comparator gap (stated, not hidden)
+Single-law comparators exist only for held-out pow1.5 and yuk32. For the trained laws pow1, pow3, yuk8, yuk128, lj no single-law comparator exists, so "other laws within 2x their comparators" can only be scored on the two held-out laws. The trained laws are reported against main_s4739 as information, not as the line. Proposed amendment: train single-law comparators for those five laws (needs-user; not done).
+
+## Prediction (stated before launch)
+Gravity err@20 ratio vs E about 1.0 to 1.1 (the trunk is E's own, the heads start from E). PASS on the 1.05 line is a coin flip; KILL above 1.15 is unlikely (about 15%). The held-out 2x line is at risk because the heads see theta only through two small MLPs and held-out laws sit between trained ones.
+
+## Plateau guard (section 10a)
+INCONCLUSIVE-undertrained if the mean validation loss over the last 10% of iterations is more than 3% below the mean over the preceding 10% window. The iteration count stays the control's (80000). One extension at double length for candidate and control together is allowed. Caveat: main_s4739 has no validation history (no hook in that run), so the extension would need the control rerun with the new hook; flagged as needs-user.
+
+## Constraints check (spec section 5)
+- pp=2, knn=16: unchanged. Satisfied.
+- No hard-wired conservation: none. Satisfied.
+- One change against the frozen control: theta withheld from the U-Net, trunk frozen. These are two coupled switches of one stage-1 variant as written in the spec (frozen trunk with per-law heads). Flagged, not separated.
+- Matched budget: 80000 iterations. Satisfied.
+- No sweeps. Satisfied.
+- Seeds: 4738 first. Satisfied.
+- At most 2 GPUs: one GPU job.
+- Over 1 h: full-state checkpoint every 500 iterations, --resume, SIGTERM saves. Satisfied.
+- Diagnostic render plus fresh reviewer after the job: the supervisor runs them.
+- Requirements Gen (generalises across laws), Int: stated in the spec.
+- Names: descriptive kebab-case.
+
+## Cost
+Spec 3.5 GPU-h. From the logged rate (job 7296: 21214 s for 80000 iterations, about 0.26 s/it, 5.9 GPU-h) my estimate for a frozen trunk is 4.7 to 5.9 GPU-h. Untested; no timing job was run. Script requests 8 h.
+
+## Job
+scripts/polaris_law-blind-unet-trunk.sh. Full run draft: scripts/polaris_law-blind-unet-trunk-full-run-draft.sh (not authorised).
+
+## Caveats (from the fresh code review)
+- "Law-blind" means theta is zeroed on the U-Net's own channel only. The U-Net still receives the kernel-field input `ak`, which is computed by the kernel MLP from theta, so law information can still reach the trunk through `ak`. Stage 1 tests the spec's variant as written.
+
+
+## one-network-for-all-tiers-with-scale-input stage 1 prereg (copied 2026-11-10 from docs/debugging/architecture-push-prereg/one-network-for-all-tiers-with-scale-input.md, branch commit 453778c)
+
+# one-network-for-all-tiers-with-scale-input: stage 1 pre-registration
+
+Spec: docs/superpowers/specs/2026-11-09-architecture-push-twenty-experiments-design.md (sections 5, 6, 7; 10a overrides). Registered before launch.
+
+## Lines (copied from the spec)
+Train on spans up to 256 units, evaluate at 1024 (two unseen tiers). Far-field relative error = sqrt(summed squared error / summed squared target) against the far field beyond radius 20.
+- PASS: far-field relative error at 1024 at most 1.2x its own value at 256 AND its value at 256 at most 1.0x the per-tier control at 256.
+- KILL: error at 1024 above 2.0x its own value at 256, OR its value at 256 above 1.15x the control.
+- Fails the pass line: 1.5x (1024 over 256).
+
+## Control
+Per-tier-weights upper tiers (separate TierNet per tier, no scale input), trained in the same job with the same budget and seed, jointly. No pre-existing Polaris checkpoint is used: both arms start from scratch on the far target with a zero tier 0 (`--target far`, ZeroTier0).
+
+## What is run
+- Shared arm: one TierNet repeated at every tier, one extra constant input channel log2(tier cell width), and the output scaled by the cell width of the tier it is called at. Trained at span 256 (grid 512, 4 tiers, cell widths 2^k x 0.5) jointly (a shared net cannot be trained tier by tier).
+- Control arm: per-tier weights, trained jointly with the same flags.
+- Fixed numbers: width 32, 6 layers, G=16 tile, halo 4, 3000 iterations, batch 16, 160 scenes, 40 steps, lr 1e-3, far radius 20, seed 4738, validation every 100 iterations on 8 held-out scenes (seed 4738+5000). err, latent and learned-pool are off in both arms so all tiers have identical inputs.
+- Eval (far mode): shared at span 256 (4 tiers) and span 1024 (6 tiers, scenes scaled with span), control at span 256, seeds 9100/9200/9300, 24 scenes, 100 steps, evaluation batch 2.
+
+## Seeds and reality rule
+Eval seeds 9100/9200/9300; fresh 12000/12100/12200 before a result is called real; training seed 4739 only after a pass.
+
+## Tie-break rule
+No argmin selection; the reported weights are the final iteration's. Equal values: lower seed index first.
+
+## Ratio lines against the reference noise floor
+Ratios are per-seed means of shared_1024 / shared_256 and shared_256 / control_256, printed with the denominator's seed spread (max - min) / mean. A ratio inside the spread is stated as such.
+
+## Prediction (stated before launch)
+Shared at 256 within about 1.0 to 1.2x the control (weight sharing costs a little). 1024 over 256 about 1.3 to 2x: two tiers are unseen and the scale channel takes values outside the training range. Most likely outcome: INCONCLUSIVE or KILL on the 1024 line; PASS is below even odds.
+
+## Plateau guard (section 10a)
+INCONCLUSIVE-undertrained if the mean validation loss over the last 10% of iterations is more than 3% below the mean over the preceding 10% window, applied to the shared arm; the iteration count stays the control's (3000). One extension at double length for both arms together. With 100-iteration validation spacing both windows hold about 3 points; the scorer fails loudly if a window is empty.
+
+## Constraints check (spec section 5)
+- pp=2, knn=16: not used in the far-field tiers (tier 0 is zero in this target). Not applicable.
+- No hard-wired conservation: none. Satisfied.
+- One change against the frozen control: shared weights plus scale input (one switch; the scale channel is what makes sharing possible). Satisfied.
+- Matched budget: same iterations, batch, scenes, seed. Satisfied.
+- No sweeps. Satisfied.
+- Seeds: 4738 first. Satisfied.
+- At most 2 GPUs: one GPU job.
+- Over 1 h: full-state checkpoint every 250 iterations, --resume, SIGTERM saves. Satisfied.
+- Diagnostic render plus fresh reviewer after the job: supervisor runs them.
+- Requirements Til, O(N), Int: tiled hierarchy is linear in cells.
+- Names: descriptive kebab-case.
+
+## Cost
+Spec 1 / 6 GPU-h. No logged rate for far-target joint training at span 256; the 6 GPU-h is the spec figure. Untested.
+
+## Job
+scripts/polaris_one-network-for-all-tiers-with-scale-input.sh. Full run draft: scripts/polaris_one-network-for-all-tiers-with-scale-input-full-run-draft.sh (not authorised).
+
+## Caveats (from the fresh code review)
+- The scale channel is a constant plane passed through the tile extraction; halo cells outside the box may read 0 rather than log2(cell width). Training and evaluation treat this identically, but the unseen tiers at span 1024 see a different edge value.
+- The scorer applies the plateau guard to the shared arm's validation history only. If the guard fires, the double-length extension for both arms needs the control's history too; the scorer does not read it yet. Proposed fix at that point, not now.
