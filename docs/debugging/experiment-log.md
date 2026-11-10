@@ -4282,3 +4282,121 @@ scripts/polaris_one-network-for-all-tiers-with-scale-input.sh. Full run draft: s
 ## staggered-double-grid-with-quadratic-deposit stage 1 result and full-run go (2026-11-10)
 - Stage 1 job 7837 (frozen single-law checkpoint, shift-average passes): pooled over seeds 9100/9200/9300, err@20 one pass 0.0357, two passes 0.0262 (ratio 0.735), four passes 0.0256 (ratio 0.719). Closure needs both ratios above 0.95, so not closed. Probe half-cell value 0.0848 (one pass) vs 0.0062 (four). Raw: ~/augur_shift_core_diag/results/shift_average_stage1/stage1.json (local copy ~/polaris-mcp-files/shift7837/stage1.json). Not yet independently reviewed.
 - User go for the full run 2026-11-10 (relayed). Job 7854, prereg as copied above, commit of authorisation line on branch. Remote inputs md5: E_ms_kp_pot_v_g128.pt 9b3cb8bb1de47eb6ebf5f708d98e94b7, init_B_ms_kp_pot_v_g128.pt 2ca31c47d197d1a82648a5cd3c1acf86; code tarball staggered_double_grid_code.tgz md5 cc261684eae8e3da76135fb398f60c3d; 13 CPU tests passed.
+
+
+## nested-refinement-levels-on-the-scatter-field-with-smooth-level-blend stage 1 prereg (copied 2026-11-10 from docs/debugging/architecture-push-prereg/nested-refinement-levels-on-the-scatter-field-with-smooth-level-blend.md, branch commit 78cb099; stage-1 lines approved by user 2026-11-10 as written)
+
+# nested-refinement-levels-on-the-scatter-field-with-smooth-level-blend: stage 1 ceiling probe (pre-registration)
+
+Written 2026-11-10 by the stage-1 worker, before any run. Per spec section 10a item 8 only the ceiling probe runs; the full run is a user decision afterward.
+
+Definitions. err@k: mean position error per body after k self-fed ticks against the exact simulation. dE@k: relative energy drift at tick k against the truth's E(t) at the same tick, never E(0). Dense body: a body with at least 20 other bodies within radius 2.0 (R_DENS in scripts/replay_mechanism_force_error_breakdown.py). Dense-bin error: late-tick (60-100) squared force error on dense bodies. Control: the frozen replay checkpoint (tier 0 tiled, halo exchange, visited-state label replay, job 4089, seed 4738). Ceiling: an upper bound on what any refinement tier could remove, obtained by giving dense bodies the exact direct-sum force.
+
+## Spec lines (copied, section 7 item 1; these govern the later full run, not this probe)
+- Line: PASS dense-bin error at most 0.70x control AND dE@100 at most 0.75x AND err@20 at most 1.00x AND cost at most 1.5x. KILL dense-bin above 0.90x or err@20 above 1.15x. Fails pass: dense-bin 0.80x.
+- Default lines (section 6): PASS err@20 at most 1.00x control AND target metric meets its line AND cost at most 1.5x. KILL err@20 above 1.15x OR target shows no gain. Between: INCONCLUSIVE. No loosening after launch.
+
+## Probe line (PROPOSED-BY-WORKER; the spec has no ceiling line; supervisor to confirm)
+Arms (each a full 100-tick closed-loop rollout, 24 scenes per seed): base; dense-exact (exact force for dense bodies, decided every tick on the model's own state); random-exact (exact force for the same number of random bodies per scene and tick); all-exact (harness check). Ratios are dense-exact / base, pooled over scenes and seeds.
+- Harness VOID: all-exact err@20 above 0.25x base (the exact-force harness must land near the exact trajectory; its residual is the float32 numerical noise floor of the reference, reported as a ratio to base).
+- PASS (ceiling clears the full-run lines with headroom, full run worth proposing): dE@100 at most 0.60x base AND err@20 at most 0.95x base AND dE@100 at least 0.10 below the random-exact ratio (the gain is specific to dense bodies).
+- KILL (a perfect refinement could not reach the full-run line, so refinement is not worth building): dE@100 above 0.75x base OR err@20 above 1.00x base.
+- Else INCONCLUSIVE. A value that would still fail PASS: dE@100 0.70x. Also reported, no line: late-tick dense-bin and non-dense-bin squared force error of the unreplaced model on the dense-exact arm's visited states (knock-on), per-seed dE@100 ratios, early/late split.
+- Reading: the dense-bin 0.70x full-run line is a trained-model line; the probe cannot test it, only bound the drift side. The stage-1 verdict is the verdict-rule output of the script; the supervisor reports it as a ceiling result, never as the experiment's pass/kill.
+
+## Run
+- Control and checkpoint (Polaris, verified by polaris_ls 2026-11-10): `~/augur_tier0_visited_state_replay_4738/results/tier0_visited_state_label_replay/tier0-visited-state-label-replay-seed4738.pt` (3,246,381 bytes). Seed-4739 replicate (not run, optional): `~/augur_tiered_replay_second_base_fresh_seed_eval/results/tiered_replay_on_second_training_base/tier0-visited-state-label-replay-on-second-base-seed4739.pt`.
+- Eval seeds 9100/9200/9300 (default). Fresh set 12000/12100/12200 (`--seeds 12000 12100 12200`) before any result is called real.
+- Tie-break rule: no argmin or selection over candidates. Dense means count at least 20 (20 is dense). Random-exact uses a fixed generator seeded 4738 plus the scene seed. Line values are inclusive for PASS (at most) and strict for KILL (above).
+- Script: scripts/dense_region_exact_force_ceiling_probe.py; job: scripts/polaris_nested-refinement-levels-on-the-scatter-field-with-smooth-level-blend.sh; output `results/dense_region_exact_force_ceiling_probe/dense_region_exact_force_ceiling_probe.json`.
+- Plateau guard: not applicable to this probe (no training). For the later full run: INCONCLUSIVE-undertrained if mean validation loss over the last 10% of iterations is more than 3% below the mean over the preceding 10% window; one extension at double length for candidate and control together.
+- Cost: estimate 1.0 GPU-h (untimed, from breakdown jobs at about 0.3 GPU-h per label rollout set); limit 1.5 h.
+
+## Prediction
+Densest 10% of bodies hold 12-26% of squared force error (loss analysis 2026-10-26) and drift is signed and dense-region (experiment-log 2026-10-26). dense-exact dE@100 0.55-0.85x base, err@20 0.90-1.00x base. P(PASS) about 35%, P(KILL) about 25%.
+
+## Constraints check
+pp=2 knn=16: untouched (the frozen model keeps its pair term; exact force is only a probe substitution, not a model change). No hard-wired conservation: the exact force is a measurement device, nothing is imposed on a model; energy is compared with truth E(t). O(N): not exercised (probe uses O(N^2) exact labels at small N; the full design's refined-cell count per level must be stated before the full run). Tileable: the frozen tiled model runs with halo exchange as trained. Already tried: MultiLevelScatterField (2026-10-01) and far-term-nested-coarse-levels (2026-10-20, far field only); no exact-force dense-region ceiling is in the log (grep 2026-11-10).
+
+## Experiment-log entry text (for the supervisor to paste when the run finishes)
+nested-refinement-levels-on-the-scatter-field-with-smooth-level-blend, stage 1 ceiling probe (job <id>, script scripts/dense_region_exact_force_ceiling_probe.py, commit <hash>). Tried: exact direct-sum force for dense bodies (at least 20 neighbours within 2.0) substituted at every tick of closed-loop rollouts of the replay checkpoint (job 4089), plus random-exact and all-exact controls. Numbers: <dE@100, err@20, per-seed ratios vs base; all-exact harness ratio>. Verdict: <verdict-rule output>, ceiling result only; the full run is a user decision.
+
+
+## separated-velocity-branch-with-soft-power-matching stage 1 prereg (copied 2026-11-10 from docs/debugging/architecture-push-prereg/separated-velocity-branch-with-soft-power-matching.md, branch commit 78cb099; stage-1 lines approved by user 2026-11-10 as written)
+
+# separated-velocity-branch-with-soft-power-matching: stage 1 split only (pre-registration)
+
+Written 2026-11-10 by the stage-1 worker, before any run. Per spec section 10a item 3 the power-matching term is NOT run. Stage 1 is an inference-only measurement of the work done by each input group on the frozen replay checkpoint. The term may be proposed later only if this measurement shows the velocity-and-history inputs do the leaking work.
+
+Definitions. err@k: mean position error per body after k self-fed ticks against the exact simulation. dE@k: relative energy drift at tick k against truth E(t) at the same tick, never E(0). v: post-kick velocity of a body. P_err = sum over bodies of m v.(a_model - a_true): the rate at which the model's energy departs from the true energy. dP_g: the part of the model's power sum m v.a_model carried by input group g, estimated by re-evaluating the net at the visited state with group g scaled by lambda (0 = removed, 0.9 = first-order finite difference, divided by 1 - lambda). Groups: velocity, history (recurrent field), velocity+history, kernel-acc, ext+boundary. S_vh = sum dP_vh / sum P_err, signed, cumulative to tick 100, pooled over scenes. Control: the frozen replay checkpoint (tier 0 tiled, halo exchange, job 4089, seed 4738).
+
+## Spec lines (copied)
+- Section 7 item 13 (split plus term; does not apply to a split-only run): PASS dE@100 at most 0.75x control AND err@20 at most 1.05x. KILL dE@100 at or above 0.95x or err@20 above 1.15x. Fails pass: dE@100 0.85x. Because this bundles a split and a loss term, the split alone (no term) is run as the ablation arm in the same job.
+- Section 10a item 3: the split-only pass/kill line must be written before launch.
+- Default lines (section 6): PASS err@20 at most 1.00x control AND target metric meets its line AND cost at most 1.5x. KILL err@20 above 1.15x OR no gain. Between: INCONCLUSIVE. No loosening after launch.
+
+## Split-only lines (PROPOSED-BY-WORKER; the supervisor or user must approve before launch)
+Stage 1 (this job, measurement on the frozen model; verdict-rule output of scripts/input_group_work_split_probe.py):
+- Harness VOID: the identity sum P_err over sum measured model drift (E_model(t) - E_model(0), same rollout) at tick 100 outside 0.75-1.25.
+- PASS (velocity-and-history inputs carry the leaking work; the power-matching term may be proposed): S_vh at least 0.50 at tick 100 for both estimators (zero, fd), AND at least 0.35 on each held-out seed for both.
+- KILL (the split cannot isolate the leak; velocity-and-history do not carry it): S_vh below 0.20 for both estimators.
+- Else INCONCLUSIVE. A value that would still fail PASS: S_vh 0.45 (pooled), or 0.50 pooled with one seed at 0.30.
+- Also reported, no line: all five groups, ticks 20/60/100, non-additivity residual, per-tile-occupancy terciles.
+Full split-only run (architecture split, no term, if stage 1 does not close it; derived from the section 7 numbers, with the term removed so no drift reduction is expected from the split alone): PASS err@20 at most 1.05x control AND dE@100 at most 1.00x control (the split costs nothing and the branch work shares are measurable). KILL err@20 above 1.15x OR dE@100 at or above 1.10x. Fails pass: err@20 1.10x. The 0.75x dE@100 line belongs to split plus term and is not claimed by split alone.
+
+## Run
+- Control and checkpoint (Polaris, verified by polaris_ls 2026-11-10): `~/augur_tier0_visited_state_replay_4738/results/tier0_visited_state_label_replay/tier0-visited-state-label-replay-seed4738.pt`. Seed-4739 replicate (not run, optional): `~/augur_tiered_replay_second_base_fresh_seed_eval/results/tiered_replay_on_second_training_base/tier0-visited-state-label-replay-on-second-base-seed4739.pt`.
+- Eval seeds 9100/9200/9300; fresh set 12000/12100/12200 (`--seeds 12000 12100 12200`) before any result is called real.
+- Tie-break rule: no argmin or selection. PASS thresholds inclusive (at least), KILL strict (below). Ratios use pooled sums over the three seeds.
+- Numerical-reference noise floor: the identity check above is the harness's own noise floor (ratio of two independent computations of the same drift, tolerance 25%); the zero and fd estimators must agree in sign for a PASS.
+- Script: scripts/input_group_work_split_probe.py; job: scripts/polaris_separated-velocity-branch-with-soft-power-matching.sh; output `results/input_group_work_split_probe/input_group_work_split_probe.json`.
+- Plateau guard: not applicable to this probe (no training). For a later full split-only run: INCONCLUSIVE-undertrained if mean validation loss over the last 10% of iterations is more than 3% below the mean over the preceding 10% window; one extension at double length for candidate and control together.
+- Cost: estimate 1.2 GPU-h (untimed: 11 forward passes per tick instead of 1); time limit 1.5 h; spec figure 0.3 GPU-h is probably low.
+
+## Prediction
+Velocity and history inputs leak energy (molecular-dynamics mesh drift -0.26/-0.29 with them, at most 0.013 with them zeroed) but removal on gravity was KILL for err@20. S_vh 0.4-0.8 for the zero estimator; fd close to zero. P(PASS) about 40%.
+
+## Constraints check
+pp=2 knn=16 untouched (frozen model, inference only). No hard-wired conservation: nothing is imposed; the power term is NOT run here (it is a soft similarity-to-truth term, opt-in, flagged in the spec, and would need the user's call). O(N) and tileable: frozen tiled model with halo exchange as trained. Already tried: input removal (KILL), total-force loss terms (KILL); no split (grep 2026-11-10 found no input-group power measurement).
+
+## Experiment-log entry text
+separated-velocity-branch-with-soft-power-matching, stage 1 split only (job <id>, script scripts/input_group_work_split_probe.py, commit <hash>). Tried: input-group power attribution on the frozen replay checkpoint (job 4089); the power-matching term was not run. Numbers: <S_vh zero/fd pooled and per seed at tick 100, identity ratio>. Verdict: <verdict-rule output> against the PROPOSED-BY-WORKER stage-1 line.
+
+
+## summary-token-exchange-between-neighbour-tiles stage 1 prereg (copied 2026-11-10 from docs/debugging/architecture-push-prereg/summary-token-exchange-between-neighbour-tiles.md, branch commit 78cb099; stage-1 lines approved by user 2026-11-10 as written)
+
+# summary-token-exchange-between-neighbour-tiles: stage 1 predictability measurement (pre-registration)
+
+Written 2026-11-10 by the stage-1 worker, before any run. Stage 1 is the spec's inference-only measurement of how much of the control's force error is predictable from neighbour-tile state. No model is trained except a fixed small MLP fitted on top of the frozen model's rollouts.
+
+Definitions. e = a_model - a_true: per-body force error of the frozen replay checkpoint (tier 0 tiled, halo exchange, job 4089, seed 4738) along its own closed-loop rollout. f: fraction of force-error energy explained, 1 - sum|e - e_hat|^2 / sum|e|^2, by an MLP (2 layers of 64, 30 epochs, Adam lr 1e-3) fitted on rollouts of training scenes (seeds 7100/7200/7300) and scored on held-out scenes (9100/9200/9300), ticks 20-100 every 5. "own" features: the body's own state, its own tile's previous-tick summary. "neighbour" features: previous-tick 17-number summaries of the 8 neighbouring tiles. Delta = f(own+neighbour) - f(own). Delta_net = Delta minus the gain of a shuffled-neighbour control (floored at 0). Oracle: own + true acceleration, must explain at least 0.90 for a KILL to count.
+
+## Spec lines (copied; they govern the later full run)
+- Line (audit row 29, with a drift guard added): PASS tiled err@20 at most 0.90x control AND dE@100 at most 1.00x control AND cost at most 1.1x. KILL err@20 at or above 0.97x. Fails pass: 0.94x.
+- Default lines (section 6): between PASS and KILL is INCONCLUSIVE. No loosening after launch.
+
+## Stage-1 line (PROPOSED-BY-WORKER; the spec gives no stage-1 line; not calibrated against a trained exchange, supervisor or user to confirm)
+- PASS (worth the 3 GPU-h full run): Delta_net at least 0.19 pooled AND at least 0.10 on each held-out seed.
+- KILL: Delta_net below 0.06 pooled AND oracle f at least 0.90 (the probe could detect predictable error and found none).
+- Else INCONCLUSIVE (including Delta_net below 0.06 with oracle f below 0.90: the probe itself is too weak).
+- A value that would still fail PASS: Delta_net 0.15 pooled, or 0.19 pooled with one seed at 0.08.
+- Rationale: the full-run PASS needs err@20 down 10%; Delta_net 0.19 is the force-error-energy fraction judged enough to give a 10% rollout error cut under a rough square-root relation (error amplitude scales with the square root of explained energy, 1 - sqrt(1 - 0.19) = 0.10). The relation is an assumption, untested.
+- Also reported, no line: n1-only and n2-only gains (raw body numbers versus learned-state numbers), late ticks 60-100, shuffled control gain.
+
+## Run
+- Control and checkpoint (Polaris, verified by polaris_ls 2026-11-10): `~/augur_tier0_visited_state_replay_4738/results/tier0_visited_state_label_replay/tier0-visited-state-label-replay-seed4738.pt`. Seed-4739 replicate (not run, optional): `~/augur_tiered_replay_second_base_fresh_seed_eval/results/tiered_replay_on_second_training_base/tier0-visited-state-label-replay-on-second-base-seed4739.pt`.
+- Eval seeds 9100/9200/9300; fresh set 12000/12100/12200 (`--seeds 12000 12100 12200`) before any result is called real. MLP training seeds 7100/7200/7300 (disjoint from every eval seed); MLP initialisation and shuffles seeded 4738.
+- Tie-break rule: no argmin or selection; one MLP per variant, fixed hyperparameters, no tuning on eval seeds. PASS thresholds inclusive, KILL strict.
+- Numerical-reference noise floor: the shuffled-neighbour control gain and the oracle f measure the probe's own floor and ceiling; Delta_net is already net of the shuffled gain.
+- Script: scripts/neighbour_tile_force_error_predictability_probe.py; job: scripts/polaris_summary-token-exchange-between-neighbour-tiles.sh; output `results/neighbour_tile_force_error_predictability_probe/neighbour_tile_force_error_predictability_probe.json`.
+- Plateau guard: not applicable to stage 1 (the frozen model is not trained; the MLP runs a fixed 30 epochs). For the full run: INCONCLUSIVE-undertrained if mean validation loss over the last 10% of iterations is more than 3% below the mean over the preceding 10% window; one extension at double length for candidate and control together.
+- Cost: estimate 0.5 GPU-h (spec figure; untimed); time limit 1.5 h.
+
+## Prediction
+Halo exchange of the recurrent field already moved tiled err@20 from 1.66-1.82x to 0.75-0.82x BL, so much of the neighbour information is already present in the halo. Delta_net 0.02-0.10; most likely KILL or INCONCLUSIVE. P(PASS) about 20%.
+
+## Constraints check
+pp=2 knn=16 untouched (frozen model). No hard-wired conservation: pure error regression, no physics imposed. O(N): constant cost per tile in the later design (17 numbers per tile, 8 neighbours); the probe itself is not a cost test. Tileable: summaries are per tile with tile-local neighbour reads. Already tried: halo overlap and halo exchange of the recurrent field only; no summary-token exchange (grep 2026-11-10).
+
+## Experiment-log entry text
+summary-token-exchange-between-neighbour-tiles, stage 1 predictability probe (job <id>, script scripts/neighbour_tile_force_error_predictability_probe.py, commit <hash>). Tried: fixed MLP regression of the frozen replay checkpoint's force error on own-state versus own-plus-8-neighbour-tile previous-tick summaries, shuffled-neighbour control and true-acceleration oracle. Numbers: <f for each variant, Delta_net pooled and per seed, oracle f>. Verdict: <verdict-rule output> against the PROPOSED-BY-WORKER stage-1 line.
