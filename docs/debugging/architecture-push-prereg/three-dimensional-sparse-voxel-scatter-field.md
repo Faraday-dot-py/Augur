@@ -9,7 +9,7 @@ Definitions. N: body count. Tick: one step of dt 0.1. err@k: mean position error
 - `model/sparse_voxel_scatter_field.py`: only occupied voxels plus a halo exist. Voxel coordinates are packed into int64 keys (19 bits per axis, batch index above bit 57), so memory is independent of the box size.
 - CIC deposit of mass and momentum to 8 corners. Sparse 3x3x3 convolutions through a searchsorted neighbour table. Coarsening by halving coordinates until at most 64 voxels per scene remain. Sparse U-Net up the levels. Potential output, central-difference gradient, trilinear gather.
 - Far field: a coarse learned radial kernel summed directly over the coarsest voxels (piecewise-constant, no FFT, no recurrence). Pair term: cell-list over cells of edge 2 (pp=2), 16 nearest neighbours (knn=16), cell capacity 32. Same `step` interface as `ScatterField`, momentum fix on, Verlet.
-- Training: the scatter-field control's scene mix in 3D (N in 10..200; half Plummer spheres, half cold balls), exact 3D truth, batch 8, k ramp 4 to 20, lr 5e-4, 4000 iterations in stage 1. Seed 4738.
+- Training: the scatter-field control's scene mix in 3D (N in 10..200; half Plummer spheres, half cold balls), exact 3D truth, batch 8, k ramp 4 to 20, lr 5e-4, 60,000 iterations (the control's count, spec 10a.1). Seed 4738.
 
 ## Lines (copied from the spec)
 
@@ -32,11 +32,13 @@ PASS lines inclusive (ratio exactly 2.0, cost exactly 12.0 pass); KILL lines exc
 
 ## Plateau guard
 
-Validation err@20 (48 3D scenes, seed 9400) logged 50 times. INCONCLUSIVE-undertrained if the mean validation loss over the last 10% of iterations is more than 3% below the mean over the preceding 10% window. Per user decision 10a.1, one extension at double length is then allowed, candidate and control together.
+Validation err@20 (48 3D scenes, seed 9400) logged 50 times. INCONCLUSIVE-undertrained if the mean validation loss over the last 10% of iterations is more than 3% below the mean over the preceding 10% window. Per user decision 10a.1, one extension at double length (120,000 iterations) is then allowed, candidate and control together. Control status: the 2D control is the frozen 60,000-iteration checkpoint, scored only; the extension needs it retrained at 120,000, a needs-user decision.
+
+Non-finite handling: a NaN or infinite ratio, or a non-finite candidate rollout, returns KILL-nonfinite. A CUDA out-of-memory error in the bench stops the job nonzero and records oom_at_n in bench.json.
 
 ## Prediction (stated before running)
 
-PASS about 25%. Expected: cost ratio between 3x and 8x at N=1e5 (sparse bookkeeping dominates; untimed guess), ratio3/ratio2 between 1.5 and 4 after 4000 iterations, so most likely INCONCLUSIVE-undertrained or between-lines. The coarse far-field kernel is the weak point at N=1000.
+PASS about 25%. Expected: cost ratio between 3x and 8x at N=1e5 (sparse bookkeeping dominates; untimed guess), ratio3/ratio2 between 1.5 and 4 after 60,000 iterations, so most likely INCONCLUSIVE-undertrained or between-lines. The coarse far-field kernel is the weak point at N=1000.
 
 ## Constraints check (re-read 2026-11-10)
 
@@ -47,7 +49,7 @@ PASS about 25%. Expected: cost ratio between 3x and 8x at N=1e5 (sparse bookkeep
 
 ## Known weaknesses (kept in the notes)
 
-- Stage 1 trains 4000 iterations against 60,000 for the control; the control is not retrained at matched length.
+- Iteration count matched at 60,000 (about 10 GPU-h untimed estimate against the spec's 1.5 GPU-h stage 1 cost; ITERS=4000 reproduces 1.5 GPU-h but is not scorable). The control is frozen and scored only.
 - The far-field kernel is coarse and has no recurrence over scales.
 - Cost is measured at 1e5 only; the dense 3D comparison (audit row 33) is not run.
 - Full run (20 GPU-h): same script with ITERS=60000, batch 16, k-end 30; needs periodic full-state checkpoints (already written every 100 iterations by `tsf.train`) and `--resume` via requeue. Needs the user's go-ahead after this report.

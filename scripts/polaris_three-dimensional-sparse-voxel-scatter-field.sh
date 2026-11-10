@@ -7,21 +7,21 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=48G
 #SBATCH --qos=student-pleiades
-#SBATCH --time=04:00:00
+#SBATCH --time=12:00:00
 #SBATCH --requeue
 #SBATCH --nice=100
 #SBATCH --signal=B:TERM@120
 #SBATCH --output=augur-three-dimensional-sparse-voxel-scatter-field-%j.log
 # --dependency=afterany:TAIL_JOB_ID  (placeholder: the supervisor passes it on the sbatch command line from the slot tail in docs/debugging/gpu-slot-chains.md; never submit without it)
-# Stage 1 of three-dimensional-sparse-voxel-scatter-field (spec cost 1.5 GPU-h): train ITERS its (default 4000, resumable, full-state checkpoint every 100 its), then score (cold and virial Plummer spheres vs exact 3D truth,
+# Stage 1 of three-dimensional-sparse-voxel-scatter-field (spec cost 1.5 GPU-h): train ITERS its (default 60000, the control's count, spec 10a.1; resumable, full-state checkpoint every 100 its), then score (cold and virial Plummer spheres vs exact 3D truth,
 # 2D the scatter-field control (ms_kp_pot_v_g128) control at equal N) and bench (cost per body-tick, 3D model vs 2D control). The 20 GPU-h full run uses this same script with ITERS and --batch raised and needs the user's go-ahead after the stage 1 report:
 # sbatch --export=ALL,ITERS=60000,BATCH=16,KEND=30 --time=<longer> this.sh; every requeue resumes from the checkpoint.
 # Pre-registration: docs/debugging/architecture-push-prereg/three-dimensional-sparse-voxel-scatter-field.md. Runtime estimate (untimed, no 3D rate is logged): the nearest logged rate is 0.28-0.31 s/it for the 2D width-32 model;
-# assuming up to 2x for sparse 3D at batch 8 gives 4000 its in about 40 min, plus validation, scoring and bench: 1.0-1.5 GPU-h; limit 4 h.
+# assuming up to 2x for sparse 3D at batch 8 gives 60000 its in about 10 h, plus validation, scoring and bench: about 10-11 GPU-h (spec stage 1 cost was 1.5 GPU-h at 4000 its: ITERS=4000 gives that but is not scorable under 10a.1); limit 12 h per submission, requeue resumes.
 # Needs $HOME/three_dimensional_sparse_voxel_scatter_field_code.tgz (scripts/build_architecture_push_stage1_code_tarball.sh) and $HOME/augur_nfr/kern/E_frozen.pt.
 set -uo pipefail
 export PYTHONUNBUFFERED=1
-ITERS=${ITERS:-4000}
+ITERS=${ITERS:-60000}
 BATCH=${BATCH:-8}
 KEND=${KEND:-20}
 W=$HOME/augur-three-dimensional-sparse-voxel-scatter-field

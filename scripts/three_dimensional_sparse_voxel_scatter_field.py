@@ -1,7 +1,7 @@
 """Stage 1 of three-dimensional-sparse-voxel-scatter-field: train model/sparse_voxel_scatter_field.py on 3D scenes with exact 3D truth, score on 3D Plummer spheres at N=1000 against the
 frozen 2D the scatter-field control (ms_kp_pot_v_g128) (ratio of err@20 to constant-velocity err@20, same seeds, same N), and time both from 1e3 to 1e5 bodies.
 Modes: train (resumable, SIGTERM-safe, periodic full-state checkpoints), score, bench, all.
-Usage: PYTHONPATH=. python scripts/three_dimensional_sparse_voxel_scatter_field.py --mode all --control kern/E_frozen.pt --iters 4000 --device cuda --out results/three_dimensional_sparse_voxel_scatter_field
+Usage: PYTHONPATH=. python scripts/three_dimensional_sparse_voxel_scatter_field.py --mode all --control kern/E_frozen.pt --iters 60000 --device cuda --out results/three_dimensional_sparse_voxel_scatter_field
 """
 import argparse
 import json
@@ -187,8 +187,13 @@ def bench(args, dev):
         p3, v3 = plummer(n, 8.0, 0.3, rng)
         p2, v2 = ss.make_scene(n, 8.0, 0.3, 64.0, 4738, 0)
         torch.cuda.empty_cache()
-        m3 = timed(lambda k: run3(cand, p3, v3, k, dev), steps, reps, dev)
-        m2 = timed(lambda k: ss.run_model(ctrl, p2, v2, k, dev, probe=False), steps, reps, dev)
+        try:
+            m3 = timed(lambda k: run3(cand, p3, v3, k, dev), steps, reps, dev)
+            m2 = timed(lambda k: ss.run_model(ctrl, p2, v2, k, dev, probe=False), steps, reps, dev)
+        except torch.cuda.OutOfMemoryError:
+            res["oom_at_n"] = n
+            json.dump(res, open(path, "w"), indent=1)
+            raise SystemExit(f"CUDA out of memory in bench at n={n}; completed cells kept in {path}")
         res[str(n)] = {"ms_tick_3d": m3, "ms_tick_2d": m2, "ratio": m3 / m2, "ns_body_tick_3d": m3 * 1e6 / n, "ns_body_tick_2d": m2 * 1e6 / n}
         log(f"bench n={n} {res[str(n)]}")
         json.dump(res, open(path, "w"), indent=1)
@@ -201,6 +206,8 @@ def bench(args, dev):
 
 def verdict(sc, bn):
     rr, c = sc["ratio3_over_ratio2"], bn["cost_ratio_at_1e5"]
+    if not (np.isfinite(rr) and sc["cold"]["all_finite"]):
+        return "KILL-nonfinite"
     if c is None:
         return "INCONCLUSIVE-no-1e5-timing"
     under = sc["plateau"]["undertrained"]
@@ -217,7 +224,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--mode", choices=["train", "score", "bench", "all"], default="all")
     ap.add_argument("--control", default="kern/E_frozen.pt")
-    ap.add_argument("--iters", type=int, default=4000)
+    ap.add_argument("--iters", type=int, default=60000)
     ap.add_argument("--train", type=int, default=1500)
     ap.add_argument("--steps", type=int, default=50)
     ap.add_argument("--batch", type=int, default=8)
