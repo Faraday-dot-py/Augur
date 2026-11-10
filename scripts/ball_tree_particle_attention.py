@@ -1,6 +1,6 @@
 """Stage 1 of ball-tree-particle-attention-tier-0: train model/ball_tree_attention.py end to end on the the scatter-field control (ms_kp_pot_v_g128) recipe, score it against the frozen the scatter-field control (ms_kp_pot_v_g128) checkpoint in the same run, and time it from 1e3 to 1e6 bodies.
 Modes: train (resumable, SIGTERM-safe, validation curve for the plateau guard), score (err@5/20 at N=1000 cold and warm vs control, in-distribution cfg E, exact-reference floor), bench (ns/body/tick sweep), all.
-Usage: PYTHONPATH=. python scripts/ball_tree_particle_attention.py --mode all --control kern/E_frozen.pt --iters 6000 --device cuda --out results/ball_tree_particle_attention
+Usage: PYTHONPATH=. python scripts/ball_tree_particle_attention.py --mode all --control kern/E_frozen.pt --iters 60000 --device cuda --out results/ball_tree_particle_attention
 """
 import argparse
 import json
@@ -179,6 +179,8 @@ def verdict(res_score, res_bench):
     r = res_score["cold"]["ratio_err20"]
     under = res_score["plateau"]["undertrained"]
     e, c = res_bench["exponent_1e3_1e6"], res_bench["ns_per_body_tick_1e6"]
+    if not (np.isfinite(r) and res_score["cold"]["all_finite"]):
+        return "KILL-nonfinite"
     if e is None or c is None:
         return "INCONCLUSIVE-no-1e6-timing"
     cost_kill = e > 1.25
@@ -198,7 +200,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--mode", choices=["train", "score", "bench", "all"], default="all")
     ap.add_argument("--control", default="kern/E_frozen.pt")
-    ap.add_argument("--iters", type=int, default=6000)
+    ap.add_argument("--iters", type=int, default=60000)
     ap.add_argument("--train", type=int, default=1500)
     ap.add_argument("--steps", type=int, default=50)
     ap.add_argument("--batch", type=int, default=16)

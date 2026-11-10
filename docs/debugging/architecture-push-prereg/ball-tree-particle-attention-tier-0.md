@@ -33,11 +33,13 @@ Verdict order, as coded in `verdict()`: (1) exponent above 1.25: KILL regardless
 
 ## Plateau guard
 
-Validation err@20 (48 scenes, seed 9400, N in 10..200) is logged 50 times over training. INCONCLUSIVE-undertrained if the mean validation loss over the last 10% of the iterations is more than 3% below the mean over the preceding 10% window (5 points each). Per user decision 10a.1, one extension at double length is then allowed for candidate and control together.
+Validation err@20 (48 scenes, seed 9400, N in 10..200) is logged 50 times over training. INCONCLUSIVE-undertrained if the mean validation loss over the last 10% of the iterations is more than 3% below the mean over the preceding 10% window (5 points each). Per user decision 10a.1, one extension at double length (120,000 iterations) is then allowed for candidate and control together. Control status: the control is the frozen 60,000-iteration checkpoint, scored only, never retrained in stage 1; the candidate therefore trains 60,000 iterations to keep the control's count. The extension needs the control retrained at 120,000, which is a needs-user decision before it is run.
+
+Non-finite handling: a NaN or infinite err@20 ratio, or a non-finite candidate rollout, returns KILL-nonfinite.
 
 ## Prediction (stated before running)
 
-PASS is unlikely (about 15%). Most likely outcome: err@20 ratio 1.5x to 4x (6,000 stage 1 iterations against 60,000 for the control, training on N up to 200 and scoring at N=1000), so INCONCLUSIVE-undertrained or KILL on error. Cost exponent expected 1.0 to 1.1 (sorting and fixed-size balls); ns per body per tick at 1e6 expected above 100 because sorting and several attention blocks run as separate PyTorch kernels (untested guess).
+PASS is unlikely (about 15%). Most likely outcome: err@20 ratio 1.5x to 4x (60,000 candidate iterations, the control's count, training on N up to 200 and scoring at N=1000), so INCONCLUSIVE-undertrained or KILL on error. Cost exponent expected 1.0 to 1.1 (sorting and fixed-size balls); ns per body per tick at 1e6 expected above 100 because sorting and several attention blocks run as separate PyTorch kernels (untested guess).
 
 ## Constraints check (project constraints re-read 2026-11-10)
 
@@ -50,8 +52,8 @@ PASS is unlikely (about 15%). Most likely outcome: err@20 ratio 1.5x to 4x (6,00
 
 ## Known weaknesses (kept in the notes)
 
-- Unmatched training length (6,000 vs 60,000 iterations) and unmatched training N range against the control.
-- The control is not retrained at matched length; the double-length extension would need the user's go-ahead for the control.
+- Unmatched training N range against the control (candidate N up to 200 in training). Iteration count matched at 60,000.
+- The control is a frozen checkpoint, scored only; the double-length extension would need the control retrained, a user decision.
 - Sorting by the widest axis changes ball membership discontinuously as bodies move.
 
 ## Files and run

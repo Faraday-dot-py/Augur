@@ -7,15 +7,15 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
 #SBATCH --qos=student-pleiades
-#SBATCH --time=03:00:00
+#SBATCH --time=12:00:00
 #SBATCH --requeue
 #SBATCH --nice=100
 #SBATCH --signal=B:TERM@120
 #SBATCH --output=augur-ball-tree-particle-attention-tier-0-%j.log
 # --dependency=afterany:TAIL_JOB_ID  (placeholder: the supervisor passes it on the sbatch command line from the slot tail in docs/debugging/gpu-slot-chains.md; never submit without it)
-# Stage 1 of ball-tree-particle-attention-tier-0: train 6000 its (resumable, full-state checkpoint every 100 its), then score (err@5/20 at N=1000 cold and warm vs frozen the scatter-field control (ms_kp_pot_v_g128)) and bench (ms/tick N=1e3..1e6).
+# Stage 1 of ball-tree-particle-attention-tier-0: train 60000 its (the control's count, spec 10a.1; resumable, full-state checkpoint every 100 its), then score (err@5/20 at N=1000 cold and warm vs frozen the scatter-field control (ms_kp_pot_v_g128)) and bench (ms/tick N=1e3..1e6).
 # Pre-registration: docs/debugging/architecture-push-prereg/ball-tree-particle-attention-tier-0.md. Runtime estimate (untimed): about 0.3 s/it from the nearest logged rate (width-32 scatter field, 0.28-0.31 s/it)
-# gives 30 min training, plus validation, scoring and the 1e6 bench, 1.0-1.5 GPU-h; limit 3 h. Rerun with sbatch to resume (checkpoint, validation curve and bench cells are skipped when present).
+# gives 5 h training, plus validation, scoring and the 1e6 bench, about 5.5-6.5 GPU-h; limit 12 h per submission, requeue resumes. The 10a.1 extension is a rerun with --iters 120000 from the same checkpoint dir (needs a retrained double-length control, a user decision). Rerun with sbatch to resume (checkpoint, validation curve and bench cells are skipped when present).
 # Needs $HOME/ball_tree_particle_attention_code.tgz (scripts/build_architecture_push_stage1_code_tarball.sh) and $HOME/augur_nfr/kern/E_frozen.pt.
 set -uo pipefail
 export PYTHONUNBUFFERED=1
@@ -39,7 +39,7 @@ OUT=results/ball_tree_particle_attention
 mkdir -p $OUT ckpt
 PID=
 trap 'kill -TERM $PID 2>/dev/null; wait $PID; exit 143' TERM
-python scripts/ball_tree_particle_attention.py --mode all --control kern/E_frozen.pt --iters 6000 --heldout ${HELDOUT:-9100,9200,9300} --device cuda --out $OUT --ckpt-dir ckpt >> $OUT/run.log 2>&1 &
+python scripts/ball_tree_particle_attention.py --mode all --control kern/E_frozen.pt --iters ${ITERS:-60000} --heldout ${HELDOUT:-9100,9200,9300} --device cuda --out $OUT --ckpt-dir ckpt >> $OUT/run.log 2>&1 &
 PID=$!
 wait $PID
 RC=$?

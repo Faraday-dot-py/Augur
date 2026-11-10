@@ -1,5 +1,6 @@
 """Fail-loudly check for the architecture-push stage 1 jobs: the control loads under the shipped scatter_field.py and takes one finite step on a scene."""
 import argparse
+import hashlib
 
 import numpy as np
 import torch
@@ -11,7 +12,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--control", default="kern/E_frozen.pt")
     ap.add_argument("--device", default="cuda")
+    ap.add_argument("--control-md5", default="9b3cb8bb1de47eb6ebf5f708d98e94b7")
     args = ap.parse_args()
+    md5 = hashlib.md5(open(args.control, "rb").read()).hexdigest()
+    if md5 != args.control_md5:
+        raise SystemExit(f"control md5 {md5} != expected {args.control_md5}")
     dev = torch.device(args.device)
     model = ss.load(args.control, dev)
     pos0, vel0 = ss.make_scene(200, 8.0, 0.3, 64.0, 4738, 0)
