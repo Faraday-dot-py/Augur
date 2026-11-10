@@ -51,20 +51,22 @@ def main():
     ap.add_argument("--e-ckpt", default="")
     ap.add_argument("--cases", default="all")
     ap.add_argument("--n", type=int, default=48)
+    ap.add_argument("--seeds", default="", help="comma-separated eval seeds (default SEEDS)")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
-    dev = torch.device("cuda")
+    seeds = tuple(int(s) for s in a.seeds.split(",")) if a.seeds else SEEDS
+    dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     names = [c for c in CASES if a.cases == "all" or (a.cases == "held" and c.startswith("HELD")) or c in a.cases.split(",")]
     data = {}
     for c in names:
-        for s in SEEDS:
+        for s in seeds:
             shape, st = CASES[c]
             data[(c, s)] = sm.gen_cases([(shape, st, 1.0)] * a.n, s, dev, 20, tag=2)
     models = {}
     for spec in a.ckpt:
         nm, path = spec.split("=")
-        m = sm.build().to(dev).eval()
         st = torch.load(path, map_location=dev, weights_only=False)
+        m = sm.build(law_blind=bool(st.get("args", {}).get("law_blind", False))).to(dev).eval()
         m.load_state_dict(st["model"])
         models[nm] = (m, False, st.get("it"))
     if a.e_ckpt:
@@ -78,7 +80,7 @@ def main():
         for c in names:
             if is_e and c != "grav":
                 continue
-            res[nm][c] = {str(s): eval_case(m, data[(c, s)], dev, is_e) for s in SEEDS}
+            res[nm][c] = {str(s): eval_case(m, data[(c, s)], dev, is_e) for s in seeds}
             r = res[nm][c]
             print(nm, c, {s: (round(v["force_rel"], 4), round(v["err20"], 4)) for s, v in r.items()}, flush=True)
     json.dump(res, open(a.out, "w"), indent=1)
