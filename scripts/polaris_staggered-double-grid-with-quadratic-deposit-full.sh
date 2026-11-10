@@ -11,8 +11,7 @@
 #SBATCH --requeue
 #SBATCH --signal=B:TERM@120
 #SBATCH --output=augur-staggered-double-grid-with-quadratic-deposit-full-%j.log
-# NOT YET AUTHORISED. Do not sbatch until the supervisor has read stage 1 (shift_average_stage1 stage1.json; closure rule in docs/debugging/architecture-push-prereg/staggered-double-grid-with-quadratic-deposit.md)
-# and created $HOME/augur_staggered_double_grid/FULL_RUN_AUTHORISED (the script exits 3 without it). One GPU only; the supervisor owns the slot chain.
+# Authorised by the user go of 2026-11-10 after stage 1 (job 7837) did not close it: pooled err@20 ratio vs one pass 0.735 (2 passes), 0.719 (4 passes), closure needs both above 0.95. Exits 3 without $HOME/augur_staggered_double_grid/FULL_RUN_AUTHORISED. One GPU only.
 # Trains ms_kp_pot_v_g128_quad_dual (quadratic three-cell deposit and gather, two grids offset half a cell, same U-Net) for the control's 60769 iterations with the the frozen single-law gravity checkpoint recipe (init_B warm start,
 # lr 5e-4, batch 16, k 4-30, 1500 scenes x 50 steps, seed 4738), validation loss every 500 iterations for the plateau guard, then evaluates candidate vs frozen the frozen single-law gravity checkpoint on seeds 9100/9200/9300 and
 # 12000/12100/12200 and writes verdicts. Requeue-safe on preemption or node failure (a 9 h timeout needs a manual resubmit, which resumes): the trainer saves full state (model, optimiser, iteration) every 100 iterations and on SIGTERM, and resumes from it; finished steps are skipped.
