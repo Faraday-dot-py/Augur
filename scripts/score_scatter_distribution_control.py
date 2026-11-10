@@ -98,7 +98,14 @@ def main(argv=None):
         if len(rows) != len(ss):
             continue
         worst = min(min(r["density"]["frac"], r["speed"]["frac"]) for r in rows)
-        summary[name] = dict(worst_fraction=worst, verdict="CONTROL-PASSES-CLOSED" if worst >= PASS_FRAC else "CONTROL-BELOW-KILL-FRACTION" if worst < KILL_FRAC else "CONTROL-BELOW-PASS-OPEN")
+        ceiling = min(min(r["density"]["self_frac"], r["speed"]["self_frac"]) for r in rows)
+        v = "CONTROL-PASSES-CLOSED" if worst >= PASS_FRAC else "CONTROL-BELOW-KILL-FRACTION" if worst < KILL_FRAC else "CONTROL-BELOW-PASS-OPEN"
+        if ceiling < PASS_FRAC:
+            v = "INCONCLUSIVE-metric-ceiling"
+        summary[name] = dict(worst_fraction=worst, worst_self_fraction=ceiling, verdict=v)
+    if len(summary) == 2 and (summary["pre_registered"]["verdict"] == "CONTROL-PASSES-CLOSED") != (summary["fresh"]["verdict"] == "CONTROL-PASSES-CLOSED"):
+        summary["pre_registered"]["verdict_before_fresh_check"] = summary["pre_registered"]["verdict"]
+        summary["pre_registered"]["verdict"] = "INCONCLUSIVE-fresh-seeds-disagree"
     json.dump(dict(summary=summary, rows=allres, ckpt=args.ckpt, torch=torch.__version__), open(f"{args.out_dir}/summary.json", "w"), indent=1)
     print(json.dumps(summary))
     return 0

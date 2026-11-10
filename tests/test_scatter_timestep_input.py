@@ -105,8 +105,8 @@ def test_plateau_guard_ten_percent_windows_three_percent_drop():
     from scripts import train_scatter_timestep as tt
 
     flat = [(i, 1.0) for i in range(10, 101, 10)]
-    falling = [(i, 1.0 if i <= 80 else 0.9) for i in range(10, 101, 10)]
-    small = [(i, 1.0 if i <= 80 else 0.98) for i in range(10, 101, 10)]
+    falling = [(i, 1.0 if i <= 90 else 0.9) for i in range(10, 101, 10)]
+    small = [(i, 1.0 if i <= 90 else 0.98) for i in range(10, 101, 10)]
     assert not tt.plateau_falling(flat, 100)
     assert tt.plateau_falling(falling, 100)
     assert not tt.plateau_falling(small, 100)

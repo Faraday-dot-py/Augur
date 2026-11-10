@@ -13,6 +13,7 @@
 #SBATCH --nice=100
 #SBATCH --signal=B:TERM@120
 #SBATCH --output=augur-timestep-as-input-model-full-run-%j.log
+##SBATCH --dependency=afterany:SUPERVISOR_GPU_SLOT_PREDECESSOR_JOBID
 # NOT YET AUTHORISED: runs only with FULL_RUN_AUTHORISED=yes in the submission environment (sbatch --export=ALL,FULL_RUN_AUTHORISED=yes). Starts per spec 10a item 9 once stage 1 does not close the experiment.
 # Full run of timestep-as-input-model: variant ms_kp_pot_v_g128_dtin, 60000 iterations (the control's count), mixed step sizes, warm start from init_B, seed 4738, then eval on seeds 9100/9200/9300.
 # Estimate 5 GPU-h (spec figure; untimed). Requeue-safe: full state every 500 iterations and on SIGTERM; --iters 60000 resumes from the checkpoint. Needs stage 1's truth sets in $HOME/augur_timestep_truth.

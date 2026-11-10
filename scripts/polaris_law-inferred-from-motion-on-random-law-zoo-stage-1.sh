@@ -13,6 +13,7 @@
 #SBATCH --nice=100
 #SBATCH --signal=B:TERM@120
 #SBATCH --output=augur-law-zoo-data-readiness-stage-1-%j.log
+##SBATCH --dependency=afterany:SUPERVISOR_GPU_SLOT_PREDECESSOR_JOBID
 # Stage 1 of law-inferred-from-motion-on-random-law-zoo: data and code readiness. Runs the CPU test files, generates 300 zoo laws x 2 scenes + 64 held-out-law scenes of exact truth, checks counts reconcile.
 # No training and no probe (the spec defines none). Pre-registration: docs/debugging/architecture-push-prereg/law-inferred-from-motion-on-random-law-zoo.md.
 # Estimate about 0.2 GPU-h (untimed; 11 chunks of 64 float64 scenes of 50 ticks). Requeue-safe: one chunk file per 64 scenes, skipped on rerun.

@@ -6,7 +6,7 @@ Definitions. err@k: mean per-body position error at tick k. da/a: relative error
 
 ## Stage 1 (what runs)
 Arm massfeat_curriculum of scripts/train_scatter_mass_curriculum.py: given per-body mass as extra deposit channels, geometric-mean mass normaliser (`norm="gmean"`), 7-stage ratio curriculum (q 1,3,10,30,100,300,1000 x 600 iterations = 4200), unit-mass replay, warm start from single-law-gravity-control (`load_compat` zero-pads the new input columns, so the warm start reproduces single-law-gravity-control exactly). Seed 4738.
-Control and its checkpoint: single-law-gravity-control, Polaris `~/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt` (verified present, 3200305 bytes, 2026-11-10). The `init` entry in the results json is single-law-gravity-control scored by the same code on the same scenes.
+Control and its checkpoint: single-law-gravity-control, Polaris `~/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt` (verified present, 3200305 bytes, 2026-11-10). The `init_by_seed` entry in the results json (one per eval seed, so each seed's gate uses its own baseline) is single-law-gravity-control scored by the same code on the same scenes.
 
 ## Lines (verbatim from spec section 7, experiment 10; numbers from docs/theory/mass-conditioned-scatter-field.md lines 34-40, implemented in `LINES`)
 - Spec: "stage 1 uses the pre-registered mass lines (planet semi-major-axis error at most 0.02, in-distribution gate 1.15x; KILL above 0.15 or 1.5x)."

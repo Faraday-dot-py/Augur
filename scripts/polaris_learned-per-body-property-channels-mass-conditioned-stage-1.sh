@@ -13,6 +13,7 @@
 #SBATCH --nice=100
 #SBATCH --signal=B:TERM@120
 #SBATCH --output=augur-learned-per-body-property-channels-mass-conditioned-stage-1-%j.log
+##SBATCH --dependency=afterany:SUPERVISOR_GPU_SLOT_PREDECESSOR_JOBID
 # Stage 1 of learned-per-body-property-channels: mass-conditioned curriculum, arm massfeat_curriculum, warm start from single-law-gravity-control, seed 4738, verdict = worst over eval seeds 9100/9200/9300.
 # Pre-registration: docs/debugging/architecture-push-prereg/learned-per-body-property-channels.md.
 # Estimate 1.0 GPU-h (untimed; 4200 iterations at 0.315 s/it from the nearest logged run, plus validation, evaluation and scene generation). Requeue-safe: full state every 50 iterations and on SIGTERM, resumed automatically.

@@ -13,6 +13,7 @@
 #SBATCH --nice=100
 #SBATCH --signal=B:TERM@120
 #SBATCH --output=augur-sampled-force-distribution-control-stage-1-%j.log
+##SBATCH --dependency=afterany:SUPERVISOR_GPU_SLOT_PREDECESSOR_JOBID
 # Stage 1 of sampled-force-tier-0-scored-on-distributions-past-the-chaos-horizon: score the unchanged control (single-law-gravity-control) on the tick-300 distribution metric against exact perturbed ensembles.
 # Pre-registration: docs/debugging/architecture-push-prereg/sampled-force-tier-0-scored-on-distributions-past-the-chaos-horizon.md.
 # Estimate about 0.5 GPU-h (untimed; 6 seeds x 3 perturbation sizes x 16 scenes x 17 float64 runs of 300 ticks). Requeue-safe: one json per (seed, perturbation size), skipped on rerun.

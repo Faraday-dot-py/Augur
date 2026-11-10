@@ -140,9 +140,10 @@ def train(args, log):
         results = st.get("results", {})
         val_hist = st.get("val_hist", [])
         log(f"resumed from it {start}")
-    if "init" not in results:
-        results["init"] = evaluate(model, dev, num=args.eval_scenes)
-        log(f"init eval {json.dumps(results['init'], default=float)}")
+    if "init_by_seed" not in results:
+        results["init_by_seed"] = {str(sd): evaluate(model, dev, num=args.eval_scenes, seed=sd) for sd in EVAL_SEEDS}
+        results["init"] = results["init_by_seed"][str(EVAL_SEEDS[0])]
+        log(f"init eval {json.dumps(results['init_by_seed'], default=float)}")
     nst = len(cd.STAGES) if ARMS[args.arm]["curriculum"] else 1
     total = args.stage_iters * nst
     skipped = 0
@@ -229,10 +230,10 @@ def train(args, log):
             save(it)
     results["final"] = evaluate(model, dev, num=args.eval_scenes, seed=EVAL_SEEDS[0])
     results["final_by_seed"] = {str(EVAL_SEEDS[0]): results["final"]}
-    verdicts = [verdict(results["final"], results["init"])]
+    verdicts = [verdict(results["final"], results["init_by_seed"][str(EVAL_SEEDS[0])])]
     for sd in EVAL_SEEDS[1:]:
         results["final_by_seed"][str(sd)] = evaluate(model, dev, num=args.eval_scenes, seed=sd)
-        verdicts.append(verdict(results["final_by_seed"][str(sd)], results["init"]))
+        verdicts.append(verdict(results["final_by_seed"][str(sd)], results["init_by_seed"][str(sd)]))
     results["verdict"] = worst_verdict([v[0] for v in verdicts])
     results["verdict_reasons"] = [r for v in verdicts for r in v[1]]
     results["plateau_falling"] = still_falling(val_hist, total)

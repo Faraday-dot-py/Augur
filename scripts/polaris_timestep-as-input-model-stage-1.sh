@@ -13,6 +13,7 @@
 #SBATCH --nice=100
 #SBATCH --signal=B:TERM@120
 #SBATCH --output=augur-timestep-as-input-model-stage-1-%j.log
+##SBATCH --dependency=afterany:SUPERVISOR_GPU_SLOT_PREDECESSOR_JOBID
 # Stage 1 of timestep-as-input-model: exact truth at step sizes 0.05/0.1/0.2 (train + eval) and 0.075 (eval only) on the single-law-gravity-control scene distribution, then the frozen single-law-gravity-control reference eval at each step size.
 # Pre-registration: docs/debugging/architecture-push-prereg/timestep-as-input-model.md.
 # Estimate about 1.0 GPU-h (untimed; spec figure, 4500 train scenes + 576 eval scenes of float64 truth, then 4 x 3 frozen evals). Requeue-safe: every set is written atomically and skipped on rerun.
