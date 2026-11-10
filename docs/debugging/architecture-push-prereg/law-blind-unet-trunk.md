@@ -3,19 +3,19 @@
 Spec: docs/superpowers/specs/2026-11-09-architecture-push-twenty-experiments-design.md (sections 5, 6, 7; 10a overrides). Registered before launch.
 
 ## Lines (copied from the spec)
-Stage 1 (audit row 16, the cheaper never-run variant: Exp E frozen, small per-law kernel and pair heads):
-- PASS: gravity err@20 at most 1.05x Exp E AND the other laws within 2x their single-law comparators.
-- KILL: gravity err@20 above 1.15x Exp E.
+Stage 1 (audit row 16, the cheaper never-run variant: scatter-gravity-clustered-baseline frozen, small per-law kernel and pair heads):
+- PASS: gravity err@20 at most 1.05x scatter-gravity-clustered-baseline AND the other laws within 2x their single-law comparators.
+- KILL: gravity err@20 above 1.15x scatter-gravity-clustered-baseline.
 Full run (not authorised here): PASS gravity err@20 at most 0.0509 on seeds 4738 and 4739 AND no dead decoder level AND every trained law's tick-1 force within 1.25x of main_s4739. KILL gravity above 0.106. Fails the pass line: 0.07.
 
 ## Control and checkpoints
-- Gravity control: Exp E, `augur_nfr/kern/E_frozen.pt` (verified, 3200305 B).
+- Gravity control: scatter-gravity-clustered-baseline, `augur_nfr/kern/E_frozen.pt` (verified, 3200305 B).
 - Multi-law reference: `augur_nfr/ckpt/main_s4739.pt` (verified, 3659299 B).
 - Single-law comparators (verified): `augur_nfr/ckpt/cmp_pow1.5_single`, `cmp_yuk32_single` (held-out laws pow1.5 and yuk32 only).
 - Verified files: cmp_pow1.5_single.pt (3661021 B), cmp_yuk32_single.pt (3660775 B), main_s4739.pt (3659299 B), each with a .done marker.
 
 ## What is run
-- Model: MultiScatterField with `--law-blind` (the law vector theta is zeroed on the U-Net input channel; kernel MLP and pair MLP still receive theta) and `--freeze-trunk` (U-Net weights not trained). Initialised from Exp E with init_from_e. Trained: kernel MLP and pair MLP heads, width 128 (the existing size; fixed, not tuned).
+- Model: MultiScatterField with `--law-blind` (the law vector theta is zeroed on the U-Net input channel; kernel MLP and pair MLP still receive theta) and `--freeze-trunk` (U-Net weights not trained). Initialised from scatter-gravity-clustered-baseline with init_from_e. Trained: kernel MLP and pair MLP heads, width 128 (the existing size; fixed, not tuned).
 - Budget: 80000 iterations, the control's (main) count; same data and loss recipe as main (train_scatter_multi.py defaults), seed 4738.
 - Validation: every 1000 iterations, 24 scenes per shape, k=10 rollout, saved in the checkpoint and .done file.
 - Eval: scatter_multi_eval on seeds 9100/9200/9300, 48 scenes per case, cases grav, pow1, pow3, yuk8, yuk128, lj, HELD_pow1.5, HELD_yuk32, for candidate, main_s4739, comparators, and E on grav.

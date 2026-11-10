@@ -6,13 +6,13 @@ Spec: docs/superpowers/specs/2026-11-09-architecture-push-twenty-experiments-des
 - PASS: err@20 (mean position error after 20 ticks) at most 1.15x the control AND tiled-versus-single-grid force difference at most 4% with no global term AND exponent read from the amplitudes within 10% on pow2 (potential of 1/r^2 force law).
 - KILL: err@20 above 1.30x the control.
 - Fails the pass line (INCONCLUSIVE): exponent error 15% (any value above 10% without a KILL is INCONCLUSIVE; 15% would fail).
-- Control: Exp E (ScatterField with the FFT far kernel), `augur_nfr/kern/E_frozen.pt` (also `augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt`; both verified present on Polaris with polaris_ls). The multi-law model `augur_nfr/ckpt/main_s4739.pt` is fitted per law for kernel fit error and exponent only; it is not rolled out.
+- Control: scatter-gravity-clustered-baseline (ScatterField with the FFT far kernel), `augur_nfr/kern/E_frozen.pt` (also `augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt`; both verified present on Polaris with polaris_ls). The multi-law model `augur_nfr/ckpt/main_s4739.pt` is fitted per law for kernel fit error and exponent only; it is not rolled out.
 
 ## What is run
 - Ladder: K(r) = sum over l of a_l exp(-r^2 / 2 s_l^2), 7 levels, s_l = 0.5 x 2^l (units), amplitudes free in sign, fitted once by weighted least squares to the frozen learned kernel on the 2G x 2G lattice (weights 1/(|K| + 0.01 max|K|), r up to the lattice half-diagonal). Each level is a separable Gaussian blur, stencil plus or minus 4 coarse cells, on a grid coarsened by 2^max(l-1, 0), then bilinearly upsampled. No FFT. Fixed numbers: 7 levels, s0 0.5, 4 taps. None is tuned.
 - Exponent: slope of log|a_l| against log s_l over levels 2 to 6; force exponent = potential exponent + 1.
 - Tiled difference: kernel acceleration on 8 pow2 scenes (seed 9100) computed tile by tile (tile 64 cells, halo 32 cells, density outside tile+halo dropped, no global term) against the single grid; relative L1.
-- Rollout: Exp E against Exp E with the ladder replacing its kernel and the U-Net frozen at E's weights, 48 pow2 scenes per seed, 20 ticks, seeds 9100/9200/9300. No training.
+- Rollout: scatter-gravity-clustered-baseline against scatter-gravity-clustered-baseline with the ladder replacing its kernel and the U-Net frozen at E's weights, 48 pow2 scenes per seed, 20 ticks, seeds 9100/9200/9300. No training.
 - Per-law kernel fit error and exponent for main_s4739 (pow1, pow2, pow3, yuk8, yuk128, lj): expected force exponents 1, 2, 3; yuk and lj report fit error only.
 
 ## Seeds and reality rule

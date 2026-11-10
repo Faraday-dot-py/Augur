@@ -12,7 +12,7 @@
 #SBATCH --signal=B:TERM@120
 #SBATCH --dependency=afterany:SUPERVISOR_REPLACES_WITH_SLOT_TAIL_JOB_ID
 #SBATCH --output=augur-law-blind-unet-trunk-%j.log
-# Stage 1 (audit row 16): Exp E U-Net frozen, theta not given to the U-Net, kernel and pair networks trained, 80000 iterations (the control's count), seed 4738. Pre-registration: docs/debugging/architecture-push-prereg/law-blind-unet-trunk.md.
+# Stage 1 (audit row 16): scatter-gravity-clustered-baseline U-Net frozen, theta not given to the U-Net, kernel and pair networks trained, 80000 iterations (the control's count), seed 4738. Pre-registration: docs/debugging/architecture-push-prereg/law-blind-unet-trunk.md.
 # Estimate 4.7-5.9 GPU-h (spec said 3.5): job 7296 ran 0.256 s/it at the end and 21214 s for 80000 its including data generation; the frozen trunk skips U-Net weight gradients (untested guess, 0.8x). No timing job was run.
 # Requeue-safe: full-state checkpoint every 500 its with the validation history, SIGTERM saves and exits 143, --resume continues; sbatch again to resume.
 # Needs $HOME/augur-architecture-push-stage-one-code.tgz, $HOME/augur_nfr/kern/E_frozen.pt, ckpt/main_s4739.pt, ckpt/cmp_pow1.5_single.pt, ckpt/cmp_yuk32_single.pt.

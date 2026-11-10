@@ -3,7 +3,7 @@
 Cells, each written to --out as it finishes (a rerun skips finished cells; SIGTERM exits 143 after the current cell):
   fit:<model>:<law>     ladder fitted to the frozen learned kernel; fit error, amplitudes, exponent read from the amplitudes
   tiled                 kernel-acceleration difference, tile-by-tile (tile 64 cells, halo 32 cells, no global term) against the single grid
-  rollout:<seeds>       Exp E with its kernel replaced by the ladder (U-Net frozen at E's weights): err@5/20 against Exp E on the same scenes
+  rollout:<seeds>       scatter-gravity-clustered-baseline with its kernel replaced by the ladder (U-Net frozen at E's weights): err@5/20 against scatter-gravity-clustered-baseline on the same scenes
   timing                kernel acceleration time, FFT path against ladder, at grid 128
 Usage: PYTHONPATH=. python scripts/scatter_ladder_stage1.py --e-ckpt kern/E_frozen.pt --main-ckpt ckpt/main_s4739.pt --out results/x.json
 """
