@@ -7,12 +7,12 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=32G
 #SBATCH --qos=student-pleiades
-#SBATCH --time=00:45:00
+#SBATCH --time=01:30:00
 #SBATCH --requeue
 #SBATCH --nice=100
 # Unpatched vs lowest-index tie-break patched (in-memory copy, scatter_field.py untouched) pp_acc_adapt, default and adaptdeep, on the collapsed 3e6 Plummer cloud. Seed 4738. Inference only, 1 GPU.
 # The supervisor adds --dependency=afterany:<id> so no more than 2 GPU jobs run at once. Pass/kill: pre-registered in experiment-log.md (adaptive-depth-tie-break-gpu-check-3e6), applied by hand on result.json.
-# Estimate: about 15 min (two 220 s default calls plus load and warm-up), about 0.3 GPU-h with queue-side overhead excluded.
+# Estimate: about 15 to 25 min (two 220 s default calls, 8 full adaptdeep calls of untested duration, load), about 0.3 to 0.4 GPU-h.
 # Needs in $HOME/augur_probe_deep: scripts/{scatter_field.py,scatter_scaling_ops.py,pm_baseline_force_error.py,pair_term_adaptive_depth_test.py,pair_term_adaptdeep_bruteforce_at_3e6.py,adaptive_depth_3e6_argmax_body_brute_force.py,adaptive_depth_tie_break_prototype.py,adaptive_depth_tie_break_gpu_check_3e6.py},
 # results/adaptive_depth_tie_and_single_query_diff_investigation/tie_count_3e6.json and kern/E_frozen.pt.
 set -uo pipefail

@@ -81,8 +81,9 @@ def main():
     outs = {}
     with torch.no_grad():
         for m in (base, patched):
-            m.opt = {"adapt", "adaptdeep"}
-            m.pp_acc(pos[:, :200000], mass[:, :200000], mask[:, :200000], knn)
+            for o in ({"adapt", "adaptdeep"}, {"adapt"}):
+                m.opt = set(o)
+                m.pp_acc(pos[:, :200000], mass[:, :200000], mask[:, :200000], knn)
         for name, opt in PATHS:
             reps = a.default_reps if name == "default" else a.deep_reps
             base.opt = set(opt)
@@ -115,7 +116,8 @@ def main():
         dp, dd = outs["default"][1], outs["adaptdeep"][1]
         bit_pp = (dp != dd).any(-1)[0]
         dif = (dp - dd)[0].norm(dim=-1)
-        res["patched_default_vs_patched_adaptdeep"] = {"bodies_bit_different": int(bit_pp.sum()), "max_abs_diff": float(dif.max()), "indices_bit_different": [int(i) for i in bit_pp.nonzero()[:, 0]][:50]}
+        res["patched_default_vs_patched_adaptdeep"] = {"bodies_bit_different": int(bit_pp.sum()), "max_abs_diff": float(dif.max()), "indices_bit_different": [int(i) for i in bit_pp.nonzero()[:, 0]][:50],
+                                                  "max_rel_diff": float((dif / dp[0].norm(dim=-1).clamp(min=1e-30)).max()), "bodies_rel_diff_gt_tol": int((dif / dp[0].norm(dim=-1).clamp(min=1e-30) > REL_TOL).sum())}
         res["unpatched_default_vs_unpatched_adaptdeep"] = {"bodies_bit_different": int((outs["default"][0] != outs["adaptdeep"][0]).any(-1).sum())}
 
         b = a.body
@@ -127,7 +129,7 @@ def main():
             for name, opt in PATHS:
                 _, (ds, rs), stats = captured_call(model, set(opt), pos, mass, mask, qmask, knn)
                 idx = indices_from_ds(p32, b, ds)
-                pick[f"{label}_{name}"] = {"top16": idx, "selected_16th_index": idx[knn - 1]}
+                pick[f"{label}_{name}"] = {"top16": idx, "selected_16th_index": idx[knn - 1], "in_top16": sorted(idx)}
         tied_group = [627953, 849166] if a.n == 3000000 else None
         lower = min(tied_group) if tied_group else None
         res["body_1381234_pick"] = pick
@@ -135,7 +137,7 @@ def main():
             "tied_group": tied_group, "lowest_index_member": lower,
             "patched_default_equals_patched_adaptdeep_top16": sorted(pick["patched_default"]["top16"]) == sorted(pick["patched_adaptdeep"]["top16"]),
             "patched_16th_both_paths": [pick["patched_default"]["selected_16th_index"], pick["patched_adaptdeep"]["selected_16th_index"]],
-            "patched_both_pick_lowest_index_member": pick["patched_default"]["selected_16th_index"] == lower and pick["patched_adaptdeep"]["selected_16th_index"] == lower,
+            "patched_both_pick_lowest_index_member": lower in pick["patched_default"]["top16"] and lower in pick["patched_adaptdeep"]["top16"] and tied_group[1] not in pick["patched_default"]["top16"] and tied_group[1] not in pick["patched_adaptdeep"]["top16"] if tied_group else False,
         }
         print(res["body_1381234_check"], flush=True)
         pd, pa = res["paths"]["default"], res["paths"]["adaptdeep"]
@@ -146,6 +148,8 @@ def main():
             "time_ratio_default": pd["time_ratio"], "time_ratio_adaptdeep": pa["time_ratio"],
             "time_ratio_over_line": pd["time_ratio"] > TIME_RATIO_LINE or pa["time_ratio"] > TIME_RATIO_LINE,
             "body_pick_same_in_both_paths": res["body_1381234_check"]["patched_default_equals_patched_adaptdeep_top16"],
+            "body_16th_is_lowest_index_member_both_paths": res["body_1381234_check"]["patched_both_pick_lowest_index_member"],
+            "patched_default_vs_adaptdeep_bodies_rel_diff_gt_tol": res["patched_default_vs_patched_adaptdeep"]["bodies_rel_diff_gt_tol"],
             "ambiguous_set_ceiling_1.5e-6_variant_over_tol": [pd["bodies_rel_change_gt_tol_outside_ambiguous_and_band"], pa["bodies_rel_change_gt_tol_outside_ambiguous_and_band"]],
         }
     res["done"] = True
