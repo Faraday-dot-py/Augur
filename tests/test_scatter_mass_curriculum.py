@@ -156,3 +156,17 @@ def test_train_smoke_resume_and_sigterm(tmp_path, monkeypatch):
     assert tm.main(argv) == 0
     st = torch.load(tmp_path / "c" / "massfeat_curriculum.pt", weights_only=False)
     assert st["it"] == 4
+
+
+def test_plateau_guard_marks_falling_runs_undertrained():
+    total = 1000
+    flat = [(i, 1.0) for i in range(100, 1001, 100)]
+    falling = [(i, 1.0 - 0.001 * i) for i in range(100, 1001, 100)]
+    assert not tm.still_falling(flat, total)
+    assert tm.still_falling(falling, total)
+    assert not tm.still_falling([(1000, 1.0)], total)
+    assert tm.apply_plateau("KILL", ["x"], True)[0] == "INCONCLUSIVE-undertrained"
+    assert tm.apply_plateau("PASS", [], True)[0] == "PASS"
+    assert tm.apply_plateau("KILL", ["x"], False)[0] == "KILL"
+    assert tm.worst_verdict(["PASS", "KILL", "INCONCLUSIVE"]) == "KILL"
+    assert tm.worst_verdict(["PASS", "INCONCLUSIVE"]) == "INCONCLUSIVE"
