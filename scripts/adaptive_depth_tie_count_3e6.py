@@ -29,6 +29,8 @@ def main():
         res[f"bodies_rank16_17_gap_rel_le_{tol}"] = int((gap <= tol).sum())
     res["expected_if_gap_density_uniform_over_median_rel_gap"] = float(np.median(gap))
     res["fraction_le_1e-6"] = float((gap <= 1e-6).mean())
+    res["ambiguous_bodies_gap_le_1e-6"] = [int(i) for i in np.nonzero(gap <= 1e-6)[0]]
+    res["boundary_band_bodies_gap_gt_1e-6_le_1.5e-6"] = [int(i) for i in np.nonzero((gap > 1e-6) & (gap <= 1.5e-6))[0]]
     os.makedirs(os.path.dirname(a.out), exist_ok=True)
     json.dump(res, open(a.out, "w"), indent=1)
     print(json.dumps(res, indent=1))
