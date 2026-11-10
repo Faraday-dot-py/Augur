@@ -127,6 +127,7 @@ def test_stage_one_script_runs_and_resumes(tmp_path, monkeypatch):
     s1.main()
     res = json.load(open(out))
     assert set(res) == {"fit:E:pow2", "tiled", "timing", "rollout:9100"}
+    assert all(k in res["rollout:9100"] for k in ("err20_ratio_mean", "err20_ratio_per_seed", "err20_E_noise_floor", "err5_ratio_mean", "force_rel_ratio_mean"))
     assert (tmp_path / "o.json.done").exists()
     mt = out.stat().st_mtime_ns
     s1.main()

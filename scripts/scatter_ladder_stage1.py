@@ -80,9 +80,10 @@ def rollout_cell(e, lad, dev, seeds, n):
     for s in seeds:
         d = sm.gen_cases([("pow2", "single", 1.0)] * n, s, dev, 20, tag=2)
         out[str(s)] = {"E": sme.eval_case(e, d, dev, True), "ladder": sme.eval_case(lad, d, dev, True)}
+    ss = list(out)
     for k in ("err5", "err20", "force_rel"):
-        ratios = [out[s]["ladder"][k] / out[s]["E"][k] for s in out]
-        e_vals = [out[s]["E"][k] for s in out]
+        ratios = [out[s]["ladder"][k] / out[s]["E"][k] for s in ss]
+        e_vals = [out[s]["E"][k] for s in ss]
         out[f"{k}_ratio_mean"] = sum(ratios) / len(ratios)
         out[f"{k}_ratio_per_seed"] = ratios
         out[f"{k}_E_noise_floor"] = (max(e_vals) - min(e_vals)) / (sum(e_vals) / len(e_vals))
