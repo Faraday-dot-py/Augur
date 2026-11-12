@@ -367,3 +367,7 @@ KILL on held-out guard. Two-moons moon survival 1036 (CI 944-1129; truth 2000; b
 - User decisions applied: neighbour-context one seed 4739 (script, eval default, prereg cut from two seeds); sparse-code cleared, width-32 reference seed 4739 (job 7442), candidate seed 4738, cost 1.0-1.3 GPU-h flagged and accepted.
 - c01f103: neighbour-context and bit-output scripts now extract the tarball themselves (their pre-extracted remote dirs did not exist). Remote inputs verified by ls: tarball, E_ms_kp_pot_v_g128.pt, width8.pt, width32 seed4739 checkpoint.
 - Tarball uploaded. Submit of neighbour-context refused (QOSMaxSubmitJobPerUserLimit, 4 queued). Order and slot tails recorded in gpu-slot-chains.md. Not retried.
+
+## 2026-11-11 law-blind-unet-trunk stage 1 (jobs 7839 + 9247): score KILL, review pending
+- 9247 COMPLETED 0:0 in 3608 s (resumed from the SIGTERM checkpoint at it 71995, ran to 80000, eval and score ran). Scorer output (law-blind-unet-trunk-stage-one-score.json): gravity err@20 ratio vs E mean 395.9 (kill line 1.15), held-out pow1.5 37.8x and yuk32 22.5x vs comparators, plateau_guard flat, verdict KILL. The size of the ratio is extreme, so a fresh reviewer was dispatched to separate genuine result from eval/load/resume bug before anything is reported as a verdict. Results table not yet updated.
+- Submitted 9277 neighbour-context stage 1 (afterany:9246). Auth: no polaris_start called.
