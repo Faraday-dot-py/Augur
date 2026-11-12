@@ -371,3 +371,6 @@ KILL on held-out guard. Two-moons moon survival 1036 (CI 944-1129; truth 2000; b
 ## 2026-11-11 law-blind-unet-trunk stage 1 (jobs 7839 + 9247): score KILL, review pending
 - 9247 COMPLETED 0:0 in 3608 s (resumed from the SIGTERM checkpoint at it 71995, ran to 80000, eval and score ran). Scorer output (law-blind-unet-trunk-stage-one-score.json): gravity err@20 ratio vs E mean 395.9 (kill line 1.15), held-out pow1.5 37.8x and yuk32 22.5x vs comparators, plateau_guard flat, verdict KILL. The size of the ratio is extreme, so a fresh reviewer was dispatched to separate genuine result from eval/load/resume bug before anything is reported as a verdict. Results table not yet updated.
 - Submitted 9277 neighbour-context stage 1 (afterany:9246). Auth: no polaris_start called.
+
+## 2026-11-11 RESULT law-blind-unet-trunk stage 1: KILL (reviewed)
+- Fresh reviewer CONFIRMED: ratios recomputed (395.9 mean), KILL per prereg; genuine head divergence (validation min 0.120 at it 29000, 3.17 at it 80000), not an eval, load or resume bug. Plateau guard label "flat" misdescribes a rising loss (guard lacks a divergence check). Mechanism untested. Table and experiment-log updated.

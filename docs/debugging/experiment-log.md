@@ -4412,3 +4412,9 @@ Prepared only, nothing submitted. Four preregs in docs/debugging/architecture-pu
 - CPU tests after merge: 128 passed (HEAD alone 97 on the shared files; cluster 3 added 31). bash -n clean on every polaris script touched.
 - User decisions applied: sparse-code stage 1 is cleared to launch; the width-32 reference checkpoint (job 7442, seed 4739, clean) is now the default in stage 1 and full drafts; candidate seed stays 4738, second candidate seed only after a pass; cost 1.0-1.3 GPU-h vs spec 0.7 accepted; per-set ablation kill reading accepted; previously: the clean seed-4739 width-32 checkpoint (candidate seed unchanged); neighbour-context script, full draft, pair_context_eval default and prereg changed from seeds 4738+4739 to 4739 only.
 - Verdict: merged, no results.
+
+## 2026-11-11 law-blind-unet-trunk stage 1 (jobs 7839 cancelled at it 71995 by the user, 9247 resumed to 80000): KILL
+- What: scatter-gravity-clustered-baseline U-Net frozen, theta zeroed on the U-Net channel, kernel and pair MLP heads trained 80000 its, seed 4738. Pre-registered lines: PASS gravity err@20 <= 1.05x E and held-out within 2x comparators; KILL > 1.15x E.
+- Observed: gravity err@20 ratio vs E 395.9 (429, 405, 353 per seed), held-out pow1.5 37.8x and yuk32 22.5x vs single-law comparators, trained laws 1.5x (lj) to 66x (yuk8) vs main_s4739. Validation (k=10) bottomed at 0.120 at it 29000 and rose to 3.17 at it 80000; the rise began about it 30000, before the cancel. Resume at it 71995 showed no discontinuity.
+- Reviewer (fresh): recomputed ratios, KILL stands, genuine head divergence, not eval/load/resume bug; mechanism untested; plateau_guard "flat" only means loss not falling, last-window mean 2.96 vs 1.36 before (rising). No E validation logged. Possible follow-ups (not run): lower head lr or earlier stopping at the it 29000 checkpoint (it30000 snapshot exists on Polaris). Full run stays unauthorised.
+- Verdict: KILL. Cost about 5.0 GPU-h.

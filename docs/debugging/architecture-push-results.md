@@ -15,7 +15,7 @@ Columns: stage reached, job ids, control, deciding numbers with file citations, 
 | one-network-for-all-tiers-with-scale-input (8) | stage 1 prepared | - | per-tier weights | - | pending | - | - | 0 |
 | neighbour-context-pair-branch-replacing-central-pair-term (9) | stage 1 prepared | - | single-law-gravity-checkpoint-g128 | - | pending | - | - | 0 |
 | learned-per-body-property-channels (10) | stage 1 prepared | - | single-law-gravity-checkpoint-g128 | - | pending | - | - | 0 |
-| law-blind-unet-trunk (11) | stage 1 prepared | - | main_s4739 | - | pending | - | - | 0 |
+| law-blind-unet-trunk (11) | stage 1 done | 7839 (cancelled it 71995), 9247 (resume to 80000, 3608 s) | E_frozen (scatter-gravity-clustered-baseline), main_s4739 | gravity err@20 ratio vs E 395.9 (per seed 429, 405, 353; kill line 1.15, pass 1.05); held-out pow1.5 37.8x, yuk32 22.5x vs comparators; validation loss min 0.120 at it 29000 then 3.17 at it 80000 (diverged); law-blind-unet-trunk-stage-one-score.json, scorer scripts/score_architecture_push_stage_one.py:75 | KILL (heads diverged; mechanism untested) | CONFIRMED (fresh reviewer: not an eval, load or resume bug; plateau guard "flat" mislabels a rising loss) | 8fe82a3+ (this commit) | about 5.0 (4:25 + 1:00 H200) |
 | law-inferred-from-motion-on-random-law-zoo (12) | stage 1 prepared | - | trunk model or main_s4739 | - | pending | - | - | 0 |
 | separated-velocity-branch-with-soft-power-matching (13, split only) | stage 1 prepared | - | replay checkpoint | - | pending | - | - | 0 |
 | sampled-force-tier-0-scored-on-distributions-past-the-chaos-horizon (14) | stage 1 prepared | - | single-law-gravity-checkpoint-g128 | - | pending | - | - | 0 |
