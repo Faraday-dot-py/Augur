@@ -4400,3 +4400,15 @@ pp=2 knn=16 untouched (frozen model). No hard-wired conservation: pure error reg
 
 ## Experiment-log entry text
 summary-token-exchange-between-neighbour-tiles, stage 1 predictability probe (job <id>, script scripts/neighbour_tile_force_error_predictability_probe.py, commit <hash>). Tried: fixed MLP regression of the frozen replay checkpoint's force error on own-state versus own-plus-8-neighbour-tile previous-tick summaries, shuffled-neighbour control and true-acceleration oracle. Numbers: <f for each variant, Delta_net pooled and per seed, oracle f>. Verdict: <verdict-rule output> against the PROPOSED-BY-WORKER stage-1 line.
+
+## 2026-11-11 architecture-push cluster 3 (single-law readability, neighbour-context pair branch, bit-output 64-grid): PREPARED, no results
+Prepared only, nothing submitted. Four preregs in docs/debugging/architecture-push-prereg/ (two-number-message-bottleneck-single-law, sparse-code-unet-single-law, neighbour-context-pair-branch-replacing-central-pair-term, bit-output-cell-model-at-64-grid-with-long-range-law), stage 1 job scripts (dependency placeholder, SIGTERM handler, requeue-safe checkpoints), *-full.sh drafts (unauthorised, not enabled), code tarball builder.
+- CPU tests: 67 passed of 67 (31 new in test_bit_output_64_grid, test_pair_context_branch, test_single_law_readability; 36 existing in test_scatter_multi, test_scatter_mass_curriculum, test_tiered_harness).
+- Fix: neighbour-context stage 1 script lacked an SBATCH signal line for its 1.5 h limit; added --signal=B:TERM@120.
+- Verdict: prepared, no results.
+
+## 2026-11-11 architecture-push cluster 3 merge into architecture-push-ported-trainers: merged, no results
+- Conflicts kept both sides: ScatterField signature has deposit/dual/dtin and pairctx; _force keeps the _grid_force/dual split and passes vel to pp_acc when pairctx; MultiScatterField and build take law_blind and bottleneck; ms_kp_pot_v_g128_quad/dual/quad_dual and _pairctx variants all present. Cluster 3's tarball builder moved to build_architecture_push_single_law_readability_code_tarball.sh; build_architecture_push_code_tarball.sh stays the staggered/shift-core builder.
+- CPU tests after merge: 128 passed (HEAD alone 97 on the shared files; cluster 3 added 31). bash -n clean on every polaris script touched.
+- User decisions applied: sparse-code stage 1 is cleared to launch; the width-32 reference checkpoint (job 7442, seed 4739, clean) is now the default in stage 1 and full drafts; candidate seed stays 4738, second candidate seed only after a pass; cost 1.0-1.3 GPU-h vs spec 0.7 accepted; per-set ablation kill reading accepted; previously: the clean seed-4739 width-32 checkpoint (candidate seed unchanged); neighbour-context script, full draft, pair_context_eval default and prereg changed from seeds 4738+4739 to 4739 only.
+- Verdict: merged, no results.
