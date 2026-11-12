@@ -37,16 +37,32 @@ class UNet(nn.Module):
         self.enc = nn.ModuleList(_block(width, width) for _ in range(levels + 1))
         self.dec = nn.ModuleList(_block(2 * width, width) for _ in range(levels))
         self.out = nn.Conv2d(width, cout, 3, padding=1)
+        self.sparse_k = 0
+        self.ablate = ()
+        self.record = None
+
+    def _site(self, h, name):
+        k = self.sparse_k
+        if k and k < h.shape[1]:
+            keep = torch.zeros_like(h).scatter_(1, h.topk(k, dim=1).indices, 1.0)
+            h = h * keep
+        if self.record is not None:
+            s, n = self.record.get(name, (0.0, 0))
+            self.record[name] = (s + (h != 0).float().sum((0, 2, 3)), n + h.shape[0] * h.shape[2] * h.shape[3])
+        for site, ch in self.ablate:
+            if site == name:
+                h = torch.cat([h[:, :ch], torch.zeros_like(h[:, ch:ch + 1]), h[:, ch + 1:]], 1)
+        return h
 
     def forward(self, x):
-        h = self.enc[0](F.gelu(self.inp(x)))
+        h = self._site(self.enc[0](F.gelu(self.inp(x))), "enc0")
         skips = [h]
         for l in range(1, self.levels + 1):
-            h = self.enc[l](F.avg_pool2d(h, 2))
+            h = self._site(self.enc[l](F.avg_pool2d(h, 2)), f"enc{l}")
             skips.append(h)
         for l in reversed(range(self.levels)):
             h = F.interpolate(h, scale_factor=2, mode="nearest")
-            h = self.dec[l](torch.cat([h, skips[l]], 1))
+            h = self._site(self.dec[l](torch.cat([h, skips[l]], 1)), f"dec{l}")
         return self.out(h)
 
 
@@ -67,9 +83,11 @@ class ScatterField(nn.Module):
 
     def __init__(self, grid=64, extent=64.0, net="local", recurrent=True, hidden_ch=0, dt=0.1, width=32, layers=8,
                  levels=5, momfix=True, in_scale=1.0, potential=False, kernel=False, pp=0.0, split=False, nonet=False, verlet=False,
-                 prior=False, knn=16, eps=0.5, cu=False, epsin=False, norm="", massfeat=False):
+                 prior=False, knn=16, eps=0.5, cu=False, epsin=False, norm="", massfeat=False, pairctx=False):
         super().__init__()
         assert not prior or (kernel and pp and split)
+        assert not pairctx or (pp and not prior and not cu and not epsin)
+        self.pairctx, self.pp_stats = pairctx, None
         self.prior, self.knn, self.eps = prior, knn, eps
         self.potential, self.kernel, self.pp, self.split, self.nonet = potential, kernel, pp, split, nonet
         self.verlet = verlet
@@ -93,7 +111,7 @@ class ScatterField(nn.Module):
         self.t0 = None
         self.cell_max_occ = None
         if pp:
-            self.ppmlp = nn.Sequential(nn.Linear(ncol, 64), nn.GELU(), nn.Linear(64, 64), nn.GELU(), nn.Linear(64, 1))
+            self.ppmlp = nn.Sequential(nn.Linear(ncol + 3 * int(pairctx), 64), nn.GELU(), nn.Linear(64, 64), nn.GELU(), nn.Linear(64, 1 + int(pairctx)))
             nn.init.zeros_(self.ppmlp[-1].weight)
             nn.init.zeros_(self.ppmlp[-1].bias)
         self.grid, self.extent, self.h = grid, extent, extent / grid
@@ -416,9 +434,38 @@ class ScatterField(nn.Module):
         a_act = torch.zeros(n, 2, device=dev, dtype=pos.dtype).index_copy(0, torch.cat(qs), torch.cat(accs))
         return torch.zeros(B * N, 2, device=dev, dtype=pos.dtype).index_copy(0, act, a_act).reshape(B, N, 2)
 
-    def pp_acc(self, pos, mass, mask, knn=16, qmask=None):
+    def pp_acc_ctx(self, pos, vel, mass, mask, knn=16):
+        B, N = mask.shape
+        k = min(knn, N - 1)
+        d_all = pos[:, None, :, :] - pos[:, :, None, :]
+        r_all = torch.sqrt((d_all ** 2).sum(-1) + 1e-8)
+        bad = (1 - mask)[:, None, :] + torch.eye(N, device=pos.device, dtype=pos.dtype)[None]
+        r_sel, idx = torch.topk(r_all + 1e6 * (bad > 0).to(pos.dtype), k, dim=-1, largest=False)
+        d = torch.gather(d_all, 2, idx[..., None].expand(B, N, k, 2))
+        vr = torch.gather(vel[:, None, :, :].expand(B, N, N, 2), 2, idx[..., None].expand(B, N, k, 2)) - vel[:, :, None, :]
+        mj = torch.gather((mass * mask)[:, None, :].expand(B, N, N), 2, idx)
+        ok = (r_sel < 1e5).to(pos.dtype) * mask[:, :, None]
+        r = r_sel.clamp(max=1e5)
+        perp = torch.stack([-d[..., 1], d[..., 0]], -1)
+        v_rad = (vr * d).sum(-1) / r
+        v_tan = (vr * perp).sum(-1) / r
+        dens = torch.log1p(((r < self.ppe()).to(pos.dtype) * ok).sum(-1, keepdim=True)).expand(B, N, k)
+        g = self.ppmlp(torch.cat([self._feat(r, "p"), torch.stack([v_rad, v_tan, dens], -1)], -1))
+        win = (1 - (r / self.ppe()).clamp(max=1.0) ** 2) ** 2
+        w_r, w_t = g[..., 0] * win * mj * ok, g[..., 1] * win * mj * ok
+        if self.pp_stats is not None:
+            st = self.pp_stats
+            st["rad_sq"] = st.get("rad_sq", 0.0) + float((w_r.detach().double() ** 2).sum())
+            st["tan_sq"] = st.get("tan_sq", 0.0) + float((w_t.detach().double() ** 2).sum())
+        return (w_r[..., None] * d / r[..., None] + w_t[..., None] * perp / r[..., None]).sum(2)
+
+    def pp_acc(self, pos, mass, mask, knn=16, qmask=None, vel=None):
         B, N = mask.shape
         mode = self.pp_mode(N)
+        if self.pairctx:
+            if mode != "dense" or vel is None:
+                raise NotImplementedError("pairctx supports only the dense pair path (N <= 512) and needs vel")
+            return self.pp_acc_ctx(pos, vel, mass, mask, knn)
         if mode == "adapt":
             return self.pp_acc_adapt(pos, mass, mask, knn, qmask=qmask)
         if mode == "cell":
@@ -556,7 +603,7 @@ class ScatterField(nn.Module):
             w = self.edge_weight(pos)[..., None]
             a_tok = a_tok * w + self.far_acc(pos, mass, mask) * (1 - w)
         if self.pp:
-            a_tok = a_tok + self.pp_acc(pos, mass, mask, self.knn)
+            a_tok = a_tok + self.pp_acc(pos, mass, mask, self.knn, vel=vel if self.pairctx else None)
         if ctx is not None:
             a_tok = self.t0.head(self, ctx, a_tok, acc, vel, mass, mask)
         if self.momfix:

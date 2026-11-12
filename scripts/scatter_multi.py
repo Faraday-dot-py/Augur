@@ -30,18 +30,23 @@ CIN = 3 + 1 + 4 + 2 + DC
 
 
 class CondMLP(nn.Module):
-    def __init__(self, dout, hidden=128):
+    def __init__(self, dout, hidden=128, bottleneck=0):
         super().__init__()
         self.l1 = nn.Linear(2 + DC, hidden)
         self.l2 = nn.Linear(hidden, hidden)
-        self.l3 = nn.Linear(hidden, dout)
+        self.l3 = nn.Linear(hidden, bottleneck or dout)
         nn.init.zeros_(self.l3.weight)
         nn.init.zeros_(self.l3.bias)
+        self.head = nn.Linear(bottleneck, dout, bias=False) if bottleneck else None
 
-    def forward(self, f, cond):
+    def code(self, f, cond):
         c = cond.expand(f.shape[:-1] + (DC,))
         h = F.gelu(self.l1(torch.cat([f, c], -1)))
         return self.l3(F.gelu(self.l2(h)))
+
+    def forward(self, f, cond):
+        z = self.code(f, cond)
+        return z if self.head is None else self.head(z)
 
     def load_e(self, seq):
         """embed E's 2-64-64-1 MLP (Sequential keys 0, 2, 4) as output channel 0; extra units start isolated with zero output weight."""
@@ -63,9 +68,9 @@ class CondMLP(nn.Module):
 class PairNet(nn.Module):
     """pair MLP; forward(x) (x = (r, log(r + .05)) features) returns species-pair channel 00 for the single-species code paths."""
 
-    def __init__(self):
+    def __init__(self, bottleneck=0):
         super().__init__()
-        self.mlp = CondMLP(4)
+        self.mlp = CondMLP(4, bottleneck=bottleneck)
         self.cond = None
 
     def cond_for(self, x):
@@ -82,16 +87,16 @@ class PairNet(nn.Module):
 
 
 class MultiScatterField(sf.ScatterField):
-    def __init__(self, dt=DT, hidden=128):
+    def __init__(self, dt=DT, hidden=128, bottleneck=0):
         super().__init__(grid=GRID, extent=EXTENT, net="unet", recurrent=True, hidden_ch=0, dt=dt, momfix=False, in_scale=1.0,
                          potential=True, kernel=True, pp=2.0, split=True, verlet=True)
         self.cf = 2
         self.net = sf.UNet(CIN, 2, 32, 5)
         nn.init.zeros_(self.net.out.weight)
         nn.init.zeros_(self.net.out.bias)
-        self.kmlp = CondMLP(4, hidden)
+        self.kmlp = CondMLP(4, hidden, bottleneck)
         self.ppmlp = PairNet()
-        self.ppmlp.mlp = CondMLP(4, hidden)
+        self.ppmlp.mlp = CondMLP(4, hidden, bottleneck)
         self.cond = torch.zeros(1, DC)
         self.typ = None
 
@@ -201,8 +206,8 @@ class MultiScatterField(sf.ScatterField):
         return a_tok * mask[..., None], field
 
 
-def build(dt=DT):
-    return MultiScatterField(dt)
+def build(dt=DT, bottleneck=0):
+    return MultiScatterField(dt, bottleneck=bottleneck)
 
 
 # ---------------------------------------------------------------- laws and scenes

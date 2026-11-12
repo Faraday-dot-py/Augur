@@ -35,16 +35,23 @@ def log(s):
     print(f"[{time.strftime('%H:%M:%S')}] {s}", flush=True)
 
 
-def build_model(width, seed, dev):
+def build_model(width, seed, dev, bottleneck=0, sparse_k=0):
     torch.manual_seed(seed)
     model = sm.build()
     model.net = sf.UNet(sm.CIN, 2, width, LEVELS)
+    model.net.sparse_k = sparse_k
     torch.nn.init.zeros_(model.net.out.weight)
     torch.nn.init.zeros_(model.net.out.bias)
     torch.manual_seed(seed)
     k, p = sm.CondMLP(4, 128), sm.CondMLP(4, 128)
-    model.kmlp.load_state_dict(k.state_dict())
-    model.ppmlp.mlp.load_state_dict(p.state_dict())
+    if bottleneck:
+        kb, pb = sm.CondMLP(4, 128, bottleneck), sm.CondMLP(4, 128, bottleneck)
+        for src, dst in ((k, kb), (p, pb)):
+            dst.l1.load_state_dict(src.l1.state_dict())
+            dst.l2.load_state_dict(src.l2.state_dict())
+        k, p = kb, pb
+    model.kmlp = k
+    model.ppmlp.mlp = p
     model = model.to(dev)
     model.set_law(torch.zeros(1, sm.DC, device=dev), None)
     return model
@@ -65,18 +72,19 @@ def save(path, model, opt, it, args, extra):
     os.replace(tmp, path)
 
 
-def train(width, args, dev, data):
-    path = f"{args.ckpt_dir}/width{width}.pt"
-    model = build_model(width, args.seed, dev)
+def train(width, args, dev, data, build=None, name=None, val_fn=None, val_epochs=()):
+    path = f"{args.ckpt_dir}/{name or f'width{width}'}.pt"
+    model = (build or build_model)(width, args.seed, dev)
     opt = torch.optim.Adam(model.parameters(), lr=args.lr)
     iters = args.epochs * (args.scenes // args.batch)
-    it0, elapsed0, kgate, losses, skipped, dropped = 0, 0.0, args.k_start, [], 0, 0
+    it0, elapsed0, kgate, losses, skipped, dropped, val = 0, 0.0, args.k_start, [], 0, 0, {}
     if os.path.exists(path):
         st = torch.load(path, map_location=dev, weights_only=False)
         model.load_state_dict(st["model"])
         opt.load_state_dict(st["opt"])
         it0, elapsed0, kgate = st["it"], st["elapsed"], st["kgate"]
         losses, skipped, dropped = st["epoch_loss"], st["skipped"], st["dropped"]
+        val = st.get("val", {})
         log(f"width {width} resumed at it {it0}/{iters} (elapsed {elapsed0:.0f}s)")
     log(f"width {width} params {count_params(model)}")
     S = data["P"].shape[0]
@@ -148,11 +156,14 @@ def train(width, args, dev, data):
         if it % per_epoch == 0:
             losses.append(float(run_loss) / per_epoch)
             run_loss.zero_()
+            if val_fn is not None and it // per_epoch in val_epochs:
+                val[str(it // per_epoch)] = val_fn(model)
+                log(f"width {width} epoch {it // per_epoch} validation {val[str(it // per_epoch)]:.6f}")
         stop = STOP["flag"]
         if stop or it % args.ckpt_every == 0 or it == iters:
             if all(torch.isfinite(p).all() for p in model.parameters()):
                 save(path, model, opt, it, args, {"elapsed": elapsed0 + time.time() - t_start, "kgate": kgate, "epoch_loss": losses,
-                                                  "skipped": skipped, "dropped": dropped})
+                                                  "skipped": skipped, "dropped": dropped, "val": val})
             else:
                 log(f"width {width} non-finite parameters, checkpoint NOT written")
         if stop:
@@ -160,7 +171,7 @@ def train(width, args, dev, data):
             sys.exit(143)
     elapsed = elapsed0 + time.time() - t_start
     return model, {"iters": iters, "seconds": elapsed, "s_per_it_this_run": (time.time() - t_start) / max(1, it - it0), "skipped_steps": skipped,
-                   "dropped_samples": dropped, "epoch_loss": losses, "kgate_final": kgate}
+                   "dropped_samples": dropped, "epoch_loss": losses, "kgate_final": kgate, "validation": val}
 
 
 @torch.no_grad()
@@ -290,9 +301,7 @@ def verdict(res, widths):
     return out
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--widths", default="4,8,16,32,64")
+def train_args(ap):
     ap.add_argument("--seed", type=int, default=4738)
     ap.add_argument("--epochs", type=int, default=50)
     ap.add_argument("--scenes", type=int, default=2560)
@@ -312,6 +321,12 @@ def main():
     ap.add_argument("--out-dir", required=True)
     ap.add_argument("--ckpt-dir", default="ckpt")
     ap.add_argument("--device", default="cuda")
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--widths", default="4,8,16,32,64")
+    train_args(ap)
     args = ap.parse_args()
     dev = torch.device(args.device)
     widths = [int(x) for x in args.widths.split(",")]

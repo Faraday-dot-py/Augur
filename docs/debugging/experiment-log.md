@@ -3919,3 +3919,9 @@ Line quoted (aeca91f): "Pass: adaptdeep top-16 set equals the fp64 brute-force s
 - Reading: PASS means "the only difference is a tie", not "adaptdeep matches brute force": the two tied sets give forces 1.47e-2 apart (7297 caveat stands). The pass was near-certain beforehand since the 5.0e-8 gap was known from 7297; the new information is the dumped sets and which member each path picks. One body, one seed.
 - Completeness: DONE marker, result.json done=true, run.log ends DONE, job-7475.log (polaris_mcp_jobs/slurm-7475.out) ends ALLDONE; wrapper md5 gates on scatter_field.py and pair_term_adaptive_depth_test.py passed (job would have exited 2). Not checked: the Polaris copy of the probe script against aeca91f (no md5 logged). Dependency note: scripts/adaptive_depth_3e6_argmax_body_brute_force.py and its job script exist only on branch adaptive-depth-3e6-argmax-body-brute-force (aeca91f), not on this branch.
 - Independent fresh reviewer ran: CONFIRMED, with the qmask and near-certain-pass findings above.
+
+## 2026-11-11 architecture-push cluster 3 (single-law readability, neighbour-context pair branch, bit-output 64-grid): PREPARED, no results
+Prepared only, nothing submitted. Four preregs in docs/debugging/architecture-push-prereg/ (two-number-message-bottleneck-single-law, sparse-code-unet-single-law, neighbour-context-pair-branch-replacing-central-pair-term, bit-output-cell-model-at-64-grid-with-long-range-law), stage 1 job scripts (dependency placeholder, SIGTERM handler, requeue-safe checkpoints), *-full.sh drafts (unauthorised, not enabled), code tarball builder.
+- CPU tests: 67 passed of 67 (31 new in test_bit_output_64_grid, test_pair_context_branch, test_single_law_readability; 36 existing in test_scatter_multi, test_scatter_mass_curriculum, test_tiered_harness).
+- Fix: neighbour-context stage 1 script lacked an SBATCH signal line for its 1.5 h limit; added --signal=B:TERM@120.
+- Verdict: prepared, no results.
