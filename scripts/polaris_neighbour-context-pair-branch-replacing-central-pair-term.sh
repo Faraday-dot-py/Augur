@@ -17,7 +17,11 @@
 # Pre-registration: docs/debugging/architecture-push-prereg/neighbour-context-pair-branch-replacing-central-pair-term.md
 set -uo pipefail
 export PYTHONUNBUFFERED=1
-cd $HOME/augur_pair_context
+TGZ=${TGZ:-$HOME/augur-architecture-push-single-law-readability-code.tgz}
+W=$HOME/augur_pair_context
+test -f $TGZ || { echo MISSING $TGZ; exit 2; }
+mkdir -p $W && tar xzf $TGZ -C $W || { echo "EXTRACT FAILED"; exit 2; }
+cd $W || exit 2
 export PYTHONPATH=.
 E=$HOME/E_ms_kp_pot_v_g128.pt
 ITERS=1500

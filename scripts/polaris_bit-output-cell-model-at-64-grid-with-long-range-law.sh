@@ -17,7 +17,10 @@
 # Requeue-safe: checkpoints every 250 steps, finished models and eval keys are skipped on restart. Supervisor replaces SLOT_TAIL_PLACEHOLDER with the slot tail job id before sbatch.
 set -uo pipefail
 export PYTHONUNBUFFERED=1
+TGZ=${TGZ:-$HOME/augur-architecture-push-single-law-readability-code.tgz}
 W=$HOME/augur_bit_output_64
+test -f $TGZ || { echo MISSING $TGZ; exit 2; }
+mkdir -p $W && tar xzf $TGZ -C $W || { echo "EXTRACT FAILED"; exit 2; }
 cd $W || exit 2
 export PYTHONPATH=$W/scripts
 for f in scripts/bit_force_smoke.py scripts/bit_output_encoding_fixes.py scripts/bit_output_64_grid_long_range.py; do [ -e $f ] || { echo "MISSING $f"; exit 2; }; done
