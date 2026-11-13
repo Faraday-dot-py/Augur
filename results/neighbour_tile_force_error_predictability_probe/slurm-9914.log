@@ -1,0 +1,14 @@
+name, memory.total [MiB]
+NVIDIA H200 NVL, 143771 MiB
+/home/adamwebb/.local/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+replay rows train 270521 eval 279293 own/n1/n2 dims 28 72 72
+own {"pooled": 0.11512482166290283, "per_seed": {"9100": 0.10209232568740845, "9200": 0.10109210014343262, "9300": 0.13415539264678955}, "late_ticks_60_100": 0.11719733476638794}
+own+n1 {"pooled": 0.08746594190597534, "per_seed": {"9100": 0.07563143968582153, "9200": 0.06673473119735718, "9300": 0.11090505123138428}, "late_ticks_60_100": 0.09077280759811401}
+own+n2 {"pooled": 0.09752833843231201, "per_seed": {"9100": 0.08181071281433105, "9200": 0.0781053900718689, "9300": 0.1224062442779541}, "late_ticks_60_100": 0.10750311613082886}
+own+n1+n2 {"pooled": 0.08284103870391846, "per_seed": {"9100": 0.07357168197631836, "9200": 0.06647056341171265, "9300": 0.10130232572555542}, "late_ticks_60_100": 0.09097349643707275}
+own+shuffled-neighbour {"pooled": 0.10520637035369873, "per_seed": {"9100": 0.09155005216598511, "9200": 0.09109312295913696, "9300": 0.12469214200973511}, "late_ticks_60_100": 0.1085519790649414}
+own+oracle-true-acc {"pooled": 0.9962384104728699, "per_seed": {"9100": 0.9958359003067017, "9200": 0.9963299632072449, "9300": 0.9964215159416199}, "late_ticks_60_100": 0.9959325790405273}
+replay delta_net {"pooled": -0.032283782958984375, "per_seed": {"9100": -0.028520643711090088, "9200": -0.03462153673171997, "9300": -0.03285306692123413}} oracle 0.9962384104728699 verdict-rule KILL
+DONE results/neighbour_tile_force_error_predictability_probe/neighbour_tile_force_error_predictability_probe.json
+OK results/neighbour_tile_force_error_predictability_probe/neighbour_tile_force_error_predictability_probe.json
