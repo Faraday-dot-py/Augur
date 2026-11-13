@@ -198,10 +198,10 @@ def test_stop_at_beyond_iters_refused(tmp_path, monkeypatch):
     assert isinstance(code, str) and "exceeds" in code
 
 
-def test_stop_off_leaves_checkpoint_without_generator_state(tmp_path, monkeypatch):
+def test_final_segment_checkpoint_carries_generator_state(tmp_path, monkeypatch):
     code, out, ck = segment(tmp_path, monkeypatch, "off", 4, 0)
     assert code is None
-    assert "gen" not in torch.load(ck / "three_dimensional_sparse_voxel_scatter_field.pt", weights_only=False)
+    assert "gen" in torch.load(ck / "three_dimensional_sparse_voxel_scatter_field.pt", weights_only=False)
 
 
 def test_load_candidate_reads_ckpt_file_and_iteration(tmp_path, monkeypatch):

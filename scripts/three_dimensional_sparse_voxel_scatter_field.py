@@ -95,7 +95,7 @@ def train(args, dev):
     ckpt = ckpt_path(args)
     if args.stop_at > args.iters:
         raise SystemExit(f"--stop-at {args.stop_at} exceeds --iters {args.iters}")
-    args.exact_resume = args.stop_at > 0
+    args.exact_resume = True
     if args.stop_at == args.iters:
         args.stop_at = 0
     if args.stop_at and os.path.exists(ckpt):
@@ -107,6 +107,8 @@ def train(args, dev):
     val = train_scenes(args.val_scenes, 20, VAL_SEED, dev)
     n_it, secs = common.train_with_curve(model, tensors, lambda m: val_err(m, val, dev), args, ckpt, args.out, lambda: STOP["flag"], log)
     if args.stop_at and n_it == args.stop_at:
+        if torch.load(ckpt, map_location="cpu", weights_only=False)["it"] != args.stop_at:
+            raise SystemExit(f"checkpoint it is not {args.stop_at}, refusing to copy a stale slice")
         shutil.copyfile(ckpt, f"{args.ckpt_dir}/three_dimensional_sparse_voxel_scatter_field-at-{args.stop_at}-its.pt")
         log(f"STOP-AT {args.stop_at}: checkpoint saved and copied to {args.ckpt_dir}/three_dimensional_sparse_voxel_scatter_field-at-{args.stop_at}-its.pt, train_done.json not written")
         if not STOP["flag"]:

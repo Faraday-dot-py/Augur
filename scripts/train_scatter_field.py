@@ -140,7 +140,7 @@ def train(model, tensors, args, ckpt_path, log):
         log(f"resumed from it {start}")
     g = torch.Generator(device="cpu").manual_seed(args.seed + start)
     if st_gen is not None:
-        g.set_state(st_gen)
+        g.set_state(st_gen.cpu())
 
     def gen_state():
         return {"gen": g.get_state()} if getattr(args, 'exact_resume', False) else {}
