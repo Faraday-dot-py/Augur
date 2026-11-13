@@ -130,13 +130,21 @@ def train(model, tensors, args, ckpt_path, log):
     S = P.shape[0]
     opt = torch.optim.Adam(model.parameters(), lr=args.lr)
     start = 0
+    st_gen = None
     if os.path.exists(ckpt_path):
         st = torch.load(ckpt_path, map_location=args.device, weights_only=False)
         model.load_state_dict(st["model"])
         opt.load_state_dict(st["opt"])
         start = st["it"]
+        st_gen = st.get("gen")
         log(f"resumed from it {start}")
     g = torch.Generator(device="cpu").manual_seed(args.seed + start)
+    if st_gen is not None:
+        g.set_state(st_gen)
+
+    def gen_state():
+        return {"gen": g.get_state()} if getattr(args, 'exact_resume', False) else {}
+
     fns = sf.make_step_fns(model, args.batch, P.shape[2], args.k_end, P.device) if "graphtrain" in getattr(model, "opt", ()) else None
     skipped = 0
     t_start = time.time()
@@ -206,14 +214,14 @@ def train(model, tensors, args, ckpt_path, log):
             extra = f" long dE {pen[0]:.4g} dL {pen[1]:.4g}" if args.long_windows > 0 and torch.isfinite(loss) else ""
             log(f"it {it} k {k} loss {loss.item():.6f} t {time.time() - t_start:.0f}s" + extra)
             if all(torch.isfinite(p).all() for p in model.parameters()):
-                torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, ckpt_path)
+                torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1, **gen_state()}, ckpt_path)
                 if it % 5000 == 0:
                     torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, f"{ckpt_path}.it{it}")
         cb = getattr(args, 'it_hook', None)
         if cb:
             cb(it)
     if all(torch.isfinite(p).all() for p in model.parameters()):
-        torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it}, ckpt_path)
+        torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it, **gen_state()}, ckpt_path)
     log(f"trained {it} iters in {time.time() - t_start:.0f}s")
     return it, time.time() - t_start
 

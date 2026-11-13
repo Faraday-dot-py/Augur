@@ -1,12 +1,13 @@
 """Stage 1 of three-dimensional-sparse-voxel-scatter-field: train model/sparse_voxel_scatter_field.py on 3D scenes with exact 3D truth, score on 3D Plummer spheres at N=1000 against the
 frozen 2D the scatter-field control (ms_kp_pot_v_g128) (ratio of err@20 to constant-velocity err@20, same seeds, same N), and time both from 1e3 to 1e5 bodies.
-Modes: train (resumable, SIGTERM-safe, periodic full-state checkpoints), score, bench, all.
+Modes: train (resumable, SIGTERM-safe, periodic full-state checkpoints; --stop-at N saves and exits 0 at iteration N without train_done.json), score (--ckpt-file, --out for a slice), bench, all.
 Usage: PYTHONPATH=. python scripts/three_dimensional_sparse_voxel_scatter_field.py --mode all --control kern/E_frozen.pt --iters 10000 --device cuda --out results/three_dimensional_sparse_voxel_scatter_field
 """
 import argparse
 import hashlib
 import json
 import os
+import shutil
 import signal
 import time
 
@@ -91,20 +92,40 @@ def build(dev):
 
 def train(args, dev):
     os.makedirs(args.ckpt_dir, exist_ok=True)
-    ckpt = f"{args.ckpt_dir}/three_dimensional_sparse_voxel_scatter_field.pt"
+    ckpt = ckpt_path(args)
+    if args.stop_at > args.iters:
+        raise SystemExit(f"--stop-at {args.stop_at} exceeds --iters {args.iters}")
+    args.exact_resume = args.stop_at > 0
+    if args.stop_at == args.iters:
+        args.stop_at = 0
+    if args.stop_at and os.path.exists(ckpt):
+        have = torch.load(ckpt, map_location="cpu", weights_only=False)["it"]
+        if have >= args.stop_at:
+            raise SystemExit(f"checkpoint already at it {have}, not below --stop-at {args.stop_at}")
     model = build(dev)
     tensors = train_scenes(args.train, args.steps, args.seed, dev)
     val = train_scenes(args.val_scenes, 20, VAL_SEED, dev)
     n_it, secs = common.train_with_curve(model, tensors, lambda m: val_err(m, val, dev), args, ckpt, args.out, lambda: STOP["flag"], log)
+    if args.stop_at and n_it == args.stop_at:
+        shutil.copyfile(ckpt, f"{args.ckpt_dir}/three_dimensional_sparse_voxel_scatter_field-at-{args.stop_at}-its.pt")
+        log(f"STOP-AT {args.stop_at}: checkpoint saved and copied to {args.ckpt_dir}/three_dimensional_sparse_voxel_scatter_field-at-{args.stop_at}-its.pt, train_done.json not written")
+        if not STOP["flag"]:
+            raise SystemExit(0)
     if STOP["flag"]:
         log("SIGTERM: checkpoint saved, exiting for requeue")
         raise SystemExit(143)
     json.dump({"train_iters": n_it, "train_seconds": secs, "args": vars(args)}, open(f"{args.out}/train_done.json", "w"))
 
 
+def ckpt_path(args):
+    return args.ckpt_file or f"{args.ckpt_dir}/three_dimensional_sparse_voxel_scatter_field.pt"
+
+
 def load_candidate(args, dev):
     model = build(dev)
-    model.load_state_dict(torch.load(f"{args.ckpt_dir}/three_dimensional_sparse_voxel_scatter_field.pt", map_location=dev, weights_only=False)["model"])
+    st = torch.load(ckpt_path(args), map_location=dev, weights_only=False)
+    model.load_state_dict(st["model"])
+    args.ckpt_it = st["it"]
     for p in model.parameters():
         p.requires_grad_(False)
     return model.eval()
@@ -152,7 +173,11 @@ def score(args, dev):
                             "finite": bool(torch.isfinite(Pm).all()), "cell_overflow": cand.cell_overflow}
             per.append(row)
             log(f"seed {seed}/{rep} 2D err@20 {row['d2']['20']:.4g} (cv {row['cv2_20']:.4g}) " + " ".join(f"{f}: 3D err@20 {row[f]['d3']['20']:.4g} (cv {row[f]['cv3_20']:.4g}, floor {row[f]['floor3_20']:.3g}, overflow {row[f]['cell_overflow']})" for f in FAMILIES))
-    res = {"per_scene": per, "primary_family": "cold", "plateau": common.plateau(args.out)}
+    res = {"per_scene": per, "primary_family": "cold", "plateau": common.plateau(args.out) if os.path.exists(f"{args.out}/val_curve.json") else None}
+    if args.mode == "score":
+        res["ckpt_file"], res["ckpt_it"] = ckpt_path(args), args.ckpt_it
+        res["val_err20"] = val_err(cand, train_scenes(args.val_scenes, 20, VAL_SEED, dev), dev)
+        log(f"val err@20 at it {args.ckpt_it}: {res['val_err20']:.5f}")
     ratio2 = float(np.mean([r["d2"]["20"] for r in per]) / np.mean([r["cv2_20"] for r in per]))
     res["ratio2_err20_over_constvel"] = ratio2
     res["ratio2_mean_of_per_scene_ratios"] = float(np.mean([r["d2"]["20"] / r["cv2_20"] for r in per]))
@@ -251,6 +276,8 @@ def main():
     ap.add_argument("--heldout", default="9100,9200,9300")
     ap.add_argument("--out", default="results/three_dimensional_sparse_voxel_scatter_field")
     ap.add_argument("--ckpt-dir", default="ckpt")
+    ap.add_argument("--ckpt-file", default="")
+    ap.add_argument("--stop-at", type=int, default=0)
     args = ap.parse_args()
     global HELD_OUT
     HELD_OUT = tuple(int(x) for x in args.heldout.split(","))

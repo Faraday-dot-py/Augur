@@ -18,9 +18,11 @@ def train_with_curve(model, tensors, val_fn, args, ckpt, out, stop, log, eps=0.5
     every = max(1, args.iters // VAL_POINTS)
 
     rate = {}
+    stop_at = getattr(args, "stop_at", 0)
 
     def it_hook(it):
         n = it + 1
+        rate["completed"] = n
         if "n0" not in rate:
             rate["n0"], rate["t0"] = n, time.time()
         elif "done" not in rate and n - rate["n0"] >= 100:
@@ -32,7 +34,7 @@ def train_with_curve(model, tensors, val_fn, args, ckpt, out, stop, log, eps=0.5
             log(f"val err@20 at it {n}: {curve[n]:.5f}")
 
     ns = SimpleNamespace(device=args.device, seed=args.seed, batch=args.batch, steps=args.steps, k_start=args.k_start, k_end=args.k_end, iters=args.iters,
-                         time_budget=0.0, log_every=args.log_every, long_windows=0, lr=args.lr, eps=eps, stop=stop, it_hook=it_hook)
+                         time_budget=0.0, log_every=args.log_every, long_windows=0, lr=args.lr, eps=eps, stop=lambda: stop() or rate.get("completed") == stop_at, it_hook=it_hook, exact_resume=getattr(args, "exact_resume", stop_at > 0))
     log(f"params {sum(p.numel() for p in model.parameters())}")
     return tsf.train(model, tensors, ns, ckpt, log)
 

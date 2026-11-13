@@ -134,3 +134,86 @@ def test_step_gradient_reaches_modules_with_nonzero_signal():
     (p.pow(2).sum() + v.pow(2).sum()).backward()
     missing = [n for n, q in m.named_parameters() if q.grad is None or not torch.isfinite(q.grad).all()]
     assert not missing, missing
+
+
+def tiny_train_scenes():
+    def small(num, steps, seed, dev):
+        rng = torch.Generator().manual_seed(seed)
+        P = torch.randn(num, steps + 1, 12, 3, generator=rng) * 3
+        V = torch.randn(num, steps + 1, 12, 3, generator=rng) * 0.3
+        return P.double(), V.double(), torch.ones(num, 12).double(), torch.ones(num, 12).double()
+
+    return small
+
+
+def segment(tmp_path, monkeypatch, name, iters, stop_at, dirs=None):
+    import argparse
+
+    from scripts import three_dimensional_sparse_voxel_scatter_field as tv
+
+    monkeypatch.setattr(tv, "build", lambda dev: make().train())
+    monkeypatch.setattr(tv, "train_scenes", tiny_train_scenes())
+    out, ck = (tmp_path / name / "out", tmp_path / name / "ckpt") if dirs is None else dirs
+    out.mkdir(parents=True, exist_ok=True)
+    args = argparse.Namespace(out=str(out), ckpt_dir=str(ck), ckpt_file="", stop_at=stop_at, iters=iters, train=3, val_scenes=2, steps=8, seed=4738, batch=2, k_start=1, k_end=3,
+                              log_every=2, device="cpu", lr=5e-4)
+    tv.STOP["flag"] = False
+    try:
+        tv.train(args, torch.device("cpu"))
+        code = None
+    except SystemExit as e:
+        code = e.code
+    return code, out, ck
+
+
+def test_stop_at_then_resume_matches_uninterrupted(tmp_path, monkeypatch):
+    code, out_a, ck_a = segment(tmp_path, monkeypatch, "straight", 8, 8)
+    assert code is None and (out_a / "train_done.json").exists()
+    code, out_b, ck_b = segment(tmp_path, monkeypatch, "split", 8, 4)
+    assert code == 0
+    assert not (out_b / "train_done.json").exists()
+    name = "three_dimensional_sparse_voxel_scatter_field"
+    sl = torch.load(ck_b / f"{name}-at-4-its.pt", weights_only=False)
+    assert sl["it"] == 4
+    code, _, _ = segment(tmp_path, monkeypatch, "split", 8, 8, dirs=(out_b, ck_b))
+    assert code is None and (out_b / "train_done.json").exists()
+    a = torch.load(ck_a / f"{name}.pt", weights_only=False)
+    b = torch.load(ck_b / f"{name}.pt", weights_only=False)
+    assert a["it"] == b["it"] == 8
+    assert torch.equal(a["gen"], b["gen"])
+    for k in a["model"]:
+        assert torch.allclose(a["model"][k], b["model"][k], atol=1e-6), k
+    assert all(torch.equal(a["opt"]["state"][i]["step"], b["opt"]["state"][i]["step"]) for i in a["opt"]["state"])
+
+
+def test_stop_at_refuses_checkpoint_at_or_past_it(tmp_path, monkeypatch):
+    code, out, ck = segment(tmp_path, monkeypatch, "past", 8, 4)
+    assert code == 0
+    code, _, _ = segment(tmp_path, monkeypatch, "past", 8, 4, dirs=(out, ck))
+    assert isinstance(code, str) and "not below" in code
+
+
+def test_stop_at_beyond_iters_refused(tmp_path, monkeypatch):
+    code, _, _ = segment(tmp_path, monkeypatch, "beyond", 4, 6)
+    assert isinstance(code, str) and "exceeds" in code
+
+
+def test_stop_off_leaves_checkpoint_without_generator_state(tmp_path, monkeypatch):
+    code, out, ck = segment(tmp_path, monkeypatch, "off", 4, 0)
+    assert code is None
+    assert "gen" not in torch.load(ck / "three_dimensional_sparse_voxel_scatter_field.pt", weights_only=False)
+
+
+def test_load_candidate_reads_ckpt_file_and_iteration(tmp_path, monkeypatch):
+    import argparse
+
+    from scripts import three_dimensional_sparse_voxel_scatter_field as tv
+
+    monkeypatch.setattr(tv, "build", lambda dev: make())
+    path = tmp_path / "slice.pt"
+    torch.save({"model": make(seed=1).state_dict(), "it": 10000}, path)
+    args = argparse.Namespace(ckpt_file=str(path), ckpt_dir=str(tmp_path / "unused"))
+    m = tv.load_candidate(args, torch.device("cpu"))
+    assert args.ckpt_it == 10000 and tv.ckpt_path(args) == str(path)
+    assert torch.equal(m.state_dict()["inp.weight"], make(seed=1).state_dict()["inp.weight"])
+    assert not any(p.requires_grad for p in m.parameters())
