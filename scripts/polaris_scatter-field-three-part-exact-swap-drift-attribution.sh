@@ -23,7 +23,7 @@ C=$HOME/augur-single-law-network-sizing/ckpt/width8.pt
 for f in $CODE $E $C; do
   [ -s $f ] || { echo "MISSING $f"; exit 2; }
 done
-tar -tzf $CODE | grep -qx scripts/scatter_three_part_exact_swap_drift_attribution.py || { echo "TARBALL LACKS RUN SCRIPT"; exit 2; }
+tar -tzf $CODE | grep -x scripts/scatter_three_part_exact_swap_drift_attribution.py > /dev/null || { echo "TARBALL LACKS RUN SCRIPT"; exit 2; }
 W=$HOME/augur-scatter-field-three-part-exact-swap-drift-attribution
 mkdir -p $W/results || exit 2
 SUM=$(md5sum $CODE | cut -d' ' -f1)
