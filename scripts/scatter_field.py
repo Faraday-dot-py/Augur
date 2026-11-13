@@ -92,7 +92,7 @@ class ScatterField(nn.Module):
         assert not (dual and massfeat)
         assert not pairctx or (pp and not prior and not cu and not epsin)
         self.deposit, self.dual = deposit, dual
-        self.pairctx, self.pp_stats = pairctx, None
+        self.pairctx, self.pp_stats, self.pen_acc = pairctx, None, None
         self.prior, self.knn, self.eps = prior, knn, eps
         self.potential, self.kernel, self.pp, self.split, self.nonet = potential, kernel, pp, split, nonet
         self.verlet = verlet
@@ -493,6 +493,8 @@ class ScatterField(nn.Module):
             st = self.pp_stats
             st["rad_sq"] = st.get("rad_sq", 0.0) + float((w_r.detach().double() ** 2).sum())
             st["tan_sq"] = st.get("tan_sq", 0.0) + float((w_t.detach().double() ** 2).sum())
+        if self.pen_acc is not None:
+            self.pen_acc.append((w_t ** 2).sum() / ((w_r.detach() ** 2).sum() + 1e-12))
         return (w_r[..., None] * d / r[..., None] + w_t[..., None] * perp / r[..., None]).sum(2)
 
     def pp_acc(self, pos, mass, mask, knn=16, qmask=None, vel=None):

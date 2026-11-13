@@ -74,6 +74,23 @@ def score(res, seeds, iters):
             "momentum_ratio_pooled": mom_pooled, "tangential_over_radial": tans, "plateau": plats}
 
 
+def score_lines(res, seeds, iters, lines):
+    """seed-replication: PASS err20 ratio <= 0.90 on every train seed, KILL ratio > 0.95 on any. tangential-penalty: PASS tangential/radial < 0.05 and ratio <= 0.90, KILL ratio > 0.95."""
+    ratios = {s: res["arms"][f"cand-s{s}"]["err20_mean"] / res["arms"][f"ctrl-s{s}"]["err20_mean"] for s in seeds}
+    tans = {s: res["arms"][f"cand-s{s}"]["tangential_over_radial"] for s in seeds}
+    moms = {s: res["arms"][f"cand-s{s}"]["momentum_error_mean"] / res["arms"][f"ctrl-s{s}"]["momentum_error_mean"] for s in seeds}
+    plats = {s: {"cand": plateau(res["arms"][f"cand-s{s}"]["validation"], iters), "ctrl": plateau(res["arms"][f"ctrl-s{s}"]["validation"], iters)} for s in seeds}
+    kill = any(r > ERR_KILL for r in ratios.values())
+    ok = all(r <= ERR_PASS for r in ratios.values())
+    if lines == "tangential-penalty":
+        ok = ok and all(t < TAN_PASS for t in tans.values())
+    label = "PASS" if ok else "KILL" if kill else "INCONCLUSIVE"
+    if label != "PASS" and any(p["cand"]["undertrained"] for p in plats.values()):
+        label = "INCONCLUSIVE-undertrained"
+    return {"lines": lines, "label": label, "err20_ratio_per_train_seed": ratios, "tangential_over_radial": tans,
+            "momentum_ratio_per_train_seed_report_only": moms, "plateau": plats}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--e-ckpt", required=True)
@@ -84,6 +101,7 @@ def main():
     ap.add_argument("--scenes", type=int, default=32)
     ap.add_argument("--iters", type=int, required=True)
     ap.add_argument("--device", default="cuda")
+    ap.add_argument("--lines", choices=["seed-replication", "tangential-penalty"], default=None)
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
     dev = torch.device(args.device)
@@ -122,7 +140,7 @@ def main():
                                    "cv_across_train_seeds": float(np.std([res["arms"][f"ctrl-s{s}"]["err20_mean"] for s in seeds]) / np.mean([res["arms"][f"ctrl-s{s}"]["err20_mean"] for s in seeds])),
                                    "cv_across_eval_seeds": float(np.mean([np.std([res["arms"][f"ctrl-s{s}"]["per_eval_seed"][str(e)]["err20"] for e in eseeds]) / np.mean([res["arms"][f"ctrl-s{s}"]["per_eval_seed"][str(e)]["err20"] for e in eseeds]) for s in seeds]))}
     res["frozen_ratio_cand_over_frozen"] = {str(s): res["arms"][f"cand-s{s}"]["err20_mean"] / res["arms"]["frozen-exp-e"]["err20_mean"] for s in seeds}
-    res["verdict"] = score(res, seeds, args.iters)
+    res["verdict"] = score_lines(res, seeds, args.iters, args.lines) if args.lines else score(res, seeds, args.iters)
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
     json.dump(res, open(args.out + ".tmp", "w"), indent=1)
     os.replace(args.out + ".tmp", args.out)

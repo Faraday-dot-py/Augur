@@ -151,11 +151,16 @@ def train(model, groups, args, ckpt_path, log, vdata=None):
         lp = lv = 0.0
         w = mk[:, :, None]
         denom = mk.sum() * 2 * k
+        if args.tan_penalty:
+            model.pen_acc = []
         for s in range(k):
             pos, vel, m, field, _ = sf._step_m(model, pos, vel, m, mk, field)
             lp = lp + (((pos - Pw[:, s + 1]) ** 2) * w).sum() / denom
             lv = lv + (((vel - Vw[:, s + 1]) ** 2) * w).sum() / denom
         loss = lp + 0.1 * lv
+        if args.tan_penalty:
+            loss = loss + args.tan_penalty * torch.stack(model.pen_acc).mean()
+            model.pen_acc = None
         opt.zero_grad()
         loss.backward()
         gn = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -205,6 +210,7 @@ def main():
     ap.add_argument("--log-every", type=int, default=50)
     ap.add_argument("--seed", type=int, default=4738)
     ap.add_argument("--iters", type=int, default=0, help="fixed iteration count (replaces --time-budget when set)")
+    ap.add_argument("--tan-penalty", type=float, default=0.0, help="weight on the squared tangential-to-radial pair-force ratio (pairctx only; 0 = off)")
     ap.add_argument("--resume", action="store_true")
     ap.add_argument("--val-scenes", type=int, default=32)
     ap.add_argument("--val-seed", type=int, default=9000)
@@ -225,6 +231,7 @@ def main():
     sf.load_compat(model, torch.load(args.init_ckpt, map_location=dev, weights_only=False)["model"])
     log(f"=== {args.name} fix {args.fix} variant {args.variant} params {sum(p.numel() for p in model.parameters())} init {args.init_ckpt}")
     assert (args.fix == "pairctx") == args.variant.endswith("_pairctx"), "fix pairctx needs a *_pairctx variant and vice versa"
+    assert not args.tan_penalty or args.fix == "pairctx", "--tan-penalty needs --fix pairctx"
     signal.signal(signal.SIGTERM, on_term)
     groups = build_groups(args, dev, log)
     vdata = None
