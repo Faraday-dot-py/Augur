@@ -99,6 +99,39 @@ def main():
     check("neighbour probe: rows carry only live bodies and finite features", bool(torch.isfinite(tr["own"]).all() and torch.isfinite(tr["n1"]).all() and torch.isfinite(tr["n2"]).all()))
     idx = npb.neighbour_index()
     check("neighbour index: corner tile has 3 neighbours, interior tile has 8", int((idx[0] >= 0).sum()) == 3 and int((idx[5] >= 0).sum()) == 8)
+    g = torch.Generator().manual_seed(4738)
+    n = 600
+    sc = torch.arange(n) % 12
+    fake = lambda: {"n1": torch.randn(n, 6, generator=g), "n2": torch.randn(n, 6, generator=g), "own": torch.randn(n, 4, generator=g), "scene": sc, "seed": torch.full((n,), 7100)}
+    ftr, fte = fake(), fake()
+    ftr["e"], fte["e"] = torch.randn(n, 2, generator=g), torch.randn(n, 2, generator=g)
+    ptr, pte = npb.planted_target(ftr, fte, 0.05)
+    ratio = float(((ptr - ftr["e"]) ** 2).sum() / (ftr["e"] ** 2).sum())
+    share = float(((ptr - ftr["e"]) ** 2).sum() / (ptr ** 2).sum())
+    check("planted term has share/(1-share) of the training error energy and about the share of the target's", abs(ratio - 0.05 / 0.95) < 1e-5 and abs(share - 0.05) < 0.01, f"{ratio:.6f} {share:.4f}")
+    val = npb.val_split(ftr)
+    check("validation split is a proper subset of whole scenes", 0 < int(val.sum()) < n and set(sc[val].tolist()).isdisjoint(sc[~val].tolist()))
+    lin_tr = dict(ftr, e=torch.cat([ftr["n1"][:, :1], ftr["n2"][:, :1]], 1) + 0.1 * torch.randn(n, 2, generator=g))
+    lin_te = torch.cat([fte["own"], fte["n1"], fte["n2"]], 1)
+    pr = npb.ridge_predict(torch.cat([ftr["own"], ftr["n1"], ftr["n2"]], 1), lin_tr["e"], lin_te, dev, val)
+    truth = torch.cat([fte["n1"][:, :1], fte["n2"][:, :1]], 1)
+    check("ridge recovers a linear neighbour signal", npb.explained(pr, truth, torch.ones(n, dtype=torch.bool)) > 0.95, f"{npb.explained(pr, truth, torch.ones(n, dtype=torch.bool)):.3f}")
+    npb.FIT_LOG.clear()
+    saved = dict(npb.EARLY)
+    npb.EARLY.update(max_epochs=4, patience=1)
+    npb.fit_predict(torch.cat([ftr["own"], ftr["n1"], ftr["n2"]], 1), lin_tr["e"], lin_te, dev, val=val)
+    npb.EARLY.update(saved)
+    check("early-stopped fit logs its epochs and validation loss", len(npb.FIT_LOG) == 1 and 1 <= npb.FIT_LOG[0]["epochs_run"] <= 4 and np.isfinite(npb.FIT_LOG[0]["best_val_loss"]), json.dumps(npb.FIT_LOG))
+    check("combined verdict: KILL needs both learners, PASS needs the early-stopped MLP",
+          npb.combined_verdict({"mlp-early-stopped": "KILL", "ridge": "INCONCLUSIVE"}) == "INCONCLUSIVE" and npb.combined_verdict({"mlp-early-stopped": "KILL", "ridge": "KILL"}) == "KILL"
+          and npb.combined_verdict({"mlp-early-stopped": "PASS", "ridge": "KILL"}) == "PASS")
+    npb.EARLY.update(max_epochs=3)
+    out2 = os.path.join(tmp, "tile_flags.json")
+    sys.argv = ["x", "--ckpt", f"c1={ck}", "--scenes", "2", "--steps", str(steps), "--chunk", "16", "--early-stop", "--ridge", "--planted-share", "0.05", "--out", out2]
+    npb.main()
+    c = json.load(open(out2))["ckpt"]["c1"]
+    check("flagged probe run reports every learner, the gate and a combined verdict", set(c["learners"]) == {"mlp-fixed", "mlp-early-stopped", "ridge"} and "valid" in c["planted_gate"] and "combined_verdict" in c, c["combined_verdict"])
+    check("flagged probe run: every learner has a finite pooled delta_net", all(np.isfinite(v["summary"]["delta_net"]["pooled"]) for v in c["learners"].values()))
     print("FAILED: " + ", ".join(fails) if fails else "ALL PASSED")
     sys.exit(1 if fails else 0)
 
