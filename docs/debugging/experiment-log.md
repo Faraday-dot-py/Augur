@@ -4450,3 +4450,11 @@ Tried: fixed 64x64 MLP regression of the frozen replay checkpoint (seed 4738) fo
 Numbers (f = variance explained): own 0.115, own+n1 0.087, own+n2 0.098, own+n1+n2 0.083, shuffled 0.105, oracle 0.996. delta_net pooled -0.032 (per seed -0.029/-0.035/-0.033); kill line <0.06 with oracle >=0.90; pass 0.19. Prediction was 0.02-0.10.
 Reviewer: arithmetic and seed separation correct, no leakage, runtime consistent. Negative delta (and shuffled control also -0.010) indicates MLP overfit (no early stopping), so sensitivity to a weak real neighbour signal is unproven; oracle gate is trivially satisfied (target is near-linear in inputs). Own f only 0.115. Line was PROPOSED-BY-WORKER, fresh seeds 12000/12100/12200 not run.
 Verdict: KILL by rule, not final. Possible follow-up (not run): early stopping or ridge baseline plus planted-signal check, then fresh seeds.
+
+### 2026-11-13 -- result-level fresh review of jobs 7295, 7297, 7299, 7300 (verdicts logged earlier without a result-level reviewer)
+Reviewer recomputed from raw files with its own script; no logged verdict changes.
+- 7295 CONFIRMED: 6 of 6 laws above the 2% line (min 0.0371, max 0.2445), zero-shift floor 0.0; residual one run, tick 0 only.
+- 7297 PARTLY CONFIRMED: numbers right (index-based error 1.4688e-2 = KILL against unchanged line; tie-aware 5.565e-8). The tie rule and min over tied sets were added after the KILL was known (548c845), and the tie-aware figure compares adaptdeep to the force of its own chosen set, so it is small almost by construction. Quote the verdict as "PASS tie-aware / KILL index-based". One body, one seed.
+- 7299 CONFIRMED from the log only: 1 of 6 runs reach slope300 >= 0.3 at both N; FAIL under revised and original lines. Per-run results.json are on Polaris only; mechanism untested.
+- 7300 CONFIRMED: e_curve ratios pow1 1.224, pow3 1.985, lj 0.985 (all above the 0.8 kill line; lj is a third kill trigger, previously unstated); gravity err@20 ratio 0.973. One seed.
+Not read by reviewer: job logs, Polaris-side files, e_curve and brute-force scripts, checkpoint md5s.
