@@ -1,0 +1,68 @@
+23764cdc1602a95bb7c962e3bbd60c60  scripts/scatter_three_part_exact_swap_drift_attribution.py
+2343727035e07a3bb04e54d55a18c14f  scripts/scatter_three_part_exact_swap_drift_attribution_analyze.py
+9b3cb8bb1de47eb6ebf5f708d98e94b7  /home/adamwebb/augur_nfr/kern/E_frozen.pt
+25cb60747fbc33eecc1a7ae730608538  /home/adamwebb/augur-single-law-network-sizing/ckpt/width8.pt
+name, memory.total [MiB]
+NVIDIA H200 NVL, 143771 MiB
+exp-e-frozen/heldout/all-families 48 scenes
+  err@20 fails: no dominant source None [-17.042, -10.913, -17.801] floor/all 0.407
+  err@50 fails: no dominant source None [-3.553, -2.212, -4.125] floor/all 0.772
+  err@100 fails: no dominant source None [-0.789, -0.53, -1.374] floor/all 0.726
+  dominance changes [(3, 'U-Net', 2), (5, 'kernel', 5), (10, 'pair term', 27), (37, 'U-Net', 102), (139, 'kernel', 12)]
+exp-e-frozen/heldout/expB 24 scenes
+  err@20 fails: no dominant source None [-21.037, -13.337, -21.056] floor/all 0.087
+  err@50 fails: no dominant source None [-10.131, -5.516, -9.025] floor/all 0.08
+  err@100 fails: no dominant source None [-1.494, -0.983, -2.164] floor/all 0.199
+  dominance changes [(4, 'U-Net', 3), (7, 'kernel', 2), (9, 'pair term', 51), (60, 'U-Net', 71), (131, 'kernel', 20)]
+exp-e-frozen/heldout/cluster 24 scenes
+  err@20 fails: no dominant source None [-15.561, -10.015, -16.595] floor/all 0.526
+  err@50 fails: no dominant source None [-2.37, -1.618, -3.244] floor/all 0.897
+  err@100 fails: no dominant source None [-0.537, -0.368, -1.092] floor/all 0.914
+  dominance changes [(3, 'U-Net', 2), (5, 'kernel', 5), (10, 'pair term', 20), (30, 'U-Net', 110), (140, 'kernel', 11)]
+exp-e-frozen/fresh/all-families 48 scenes
+  err@20 fails: no dominant source None [-18.173, -11.457, -18.857] floor/all 0.378
+  err@50 fails: no dominant source None [-3.466, -2.218, -4.268] floor/all 0.77
+  err@100 fails: no dominant source None [-0.772, -0.556, -1.33] floor/all 0.77
+  dominance changes [(3, 'U-Net', 2), (5, 'kernel', 5), (10, 'pair term', 26), (36, 'U-Net', 82), (118, 'kernel', 33)]
+exp-e-frozen/fresh/expB 24 scenes
+  err@20 fails: no dominant source None [-21.556, -13.112, -20.163] floor/all 0.085
+  err@50 fails: no dominant source None [-10.151, -5.67, -10.164] floor/all 0.081
+  err@100 fails: no dominant source None [-1.652, -1.195, -2.258] floor/all 0.193
+  dominance changes [(4, 'U-Net', 1), (5, 'kernel', 2), (7, 'pair term', 51), (58, 'U-Net', 93)]
+exp-e-frozen/fresh/cluster 24 scenes
+  err@20 fails: no dominant source None [-16.871, -10.82, -18.354] floor/all 0.49
+  err@50 fails: no dominant source None [-2.37, -1.652, -3.302] floor/all 0.883
+  err@100 fails: no dominant source None [-0.505, -0.362, -1.049] floor/all 0.945
+  dominance changes [(3, 'U-Net', 2), (5, 'kernel', 5), (10, 'pair term', 21), (31, 'U-Net', 81), (112, 'kernel', 39)]
+width8-single-law-control/heldout/all-families 48 scenes
+  err@20 fails: no dominant source None [-7.525, -11.924, -14.57] floor/all 0.336
+  err@50 fails: no dominant source None [-1.748, -2.38, -3.457] floor/all 0.673
+  err@100 fails: no dominant source None [-0.428, -0.521, -1.262] floor/all 0.681
+  dominance changes [(5, 'U-Net', 3), (8, 'kernel', 1), (9, 'pair term', 33), (42, 'U-Net', 76), (118, 'kernel', 33)]
+width8-single-law-control/heldout/expB 24 scenes
+  err@20 fails: no dominant source None [-8.552, -13.688, -16.563] floor/all 0.069
+  err@50 fails: no dominant source None [-4.515, -6.357, -7.752] floor/all 0.069
+  err@100 fails: no dominant source None [-0.847, -1.076, -1.893] floor/all 0.191
+  dominance changes [(7, 'U-Net', 1), (8, 'pair term', 56), (64, 'U-Net', 87)]
+width8-single-law-control/heldout/cluster 24 scenes
+  err@20 fails: no dominant source None [-7.122, -11.23, -13.787] floor/all 0.441
+  err@50 fails: no dominant source None [-1.246, -1.657, -2.677] floor/all 0.782
+  err@100 fails: no dominant source None [-0.284, -0.329, -1.045] floor/all 0.849
+  dominance changes [(4, 'U-Net', 4), (8, 'kernel', 2), (10, 'pair term', 23), (33, 'U-Net', 82), (115, 'kernel', 36)]
+width8-single-law-control/fresh/all-families 48 scenes
+  err@20 fails: no dominant source None [-8.174, -13.173, -16.099] floor/all 0.324
+  err@50 fails: no dominant source None [-1.756, -2.477, -3.697] floor/all 0.693
+  err@100 fails: no dominant source None [-0.417, -0.521, -1.265] floor/all 0.718
+  dominance changes [(5, 'U-Net', 3), (8, 'kernel', 1), (9, 'pair term', 30), (39, 'kernel', 1), (40, 'U-Net', 75), (115, 'kernel', 36)]
+width8-single-law-control/fresh/expB 24 scenes
+  err@20 fails: no dominant source None [-9.006, -14.512, -17.074] floor/all 0.072
+  err@50 fails: no dominant source None [-4.433, -6.435, -8.565] floor/all 0.071
+  err@100 fails: no dominant source None [-0.94, -1.177, -2.148] floor/all 0.184
+  dominance changes [(61, 'U-Net', 1), (62, 'kernel', 5), (67, 'U-Net', 84)]
+width8-single-law-control/fresh/cluster 24 scenes
+  err@20 fails: no dominant source None [-7.847, -12.647, -15.716] floor/all 0.423
+  err@50 fails: no dominant source None [-1.304, -1.808, -2.874] floor/all 0.799
+  err@100 fails: no dominant source None [-0.263, -0.327, -1.005] floor/all 0.876
+  dominance changes [(4, 'U-Net', 4), (8, 'kernel', 2), (10, 'pair term', 22), (32, 'kernel', 3), (35, 'U-Net', 77), (112, 'kernel', 39)]
+TOTAL_SECONDS 84
+ALLDONE
