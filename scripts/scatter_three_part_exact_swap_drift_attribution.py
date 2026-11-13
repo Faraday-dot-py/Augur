@@ -263,6 +263,8 @@ def main():
     sg.T = a.ticks
     signal.signal(signal.SIGTERM, on_term)
     dev = torch.device(a.device)
+    torch.backends.cudnn.allow_tf32 = False
+    torch.backends.cuda.matmul.allow_tf32 = False
     sg.DEV = dev
     os.makedirs(a.out_dir, exist_ok=True)
     torch.manual_seed(4738)
