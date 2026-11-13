@@ -23,7 +23,7 @@ Columns: stage reached, job ids, control, deciding numbers with file citations, 
 | timestep-as-input-model (16) | stage 1 prepared | - | single-law-gravity-checkpoint-g128 | - | pending | - | - | 0 |
 | two-number-message-bottleneck-single-law (17) | stage 1 prepared | - | width-8 single-law | - | pending | - | - | 0 |
 | sparse-code-unet-single-law (18) | stage 1 prepared | - | width-8 and width-32 single-law | - | pending | - | - | 0 |
-| bit-output-cell-model-at-64-grid-with-long-range-law (19) | stage 1 prepared | - | float twin | - | pending | - | - | 0 |
+| bit-output-cell-model-at-64-grid-with-long-range-law (19) | stage 1 done, seed 4738 only, 3000 steps | 9616 (3:19) | float twin | soft-decode bits/float force-error ratio F 0.933, R20 0.910 (pass at most 1.5 on both, kill above 3); held-out 9100-9300 and fresh 12000-12200 both PASS (R20 0.910 vs 0.911); plateau guard not triggered; ~/augur-bit-output-64-grid-long-range-9616.log, scorer scripts/bit_output_64_grid_long_range.py:262-282 | PASS (weak: twin loss flat from step 1500 so the control may flatter the ratio; absolute F 0.93 is near zero-force F 1.0; results JSON on Polaris not yet inspected) | CONFIRMED on logic and log only (no numeric recompute, JSON Polaris-only) | this commit | 0.06 |
 | finite-speed-local-field-medium (20) | curiosity, 1 GPU-h cap | - | none | - | curiosity (no verdict) | - | - | 0 |
 
 ## Prep log
