@@ -4458,3 +4458,10 @@ Reviewer recomputed from raw files with its own script; no logged verdict change
 - 7299 CONFIRMED from the log only: 1 of 6 runs reach slope300 >= 0.3 at both N; FAIL under revised and original lines. Per-run results.json are on Polaris only; mechanism untested.
 - 7300 CONFIRMED: e_curve ratios pow1 1.224, pow3 1.985, lj 0.985 (all above the 0.8 kill line; lj is a third kill trigger, previously unstated); gravity err@20 ratio 0.973. One seed.
 Not read by reviewer: job logs, Polaris-side files, e_curve and brute-force scripts, checkpoint md5s.
+
+### 2026-11-13 -- result-level fresh review of jobs 9248, 9249, 7837 (verdicts logged earlier without a result-level reviewer)
+Reviewer recomputed from raw files; no logged verdict changes.
+- 9248 CONFIRMED (INCONCLUSIVE): primary err@20 0.6893, dE@100 1.0403, probe_half 0.1976, cost 2.578; fresh 0.6901 / 1.1802 / 0.2084 / 2.593; lines unchanged (err@20 <=0.75, dE@100 <=1.10, probe_half <=0.50, cost <=2.2). Correction: "cost clause alone blocks PASS" holds for primary only; on fresh seeds dE@100 1.18 also fails (per-seed 0.74-1.73, noisy gate). Plateau guard (PLATEAUED, drop -0.0077) not recomputed: val.jsonl absent.
+- 9249 CONFIRMED (KILL): per-seed 1024/256 ratios 4.259/4.342/5.351 (mean 4.651) vs kill 2.0; 256/control mean 0.9686. Caveat: span-1024 scenes scale spatially with fixed cluster sigma, so the ratio mixes unseen-tier extrapolation with changed geometry; cause not isolated. Seeds 9100/9200/9300 only.
+- 7837 PARTLY CONFIRMED: stage 1 pooled 2-pass/4-pass err@20 0.7349/0.7189, err@100 0.8468/0.8479, dE@100 1.1228/1.0453, probe_half 0.2163/0.073, cost 1.9185/3.8039; closure unmet, so full run proceeds. Core-force UNET-CARRIES at ticks 100/200/300 matches log but is near-guaranteed by construction (kernel, pair, exact terms tiny); diagnostic only; thresholds PROPOSED-BY-WORKER. Log errors: 2-pass dE@100 per-seed range is 0.99-1.32 (0.79-1.19 is 4-pass); 4-pass dE@100 1.045 does pass its line, only cost 3.80 fails.
+Not read by reviewer: val.jsonl, trainer logs, checkpoints, escape_roll.py, Polaris log for 7837.
