@@ -15,15 +15,17 @@ li { margin: 0; text-align: justify; }
 h2 { font-size: 11pt; margin: 5pt 0 1pt 0; }
 figure { margin: 3pt 0; }
 figure img { display: block; width: 100%; }
-figure.wide img { width: 78%; margin: 0 auto; }
+figure.wide img { width: 64%; margin: 0 auto; }
 figcaption { font-size: 11pt; line-height: 1.15; margin-top: 1pt; text-align: justify; }
 .row { display: flex; gap: 0.2in; align-items: flex-start; margin: 3pt 0; }
-.row .tbl { width: 3.2in; }
-.row figure { width: 3.1in; margin: 0; }
+.row .tbl { width: 3.55in; }
+.row figure { width: 2.75in; margin: 0; }
 table { border-collapse: collapse; width: 100%; font-size: 11pt; line-height: 1.1; }
-th, td { border-top: 0.5pt solid #000; padding: 1pt 3pt; text-align: left; vertical-align: top; }
+th, td { border-top: 0.5pt solid #000; padding: 1pt 2pt; text-align: left; vertical-align: top; }
 tr:last-child td, tr:first-child th { border-bottom: 0.5pt solid #000; }
-.cap { font-size: 11pt; line-height: 1.15; margin-top: 2pt; text-align: justify; }
+.cap { font-size: 11pt; line-height: 1.15; margin-top: 2pt; text-align: left; }
+td { white-space: nowrap; }
+td:first-child { white-space: normal; }
 </style>
 </head>
 <body>
@@ -32,32 +34,32 @@ tr:last-child td, tr:first-child th { border-bottom: 0.5pt solid #000; }
 <p class="by">Adam Webb &middot; Applied project</p>
 
 <h2>Project idea</h2>
-<p>I am building and evaluating a learned simulator for 2D bouncing balls (walls, ball-ball contact, gravity) in which each ball is one state token (position, velocity) and a small network predicts the next state. The question is whether a physics-structured token model beats a generic graph network in accuracy, energy behavior and generalization to far more balls than it was trained on. The pass/kill rule from the proposal is unchanged: the structured model must beat the graph-network (GNS-style) baseline at tick 10 and in energy drift on all held-out seed sets, otherwise I report a negative result.</p>
+<p>I am building and evaluating a learned simulator for 2D bouncing balls (walls, ball-ball contact, gravity) in which each ball is one state token (position, velocity) and a small network predicts the next state. The question is whether a physics-structured token model beats a generic graph network in accuracy, energy behavior and generalization to far more balls than it was trained on. The pass/kill rule from the proposal is unchanged: the structured model must beat the graph-network (GNS-style) baseline at tick 10 and in energy drift on all held-out seed sets, otherwise I report a negative result. It is now scored: PASS.</p>
 
 <h2>Current methods and pipeline</h2>
-<p><b>Data.</b> A seeded 64-bit GPU force simulator (soft-penalty contact, stiffness 400; walls; gravity 9; ball radius 0.75; time step 0.15; 8 substeps) generates scenes at training time: a single ball, head-on pairs, 20x20 boxes with 2-6 balls, and wider boxes with up to 100 balls and speeds up to 40. There are 1,200 training and 100 validation scenes of 24 steps (seed 4738). <b>Model</b> (&ldquo;conservative-contact token model&rdquo;, 8,708 weights, no attention): a distance-only pair-force network (1-64-64-1) applied equal and opposite, which makes pair momentum exact; a wall-force network; a learned uniform gravity; and 8 velocity-Verlet substeps over a cell-list neighbor graph rebuilt each substep, so cost is linear in ball count. <b>Training:</b> unrolled loss on position and velocity over 1, then 4, then 8 steps, 50 epochs, about 39 minutes on one GPU (first run, <code>cons_pure.pt</code>). <b>Evaluation:</b> err@k is the mean position error per ball at tick k, with model and truth started from the same true state; also energy per ball, momentum error, wall restitution versus speed, and first non-finite step. <b>Baselines:</b> an older attention-plus-GRU token model (&ldquo;soup B&rdquo;, in place); constant velocity and a GNS-style message-passing network (to add).</p>
+<p><b>Data.</b> A seeded 64-bit GPU force simulator (soft-penalty contact, stiffness 400; walls; gravity 9; ball radius 0.75; time step 0.15; 8 substeps) generates scenes at training time: a single ball, head-on pairs, 20x20 boxes with 2-6 balls, and wider boxes with up to 100 balls and speeds up to 40. There are 1,200 training and 100 validation scenes of 24 steps (seed 4738). <b>Model</b> (&ldquo;conservative-contact token model&rdquo;, 8,708 weights, no attention): a distance-only pair-force network (1-64-64-1) applied equal and opposite, which makes pair momentum exact; a wall-force network; a learned uniform gravity; and 8 velocity-Verlet substeps over a cell-list neighbor graph rebuilt each substep, so cost is linear in ball count. <b>Training:</b> unrolled loss on position and velocity over 1, then 4, then 8 steps, 50 epochs, about 39 minutes on one GPU (first run, <code>cons_pure.pt</code>). <b>Evaluation:</b> err@k is the mean position error per ball at tick k, with model and truth started from the same true state; also energy per ball, momentum error, wall restitution versus speed, and first non-finite step. <b>Baselines:</b> an older attention-plus-GRU token model (&ldquo;soup B&rdquo;, in place); constant velocity and a GNS-style message-passing network (547,458 weights, 3 message-passing layers, same data and unrolled loss, 30 epochs, about 10 minutes, one training seed).</p>
 
 <h2>Implementation progress</h2>
 <ul>
 <li><b>Built and in the repository:</b> the exact simulator and its GPU version; the token model with unit tests (including exact pair momentum); the training and evaluation scripts; 1,000-ball and 50,000-ball rollout scripts with frame renderers; and a JavaScript port of the model with a browser page that runs the model beside the exact simulator, with live-editable weights, per-ball internals, force-curve and energy plots, and a weight-export script.</li>
-<li><b>Frozen for the study:</b> the checkpoint <code>cons_pure_100.pt</code> (trained on at most 100 balls, seed 4738), which is the one the live page serves and the one tested at 50,000 balls. Numbers below were re-read from saved result files; Table 1 and Figure 2 used the earlier checkpoint <code>cons_pure.pt</code>.</li>
-<li><b>Not started yet:</b> the GNS-style baseline, the unified harness with three seed sets and confidence intervals, the one-command pipeline, and the ablations.</li>
+<li><b>Frozen for the study:</b> the checkpoint <code>cons_pure_100.pt</code> (trained on at most 100 balls, seed 4738), which is the one the live page serves and the one tested at 50,000 balls. Table 1 uses it; Figure 2 used the earlier checkpoint <code>cons_pure.pt</code>.</li>
+<li><b>Added this phase:</b> the GNS-style baseline (PyTorch, with tests) and one evaluation harness over three held-out seed sets (4738, 9000, 12000; 12 scenes each) with bootstrap confidence intervals and the pass/kill scorer.</li>
 </ul>
 
 <h2>Current results and prototype status</h2>
-<p>The structured model beats soup B on every metric measured so far (table), and in a 1,000-ball, 500-step rollout it never goes non-finite while soup B fails at step 75. Trained on at most 100 balls, it stays finite on 50,000 balls for 100 steps: err@1/5/10/20 = 0.019 / 0.107 / 0.280 / 0.937, kinetic energy per ball 1.7% below truth at tick 100, and the model step (1.16 s) is as fast as the exact one (1.28 s).</p>
+<p>The structured model beats both the GNS-style baseline and soup B at tick 10 and in energy drift on all three held-out seed sets, so the pass/kill rule passes (Table 1); in a 1,000-ball, 500-step rollout it never goes non-finite while soup B fails at step 76. Trained on at most 100 balls, it stays finite on 50,000 balls for 100 steps: err@1/5/10/20 = 0.019 / 0.107 / 0.280 / 0.937, kinetic energy per ball 1.7% below truth at tick 100, and the model step (1.16 s) is as fast as the exact one (1.28 s).</p>
 
 <div class="row">
 <div class="tbl">
 <table>
-<tr><th>Metric</th><th>Soup B</th><th>Token</th></tr>
-<tr><td>err@10, 4 balls</td><td>0.67</td><td>0.31</td></tr>
-<tr><td>err@10, 100 balls</td><td>0.49</td><td>0.30</td></tr>
-<tr><td>Energy/ball @100 (truth &minus;364)</td><td>&minus;778</td><td>&minus;388</td></tr>
-<tr><td>y-wall restitution (truth 1.0)</td><td>0.41&ndash;1.65</td><td>1.00&ndash;1.04</td></tr>
-<tr><td>First non-finite step</td><td>75</td><td>none</td></tr>
+<tr><th>Metric</th><th>Soup B</th><th>GNS</th><th>Token</th></tr>
+<tr><td>err@10, 4 balls</td><td>0.53</td><td>1.44</td><td>0.22</td></tr>
+<tr><td>err@10, 100 balls</td><td>0.46</td><td>1.09</td><td>0.27</td></tr>
+<tr><td>Drift@100, 100 balls</td><td>1.47</td><td>0.74</td><td>0.08</td></tr>
+<tr><td>Wall restit. (truth 1)</td><td>0.41&ndash;1.65</td><td>0.19&ndash;1.23</td><td>1.00&ndash;1.01</td></tr>
+<tr><td>First non-finite step</td><td>76</td><td>none</td><td>none</td></tr>
 </table>
-<p class="cap"><b>Table 1.</b> Soup B versus the token model. Rows 1-4: held-out seeds 9000 and 12000, 24 and 6 scenes, true start (energy row: 100 balls); wall speeds 3-80; last row: 1,000 balls, 500 steps. Checkpoint <code>cons_pure.pt</code> (before the 100-ball cap).</p>
+<p class="cap"><b>Table 1.</b> Harness results, checkpoint <code>cons_pure_100.pt</code>: seed sets 4738, 9000, 12000 pooled, 12 scenes each, true start; wall speeds 3-80; last row 1,000 balls, 500 steps. The token model wins err@10 and drift on every seed set separately.</p>
 </div>
 <figure>
 <img src="progress-report-assets/demo-screenshot.png" alt="Browser demo">
@@ -67,24 +69,22 @@ tr:last-child td, tr:first-child th { border-bottom: 0.5pt solid #000; }
 
 <figure class="wide">
 <img src="progress-report-assets/rollout-grid-1000-balls.png" alt="Rollout grid">
-<figcaption><b>Figure 2.</b> 1,000 balls, steps 0 to 499: truth (top), token model <code>cons_pure.pt</code> (middle), soup B (bottom). Soup B panels after step 75 show its last finite frame. A reviewer with no hypothesis primed saw truth and the token model match to about step 20 and both re-expand after the floor impact; soup B stays packed.</figcaption>
+<figcaption><b>Figure 2.</b> 1,000 balls, steps 0 to 499: truth (top), token model <code>cons_pure.pt</code> (middle), soup B (bottom). Soup B panels after step 75 show its last finite frame. A reviewer with no hypothesis primed saw truth and the token model match to about step 20; soup B stays packed.</figcaption>
 </figure>
 
 <h2>Challenges and changes</h2>
 <ul>
 <li><b>Chaos limits accuracy claims.</b> Past about tick 20-30 position error saturates (err@50 is about 7 for 4 balls and 45 for 100 balls, for both models), so I judge accuracy over ticks 1-20 and use energy, momentum and restitution beyond that.</li>
-<li><b>Small, single-seed evidence.</b> Table 1 uses few scenes and one training seed; the harness with three seed sets and bootstrap intervals will replace it.</li>
-<li><b>Known model limits:</b> in <code>cons_pure.pt</code> learned gravity is 8.90 versus the true 9, leaving a constant 0.88 pair-momentum offset (the gravity fine-tune ablation targets it); Verlet, 8 substeps and the force scale mirror the truth integrator, a strong prior the substep ablation will quantify.</li>
-<li><b>Change from the proposal:</b> evaluation now starts from the true state, so older grid-start headline numbers are not comparable. The pass/kill rule cannot be scored until the GNS baseline exists.</li>
+<li><b>Limited baseline effort.</b> One training seed per model, and the GNS baseline got 30 epochs (about 10 minutes) and no tuning versus 50 epochs for the token model, so its gap could shrink with more training; it also has 547,458 weights versus 8,708. At 1,000 balls both models are stable but not accurate: error at tick 100 is 125 (GNS) and 134 (token), worse than constant velocity (111). Only seed set 12000 is untouched by training; 4738 and 9000 use a different scene generator than training.</li>
+<li><b>Known model limits:</b> in <code>cons_pure.pt</code> learned gravity is 8.90 versus the true 9, leaving a constant 0.88 pair-momentum offset; Verlet, 8 substeps and the force scale mirror the truth integrator, a strong prior that is not yet ablated.</li>
+<li><b>Change from the proposal:</b> evaluation now starts from the true state, so older grid-start headline numbers are not comparable. To fit the schedule, the ablations, scaling study and one-command pipeline were cut from this phase.</li>
 </ul>
 
 <h2>Next steps before the final submission</h2>
 <ul>
-<li>GNS-style baseline in PyTorch (encoder, 3 message-passing layers, acceleration decoder, same data and unrolled loss) with tests for shapes, permutation invariance and pair momentum; add the constant-velocity baseline.</li>
-<li>One evaluation harness over three held-out seed sets with bootstrap confidence intervals; rerun everything on <code>cons_pure_100.pt</code>; score the pass/kill rule.</li>
-<li>Ablations: substep count, residual attention path, fixed versus fine-tuned gravity, unroll length.</li>
-<li>Scaling study (ball count at constant density to 50,000, box size, speeds beyond 40), dropped first if time runs short.</li>
-<li>One-command pipeline tested on a clean clone; demo polish (results panel, truth/model/GNS video), failure analysis, report.</li>
+<li>Check the verdict is robust: retrain the GNS baseline for the full 50 epochs and add training seeds for both models.</li>
+<li>Demo: add a results panel and a truth/token/GNS video; failure analysis of where each model breaks; final report.</li>
+<li>Future work, not started: ablations (substeps, residual attention path, gravity fine-tune, unroll length), a scaling study to 50,000 balls, and a one-command pipeline.</li>
 </ul>
 
 </body>
