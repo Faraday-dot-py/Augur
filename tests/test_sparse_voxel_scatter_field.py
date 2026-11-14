@@ -240,7 +240,7 @@ def test_score_records_diverged_rollout_as_not_finite(tmp_path, monkeypatch):
     monkeypatch.setattr(tv.ops, "retarget", lambda *a: None)
     monkeypatch.setattr(tv.ops, "exact_rollout", exact)
     monkeypatch.setattr(tv.ss, "make_scene", lambda *a: (np.zeros((n, 3)), np.ones((n, 3))))
-    monkeypatch.setattr(tv.ss, "run_model", lambda *a, **k: (torch.zeros(steps + 1, n, 3), None, None))
+    monkeypatch.setattr(tv.ss, "run_model", lambda *a, **k: (torch.ones(steps + 1, n, 3), None, None))
     monkeypatch.setattr(tv, "plummer", lambda *a: (np.zeros((n, 3)), np.ones((n, 3))))
     monkeypatch.setattr(tv, "run3", boom)
     monkeypatch.setattr(tv, "val_err", lambda *a: 0.0)
