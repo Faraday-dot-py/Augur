@@ -243,7 +243,7 @@ def test_score_records_diverged_rollout_as_not_finite(tmp_path, monkeypatch):
     monkeypatch.setattr(tv.ss, "run_model", lambda *a, **k: (torch.ones(steps + 1, n, 3), None, None))
     monkeypatch.setattr(tv, "plummer", lambda *a: (np.zeros((n, 3)), np.ones((n, 3))))
     monkeypatch.setattr(tv, "run3", boom)
-    monkeypatch.setattr(tv, "val_err", lambda *a: 0.0)
+    monkeypatch.setattr(tv, "val_err", boom)
     monkeypatch.setattr(tv, "train_scenes", lambda *a: None)
     monkeypatch.setattr(tv, "HELD_OUT", (1,))
     ctrl = tmp_path / "ctrl.pt"
@@ -252,3 +252,4 @@ def test_score_records_diverged_rollout_as_not_finite(tmp_path, monkeypatch):
     res = tv.score(args, torch.device("cpu"))
     saved = json.load(open(tmp_path / "score.json"))
     assert res["cold"]["all_finite"] is False and saved["cold"]["all_finite"] is False and saved["virial"]["all_finite"] is False
+    assert saved["val_err20"] != saved["val_err20"]

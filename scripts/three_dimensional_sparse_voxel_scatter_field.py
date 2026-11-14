@@ -145,6 +145,8 @@ def run3(model, pos0, vel0, steps, dev):
 def run3_or_nan(model, pos0, vel0, steps, dev):
     try:
         return run3(model, pos0, vel0, steps, dev)
+    except torch.cuda.OutOfMemoryError:
+        raise
     except RuntimeError as e:
         log(f"rollout diverged ({str(e)[:80]}), recording non-finite")
         return torch.full((steps + 1, pos0.shape[0], 3), float("nan"), dtype=torch.float64, device=dev)
@@ -186,7 +188,13 @@ def score(args, dev):
     res = {"per_scene": per, "primary_family": "cold", "plateau": common.plateau(args.out) if os.path.exists(f"{args.out}/val_curve.json") else None}
     if args.mode == "score":
         res["ckpt_file"], res["ckpt_it"] = ckpt_path(args), args.ckpt_it
-        res["val_err20"] = val_err(cand, train_scenes(args.val_scenes, 20, VAL_SEED, dev), dev)
+        try:
+            res["val_err20"] = val_err(cand, train_scenes(args.val_scenes, 20, VAL_SEED, dev), dev)
+        except torch.cuda.OutOfMemoryError:
+            raise
+        except RuntimeError as e:
+            log(f"val rollout diverged ({str(e)[:80]}), recording non-finite")
+            res["val_err20"] = float("nan")
         log(f"val err@20 at it {args.ckpt_it}: {res['val_err20']:.5f}")
     ratio2 = float(np.mean([r["d2"]["20"] for r in per]) / np.mean([r["cv2_20"] for r in per]))
     res["ratio2_err20_over_constvel"] = ratio2
