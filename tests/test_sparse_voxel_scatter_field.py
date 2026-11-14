@@ -217,3 +217,38 @@ def test_load_candidate_reads_ckpt_file_and_iteration(tmp_path, monkeypatch):
     assert args.ckpt_it == 10000 and tv.ckpt_path(args) == str(path)
     assert torch.equal(m.state_dict()["inp.weight"], make(seed=1).state_dict()["inp.weight"])
     assert not any(p.requires_grad for p in m.parameters())
+
+
+def test_score_records_diverged_rollout_as_not_finite(tmp_path, monkeypatch):
+    import argparse
+    import json
+
+    import numpy as np
+
+    from scripts import three_dimensional_sparse_voxel_scatter_field as tv
+
+    n, steps = 8, 20
+
+    def exact(p, v, k, *a):
+        return torch.zeros(k + 1, n, 3, dtype=torch.float64), None
+
+    def boom(*a, **k):
+        raise RuntimeError("bincount only supports 1-d non-negative integral inputs.")
+
+    monkeypatch.setattr(tv, "load_candidate", lambda args, dev: setattr(args, "ckpt_it", 7) or make())
+    monkeypatch.setattr(tv.ss, "load", lambda path, dev: object())
+    monkeypatch.setattr(tv.ops, "retarget", lambda *a: None)
+    monkeypatch.setattr(tv.ops, "exact_rollout", exact)
+    monkeypatch.setattr(tv.ss, "make_scene", lambda *a: (np.zeros((n, 3)), np.ones((n, 3))))
+    monkeypatch.setattr(tv.ss, "run_model", lambda *a, **k: (torch.zeros(steps + 1, n, 3), None, None))
+    monkeypatch.setattr(tv, "plummer", lambda *a: (np.zeros((n, 3)), np.ones((n, 3))))
+    monkeypatch.setattr(tv, "run3", boom)
+    monkeypatch.setattr(tv, "val_err", lambda *a: 0.0)
+    monkeypatch.setattr(tv, "train_scenes", lambda *a: None)
+    monkeypatch.setattr(tv, "HELD_OUT", (1,))
+    ctrl = tmp_path / "ctrl.pt"
+    ctrl.write_bytes(b"x")
+    args = argparse.Namespace(mode="score", control=str(ctrl), out=str(tmp_path), score_steps=steps, score_n=n, score_reps=1, val_scenes=1, ckpt_file="c", ckpt_dir="d")
+    res = tv.score(args, torch.device("cpu"))
+    saved = json.load(open(tmp_path / "score.json"))
+    assert res["cold"]["all_finite"] is False and saved["cold"]["all_finite"] is False and saved["virial"]["all_finite"] is False

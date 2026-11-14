@@ -142,6 +142,14 @@ def run3(model, pos0, vel0, steps, dev):
     return Pm[0].double()
 
 
+def run3_or_nan(model, pos0, vel0, steps, dev):
+    try:
+        return run3(model, pos0, vel0, steps, dev)
+    except RuntimeError as e:
+        log(f"rollout diverged ({str(e)[:80]}), recording non-finite")
+        return torch.full((steps + 1, pos0.shape[0], 3), float("nan"), dtype=torch.float64, device=dev)
+
+
 def cv_err(pos0, vel0, Pt, k, dev):
     return float((Pt[k] - torch.tensor(pos0, device=dev) - torch.tensor(vel0, device=dev) * DT * k).norm(dim=-1).mean())
 
@@ -169,7 +177,7 @@ def score(args, dev):
                 Pt, _ = ops.exact_rollout(t3, o3, steps, DT, SUB, EPS)
                 f1, _ = ops.exact_rollout(t3, o3, 20, DT, SUB, EPS)
                 f2, _ = ops.exact_rollout(t3, o3, 20, DT, 4 * SUB, EPS)
-                Pm = run3(cand, p3, v3, steps, dev)
+                Pm = run3_or_nan(cand, p3, v3, steps, dev)
                 e3 = (Pm - Pt).norm(dim=-1).mean(1)
                 row[fam] = {"d3": {str(k): float(e3[k]) for k in TICKS if k <= steps}, "cv3_20": cv_err(p3, v3, Pt, 20, dev), "floor3_20": float((f1[20] - f2[20]).norm(dim=-1).mean()),
                             "finite": bool(torch.isfinite(Pm).all()), "cell_overflow": cand.cell_overflow}
