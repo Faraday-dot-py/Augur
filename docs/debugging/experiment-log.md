@@ -4480,3 +4480,10 @@ Rule (unchanged, from proposal): token model beats GNS at err@10 AND abs energy 
 - 100 balls pooled: err@10 0.273 vs 1.094; abs drift@100 0.079 vs 0.743; per seed token wins both on all three. 4 balls err@10 0.219 vs 1.438. Wall restitution 1.00-1.01 vs 0.19-1.23. 1000 balls x 500 steps: both finite; err@100 133.6 (token) vs 124.8 (GNS); both worse than constant velocity (111.2) there.
 - Failed attempts: 10422 and 10434 crashed on numpy float32 in JSON writes (fixed in 00dbeb9, 94341a7); 10424 failed on a wrapper path error.
 - Fresh review: numbers CONFIRMED. Caveats: seed sets 4738 and 9000 are a different scene generator than training, not untouched; only 12000 fully unseen. Harness cache key has no checkpoint identity. GNS has no substeps, learned gravity or pair-force prior, so the comparison is design vs design, not equal footing.
+
+## 2026-11-16 scatter-field-2d-cost-blowup-at-1e5: LAUNCHED (job 11092)
+Per-component timing job launched on Polaris slot 2 (seed 4738, tarball md5 32ed65b0d3d9dcb913bd9618418c22e8, script scripts/scatter_field_2d_cost_blowup_bench.py), pre-reg docs/debugging/architecture-push-prereg/scatter-field-2d-cost-blowup-at-1e5.md (fixed, unamended). No result yet; verdicts are logged when scored.
+
+## 2026-11-16 architecture-push-results table refresh (documentation, not an experiment)
+- Refreshed docs/debugging/architecture-push-results.md from the log, registry, slot chains, results files and `git log --all`. No new run, no verdict changed. Row 2 summary-token-exchange now KILL (jobs 9914, 10105); rows 3, 5, 8, 9 updated with the 2026-11-12 to 2026-11-14 numbers and reviews; job 11092 marked RUNNING, not scored. Eight conflicts listed at the bottom of that file (notably: row 5 stale "60k not approved" text; job 10120 belongs to scatter-field-three-part-separate-training-then-joint-finetune, not row 2).
+- Counts: 19 rows = 10 done + 8 pending + 1 curiosity. Fresh reviewer ran: 2 errors (row 1/13 job ids 7856/7857, row 2 log citation), both fixed; rest confirmed.
