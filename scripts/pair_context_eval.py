@@ -91,19 +91,72 @@ def score_lines(res, seeds, iters, lines):
             "momentum_ratio_per_train_seed_report_only": moms, "plateau": plats}
 
 
+ORDER = {"PASS": 0, "INCONCLUSIVE": 1, "INCONCLUSIVE-undertrained": 1, "KILL": 2}
+
+
+def full_run_cells(res, arm):
+    """Per train seed (lowest first) cells of one arm on one eval set, as in neighbour-context-pair-branch-full-run."""
+    cells = {}
+    for s in res["train_seeds"]:
+        a, c = res["arms"][f"{arm}-s{s}"], res["arms"][f"ctrl-s{s}"]
+        cells[s] = {"err20_ratio": a["err20_mean"] / c["err20_mean"], "tangential_over_radial": a["tangential_over_radial"],
+                    "momentum_ratio": a["momentum_error_mean"] / c["momentum_error_mean"],
+                    "over_frozen": a["err20_mean"] / res["arms"]["frozen-exp-e"]["err20_mean"],
+                    "plateau": plateau(a["validation"], res["iters"])}
+    return cells
+
+
+def full_run_set_label(cells):
+    mom = float(np.mean([c["momentum_ratio"] for c in cells.values()]))
+    kill = any(c["err20_ratio"] >= ERR_KILL for c in cells.values()) or mom > 1.0
+    ok = all(c["err20_ratio"] <= ERR_PASS and c["tangential_over_radial"] < TAN_PASS and c["over_frozen"] <= 1.0 for c in cells.values())
+    label = "KILL" if kill else "PASS" if ok else "INCONCLUSIVE"
+    return label, mom
+
+
+def combine_full_run(held, fresh):
+    out = {"lines": "full-run", "momentum_rule": "pooled over train seeds per eval set, KILL if above 1.0 on either set", "arms": {}}
+    for arm in ("pen", "cand"):
+        sets = {}
+        for name, res in (("held-out", held), ("fresh", fresh)):
+            cells = full_run_cells(res, arm)
+            label, mom = full_run_set_label(cells)
+            sets[name] = {"label": label, "momentum_ratio_pooled": mom, "cells": cells}
+        label = max((v["label"] for v in sets.values()), key=lambda l: ORDER[l])
+        if label != "PASS" and any(c["plateau"]["undertrained"] for v in sets.values() for c in v["cells"].values()):
+            label = "INCONCLUSIVE-undertrained"
+        out["arms"][arm] = {"label": label, "sets": sets}
+    out["headline_arm"] = "pen"
+    out["label"] = out["arms"]["pen"]["label"]
+    out["control_err20_cv_across_eval_seeds"] = {"held-out": held["control_err20_spread"]["cv_across_eval_seeds"], "fresh": fresh["control_err20_spread"]["cv_across_eval_seeds"]}
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--e-ckpt", required=True)
-    ap.add_argument("--ckpt-dir", required=True)
-    ap.add_argument("--train-dir", required=True)
+    ap.add_argument("--combine", nargs=3, metavar=("HELD_OUT_JSON", "FRESH_JSON", "OUT"), default=None)
+    ap.add_argument("--arm-cache-dir", default=None)
+    ap.add_argument("--e-ckpt")
+    ap.add_argument("--ckpt-dir")
+    ap.add_argument("--train-dir")
     ap.add_argument("--train-seeds", default="4739")
     ap.add_argument("--eval-seeds", default="9100,9200,9300")
     ap.add_argument("--scenes", type=int, default=32)
-    ap.add_argument("--iters", type=int, required=True)
+    ap.add_argument("--iters", type=int)
     ap.add_argument("--device", default="cuda")
-    ap.add_argument("--lines", choices=["seed-replication", "tangential-penalty"], default=None)
-    ap.add_argument("--out", required=True)
+    ap.add_argument("--lines", choices=["seed-replication", "tangential-penalty", "full-run"], default=None)
+    ap.add_argument("--out")
     args = ap.parse_args()
+    if args.combine:
+        held, fresh, out_path = args.combine
+        out = combine_full_run(json.load(open(held)), json.load(open(fresh)))
+        json.dump(out, open(out_path + ".tmp", "w"), indent=1)
+        os.replace(out_path + ".tmp", out_path)
+        print("verdict", json.dumps(out), flush=True)
+        return
+    for need in ("e_ckpt", "ckpt_dir", "train_dir", "iters", "out"):
+        if getattr(args, need) is None:
+            raise SystemExit(f"--{need.replace('_', '-')} is required")
     dev = torch.device(args.device)
     seeds = [int(s) for s in args.train_seeds.split(",")]
     eseeds = [int(s) for s in args.eval_seeds.split(",")]
@@ -112,8 +165,15 @@ def main():
     for s in seeds:
         arms[f"ctrl-s{s}"] = (f"{args.ckpt_dir}/pairctx-ctrl-s{s}.pt", STOCK, f"{args.train_dir}/pairctx-ctrl-s{s}_train.json")
         arms[f"cand-s{s}"] = (f"{args.ckpt_dir}/pairctx-cand-s{s}.pt", CAND, f"{args.train_dir}/pairctx-cand-s{s}_train.json")
+        if args.lines == "full-run":
+            arms[f"pen-s{s}"] = (f"{args.ckpt_dir}/pairctx-pen-s{s}.pt", CAND, f"{args.train_dir}/pairctx-pen-s{s}_train.json")
     res = {"eval_seeds": eseeds, "train_seeds": seeds, "scenes": args.scenes, "ticks": STEPS, "iters": args.iters, "arms": {}}
     for name, (ck, var, tj) in arms.items():
+        cache = f"{args.arm_cache_dir}/{name}.json" if args.arm_cache_dir else None
+        if cache and os.path.exists(cache):
+            res["arms"][name] = json.load(open(cache))
+            print(name, "cached, skipping", flush=True)
+            continue
         for p in (ck, tj):
             if p and not os.path.exists(p):
                 raise SystemExit(f"missing {p}")
@@ -134,13 +194,21 @@ def main():
             assert tr["iters"] == args.iters, f"{tj} ran {tr['iters']} iterations, expected {args.iters}"
             a["validation"] = tr["validation"]
         res["arms"][name] = a
+        if cache:
+            os.makedirs(args.arm_cache_dir, exist_ok=True)
+            json.dump(a, open(cache + ".tmp", "w"))
+            os.replace(cache + ".tmp", cache)
         print(name, {k: v for k, v in a.items() if k not in ("per_eval_seed", "validation")}, flush=True)
     c20 = [res["arms"][f"ctrl-s{s}"]["per_eval_seed"][str(e)]["err20"] for s in seeds for e in eseeds]
     res["control_err20_spread"] = {"cv_all_cells": float(np.std(c20) / np.mean(c20)),
                                    "cv_across_train_seeds": float(np.std([res["arms"][f"ctrl-s{s}"]["err20_mean"] for s in seeds]) / np.mean([res["arms"][f"ctrl-s{s}"]["err20_mean"] for s in seeds])),
                                    "cv_across_eval_seeds": float(np.mean([np.std([res["arms"][f"ctrl-s{s}"]["per_eval_seed"][str(e)]["err20"] for e in eseeds]) / np.mean([res["arms"][f"ctrl-s{s}"]["per_eval_seed"][str(e)]["err20"] for e in eseeds]) for s in seeds]))}
     res["frozen_ratio_cand_over_frozen"] = {str(s): res["arms"][f"cand-s{s}"]["err20_mean"] / res["arms"]["frozen-exp-e"]["err20_mean"] for s in seeds}
-    res["verdict"] = score_lines(res, seeds, args.iters, args.lines) if args.lines else score(res, seeds, args.iters)
+    if args.lines == "full-run":
+        res["frozen_ratio_pen_over_frozen"] = {str(s): res["arms"][f"pen-s{s}"]["err20_mean"] / res["arms"]["frozen-exp-e"]["err20_mean"] for s in seeds}
+        res["verdict"] = {"lines": "full-run", "note": "per-set cells; the verdict is printed by --combine on both sets"}
+    else:
+        res["verdict"] = score_lines(res, seeds, args.iters, args.lines) if args.lines else score(res, seeds, args.iters)
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
     json.dump(res, open(args.out + ".tmp", "w"), indent=1)
     os.replace(args.out + ".tmp", args.out)
