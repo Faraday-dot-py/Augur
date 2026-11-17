@@ -1,0 +1,25 @@
+plummer_n1000000 scene 0 {'learned_adaptdeep': 0.08543, 'learned_default_adapt': 0.08545, 'plain_pm': 0.01306, 'barnes_hut': 0.01093} 3.0 s
+plummer_n1000000 scene 1 {'learned_adaptdeep': 0.08831, 'learned_default_adapt': 0.08831, 'plain_pm': 0.01365, 'barnes_hut': 0.01097} 2.7 s
+two_clump_n1000000 scene 0 {'learned_adaptdeep': 0.08555, 'learned_default_adapt': 0.08557, 'plain_pm': 0.00978, 'barnes_hut': 0.012} 3.1 s
+two_clump_n1000000 scene 1 {'learned_adaptdeep': 0.08691, 'learned_default_adapt': 0.0869, 'plain_pm': 0.00953, 'barnes_hut': 0.01214} 3.2 s
+exp_disk_n1000000 scene 0 {'learned_adaptdeep': 0.0463, 'learned_default_adapt': 0.04632, 'plain_pm': 0.00397, 'barnes_hut': 0.01384} 2.8 s
+exp_disk_n1000000 scene 1 {'learned_adaptdeep': 0.04637, 'learned_default_adapt': 0.04636, 'plain_pm': 0.00387, 'barnes_hut': 0.01391} 2.7 s
+uniform_disk_n1000000 scene 0 {'learned_adaptdeep': 0.02563, 'learned_default_adapt': 0.02563, 'plain_pm': 0.00988, 'barnes_hut': 0.01262} 2.3 s
+uniform_disk_n1000000 scene 1 {'learned_adaptdeep': 0.02596, 'learned_default_adapt': 0.02595, 'plain_pm': 0.01015, 'barnes_hut': 0.01243} 2.3 s
+plummer_n2000000 scene 0 {'learned_adaptdeep': 0.08391, 'plain_pm': 0.01266, 'barnes_hut': 0.01092} 3.6 s
+plummer_n2000000 scene 1 {'learned_adaptdeep': 0.08887, 'plain_pm': 0.01348, 'barnes_hut': 0.01086} 3.6 s
+two_clump_n2000000 scene 0 {'learned_adaptdeep': 0.08668, 'plain_pm': 0.00978, 'barnes_hut': 0.01212} 4.0 s
+two_clump_n2000000 scene 1 {'learned_adaptdeep': 0.08347, 'plain_pm': 0.00981, 'barnes_hut': 0.01195} 3.9 s
+exp_disk_n2000000 scene 0 {'learned_adaptdeep': 0.04541, 'plain_pm': 0.0031, 'barnes_hut': 0.01392} 3.6 s
+exp_disk_n2000000 scene 1 {'learned_adaptdeep': 0.04493, 'plain_pm': 0.00317, 'barnes_hut': 0.01391} 3.6 s
+uniform_disk_n2000000 scene 0 {'learned_adaptdeep': 0.02449, 'plain_pm': 0.00723, 'barnes_hut': 0.01273} 3.7 s
+uniform_disk_n2000000 scene 1 {'learned_adaptdeep': 0.02391, 'plain_pm': 0.00746, 'barnes_hut': 0.01266} 3.7 s
+plummer_n3000000 scene 0 {'learned_adaptdeep': 0.08668, 'plain_pm': 0.01323, 'barnes_hut': 0.01083} 5.5 s
+plummer_n3000000 scene 1 {'learned_adaptdeep': 0.08682, 'plain_pm': 0.01382, 'barnes_hut': 0.01094} 5.5 s
+two_clump_n3000000 scene 0 {'learned_adaptdeep': 0.08281, 'plain_pm': 0.00973, 'barnes_hut': 0.01198} 6.1 s
+two_clump_n3000000 scene 1 {'learned_adaptdeep': 0.08667, 'plain_pm': 0.00971, 'barnes_hut': 0.01196} 6.1 s
+exp_disk_n3000000 scene 0 {'learned_adaptdeep': 0.04503, 'plain_pm': 0.00287, 'barnes_hut': 0.01391} 5.5 s
+exp_disk_n3000000 scene 1 {'learned_adaptdeep': 0.0451, 'plain_pm': 0.00288, 'barnes_hut': 0.01396} 5.5 s
+uniform_disk_n3000000 scene 0 {'learned_adaptdeep': 0.0238, 'plain_pm': 0.00606, 'barnes_hut': 0.01258} 5.0 s
+uniform_disk_n3000000 scene 1 {'learned_adaptdeep': 0.02333, 'plain_pm': 0.00622, 'barnes_hut': 0.01252} 5.0 s
+DONE
