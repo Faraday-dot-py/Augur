@@ -18,15 +18,20 @@ Built 2026-11-17 from docs/paper/paper-claims-and-evidence-table.md (the table; 
 6. Limitations.
 7. Related work, conclusion, reproducibility and release.
 
-## Headline claims (candidates; the user picks, see needs-user list)
+## Headline structure (Pilot decision 2026-11-17)
 
-- scatter-field-linear-cost-to-ten-billion-bodies (speed and memory only, no accuracy at that size)
-- token-model-linear-cost-to-one-billion-balls
-- reference-simulator-validated-against-ias15 (as-registered INCONCLUSIVE and amended PASS both stated)
-- chaos-floor-err20-is-model-dominated and chaos-floor-cold-collapse-err100-at-ceiling (a measurement-validity contribution)
-- tiled-closed-loop-tier-zero-accuracy (4 of 4 training seeds PASS on err@20)
-- token-model-beats-gns-style-baseline (design versus design, not equal footing)
-- pre-registered-kill-lines-and-fresh-reviewer-method
+Main headlines:
+1. Linear cost at scale: scatter-field-linear-cost-to-ten-billion-bodies (speed and memory only, no accuracy at that size; marker speed-only) and token-model-linear-cost-to-one-billion-balls (speed-only).
+2. Tileability: scatter-field-ghost-cell-tiling-for-gravity, token-model-strip-tiling-equals-global (fp32 noise, exact translation equivariance), tiled-closed-loop-tier-zero-accuracy (err@20 passes on 4 of 4 training seeds) with tiled-closed-loop-tier-zero-energy-drift-fails stated beside it.
+
+Secondary:
+- token-model-size-generalization-to-fifty-thousand-balls (trained at 200 balls or fewer)
+- visited-state-label-replay-cuts-drift (4.25 to 1.99 and 4.78 to 1.88; truth-state control similar, cause not settled)
+- learned-vs-plain-particle-mesh-force-at-n1000 (learned wins 1.8-4.6x median/p90 at N=1000, loses at 1e4 and above)
+
+Supporting methodology: chaos-floor-err20-is-model-dominated, chaos-floor-cold-collapse-err100-at-ceiling, reference-simulator-validated-against-ias15 (as registered INCONCLUSIVE, amended PASS), pre-registered-kill-lines-and-fresh-reviewer-method, token-model-beats-gns-style-baseline (design versus design).
+
+Every claim row carries a marker (validated, single-seed, worker-proposed-line, post-hoc-amended, speed-only, unvalidated); the draft repeats the marker beside each claim. Verdicts are reported as pre-registered, with amendments (tie-aware pair-term rule, post hoc IAS15 line) labelled as amendments, never as plain passes. No raw files are released; the paper cites result tables. Sole author; acknowledgment that CPP Polaris HPC provided compute. Full text is in docs/paper/paper-draft.md.
 
 ## Negative-results section
 
