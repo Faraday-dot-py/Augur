@@ -3,7 +3,7 @@ sum for bodies in the densest region and measure how much drift and error disapp
   base          unchanged model
   dense-exact   exact force for bodies with at least DENSE_MIN neighbours within R_DENS (decided at every tick on the model's own state)
   random-exact  exact force for the same number of randomly chosen bodies per scene and tick (is the gain specific to dense bodies)
-  all-exact     exact force for every body (harness check: must land near the exact trajectory)
+  all-exact     exact force for every body, integrated with the truth's own substepped integrator (harness check: must land near the exact trajectory)
 Usage: PYTHONPATH=. python scripts/dense_region_exact_force_ceiling_probe.py --ckpt replay=<pt> [more name=path] --out <json>"""
 import argparse
 import json
@@ -13,6 +13,8 @@ import numpy as np
 import torch
 
 from scripts import replay_mechanism_force_error_breakdown as rb
+from scripts import gravity_sim as gs
+from scripts import scatter_field as sf
 from scripts import tier0_stage1_probe_common as pc
 from scripts import tier0_tiled_closed_loop as tc
 from scripts import train_tiered as ttr
@@ -22,6 +24,7 @@ DENSE_MIN = 20
 ARMS = ("base", "dense-exact", "random-exact", "all-exact")
 FORCE_TICKS = tuple(range(20, 101, 5))
 LATE = 60
+SUBSTEPS = gs.rollout_torch.__defaults__[1]
 LINE = {"dE_pass": 0.60, "err20_pass": 0.95, "random_margin": 0.10, "dE_kill": 0.75, "err20_kill": 1.00, "harness": 0.25}
 
 
@@ -69,10 +72,41 @@ class ForceRows:
             r[2] += float(t2[s].sum())
 
 
+@torch.no_grad()
+def rollout_exact(tt, d, observe, substeps=SUBSTEPS):
+    """All-exact harness check: the truth's own integrator (substeps Verlet sub-steps per tick, exact force, float32) so the only residual is float32 noise.
+    A single tick-sized Verlet step with exact force carries a discretisation error against the substepped truth that the trained model absorbs."""
+    m, mk = d["M"].float(), d["mask"].float()
+    T = d["P"].shape[1]
+    pos, vel = d["P"][:, 0].float(), d["V"][:, 0].float()
+    fld = tt.init_state(pos.shape[0])
+    _, fld = tt.force(pos, vel, m, mk, fld)
+    h = pc.DT / substeps
+    a = ttr.true_acc(pos, m, mk)
+    cnt = d["mask"].sum(1)
+    err, en = {}, [sf.energy(pos.double(), vel.double(), d["M"], d["mask"], pc.EPS).cpu()]
+    for t in range(1, T):
+        for _ in range(substeps):
+            pos = pos + h * vel + 0.5 * h * h * a
+            an = ttr.true_acc(pos, m, mk)
+            vel = vel + 0.5 * h * (a + an)
+            a = an
+        a_model, fld_out = tt.force(pos, vel, m, mk, fld)
+        observe(t, pos, vel, a_model, a, fld, fld_out)
+        fld = fld_out
+        en.append(sf.energy(pos.double(), vel.double(), d["M"], d["mask"], pc.EPS).cpu())
+        if t in pc.ERR_TICKS:
+            err[t] = (((pos.double() - d["P"][:, t]).norm(dim=-1) * d["mask"]).sum(1) / cnt).cpu().numpy()
+    return {"err": err, "energy": torch.stack(en)}
+
+
 def run_arm(tt, d, arm, seed):
     m, mk = d["M"].float(), d["mask"].float()
     gen = torch.Generator().manual_seed(4738 + seed)
     rows = ForceRows(m, mk)
+    if arm == "all-exact":
+        r = rollout_exact(tt, d, rows)
+        return {"err": r["err"], "dE": pc.energy_vs_truth(r["energy"], pc.truth_energy(d)), "force": rows.acc}
     r = pc.rollout(tt, d, hook=make_hook(arm, m, mk, gen), observe=rows)
     en = pc.energy_vs_truth(r["energy"], pc.truth_energy(d))
     return {"err": r["err"], "dE": en, "force": rows.acc}

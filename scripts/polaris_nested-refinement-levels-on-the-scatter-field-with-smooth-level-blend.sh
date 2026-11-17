@@ -18,7 +18,7 @@
 # Usage: remove one # from the dependency line and fill the slot tail, then sbatch. Requeue-safe: skips if the result json exists.
 set -uo pipefail
 export PYTHONUNBUFFERED=1
-W=$HOME/augur_dense_region_exact_force_ceiling_probe
+W=$HOME/augur_dense_region_exact_force_ceiling_probe_harness_fix
 mkdir -p $W && cd $W && tar xzf $HOME/tier0_stage1_probes_code.tgz
 export PYTHONPATH=$W
 O=results/dense_region_exact_force_ceiling_probe
