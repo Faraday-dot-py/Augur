@@ -34,7 +34,7 @@ Built 2026-11-17. Ordered by value to a paper. GPU-hours are from logged runs of
 - Scatter field at 1e9 and 1e10: accuracy vs an exact reference and repeat timing at matched tick counts. Analog: job 4068/4081 (1e10, 100 ticks, 13.4 s/tick, about 0.4 GPU-h per run); accuracy reference at 1e6-3e6 about 0.5-2 GPU-h (untimed estimate).
 - Pair-term search at 3M: tie-break rule and a multi-body brute-force check. Nearest run: brute force of one force at 3e6 took 224 s, so 50 bodies is about 3 GPU-h (derived, untested).
 - Shift-equivariance: second data seed and a line the Pilot sets (the 2% line is worker-proposed). Under 0.1 GPU-h (inference only).
-- Summary-token: Pilot approval of the stage-1 lines (Pilot asked to see them; pending; source architecture-push-prereg/summary-token-exchange-between-neighbour-tiles.md), plus the nonlinear planted-signal control. Under 0.5 GPU-h (analog: stage-1 probes 0.2-1 GPU-h).
+- Summary-token: lines approved by Pilot 2026-11-17 after the runs; remaining gap is the nonlinear planted-signal control. Under 0.5 GPU-h (analog: stage-1 probes 0.2-1 GPU-h).
 - Mixed-law retrain: second training seed and a matched retrain control. About 5.9 GPU-h each (job 7296).
 - Voxel: 60k-iteration extension, about 25 GPU-h (derived, job 9623 rate).
 - Token-model strip-tiling and size generalization: second trained seed (analog of token training about 5-6 GPU-h, flagged as analog) and ghost-cell gravity tiling numbers re-opened from the source file.
