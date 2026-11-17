@@ -7,7 +7,7 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
 #SBATCH --qos=student-pleiades
-#SBATCH --time=02:30:00
+#SBATCH --time=01:30:00
 #SBATCH --requeue
 #SBATCH --open-mode=append
 #SBATCH --nice=100
