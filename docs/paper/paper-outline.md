@@ -21,7 +21,7 @@ Built 2026-11-17 from docs/paper/paper-claims-and-evidence-table.md (the table; 
 ## Headline structure (Pilot decision 2026-11-17)
 
 Main headlines:
-1. Linear cost at scale: scatter-field-linear-cost-to-ten-billion-bodies (speed and memory only, no accuracy at that size; marker speed-only) and token-model-linear-cost-to-one-billion-balls (speed-only).
+1. Linear cost at scale: scatter-field-linear-cost-to-ten-billion-bodies (speed and memory only at 1e9 and 1e10, marker speed-only; force accuracy is validated against an exact reference up to 3e6 bodies, single-seed) and token-model-linear-cost-to-one-billion-balls (speed-only).
 2. Tileability: scatter-field-ghost-cell-tiling-for-gravity, token-model-strip-tiling-equals-global (fp32 noise, exact translation equivariance), tiled-closed-loop-tier-zero-accuracy (err@20 passes on 4 of 4 training seeds) with tiled-closed-loop-tier-zero-energy-drift-fails stated beside it.
 
 Secondary:
@@ -41,7 +41,7 @@ tiled-closed-loop-tier-zero-energy-drift-fails; upper-tier-hierarchy-adds-nothin
 
 - err@20 is model-dominated per the chaos-floor study; err@100 in cold-collapse scenes is at the chaos ceiling (4 scenes only), so err@100 cannot rank models there.
 - Unit-mass bodies only; planetesimal proxy failed; mass-conditioned model untrained.
-- 1e9 and 1e10 runs are speed and stability only, with no accuracy; the 1e10/1e9 time ratio is from two runs with different tick counts.
+- 1e9 and 1e10 runs are speed and stability only (accuracy is shown to 3e6 bodies, one seed), with no accuracy; the 1e10/1e9 time ratio is from two runs with different tick counts.
 - Interpretability is partial: force-law recovery level 1 INCONCLUSIVE_PARTIAL, level 2 KILL; no passing readability design.
 - Most rows are one training seed; tier 0 is the exception (4 seeds).
 - Tiled energy drift fails its line on every seed even after the replay fine-tune.

@@ -5,12 +5,12 @@ Built 2026-11-17. Ordered by value to a paper. GPU-hours are from logged runs of
 ## Missing experiments, analyses, figures
 
 1. Seeds and error bars on the headline accuracy rows (100k scene, solar system, edge fix): many scenes, 3+ seeds. Inference only; about 0.1-1 GPU-h (analog: stage-1 probes 0.2-1 GPU-h).
-2. Accuracy at 1e6 to 3e6 bodies against an exact reference, plus a 4-point scaling curve 1e6 to 1e10 on one setup. Brute force of one force at 3e6 took 224 s (EL:3841). About 0.5-2 GPU-h (estimate, untimed).
+2. Accuracy at 1e6 to 3e6 bodies is done (job 11171: worst single-scene median error 0.0889 against a 0.15 line, PASS, 12 of 12 cells finite, seed 4738, one scene per family; marker single-seed). Remaining: accuracy at 1e9 and 1e10 (unvalidated), and a 4-point scaling curve 1e6 to 1e10 on one setup. About 0.5-2 GPU-h (estimate, untimed).
 3. Interior force offset: cause counted and explained (reference sum over 636,068 of 1,000,000 bodies; subsample-over-all ratio 1.571-1.575 vs 1/0.636068 = 1.572); all-bodies interior ratio 1.0104 at tick 0 and 0.9596 at tick 11; registered verdict INCONCLUSIVE (line centred on tick 0, not amended); single scene, seed 4738 (job 11169, commit 4220135). Remaining: more scenes or seeds, and a pre-registered line that covers ticks 0 and 11. Under 1 GPU-h.
 4. Second training seed for single-seed negative and mixed results that carry claims: mixed-law retrain (about 5.9 GPU-h, job 7296), staggered grid, bit-output. About 6 GPU-h each.
 5. Equal-footing GNS comparison: tune the baseline, 50 epochs, second seed. About 3-6 GPU-h (analog: 5-6, flagged as analog).
 6. Mass-conditioned training for unequal masses and the planetesimal disk. About 5-6 GPU-h (analog only).
-7. Plain-PM and Barnes-Hut baselines at 1e4 to 1e5 on the same scenes (small CPU/GPU, under 1 GPU-h).
+7. Plain-PM done earlier; the Barnes-Hut baseline is not yet scored (rerun queued after job 11170, pending). Plain-PM and Barnes-Hut baselines at 1e4 to 1e5 on the same scenes (small CPU/GPU, under 1 GPU-h).
 8. Interpretability: run the two-number bottleneck double-length extension (analog 0.7 GPU-h, job 9617); level-three force-law recovery; second SAE seed (2.4 GPU-h, job 7183).
 9. Voxel 3D: extend 30k to 60k iterations, about 25 GPU-h (derived from about 1,200 iterations per hour, job 9623).
 10. Tiled energy drift: close the remaining gap to the 2.5x line (replay arms reach 1.88-1.99x); tile-seam and long-run energy figure. About 5-6.4 GPU-h per run (jobs 4041, 4818).
@@ -32,7 +32,7 @@ Built 2026-11-17. Ordered by value to a paper. GPU-hours are from logged runs of
 ## Added 2026-11-17 (claims that stay unvalidated or single-seed until new runs; none were run)
 
 - Scatter field at 1e9 and 1e10: accuracy vs an exact reference and repeat timing at matched tick counts. Analog: job 4068/4081 (1e10, 100 ticks, 13.4 s/tick, about 0.4 GPU-h per run); accuracy reference at 1e6-3e6 about 0.5-2 GPU-h (untimed estimate).
-- Pair-term search at 3M: tie-break rule and a multi-body brute-force check. Nearest run: brute force of one force at 3e6 took 224 s, so 50 bodies is about 3 GPU-h (derived, untested).
+- Pair-term search at 3M: tie-break rule and a multi-body brute-force check. The 224 s at 3e6 in the log is the all-pairs fallback of the default pair term (job 7297), not a brute-force force, so no cost can be derived from it; cost not estimated.
 - Shift-equivariance: second data seed and a line the Pilot sets (the 2% line is worker-proposed). Under 0.1 GPU-h (inference only).
 - Summary-token: lines approved by Pilot 2026-11-17 after the runs; remaining gap is the nonlinear planted-signal control. Under 0.5 GPU-h (analog: stage-1 probes 0.2-1 GPU-h).
 - Mixed-law retrain: second training seed and a matched retrain control. About 5.9 GPU-h each (job 7296).

@@ -8,7 +8,7 @@ Abbreviations, defined once. N-body: a simulation of many bodies pulling on each
 
 ## Abstract
 
-Augur is a family of learned particle simulators built around four requirements: generalization to new particle rules, tileability (one model applied to a larger area), cost that grows no faster than linearly in the number of bodies, and interpretability. This draft reports what the evidence supports. The main results are speed and memory results: the scatter-field model advanced 1e9 and 1e10 bodies at about 1.4 and 13.4 seconds per tick (speed-only, no accuracy at those sizes), and the contact-force token model advanced 1e9 balls at 12.7 seconds per tick (speed-only). Tileability holds for the contact model (strip-tiled rollouts match global rollouts at floating-point noise) and for tier-zero gravity tiling on position error (passes on 4 of 4 training seeds), while tiled energy drift fails its pre-registered line on every seed. Secondary results cover size generalization, a closed-loop replay fine-tune, and a baseline comparison in which the learned model beats a plain particle-mesh code at 1000 bodies and loses at 1e4 bodies and above. Interpretability is partial, and most attempts to extend the architecture failed or were inconclusive. We report these as pre-registered negative results.
+Augur is a family of learned particle simulators built around four requirements: generalization to new particle rules, tileability (one model applied to a larger area), cost that grows no faster than linearly in the number of bodies, and interpretability. This draft reports what the evidence supports. The main results are speed and memory results: the scatter-field model advanced 1e9 and 1e10 bodies at about 1.4 and 13.4 seconds per tick (speed-only at those sizes; force accuracy against an exact reference is shown up to 3e6 bodies, one seed), and the contact-force token model advanced 1e9 balls at 12.7 seconds per tick (speed-only). Tileability holds for the contact model (strip-tiled rollouts match global rollouts at floating-point noise) and for tier-zero gravity tiling on position error (passes on 4 of 4 training seeds), while tiled energy drift fails its pre-registered line on every seed. Secondary results cover size generalization, a closed-loop replay fine-tune, and a baseline comparison in which the learned model beats a plain particle-mesh code at 1000 bodies and loses at 1e4 bodies and above. Interpretability is partial, and most attempts to extend the architecture failed or were inconclusive. We report these as pre-registered negative results.
 
 ## 1. Introduction
 
@@ -36,9 +36,11 @@ Truth comes from an exact N-body simulator validated against IAS15 (section 7.1)
 
 ## 3. Main result 1: cost grows linearly at scale
 
-### 3.1 Scatter field to ten billion bodies [speed-only]
+### 3.1 Scatter field to ten billion bodies [speed-only at 1e9 and 1e10; accuracy to 3e6]
 
-At 1e9 bodies the scatter field ran at a median 1.33 s per tick over 100 ticks (16 GB) and 1.39 s per tick over 300 ticks with the edge fix (14.0 GB); a clumpy 1e9 scene ran at 1.47 s per tick over 200 ticks. At 1e10 bodies, 100 ticks, the median was 13.37 s per tick (13.4 in the log) at 88.1 GB peak memory in the raw file (87.3 GB in the log), 1.34 ns per body per tick. The ratio is 9.64x for 10x the bodies when comparing the 300-tick 1e9 median with the 100-tick 1e10 median, and 10.09x when both use 100 ticks, so the scaling is linear to slightly superlinear. Per-tick time at 1e9 rises as the scene clumps, from 1.02 s at tick 0 to about 1.8 s. These runs measure speed and memory only. No accuracy against an exact reference exists at these sizes; the only accuracy figure is a self-test relative error of 5.8e-5 to 1.1e-4. Late-time lattice stripes in fp16 and core drift are known limitations. One seed, one setup, two sizes at matched ticks: this is not a scaling curve. [scatter-field-linear-cost-to-ten-billion-bodies]
+At 1e9 bodies the scatter field ran at a median 1.33 s per tick over 100 ticks (16 GB) and 1.39 s per tick over 300 ticks with the edge fix (14.0 GB); a clumpy 1e9 scene ran at 1.47 s per tick over 200 ticks. At 1e10 bodies, 100 ticks, the median was 13.37 s per tick (13.4 in the log) at 88.1 GB peak memory in the raw file (87.3 GB in the log), 1.34 ns per body per tick. The ratio is 9.64x for 10x the bodies when comparing the 300-tick 1e9 median with the 100-tick 1e10 median, and 10.09x when both use 100 ticks, so the scaling is linear to slightly superlinear. Per-tick time at 1e9 rises as the scene clumps, from 1.02 s at tick 0 to about 1.8 s. The 1e9 and 1e10 runs measure speed and memory only. No accuracy against an exact reference exists at those sizes; the only accuracy figure is a self-test relative error of 5.8e-5 to 1.1e-4. Late-time lattice stripes in fp16 and core drift are known limitations. One seed, one setup, two sizes at matched ticks: this is not a scaling curve. [scatter-field-linear-cost-to-ten-billion-bodies]
+
+Accuracy up to three million bodies [single-seed]. Against an exact fp64 reference summed over all N sources, force error was measured at 1e6, 2e6 and 3e6 bodies on 8192 random target bodies (seed 4738): the worst single-scene median error was 0.0889 against a pre-registered pass line of 0.15, with 12 of 12 cells finite, a PASS by the registered line. One seed, one scene per family. The earlier learned/PM comparison reproduced within 5e-5 on medians (8e-5 on all metrics). Numbers copied from the reviewed job 11171 (branch accuracy-at-1e6-bodies-and-barnes-hut-baseline, commit 7e061c4). A Barnes-Hut baseline is not yet scored; its rerun is queued. [scatter-field-force-accuracy-at-one-to-three-million-bodies]
 
 ### 3.2 Token model to one billion balls [speed-only]
 
@@ -148,7 +150,7 @@ Force-law recovery from the learned model gave, at level 1 (curve against truth)
 
 - err@20 is model-dominated, but err@100 in cold-collapse scenes sits at the chaos ceiling (4 scenes only).
 - Unit-mass bodies only; the planetesimal proxy failed; the mass-conditioned model is untrained.
-- 1e9 and 1e10 runs are speed and stability only. The 1e10 versus 1e9 ratio is linear to slightly superlinear, and per-tick time rises with clustering.
+- 1e9 and 1e10 runs are speed and stability only; accuracy against an exact reference exists only up to 3e6 bodies (one seed). The 1e10 versus 1e9 ratio is linear to slightly superlinear, and per-tick time rises with clustering.
 - Most rows are one training seed; only tier-zero accuracy, the chaos floor (err@20), the pair branch, bit-output cells and the Gaussian ladder meet the validated test.
 - Tiled energy drift fails its 2.5x line on every seed without replay (2.43-5.77x BL); the replay fine-tune reaches 1.88-1.99x on two base seeds, which meets the line, but the cause of the gain is unsettled and the other two seeds were not fine-tuned.
 - Plain PM beats the learned model at N of 1e4 and above.
@@ -164,7 +166,7 @@ Graph-network simulators for particles; particle-mesh and tree gravity, fast mul
 
 ## 12. Conclusion
 
-A learned scatter-field simulator reaches ten billion bodies at near-linear cost on one GPU (speed-only), contact tileability holds to floating-point noise, and tier-zero gravity tiling holds on position error across four training seeds but not on energy drift. Beyond that the picture is mostly one-seed or negative. The next steps in priority order are accuracy at 1e6 to 1e10 bodies, a second seed on the claims marked single-seed, mass-conditioned training, and energy-drift closure; costs are in the gap list.
+A learned scatter-field simulator reaches ten billion bodies at near-linear cost on one GPU (speed-only), contact tileability holds to floating-point noise, and tier-zero gravity tiling holds on position error across four training seeds but not on energy drift. Beyond that the picture is mostly one-seed or negative. The next steps in priority order are accuracy at 1e9 to 1e10 bodies, a second seed on the claims marked single-seed, mass-conditioned training, and energy-drift closure; costs are in the gap list.
 
 ## Acknowledgments
 
