@@ -20,7 +20,7 @@ Contributions, in order of support. (a) A scatter-field simulator that ran 1e9 a
 
 ### 2.1 Scatter field
 
-Each body is spread onto a grid with CIC deposit, a U-Net maps the grid to an acceleration field, and the field is gathered back at each body. A learned kernel term is evaluated by FFT with an extended-padding edge fix, so cost is linear in bodies plus a grid term (architecture document). The pinned baseline checkpoint is ms_kp_pot_v_g128. The edge fix removes a boundary artifact without retraining: at 1e6 bodies the mean model-to-exact force ratio in the outermost grid band fell from 91.1 to 1.53 (next two bands 61.9 and 27.6 to 1.56 and 1.58) [grid-edge-artifact-fix-without-retrain; single-seed]. A later rerun of a corrected interior-force quantity gave 1.0104 instead of 1.53-1.58; the two quantities were not shown identical and the conflict is unresolved, so interior force accuracy at 1e6 or more bodies is not claimed here.
+Each body is spread onto a grid with CIC deposit, a U-Net maps the grid to an acceleration field, and the field is gathered back at each body. A learned kernel term is evaluated by FFT with an extended-padding edge fix, so cost is linear in bodies plus a grid term (architecture document). The pinned baseline checkpoint is ms_kp_pot_v_g128. The edge fix removes a boundary artifact without retraining: at 1e6 bodies the mean model-to-exact force ratio in the outermost grid band fell from 91.1 to 1.53 (next two bands 61.9 and 27.6 to 1.56 and 1.58) [grid-edge-artifact-fix-without-retrain; single-seed]. A later rerun of a corrected interior-force quantity gave 1.0104 instead of 1.53-1.58. The likely cause is that the edge check's exact reference summed over only a with-replacement subsample of about 63.6% of the bodies (the fraction is inferred from the ratio, not counted); an analysis of saved files scored INCONCLUSIVE on its registered line, and a direct all-bodies rerun is pending. The explanation is inferred, not confirmed, so interior force accuracy at 1e6 or more bodies is not claimed here.
 
 ### 2.2 Tiered hierarchy and ghost-cell tiling
 
@@ -152,7 +152,7 @@ Force-law recovery from the learned model gave, at level 1 (curve against truth)
 - Most rows are one training seed; only tier-zero accuracy, the chaos floor (err@20), the pair branch, bit-output cells and the Gaussian ladder meet the validated test.
 - Tiled energy drift fails its 2.5x line on every seed without replay (2.43-5.77x BL); the replay fine-tune reaches 1.88-1.99x on two base seeds, which meets the line, but the cause of the gain is unsettled and the other two seeds were not fine-tuned.
 - Plain PM beats the learned model at N of 1e4 and above.
-- Interior force accuracy at 1e6+ bodies is contested (1.53-1.58 against 1.0104).
+- Interior force accuracy at 1e6+ bodies: 1.53-1.58 in the edge check against 1.0104 in the corrected quantity; the inferred cause (a subsampled reference sum) awaits a direct all-bodies rerun, so it is not resolved.
 - The pair-term search passes only under an amended, tie-aware rule on one body.
 - 3D has no passing checkpoint.
 - Interpretability is partial; level-2 force recovery is mostly KILL.

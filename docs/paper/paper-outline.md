@@ -48,7 +48,7 @@ tiled-closed-loop-tier-zero-energy-drift-fails; upper-tier-hierarchy-adds-nothin
 - Plain particle mesh beats the learned model at N of 1e4 and above.
 - Pair-term neighbour search passes only under a tie-aware rule written after the KILL.
 - 3D voxel version has no passing checkpoint.
-- Interior force offset conflict (1.53-1.58 vs 1.0104) is unresolved.
+- Interior force offset: 1.53-1.58 in the edge check vs 1.0104 interior ratio; the inferred cause is a subsampled reference sum, direct confirmation pending, so not resolved.
 
 ## Related work to find (all "to look up"; no citations invented)
 

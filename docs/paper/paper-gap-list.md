@@ -6,7 +6,7 @@ Built 2026-11-17. Ordered by value to a paper. GPU-hours are from logged runs of
 
 1. Seeds and error bars on the headline accuracy rows (100k scene, solar system, edge fix): many scenes, 3+ seeds. Inference only; about 0.1-1 GPU-h (analog: stage-1 probes 0.2-1 GPU-h).
 2. Accuracy at 1e6 to 3e6 bodies against an exact reference, plus a 4-point scaling curve 1e6 to 1e10 on one setup. Brute force of one force at 3e6 took 224 s (EL:3841). About 0.5-2 GPU-h (estimate, untimed).
-3. Resolve the interior force offset conflict (1.53-1.58 vs 1.0104) by re-running both quantities with one verified checkpoint and scene. Under 1 GPU-h (job 7249 took 7 s).
+3. Interior force offset (1.53-1.58 vs 1.0104): inferred cause is a reference-sum subsample defect, (the exact sum covered a with-replacement subsample of about 63.6% of bodies, implied fraction 0.635-0.636 inferred, not counted; branch interior-force-offset-edge-check-subsample-reference, commits 4f6a171/72ece3f/2d844ec); the direct all-bodies rerun is running and pending. Until it returns this is not resolved and interior force accuracy at 1e6+ is not claimed. Under 1 GPU-h (job 7249 took 7 s).
 4. Second training seed for single-seed negative and mixed results that carry claims: mixed-law retrain (about 5.9 GPU-h, job 7296), staggered grid, bit-output. About 6 GPU-h each.
 5. Equal-footing GNS comparison: tune the baseline, 50 epochs, second seed. About 3-6 GPU-h (analog: 5-6, flagged as analog).
 6. Mass-conditioned training for unequal masses and the planetesimal disk. About 5-6 GPU-h (analog only).
