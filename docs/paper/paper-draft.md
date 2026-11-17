@@ -124,7 +124,7 @@ The conservative-contact token model gave wall restitution 1.00-1.04 and head-on
 
 ### 7.4 Shift equivariance [single-seed]
 
-Under a half-cell shift, median force changed by more than 2% on all six laws, on two checkpoints (smallest cell 0.0371), 32 scenes per law. The 2% line was not approved by the author in the sources found. This motivates a shift-consistency loss; it is not a result about the final model. [shift-equivariance-probe]
+Under a half-cell shift, median force changed by more than 2% on all six laws, on two checkpoints (smallest cell 0.0371), 32 scenes per law. The 2% line was set by a worker agent, not by the author. This motivates a shift-consistency loss; it is not a result about the final model. [shift-equivariance-probe; worker-proposed-line, single-seed]
 
 ## 8. Interpretability (requirement 4): mostly negative
 
@@ -138,7 +138,7 @@ Force-law recovery from the learned model gave, at level 1 (curve against truth)
 - Gaussian-ladder far kernel replacing the FFT: err@20 ratio 16.57 (kill 1.30). KILL. [gaussian-ladder-far-kernel-replacing-fft; validated]
 - One network for all tiers with a scale input: far-field span error 4.65 (kill above 2.0). KILL. [one-network-for-all-tiers-with-scale-input; single-seed]
 - Law-blind U-Net trunk: gravity err@20 ratio 395.9 (kill 1.15). KILL. [law-blind-unet-trunk; single-seed]
-- Summary-token exchange between tiles: predictability gain -0.032 (kill below 0.06, pass 0.19). KILL by rule, but the lines were proposed by a worker agent and no approval was found. [summary-token-exchange-between-neighbour-tiles; worker-proposed-line]
+- Summary-token exchange between tiles: predictability gain -0.032 (kill below 0.06, pass 0.19). KILL by rule, but the lines were proposed by a worker agent and the author's approval is pending. [summary-token-exchange-between-neighbour-tiles; worker-proposed-line]
 - 3D sparse voxel scatter field: INCONCLUSIVE-undertrained; models diverged at 25/72 scenes at 25k iterations and 32/72 at 30k; no passing checkpoint; 3D is about 4x slower than 2D at 1e5. [three-dimensional-sparse-voxel-scatter-field; single-seed]
 - Muon optimizer: no effect on drift (dE@100/BL 4.33/4.72/3.84 against 4.10/4.75/3.89). KILL. [muon-optimizer-has-no-effect-on-drift; single-seed]
 - Grid next-frame models (history): flow-warp step-1 error 0.80x/0.68x/0.71x against copy-last-frame, honest horizon 6 steps at 20-50 balls, 1-2 at 250. [grid-next-frame-models-negative; unvalidated]
@@ -156,7 +156,7 @@ Force-law recovery from the learned model gave, at level 1 (curve against truth)
 - The pair-term search passes only under an amended, tie-aware rule on one body.
 - 3D has no passing checkpoint.
 - Interpretability is partial; level-2 force recovery is mostly KILL.
-- Several raw result files live outside version control and are not released; this paper cites result tables only.
+- Raw result files and checkpoints are not released; this paper cites result tables only, so readers cannot recompute its numbers from files.
 
 ## 11. Related work (all to look up; no citations given)
 
@@ -172,4 +172,4 @@ The author thanks CPP Polaris HPC for compute.
 
 ## Reproducibility
 
-Training seed 4738 unless stated. Pass and kill lines were registered before each run where stated; amended or worker-proposed lines are marked. No raw files are released; code scope is undecided.
+Training seed 4738 unless stated. Pass and kill lines were registered before each run where stated; amended or worker-proposed lines are marked. Code and videos are released. Raw result files and trained checkpoints are not released; results are reported as tables.

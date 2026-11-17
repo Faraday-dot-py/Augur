@@ -31,7 +31,7 @@ Secondary:
 
 Supporting methodology: chaos-floor-err20-is-model-dominated, chaos-floor-cold-collapse-err100-at-ceiling, reference-simulator-validated-against-ias15 (as registered INCONCLUSIVE, amended PASS), pre-registered-kill-lines-and-fresh-reviewer-method, token-model-beats-gns-style-baseline (design versus design).
 
-Every claim row carries a marker (validated, single-seed, worker-proposed-line, post-hoc-amended, speed-only, unvalidated); the draft repeats the marker beside each claim. Verdicts are reported as pre-registered, with amendments (tie-aware pair-term rule, post hoc IAS15 line) labelled as amendments, never as plain passes. No raw files are released; the paper cites result tables. Sole author; acknowledgment that CPP Polaris HPC provided compute. Full text is in docs/paper/paper-draft.md.
+Every claim row carries a marker (validated, single-seed, worker-proposed-line, post-hoc-amended, speed-only, unvalidated); the draft repeats the marker beside each claim. Verdicts are reported as pre-registered, with amendments (tie-aware pair-term rule, post hoc IAS15 line) labelled as amendments, never as plain passes. Code and videos are released; no raw files, no checkpoints; the paper cites result tables. Sole author; acknowledgment that CPP Polaris HPC provided compute. Full text is in docs/paper/paper-draft.md.
 
 ## Negative-results section
 
