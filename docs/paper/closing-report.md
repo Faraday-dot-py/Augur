@@ -1,0 +1,217 @@
+# Augur closing report: what was built, what worked, what did not
+
+Draft of 2026-11-23. Sole author. Archive document; no venue. Compute was provided by the CPP Polaris HPC system. This replaces docs/paper/paper-draft.md as the project's final form; that draft and docs/paper/paper-outline.md stay in the repository as history.
+
+## How to read this report
+
+The project is being archived because the author believes serious architectural issues prevent it from reaching its goals. This report states what was tried and what the evidence shows. It does not give the diagnosis of why; that section is left for the author (section 7).
+
+Sourcing. Every number comes from a saved result file or from docs/paper/paper-claims-and-evidence-table.md (called "the table" below; its rows are named in square brackets, and file and line citations live there). Where a number was recomputed from a raw file for this report, the file is named. Raw files are not released; this report cites result tables. Paths below are for the author's checking.
+
+Verdicts are given as registered before each run. Where a line was changed or approved after a result, that is stated as an amendment and the as-registered verdict is kept.
+
+Markers on each result:
+- validated: several seeds or sizes, a control, and an approved pre-registered line.
+- single-seed: one training seed or one run. Nearly all results here.
+- worker-proposed-line: the verdict rests on a line a worker agent proposed and the author did not approve.
+- approved-line-2026-11-17: lines proposed by a worker agent and approved by the author after the runs.
+- post-hoc-amended: the verdict depends on a line or rule changed after the result.
+- speed-only: time and memory measured, no accuracy claim.
+- unvalidated: design only, or numbers not checked against a raw file.
+
+Terms, defined once.
+- Body, tick: a body is one simulated particle; a tick is one simulation time step.
+- N-body: a simulation of many bodies pulling on each other (here mostly by gravity).
+- Particle mesh (PM): a classical method that spreads bodies onto a grid, solves for the force on the grid, and reads it back. "Plain PM" means the same grid as the learned model with no learning.
+- Barnes-Hut: a classical tree method that groups distant bodies and treats each group as one mass. Its opening angle theta sets the speed and accuracy trade-off; smaller is more accurate. Its cost grows as N log N, slightly faster than linear.
+- Scatter field: Augur's main model. Each body is spread onto a grid by cloud-in-cell (CIC, a rule that splits each body across nearby grid cells), a U-Net (a convolutional network with a down-and-up path) maps the grid to a force field, and the field is read back at each body. A learned kernel is applied with the fast Fourier transform (FFT, a fast way to do large convolutions).
+- Token-per-ball model: a second model where each ball is one token in a transformer-style network; built for contact forces.
+- err@k: mean per-body position error at tick k against an exact simulation, in simulation length units; lower is better. dE@k: relative energy drift at tick k.
+- BL: the tiled scatter-field baseline that a ratio is divided by. A ratio below 1 is better than the control.
+- Pass line, kill line: the pre-registered criteria. A result between them is INCONCLUSIVE. INCONCLUSIVE-undertrained means the run had not trained long enough to judge.
+- Chaos floor: the error you get just from tiny numerical differences in a chaotic system, so errors below it cannot be told apart.
+- Seeds: training seed 4738 unless stated; held-out evaluation seeds 9100, 9200, 9300; fresh seeds 12000, 12100, 12200.
+- IAS15 and REBOUND: a high-accuracy adaptive N-body integrator and the package that provides it, used to validate the reference simulator.
+- GNS: graph-network simulator, a common learned-simulator design.
+- GPU-h: GPU hours.
+
+The four requirements (docs/paper/core-requirements.md): (1) generalization, the method must work for any particle simulation with different rules; (2) tileable, one model must simulate a larger area than it was trained on; (3) O(N), time cost no worse than linear in the number of bodies; (4) interpretability, the simulation's rules must be recoverable from the model (marked UNTESTED in that document).
+
+## 1. Summary
+
+- Speed and memory: the scatter field advanced 1e9 and 1e10 bodies on one GPU at close to linear time per tick. These runs show speed and memory only; there is no accuracy claim at those sizes (section 5).
+- Accuracy: against an exact force calculation, the scatter field's median force error on the Plummer scene was 0.082 to 0.087 from 1e4 to 3e6 bodies and did not grow from 1e6 to 3e6 and passed its registered line, one seed. It is, however, worse than plain PM in all 24 scenes at 1e6 to 3e6 bodies (at 1e4 to 1e5 in 5 of 6 cells), and worse than Barnes-Hut at theta 0.5 by up to 8.06x (registered KILL, section 4).
+- Tiling: the contact model's strip-tiled rollouts match global rollouts at floating-point noise (and fail for unbounded-range forces). Gravity tier-zero tiling passes on position error on 4 of 4 training seeds and fails its energy-drift line on all of them.
+- Generalization: it holds for the trained gravity-like rule. No table row tests this directly; the evidence is the absence of failures on the trained gravity scenes. It failed for mixed laws (KILL) and unequal masses (KILL, proxy), and the 3D variant was INCONCLUSIVE-undertrained with no passing checkpoint.
+- Interpretability: partial at best. Force-law recovery passes at the curve level for 5 of 16 cells and at the formula level for 2 of 16.
+- Architecture push: of 19 pre-registered experiments, 10 finished (1 PASS, 4 KILL, 3 INCONCLUSIVE, 2 INCONCLUSIVE-undertrained) and 8 plus one curiosity have no result, two of them running now.
+- Most results are single-seed. Only a handful meet the validated test (section 8).
+
+## 2. What was built and what worked
+
+### 2.1 Models
+
+The scatter field (section "Terms") is the main line. It is built to be linear in body count: spreading and reading are per body, the grid and FFT term depends on grid size only. Tiling uses ghost cells (a halo of neighbouring bodies, halo 16 in the gravity runs) plus a coarse far-field term; upper tiers work on summary moments. A design document lists ten weak points of the hierarchy, each with a proposed test [tiered-hierarchy-theory-and-ten-weak-points; unvalidated, design only]. An edge fix (extended padding of the kernel) removes a boundary artifact without retraining.
+
+The token-per-ball model is a conservative-contact variant with central, distance-only pair forces. It is structurally limited for unbounded-range forces.
+
+### 2.2 Evaluation tooling that held up
+
+- Reference simulator validated against IAS15 [reference-simulator-validated-against-ias15; post-hoc-amended]. Force matches the REBOUND 5.2.2 Plummer pair formula to about 2e-16 relative (line 1e-6), and (experiment log, EL:3503, not in force.json) position error falls 4.00x per doubling of substeps from 8 to 32 on all 8 cases (results/truth_vs_integrator/force.json). As registered, the overall verdict is INCONCLUSIVE (the Kepler energy clause failed at 1.3e-4 to 1.8e-4 against 1e-4, and a replica-spread yardstick passed 0 of 9). Under a line amended after the result and approved by the author on 2026-11-03 it is PASS. Both verdicts stand on record.
+- Chaos floor [chaos-floor-err20-is-model-dominated; validated for err@20; chaos-floor-cold-collapse-err100-at-ceiling; single-seed]. In 300-body cold-collapse scenes, err@20 is 0.0622 against floors of 3.2e-6 (float32 truth), 5.4e-4 (eight-substep truth) and 3.9e-4 (1e-5 perturbation), so err@20 reflects model error. In 240 scenes of 10 to 100 bodies, err@20 is 0.0040 against floors of 2.3e-6, 1.1e-4 and 2.3e-4. At k=100 in the 300-body scene the model's 4.73 sits in the same range as the 3.4 produced by a 1e-3 relative perturbation (saturation about 6; results/chaos_bh.json), so err@100 cannot rank models there; err@50 (0.912 against a floor of 0.015) still can. The scenes are black-hole-style cold collapses, four scenes for the large case. The token model's err@20 is at its own contact chaos floor.
+- Process: pre-registered pass and kill lines, fresh no-hypothesis reviewer subagents recomputing numbers from raw files, and a log entry for every experiment. Reviewers caught real errors (pooled-versus-mean ratios in a cost result, a tenfold slip in a margin, a reference that summed only part of the bodies). How many interventions changed a verdict was not quantified [pre-registered-kill-lines-and-fresh-reviewer-method].
+
+### 2.3 Results that worked, with evidence
+
+| result | numbers | source | marker |
+| --- | --- | --- | --- |
+| Scatter-field force accuracy, 1e6 to 3e6 bodies (job 11171, rerun in job 11172) | Worst single-scene median error 0.0889 against a pass line of 0.15 (an exact fp64 reference over all N sources, 8192 random target bodies, seed 4738); 12 of 12 cells and 24 of 24 scenes finite; the error does not grow from 1e6 to 3e6. Static force on the pinned checkpoint, not rollouts | results/scatter_force_accuracy_vs_exact_at_million_bodies_chunk_fix/result.json (recomputed 0.08887); table [scatter-field-force-accuracy-at-one-to-three-million-bodies] | PASS as registered; single-seed |
+| Edge artifact fix at 1e6 bodies | Mean model-to-exact force ratio in the outermost three grid bands 91.1 / 61.9 / 27.6 before, 1.53 / 1.56 / 1.58 after; the small-N err@5/10/20 (.0030/.0082/.0242, experiment log, not a 1e6 result) were unchanged. The 1.53 to 1.58 offset is a reference defect, not model error (see section 4, interior offset) | results/bh_edge_zero_1e6_edgecheck.json, results/bh_edge_ext_1e6_edgecheck.json; table [grid-edge-artifact-fix-without-retrain] | PASS at 1e6 (edge ratio only); single-seed |
+| Accuracy at 100,000 bodies, black-hole-style scene | err@5/10/20/50/100 = 0.073 / 0.266 / 1.327 / 8.31 / 18.94 against a constant-velocity baseline of 3.44 / 9.51 / 20.54 / 50.65 / 100.84. No PM or Barnes-Hut baseline was run on this scene | results/showcase_bh_100k_kpadext.json; table [scatter-field-small-n-gravity-accuracy-at-100k] | no registered line; single-seed |
+| Tier-zero tiled closed loop, position error | err@20 divided by BL, per evaluation seed: training seed 4738 0.822/0.817/0.746; 4739 0.9990/0.9881/0.8761; 4740 0.932/0.943/0.883; 4742 0.911/0.891/0.831. Line: at most 1.0 on every evaluation seed and plain within 1.10x of the matched-60k baseline. Seed 4739 margin about 0.001 | results/tier0_second_training_seed/tier0-tiled-closed-loop-halo-base-seed4739_score.json (4739); other seeds on Polaris, not re-derived by a reviewer; table [tiled-closed-loop-tier-zero-accuracy] | PASS on 4 of 4; validated, with the thin-margin caveat |
+| Contact model strip tiling | Strip-tiled and global rollouts differ at floating-point noise (halo at least 12: max difference 0 to 6e-5); exact translation equivariance in the interior. Fails for unbounded forces: error 22x once a cloud exceeds the 100-unit cutoff | table [token-model-strip-tiling-equals-global]; from the log, not re-opened | no line found; single-seed |
+| Token model against a GNS-style baseline | At 100 balls err@10 0.273 against 1.094 and absolute drift@100 0.079 against 0.743; at 1000 balls both lose to constant velocity (err@100 133.6 against 124.8, constant velocity 111.2). The GNS baseline had 30 epochs against 50, no tuning, no substeps or pair prior | table [token-model-beats-gns-style-baseline] | PASS (class rule); single-seed |
+| Conservative contact energy | Wall restitution 1.00 to 1.04 for speeds 3 to 80; head-on pair kinetic-energy ratio 0.99 to 1.00 | table [token-model-contact-energy-conserved]; source file not opened | no line found; single-seed |
+| Size generalization of the token model | Trained on at most 200 balls: err@20 1.44 / 1.09 / 1.06 at 1x / 4x / 8x ball counts (seed 9000; seed 12000 gives 2.12 / 1.14 / 1.08); 50,000 balls err@20/50/100 = 0.94 / 9.3 / 71.5 with kinetic energy within 2% of truth. err@20 at 1x is at the contact chaos floor; err@50 and err@100 are not usable; density held constant, so this tests locality, not density shift | table [token-model-size-generalization-to-fifty-thousand-balls] | no line found; single-seed |
+| Closed-loop visited-state replay | dE@100 divided by BL 4.25 to 1.99 (base seed 4738, job 4089) and 4.78 to 1.88 (base seed 4739, job 6168). A truth-state replay control reaches 2.10, so the gain is not replay-specific; mechanism arms are curiosity with no verdict | table [visited-state-label-replay-cuts-drift] | job 4089 PASS; single-seed; cause unsettled |
+| Bit-output cell model at 64 grid | Soft-decode force-error ratio 0.933 against its float twin (pass at most 1.5, kill above 3); seeds 4739 / 4740 0.974 / 0.959. Narrow scope: 64 grid, 1024 bodies, one law, 3000 steps; gain 3 to 9% | table [bit-output-cell-model-at-64-grid]; per-seed numbers are in bit_output_results_full.json outside git | PASS, thin; validated, narrow scope |
+| Solar-system stability | Star, 8 planets, moon and belt: 0 of 8 planets lost at ticks 100, 300 and 1000; 5 of 8 (62.5%) lost at 2000. Median period error 3.5 / 7.2 / 17.1 / 44% at those four horizons | table [solar-system-stability-with-edge-fix]; from the log | no line found; single-seed |
+
+## 3. What was killed or inconclusive, by requirement
+
+Verdicts are as registered. "A" marks an amendment.
+
+### Requirement 1: generalization
+
+| experiment | numbers | verdict | marker |
+| --- | --- | --- | --- |
+| Barnes-Hut baseline (job 11172) | See section 4 | KILL | single-seed |
+| Plain PM against learned, N = 300 to 1e5 | Plain PM error divided by learned median error at N = 1000: Plummer 2.29, two-clump 3.68, exponential disk 4.60 (so learned wins at N = 1000); results/pm_baseline_force_error.json. At N = 1e4 and 1e5 plain PM is lower in 5 of 6 cells (for example Plummer 1e5 median 0.0131 against 0.0875 learned); the one exception is the exponential disk at 1e4 (learned 0.0283, plain PM 0.0321). The pre-registered verdict was INCONCLUSIVE_PARTIAL (Plummer 90th percentile 1.80 below the 2.0 line) | INCONCLUSIVE_PARTIAL | single-seed |
+| Mixed-law retrain (six laws) | Gravity err@20 33.08 (31.13 and 35.03 on seeds 9000 and 12000) against 0.1064 for the main checkpoint and 0.0407 for the reference; kill edge 0.106. About 6% of steps skipped in training (a confound); controls are different-seed checkpoints | KILL | single-seed |
+| Unit mass only, planetesimal-disk proxy | Proxy of 700 disk plus 300 core bodies: err@20 0.016, err@100 1.73 (kill above 1.0), model dE/E0 1.23 against 0.003 (kill above 0.3). A second proxy was added after seeing the first. The real disk (1000:1 mass ratio) is out of the trained range and was not tested. A mass-conditioned model is coded with 10 CPU tests and was never trained | KILL (proxy) | single-seed |
+| Law-blind U-Net trunk | Gravity err@20 ratio against the reference 395.9 (per seed 429 / 405 / 353; kill 1.15); validation loss minimum 0.120 at iteration 29,000, 3.17 at 80,000 (diverged) | KILL | single-seed |
+| Shift-equivariance probe | Median force change under a half-cell shift exceeded 2% on all six laws, 32 scenes per law, two checkpoints. The 2% line was proposed by a worker agent, not the author | PASS of a probe | worker-proposed-line; single-seed |
+| Unmodified token model on gravity at 100 to 1000 bodies | err@5/10/20 0.50 / 0.52 / 2.14 against constant velocity 0.073 / 0.27 / 0.95; a 1000-body 10,000-step run gained energy +2.59e6 against truth -10437 | negative (scope limit; "small training budget, not proof of impossibility") | single-seed |
+| Grid next-frame models (history) | Flow-warp step-1 error 0.80x / 0.68x / 0.71x against copy-last-frame; honest horizon 6 steps at 20 to 50 balls, 4 at 125, 1 to 2 at 250 | negative | unvalidated |
+| Neighbour-context pair branch | err@20 ratio 0.649 to 0.650 held-out against a matched control (pass line 0.90) across 3 training seeds. Soft tangential-penalty arm: tangential force 0.008 to 0.011 but pooled momentum penalty 1.231 held-out and 1.226 fresh (kill above 1.0), so KILL; unpenalized arm tangential 0.131 to 0.166, INCONCLUSIVE | penalty arm KILL; candidate INCONCLUSIVE | validated |
+| Staggered double grid | err@20 0.6893x control (pass 0.75), dE@100 1.0403 (pass 1.10), cost 2.578x (pass line 2.2x, FAILED). Cost-fix rerun (job 11098): cost 2.479x primary, 2.487x fresh, and dE@100 1.194 on the same checkpoint (unexplained difference from 1.0403) | INCONCLUSIVE | single-seed |
+| Muon optimizer | dE@100 / BL 4.33 / 4.72 / 3.84 against 4.10 / 4.75 / 3.89 baseline (line 2.5x or less); both Muon arms fail | KILL | single-seed |
+
+### Requirement 2: tileable
+
+| experiment | numbers | verdict | marker |
+| --- | --- | --- | --- |
+| Tier-zero tiled energy drift | dE@100 / BL 3.89 to 4.75 (4738), 4.04 / 5.77 / 4.53 (4739), 3.43 / 3.76 / 3.37 (4740), 2.43 / 3.37 / 2.96 (4742) against a 2.5x line; fails on every seed. Absolute drift 0.033 to 0.038. The BL divisor differs between files (3.3 to 3.7x against 3.9 to 4.75x) | fails line | validated (negative) |
+| Ghost-cell gravity tiling | Accuracy gate against one G=256 grid passed with no seam artifact; the energy gate failed (dE@1000 1.246x and 1.660x against a 1.15x gate). Seed count and numbers taken from the architecture document, not re-opened | accuracy pass, energy fail | unvalidated |
+| Upper-tier hierarchy end to end | err@20 1.5 to 2.4x BL, drift 4 to 5x; upper tiers on a frozen tier zero add 28 to 29% force error; removing velocity and recurrent inputs err@20 1.56 to 1.85x and dE@100 6.0 to 7.3x; frozen residual corrector 1.60 to 1.92x. Some figures predate the matched-60k tier zero | KILL (several) | single-seed |
+| Three-part separate-then-joint training | err@20 ratio 1.010 held-out, 0.999 fresh against an exp-e-frozen reference (kill at or above 0.97); continuation control 0.991 / 1.005; with part losses 40.1 / 35.0 diverged | KILL | single-seed |
+| One network for all tiers with a scale input | Far-field relative error 1024 over 256 span 4.65 (per seed 4.26 / 4.34 / 5.35; kill above 2.0). The ratio mixes tier extrapolation with changed geometry | KILL | single-seed |
+| Summary-token exchange between tiles | Predictability gain pooled -0.032 (kill below 0.06, pass 0.19, oracle 0.996); early-stopped MLP -0.0115, ridge -0.0025; planted-signal gate valid at 0.0275 / 0.0394 (minimum 0.025). Lines proposed by a worker and approved by the author on 2026-11-17 after the runs. A nonlinear planted signal was not tried | KILL by rule | approved-line-2026-11-17 |
+| Contact model beyond the cutoff | Strip tiling error 22x once a cloud exceeds cutoff 100 | structural limit | single-seed |
+
+### Requirement 3: O(N)
+
+| experiment | numbers | verdict | marker |
+| --- | --- | --- | --- |
+| Scatter field to 1e10 bodies | See section 5 | demonstration, no line | speed-only |
+| Token model to 1e9 balls | 1e9 balls, 300 ticks, total 3825.3 s, median 12,749 ms per tick, peak 121,352 MB, fp16 hidden state; fitted log-log slope 0.988 over six sizes (5e6 to 1e9), 0.983 over 5e6 to 1e8. One run per size; precision changes from fp32 to fp16 at 1e9. Linear for contact forces only; quadratic for unbounded-range forces (results/bench_scaling_big.json, recomputed 12748.9 ms, 121352 MB, 3825.34 s) | demonstration, no line | speed-only |
+| Pair-term neighbour search at 3e6 bodies | Argmax body error 1.469e-2 against an fp64 brute-force reference (pass at most 1.7e-6, kill at least 1e-4). The 16th and 17th neighbours were tied (distance difference 1.46e-10). Tie-aware rule written after the KILL gives 5.56e-8; the author ruled it the verdict of record. The tie-aware figure compares against the model's own chosen neighbour set, so it is small almost by construction; one body | KILL as registered; PASS under the tie-aware rule (A) | post-hoc-amended |
+| Gaussian-ladder far kernel replacing the FFT | err@20 ratio 16.57 against the FFT kernel (per seed 16.65 / 17.17 / 15.88; kill 1.30); no training; 46 s | KILL | validated |
+| 3D sparse-voxel scatter field | ratio of 3D to 2D 7.77 at 10,000 iterations (kill edge 4.0 not applied below 60,000 iterations); 10.03 at 15k and 10.31 at 20k; N=1000 scenes diverged 25 of 72 at 25k and 32 of 72 at 30k iterations (0 of 72 at 10k, 15k, 20k; results/voxel_divergence_diagnosis/scoring.json). About 4x slower than production 2D at 1e5; constant-density 1e6 ran out of memory at 119 GB. No passing checkpoint. The 7.77 figure is partly disputed in the log, and the 15k and 20k slice values have no raw file | INCONCLUSIVE-undertrained | single-seed |
+| 2D cost blow-up diagnosis | An 87x slowdown was the benchmark loader's all-pairs control path (99.5% of per-force time at 1e5; exponent 1.96 for 1e4 to 1e5); the production adaptive path took 15 ms at 1e5 against 60 ms for the 3D voxel variant. The production curve above 1e5 was not measured | hypotheses 1 to 4 PASS | single-seed |
+
+### Requirement 4: interpretability
+
+| experiment | numbers | verdict | marker |
+| --- | --- | --- | --- |
+| Rule-free force-law recovery (job 7190) | Level 1 (recovered curve against truth, 16 cells): 5 PASS, 9 MARGINAL, 2 KILL. Level 2 (formula against exact, 16 cells): 2 PASS, 6 MARGINAL, 8 KILL. Recovered inverse-square exponent 1.96 (truth 2); Yukawa range 10.6 (truth 8) and 14.6 (truth 32); Lennard-Jones exponents 14.9 / 5.8 (truth 13 / 7). Level 3 was not run. Failures come from the model curves, not the fitting step (results/rule_free_force_recovery_scores.json) | level 1 INCONCLUSIVE_PARTIAL; level 2 KILL; prediction wrong | single-seed (two training seeds) |
+| Two-number message bottleneck | err@20 ratio 0.9988 against a width-8 control (pass 1.15); pair-fit R2 0.347 (pass 0.95, kill below 0.80). The raw rule gives KILL; a plateau guard relabelled it undertrained; the registered double-length extension was not run | INCONCLUSIVE-undertrained | single-seed |
+| Sparse-code U-Net, single law | Force ratio 1.066 against width 32 (pass 1.10, kill 1.30); ablation ratios 3.92, 4.03 and a third (pass 5.0, kill 2.0): 0 pass, 0 kill | INCONCLUSIVE | single-seed |
+| Single-law network sizing | Held-out force relative error against width 32: width 4 1.0997 (split), 8 0.831, 16 0.839, 64 1.160. Width 32 spiked in 2 of 4 training seeds. The 10% line sits inside the 10 to 15% seed noise | INCONCLUSIVE | single-seed |
+| Sparse-autoencoder random-pool study | Special features differ from random pools from k = 2 to 5 upward; damage concentrated in a handful of features | curiosity, no verdict | single-seed |
+| Learned versus plain PM at N = 1000 | See requirement 1 | INCONCLUSIVE_PARTIAL | single-seed |
+
+Excluded as outside the four requirements: neuron-graph and TimesFM ideas (10 of 10 seeds KILL, 1 of 6 reproduced; log only), solar n/k/m regimes (job 4918, memory notes only, unchecked here), engineering items (video uploads, browser demos, GUI statistics menu, WebGPU port numerics 2.4e-6 against CPU, speed unmeasured).
+
+## 4. Barnes-Hut baseline: registered KILL
+
+What it tests. Whether the learned scatter field is as accurate as a classical tree code on the same scenes. Job 11172 (one seed, 4738; scorer scripts/score_barnes_hut_baseline_item.py, introduced in commit edc0a92, applied to results/pm_baseline_with_barnes_hut_force_error_chunk_fix/result.json). Median force error of each method against an exact fp64 all-N reference.
+
+Registered lines: pass at most 2x the Barnes-Hut error at theta 0.5, kill above 5x in any family at either size. No amendment.
+
+| scene family | N | learned median error | Barnes-Hut theta 0.5 | ratio |
+| --- | --- | --- | --- | --- |
+| Plummer | 1e4 | 0.0820 | 0.0108 | 7.56 |
+| Plummer | 1e5 | 0.0875 | 0.0109 | 8.06 |
+| two-clump | 1e4 | 0.0722 | 0.0124 | 5.84 |
+| two-clump | 1e5 | 0.0821 | 0.0120 | 6.82 |
+| exponential disk | 1e4 | 0.0283 | 0.0135 | 2.10 |
+| exponential disk | 1e5 | 0.0477 | 0.0139 | 3.44 |
+
+Verdict: KILL. The maximum ratio is 8.06 (learned error up to 8.06x Barnes-Hut at theta 0.5). The kill line is exceeded in 4 of 6 cells and the pass line is missed in 6 of 6. Plain PM is also below the learned model in 5 of those 6 cells.
+
+Caveats. One seed. Three scenes per family at 1e4 and one at 1e5. A first run with the same scorer gave invalid Barnes-Hut numbers (about 1.0) because of a chunk-offset bug in the Barnes-Hut script; it was fixed and rerun, and the first run's files are kept only as labelled invalid. The Polaris overlay copy of barnes_hut_2d.py was not checked. Parity with Barnes-Hut at equal opening angle cannot be claimed. Barnes-Hut is O(N log N), so this is an accuracy comparison, not a cost comparison. At 1e6 to 3e6 bodies the Barnes-Hut medians are 0.0108 to 0.0140 (reviewer recount from the raw file).
+
+Interior force offset (related, INCONCLUSIVE). The 1.53 to 1.58 mean force ratio seen at 1e6 bodies was a reference defect: the reference summed 636,068 of 1,000,000 bodies, and the ratio of the subsample to the all-bodies reference is 1.571 to 1.575 in every band (1 / 0.636068 = 1.572). A rerun with all bodies as sources (job 11169, commit 4220135) gives an interior ratio of 1.0104 at tick 0 and 0.9596 at tick 11. Registered verdict INCONCLUSIVE: the line was centred on the tick-0 value, so tick 11 could not pass; the line was not amended. One scene, seed 4738.
+
+## 5. Limits of the scale demos
+
+The 1e9 and 1e10 runs show that the model runs at that size, how fast, and how much memory it uses. They do not show accuracy.
+
+- Scatter field, 1e9 bodies: median 1.33 s per tick over 100 ticks (16 GB; results/bh_1e9_edge_free.json); from the experiment log only (EL:3393, no raw file in the repo), 1.39 s per tick over 300 ticks with the edge fix (14.0 GB) and a clumpy 1e9 scene at 1.47 s per tick over 200 ticks. Per-tick time rises as the scene clumps, from 1.02 s at tick 0 to about 1.8 s (results/bh_1e9_edge_free.json).
+- Scatter field, 1e10 bodies, 100 ticks: median 13.37 s per tick, 88.14 GB peak in the raw file (the log says 13.4 s and 87.3 GB), 1.34 ns per body per tick. Ten times the bodies costs 9.64x the time when the 300-tick 1e9 median is compared with the 100-tick 1e10 median, and 10.09x like for like at 100 ticks, so scaling is linear to slightly superlinear. Two sizes on one setup do not make a scaling curve.
+- Token model, 1e9 balls: speed only, contact forces only (section 3, requirement 3).
+- No accuracy against an exact reference exists at 1e9 or 1e10. The only accuracy figure at those sizes is a self-test relative error of about 5.8e-5 to 1.2e-4 (log lower bound; raw files give 8.2e-5, 1.11e-4 and 1.19e-4), which is not a comparison with an exact reference. Exact-reference accuracy exists up to 3e6 bodies (section 2.3), one seed, static forces.
+- Known defects at scale: fp16 lattice stripes after tick about 190 and core drift.
+- The runs are one seed with no pre-registered line. Separately, at 1e6 to 3e6 bodies the learned model is less accurate than plain PM in all 24 scenes and than Barnes-Hut at theta 0.5, and at 1e4 to 1e5 less accurate than Barnes-Hut in 6 of 6 cells (sections 3 and 4), so speed at 1e9 was demonstrated for a model whose accuracy there is not known and whose accuracy at smaller sizes is below classical methods.
+
+## 6. Open items
+
+Pending architecture-push experiments (no result in the sources; counts below).
+
+- Mass channels, learned per-body property channels (row 10, job 13166, running; job ID from the author's 2026-11-23 instruction, not in the logs): pending, results not yet in.
+- Chaos-horizon scoring, sampled-force tier-zero scored on distributions past the chaos horizon (row 14, job 13167, running; job ID from the author's 2026-11-23 instruction, not in the logs): pending, results not yet in.
+- Nested refinement levels with a smooth level blend (row 1): ceiling probe VOID (job 11099, harness check failed: all-exact err@20 0.531x base against a limit of 0.25x); harness-fix rerun job 11163 submitted 2026-11-17, no verdict.
+- Timestep-as-input model (row 16): job 11162 submitted 2026-11-17 according to the experiment log; the architecture-push table lists no job (unresolved conflict); no result.
+- Ball-tree particle attention (row 4), law inferred from motion (row 12), separated velocity branch with soft power matching (row 13), rotation-steerable weights (row 15): prepared, no job or result found. Rows 1 and 13 had probes cancelled by the author on 2026-11-11.
+- Finite-speed local-field medium (row 20): curiosity, no run, no verdict.
+
+Other open items.
+- Accuracy at 1e9 and 1e10 bodies against an exact reference: never run.
+- More scenes and seeds for the Barnes-Hut baseline, the 1e6 to 3e6 accuracy item, the 100k scene and the edge fix.
+- Mass-conditioned training for unequal masses and the planetesimal disk.
+- Tiled energy drift above the 2.5x line without replay (replay reaches 1.88 to 1.99 with cause unsettled).
+- Voxel 3D: no passing checkpoint; a 60k-iteration extension was approved and then paused.
+- Interpretability: level-3 force-law recovery, the double-length bottleneck extension, a second sparse-autoencoder seed.
+- Record hygiene: raw files for jobs 11101, 11098, 9248, 7415, the law-blind and bit-output runs and tier-zero seeds 4740 and 4742 live outside git; the README's supervisor-log line citations are stale; the architecture-push table's rows 9 and 16 lag the experiment log; the summary-token header "approved by user 2026-11-10" in the log looks like copied boilerplate and no matching message was found.
+
+Counts reconcile in section 9.
+
+## 7. Architectural diagnosis (author to write)
+
+Placeholder. This section is for the author's own diagnosis. Nothing below is a conclusion; each prompt points at a pattern in the results above that a diagnosis would need to explain.
+
+1. Accuracy against classical methods. On the Plummer scene the learned scatter field's median force error is 0.082 at 1e4 bodies, 0.0875 at 1e5 and 0.0869 at 1e6 (job 11171 scene mean), while plain PM on the same grid is 0.0199 at 1e4 and 0.0131 at 1e5 and Barnes-Hut at theta 0.5 is about 0.011. Learned error is 2.6x to 15.7x higher than plain PM in all 24 million-body scenes. What does the learned error not depend on, and what does it depend on?
+2. Energy drift. Tiled energy drift fails its line on all four training seeds (2.43 to 5.77x BL). Replay fine-tuning reaches 1.88 to 1.99x but a truth-state replay control reaches 2.10, and Muon changed nothing (4.33 / 4.72 / 3.84 against 4.10 / 4.75 / 3.89). Which interventions moved drift and which did not, and what does that say about where the drift comes from?
+3. Many variants, small gains. The pair branch (0.65x err@20), the staggered grid (0.69x) and the bit-output cells (force-error ratio 0.933, rollout ratio 0.910) each improved on a control, but with a momentum, compute or scope cost, and none moved a failing requirement to passing. Is there a pattern across those trade-offs, or are they unrelated?
+4. Generalization across laws. A retrain without one scene type gave gravity err@20 of 33.08 against 0.106 for the main checkpoint (different-seed control, about 6% of training steps skipped), a law-blind trunk diverged (395.9x), and the shift probe found force changes above 2% under a half-cell shift on all six laws. What do these three results have in common, and what do they not explain?
+5. Interpretability. The recovered inverse-square exponent was 1.96 against 2, but the Yukawa range was 14.6 against 32 and the bottleneck variants did not become readable (pair-fit R2 0.347). Which laws were recovered and which were not, and does the difference suggest anything?
+6. Scale and the choice of requirement. Linear cost was shown to 1e10 bodies, accuracy only to 3e6, and the classical Barnes-Hut method is more accurate at every size tested (1e4 to 3e6). Which of the four requirements, as written, could the architecture have satisfied, and which could it not?
+
+## 8. Limitations of this report
+
+- Most rows are one training seed. Only tier-zero position accuracy, the chaos floor (err@20), the pair branch, bit-output cells (narrow scope), the Gaussian ladder, and the tiled energy-drift failure meet the validated test.
+- Several tabulated numbers are taken from log entries and not re-derived from raw files: 4738, 4740 and 4742 tier-zero ratios beyond the 4739 file, jobs 11101, 11098, 11099 raw JSON, the GNS, replay, solar, force-law-curve, shift, bit-output and size-generalization files, and the 1e9 300-tick raw file. Where this report cites a raw file in section 2.3, 3 or 4 it was recomputed for this report or by a fresh reviewer (see section 9).
+- Line citations to the experiment log, architecture document, chaos document and README in the table were only partly audited (about 10 of 17 spot-checked citations were on target before correction); entry names are the safer citation.
+- Raw result files and checkpoints are not released; readers cannot recompute these numbers.
+- No project-wide GPU-hour total was computed for this report; per-experiment GPU-h are in docs/debugging/architecture-push-results.md.
+
+## 9. Count reconciliation and review
+
+Evidence-table claim rows: 46 found (A 5, B 6, C 9, D 13, E 11, F 2, counted from the table). 45 included. 1 excluded: webgpu-scatter-network-port-numerics (a numerics check with speed not measured and no tie to a requirement; one clause only). The reviewer found no unrepresented row. Further exclusions outside the table: neuron-graph/TimesFM ideas, solar n/k/m regimes (notes only), engineering items. Architecture push: 19 rows = 10 done + 8 pending + 1 curiosity, plus 2 related results outside the rows (2D cost blow-up, three-part training), all included. 6 Barnes-Hut cells and 12 million-body cells reconciled.
+
+Review: a fresh no-hypothesis reviewer recomputed every checkable number from raw files on 2026-11-23. All recomputable numbers matched. It found five overstated or wrong statements (contact tiling "exactly", 3D variant "failed", small-N edge-fix errors presented as 1e6, bit-output metric, plain-PM claim stated at the wrong sizes), a Barnes-Hut caveat contradicting the rest, and unsourced job IDs; all were corrected in this version. Not recomputable (raw files outside git, matched to the table and log only): mixed-law, pair branch, staggered, law-blind, tier-zero seeds 4738/4740/4742, GNS, replay, solar, shift, bit-output, size generalization, strip tiling.
+
+## Acknowledgments
+
+The author thanks CPP Polaris HPC for compute.
