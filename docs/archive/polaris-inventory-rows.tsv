@@ -1,270 +1,270 @@
 path	kind	bytes	newest_date	key_outputs	verified_local	unverified	over_2GB_no_md5	action	reason	producing_job
-a3	dir	1665803772	2026-10-10	19	1	18	0	DOWNLOAD-FIRST	18 of 19 key outputs not md5-verified local	
+a3	dir	1665803772	2026-10-10	19	1	18	0	DOWNLOAD-FIRST	18 of 19 key outputs not md5-verified against same-name local file	
 a3nb	dir	168283854	2026-10-10	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	
-augur-accuracy-at-1e6-bodies-and-barnes-hut-baseline	dir	5598792	2026-11-17	5	5	0	0	DELETE-CANDIDATE	all 5 key outputs md5-verified local	11171,4823
-augur_architecture_push_stage1_distribution	dir	3680994	2026-11-23	19	1	18	0	DOWNLOAD-FIRST	18 of 19 key outputs not md5-verified local	13154,13155,13166
-augur_architecture_push_stage1_distribution_2026_11_23_fresh	dir	3680817	2026-11-23	19	1	18	0	DOWNLOAD-FIRST	18 of 19 key outputs not md5-verified local	polaris_sampled-force-tier-0-scored-on-distributions-past-th
-augur_architecture_push_stage1_lawzoo	dir	167459485	2026-11-17	12	1	11	0	DOWNLOAD-FIRST	11 of 12 key outputs not md5-verified local	polaris_law-inferred-from-motion-on-random-law-zoo-stage-1.s
-augur_architecture_push_stage1_mass	dir	7197601	2026-11-23	2	1	1	0	DOWNLOAD-FIRST	1 of 2 key outputs not md5-verified local	13154,13155,13166
-augur_architecture_push_stage1_mass_2026_11_23_fresh	dir	7179543	2026-11-23	2	1	1	0	DOWNLOAD-FIRST	1 of 2 key outputs not md5-verified local	polaris_learned-per-body-property-channels-mass-conditioned-
-augur_architecture_push_stage1_timestep	dir	3636324	2026-11-17	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified local	polaris_timestep-as-input-model-stage-1.sh
-augur_armA	dir	851454161	2026-10-22	49	18	31	0	DOWNLOAD-FIRST	31 of 49 key outputs not md5-verified local	
-augur_armA_fresh	dir	373808675	2026-11-10	32	4	28	0	DOWNLOAD-FIRST	28 of 32 key outputs not md5-verified local	polaris_scatter-core-drift-arm-a-fresh-held-out-seeds.sh
-augur-assim	dir	2115843	2026-10-15	2	1	1	0	DOWNLOAD-FIRST	1 of 2 key outputs not md5-verified local	
-augur_audit_side_tiled_tests	dir	3629071	2026-11-09	3	3	0	0	DELETE-CANDIDATE	all 3 key outputs md5-verified local	
-augur-bfrozen	dir	407530080	2026-10-13	80	27	53	0	DOWNLOAD-FIRST	53 of 80 key outputs not md5-verified local	
-augur-bhtime	dir	6079676242	2026-10-12	36	27	9	0	DOWNLOAD-FIRST	9 of 36 key outputs not md5-verified local	
-augur_bit_output_64	dir	11625000	2026-11-12	7	0	7	0	DOWNLOAD-FIRST	7 of 7 key outputs not md5-verified local	polaris_bit-output-cell-model-at-64-grid-with-long-range-law
-augur_bit_output_encoding	dir	5461462	2026-11-08	31	1	30	0	DOWNLOAD-FIRST	30 of 31 key outputs not md5-verified local	7192
-augur_cl	dir	18637218	2026-10-12	23	12	11	0	DOWNLOAD-FIRST	11 of 23 key outputs not md5-verified local	
-augur-class-evaluation-harness	dir	9808922	2026-11-14	375	4	371	0	DOWNLOAD-FIRST	371 of 375 key outputs not md5-verified local	
-augur_close_pair_localise	dir	3341451	2026-10-28	3	2	1	0	DOWNLOAD-FIRST	1 of 3 key outputs not md5-verified local	
-augur-contact	dir	999398636	2026-10-13	239	32	207	0	DOWNLOAD-FIRST	207 of 239 key outputs not md5-verified local	
-augur_corrector	dir	6206580	2026-10-26	8	4	4	0	DOWNLOAD-FIRST	4 of 8 key outputs not md5-verified local	
+augur-accuracy-at-1e6-bodies-and-barnes-hut-baseline	dir	5598792	2026-11-17	5	4	1	0	DOWNLOAD-FIRST	1 of 5 key outputs not md5-verified against same-name local file	11171,4823
+augur_architecture_push_stage1_distribution	dir	3680994	2026-11-23	19	1	18	0	DOWNLOAD-FIRST	18 of 19 key outputs not md5-verified against same-name local file	13154,13155,13166
+augur_architecture_push_stage1_distribution_2026_11_23_fresh	dir	3680817	2026-11-23	19	1	18	0	DOWNLOAD-FIRST	18 of 19 key outputs not md5-verified against same-name local file	polaris_sampled-force-tier-0-scored-on-distributions-past-th
+augur_architecture_push_stage1_lawzoo	dir	167459485	2026-11-17	12	1	11	0	DOWNLOAD-FIRST	11 of 12 key outputs not md5-verified against same-name local file	polaris_law-inferred-from-motion-on-random-law-zoo-stage-1.s
+augur_architecture_push_stage1_mass	dir	7197601	2026-11-23	2	1	1	0	DOWNLOAD-FIRST	1 of 2 key outputs not md5-verified against same-name local file	13154,13155,13166
+augur_architecture_push_stage1_mass_2026_11_23_fresh	dir	7179543	2026-11-23	2	1	1	0	DOWNLOAD-FIRST	1 of 2 key outputs not md5-verified against same-name local file	polaris_learned-per-body-property-channels-mass-conditioned-
+augur_architecture_push_stage1_timestep	dir	3636324	2026-11-17	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified against same-name local file	polaris_timestep-as-input-model-stage-1.sh
+augur_armA	dir	851454161	2026-10-22	49	18	31	0	DOWNLOAD-FIRST	31 of 49 key outputs not md5-verified against same-name local file	
+augur_armA_fresh	dir	373808675	2026-11-10	32	4	28	0	DOWNLOAD-FIRST	28 of 32 key outputs not md5-verified against same-name local file	polaris_scatter-core-drift-arm-a-fresh-held-out-seeds.sh
+augur-assim	dir	2115843	2026-10-15	2	1	1	0	DOWNLOAD-FIRST	1 of 2 key outputs not md5-verified against same-name local file	
+augur_audit_side_tiled_tests	dir	3629071	2026-11-09	3	3	0	0	DELETE-CANDIDATE	all 3 key outputs md5-verified against same-name local file	
+augur-bfrozen	dir	407530080	2026-10-13	80	22	58	0	DOWNLOAD-FIRST	58 of 80 key outputs not md5-verified against same-name local file	
+augur-bhtime	dir	6079676242	2026-10-12	36	27	9	0	DOWNLOAD-FIRST	9 of 36 key outputs not md5-verified against same-name local file	
+augur_bit_output_64	dir	11625000	2026-11-12	7	0	7	0	DOWNLOAD-FIRST	7 of 7 key outputs not md5-verified against same-name local file	polaris_bit-output-cell-model-at-64-grid-with-long-range-law
+augur_bit_output_encoding	dir	5461462	2026-11-08	31	1	30	0	DOWNLOAD-FIRST	30 of 31 key outputs not md5-verified against same-name local file	7192
+augur_cl	dir	18637218	2026-10-12	23	12	11	0	DOWNLOAD-FIRST	11 of 23 key outputs not md5-verified against same-name local file	
+augur-class-evaluation-harness	dir	9808922	2026-11-14	375	4	371	0	DOWNLOAD-FIRST	371 of 375 key outputs not md5-verified against same-name local file	
+augur_close_pair_localise	dir	3341451	2026-10-28	3	2	1	0	DOWNLOAD-FIRST	1 of 3 key outputs not md5-verified against same-name local file	
+augur-contact	dir	999398636	2026-10-13	239	26	213	0	DOWNLOAD-FIRST	213 of 239 key outputs not md5-verified against same-name local file	
+augur_corrector	dir	6206580	2026-10-26	8	4	4	0	DOWNLOAD-FIRST	4 of 8 key outputs not md5-verified against same-name local file	
 augur-d1	dir	2443076	2026-10-12	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	
-augur-d2	dir	11815574	2026-10-12	9	3	6	0	DOWNLOAD-FIRST	6 of 9 key outputs not md5-verified local	
-augur-d2b	dir	818704884	2026-10-13	85	8	77	0	DOWNLOAD-FIRST	77 of 85 key outputs not md5-verified local	
-augur-d3	dir	2056004	2026-10-07	9	1	8	0	DOWNLOAD-FIRST	8 of 9 key outputs not md5-verified local	
-augur-d3b	dir	34907161	2026-10-12	7	1	6	0	DOWNLOAD-FIRST	6 of 7 key outputs not md5-verified local	
-augur-d3rn	dir	22402348	2026-10-12	12	1	11	0	DOWNLOAD-FIRST	11 of 12 key outputs not md5-verified local	
-augur_d5h	dir	5550839	2026-10-12	8	1	7	0	DOWNLOAD-FIRST	7 of 8 key outputs not md5-verified local	
-augur-d6	dir	2202411	2026-10-12	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified local	
-augur_dense_region_exact_force_ceiling_probe	dir	3611344	2026-11-16	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified local	
-augur_dense_region_exact_force_ceiling_probe_harness_fix	dir	3798732	2026-11-17	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified local	polaris_nested-refinement-levels-on-the-scatter-field-with-s
-augur-dm	dir	2112739	2026-10-20	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified local	
-augur_drift_diagnoses	dir	394292488	2026-10-29	4	1	3	0	DOWNLOAD-FIRST	3 of 4 key outputs not md5-verified local	
-augur-edge	dir	12599829	2026-10-21	22	4	18	0	DOWNLOAD-FIRST	18 of 22 key outputs not md5-verified local	
-augur-edge-3788	dir	2026939	2026-10-20	6	0	6	0	DOWNLOAD-FIRST	6 of 6 key outputs not md5-verified local	
-augur-edge-3789	dir	2023753	2026-10-20	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified local	
-augur-edge-3791	dir	2540083	2026-10-20	6	0	6	0	DOWNLOAD-FIRST	6 of 6 key outputs not md5-verified local	
-augur-edge-3792	dir	2759679	2026-10-20	9	0	9	0	DOWNLOAD-FIRST	9 of 9 key outputs not md5-verified local	
-augur-edge-3793	dir	2058279	2026-10-20	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified local	
-augur-edge-3795	dir	2033945	2026-10-20	7	0	7	0	DOWNLOAD-FIRST	7 of 7 key outputs not md5-verified local	
-augur-edge-3798	dir	2970141	2026-10-20	12	0	12	0	DOWNLOAD-FIRST	12 of 12 key outputs not md5-verified local	
+augur-d2	dir	11815574	2026-10-12	9	1	8	0	DOWNLOAD-FIRST	8 of 9 key outputs not md5-verified against same-name local file	
+augur-d2b	dir	818704884	2026-10-13	85	8	77	0	DOWNLOAD-FIRST	77 of 85 key outputs not md5-verified against same-name local file	
+augur-d3	dir	2056004	2026-10-07	9	1	8	0	DOWNLOAD-FIRST	8 of 9 key outputs not md5-verified against same-name local file	
+augur-d3b	dir	34907161	2026-10-12	7	1	6	0	DOWNLOAD-FIRST	6 of 7 key outputs not md5-verified against same-name local file	
+augur-d3rn	dir	22402348	2026-10-12	12	1	11	0	DOWNLOAD-FIRST	11 of 12 key outputs not md5-verified against same-name local file	
+augur_d5h	dir	5550839	2026-10-12	8	1	7	0	DOWNLOAD-FIRST	7 of 8 key outputs not md5-verified against same-name local file	
+augur-d6	dir	2202411	2026-10-12	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified against same-name local file	
+augur_dense_region_exact_force_ceiling_probe	dir	3611344	2026-11-16	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified against same-name local file	
+augur_dense_region_exact_force_ceiling_probe_harness_fix	dir	3798732	2026-11-17	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified against same-name local file	polaris_nested-refinement-levels-on-the-scatter-field-with-s
+augur-dm	dir	2112739	2026-10-20	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified against same-name local file	
+augur_drift_diagnoses	dir	394292488	2026-10-29	4	1	3	0	DOWNLOAD-FIRST	3 of 4 key outputs not md5-verified against same-name local file	
+augur-edge	dir	12599829	2026-10-21	22	2	20	0	DOWNLOAD-FIRST	20 of 22 key outputs not md5-verified against same-name local file	
+augur-edge-3788	dir	2026939	2026-10-20	6	0	6	0	DOWNLOAD-FIRST	6 of 6 key outputs not md5-verified against same-name local file	
+augur-edge-3789	dir	2023753	2026-10-20	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified against same-name local file	
+augur-edge-3791	dir	2540083	2026-10-20	6	0	6	0	DOWNLOAD-FIRST	6 of 6 key outputs not md5-verified against same-name local file	
+augur-edge-3792	dir	2759679	2026-10-20	9	0	9	0	DOWNLOAD-FIRST	9 of 9 key outputs not md5-verified against same-name local file	
+augur-edge-3793	dir	2058279	2026-10-20	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified against same-name local file	
+augur-edge-3795	dir	2033945	2026-10-20	7	0	7	0	DOWNLOAD-FIRST	7 of 7 key outputs not md5-verified against same-name local file	
+augur-edge-3798	dir	2970141	2026-10-20	12	0	12	0	DOWNLOAD-FIRST	12 of 12 key outputs not md5-verified against same-name local file	
 augur-edge-3799	dir	216905	2026-10-20	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	
-augur-edge-3800	dir	2073154	2026-10-20	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified local	
-augur-edge-3802	dir	2669517	2026-10-20	8	0	8	0	DOWNLOAD-FIRST	8 of 8 key outputs not md5-verified local	
-augur-edge-3805	dir	2079617	2026-10-20	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified local	
-augur-edge-3807	dir	2384376	2026-10-20	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified local	
-augur-edge-3808	dir	2085025	2026-10-20	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified local	
-augur-edge-3809	dir	2200274	2026-10-20	5	0	5	0	DOWNLOAD-FIRST	5 of 5 key outputs not md5-verified local	
-augur-edge-3810	dir	40548525	2026-10-20	4	0	4	0	DOWNLOAD-FIRST	4 of 4 key outputs not md5-verified local	
-augur-edge-3811	dir	21308313	2026-10-20	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified local	
-augur-edge-3820	dir	50259359	2026-10-20	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified local	
-augur-edgefree	dir	434511222	2026-11-17	5	4	1	0	DOWNLOAD-FIRST	1 of 5 key outputs not md5-verified local	4056
-augur-edge-lr3	dir	92986624	2026-10-20	3	2	1	0	DOWNLOAD-FIRST	1 of 3 key outputs not md5-verified local	
-augur-ef	dir	105413050	2026-10-15	41	1	40	0	DOWNLOAD-FIRST	40 of 41 key outputs not md5-verified local	
-augur-el	dir	107031862	2026-10-19	59	1	58	0	DOWNLOAD-FIRST	58 of 59 key outputs not md5-verified local	
-augur-el-hf-4738	dir	21923021	2026-10-22	12	9	3	0	DOWNLOAD-FIRST	3 of 12 key outputs not md5-verified local	
-augur-el-hf-4739	dir	21871794	2026-10-22	8	5	3	0	DOWNLOAD-FIRST	3 of 8 key outputs not md5-verified local	
-augur-el-hfsmoke-4738	dir	7908410	2026-10-22	4	1	3	0	DOWNLOAD-FIRST	3 of 4 key outputs not md5-verified local	
+augur-edge-3800	dir	2073154	2026-10-20	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified against same-name local file	
+augur-edge-3802	dir	2669517	2026-10-20	8	0	8	0	DOWNLOAD-FIRST	8 of 8 key outputs not md5-verified against same-name local file	
+augur-edge-3805	dir	2079617	2026-10-20	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified against same-name local file	
+augur-edge-3807	dir	2384376	2026-10-20	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified against same-name local file	
+augur-edge-3808	dir	2085025	2026-10-20	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified against same-name local file	
+augur-edge-3809	dir	2200274	2026-10-20	5	0	5	0	DOWNLOAD-FIRST	5 of 5 key outputs not md5-verified against same-name local file	
+augur-edge-3810	dir	40548525	2026-10-20	4	0	4	0	DOWNLOAD-FIRST	4 of 4 key outputs not md5-verified against same-name local file	
+augur-edge-3811	dir	21308313	2026-10-20	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified against same-name local file	
+augur-edge-3820	dir	50259359	2026-10-20	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified against same-name local file	
+augur-edgefree	dir	434511222	2026-11-17	5	4	1	0	DOWNLOAD-FIRST	1 of 5 key outputs not md5-verified against same-name local file	4056
+augur-edge-lr3	dir	92986624	2026-10-20	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified against same-name local file	
+augur-ef	dir	105413050	2026-10-15	41	1	40	0	DOWNLOAD-FIRST	40 of 41 key outputs not md5-verified against same-name local file	
+augur-el	dir	107031862	2026-10-19	59	1	58	0	DOWNLOAD-FIRST	58 of 59 key outputs not md5-verified against same-name local file	
+augur-el-hf-4738	dir	21923021	2026-10-22	12	9	3	0	DOWNLOAD-FIRST	3 of 12 key outputs not md5-verified against same-name local file	
+augur-el-hf-4739	dir	21871794	2026-10-22	8	5	3	0	DOWNLOAD-FIRST	3 of 8 key outputs not md5-verified against same-name local file	
+augur-el-hfsmoke-4738	dir	7908410	2026-10-22	4	1	3	0	DOWNLOAD-FIRST	3 of 4 key outputs not md5-verified against same-name local file	
 augur_energy_audit	dir	2982228	2026-10-27	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	
-augur_escape	dir	3829349228	2026-10-21	264	10	254	0	DOWNLOAD-FIRST	254 of 264 key outputs not md5-verified local	
-augur_far	dir	1072845393	2026-10-24	105	30	75	0	DOWNLOAD-FIRST	75 of 105 key outputs not md5-verified local	polaris_scatter-core-drift-arm-a-fresh-held-out-seeds.sh
-augur-fewshot	dir	13861597	2026-10-16	22	0	22	0	DOWNLOAD-FIRST	22 of 22 key outputs not md5-verified local	
-augur-fix	dir	284776990	2026-10-06	139	3	136	0	DOWNLOAD-FIRST	136 of 139 key outputs not md5-verified local	
-augur_fkg	dir	2987075	2026-10-21	38	5	33	0	DOWNLOAD-FIRST	33 of 38 key outputs not md5-verified local	
-augur-ftde	dir	80243092	2026-10-13	42	5	37	0	DOWNLOAD-FIRST	37 of 42 key outputs not md5-verified local	
+augur_escape	dir	3829349228	2026-10-21	264	10	254	0	DOWNLOAD-FIRST	254 of 264 key outputs not md5-verified against same-name local file	
+augur_far	dir	1072845393	2026-10-24	105	30	75	0	DOWNLOAD-FIRST	75 of 105 key outputs not md5-verified against same-name local file	polaris_scatter-core-drift-arm-a-fresh-held-out-seeds.sh
+augur-fewshot	dir	13861597	2026-10-16	22	0	22	0	DOWNLOAD-FIRST	22 of 22 key outputs not md5-verified against same-name local file	
+augur-fix	dir	284776990	2026-10-06	139	3	136	0	DOWNLOAD-FIRST	136 of 139 key outputs not md5-verified against same-name local file	
+augur_fkg	dir	2987075	2026-10-21	38	5	33	0	DOWNLOAD-FIRST	33 of 38 key outputs not md5-verified against same-name local file	
+augur-ftde	dir	80243092	2026-10-13	42	4	38	0	DOWNLOAD-FIRST	38 of 42 key outputs not md5-verified against same-name local file	
 augur-galaxy-3851	dir	1770521	2026-10-21	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	
-augur-galaxy-3852	dir	211965121	2026-10-21	7	0	7	0	DOWNLOAD-FIRST	7 of 7 key outputs not md5-verified local	
+augur-galaxy-3852	dir	211965121	2026-10-21	7	0	7	0	DOWNLOAD-FIRST	7 of 7 key outputs not md5-verified against same-name local file	
 augur-galaxy-3853	dir	1812904	2026-10-21	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	
-augur-galaxy-3854	dir	2091055	2026-10-21	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified local	
-augur-galaxy-3855	dir	8637077459	2026-10-21	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified local	
-augur-galaxy-3856	dir	2559695815	2026-10-21	12	0	12	0	DOWNLOAD-FIRST	12 of 12 key outputs not md5-verified local	
-augur-galaxy-3857	dir	3211740519	2026-10-21	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified local	
-augur-galaxy-3858	dir	637083317	2026-10-21	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified local	
-augur-galaxy-3859	dir	673498554	2026-10-21	8	0	8	0	DOWNLOAD-FIRST	8 of 8 key outputs not md5-verified local	
-augur-galaxy-3860	dir	348323368	2026-10-21	6	0	6	0	DOWNLOAD-FIRST	6 of 6 key outputs not md5-verified local	
-augur-galaxy-3861	dir	33272584916	2026-10-21	6	4	2	0	DOWNLOAD-FIRST	2 of 6 key outputs not md5-verified local	
-augur-galaxy-3862	dir	5126935003	2026-10-21	24	8	16	0	DOWNLOAD-FIRST	16 of 24 key outputs not md5-verified local	
-augur-galaxy-3864	dir	2038657	2026-10-22	3	3	0	0	DELETE-CANDIDATE	all 3 key outputs md5-verified local	
-augur-galaxy-3869	dir	1118005185	2026-10-22	9	7	2	0	DOWNLOAD-FIRST	2 of 9 key outputs not md5-verified local	
-augur-galaxy-tile-3873	dir	16674374278	2026-10-22	12	5	7	0	DOWNLOAD-FIRST	7 of 12 key outputs not md5-verified local	
-augur-galaxy-tile-3876	dir	55832236	2026-10-22	12	3	9	0	DOWNLOAD-FIRST	9 of 12 key outputs not md5-verified local	
-augur-gaussian-ladder-far-kernel-replacing-fft	dir	3352504	2026-11-10	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified local	polaris_gaussian-ladder-far-kernel-replacing-fft.sh
-augur-gns-style-message-passing-baseline-3-layers	dir	16421380	2026-11-14	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified local	
-augur-gpuaudit	dir	20041729	2026-10-14	10	1	9	0	DOWNLOAD-FIRST	9 of 10 key outputs not md5-verified local	
-augur-gpuconc	dir	31149753	2026-10-14	12	0	12	0	DOWNLOAD-FIRST	12 of 12 key outputs not md5-verified local	
-augur_h1	dir	1515481571	2026-10-24	79	17	62	0	DOWNLOAD-FIRST	62 of 79 key outputs not md5-verified local	
-augur_h1_poly	dir	1736924	2026-10-24	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified local	
-augur-harness	dir	12492351	2026-10-12	10	6	4	0	DOWNLOAD-FIRST	4 of 10 key outputs not md5-verified local	
-augur-harness-up	dir	42869	2026-10-06	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified local	
-augur-headline-seed-error-bars	dir	34880914	2026-11-17	27	21	6	0	DOWNLOAD-FIRST	6 of 27 key outputs not md5-verified local	
-augur-hteval	dir	25646798	2026-10-24	52	17	35	0	DOWNLOAD-FIRST	35 of 52 key outputs not md5-verified local	
-augur-hteval-cpu	dir	9365194	2026-10-24	22	2	20	0	DOWNLOAD-FIRST	20 of 22 key outputs not md5-verified local	
+augur-galaxy-3854	dir	2091055	2026-10-21	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified against same-name local file	
+augur-galaxy-3855	dir	8637077459	2026-10-21	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified against same-name local file	
+augur-galaxy-3856	dir	2559695815	2026-10-21	12	0	12	0	DOWNLOAD-FIRST	12 of 12 key outputs not md5-verified against same-name local file	
+augur-galaxy-3857	dir	3211740519	2026-10-21	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified against same-name local file	
+augur-galaxy-3858	dir	637083317	2026-10-21	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified against same-name local file	
+augur-galaxy-3859	dir	673498554	2026-10-21	8	0	8	0	DOWNLOAD-FIRST	8 of 8 key outputs not md5-verified against same-name local file	
+augur-galaxy-3860	dir	348323368	2026-10-21	6	0	6	0	DOWNLOAD-FIRST	6 of 6 key outputs not md5-verified against same-name local file	
+augur-galaxy-3861	dir	33272584916	2026-10-21	6	4	2	0	DOWNLOAD-FIRST	2 of 6 key outputs not md5-verified against same-name local file	
+augur-galaxy-3862	dir	5126935003	2026-10-21	24	8	16	0	DOWNLOAD-FIRST	16 of 24 key outputs not md5-verified against same-name local file	
+augur-galaxy-3864	dir	2038657	2026-10-22	3	3	0	0	DELETE-CANDIDATE	all 3 key outputs md5-verified against same-name local file	
+augur-galaxy-3869	dir	1118005185	2026-10-22	9	7	2	0	DOWNLOAD-FIRST	2 of 9 key outputs not md5-verified against same-name local file	
+augur-galaxy-tile-3873	dir	16674374278	2026-10-22	12	5	7	0	DOWNLOAD-FIRST	7 of 12 key outputs not md5-verified against same-name local file	
+augur-galaxy-tile-3876	dir	55832236	2026-10-22	12	3	9	0	DOWNLOAD-FIRST	9 of 12 key outputs not md5-verified against same-name local file	
+augur-gaussian-ladder-far-kernel-replacing-fft	dir	3352504	2026-11-10	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified against same-name local file	polaris_gaussian-ladder-far-kernel-replacing-fft.sh
+augur-gns-style-message-passing-baseline-3-layers	dir	16421380	2026-11-14	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified against same-name local file	
+augur-gpuaudit	dir	20041729	2026-10-14	10	1	9	0	DOWNLOAD-FIRST	9 of 10 key outputs not md5-verified against same-name local file	
+augur-gpuconc	dir	31149753	2026-10-14	12	0	12	0	DOWNLOAD-FIRST	12 of 12 key outputs not md5-verified against same-name local file	
+augur_h1	dir	1515481571	2026-10-24	79	17	62	0	DOWNLOAD-FIRST	62 of 79 key outputs not md5-verified against same-name local file	
+augur_h1_poly	dir	1736924	2026-10-24	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified against same-name local file	
+augur-harness	dir	12492351	2026-10-12	10	6	4	0	DOWNLOAD-FIRST	4 of 10 key outputs not md5-verified against same-name local file	
+augur-harness-up	dir	42869	2026-10-06	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified against same-name local file	
+augur-headline-seed-error-bars	dir	34880914	2026-11-17	27	21	6	0	DOWNLOAD-FIRST	6 of 27 key outputs not md5-verified against same-name local file	
+augur-hteval	dir	25646798	2026-10-24	52	17	35	0	DOWNLOAD-FIRST	35 of 52 key outputs not md5-verified against same-name local file	
+augur-hteval-cpu	dir	9365194	2026-10-24	22	2	20	0	DOWNLOAD-FIRST	20 of 22 key outputs not md5-verified against same-name local file	
 augur-hteval-src	dir	348138	2026-10-24	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	
-augur_int	dir	63414019	2026-10-12	23	12	11	0	DOWNLOAD-FIRST	11 of 23 key outputs not md5-verified local	
-augur-integ	dir	1745877	2026-10-20	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified local	
-augur-integ2	dir	1746369	2026-10-20	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified local	
-augur_joint	dir	85955529	2026-10-08	21	14	7	0	DOWNLOAD-FIRST	7 of 21 key outputs not md5-verified local	
-augur-law-blind-unet-trunk	dir	17470646	2026-11-11	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified local	polaris_law-blind-unet-trunk.sh
-augur-le	dir	92346536	2026-10-14	77	3	74	0	DOWNLOAD-FIRST	74 of 77 key outputs not md5-verified local	
-augur-le-b2	dir	28461505	2026-10-15	28	24	4	0	DOWNLOAD-FIRST	4 of 28 key outputs not md5-verified local	
-augur-lf	dir	131105316	2026-10-14	36	2	34	0	DOWNLOAD-FIRST	34 of 36 key outputs not md5-verified local	
-augur_loss_terms	dir	36155067	2026-10-26	48	5	43	0	DOWNLOAD-FIRST	43 of 48 key outputs not md5-verified local	
-augur-lrw	dir	145991335	2026-10-16	60	57	3	0	DOWNLOAD-FIRST	3 of 60 key outputs not md5-verified local	
-augur-lt	dir	69236213	2026-10-14	30	3	27	0	DOWNLOAD-FIRST	27 of 30 key outputs not md5-verified local	
-augur-lw	dir	120947606	2026-10-14	71	2	69	0	DOWNLOAD-FIRST	69 of 71 key outputs not md5-verified local	
-augur_merge_gradient_fix_tests	dir	6036704	2026-11-09	10	10	0	0	DELETE-CANDIDATE	all 10 key outputs md5-verified local	
-augur_merge_scorer_fix_tests	dir	6037817	2026-11-09	10	10	0	0	DELETE-CANDIDATE	all 10 key outputs md5-verified local	
-augur_merge_tests	dir	8561614	2026-11-09	16	16	0	0	DELETE-CANDIDATE	all 16 key outputs md5-verified local	
-augur-mixed-law-pow1-amp-cap	dir	5333337	2026-11-09	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified local	
-augur-mixed-law-pow1-amp-cap-baseline-scatter-field	dir	38567730	2026-11-09	5	4	1	0	DOWNLOAD-FIRST	1 of 5 key outputs not md5-verified local	polaris_mixed-law-pow1-amp-cap-scoring-eval.sh
+augur_int	dir	63414019	2026-10-12	23	12	11	0	DOWNLOAD-FIRST	11 of 23 key outputs not md5-verified against same-name local file	
+augur-integ	dir	1745877	2026-10-20	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified against same-name local file	
+augur-integ2	dir	1746369	2026-10-20	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified against same-name local file	
+augur_joint	dir	85955529	2026-10-08	21	14	7	0	DOWNLOAD-FIRST	7 of 21 key outputs not md5-verified against same-name local file	
+augur-law-blind-unet-trunk	dir	17470646	2026-11-11	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified against same-name local file	polaris_law-blind-unet-trunk.sh
+augur-le	dir	92346536	2026-10-14	77	2	75	0	DOWNLOAD-FIRST	75 of 77 key outputs not md5-verified against same-name local file	
+augur-le-b2	dir	28461505	2026-10-15	28	23	5	0	DOWNLOAD-FIRST	5 of 28 key outputs not md5-verified against same-name local file	
+augur-lf	dir	131105316	2026-10-14	36	1	35	0	DOWNLOAD-FIRST	35 of 36 key outputs not md5-verified against same-name local file	
+augur_loss_terms	dir	36155067	2026-10-26	48	5	43	0	DOWNLOAD-FIRST	43 of 48 key outputs not md5-verified against same-name local file	
+augur-lrw	dir	145991335	2026-10-16	60	57	3	0	DOWNLOAD-FIRST	3 of 60 key outputs not md5-verified against same-name local file	
+augur-lt	dir	69236213	2026-10-14	30	2	28	0	DOWNLOAD-FIRST	28 of 30 key outputs not md5-verified against same-name local file	
+augur-lw	dir	120947606	2026-10-14	71	1	70	0	DOWNLOAD-FIRST	70 of 71 key outputs not md5-verified against same-name local file	
+augur_merge_gradient_fix_tests	dir	6036704	2026-11-09	10	10	0	0	DELETE-CANDIDATE	all 10 key outputs md5-verified against same-name local file	
+augur_merge_scorer_fix_tests	dir	6037817	2026-11-09	10	10	0	0	DELETE-CANDIDATE	all 10 key outputs md5-verified against same-name local file	
+augur_merge_tests	dir	8561614	2026-11-09	16	16	0	0	DELETE-CANDIDATE	all 16 key outputs md5-verified against same-name local file	
+augur-mixed-law-pow1-amp-cap	dir	5333337	2026-11-09	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified against same-name local file	
+augur-mixed-law-pow1-amp-cap-baseline-scatter-field	dir	38567730	2026-11-09	5	4	1	0	DOWNLOAD-FIRST	1 of 5 key outputs not md5-verified against same-name local file	polaris_mixed-law-pow1-amp-cap-scoring-eval.sh
 augur-mixed-law-upload	dir	91148	2026-11-09	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	polaris_mixed-law-pow1-amp-cap-scoring-eval.sh
-augur_neighbour_tile_force_error_predictability_probe	dir	3502025	2026-11-13	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified local	polaris_summary-token-exchange-between-neighbour-tiles.sh
-augur-neuron	dir	135173503	2026-11-03	85	16	69	0	DOWNLOAD-FIRST	69 of 85 key outputs not md5-verified local	
-augur-neuron-extra-training-seeds	dir	50240258	2026-11-06	32	0	32	0	DOWNLOAD-FIRST	32 of 32 key outputs not md5-verified local	
-augur-neuron-seed-reproduction-11-07-configuration	dir	63535247	2026-11-09	36	0	36	0	DOWNLOAD-FIRST	36 of 36 key outputs not md5-verified local	
-augur-neuron-seed-robust	dir	138813314	2026-11-08	110	20	90	0	DOWNLOAD-FIRST	90 of 110 key outputs not md5-verified local	7193
-augur_nf	dir	168171585	2026-10-22	30	4	26	0	DOWNLOAD-FIRST	26 of 30 key outputs not md5-verified local	
-augur_nfr	dir	256901717	2026-11-09	155	103	52	0	DOWNLOAD-FIRST	52 of 155 key outputs not md5-verified local	4824
-augur_nfr_render	dir	12699426	2026-10-23	4	3	1	0	DOWNLOAD-FIRST	1 of 4 key outputs not md5-verified local	
-augur_nf_smoke	dir	9467000	2026-10-22	9	3	6	0	DOWNLOAD-FIRST	6 of 9 key outputs not md5-verified local	
-augur-one-network-for-all-tiers-with-scale-input	dir	6327785	2026-11-12	6	3	3	0	DOWNLOAD-FIRST	3 of 6 key outputs not md5-verified local	polaris_one-network-for-all-tiers-with-scale-input.sh
-augur-ood	dir	28446877	2026-10-04	4	3	1	0	DOWNLOAD-FIRST	1 of 4 key outputs not md5-verified local	polaris_scatter_ood.sh
+augur_neighbour_tile_force_error_predictability_probe	dir	3502025	2026-11-13	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified against same-name local file	polaris_summary-token-exchange-between-neighbour-tiles.sh
+augur-neuron	dir	135173503	2026-11-03	85	16	69	0	DOWNLOAD-FIRST	69 of 85 key outputs not md5-verified against same-name local file	
+augur-neuron-extra-training-seeds	dir	50240258	2026-11-06	32	0	32	0	DOWNLOAD-FIRST	32 of 32 key outputs not md5-verified against same-name local file	
+augur-neuron-seed-reproduction-11-07-configuration	dir	63535247	2026-11-09	36	0	36	0	DOWNLOAD-FIRST	36 of 36 key outputs not md5-verified against same-name local file	
+augur-neuron-seed-robust	dir	138813314	2026-11-08	110	20	90	0	DOWNLOAD-FIRST	90 of 110 key outputs not md5-verified against same-name local file	7193
+augur_nf	dir	168171585	2026-10-22	30	3	27	0	DOWNLOAD-FIRST	27 of 30 key outputs not md5-verified against same-name local file	
+augur_nfr	dir	256901717	2026-11-09	155	103	52	0	DOWNLOAD-FIRST	52 of 155 key outputs not md5-verified against same-name local file	4824
+augur_nfr_render	dir	12699426	2026-10-23	4	3	1	0	DOWNLOAD-FIRST	1 of 4 key outputs not md5-verified against same-name local file	
+augur_nf_smoke	dir	9467000	2026-10-22	9	3	6	0	DOWNLOAD-FIRST	6 of 9 key outputs not md5-verified against same-name local file	
+augur-one-network-for-all-tiers-with-scale-input	dir	6327785	2026-11-12	6	3	3	0	DOWNLOAD-FIRST	3 of 6 key outputs not md5-verified against same-name local file	polaris_one-network-for-all-tiers-with-scale-input.sh
+augur-ood	dir	28446877	2026-10-04	4	3	1	0	DOWNLOAD-FIRST	1 of 4 key outputs not md5-verified against same-name local file	polaris_scatter_ood.sh
 augur-ood-src	dir	31895	2026-10-20	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	polaris_scatter_ood.sh
-augur-opt	dir	23262918	2026-10-04	32	2	30	0	DOWNLOAD-FIRST	30 of 32 key outputs not md5-verified local	polaris_scatter_ood.sh
-augur-p1e8	dir	25230085521	2026-10-22	87	60	27	0	DOWNLOAD-FIRST	27 of 87 key outputs not md5-verified local	
-augur_pair_context	dir	9822612	2026-11-12	6	4	2	0	DOWNLOAD-FIRST	2 of 6 key outputs not md5-verified local	polaris_neighbour-context-pair-branch-replacing-central-pair
-augur_pair_context_full	dir	32660378	2026-11-16	41	3	38	0	DOWNLOAD-FIRST	38 of 41 key outputs not md5-verified local	polaris_neighbour-context-pair-branch-replacing-central-pair
-augur_pair_context_replication	dir	16280108	2026-11-12	10	6	4	0	DOWNLOAD-FIRST	4 of 10 key outputs not md5-verified local	polaris_neighbour-context-pair-branch-train-seed-replication
-augur_pair_context_tangential_penalty	dir	9846769	2026-11-12	6	4	2	0	DOWNLOAD-FIRST	2 of 6 key outputs not md5-verified local	polaris_neighbour-context-pair-branch-with-soft-tangential-p
-augur_pp8	dir	27329219	2026-10-07	27	11	16	0	DOWNLOAD-FIRST	16 of 27 key outputs not md5-verified local	polaris_scatter_protocol.sh
+augur-opt	dir	23262918	2026-10-04	32	0	32	0	DOWNLOAD-FIRST	32 of 32 key outputs not md5-verified against same-name local file	polaris_scatter_ood.sh
+augur-p1e8	dir	25230085521	2026-10-22	87	60	27	0	DOWNLOAD-FIRST	27 of 87 key outputs not md5-verified against same-name local file	
+augur_pair_context	dir	9822612	2026-11-12	6	4	2	0	DOWNLOAD-FIRST	2 of 6 key outputs not md5-verified against same-name local file	polaris_neighbour-context-pair-branch-replacing-central-pair
+augur_pair_context_full	dir	32660378	2026-11-16	41	3	38	0	DOWNLOAD-FIRST	38 of 41 key outputs not md5-verified against same-name local file	polaris_neighbour-context-pair-branch-replacing-central-pair
+augur_pair_context_replication	dir	16280108	2026-11-12	10	6	4	0	DOWNLOAD-FIRST	4 of 10 key outputs not md5-verified against same-name local file	polaris_neighbour-context-pair-branch-train-seed-replication
+augur_pair_context_tangential_penalty	dir	9846769	2026-11-12	6	4	2	0	DOWNLOAD-FIRST	2 of 6 key outputs not md5-verified against same-name local file	polaris_neighbour-context-pair-branch-with-soft-tangential-p
+augur_pp8	dir	27329219	2026-10-07	27	11	16	0	DOWNLOAD-FIRST	16 of 27 key outputs not md5-verified against same-name local file	polaris_scatter_protocol.sh
 augur_pp8_up	dir	107735	2026-10-07	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	polaris_scatter_protocol.sh
-augur_probe	dir	278706	2026-11-08	4	2	2	0	DOWNLOAD-FIRST	2 of 4 key outputs not md5-verified local	6239
-augur_probe_deep	dir	490684	2026-11-10	6	6	0	0	DELETE-CANDIDATE	all 6 key outputs md5-verified local	7475
-augur-r1	dir	1861680	2026-10-19	2	1	1	0	DOWNLOAD-FIRST	1 of 2 key outputs not md5-verified local	
-augur-rc	dir	2210866	2026-10-15	8	4	4	0	DOWNLOAD-FIRST	4 of 8 key outputs not md5-verified local	
-augur-rcpf	dir	15954371	2026-10-14	13	6	7	0	DOWNLOAD-FIRST	7 of 13 key outputs not md5-verified local	
-augur-recabl	dir	183213177	2026-10-14	48	12	36	0	DOWNLOAD-FIRST	36 of 48 key outputs not md5-verified local	
-augur-regce	dir	5273631	2026-10-15	9	9	0	0	DELETE-CANDIDATE	all 9 key outputs md5-verified local	
-augur-regce2	dir	5363204	2026-10-19	10	9	1	0	DOWNLOAD-FIRST	1 of 10 key outputs not md5-verified local	
-augur_replay_mechanism	dir	20684112	2026-11-09	28	18	10	0	DOWNLOAD-FIRST	10 of 28 key outputs not md5-verified local	polaris_replay-mechanism-arms-and-force-error-breakdown.sh
-augur_s46	dir	291993336	2026-10-08	53	18	35	0	DOWNLOAD-FIRST	35 of 53 key outputs not md5-verified local	
-augur-scatter-field-2d-cost-blowup	dir	10182946	2026-11-16	3	1	2	0	DOWNLOAD-FIRST	2 of 3 key outputs not md5-verified local	
-augur-scatter-field-three-part-exact-swap-drift-attribution	dir	17394876	2026-11-12	25	25	0	0	DELETE-CANDIDATE	all 25 key outputs md5-verified local	
-augur-scatter-field-three-part-separate-training	dir	110204659	2026-11-16	126	49	77	0	DOWNLOAD-FIRST	77 of 126 key outputs not md5-verified local	11094,10402
-augur_shift_core_diag	dir	121056918	2026-11-10	8	2	6	0	DOWNLOAD-FIRST	6 of 8 key outputs not md5-verified local	7837
+augur_probe	dir	278706	2026-11-08	4	2	2	0	DOWNLOAD-FIRST	2 of 4 key outputs not md5-verified against same-name local file	6239
+augur_probe_deep	dir	490684	2026-11-10	6	6	0	0	DELETE-CANDIDATE	all 6 key outputs md5-verified against same-name local file	7475
+augur-r1	dir	1861680	2026-10-19	2	1	1	0	DOWNLOAD-FIRST	1 of 2 key outputs not md5-verified against same-name local file	
+augur-rc	dir	2210866	2026-10-15	8	4	4	0	DOWNLOAD-FIRST	4 of 8 key outputs not md5-verified against same-name local file	
+augur-rcpf	dir	15954371	2026-10-14	13	6	7	0	DOWNLOAD-FIRST	7 of 13 key outputs not md5-verified against same-name local file	
+augur-recabl	dir	183213177	2026-10-14	48	12	36	0	DOWNLOAD-FIRST	36 of 48 key outputs not md5-verified against same-name local file	
+augur-regce	dir	5273631	2026-10-15	9	9	0	0	DELETE-CANDIDATE	all 9 key outputs md5-verified against same-name local file	
+augur-regce2	dir	5363204	2026-10-19	10	9	1	0	DOWNLOAD-FIRST	1 of 10 key outputs not md5-verified against same-name local file	
+augur_replay_mechanism	dir	20684112	2026-11-09	28	18	10	0	DOWNLOAD-FIRST	10 of 28 key outputs not md5-verified against same-name local file	polaris_replay-mechanism-arms-and-force-error-breakdown.sh
+augur_s46	dir	291993336	2026-10-08	53	18	35	0	DOWNLOAD-FIRST	35 of 53 key outputs not md5-verified against same-name local file	
+augur-scatter-field-2d-cost-blowup	dir	10182946	2026-11-16	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified against same-name local file	
+augur-scatter-field-three-part-exact-swap-drift-attribution	dir	17394876	2026-11-12	25	25	0	0	DELETE-CANDIDATE	all 25 key outputs md5-verified against same-name local file	
+augur-scatter-field-three-part-separate-training	dir	110204659	2026-11-16	126	49	77	0	DOWNLOAD-FIRST	77 of 126 key outputs not md5-verified against same-name local file	11094,10402
+augur_shift_core_diag	dir	121056918	2026-11-10	8	2	6	0	DOWNLOAD-FIRST	6 of 8 key outputs not md5-verified against same-name local file	7837
 augur-showcase	dir	36696484308	2026-10-26	6	1	5	4	DOWNLOAD-FIRST	4 key file(s) over 2 GB not md5ed; 5 other unverified	polaris_showcase_solar_system_orbit_ft2.sh
 augur-showcase-kpadext	dir	118144108418	2026-10-28	10	8	2	5	DOWNLOAD-FIRST	5 key file(s) over 2 GB not md5ed; 2 other unverified	
-augur-single-law-network-sizing	dir	51080551	2026-11-10	21	10	11	0	DOWNLOAD-FIRST	11 of 21 key outputs not md5-verified local	7442
-augur-single-law-readability	dir	8053748	2026-11-12	8	2	6	0	DOWNLOAD-FIRST	6 of 8 key outputs not md5-verified local	polaris_two-number-message-bottleneck-single-law.sh
+augur-single-law-network-sizing	dir	51080551	2026-11-10	21	10	11	0	DOWNLOAD-FIRST	11 of 21 key outputs not md5-verified against same-name local file	7442
+augur-single-law-readability	dir	8053748	2026-11-12	8	2	6	0	DOWNLOAD-FIRST	6 of 8 key outputs not md5-verified against same-name local file	polaris_two-number-message-bottleneck-single-law.sh
 augur-single-law-upload	dir	86289	2026-11-08	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	polaris_single-law-inverse-square-network-sizing.sh
-augur_slj	dir	1270634315	2026-10-23	408	380	28	0	DOWNLOAD-FIRST	28 of 408 key outputs not md5-verified local	
-augur_slj_ft	dir	1050835184	2026-10-23	34	18	16	0	DOWNLOAD-FIRST	16 of 34 key outputs not md5-verified local	
-augur_slj_hv	dir	3372712366	2026-10-26	257	42	215	0	DOWNLOAD-FIRST	215 of 257 key outputs not md5-verified local	
-augur_slj_scratch	dir	863893922	2026-10-23	27	11	16	0	DOWNLOAD-FIRST	16 of 27 key outputs not md5-verified local	
-augur-smoke	dir	1838302	2026-10-07	4	2	2	0	DOWNLOAD-FIRST	2 of 4 key outputs not md5-verified local	
-augur-softcap	dir	462085686	2026-10-13	75	6	69	0	DOWNLOAD-FIRST	69 of 75 key outputs not md5-verified local	
+augur_slj	dir	1270634315	2026-10-23	408	380	28	0	DOWNLOAD-FIRST	28 of 408 key outputs not md5-verified against same-name local file	
+augur_slj_ft	dir	1050835184	2026-10-23	34	18	16	0	DOWNLOAD-FIRST	16 of 34 key outputs not md5-verified against same-name local file	
+augur_slj_hv	dir	3372712366	2026-10-26	257	42	215	0	DOWNLOAD-FIRST	215 of 257 key outputs not md5-verified against same-name local file	
+augur_slj_scratch	dir	863893922	2026-10-23	27	11	16	0	DOWNLOAD-FIRST	16 of 27 key outputs not md5-verified against same-name local file	
+augur-smoke	dir	1838302	2026-10-07	4	2	2	0	DOWNLOAD-FIRST	2 of 4 key outputs not md5-verified against same-name local file	
+augur-softcap	dir	462085686	2026-10-13	75	6	69	0	DOWNLOAD-FIRST	69 of 75 key outputs not md5-verified against same-name local file	
 augur-softcap-old	dir	1918619	2026-10-13	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	
-augur-solar10m	dir	13146354466	2026-10-19	223	8	215	0	DOWNLOAD-FIRST	215 of 223 key outputs not md5-verified local	
+augur-solar10m	dir	13146354466	2026-10-19	223	8	215	0	DOWNLOAD-FIRST	215 of 223 key outputs not md5-verified against same-name local file	
 augur-solar-generalized	dir	5738281247	2026-11-02	7	4	3	2	DOWNLOAD-FIRST	2 key file(s) over 2 GB not md5ed; 3 other unverified	
-augur-solar-generalized-smoke	dir	6370294	2026-11-02	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified local	
-augur-solar-moon-arms	dir	198134011	2026-11-02	42	5	37	0	DOWNLOAD-FIRST	37 of 42 key outputs not md5-verified local	
-augur-solar-moon-diagnosis	dir	1279125651	2026-11-02	7	0	7	0	DOWNLOAD-FIRST	7 of 7 key outputs not md5-verified local	
-augur-solar-more-moons	dir	2655354121	2026-11-02	8	5	3	1	DOWNLOAD-FIRST	1 key file(s) over 2 GB not md5ed; 3 other unverified	
-augur-solar-nkm-regimes	dir	352857659	2026-11-03	41	25	16	0	DOWNLOAD-FIRST	16 of 41 key outputs not md5-verified local	
+augur-solar-generalized-smoke	dir	6370294	2026-11-02	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified against same-name local file	
+augur-solar-moon-arms	dir	198134011	2026-11-02	42	5	37	0	DOWNLOAD-FIRST	37 of 42 key outputs not md5-verified against same-name local file	
+augur-solar-moon-diagnosis	dir	1279125651	2026-11-02	7	0	7	0	DOWNLOAD-FIRST	7 of 7 key outputs not md5-verified against same-name local file	
+augur-solar-more-moons	dir	2655354121	2026-11-02	8	4	4	1	DOWNLOAD-FIRST	1 key file(s) over 2 GB not md5ed; 4 other unverified	
+augur-solar-nkm-regimes	dir	352857659	2026-11-03	41	25	16	0	DOWNLOAD-FIRST	16 of 41 key outputs not md5-verified against same-name local file	
 augur-solar-nkm-regimes-cputest	dir	2638861	2026-11-03	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	
-augur-solar-nkm-second-seed	dir	353429529	2026-11-07	43	2	41	0	DOWNLOAD-FIRST	41 of 43 key outputs not md5-verified local	
-augur-solar-stability	dir	454573011	2026-11-02	24	17	7	0	DOWNLOAD-FIRST	7 of 24 key outputs not md5-verified local	
+augur-solar-nkm-second-seed	dir	353429529	2026-11-07	43	2	41	0	DOWNLOAD-FIRST	41 of 43 key outputs not md5-verified against same-name local file	
+augur-solar-stability	dir	454573011	2026-11-02	24	17	7	0	DOWNLOAD-FIRST	7 of 24 key outputs not md5-verified against same-name local file	
 augur-solar-translation	dir	2656640000	2026-11-02	7	4	3	1	DOWNLOAD-FIRST	1 key file(s) over 2 GB not md5ed; 3 other unverified	
 augur-solar-translation-arms	dir	2687824232	2026-11-02	8	0	8	1	DOWNLOAD-FIRST	1 key file(s) over 2 GB not md5ed; 8 other unverified	
-augur-sr	dir	343403396	2026-10-14	369	359	10	0	DOWNLOAD-FIRST	10 of 369 key outputs not md5-verified local	
-augur_staggered_double_grid	dir	48480660	2026-11-12	8	3	5	0	DOWNLOAD-FIRST	5 of 8 key outputs not md5-verified local	polaris_staggered-double-grid-with-quadratic-deposit-full.sh
-augur_staggered_grid_cost_fix_gpu_timing	dir	3458957	2026-11-16	2	2	0	0	DELETE-CANDIDATE	all 2 key outputs md5-verified local	polaris_staggered-grid-cost-fix-gpu-timing.sh
-augur_summary_token_exchange_probe_with_early_stopping_and_planted_signal	dir	3677367	2026-11-13	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified local	
-augur-sx	dir	49002514	2026-10-14	85	4	81	0	DOWNLOAD-FIRST	81 of 85 key outputs not md5-verified local	
-augur-testaudit	dir	6477116	2026-10-13	6	4	2	0	DOWNLOAD-FIRST	2 of 6 key outputs not md5-verified local	
-augur-three-dimensional-sparse-voxel-scatter-field	dir	57184314	2026-11-14	11	2	9	0	DOWNLOAD-FIRST	9 of 11 key outputs not md5-verified local	
-augur-three-dimensional-sparse-voxel-scatter-field-score-15000	dir	3233081	2026-11-14	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified local	
-augur-three-dimensional-sparse-voxel-scatter-field-score-20000	dir	3233076	2026-11-14	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified local	
+augur-sr	dir	343403396	2026-10-14	369	359	10	0	DOWNLOAD-FIRST	10 of 369 key outputs not md5-verified against same-name local file	
+augur_staggered_double_grid	dir	48480660	2026-11-12	8	3	5	0	DOWNLOAD-FIRST	5 of 8 key outputs not md5-verified against same-name local file	polaris_staggered-double-grid-with-quadratic-deposit-full.sh
+augur_staggered_grid_cost_fix_gpu_timing	dir	3458957	2026-11-16	2	2	0	0	DELETE-CANDIDATE	all 2 key outputs md5-verified against same-name local file	polaris_staggered-grid-cost-fix-gpu-timing.sh
+augur_summary_token_exchange_probe_with_early_stopping_and_planted_signal	dir	3677367	2026-11-13	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified against same-name local file	
+augur-sx	dir	49002514	2026-10-14	85	0	85	0	DOWNLOAD-FIRST	85 of 85 key outputs not md5-verified against same-name local file	
+augur-testaudit	dir	6477116	2026-10-13	6	4	2	0	DOWNLOAD-FIRST	2 of 6 key outputs not md5-verified against same-name local file	
+augur-three-dimensional-sparse-voxel-scatter-field	dir	57184314	2026-11-14	11	0	11	0	DOWNLOAD-FIRST	11 of 11 key outputs not md5-verified against same-name local file	
+augur-three-dimensional-sparse-voxel-scatter-field-score-15000	dir	3233081	2026-11-14	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified against same-name local file	
+augur-three-dimensional-sparse-voxel-scatter-field-score-20000	dir	3233076	2026-11-14	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified against same-name local file	
 augur-three-dimensional-sparse-voxel-scatter-field-score-30000	dir	3222552	2026-11-14	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	
-augur-tier0	dir	23804164	2026-10-24	27	8	19	0	DOWNLOAD-FIRST	19 of 27 key outputs not md5-verified local	
-augur_tier0_second_training_seed	dir	15577790	2026-11-03	13	9	4	0	DOWNLOAD-FIRST	4 of 13 key outputs not md5-verified local	polaris_replay-mechanism-arms-and-force-error-breakdown.sh
-augur_tier0_tiled_energy_similarity_4738	dir	8249493	2026-10-27	8	6	2	0	DOWNLOAD-FIRST	2 of 8 key outputs not md5-verified local	
-augur_tier0_tiled_energy_similarity_4739	dir	8249672	2026-10-27	8	6	2	0	DOWNLOAD-FIRST	2 of 8 key outputs not md5-verified local	
-augur_tier0_tiled_pebin_4738	dir	6484982	2026-10-28	5	2	3	0	DOWNLOAD-FIRST	3 of 5 key outputs not md5-verified local	
-augur_tier0_truth_state_replay_control_4738	dir	10656007	2026-10-29	14	6	8	0	DOWNLOAD-FIRST	8 of 14 key outputs not md5-verified local	
-augur_tier0_visited_state_replay_4738	dir	10530977	2026-10-29	14	7	7	0	DOWNLOAD-FIRST	7 of 14 key outputs not md5-verified local	polaris_replay-mechanism-arms-and-force-error-breakdown.sh
-augur_tier0_visited_state_replay_4739	dir	6415569	2026-10-29	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified local	
-augur-tiered	dir	609216094	2026-10-24	25	0	25	0	DOWNLOAD-FIRST	25 of 25 key outputs not md5-verified local	
-augur-tiered2	dir	10549520	2026-10-25	8	0	8	0	DOWNLOAD-FIRST	8 of 8 key outputs not md5-verified local	
-augur_tiered_c2	dir	2241587514	2026-10-26	60	0	60	0	DOWNLOAD-FIRST	60 of 60 key outputs not md5-verified local	
-augur_tiered_c2_e12	dir	3395413	2026-10-26	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified local	
-augur_tiered_c2_hier_matched60k_ckpt	dir	2960422	2026-10-26	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified local	
-augur_tiered_c2_hier_no_velocity_no_recurrent_seed4738_ckpt	dir	2960486	2026-10-26	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified local	
-augur_tiered_c2_hier_no_velocity_no_recurrent_seed4739_ckpt	dir	2960486	2026-10-26	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified local	
-augur_tiered_c2_s1_extfield_ckpt	dir	2960358	2026-10-26	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified local	
+augur-tier0	dir	23804164	2026-10-24	27	8	19	0	DOWNLOAD-FIRST	19 of 27 key outputs not md5-verified against same-name local file	
+augur_tier0_second_training_seed	dir	15577790	2026-11-03	13	9	4	0	DOWNLOAD-FIRST	4 of 13 key outputs not md5-verified against same-name local file	polaris_replay-mechanism-arms-and-force-error-breakdown.sh
+augur_tier0_tiled_energy_similarity_4738	dir	8249493	2026-10-27	8	5	3	0	DOWNLOAD-FIRST	3 of 8 key outputs not md5-verified against same-name local file	
+augur_tier0_tiled_energy_similarity_4739	dir	8249672	2026-10-27	8	5	3	0	DOWNLOAD-FIRST	3 of 8 key outputs not md5-verified against same-name local file	
+augur_tier0_tiled_pebin_4738	dir	6484982	2026-10-28	5	2	3	0	DOWNLOAD-FIRST	3 of 5 key outputs not md5-verified against same-name local file	
+augur_tier0_truth_state_replay_control_4738	dir	10656007	2026-10-29	14	5	9	0	DOWNLOAD-FIRST	9 of 14 key outputs not md5-verified against same-name local file	
+augur_tier0_visited_state_replay_4738	dir	10530977	2026-10-29	14	5	9	0	DOWNLOAD-FIRST	9 of 14 key outputs not md5-verified against same-name local file	polaris_replay-mechanism-arms-and-force-error-breakdown.sh
+augur_tier0_visited_state_replay_4739	dir	6415569	2026-10-29	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified against same-name local file	
+augur-tiered	dir	609216094	2026-10-24	25	0	25	0	DOWNLOAD-FIRST	25 of 25 key outputs not md5-verified against same-name local file	
+augur-tiered2	dir	10549520	2026-10-25	8	0	8	0	DOWNLOAD-FIRST	8 of 8 key outputs not md5-verified against same-name local file	
+augur_tiered_c2	dir	2241587514	2026-10-26	60	0	60	0	DOWNLOAD-FIRST	60 of 60 key outputs not md5-verified against same-name local file	
+augur_tiered_c2_e12	dir	3395413	2026-10-26	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified against same-name local file	
+augur_tiered_c2_hier_matched60k_ckpt	dir	2960422	2026-10-26	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified against same-name local file	
+augur_tiered_c2_hier_no_velocity_no_recurrent_seed4738_ckpt	dir	2960486	2026-10-26	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified against same-name local file	
+augur_tiered_c2_hier_no_velocity_no_recurrent_seed4739_ckpt	dir	2960486	2026-10-26	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified against same-name local file	
+augur_tiered_c2_s1_extfield_ckpt	dir	2960358	2026-10-26	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified against same-name local file	
 augur_tiered_c2_t0blind_seed4738	dir	3234512	2026-10-26	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	
 augur_tiered_c2_t0blind_seed4739	dir	3234512	2026-10-26	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	
-augur_tiered_c2_tier0_no_velocity_no_recurrent_seed4738_ckpt	dir	3249674	2026-10-26	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified local	
-augur_tiered_c2_tier0_no_velocity_no_recurrent_seed4739_ckpt	dir	3249676	2026-10-26	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified local	
-augur_tiered_muon_conv	dir	7411869	2026-11-04	14	10	4	0	DOWNLOAD-FIRST	4 of 14 key outputs not md5-verified local	
-augur_tiered_muon_swap	dir	10480326	2026-11-03	17	10	7	0	DOWNLOAD-FIRST	7 of 17 key outputs not md5-verified local	
-augur_tiered_replay_second_base_fresh_seed_eval	dir	8894418	2026-11-07	17	8	9	0	DOWNLOAD-FIRST	9 of 17 key outputs not md5-verified local	polaris_replay-mechanism-arms-and-force-error-breakdown.sh
-augur_tiered_sharpness_aware_minimisation_adam	dir	6630470	2026-11-06	11	8	3	0	DOWNLOAD-FIRST	3 of 11 key outputs not md5-verified local	polaris_tiered-sharpness-aware-minimisation-adam.sh
-augur_tiered_tier0_fourth_training_seed	dir	13909133	2026-11-07	16	8	8	0	DOWNLOAD-FIRST	8 of 16 key outputs not md5-verified local	polaris_tiered-tier0-fourth-training-seed.sh
-augur_tiered_tier0_third_training_seed	dir	13908218	2026-11-07	16	8	8	0	DOWNLOAD-FIRST	8 of 16 key outputs not md5-verified local	polaris_tiered-tier0-third-training-seed.sh
-augur_tile2	dir	27461605	2026-10-20	40	38	2	0	DOWNLOAD-FIRST	2 of 40 key outputs not md5-verified local	
-augur_tiled_closed_loop	dir	10305561	2026-10-26	12	7	5	0	DOWNLOAD-FIRST	5 of 12 key outputs not md5-verified local	polaris_replay-mechanism-arms-and-force-error-breakdown.sh
-augur_tiling	dir	16580869	2026-10-20	27	26	1	0	DOWNLOAD-FIRST	1 of 27 key outputs not md5-verified local	
-augur_timestep_truth	dir	1391507455	2026-11-17	15	0	15	0	DOWNLOAD-FIRST	15 of 15 key outputs not md5-verified local	polaris_timestep-as-input-model-stage-1.sh
-augur-two-body-finetune	dir	9581017	2026-11-09	16	8	8	0	DOWNLOAD-FIRST	8 of 16 key outputs not md5-verified local	polaris_two-body-curve-scenes-finetune-vs-matched-control.sh
+augur_tiered_c2_tier0_no_velocity_no_recurrent_seed4738_ckpt	dir	3249674	2026-10-26	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified against same-name local file	
+augur_tiered_c2_tier0_no_velocity_no_recurrent_seed4739_ckpt	dir	3249676	2026-10-26	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified against same-name local file	
+augur_tiered_muon_conv	dir	7411869	2026-11-04	14	10	4	0	DOWNLOAD-FIRST	4 of 14 key outputs not md5-verified against same-name local file	
+augur_tiered_muon_swap	dir	10480326	2026-11-03	17	10	7	0	DOWNLOAD-FIRST	7 of 17 key outputs not md5-verified against same-name local file	
+augur_tiered_replay_second_base_fresh_seed_eval	dir	8894418	2026-11-07	17	8	9	0	DOWNLOAD-FIRST	9 of 17 key outputs not md5-verified against same-name local file	polaris_replay-mechanism-arms-and-force-error-breakdown.sh
+augur_tiered_sharpness_aware_minimisation_adam	dir	6630470	2026-11-06	11	8	3	0	DOWNLOAD-FIRST	3 of 11 key outputs not md5-verified against same-name local file	polaris_tiered-sharpness-aware-minimisation-adam.sh
+augur_tiered_tier0_fourth_training_seed	dir	13909133	2026-11-07	16	8	8	0	DOWNLOAD-FIRST	8 of 16 key outputs not md5-verified against same-name local file	polaris_tiered-tier0-fourth-training-seed.sh
+augur_tiered_tier0_third_training_seed	dir	13908218	2026-11-07	16	8	8	0	DOWNLOAD-FIRST	8 of 16 key outputs not md5-verified against same-name local file	polaris_tiered-tier0-third-training-seed.sh
+augur_tile2	dir	27461605	2026-10-20	40	33	7	0	DOWNLOAD-FIRST	7 of 40 key outputs not md5-verified against same-name local file	
+augur_tiled_closed_loop	dir	10305561	2026-10-26	12	7	5	0	DOWNLOAD-FIRST	5 of 12 key outputs not md5-verified against same-name local file	polaris_replay-mechanism-arms-and-force-error-breakdown.sh
+augur_tiling	dir	16580869	2026-10-20	27	22	5	0	DOWNLOAD-FIRST	5 of 27 key outputs not md5-verified against same-name local file	
+augur_timestep_truth	dir	1391507455	2026-11-17	15	0	15	0	DOWNLOAD-FIRST	15 of 15 key outputs not md5-verified against same-name local file	polaris_timestep-as-input-model-stage-1.sh
+augur-two-body-finetune	dir	9581017	2026-11-09	16	5	11	0	DOWNLOAD-FIRST	11 of 16 key outputs not md5-verified against same-name local file	polaris_two-body-curve-scenes-finetune-vs-matched-control.sh
 augur-two-body-upload	dir	43931	2026-11-09	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	polaris_two-body-curve-scenes-finetune-vs-matched-control.sh
 augur-width32-spike-instrumented-upload	dir	17867	2026-11-10	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	
-bounce-cons	dir	40230453	2026-10-04	17	9	8	0	DOWNLOAD-FIRST	8 of 17 key outputs not md5-verified local	
-bounce_rect	dir	161934806	2026-09-24	4	1	3	0	DOWNLOAD-FIRST	3 of 4 key outputs not md5-verified local	
-bounce_scaling	dir	14918453	2026-10-04	10	9	1	0	DOWNLOAD-FIRST	1 of 10 key outputs not md5-verified local	
-bounce_scaling_opt	dir	4584553	2026-10-04	4	4	0	0	DELETE-CANDIDATE	all 4 key outputs md5-verified local	
-bounce-scenes	dir	114494184	2026-10-04	61	21	40	0	DOWNLOAD-FIRST	40 of 61 key outputs not md5-verified local	polaris_showcase_solar_system_orbit_ft2.sh
-bounce_windowed	dir	590131745	2026-09-22	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified local	
-d6_results	dir	415639	2026-10-12	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified local	
-edge_ck	dir	207741403	2026-10-20	76	2	74	0	DOWNLOAD-FIRST	74 of 76 key outputs not md5-verified local	polaris_scatter-core-drift-arm-a-fresh-held-out-seeds.sh
+bounce-cons	dir	40230453	2026-10-04	17	9	8	0	DOWNLOAD-FIRST	8 of 17 key outputs not md5-verified against same-name local file	
+bounce_rect	dir	161934806	2026-09-24	4	1	3	0	DOWNLOAD-FIRST	3 of 4 key outputs not md5-verified against same-name local file	
+bounce_scaling	dir	14918453	2026-10-04	10	5	5	0	DOWNLOAD-FIRST	5 of 10 key outputs not md5-verified against same-name local file	
+bounce_scaling_opt	dir	4584553	2026-10-04	4	3	1	0	DOWNLOAD-FIRST	1 of 4 key outputs not md5-verified against same-name local file	
+bounce-scenes	dir	114494184	2026-10-04	61	19	42	0	DOWNLOAD-FIRST	42 of 61 key outputs not md5-verified against same-name local file	polaris_showcase_solar_system_orbit_ft2.sh
+bounce_windowed	dir	590131745	2026-09-22	2	0	2	0	DOWNLOAD-FIRST	2 of 2 key outputs not md5-verified against same-name local file	
+d6_results	dir	415639	2026-10-12	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified against same-name local file	
+edge_ck	dir	207741403	2026-10-20	76	2	74	0	DOWNLOAD-FIRST	74 of 76 key outputs not md5-verified against same-name local file	polaris_scatter-core-drift-arm-a-fresh-held-out-seeds.sh
 eg_scripts	dir	24655	2026-10-12	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	
 gpuaudit	dir	1937940	2026-10-14	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	
-hti_run	dir	3031308	2026-10-24	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified local	
+hti_run	dir	3031308	2026-10-24	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified against same-name local file	
 polaris-mcp-files	dir	3383	2026-11-23	0	0	0	0	EXCLUDED-NON-PROJECT	MCP transfer/job-script infrastructure	6160
 polaris_mcp_jobs	dir	8561363	2026-11-23	0	0	0	0	EXCLUDED-NON-PROJECT	MCP transfer/job-script infrastructure	7249
 py312hdr	dir	2523966	2026-10-06	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	polaris_probe_compile.sh
 rc_files	dir	3904903	2026-10-14	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	
 recabl_stage	dir	41309	2026-10-14	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	
-scatter_band_probe	dir	1105531	2026-10-06	3	3	0	0	DELETE-CANDIDATE	all 3 key outputs md5-verified local	
-scatter_energy_log	dir	1224769	2026-10-06	4	4	0	0	DELETE-CANDIDATE	all 4 key outputs md5-verified local	
-scatterpc	dir	1957118	2026-10-03	3	3	0	0	DELETE-CANDIDATE	all 3 key outputs md5-verified local	
+scatter_band_probe	dir	1105531	2026-10-06	3	2	1	0	DOWNLOAD-FIRST	1 of 3 key outputs not md5-verified against same-name local file	
+scatter_energy_log	dir	1224769	2026-10-06	4	4	0	0	DELETE-CANDIDATE	all 4 key outputs md5-verified against same-name local file	
+scatterpc	dir	1957118	2026-10-03	3	3	0	0	DELETE-CANDIDATE	all 3 key outputs md5-verified against same-name local file	
 scripts	dir	1438	2026-10-22	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	2852
-slj_ph	dir	725288714	2026-10-24	26	8	18	0	DOWNLOAD-FIRST	18 of 26 key outputs not md5-verified local	
+slj_ph	dir	725288714	2026-10-24	26	8	18	0	DOWNLOAD-FIRST	18 of 26 key outputs not md5-verified against same-name local file	
 sr_files	dir	241050480	2026-10-14	0	0	0	0	DELETE-CANDIDATE	no pt/json/npz key outputs; scripts and logs only (review before deleting)	
-sx_files	dir	6533852	2026-10-14	2	2	0	0	DELETE-CANDIDATE	all 2 key outputs md5-verified local	
-t0c	dir	12962628	2026-10-25	9	1	8	0	DOWNLOAD-FIRST	8 of 9 key outputs not md5-verified local	
-t0c2	dir	12989676	2026-10-25	9	1	8	0	DOWNLOAD-FIRST	8 of 9 key outputs not md5-verified local	
-t0c3	dir	13208352	2026-10-25	9	1	8	0	DOWNLOAD-FIRST	8 of 9 key outputs not md5-verified local	
-t0c4	dir	13209872	2026-10-25	9	1	8	0	DOWNLOAD-FIRST	8 of 9 key outputs not md5-verified local	
-t0d	dir	3171328	2026-10-25	5	0	5	0	DOWNLOAD-FIRST	5 of 5 key outputs not md5-verified local	
-t0d2	dir	2991643	2026-10-25	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified local	
-t0d3	dir	2649469	2026-10-25	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified local	
-t0f	dir	12277802	2026-10-25	13	0	13	0	DOWNLOAD-FIRST	13 of 13 key outputs not md5-verified local	
-t0g	dir	6092470	2026-10-25	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified local	
-t0g2	dir	2824879	2026-10-25	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified local	
-t0h	dir	247831029	2026-10-24	75	0	75	0	DOWNLOAD-FIRST	75 of 75 key outputs not md5-verified local	
-t0h3	dir	282928067	2026-10-25	126	0	126	0	DOWNLOAD-FIRST	126 of 126 key outputs not md5-verified local	
-t0m	dir	8165335	2026-10-26	5	4	1	0	DOWNLOAD-FIRST	1 of 5 key outputs not md5-verified local	
-t0n	dir	815715142	2026-10-25	126	1	125	0	DOWNLOAD-FIRST	125 of 126 key outputs not md5-verified local	
-t0r	dir	2305504	2026-10-25	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified local	
-t0r2	dir	22534980	2026-10-25	29	1	28	0	DOWNLOAD-FIRST	28 of 29 key outputs not md5-verified local	
-t0s	dir	8013685	2026-10-25	7	2	5	0	DOWNLOAD-FIRST	5 of 7 key outputs not md5-verified local	
-t0t	dir	3527263	2026-10-25	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified local	
-t0v	dir	5029971	2026-10-25	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified local	
-t0x	dir	11613386	2026-10-25	6	0	6	0	DOWNLOAD-FIRST	6 of 6 key outputs not md5-verified local	
-tln	dir	4110444	2026-11-17	41	23	18	0	DOWNLOAD-FIRST	18 of 41 key outputs not md5-verified local	
-truthval	dir	220312	2026-11-03	6	6	0	0	DELETE-CANDIDATE	all 6 key outputs md5-verified local	
-voxel-divergence-diagnosis	dir	38610749	2026-11-16	9	9	0	0	DELETE-CANDIDATE	all 9 key outputs md5-verified local	polaris_voxel-divergence-diagnosis-inference-on-checkpoints.
+sx_files	dir	6533852	2026-10-14	2	2	0	0	DELETE-CANDIDATE	all 2 key outputs md5-verified against same-name local file	
+t0c	dir	12962628	2026-10-25	9	1	8	0	DOWNLOAD-FIRST	8 of 9 key outputs not md5-verified against same-name local file	
+t0c2	dir	12989676	2026-10-25	9	1	8	0	DOWNLOAD-FIRST	8 of 9 key outputs not md5-verified against same-name local file	
+t0c3	dir	13208352	2026-10-25	9	1	8	0	DOWNLOAD-FIRST	8 of 9 key outputs not md5-verified against same-name local file	
+t0c4	dir	13209872	2026-10-25	9	1	8	0	DOWNLOAD-FIRST	8 of 9 key outputs not md5-verified against same-name local file	
+t0d	dir	3171328	2026-10-25	5	0	5	0	DOWNLOAD-FIRST	5 of 5 key outputs not md5-verified against same-name local file	
+t0d2	dir	2991643	2026-10-25	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified against same-name local file	
+t0d3	dir	2649469	2026-10-25	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified against same-name local file	
+t0f	dir	12277802	2026-10-25	13	0	13	0	DOWNLOAD-FIRST	13 of 13 key outputs not md5-verified against same-name local file	
+t0g	dir	6092470	2026-10-25	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified against same-name local file	
+t0g2	dir	2824879	2026-10-25	1	0	1	0	DOWNLOAD-FIRST	1 of 1 key outputs not md5-verified against same-name local file	
+t0h	dir	247831029	2026-10-24	75	0	75	0	DOWNLOAD-FIRST	75 of 75 key outputs not md5-verified against same-name local file	
+t0h3	dir	282928067	2026-10-25	126	0	126	0	DOWNLOAD-FIRST	126 of 126 key outputs not md5-verified against same-name local file	
+t0m	dir	8165335	2026-10-26	5	4	1	0	DOWNLOAD-FIRST	1 of 5 key outputs not md5-verified against same-name local file	
+t0n	dir	815715142	2026-10-25	126	1	125	0	DOWNLOAD-FIRST	125 of 126 key outputs not md5-verified against same-name local file	
+t0r	dir	2305504	2026-10-25	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified against same-name local file	
+t0r2	dir	22534980	2026-10-25	29	1	28	0	DOWNLOAD-FIRST	28 of 29 key outputs not md5-verified against same-name local file	
+t0s	dir	8013685	2026-10-25	7	2	5	0	DOWNLOAD-FIRST	5 of 7 key outputs not md5-verified against same-name local file	
+t0t	dir	3527263	2026-10-25	1	1	0	0	DELETE-CANDIDATE	all 1 key outputs md5-verified against same-name local file	
+t0v	dir	5029971	2026-10-25	3	0	3	0	DOWNLOAD-FIRST	3 of 3 key outputs not md5-verified against same-name local file	
+t0x	dir	11613386	2026-10-25	6	0	6	0	DOWNLOAD-FIRST	6 of 6 key outputs not md5-verified against same-name local file	
+tln	dir	4110444	2026-11-17	41	23	18	0	DOWNLOAD-FIRST	18 of 41 key outputs not md5-verified against same-name local file	
+truthval	dir	220312	2026-11-03	6	6	0	0	DELETE-CANDIDATE	all 6 key outputs md5-verified against same-name local file	
+voxel-divergence-diagnosis	dir	38610749	2026-11-16	9	9	0	0	DELETE-CANDIDATE	all 9 key outputs md5-verified against same-name local file	polaris_voxel-divergence-diagnosis-inference-on-checkpoints.
 ai	file	18	2026-08-24	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-architecture_push_stage1_code.tgz	file	918838	2026-11-23	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-armA_code.tgz	file	680459	2026-10-22	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-armA_fresh_code.tgz	file	656895	2026-11-06	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-assim_code.tgz	file	514591	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-audit_side_tiled_closed_loop_code.tgz	file	799555	2026-11-09	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-augur-architecture-push-single-law-readability-code.tgz	file	843206	2026-11-11	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+architecture_push_stage1_code.tgz	file	918838	2026-11-23	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+armA_code.tgz	file	680459	2026-10-22	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+armA_fresh_code.tgz	file	656895	2026-11-06	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+assim_code.tgz	file	514591	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+audit_side_tiled_closed_loop_code.tgz	file	799555	2026-11-09	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+augur-architecture-push-single-law-readability-code.tgz	file	843206	2026-11-11	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 augur-armA-1-3866.log	file	26622	2026-10-22	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-armA-2-3867.log	file	37464	2026-10-22	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-armA-G-3868.log	file	16048	2026-10-22	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
@@ -290,7 +290,7 @@ augur-class-evaluation-harness-10422.log	file	3788	2026-11-14	0	0	0	0	DELETE-CAN
 augur-class-harness-with-gns-baseline-10424.log	file	123	2026-11-14	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-class-harness-with-gns-baseline-10434.log	file	3694	2026-11-14	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-class-harness-with-gns-baseline-10444.log	file	3435	2026-11-14	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-augur_code.tgz	file	391139	2026-10-06	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+augur_code.tgz	file	391139	2026-10-06	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 augur-collapsed-pair-term-fallback-chase-7185.log	file	170	2026-11-08	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-collapsed-pair-term-fallback-chase-7187.log	file	80	2026-11-08	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-collapsed-pair-term-scaling-probe-6237.log	file	1018	2026-11-07	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
@@ -394,7 +394,7 @@ augur-galaxy-tile-gate-3869.log	file	44592	2026-10-22	0	0	0	0	DOWNLOAD-FIRST	non
 augur-galaxy-tile-rs-3876.log	file	6389	2026-10-22	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-gaussian-ladder-far-kernel-replacing-fft-7838.log	file	864	2026-11-10	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-gns-style-message-passing-baseline-3-layers-10423.log	file	1698	2026-11-14	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-augur-gns-style-message-passing-baseline-3-layers-code.tgz	file	787430	2026-11-14	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+augur-gns-style-message-passing-baseline-3-layers-code.tgz	file	787430	2026-11-14	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 augur-gpuaudit-3617.log	file	8128	2026-10-14	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-gpu-burn-check-per-gpu-6087_0.log	file	225	2026-11-06	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-gpu-burn-check-per-gpu-6087_1.log	file	225	2026-11-06	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
@@ -500,9 +500,9 @@ augur-moon-cause-arm-4779.log	file	41121	2026-11-02	0	0	0	0	DOWNLOAD-FIRST	non-k
 augur-moon-cause-prep-4775.log	file	1458	2026-11-02	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-neighbour-context-pair-branch-9277.log	file	6564	2026-11-12	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-neighbour-context-pair-branch-full-11101.log	file	71546	2026-11-16	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-augur-neighbour-context-pair-branch-full-run-code.tgz	file	910504	2026-11-16	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+augur-neighbour-context-pair-branch-full-run-code.tgz	file	910504	2026-11-16	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 augur-neighbour-context-pair-branch-train-seed-replication-9688.log	file	14140	2026-11-12	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-augur-neighbour-context-pair-branch-train-seed-replication-code.tgz	file	848446	2026-11-12	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+augur-neighbour-context-pair-branch-train-seed-replication-code.tgz	file	848446	2026-11-12	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 augur-neighbour-context-pair-branch-with-soft-tangential-penalty-9689.log	file	7431	2026-11-12	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-neighbour-tile-force-error-predictability-probe-9914.log	file	1849	2026-11-13	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-network-utilization-statistics-7162.log	file	7609	2026-11-08	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
@@ -608,12 +608,12 @@ augur-scatter-field-three-part-exact-swap-drift-attribution-9721.log	file	25	202
 augur-scatter-field-three-part-exact-swap-drift-attribution-9722.log	file	1295	2026-11-12	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-scatter-field-three-part-exact-swap-drift-attribution-9730.log	file	2244	2026-11-12	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-scatter-field-three-part-exact-swap-drift-attribution-9819.log	file	5294	2026-11-12	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-augur-scatter-field-three-part-exact-swap-drift-attribution-code.tgz	file	986705	2026-11-12	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+augur-scatter-field-three-part-exact-swap-drift-attribution-code.tgz	file	986705	2026-11-12	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 augur-scatter-field-three-part-separate-training-10120.log	file	618	2026-11-13	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-scatter-field-three-part-separate-training-10304.log	file	553	2026-11-13	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-scatter-field-three-part-separate-training-10402.log	file	513	2026-11-14	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-scatter-field-three-part-separate-training-11094.log	file	520	2026-11-16	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-augur-scatter-field-three-part-separate-training-code.tgz	file	921852	2026-11-13	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+augur-scatter-field-three-part-separate-training-code.tgz	file	921852	2026-11-13	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 augur-scatter-s46-3373.log	file	5430	2026-10-06	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-scatter-s46-all-3378.log	file	499818	2026-10-07	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-scatter-tile2-3774.log	file	7415	2026-10-20	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
@@ -650,7 +650,7 @@ augur-slj-h1-poly-3956.log	file	2443	2026-10-24	0	0	0	0	DOWNLOAD-FIRST	non-key f
 augur-slj-h1-PR-3927.log	file	59543	2026-10-24	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-slj-h1-smoke-3923.log	file	6958	2026-10-24	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-slj-scratch-3913.log	file	22525	2026-10-23	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-augur_smoke.tgz	file	475897	2026-10-07	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+augur_smoke.tgz	file	475897	2026-10-07	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 augur-solar10m-pilot1-3733.log	file	38321	2026-10-19	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-solar10m-pilot2-3734.log	file	12984	2026-10-19	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-solar10m-pilot3-3735.log	file	13694	2026-10-19	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
@@ -739,9 +739,9 @@ augur-tier0-visited-state-label-replay-4088.log	file	1681	2026-10-29	0	0	0	0	DOW
 augur-tier0-visited-state-label-replay-4089.log	file	797	2026-10-29	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-tier0-visited-state-label-replay-4101.log	file	432	2026-10-29	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-tier0-visited-state-label-replay-4103.log	file	155	2026-10-29	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-augur_tiered_c2_blind_overlay.tar	file	102400	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-augur_tiered_c2_e12_diag_overlay.tar	file	102400	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-augur_tiered_c2_e12_overlay.tar	file	92160	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+augur_tiered_c2_blind_overlay.tar	file	102400	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+augur_tiered_c2_e12_diag_overlay.tar	file	102400	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+augur_tiered_c2_e12_overlay.tar	file	92160	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 augur_tiered_c2_e12smoke-4044.log	file	4071	2026-10-26	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur_tiered_c2_EN-3999.log	file	11729	2026-10-24	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur_tiered_c2_ENM-4002.log	file	38936	2026-10-25	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
@@ -751,24 +751,24 @@ augur_tiered_c2_exp89-4019.log	file	12287	2026-10-25	0	0	0	0	DOWNLOAD-FIRST	non-
 augur_tiered_c2_hier_diagnosis-4047.log	file	759	2026-10-26	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur_tiered_c2_hier_diagnosis-4048.log	file	5079	2026-10-26	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur_tiered_c2_hier_diagnosis_ablation-4049.log	file	4858	2026-10-26	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-augur_tiered_c2_hier_diagnosis_input_ablation.json	file	94231	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-augur_tiered_c2_hier_diagnosis.json	file	95406	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+augur_tiered_c2_hier_diagnosis_input_ablation.json	file	94231	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+augur_tiered_c2_hier_diagnosis.json	file	95406	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 verified after read-only download to archive-polaris-only-2026-11-23	
 augur_tiered_c2_hier_matched60k-4046.log	file	5581	2026-10-26	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur_tiered_c2_hier_matched60k_eval_joint.json	file	897	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 verified after read-only download to archive-polaris-only-2026-11-23	
-augur_tiered_c2_hier_matched60k_eval_sequential.json	file	3491	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-augur_tiered_c2_hier_no_velocity_no_recurrent_seed4738_diagnosis.json	file	24357	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-augur_tiered_c2_hier_no_velocity_no_recurrent_seed4738_eval_joint.json	file	900	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-augur_tiered_c2_hier_no_velocity_no_recurrent_seed4738_eval_sequential.json	file	3492	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-augur_tiered_c2_hier_no_velocity_no_recurrent_seed4739_diagnosis.json	file	24328	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-augur_tiered_c2_hier_no_velocity_no_recurrent_seed4739_eval_joint.json	file	901	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+augur_tiered_c2_hier_matched60k_eval_sequential.json	file	3491	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+augur_tiered_c2_hier_no_velocity_no_recurrent_seed4738_diagnosis.json	file	24357	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+augur_tiered_c2_hier_no_velocity_no_recurrent_seed4738_eval_joint.json	file	900	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+augur_tiered_c2_hier_no_velocity_no_recurrent_seed4738_eval_sequential.json	file	3492	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+augur_tiered_c2_hier_no_velocity_no_recurrent_seed4739_diagnosis.json	file	24328	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+augur_tiered_c2_hier_no_velocity_no_recurrent_seed4739_eval_joint.json	file	901	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 augur_tiered_c2_hier_no_velocity_no_recurrent_seed4739_eval_sequential.json	file	3494	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 verified after read-only download to archive-polaris-only-2026-11-23	
 augur_tiered_c2_JL-4010.log	file	21786	2026-10-25	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur_tiered_c2_JL40-4021.log	file	5625	2026-10-25	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur_tiered_c2_NG-4024.log	file	77797	2026-10-26	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur_tiered_c2_s1_extfield-4045.log	file	40219	2026-10-26	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-augur_tiered_c2_s1_extfield_eval_joint.json	file	896	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+augur_tiered_c2_s1_extfield_eval_joint.json	file	896	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 augur_tiered_c2_s1_extfield_eval_sequential.json	file	3481	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 verified after read-only download to archive-polaris-only-2026-11-23	
-augur_tiered_c2_tier0_matched_60k.pt	file	3224883	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+augur_tiered_c2_tier0_matched_60k.pt	file	3224883	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 augur_tiered_c2_tier0_no_velocity_no_recurrent_seed4738-4050.log	file	48216	2026-10-26	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur_tiered_c2_tier0_no_velocity_no_recurrent_seed4739-4051.log	file	48211	2026-10-26	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur_tiered_c2_train_tiered.py	file	26061	2026-10-24	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
@@ -817,7 +817,7 @@ augur-webtiled-vec-3833.log	file	304	2026-10-21	0	0	0	0	DELETE-CANDIDATE	non-key
 augur-width-32-loss-spike-instrumented-rerun-7777.log	file	353	2026-11-10	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-width32-loss-spike-seed-validation-7442.log	file	269	2026-11-09	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 augur-yukawa-lambda-protocol-4832.log	file	2048	2026-11-03	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-bfrozen_code.tgz	file	2493061	2026-10-13	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+bfrozen_code.tgz	file	2493061	2026-10-13	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 bounce	file	5	2026-10-06	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 bounce-bench-big-2917.log	file	21980	2026-09-24	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 bounce-bench-scaling-2913.log	file	465	2026-09-24	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
@@ -933,35 +933,35 @@ bounce-token-model-v40-2903.log	file	8271	2026-09-24	0	0	0	0	DOWNLOAD-FIRST	non-
 bounce-token-model-v41-2904.log	file	8271	2026-09-24	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 bounce-token-model-v42-2905.log	file	8271	2026-09-24	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 bounce-windowed-hist3-2835.log	file	11777	2026-09-22	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-class_harness_code.tgz	file	1108905	2026-11-14	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-cl_code.tgz	file	569713	2026-10-12	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-closepair_code.tgz	file	691339	2026-10-28	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-corrector_code.tgz	file	3601021	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+class_harness_code.tgz	file	1108905	2026-11-14	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+cl_code.tgz	file	569713	2026-10-12	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+closepair_code.tgz	file	691339	2026-10-28	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+corrector_code.tgz	file	3601021	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 d1-bounded-field.log	file	16474	2026-10-12	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-d2_code.tgz	file	552125	2026-10-12	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-d3b_code.tgz	file	501752	2026-10-12	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-d3rn_code.tgz	file	492547	2026-10-12	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+d2_code.tgz	file	552125	2026-10-12	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+d3b_code.tgz	file	501752	2026-10-12	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+d3rn_code.tgz	file	492547	2026-10-12	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 d5_run.sh	file	1624	2026-10-12	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-d6_code.tgz	file	446523	2026-10-12	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-drift_diag_code.tgz	file	638611	2026-10-29	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-edge_code10.tgz	file	556090	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-edge_code11.tgz	file	556129	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-edge_code1.tgz	file	542028	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-edge_code2.tgz	file	546650	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-edge_code3.tgz	file	548420	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-edge_code4.tgz	file	548902	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-edge_code5.tgz	file	550588	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-edge_code6.tgz	file	551685	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-edge_code7.tgz	file	552463	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-edge_code8.tgz	file	553008	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-edge_code9.tgz	file	554121	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-edge_free_code.tgz	file	1295704	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-ef_code.tar	file	2027520	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+d6_code.tgz	file	446523	2026-10-12	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+drift_diag_code.tgz	file	638611	2026-10-29	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+edge_code10.tgz	file	556090	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+edge_code11.tgz	file	556129	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+edge_code1.tgz	file	542028	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+edge_code2.tgz	file	546650	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+edge_code3.tgz	file	548420	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+edge_code4.tgz	file	548902	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+edge_code5.tgz	file	550588	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+edge_code6.tgz	file	551685	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+edge_code7.tgz	file	552463	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+edge_code8.tgz	file	553008	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+edge_code9.tgz	file	554121	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+edge_free_code.tgz	file	1295704	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+ef_code.tar	file	2027520	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 ef-cons3-3648.log	file	430	2026-10-15	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 ef_cons3.sh	file	914	2026-10-15	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-ef_cons3.tar	file	4177920	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-ef_results.tar	file	9687040	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-el_code.tar	file	2058240	2026-10-19	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+ef_cons3.tar	file	4177920	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+ef_results.tar	file	9687040	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+el_code.tar	file	2058240	2026-10-19	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 el-hf-4738-3884.log	file	44359	2026-10-22	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 el-hf-4739-3885.log	file	41184	2026-10-22	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 el-hfsmoke-3863.log	file	697	2026-10-22	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
@@ -972,15 +972,15 @@ el-ladder-3752.log	file	86034	2026-10-19	0	0	0	0	DELETE-CANDIDATE	non-key file (
 el-smoke-3749.log	file	4225	2026-10-19	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 el-smoke-3750.log	file	2326	2026-10-19	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 el-smoke-3751.log	file	910	2026-10-19	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-E_ms_kp_pot_v_g128.pt	file	3200305	2026-10-08	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-energy_audit_code.tgz	file	936174	2026-10-27	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-energy_metric_audit.json	file	77838	2026-10-27	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-escape_code1.tgz	file	589967	2026-10-21	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-escape_code2.tgz	file	640312	2026-10-21	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-escape_code3.tgz	file	641611	2026-10-21	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-escape_code4.tgz	file	641858	2026-10-21	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-escape_code5.tgz	file	642130	2026-10-21	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-escape_code6.tgz	file	642473	2026-10-21	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+E_ms_kp_pot_v_g128.pt	file	3200305	2026-10-08	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+energy_audit_code.tgz	file	936174	2026-10-27	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+energy_metric_audit.json	file	77838	2026-10-27	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+escape_code1.tgz	file	589967	2026-10-21	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+escape_code2.tgz	file	640312	2026-10-21	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+escape_code3.tgz	file	641611	2026-10-21	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+escape_code4.tgz	file	641858	2026-10-21	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+escape_code5.tgz	file	642130	2026-10-21	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+escape_code6.tgz	file	642473	2026-10-21	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 euclid-fs-3642.log	file	60375	2026-10-15	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 fallback-a-3020.log	file	11044	2026-09-25	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 fallback-b1-3027.log	file	2772	2026-09-25	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
@@ -992,13 +992,13 @@ fallback-d-3045.log	file	5057	2026-09-25	0	0	0	0	DOWNLOAD-FIRST	non-key file (lo
 fallback_submit_loop.sh	file	116	2026-09-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 fallback_submit.out	file	11270	2026-09-25	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 far-cons-sum-3804.log	file	3494	2026-10-20	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-far_gen_code.tgz	file	78005	2026-10-21	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+far_gen_code.tgz	file	78005	2026-10-21	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 far-ls-3790.log	file	7238	2026-10-20	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 far-setup-3794.log	file	504	2026-10-20	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 far-tests-3818.log	file	1550	2026-10-20	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 far-tests-3819.log	file	682	2026-10-20	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-fb_results.tgz	file	943149	2026-09-25	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-fewshot_code.tgz	file	467543	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+fb_results.tgz	file	943149	2026-09-25	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+fewshot_code.tgz	file	467543	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 fewshot_job.sh	file	743	2026-10-15	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 fkg_common.sh	file	270	2026-10-21	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 fkg_eval.sh	file	430	2026-10-21	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
@@ -1009,95 +1009,95 @@ fkg_train_theta.sh	file	484	2026-10-21	0	0	0	0	DELETE-CANDIDATE	non-key file (lo
 ftde_c1_eval.txt	file	3872	2026-10-13	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 ftde_c1_summary.txt	file	5086	2026-10-13	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 ftde_c2_summary.txt	file	5808	2026-10-13	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-ftde_code2.tgz	file	459633	2026-10-13	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-ftde_code3.tgz	file	459921	2026-10-13	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+ftde_code2.tgz	file	459633	2026-10-13	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+ftde_code3.tgz	file	459921	2026-10-13	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 ftde_code.tgz	file	458997	2026-10-13	1	1	0	0	DELETE-CANDIDATE	md5 verified after read-only download to archive-polaris-only-2026-11-23	
-galaxy_code1.tgz	file	481512	2026-10-21	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+galaxy_code1.tgz	file	481512	2026-10-21	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 galaxy_dbg.sh	file	619	2026-10-21	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 galaxy_icchk.sh	file	497	2026-10-21	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 galaxy_smoke.sh	file	929	2026-10-21	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-galaxy_tile1.tgz	file	655566	2026-10-22	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-galaxy_tile2.tgz	file	657205	2026-10-22	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-gns_style.pt	file	6655525	2026-11-14	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+galaxy_tile1.tgz	file	655566	2026-10-22	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+galaxy_tile2.tgz	file	657205	2026-10-22	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+gns_style.pt	file	6655525	2026-11-14	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 gpu01_node.txt	file	726	2026-10-14	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 gpuaudit-sacct-3616.log	file	5	2026-10-14	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-gpuaudit_util.tar	file	61440	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+gpuaudit_util.tar	file	61440	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 gpu_tools_login.txt	file	0	2026-10-14	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-headline_seed_error_bars_code.tgz	file	1094748	2026-11-17	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-h_E_baseline.json	file	15973	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+headline_seed_error_bars_code.tgz	file	1094748	2026-11-17	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+h_E_baseline.json	file	15973	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 hfsmoke_run1.log	file	764	2026-10-22	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 hfsmoke_run2.log	file	9221	2026-10-22	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-hti_code.tgz	file	606276	2026-10-24	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-int_code.tgz	file	465500	2026-10-07	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-integ_code2.tgz	file	411876	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-integ_code.tgz	file	411623	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+hti_code.tgz	file	606276	2026-10-24	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+int_code.tgz	file	465500	2026-10-07	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+integ_code2.tgz	file	411876	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+integ_code.tgz	file	411623	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 le-b2-3636.log	file	30529	2026-10-15	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-le_b2_results.tar	file	4177920	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+le_b2_results.tar	file	4177920	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 le_b2.sh	file	1788	2026-10-15	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 le_b2_summary.txt	file	38	2026-10-15	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 le-b-3631.log	file	20862	2026-10-14	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-le_code.tar	file	1955840	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+le_code.tar	file	1955840	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 le-main-3623.log	file	1560	2026-10-14	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 le-main-3627.log	file	81563	2026-10-14	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 le_main.sh	file	2338	2026-10-14	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-le_results.tar	file	10475520	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+le_results.tar	file	10475520	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 le_summary.txt	file	15024	2026-10-14	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 lf_code.tar	file	1986560	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 verified after read-only download to archive-polaris-only-2026-11-23	
 lf-main-3624.log	file	68159	2026-10-14	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 lf-rep-3628.log	file	65755	2026-10-14	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-lf_rep.tar	file	122880	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-lf_results.tar	file	122880	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-lj_code.tgz	file	458332	2026-10-23	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-lj_h1_code.tgz	file	779722	2026-10-24	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-lj_h1_poly_code.tgz	file	505582	2026-10-24	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-loss_terms_code.tgz	file	1122192	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+lf_rep.tar	file	122880	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+lf_results.tar	file	122880	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+lj_code.tgz	file	458332	2026-10-23	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+lj_h1_code.tgz	file	779722	2026-10-24	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+lj_h1_poly_code.tgz	file	505582	2026-10-24	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+loss_terms_code.tgz	file	1122192	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 lrwarm-3647.log	file	2096	2026-10-15	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 lrwarm-3664.log	file	103255	2026-10-16	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-lrw_code.tar	file	2232320	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-lrw_results.tar	file	9349120	2026-10-16	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-lt_code.tar	file	1945600	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+lrw_code.tar	file	2232320	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+lrw_results.tar	file	9349120	2026-10-16	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+lt_code.tar	file	1945600	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 lt-main-3612.log	file	50990	2026-10-14	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 lt-rep-3618.log	file	16630	2026-10-14	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 lt_rep.tar	file	20480	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 verified after read-only download to archive-polaris-only-2026-11-23	
-lt_results.tar	file	133120	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+lt_results.tar	file	133120	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 lt_scatter_losstest.py	file	6817	2026-10-14	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 lt-smoke-3608.log	file	4075	2026-10-14	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 lt_train_scatter_field.py	file	21663	2026-10-14	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-lw_code.tar	file	1945600	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+lw_code.tar	file	1945600	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 lw-main-3622.log	file	88691	2026-10-14	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 lw-rep-3626.log	file	8542	2026-10-14	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-lw_rep.tar	file	10240	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-lw_results.tar	file	51896320	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-merge_audit_into_master_code.tgz	file	1517615	2026-11-09	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-merge_gradient_tolerance_fix_code.tgz	file	1342443	2026-11-09	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-merge_scorer_check_tolerance_fix_code.tgz	file	1342197	2026-11-09	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+lw_rep.tar	file	10240	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+lw_results.tar	file	51896320	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+merge_audit_into_master_code.tgz	file	1517615	2026-11-09	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+merge_gradient_tolerance_fix_code.tgz	file	1342443	2026-11-09	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+merge_scorer_check_tolerance_fix_code.tgz	file	1342197	2026-11-09	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 mesh-momentum2-2976.log	file	6727	2026-09-25	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 mesh-momentum-2975.log	file	5073	2026-09-25	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-moon_arms_code.tgz	file	769789	2026-11-02	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-muon_conv_code.tgz	file	1204565	2026-11-04	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-muon_swap_code.tgz	file	1104718	2026-11-03	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-neuron_arch_code.tgz	file	15560	2026-10-29	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-neuron_block_readout_code.tgz	file	17033	2026-11-03	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-neuron_code.tgz	file	8668	2026-10-29	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-neuron_diag_code.tgz	file	11350	2026-10-29	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-neuron_extra_training_seeds_code.tgz	file	724148	2026-11-06	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-neuron_plasticity_code.tgz	file	10079	2026-10-29	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-neuron_seed_robust_code.tgz	file	735650	2026-11-08	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-neuron_slow_patch_code.tgz	file	17368	2026-11-03	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-neuron_spike_code.tgz	file	12427	2026-10-29	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-neuron_variants_code.tgz	file	13212	2026-10-29	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-neuron_windowed_attention_code.tgz	file	17477	2026-11-03	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-nf_code.tgz	file	648399	2026-10-22	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+moon_arms_code.tgz	file	769789	2026-11-02	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+muon_conv_code.tgz	file	1204565	2026-11-04	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+muon_swap_code.tgz	file	1104718	2026-11-03	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+neuron_arch_code.tgz	file	15560	2026-10-29	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+neuron_block_readout_code.tgz	file	17033	2026-11-03	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+neuron_code.tgz	file	8668	2026-10-29	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+neuron_diag_code.tgz	file	11350	2026-10-29	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+neuron_extra_training_seeds_code.tgz	file	724148	2026-11-06	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+neuron_plasticity_code.tgz	file	10079	2026-10-29	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+neuron_seed_robust_code.tgz	file	735650	2026-11-08	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+neuron_slow_patch_code.tgz	file	17368	2026-11-03	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+neuron_spike_code.tgz	file	12427	2026-10-29	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+neuron_variants_code.tgz	file	13212	2026-10-29	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+neuron_windowed_attention_code.tgz	file	17477	2026-11-03	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+nf_code.tgz	file	648399	2026-10-22	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 nfr_cmp_a.sh	file	658	2026-10-22	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 nfr_cmp_b.sh	file	660	2026-10-22	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-nfr_code.tgz	file	567210	2026-10-22	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+nfr_code.tgz	file	567210	2026-10-22	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 nfr_common.sh	file	233	2026-10-22	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-nfr_render_code.tgz	file	514528	2026-10-23	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+nfr_render_code.tgz	file	514528	2026-10-23	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 nfr_render_job.sh	file	699	2026-10-23	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 nfr_stab_test.sh	file	458	2026-10-22	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 nfr_train_4738.sh	file	589	2026-10-22	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 nfr_train_4739.sh	file	589	2026-10-22	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-p1e8_main_results.tgz	file	6779612978	2026-10-20	1	0	1	0	DOWNLOAD-FIRST	key file md5 not found locally	
+p1e8_main_results.tgz	file	6779612978	2026-10-20	1	0	1	0	DOWNLOAD-FIRST	key file md5 not matched by same-name local file	
 p1e8_small_results.tgz	file	36238478	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 verified after read-only download to archive-polaris-only-2026-11-23	
 pilot5_an.txt	file	7947	2026-10-19	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 polaris_galaxy_tile_1b.sh	file	1118	2026-10-22	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
@@ -1123,14 +1123,14 @@ polaris_tier0_tiled_energy_similarity.sh	file	2723	2026-10-27	0	0	0	0	DELETE-CAN
 polaris_tier0_tiled_energy_similarity_v2.sh	file	2752	2026-10-27	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 polaris_tier0_tiled_pair_potential_by_separation.sh	file	2909	2026-10-28	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 polaris_tiered_muon_conv_flattened.sh	file	3214	2026-11-03	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-proposed1e8_code.tgz	file	560245	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+proposed1e8_code.tgz	file	560245	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 qos-check-20261120.txt	file	730	2026-11-20	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 qos-check2-20261120.txt	file	606	2026-11-20	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 qos-limits-20261120.txt	file	859	2026-11-20	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-r1_code.tgz	file	423211	2026-10-19	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-regce_code2.tgz	file	15830	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-regce_code.tgz	file	13804	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-replay_mechanism_code.tgz	file	725935	2026-11-08	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+r1_code.tgz	file	423211	2026-10-19	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+regce_code2.tgz	file	15830	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+regce_code.tgz	file	13804	2026-10-15	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+replay_mechanism_code.tgz	file	725935	2026-11-08	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 rollout_submit.log	file	10170	2026-09-25	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 sacct_audit_steps.txt	file	202665	2026-10-14	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 sacct_audit_X.txt	file	47766	2026-10-14	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
@@ -1140,27 +1140,27 @@ sacct_helpformat.txt	file	2400	2026-10-14	0	0	0	0	DELETE-CANDIDATE	non-key file 
 sacct_raw.txt	file	40804	2026-09-27	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 scaling_submitter2.out	file	255	2026-09-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 scaling_submitter.out	file	86519	2026-09-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-scatter_energy_log.tgz	file	983262	2026-10-06	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-scatter_field_2d_cost_blowup_code.tgz	file	1070784	2026-11-12	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+scatter_energy_log.tgz	file	983262	2026-10-06	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+scatter_field_2d_cost_blowup_code.tgz	file	1070784	2026-11-12	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 scatter_field_master.py	file	50494	2026-10-24	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 scatter_field_old.py	file	50494	2026-10-13	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 scatter_scaling_s46.py	file	20236	2026-10-07	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 score_neuron_seed_reproduction.py	file	1485	2026-11-09	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 seamvideo-3784.log	file	27	2026-10-20	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 seamvideo8-3785.log	file	28	2026-10-20	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-second_seed_code.tgz	file	1076589	2026-11-03	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+second_seed_code.tgz	file	1076589	2026-11-03	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 sf_orig.py	file	50494	2026-10-24	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-shift_core_diag_code.tgz	file	792714	2026-11-10	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-showcase_code.tgz	file	533086	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-showcase_kpadext_code.tgz	file	1301450	2026-10-27	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-slj_hv2_code.tgz	file	1038502	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+shift_core_diag_code.tgz	file	792714	2026-11-10	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+showcase_code.tgz	file	533086	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+showcase_kpadext_code.tgz	file	1301450	2026-10-27	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+slj_hv2_code.tgz	file	1038502	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 slj_hv_code.tgz	file	933398	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 verified after read-only download to archive-polaris-only-2026-11-23	
 slj-ph-3991.log	file	614	2026-10-24	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 slj-ph-3995.log	file	31099	2026-10-24	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-slj_ph_code.tgz	file	779722	2026-10-24	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+slj_ph_code.tgz	file	779722	2026-10-24	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 slurm_acct_cfg.txt	file	247	2026-10-14	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-softcap_code.tgz	file	509604	2026-10-13	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-softcap_E_old.pt	file	158807	2026-10-13	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+softcap_code.tgz	file	509604	2026-10-13	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+softcap_E_old.pt	file	158807	2026-10-13	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 softcap-eval-3575.log	file	4169	2026-10-13	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 softcap-harness-3565.log	file	51636	2026-10-13	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 softcap_job1.sh	file	594	2026-10-13	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
@@ -1170,87 +1170,87 @@ softcap_job4.sh	file	809	2026-10-13	0	0	0	0	DELETE-CANDIDATE	non-key file (log/s
 softcap-sweep-3558.log	file	29295	2026-10-13	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 softcap-test-3549.log	file	5602	2026-10-13	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 softcap-test-3553.log	file	1457	2026-10-13	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-solar_generalized_code.tgz	file	603830	2026-11-02	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-solar_moon_diagnosis_code.tgz	file	642640	2026-11-02	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-solar_more_moons_code2.tgz	file	810410	2026-11-02	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-solar_more_moons_code.tgz	file	809723	2026-11-02	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-solar_nkm_code.tgz	file	679960	2026-11-03	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-solar_nkm_second_seed_code.tgz	file	727583	2026-11-06	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+solar_generalized_code.tgz	file	603830	2026-11-02	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+solar_moon_diagnosis_code.tgz	file	642640	2026-11-02	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+solar_more_moons_code2.tgz	file	810410	2026-11-02	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+solar_more_moons_code.tgz	file	809723	2026-11-02	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+solar_nkm_code.tgz	file	679960	2026-11-03	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+solar_nkm_second_seed_code.tgz	file	727583	2026-11-06	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 solar_orbit_error_diagnosis.sh	file	1106	2026-11-02	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-solar_stability_code.tgz	file	700537	2026-11-02	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-solar_translation_arms_code.tgz	file	792690	2026-11-02	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-solar_translation_code.tgz	file	614200	2026-11-02	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-staggered_double_grid_code.tgz	file	803482	2026-11-10	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-staggered_grid_cost_fix_code.tgz	file	846687	2026-11-16	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-substep_code.tgz	file	543847	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-summary-token-exchange-probe-with-early-stopping-and-planted-signal-code.tgz	file	849513	2026-11-13	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+solar_stability_code.tgz	file	700537	2026-11-02	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+solar_translation_arms_code.tgz	file	792690	2026-11-02	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+solar_translation_code.tgz	file	614200	2026-11-02	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+staggered_double_grid_code.tgz	file	803482	2026-11-10	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+staggered_grid_cost_fix_code.tgz	file	846687	2026-11-16	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+substep_code.tgz	file	543847	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+summary-token-exchange-probe-with-early-stopping-and-planted-signal-code.tgz	file	849513	2026-11-13	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 sx-stage1-3629.log	file	35021	2026-10-14	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-sx_stage1_results.tar	file	7813120	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+sx_stage1_results.tar	file	7813120	2026-10-14	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 t0c2-4006.log	file	335515	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-t0c2_code.tgz	file	664587	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+t0c2_code.tgz	file	664587	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 t0c3-4014.log	file	8457	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-t0c3_code.tgz	file	809197	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+t0c3_code.tgz	file	809197	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 t0c-4000.log	file	1268	2026-10-24	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 t0c-4001.log	file	8550	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 t0c4-4018.log	file	8469	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-t0c4_code.tgz	file	809492	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-t0c_code.tgz	file	661296	2026-10-24	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+t0c4_code.tgz	file	809492	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+t0c_code.tgz	file	661296	2026-10-24	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 t0d2-4035.log	file	31103	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 t0d2_run.sh	file	706	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 t0d3-4017.log	file	4445	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 t0d-4011.log	file	3842	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 t0d-4013.log	file	2999	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 t0d-4034.log	file	13872	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-t0d_code.tgz	file	922390	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+t0d_code.tgz	file	922390	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 t0d_run.sh	file	693	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 t0f-4008.log	file	10704	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-t0f_code.tgz	file	807435	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+t0f_code.tgz	file	807435	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 t0g2-4029.log	file	2884	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 t0g2_run.sh	file	583	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 t0g-4025.log	file	14269	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-t0g_code.tgz	file	917798	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+t0g_code.tgz	file	917798	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 t0g_run.sh	file	868	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 t0h3-4004.log	file	12549	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 t0h3-4005.log	file	8024	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 t0h-3997.log	file	16539	2026-10-24	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-t0h3_code.tgz	file	807109	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-t0h_code.tgz	file	660524	2026-10-24	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+t0h3_code.tgz	file	807109	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+t0h_code.tgz	file	660524	2026-10-24	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 t0m-4041.log	file	45250	2026-10-26	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-t0m_code.tgz	file	922590	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+t0m_code.tgz	file	922590	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 t0m_run.sh	file	1073	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 t0n-4036.log	file	18823	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-t0n_code.tgz	file	922502	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+t0n_code.tgz	file	922502	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 t0n_run.sh	file	1146	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 t0r2-4020.log	file	371906	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-t0r2_code.tgz	file	811009	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+t0r2_code.tgz	file	811009	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 t0r-4003.log	file	2729	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-t0r_code.tgz	file	680145	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+t0r_code.tgz	file	680145	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 t0s-4023.log	file	9595	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-t0s_code.tgz	file	916105	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+t0s_code.tgz	file	916105	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 t0s_run.sh	file	1140	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 t0t-4007.log	file	45	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-t0t_code.tgz	file	807110	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+t0t_code.tgz	file	807110	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 t0v-4033.log	file	931	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 t0v_run.sh	file	981	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 t0x-4030.log	file	1664	2026-10-25	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 t0x-4031.log	file	12424	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-t0x_code.tgz	file	919741	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+t0x_code.tgz	file	919741	2026-10-25	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 t0x_run.sh	file	1078	2026-10-25	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-testaudit_code.tgz	file	539908	2026-10-13	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-testaudit_floors.json	file	189264	2026-10-13	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-three_dimensional_sparse_voxel_scatter_field_code.tgz	file	793356	2026-11-10	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-tier0_code.tgz	file	600023	2026-10-24	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+testaudit_code.tgz	file	539908	2026-10-13	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+testaudit_floors.json	file	189264	2026-10-13	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+three_dimensional_sparse_voxel_scatter_field_code.tgz	file	793356	2026-11-10	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+tier0_code.tgz	file	600023	2026-10-24	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 tier0_extB.sh	file	1243	2026-10-24	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 tier0_ext.sh	file	1173	2026-10-24	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 tier0_job.sh	file	596	2026-10-24	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-tier0_stage1_probes_code.tgz	file	857466	2026-11-17	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-tiered_overnight_code.tgz	file	712907	2026-11-06	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-tiled_closed_loop_code.tgz	file	1054881	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-tiled_energy_similarity_code.tgz	file	1379232	2026-10-27	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-tiled_pebin_code.tgz	file	691811	2026-10-28	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
-tiling_snaps.tgz	file	397824	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+tier0_stage1_probes_code.tgz	file	857466	2026-11-17	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+tiered_overnight_code.tgz	file	712907	2026-11-06	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+tiled_closed_loop_code.tgz	file	1054881	2026-10-26	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+tiled_energy_similarity_code.tgz	file	1379232	2026-10-27	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+tiled_pebin_code.tgz	file	691811	2026-10-28	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
+tiling_snaps.tgz	file	397824	2026-10-20	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 tln-arms-train-eval-11174.log	file	18801	2026-11-17	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
-tln_code.tgz	file	67024	2026-11-17	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+tln_code.tgz	file	67024	2026-11-17	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 tln-diagnose-rate-error-11180.log	file	1922	2026-11-17	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 tln-phase0-validity-11173.log	file	4773	2026-11-17	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 tln-probe-recovery-11178.log	file	1931	2026-11-17	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
@@ -1259,6 +1259,6 @@ tln-repeatability-11175.log	file	490	2026-11-17	0	0	0	0	DELETE-CANDIDATE	non-key
 tln-repeatability-11177.log	file	6953	2026-11-17	0	0	0	0	DOWNLOAD-FIRST	non-key file (log/script), no name+size match locally	
 tln-structured-spike-neuron-11181.log	file	6522	2026-11-17	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 Untitled.ipynb	file	11101	2026-10-28	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
-visited_replay_code.tgz	file	1075086	2026-10-29	1	1	0	0	DELETE-CANDIDATE	md5 matches local copy	
+visited_replay_code.tgz	file	1075086	2026-10-29	1	1	0	0	DELETE-CANDIDATE	md5 matches same-name local copy	
 voxel_extension_segment.sh	file	4483	2026-11-13	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
 voxel_score_slice.sh	file	2952	2026-11-13	0	0	0	0	DELETE-CANDIDATE	non-key file (log/script/tarball), name+size match local (not md5ed)	
