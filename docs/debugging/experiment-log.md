@@ -4027,3 +4027,705 @@ Backed up 213 gitignored non-cache files (1.19 GB, 34 worktrees) to Augur-backup
 
 ## 2026-11-09 readme-refresh-with-gif-previews: DONE (documentation, not an experiment)
 README.md rewritten from the supervisor log, experiment log and architectures.md: four YouTube thumbnails replaced by looping GIF previews (docs/design/assets/readme/, 0.9-3.3 MB each, rendered from videos/youtube_upload/*.mp4 by scripts/render_readme_gif_previews.sh) linking to the existing YouTube IDs, captions now below media; milestone table updated (no-velocity retrain KILL, local energy-bias terms KILL, tiled closed-loop and replay results, tier-0 4 of 4 seeds); added recent probes (law recovery INCONCLUSIVE_PARTIAL, mixed-law retrain KILL, shift probe PASS, 3e6 neighbor tie); unsourced WebGPU 5.7e-6 figure and the "bodies outside the grid feel no force" sentence removed; commit count 705; contact-email placeholder line removed. Layout checked headless at 1920/1280/390 px; links clicked. Fresh reviewer ran: PASS with minor fixes, all applied (citations added, "none is an accuracy claim" narrowed to the 1e9/1e10 videos).
+
+User ruling 2026-11-09 (after this entry): tie-aware scoring is authoritative for 7297, so the verdict of record is PASS tie-aware (5.565e-8, one body, one seed). The tie-sensitivity caveat above stands.
+
+## 2026-11-09 width-32-loss-spike-seed-validation: RESULT (job 7442, COMPLETED 0:0, 2:02:47, TOTAL_SECONDS 7367, H200; lines at the PRE-REGISTRATION entry above, unchanged): INCONCLUSIVE
+Line quoted: "SYSTEMATIC if >= 2 of the 3 new seeds have a spike. SEED-SPECIFIC if 0 of 3 do. INCONCLUSIVE if exactly 1 of 3 (report per-seed; 4 seeds total then has 2 of 4)." Scorer scripts/width32_loss_spike_validation_score.py, run as pre-registered; output results/width32_loss_spike_validation/spike_verdict.json (label INCONCLUSIVE, seeds_with_spike 1).
+- Per training seed (largest epoch loss / median of preceding 5): 4739 no spike, max 1.98x; 4740 SPIKE at epochs 20 and 21, loss 41.77 and 14.28 against medians 0.0063 and 0.0070, ratios 6589x and 2035x; 4741 no spike, max 1.72x. Control check reproduces 7256: width 32 epoch 18, 1223x; other widths at most 1.75x. With 7256 seed 4738, 2 of 4 width-32 seeds spike. Prediction (0 or 1 of 3) held.
+- Seed 4740 also had 145 skipped optimiser steps and 2580 dropped samples, all between its 3071 and about it 3200 (seed4740/run.log:45-50, window drop rate 0.645, k gate cut 14 to 12); seeds 4739 and 4741 had 0 skipped, 0 dropped. Skipped steps add nothing to the epoch sum (scripts/single_law_network_sizing.py train), so the 4740 ratios are if anything understated. 7256 seed 4738 spiked with 0 skipped steps, so the two spikes are not the same event type by that measure (not investigated).
+- Completeness: job-7442.log ends ALLDONE with script md5s equal to job-7256.log and the repo copies; each seed's run.log reaches it 8000/8000 and ends ALL DONE, no "resumed" (so the resume caveat does not apply), width32.json has 50 epoch losses, train_seed and width asserted by the scorer. Per-seed 2514 / 2304 / 2496 s. The "verdict KILL" line in each run.log is the trainer's sizing verdict on a width-32-only run, meaningless here (the wrapper deletes that verdict.json). Slurm log was in the home dir (~/augur-width32-loss-spike-seed-validation-7442.log), not polaris_mcp_jobs/. Checkpoints stay on Polaris ~/augur-single-law-network-sizing/ckpt_width32_spike/.
+- Independent fresh reviewer ran: CONFIRMED; recomputed all ratios from train.epoch_loss, completion and skip counts.
+
+### FOLLOW-ON OBSERVATION (not a verdict; not an amendment of the job 7256 line; the 7256 INCONCLUSIVE label stands): 7256 width ratios against the clean width-32 seeds of 7442
+Same-quantity check passed, so computed: same trainer and evaluate() (md5 equal in both job logs), eval seeds 4739/4740 with tag 2 independent of the training seed (single_law_network_sizing.py:324, scatter_multi.py:336), args differ only in seed, widths and directories, and force_fp32_exact_floor_rel_l2 is bit-equal to 7256 on both eval seeds in all three runs (same scenes). Script and output: results/width32_loss_spike_validation/followon_width_ratios_vs_clean_width32.{py,json}.
+- Width-32 held-out force rel-L2 (eval 4739 / 4740): train seed 4739 0.0741 / 0.1014; 4741 0.0757 / 0.1088; 4740 (spiked) 0.0846 / 0.1211; 7256 seed 4738 (spiked) 0.0764 / 0.1173. Clean = no spike, 0 skipped steps, not resumed: 4739 and 4741; reference 0.0749 / 0.1051, mean 0.0900 (7256 reference mean 0.0968, 7.6% higher).
+- Ratio of means vs clean reference (per eval seed): width 4 1.184 (1.131 / 1.221); width 8 0.894 (0.935 / 0.865); width 16 0.903 (0.911 / 0.898); width 64 1.248 (1.245 / 1.250). Read against the 1.10 line for orientation only: width 4 would be above it on both seeds instead of straddling; widths 8 and 16 stay below; width 64 stays worse.
+- Caveats (reviewer): the clean reference drops the two worst of four width-32 runs, which is selection; against all three 7442 seeds width 4 is 1.130 (1.084 / 1.162, still straddling) and width 64 1.191 (reviewer's figures, not in the json). The two clean seeds differ by 2.2% and 7.3%, and widths 4/8/16/64 have one training seed each, so 0.89 and 0.90 are within seed noise of 1. Both spiked width-32 seeds have higher held-out error than both clean ones (4 runs, not a test).
+- Independent fresh reviewer ran: CONFIRMED as arithmetic and as same quantity on same scenes; reference-choice sensitivity as above.
+
+## 2026-11-09 adaptive-depth-3e6-argmax-body-brute-force: RESULT (job 7475, COMPLETED 0:0, 0:03:44, TOTAL_SECONDS 224, H200, seed 4738; pre-registration in commit aeca91f on branch adaptive-depth-3e6-argmax-body-brute-force, not merged into this branch; lines unchanged): PASS (tie-aware line as pre-registered)
+Line quoted (aeca91f): "Pass: adaptdeep top-16 set equals the fp64 brute-force set up to distance ties (every member of the symmetric difference has |r - r16_fp64| / r16_fp64 <= 1e-6). Kill: adaptdeep set differs from brute force beyond ties (a differing neighbour at relative gap > 1e-6)." Applied by hand as pre-registered, from results/adaptive_depth_3e6_argmax_body_brute_force/result.json.
+- Body 1381234 (argmax confirmed, argmax_matches_body true): adaptdeep set differs from the fp64 set by one swap, 627953 out, 849166 in. Relative gaps to r16_fp64: 0.0 and 5.024e-8, both within 1e-6 (paths.adaptdeep.sets_equal_up_to_ties true, worst_rel_gap_in_difference 5.024e-8; a value that would fail: 1e-5). 15 of 16 neighbours identical. Default path set equals the fp64 set exactly.
+- Tie is real: fp64 r16 0.0028993373039 (627953), r17 0.0028993374496 (849166), gap 1.457e-10 absolute; fp32 r of both is 0.002899337327107787 exactly, 2 bodies share it. adaptdeep picks the fp64-farther, higher-index member, so its choice is the fp32 ordering artefact, not the lower-index rule (tie_break_reference.adaptdeep_pick_is_lower_index_member false); default picks the fp64-nearest, lower-index member. Prediction held on these points.
+- Prediction that failed (finding, not a verdict input per the pre-registration): the single-query qmask call does not reproduce the full-call force bit-for-bit, diff 1.12e-7 (default) and 1.19e-7 (adaptdeep); the CPU smoke at n=30000 had matched. The neighbour sets are read from the qmask call, and the script does not assert equality with the full call (reviewer). Indirect support that the full call made the same pick: full-call adaptdeep error vs fp64 brute force is 1.469e-2 (as in 7297), a different pick would not leave a 1.2e-7 difference. Whether the 1e-7 is batch-shape summation order is untested.
+- Reading: PASS means "the only difference is a tie", not "adaptdeep matches brute force": the two tied sets give forces 1.47e-2 apart (7297 caveat stands). The pass was near-certain beforehand since the 5.0e-8 gap was known from 7297; the new information is the dumped sets and which member each path picks. One body, one seed.
+- Completeness: DONE marker, result.json done=true, run.log ends DONE, job-7475.log (polaris_mcp_jobs/slurm-7475.out) ends ALLDONE; wrapper md5 gates on scatter_field.py and pair_term_adaptive_depth_test.py passed (job would have exited 2). Not checked: the Polaris copy of the probe script against aeca91f (no md5 logged). Dependency note: scripts/adaptive_depth_3e6_argmax_body_brute_force.py and its job script exist only on branch adaptive-depth-3e6-argmax-body-brute-force (aeca91f), not on this branch.
+- Independent fresh reviewer ran: CONFIRMED, with the qmask and near-certain-pass findings above.
+## 2026-11-09 adaptive-depth-3e6-argmax-body-brute-force: PRE-REGISTRATION (review candidate 10, docs/debugging/unexplored-directions-review-2026-11-09.md; seed 4738, 1 GPU, inference, about 0.2 GPU-h; no checkpoint needed, DONE marker)
+Question: for argmax body 1381234 on the collapsed 3e6 cloud (same scene, seed and code path as job 7297), is the 16th/17th-neighbour tie real, and is adaptdeep's choice the deterministic tie-break or an fp32 artefact? Dumps the top-16 sets of default, adaptdeep and fp64 brute force, distances for ranks 14-18, the gap (r17-r16)/r16, and which side of the tie each path picks. Script scripts/adaptive_depth_3e6_argmax_body_brute_force.py, job script scripts/polaris_adaptive-depth-3e6-argmax-body-brute-force.sh (afterany:7442, slot 2).
+Already tried: 7297 (and its tie-aware rescore, 2026-11-09) scored this body's error only (fp64 gap 1.46e-10 absolute, 5.0e-8 relative; fp32 r16 = r17); the sets themselves were never dumped. Not a repeat.
+Pass: adaptdeep top-16 set equals the fp64 brute-force set up to distance ties (every member of the symmetric difference has |r - r16_fp64| / r16_fp64 <= 1e-6). Kill: adaptdeep set differs from brute force beyond ties (a differing neighbour at relative gap > 1e-6). A value that still fails pass: a different 16th neighbour at relative gap 1e-5. Amendment guard applies; lines not amended.
+Tie-break rule: lower body index wins on equal fp64 distance. What each path actually uses (read from code, to be confirmed by the dump): default and adaptdeep both pick with torch.topk on fp32 r (sqrt(d^2 + 1e-8)), no index key, so ties in fp32 r are resolved by implementation order; fp64 brute force uses a strict fp64 distance order (argsort), so the lower-index rule only matters at exactly equal fp64 r. The dump reports the tie group (bodies within 1e-6 relative of r16), its lowest index, and whether each path's 16th pick is that member.
+Prediction: PASS (tie is real: relative gap about 5e-8, fp32 r16 = r17 exactly; the adaptdeep set differs from fp64 only by the tied member). adaptdeep's choice is the fp32 artefact (picks by topk order among fp32-equal distances), not the fp64-nearest member and not necessarily the lower index; default picks the fp64-nearest member. The qmask single-query call should reproduce the full-call force of each path; if not, the tie choice depends on batch shape (reported as a finding, not a verdict input).
+Verdict is applied by hand from result.json keys paths.adaptdeep.sets_equal_up_to_ties and worst_rel_gap_in_difference; no scorer script.
+LAUNCH: job 7475 submitted 2026-11-09 (afterany:7442, slot 2, PENDING on dependency; slot 1 tail 7415 was COMPLETED and left untouched). Smoke test on CPU at n=30000 (body 5) ran: qmask single-query force equals full-call force for both paths. Log ~/polaris_mcp_jobs/slurm-7475.out, results ~/augur_probe_deep/results/adaptive_depth_3e6_argmax_body_brute_force/{result.json,DONE}. Resume: when 7475 COMPLETED, download result.json to results/adaptive_depth_3e6_argmax_body_brute_force/, apply pre-reg lines by hand, run fresh reviewer, log result here and in supervisor log, commit. Unscored.
+
+
+## three-dimensional-sparse-voxel-scatter-field stage 1 prereg (copied 2026-11-10 from branch ball-tree-particle-attention-stage-1 commit 863522d)
+
+# three-dimensional-sparse-voxel-scatter-field, stage 1 pre-registration (written 2026-11-10, before any run)
+
+Spec: `docs/superpowers/specs/2026-11-09-architecture-push-twenty-experiments-design.md` section 5 (cost 1.5 GPU-h stage 1, 20 GPU-h full run). Stage 1 reports back to the user before the full run starts.
+
+Definitions. N: body count. Tick: one step of dt 0.1. err@k: mean position error per body after k self-fed ticks against the exact fp64 simulation (softened gravity, G=1, eps 0.5, 4 substeps per tick). Voxel: a 3D grid cell. Halo: the one-voxel ring of empty neighbours stored around every occupied voxel. CIC: cloud-in-cell, trilinear spreading to 8 corners. Plummer sphere: the standard self-gravitating ball with an exact density profile and distribution function. the scatter-field control (ms_kp_pot_v_g128): the pinned 2D gravity checkpoint `ms_kp_pot_v_g128`.
+
+## Model (stage 1)
+
+- `model/sparse_voxel_scatter_field.py`: only occupied voxels plus a halo exist. Voxel coordinates are packed into int64 keys (19 bits per axis, batch index above bit 57), so memory is independent of the box size.
+- CIC deposit of mass and momentum to 8 corners. Sparse 3x3x3 convolutions through a searchsorted neighbour table. Coarsening by halving coordinates until at most 64 voxels per scene remain. Sparse U-Net up the levels. Potential output, central-difference gradient, trilinear gather.
+- Far field: a coarse learned radial kernel summed directly over the coarsest voxels (piecewise-constant, no FFT, no recurrence). Pair term: cell-list over cells of edge 2 (pp=2), 16 nearest neighbours (knn=16), cell capacity 32. Same `step` interface as `ScatterField`, momentum fix on, Verlet.
+- Training: the scatter-field control's scene mix in 3D (N in 10..200; half Plummer spheres, half cold balls), exact 3D truth, batch 8, k ramp 4 to 20, lr 5e-4, 10,000 iterations in stage 1 (user decision 2026-11-10; the control's count is 60,000, extension to 60,000 needs a separate user go and resumes the same checkpoint). Seed 4738.
+
+## Lines (copied from the spec)
+
+PASS 3D Plummer-sphere err@20 within 2x the 2D ratio to exact at equal N AND cost at most 12x the 2D model. KILL cost above 12x or err@20 above 4x. Fails pass: 3x.
+
+Not loosened. Any amendment goes to the user as a proposal with a concrete value that would still fail it.
+
+## Measurement and interpretations (stated now, flagged)
+
+- Control: the scatter-field control (ms_kp_pot_v_g128) (2D), Polaris `~/augur_nfr/kern/E_frozen.pt` (3,200,305 bytes, verified read-only 2026-11-10); same file at `~/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt`. Grid 128, extent 64.
+- Equal N: N=1000 for accuracy (a 2D Gaussian cloud, sigma 8, velocity factor 0.3, versus a 3D cold Plummer sphere, scale 8, velocities scaled by sqrt(0.3) of the virial distribution, about 0.55x; the two cold families are matched in regime, not in a shared definition).
+- "Ratio to exact" is read as err@20 divided by the zero-force error at tick 20 (norm of exact position at tick 20 minus initial position minus initial velocity times elapsed time, mean over bodies), on the same scene. This is an interpretation: the spec does not define it. The per-scene numbers are saved so another reading (for example error over the exact-vs-4x-substeps floor) can be recomputed without a rerun.
+- Accuracy pass test: ratio3 / ratio2 at most 2.0; KILL above 4.0 (3.0 is the spec's fails-pass point). Primary family: cold. A virial family (velocity factor 1.0) is reported, not scored.
+- Cost: ms per tick of the 3D model over ms per tick of the 2D control at the same N, measured at N=1e5 (also N=1e3 to 1e5 for the exponent, reported). Cost at 1e5 is the scored cost; 1e6 is not measured in stage 1.
+- Scoring seeds 9100, 9200, 9300, 4 scenes per seed. Fresh seeds 12000, 12100, 12200 (`--heldout`) before a result is called real, on the same unchanged checkpoint.
+
+## Tie-break rule
+
+PASS lines inclusive (ratio exactly 2.0, cost exactly 12.0 pass); KILL lines exclusive (4.0 and 12.0 do not kill). Order as coded in `verdict()`: cost above 12 is KILL; ratio above 4.0 is KILL unless the plateau guard fires (then INCONCLUSIVE-undertrained); ratio at most 2.0 with cost at most 12 is PASS; otherwise INCONCLUSIVE-undertrained when the guard fires, else INCONCLUSIVE-between-lines (3x is reported as a fail of pass, not a kill). A missing 1e5 timing is INCONCLUSIVE-no-1e5-timing.
+
+Stage 1 verdict rule (user decision 2026-11-10): at fewer than 60,000 iterations the accuracy outcome is INCONCLUSIVE-undertrained by design. The cost line is the stage 1 decider: cost above 12x is KILL; otherwise INCONCLUSIVE-undertrained with the cost reported against the line. KILL-nonfinite still applies.
+
+## Ratio to exact (worker's interpretation, user-accepted 2026-11-10)
+
+Ratio to exact = err@20 divided by zero-force err@20, the same quantity in 2D and 3D. Zero-force err@20 is the mean over bodies of |exact position at tick 20 - initial position - initial velocity x 0.1 x 20|.
+
+The 2D comparison value (the denominator of the PASS line, ratio2) is measured in the same job, not taken from a file (no earlier measurement exists for this control at N=1000): 2D Gaussian cloud, sigma 8, velocity factor 0.3, N=1000, `ss.make_scene`, eval seeds 9100, 9200, 9300 with 4 scenes each (12 scenes), control `~/augur_nfr/kern/E_frozen.pt` (md5 9b3cb8bb1de47eb6ebf5f708d98e94b7, verified on the Polaris copy 2026-11-10). Averaging: ratio of means, mean over the 12 scenes of err@20 divided by mean over the 12 scenes of zero-force err@20. The mean of per-scene ratios is also reported (`ratio2_mean_of_per_scene_ratios`), not scored. The 3D ratio uses the same ratio-of-means form over its 12 Plummer scenes. The scorer logs both on a line starting "2D control ratio to exact" and stores them with the control md5 in score.json.
+
+## Plateau guard
+
+Validation err@20 (48 3D scenes, seed 9400) logged 50 times. INCONCLUSIVE-undertrained if the mean validation loss over the last 10% of iterations is more than 3% below the mean over the preceding 10% window. Per user decision 10a.1, one extension at double length (120,000 iterations) is then allowed, candidate and control together. Control status: the 2D control is the frozen 60,000-iteration checkpoint, scored only; the extension needs it retrained at 120,000, a needs-user decision.
+
+Non-finite handling: a NaN or infinite ratio, or a non-finite candidate rollout, returns KILL-nonfinite. A CUDA out-of-memory error in the bench stops the job nonzero and records oom_at_n in bench.json.
+
+## Prediction (stated before running)
+
+PASS about 25%. Expected: cost ratio between 3x and 8x at N=1e5 (sparse bookkeeping dominates; untimed guess), ratio3/ratio2 between 1.5 and 4 after 10,000 iterations; the stage 1 outcome is INCONCLUSIVE-undertrained by rule, so the cost line decides (cost KILL about 20%). The coarse far-field kernel is the weak point at N=1000.
+
+## Constraints check (re-read 2026-11-10)
+
+- pp=2 knn=16 stays: yes, same pair-term radius and neighbour count as the 2D model.
+- Generalization: no force law hard-coded; the 2D-to-3D move is the generalization test. O(N): memory and cost scale with occupied voxels and bodies, not box volume (tested: node count independent of extent).
+- Tileable: not addressed in stage 1. Interpretability: unchanged from the scatter field.
+- No pairwise N^2 term: the pair term is the cell-list, bounded to 16 neighbours.
+
+## Known weaknesses (kept in the notes)
+
+- Stage 1 trains 10,000 iterations against 60,000 for the control (about 2 h untimed estimate). The control is frozen and scored only. Extending the same run to 60,000 restarts the cosine lr schedule (it depends on the iteration count), so the extended run is not identical to a fresh 60,000 run.
+- The far-field kernel is coarse and has no recurrence over scales.
+- Cost is measured at 1e5 only; the dense 3D comparison (audit row 33) is not run.
+- Full run (20 GPU-h): same script with batch 16, k-end 30 (stage 1 uses batch 8, k-end 20); needs periodic full-state checkpoints (already written every 100 iterations by `tsf.train`) and `--resume` via requeue. Needs the user's go-ahead after this report.
+
+## Files and run
+
+`scripts/three_dimensional_sparse_voxel_scatter_field.py` (modes train, score, bench, all; resumable; SIGTERM saves and exits 143). Job `scripts/polaris_three-dimensional-sparse-voxel-scatter-field.sh`. Tests `tests/test_sparse_voxel_scatter_field.py` (12). Estimate (untimed; no logged 3D rate): about 2 GPU-h at 10,000 iterations; the job logs s_per_it_first100= to measure the rate.
+
+
+## staggered-double-grid-with-quadratic-deposit prereg (copied 2026-11-10 from docs/debugging/architecture-push-prereg/staggered-double-grid-with-quadratic-deposit.md, merged commit d131607)
+
+# staggered-double-grid-with-quadratic-deposit (prereg)
+
+Status: stage 1 ready to run; FULL RUN NOT YET AUTHORISED until stage 1 is read by the supervisor (job script scripts/polaris_staggered-double-grid-with-quadratic-deposit-full.sh refuses to start without the file named in its header).
+
+## Spec lines (copied verbatim)
+
+Change: "replace bilinear deposit and gather with a quadratic (three-cell) shape, and run two grids offset by half a cell through the same U-Net, averaging the gathered force. Trained that way, not only run that way."
+
+Line: "PASS err@20 at most 0.75x control AND shift-probe value at most 0.50x control AND dE@100 at most 1.10x AND cost at most 2.2x. KILL err@20 above 0.95x or dE@100 above 1.5x. Fails pass: err@20 0.85x."
+
+Cost in spec: 0.3 GPU-h stage 1 / 3 GPU-h full. Worker estimate for full: about 5-6 GPU-h (two grids roughly double the 2.5 h the frozen single-law gravity checkpoint run; UNVERIFIED, from the logged the frozen single-law gravity checkpoint 9000 s budget). Flagged needs-user.
+
+Rules from the 2026-11-09 decisions: keep the control's iteration count (60769) with a plateau guard; if the candidate is still falling the result is INCONCLUSIVE-undertrained and one double-length extension is allowed for candidate and control together. Full run starts automatically if stage 1 does not close it.
+
+## Design
+
+Stage 1 (scripts/shift_average_stage1.py): frozen the frozen single-law gravity checkpoint, 1 / 2 / 4 passes (offsets 0; 0 and (0.5,0.5); 0, x, y, diagonal in half cells), each pass own recurrent field; measures err@5/20/100, dE@5/20/100, shift probes, sec per tick. 0.3 GPU-h.
+
+Full: ScatterField(deposit="quad", dual=True) via variant ms_kp_pot_v_g128_quad_dual: three-cell (TSC, triangular-shaped-cloud) weights 0.5(0.5-d)^2, 0.75-d^2, 0.5(0.5+d)^2 in each axis; second grid sees positions shifted by (h/2, h/2), h = cell size; gathered grid forces averaged; recurrent field holds 2*cf channels; pair term and momentum fix applied once on unshifted positions. Same recipe as the frozen single-law gravity checkpoint (init_B warm start, lr 5e-4, batch 16, k 4 to 30, 1500 scenes x 50 steps, seed 4738) but fixed 60769 iterations instead of the 9000 s time budget.
+Control: frozen the frozen single-law gravity checkpoint, ~/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt (3200305 B). Not retrained (same checkpoint on all seeds). Polaris path of candidate output: ~/augur_staggered_double_grid/ckpt/.
+
+## Seeds and tie-break
+
+Scenes: 9100/9200/9300 first, then fresh 12000/12100/12200 (expB 8 + cluster 4 scenes per seed). Training seed 4738. Ratios are pooled: mean over seeds of candidate divided by mean over seeds of control. Tie-break: a value exactly on a line counts as within the PASS line and as not over the KILL line (at most / above wording). Shift-probe value for the line = probe_half (median relative force change under half-cell x, y and diagonal shifts) (PROPOSED-BY-WORKER interpretation; probe_off is reported, not gated).
+Verdict on 9100/9200/9300 decides; 12000/12100/12200 confirms. If they disagree the report says so and the verdict is INCONCLUSIVE, not the better one.
+
+## Plateau guard
+
+INCONCLUSIVE-undertrained if the mean validation loss over the last 10% of iterations is more than 3% below the mean over the preceding 10% window (scripts/plateau_guard.py; validation loss logged to <ckpt>.val.jsonl every --val-every iterations on scenes seeded seed+1). A guard fires only on non-PASS verdicts.
+
+## Stage-1 closure rule (PROPOSED-BY-WORKER)
+
+Stage 1 closes the experiment (no full run) only if both the 2-pass and the 4-pass err@20 pooled ratios exceed 0.95 (the KILL value). A value that would still not close it: err@20 ratio 0.94 on either. Anything else proceeds to the full run automatically (spec 10a item 9). The spec does not define closure; the supervisor may amend.
+
+## Prediction
+
+Stated: probably INCONCLUSIVE (the shift-probe halving is plausible, but err@20 at most 0.75x is a large ask; the cost 2.2x is tight because two grids double the U-Net work). Rough: PASS 20 / INCONCLUSIVE 50 / KILL 30 (worker guess, not from the spec).
+
+## Constraints check
+
+- pp=2 with knn=16: unchanged (pair term kept, applied once).
+- No hard-wired conservation: none added; momentum fix is the existing optional one, off in the variant as in the frozen single-law gravity checkpoint.
+- O(N): deposit and gather are 9 cells per body each pass, two passes: constant per body.
+- Opt-in: default constructor stays deposit="cic", dual=False; existing checkpoints load unchanged.
+- One change per run: quad deposit and dual grid are one spec change; variants _quad and _dual exist for later separation, not run.
+- Checkpoint/resume/SIGTERM: train_scatter_field.py saves atomically every --log-every iterations (and a .itN snapshot every 5000), resumes from the checkpoint, and with --save-on-sigterm saves and exits 143.
+
+## Additions not in the spec line (disclosed)
+
+- Any non-finite candidate rollout counts as KILL.
+- The plateau guard downgrades any non-PASS verdict (including KILL) to INCONCLUSIVE-undertrained; PROPOSED-BY-WORKER, matches the 10a item 1 wording that an undertrained candidate is not a result.
+- A NO-DATA plateau guard (too few validation points) fails the job script loudly; it is never read as plateaued.
+
+
+## rotation-steerable-unet-weights prereg (copied 2026-11-10 from docs/debugging/architecture-push-prereg/rotation-steerable-unet-weights.md, merged commit d131607)
+
+# rotation-steerable-unet-weights (prereg, diagnostic only)
+
+Status: only the diagnostic (stage 1, spec 10a item 4) is run. The steerable retrain is NOT built and NOT authorised.
+
+## Spec line (copied verbatim)
+
+"Line (the core-drift line of experiment-log.md:3620, unchanged, plus a cost clause): seeds 12100/12200/12300; gates are core drift at most 0.007 per tick, err@20 at most 1.05x stock, black-hole-scene dE@1000 at most 1.15x stock. PASS all gates on every seed AND pooled dE ratio at most 1.095 AND cost at most 1.3x. KILL any value above 1.5x its gate. Fails pass: drift 0.009 on one seed."
+
+That line applies to the retrain, which is not run. Source line at experiment-log.md:3620 (scatter-core-drift-arm-a-fresh-held-out-seeds).
+
+## Diagnostic (what is run)
+
+Frozen four-pass symmetrised model (legacy arm name S1c4, on ~/edge_ck/ghost_lsq.pt) vs the stock arm (legacy: S1), seed 12300, n=20000, 1000 steps, probe ticks 100/200/300/500/1000; class core15 (bodies within 15 units of the arm's own centre, raw force, momentum fix off). scripts/core_force_component_verdict.py switches the U-Net, FFT kernel and pair term off in turn (mean removed) and reports which component carries the net core force. Inputs: ~/augur_armA_fresh/results/armA_fresh/n2e4_s12300/{truth.npz,truth.json}; control stock arm is the same run. Job script: scripts/polaris_shift-average-and-core-force-diagnostics.sh (shared with the shift-average stage 1; 1.5 h limit, 1 GPU). Seed set: 12300 only (a diagnostic of one existing failure; 9100/9200/9300 do not apply).
+
+## Diagnostic line (PROPOSED-BY-WORKER, derived from the core-drift line)
+
+Parameters in code: CARRY 0.5, FLOOR 0.10, STOCK_X 3.0, MAJ 2 of ticks 100/200/300, MIN_BODIES 100.
+- STOCK CHECK: median over the three ticks of |stock net force error| at least 3.0x |exact mean| (so the drift exists to be explained); otherwise INCONCLUSIVE.
+- PASS (steerable U-Net retrain is worth building): class UNET-CARRIES in at least 2 of 3 ticks, i.e. the U-Net mean, projected on the error direction, is at least 0.5 of |error|.
+- KILL (steerable retrain not justified): KERNEL-CARRIES or PAIR-CARRIES in at least 2 of 3 ticks.
+- Anything else (SHARED, CANCELLATION, NO-NET-FORCE, INCONCLUSIVE): no decision, goes to the user.
+Value that would still fail PASS: UNET-CARRIES in only 1 of 3 ticks, or a U-Net projection of 0.49 |error| at all three ticks. Tie-break: exactly 0.5 |error| carries.
+This is a diagnostic: its result is a class, reported as such. It does not count as a PASS of the retrain line above.
+
+## Prediction
+
+Stated: UNET-CARRIES most likely, because the symmetrisation acts on the U-Net only and the stock core drift has been attributed to the U-Net potential (symmetrised-potential history, experiment-log.md:3394); but if symmetrisation already removed the U-Net share the remainder is likely SHARED or NO-NET-FORCE. Rough guess: UNET-CARRIES 35 / SHARED-or-CANCELLATION 35 / KERNEL-or-PAIR 15 / NO-NET-FORCE 15 (worker guess).
+
+## Constraints check
+
+- pp=2 knn=16: untouched (diagnostic reads existing model).
+- No hard-wired conservation: none added.
+- O(N): diagnostic only; the retrain, if later approved, is a weight-sharing change with unchanged per-body cost.
+- No retrain is built here; cost clause of 1.3x is not evaluated.
+
+
+## gaussian-ladder-far-kernel-replacing-fft stage 1 prereg (copied 2026-11-10 from docs/debugging/architecture-push-prereg/gaussian-ladder-far-kernel-replacing-fft.md, branch commit 453778c)
+
+# gaussian-ladder-far-kernel-replacing-fft: stage 1 pre-registration
+
+Spec: docs/superpowers/specs/2026-11-09-architecture-push-twenty-experiments-design.md (sections 5, 6, 7; 10a overrides). Registered before launch; do not edit lines after launch.
+
+## Lines (copied from the spec)
+- PASS: err@20 (mean position error after 20 ticks) at most 1.15x the control AND tiled-versus-single-grid force difference at most 4% with no global term AND exponent read from the amplitudes within 10% on pow2 (potential of 1/r^2 force law).
+- KILL: err@20 above 1.30x the control.
+- Fails the pass line (INCONCLUSIVE): exponent error 15% (any value above 10% without a KILL is INCONCLUSIVE; 15% would fail).
+- Control: scatter-gravity-clustered-baseline (ScatterField with the FFT far kernel), `augur_nfr/kern/E_frozen.pt` (also `augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt`; both verified present on Polaris with polaris_ls). The multi-law model `augur_nfr/ckpt/main_s4739.pt` is fitted per law for kernel fit error and exponent only; it is not rolled out.
+
+## What is run
+- Ladder: K(r) = sum over l of a_l exp(-r^2 / 2 s_l^2), 7 levels, s_l = 0.5 x 2^l (units), amplitudes free in sign, fitted once by weighted least squares to the frozen learned kernel on the 2G x 2G lattice (weights 1/(|K| + 0.01 max|K|), r up to the lattice half-diagonal). Each level is a separable Gaussian blur, stencil plus or minus 4 coarse cells, on a grid coarsened by 2^max(l-1, 0), then bilinearly upsampled. No FFT. Fixed numbers: 7 levels, s0 0.5, 4 taps. None is tuned.
+- Exponent: slope of log|a_l| against log s_l over levels 2 to 6; force exponent = potential exponent + 1.
+- Tiled difference: kernel acceleration on 8 pow2 scenes (seed 9100) computed tile by tile (tile 64 cells, halo 32 cells, density outside tile+halo dropped, no global term) against the single grid; relative L1.
+- Rollout: scatter-gravity-clustered-baseline against scatter-gravity-clustered-baseline with the ladder replacing its kernel and the U-Net frozen at E's weights, 48 pow2 scenes per seed, 20 ticks, seeds 9100/9200/9300. No training.
+- Per-law kernel fit error and exponent for main_s4739 (pow1, pow2, pow3, yuk8, yuk128, lj): expected force exponents 1, 2, 3; yuk and lj report fit error only.
+
+## Seeds and reality rule
+Eval seeds 9100/9200/9300. Before a result is called real: fresh seeds 12000/12100/12200. A second training seed (4739) only after a pass (there is no training in stage 1).
+
+## Tie-break rule
+Ladder amplitudes are one closed-form fit (no argmin over candidates). If a selection among equal-valued options is ever needed, the lower index wins (lowest level, lowest seed).
+
+## Ratio lines against the reference noise floor
+Every ratio is the mean over seeds of ladder / E per seed, printed beside E's own seed spread (max - min) / mean. A ratio within that spread is reported as "inside the noise floor", not as a difference. The 1.15 and 1.30 lines are applied to the mean ratio as written.
+
+## Prediction (stated before launch)
+- Rollout ratio: likely near 1 to 1.2. Stated: PASS on err@20 is plausible but not certain.
+- Exponent on pow2: likely FAILS. A local probe on a 1/r potential read 1.60 against 2.0 (20% off) because the fit gives oscillating amplitudes with sign changes. Expected outcome is therefore INCONCLUSIVE, not PASS.
+- Tiled difference: at risk. The widest Gaussians (s up to 32 units) exceed the 16-unit halo, so the 4% line may fail.
+
+## Plateau guard (section 10a)
+No training in this stage, so not applicable. Stated for completeness: INCONCLUSIVE-undertrained if the mean validation loss over the last 10% of iterations is more than 3% below the mean over the preceding 10% window, keeping the control's iteration count.
+
+## Constraints check (spec section 5)
+- pp=2, knn=16 pair term: unchanged (same model, only the far kernel path is replaced). Satisfied.
+- No hard-wired conservation: none added. Satisfied.
+- One change against the frozen control: the far kernel only; the U-Net is frozen at E. Satisfied.
+- Matched training budget: no training. Satisfied.
+- No sweeps: levels, widths, taps, tile, halo fixed above. Satisfied.
+- Seed 4738 first; eval 9100/9200/9300 then 12000/12100/12200: stated above.
+- At most 2 GPUs: one GPU, about 0.5 GPU-h; supervisor chains it.
+- Requirements Til (tileable), Int (interpretable), O(N): ladder cost is linear in grid cells; amplitudes are readable. The tileability is what the 4% line tests.
+- Checkpoints: not needed (under 1 h, per-cell resume in the result json).
+- Rendered diagnostic and fresh reviewer: required when rollout output is produced; the supervisor runs them after the job.
+- Names: descriptive kebab-case.
+
+## Job
+scripts/polaris_gaussian-ladder-far-kernel-replacing-fft.sh (about 0.5 GPU-h). Full run: none authorised; no trainer for a ladder-kernel retrain is written.
+
+
+## law-blind-unet-trunk stage 1 prereg (copied 2026-11-10 from docs/debugging/architecture-push-prereg/law-blind-unet-trunk.md, branch commit 453778c)
+
+# law-blind-unet-trunk: stage 1 pre-registration
+
+Spec: docs/superpowers/specs/2026-11-09-architecture-push-twenty-experiments-design.md (sections 5, 6, 7; 10a overrides). Registered before launch.
+
+## Lines (copied from the spec)
+Stage 1 (audit row 16, the cheaper never-run variant: scatter-gravity-clustered-baseline frozen, small per-law kernel and pair heads):
+- PASS: gravity err@20 at most 1.05x scatter-gravity-clustered-baseline AND the other laws within 2x their single-law comparators.
+- KILL: gravity err@20 above 1.15x scatter-gravity-clustered-baseline.
+Full run (not authorised here): PASS gravity err@20 at most 0.0509 on seeds 4738 and 4739 AND no dead decoder level AND every trained law's tick-1 force within 1.25x of main_s4739. KILL gravity above 0.106. Fails the pass line: 0.07.
+
+## Control and checkpoints
+- Gravity control: scatter-gravity-clustered-baseline, `augur_nfr/kern/E_frozen.pt` (verified, 3200305 B).
+- Multi-law reference: `augur_nfr/ckpt/main_s4739.pt` (verified, 3659299 B).
+- Single-law comparators (verified): `augur_nfr/ckpt/cmp_pow1.5_single`, `cmp_yuk32_single` (held-out laws pow1.5 and yuk32 only).
+- Verified files: cmp_pow1.5_single.pt (3661021 B), cmp_yuk32_single.pt (3660775 B), main_s4739.pt (3659299 B), each with a .done marker.
+
+## What is run
+- Model: MultiScatterField with `--law-blind` (the law vector theta is zeroed on the U-Net input channel; kernel MLP and pair MLP still receive theta) and `--freeze-trunk` (U-Net weights not trained). Initialised from scatter-gravity-clustered-baseline with init_from_e. Trained: kernel MLP and pair MLP heads, width 128 (the existing size; fixed, not tuned).
+- Budget: 80000 iterations, the control's (main) count; same data and loss recipe as main (train_scatter_multi.py defaults), seed 4738.
+- Validation: every 1000 iterations, 24 scenes per shape, k=10 rollout, saved in the checkpoint and .done file.
+- Eval: scatter_multi_eval on seeds 9100/9200/9300, 48 scenes per case, cases grav, pow1, pow3, yuk8, yuk128, lj, HELD_pow1.5, HELD_yuk32, for candidate, main_s4739, comparators, and E on grav.
+
+## Seeds and reality rule
+Eval seeds 9100/9200/9300; fresh 12000/12100/12200 before a result is called real; second training seed 4739 only after a pass.
+
+## Tie-break rule
+No argmin selection. The reported checkpoint is the final one (iteration 80000); no best-of selection. Equal values: the lower seed index is reported first.
+
+## Ratio lines against the reference noise floor
+Gravity ratio = mean over seeds of candidate err@20 / E err@20 per seed, printed with E's own spread (max - min) / mean. Held-out ratios use force_rel against the matching comparator, with the comparator's spread. A ratio inside the spread is stated as such.
+
+## Comparator gap (stated, not hidden)
+Single-law comparators exist only for held-out pow1.5 and yuk32. For the trained laws pow1, pow3, yuk8, yuk128, lj no single-law comparator exists, so "other laws within 2x their comparators" can only be scored on the two held-out laws. The trained laws are reported against main_s4739 as information, not as the line. Proposed amendment: train single-law comparators for those five laws (needs-user; not done).
+
+## Prediction (stated before launch)
+Gravity err@20 ratio vs E about 1.0 to 1.1 (the trunk is E's own, the heads start from E). PASS on the 1.05 line is a coin flip; KILL above 1.15 is unlikely (about 15%). The held-out 2x line is at risk because the heads see theta only through two small MLPs and held-out laws sit between trained ones.
+
+## Plateau guard (section 10a)
+INCONCLUSIVE-undertrained if the mean validation loss over the last 10% of iterations is more than 3% below the mean over the preceding 10% window. The iteration count stays the control's (80000). One extension at double length for candidate and control together is allowed. Caveat: main_s4739 has no validation history (no hook in that run), so the extension would need the control rerun with the new hook; flagged as needs-user.
+
+## Constraints check (spec section 5)
+- pp=2, knn=16: unchanged. Satisfied.
+- No hard-wired conservation: none. Satisfied.
+- One change against the frozen control: theta withheld from the U-Net, trunk frozen. These are two coupled switches of one stage-1 variant as written in the spec (frozen trunk with per-law heads). Flagged, not separated.
+- Matched budget: 80000 iterations. Satisfied.
+- No sweeps. Satisfied.
+- Seeds: 4738 first. Satisfied.
+- At most 2 GPUs: one GPU job.
+- Over 1 h: full-state checkpoint every 500 iterations, --resume, SIGTERM saves. Satisfied.
+- Diagnostic render plus fresh reviewer after the job: the supervisor runs them.
+- Requirements Gen (generalises across laws), Int: stated in the spec.
+- Names: descriptive kebab-case.
+
+## Cost
+Spec 3.5 GPU-h. From the logged rate (job 7296: 21214 s for 80000 iterations, about 0.26 s/it, 5.9 GPU-h) my estimate for a frozen trunk is 4.7 to 5.9 GPU-h. Untested; no timing job was run. Script requests 8 h.
+
+## Job
+scripts/polaris_law-blind-unet-trunk.sh. Full run draft: scripts/polaris_law-blind-unet-trunk-full-run-draft.sh (not authorised).
+
+## Caveats (from the fresh code review)
+- "Law-blind" means theta is zeroed on the U-Net's own channel only. The U-Net still receives the kernel-field input `ak`, which is computed by the kernel MLP from theta, so law information can still reach the trunk through `ak`. Stage 1 tests the spec's variant as written.
+
+
+## one-network-for-all-tiers-with-scale-input stage 1 prereg (copied 2026-11-10 from docs/debugging/architecture-push-prereg/one-network-for-all-tiers-with-scale-input.md, branch commit 453778c)
+
+# one-network-for-all-tiers-with-scale-input: stage 1 pre-registration
+
+Spec: docs/superpowers/specs/2026-11-09-architecture-push-twenty-experiments-design.md (sections 5, 6, 7; 10a overrides). Registered before launch.
+
+## Lines (copied from the spec)
+Train on spans up to 256 units, evaluate at 1024 (two unseen tiers). Far-field relative error = sqrt(summed squared error / summed squared target) against the far field beyond radius 20.
+- PASS: far-field relative error at 1024 at most 1.2x its own value at 256 AND its value at 256 at most 1.0x the per-tier control at 256.
+- KILL: error at 1024 above 2.0x its own value at 256, OR its value at 256 above 1.15x the control.
+- Fails the pass line: 1.5x (1024 over 256).
+
+## Control
+Per-tier-weights upper tiers (separate TierNet per tier, no scale input), trained in the same job with the same budget and seed, jointly. No pre-existing Polaris checkpoint is used: both arms start from scratch on the far target with a zero tier 0 (`--target far`, ZeroTier0).
+
+## What is run
+- Shared arm: one TierNet repeated at every tier, one extra constant input channel log2(tier cell width), and the output scaled by the cell width of the tier it is called at. Trained at span 256 (grid 512, 4 tiers, cell widths 2^k x 0.5) jointly (a shared net cannot be trained tier by tier).
+- Control arm: per-tier weights, trained jointly with the same flags.
+- Fixed numbers: width 32, 6 layers, G=16 tile, halo 4, 3000 iterations, batch 16, 160 scenes, 40 steps, lr 1e-3, far radius 20, seed 4738, validation every 100 iterations on 8 held-out scenes (seed 4738+5000). err, latent and learned-pool are off in both arms so all tiers have identical inputs.
+- Eval (far mode): shared at span 256 (4 tiers) and span 1024 (6 tiers, scenes scaled with span), control at span 256, seeds 9100/9200/9300, 24 scenes, 100 steps, evaluation batch 2.
+
+## Seeds and reality rule
+Eval seeds 9100/9200/9300; fresh 12000/12100/12200 before a result is called real; training seed 4739 only after a pass.
+
+## Tie-break rule
+No argmin selection; the reported weights are the final iteration's. Equal values: lower seed index first.
+
+## Ratio lines against the reference noise floor
+Ratios are per-seed means of shared_1024 / shared_256 and shared_256 / control_256, printed with the denominator's seed spread (max - min) / mean. A ratio inside the spread is stated as such.
+
+## Prediction (stated before launch)
+Shared at 256 within about 1.0 to 1.2x the control (weight sharing costs a little). 1024 over 256 about 1.3 to 2x: two tiers are unseen and the scale channel takes values outside the training range. Most likely outcome: INCONCLUSIVE or KILL on the 1024 line; PASS is below even odds.
+
+## Plateau guard (section 10a)
+INCONCLUSIVE-undertrained if the mean validation loss over the last 10% of iterations is more than 3% below the mean over the preceding 10% window, applied to the shared arm; the iteration count stays the control's (3000). One extension at double length for both arms together. With 100-iteration validation spacing both windows hold about 3 points; the scorer fails loudly if a window is empty.
+
+## Constraints check (spec section 5)
+- pp=2, knn=16: not used in the far-field tiers (tier 0 is zero in this target). Not applicable.
+- No hard-wired conservation: none. Satisfied.
+- One change against the frozen control: shared weights plus scale input (one switch; the scale channel is what makes sharing possible). Satisfied.
+- Matched budget: same iterations, batch, scenes, seed. Satisfied.
+- No sweeps. Satisfied.
+- Seeds: 4738 first. Satisfied.
+- At most 2 GPUs: one GPU job.
+- Over 1 h: full-state checkpoint every 250 iterations, --resume, SIGTERM saves. Satisfied.
+- Diagnostic render plus fresh reviewer after the job: supervisor runs them.
+- Requirements Til, O(N), Int: tiled hierarchy is linear in cells.
+- Names: descriptive kebab-case.
+
+## Cost
+Spec 1 / 6 GPU-h. No logged rate for far-target joint training at span 256; the 6 GPU-h is the spec figure. Untested.
+
+## Job
+scripts/polaris_one-network-for-all-tiers-with-scale-input.sh. Full run draft: scripts/polaris_one-network-for-all-tiers-with-scale-input-full-run-draft.sh (not authorised).
+
+## Caveats (from the fresh code review)
+- The scale channel is a constant plane passed through the tile extraction; halo cells outside the box may read 0 rather than log2(cell width). Training and evaluation treat this identically, but the unseen tiers at span 1024 see a different edge value.
+- The scorer applies the plateau guard to the shared arm's validation history only. If the guard fires, the double-length extension for both arms needs the control's history too; the scorer does not read it yet. Proposed fix at that point, not now.
+
+
+## RESULT gaussian-ladder-far-kernel-replacing-fft stage 1 (job 7838, 2026-11-10): KILL
+- Run: no training; ladder fitted once to E_frozen's kernel (7 Gaussian levels), U-Net frozen at E weights, rolled out on 48 pow2 scenes per seed (9100/9200/9300) for 20 ticks against the control (FFT far kernel). Genuine: 10 of 10 cells, n=48 each, all finite. 46 s wall (estimate 0.5 GPU-h was an untimed upper guess). Raw: results/gaussian_ladder_far_kernel_replacing_fft_stage_one/; commit of merged code 8253345.
+- Numbers: err@20 ratio ladder/E 16.57 (16.65, 17.17, 15.88; control spread 0.18); err@5 ratio 8.40; force relative error ratio 1.63; tiled relative L1 0.167; pow2 exponent read 0.984 vs 2 (error 50.8%); fit relative error 0.29 (E), 0.21-0.50 across laws; ladder 1.89x the FFT time (0.49 vs 0.26 ms).
+- Verdict against prereg: KILL (err@20 above 1.30x); exponent and tiled lines also fail. Prediction check: exponent failure predicted correctly; err@20 near 1 to 1.2 predicted wrongly.
+- Review: fresh numeric reviewer PARTLY CONFIRMED: numbers and verdict reproduce, code matches prereg (scatter_ladder_stage1.py:78-82, score_architecture_push_stage_one.py:47-48). Unexplained: force error only 1.63x yet err@20 16x; untested guesses are U-Net residual mismatch with the swapped kernel and near-field force where E's kernel window is near zero. KILL is for this configuration (frozen U-Net), not proof the ladder cannot work. Fresh seeds 12000/12100/12200 not run (not needed for a KILL). No rendered rollout produced, so no frame review.
+
+
+## staggered-double-grid-with-quadratic-deposit stage 1 result and full-run go (2026-11-10)
+- Stage 1 job 7837 (frozen single-law checkpoint, shift-average passes): pooled over seeds 9100/9200/9300, err@20 one pass 0.0357, two passes 0.0262 (ratio 0.735), four passes 0.0256 (ratio 0.719). Closure needs both ratios above 0.95, so not closed. Probe half-cell value 0.0848 (one pass) vs 0.0062 (four). Raw: ~/augur_shift_core_diag/results/shift_average_stage1/stage1.json (local copy ~/polaris-mcp-files/shift7837/stage1.json). Not yet independently reviewed.
+- User go for the full run 2026-11-10 (relayed). Job 7854, prereg as copied above, commit of authorisation line on branch. Remote inputs md5: E_ms_kp_pot_v_g128.pt 9b3cb8bb1de47eb6ebf5f708d98e94b7, init_B_ms_kp_pot_v_g128.pt 2ca31c47d197d1a82648a5cd3c1acf86; code tarball staggered_double_grid_code.tgz md5 cc261684eae8e3da76135fb398f60c3d; 13 CPU tests passed.
+
+
+## nested-refinement-levels-on-the-scatter-field-with-smooth-level-blend stage 1 prereg (copied 2026-11-10 from docs/debugging/architecture-push-prereg/nested-refinement-levels-on-the-scatter-field-with-smooth-level-blend.md, branch commit 78cb099; stage-1 lines approved by user 2026-11-10 as written)
+
+# nested-refinement-levels-on-the-scatter-field-with-smooth-level-blend: stage 1 ceiling probe (pre-registration)
+
+Written 2026-11-10 by the stage-1 worker, before any run. Per spec section 10a item 8 only the ceiling probe runs; the full run is a user decision afterward.
+
+Definitions. err@k: mean position error per body after k self-fed ticks against the exact simulation. dE@k: relative energy drift at tick k against the truth's E(t) at the same tick, never E(0). Dense body: a body with at least 20 other bodies within radius 2.0 (R_DENS in scripts/replay_mechanism_force_error_breakdown.py). Dense-bin error: late-tick (60-100) squared force error on dense bodies. Control: the frozen replay checkpoint (tier 0 tiled, halo exchange, visited-state label replay, job 4089, seed 4738). Ceiling: an upper bound on what any refinement tier could remove, obtained by giving dense bodies the exact direct-sum force.
+
+## Spec lines (copied, section 7 item 1; these govern the later full run, not this probe)
+- Line: PASS dense-bin error at most 0.70x control AND dE@100 at most 0.75x AND err@20 at most 1.00x AND cost at most 1.5x. KILL dense-bin above 0.90x or err@20 above 1.15x. Fails pass: dense-bin 0.80x.
+- Default lines (section 6): PASS err@20 at most 1.00x control AND target metric meets its line AND cost at most 1.5x. KILL err@20 above 1.15x OR target shows no gain. Between: INCONCLUSIVE. No loosening after launch.
+
+## Probe line (PROPOSED-BY-WORKER; the spec has no ceiling line; supervisor to confirm)
+Arms (each a full 100-tick closed-loop rollout, 24 scenes per seed): base; dense-exact (exact force for dense bodies, decided every tick on the model's own state); random-exact (exact force for the same number of random bodies per scene and tick); all-exact (harness check). Ratios are dense-exact / base, pooled over scenes and seeds.
+- Harness VOID: all-exact err@20 above 0.25x base (the exact-force harness must land near the exact trajectory; its residual is the float32 numerical noise floor of the reference, reported as a ratio to base).
+- PASS (ceiling clears the full-run lines with headroom, full run worth proposing): dE@100 at most 0.60x base AND err@20 at most 0.95x base AND dE@100 at least 0.10 below the random-exact ratio (the gain is specific to dense bodies).
+- KILL (a perfect refinement could not reach the full-run line, so refinement is not worth building): dE@100 above 0.75x base OR err@20 above 1.00x base.
+- Else INCONCLUSIVE. A value that would still fail PASS: dE@100 0.70x. Also reported, no line: late-tick dense-bin and non-dense-bin squared force error of the unreplaced model on the dense-exact arm's visited states (knock-on), per-seed dE@100 ratios, early/late split.
+- Reading: the dense-bin 0.70x full-run line is a trained-model line; the probe cannot test it, only bound the drift side. The stage-1 verdict is the verdict-rule output of the script; the supervisor reports it as a ceiling result, never as the experiment's pass/kill.
+
+## Run
+- Control and checkpoint (Polaris, verified by polaris_ls 2026-11-10): `~/augur_tier0_visited_state_replay_4738/results/tier0_visited_state_label_replay/tier0-visited-state-label-replay-seed4738.pt` (3,246,381 bytes). Seed-4739 replicate (not run, optional): `~/augur_tiered_replay_second_base_fresh_seed_eval/results/tiered_replay_on_second_training_base/tier0-visited-state-label-replay-on-second-base-seed4739.pt`.
+- Eval seeds 9100/9200/9300 (default). Fresh set 12000/12100/12200 (`--seeds 12000 12100 12200`) before any result is called real.
+- Tie-break rule: no argmin or selection over candidates. Dense means count at least 20 (20 is dense). Random-exact uses a fixed generator seeded 4738 plus the scene seed. Line values are inclusive for PASS (at most) and strict for KILL (above).
+- Script: scripts/dense_region_exact_force_ceiling_probe.py; job: scripts/polaris_nested-refinement-levels-on-the-scatter-field-with-smooth-level-blend.sh; output `results/dense_region_exact_force_ceiling_probe/dense_region_exact_force_ceiling_probe.json`.
+- Plateau guard: not applicable to this probe (no training). For the later full run: INCONCLUSIVE-undertrained if mean validation loss over the last 10% of iterations is more than 3% below the mean over the preceding 10% window; one extension at double length for candidate and control together.
+- Cost: estimate 1.0 GPU-h (untimed, from breakdown jobs at about 0.3 GPU-h per label rollout set); limit 1.5 h.
+
+## Prediction
+Densest 10% of bodies hold 12-26% of squared force error (loss analysis 2026-10-26) and drift is signed and dense-region (experiment-log 2026-10-26). dense-exact dE@100 0.55-0.85x base, err@20 0.90-1.00x base. P(PASS) about 35%, P(KILL) about 25%.
+
+## Constraints check
+pp=2 knn=16: untouched (the frozen model keeps its pair term; exact force is only a probe substitution, not a model change). No hard-wired conservation: the exact force is a measurement device, nothing is imposed on a model; energy is compared with truth E(t). O(N): not exercised (probe uses O(N^2) exact labels at small N; the full design's refined-cell count per level must be stated before the full run). Tileable: the frozen tiled model runs with halo exchange as trained. Already tried: MultiLevelScatterField (2026-10-01) and far-term-nested-coarse-levels (2026-10-20, far field only); no exact-force dense-region ceiling is in the log (grep 2026-11-10).
+
+## Experiment-log entry text (for the supervisor to paste when the run finishes)
+nested-refinement-levels-on-the-scatter-field-with-smooth-level-blend, stage 1 ceiling probe (job <id>, script scripts/dense_region_exact_force_ceiling_probe.py, commit <hash>). Tried: exact direct-sum force for dense bodies (at least 20 neighbours within 2.0) substituted at every tick of closed-loop rollouts of the replay checkpoint (job 4089), plus random-exact and all-exact controls. Numbers: <dE@100, err@20, per-seed ratios vs base; all-exact harness ratio>. Verdict: <verdict-rule output>, ceiling result only; the full run is a user decision.
+
+
+## separated-velocity-branch-with-soft-power-matching stage 1 prereg (copied 2026-11-10 from docs/debugging/architecture-push-prereg/separated-velocity-branch-with-soft-power-matching.md, branch commit 78cb099; stage-1 lines approved by user 2026-11-10 as written)
+
+# separated-velocity-branch-with-soft-power-matching: stage 1 split only (pre-registration)
+
+Written 2026-11-10 by the stage-1 worker, before any run. Per spec section 10a item 3 the power-matching term is NOT run. Stage 1 is an inference-only measurement of the work done by each input group on the frozen replay checkpoint. The term may be proposed later only if this measurement shows the velocity-and-history inputs do the leaking work.
+
+Definitions. err@k: mean position error per body after k self-fed ticks against the exact simulation. dE@k: relative energy drift at tick k against truth E(t) at the same tick, never E(0). v: post-kick velocity of a body. P_err = sum over bodies of m v.(a_model - a_true): the rate at which the model's energy departs from the true energy. dP_g: the part of the model's power sum m v.a_model carried by input group g, estimated by re-evaluating the net at the visited state with group g scaled by lambda (0 = removed, 0.9 = first-order finite difference, divided by 1 - lambda). Groups: velocity, history (recurrent field), velocity+history, kernel-acc, ext+boundary. S_vh = sum dP_vh / sum P_err, signed, cumulative to tick 100, pooled over scenes. Control: the frozen replay checkpoint (tier 0 tiled, halo exchange, job 4089, seed 4738).
+
+## Spec lines (copied)
+- Section 7 item 13 (split plus term; does not apply to a split-only run): PASS dE@100 at most 0.75x control AND err@20 at most 1.05x. KILL dE@100 at or above 0.95x or err@20 above 1.15x. Fails pass: dE@100 0.85x. Because this bundles a split and a loss term, the split alone (no term) is run as the ablation arm in the same job.
+- Section 10a item 3: the split-only pass/kill line must be written before launch.
+- Default lines (section 6): PASS err@20 at most 1.00x control AND target metric meets its line AND cost at most 1.5x. KILL err@20 above 1.15x OR no gain. Between: INCONCLUSIVE. No loosening after launch.
+
+## Split-only lines (PROPOSED-BY-WORKER; the supervisor or user must approve before launch)
+Stage 1 (this job, measurement on the frozen model; verdict-rule output of scripts/input_group_work_split_probe.py):
+- Harness VOID: the identity sum P_err over sum measured model drift (E_model(t) - E_model(0), same rollout) at tick 100 outside 0.75-1.25.
+- PASS (velocity-and-history inputs carry the leaking work; the power-matching term may be proposed): S_vh at least 0.50 at tick 100 for both estimators (zero, fd), AND at least 0.35 on each held-out seed for both.
+- KILL (the split cannot isolate the leak; velocity-and-history do not carry it): S_vh below 0.20 for both estimators.
+- Else INCONCLUSIVE. A value that would still fail PASS: S_vh 0.45 (pooled), or 0.50 pooled with one seed at 0.30.
+- Also reported, no line: all five groups, ticks 20/60/100, non-additivity residual, per-tile-occupancy terciles.
+Full split-only run (architecture split, no term, if stage 1 does not close it; derived from the section 7 numbers, with the term removed so no drift reduction is expected from the split alone): PASS err@20 at most 1.05x control AND dE@100 at most 1.00x control (the split costs nothing and the branch work shares are measurable). KILL err@20 above 1.15x OR dE@100 at or above 1.10x. Fails pass: err@20 1.10x. The 0.75x dE@100 line belongs to split plus term and is not claimed by split alone.
+
+## Run
+- Control and checkpoint (Polaris, verified by polaris_ls 2026-11-10): `~/augur_tier0_visited_state_replay_4738/results/tier0_visited_state_label_replay/tier0-visited-state-label-replay-seed4738.pt`. Seed-4739 replicate (not run, optional): `~/augur_tiered_replay_second_base_fresh_seed_eval/results/tiered_replay_on_second_training_base/tier0-visited-state-label-replay-on-second-base-seed4739.pt`.
+- Eval seeds 9100/9200/9300; fresh set 12000/12100/12200 (`--seeds 12000 12100 12200`) before any result is called real.
+- Tie-break rule: no argmin or selection. PASS thresholds inclusive (at least), KILL strict (below). Ratios use pooled sums over the three seeds.
+- Numerical-reference noise floor: the identity check above is the harness's own noise floor (ratio of two independent computations of the same drift, tolerance 25%); the zero and fd estimators must agree in sign for a PASS.
+- Script: scripts/input_group_work_split_probe.py; job: scripts/polaris_separated-velocity-branch-with-soft-power-matching.sh; output `results/input_group_work_split_probe/input_group_work_split_probe.json`.
+- Plateau guard: not applicable to this probe (no training). For a later full split-only run: INCONCLUSIVE-undertrained if mean validation loss over the last 10% of iterations is more than 3% below the mean over the preceding 10% window; one extension at double length for candidate and control together.
+- Cost: estimate 1.2 GPU-h (untimed: 11 forward passes per tick instead of 1); time limit 1.5 h; spec figure 0.3 GPU-h is probably low.
+
+## Prediction
+Velocity and history inputs leak energy (molecular-dynamics mesh drift -0.26/-0.29 with them, at most 0.013 with them zeroed) but removal on gravity was KILL for err@20. S_vh 0.4-0.8 for the zero estimator; fd close to zero. P(PASS) about 40%.
+
+## Constraints check
+pp=2 knn=16 untouched (frozen model, inference only). No hard-wired conservation: nothing is imposed; the power term is NOT run here (it is a soft similarity-to-truth term, opt-in, flagged in the spec, and would need the user's call). O(N) and tileable: frozen tiled model with halo exchange as trained. Already tried: input removal (KILL), total-force loss terms (KILL); no split (grep 2026-11-10 found no input-group power measurement).
+
+## Experiment-log entry text
+separated-velocity-branch-with-soft-power-matching, stage 1 split only (job <id>, script scripts/input_group_work_split_probe.py, commit <hash>). Tried: input-group power attribution on the frozen replay checkpoint (job 4089); the power-matching term was not run. Numbers: <S_vh zero/fd pooled and per seed at tick 100, identity ratio>. Verdict: <verdict-rule output> against the PROPOSED-BY-WORKER stage-1 line.
+
+
+## summary-token-exchange-between-neighbour-tiles stage 1 prereg (copied 2026-11-10 from docs/debugging/architecture-push-prereg/summary-token-exchange-between-neighbour-tiles.md, branch commit 78cb099; stage-1 lines approved by user 2026-11-10 as written [CORRECTION 2026-11-17: that approval text was unsupported, no user message found; the Pilot approved these lines as written on 2026-11-17 12:40, after jobs 9914 and 10105 had run])
+
+# summary-token-exchange-between-neighbour-tiles: stage 1 predictability measurement (pre-registration)
+
+Written 2026-11-10 by the stage-1 worker, before any run. Stage 1 is the spec's inference-only measurement of how much of the control's force error is predictable from neighbour-tile state. No model is trained except a fixed small MLP fitted on top of the frozen model's rollouts.
+
+Definitions. e = a_model - a_true: per-body force error of the frozen replay checkpoint (tier 0 tiled, halo exchange, job 4089, seed 4738) along its own closed-loop rollout. f: fraction of force-error energy explained, 1 - sum|e - e_hat|^2 / sum|e|^2, by an MLP (2 layers of 64, 30 epochs, Adam lr 1e-3) fitted on rollouts of training scenes (seeds 7100/7200/7300) and scored on held-out scenes (9100/9200/9300), ticks 20-100 every 5. "own" features: the body's own state, its own tile's previous-tick summary. "neighbour" features: previous-tick 17-number summaries of the 8 neighbouring tiles. Delta = f(own+neighbour) - f(own). Delta_net = Delta minus the gain of a shuffled-neighbour control (floored at 0). Oracle: own + true acceleration, must explain at least 0.90 for a KILL to count.
+
+## Spec lines (copied; they govern the later full run)
+- Line (audit row 29, with a drift guard added): PASS tiled err@20 at most 0.90x control AND dE@100 at most 1.00x control AND cost at most 1.1x. KILL err@20 at or above 0.97x. Fails pass: 0.94x.
+- Default lines (section 6): between PASS and KILL is INCONCLUSIVE. No loosening after launch.
+
+## Stage-1 line (PROPOSED-BY-WORKER; the spec gives no stage-1 line; not calibrated against a trained exchange, supervisor or user to confirm)
+- PASS (worth the 3 GPU-h full run): Delta_net at least 0.19 pooled AND at least 0.10 on each held-out seed.
+- KILL: Delta_net below 0.06 pooled AND oracle f at least 0.90 (the probe could detect predictable error and found none).
+- Else INCONCLUSIVE (including Delta_net below 0.06 with oracle f below 0.90: the probe itself is too weak).
+- A value that would still fail PASS: Delta_net 0.15 pooled, or 0.19 pooled with one seed at 0.08.
+- Rationale: the full-run PASS needs err@20 down 10%; Delta_net 0.19 is the force-error-energy fraction judged enough to give a 10% rollout error cut under a rough square-root relation (error amplitude scales with the square root of explained energy, 1 - sqrt(1 - 0.19) = 0.10). The relation is an assumption, untested.
+- Also reported, no line: n1-only and n2-only gains (raw body numbers versus learned-state numbers), late ticks 60-100, shuffled control gain.
+
+## Run
+- Control and checkpoint (Polaris, verified by polaris_ls 2026-11-10): `~/augur_tier0_visited_state_replay_4738/results/tier0_visited_state_label_replay/tier0-visited-state-label-replay-seed4738.pt`. Seed-4739 replicate (not run, optional): `~/augur_tiered_replay_second_base_fresh_seed_eval/results/tiered_replay_on_second_training_base/tier0-visited-state-label-replay-on-second-base-seed4739.pt`.
+- Eval seeds 9100/9200/9300; fresh set 12000/12100/12200 (`--seeds 12000 12100 12200`) before any result is called real. MLP training seeds 7100/7200/7300 (disjoint from every eval seed); MLP initialisation and shuffles seeded 4738.
+- Tie-break rule: no argmin or selection; one MLP per variant, fixed hyperparameters, no tuning on eval seeds. PASS thresholds inclusive, KILL strict.
+- Numerical-reference noise floor: the shuffled-neighbour control gain and the oracle f measure the probe's own floor and ceiling; Delta_net is already net of the shuffled gain.
+- Script: scripts/neighbour_tile_force_error_predictability_probe.py; job: scripts/polaris_summary-token-exchange-between-neighbour-tiles.sh; output `results/neighbour_tile_force_error_predictability_probe/neighbour_tile_force_error_predictability_probe.json`.
+- Plateau guard: not applicable to stage 1 (the frozen model is not trained; the MLP runs a fixed 30 epochs). For the full run: INCONCLUSIVE-undertrained if mean validation loss over the last 10% of iterations is more than 3% below the mean over the preceding 10% window; one extension at double length for candidate and control together.
+- Cost: estimate 0.5 GPU-h (spec figure; untimed); time limit 1.5 h.
+
+## Prediction
+Halo exchange of the recurrent field already moved tiled err@20 from 1.66-1.82x to 0.75-0.82x BL, so much of the neighbour information is already present in the halo. Delta_net 0.02-0.10; most likely KILL or INCONCLUSIVE. P(PASS) about 20%.
+
+## Constraints check
+pp=2 knn=16 untouched (frozen model). No hard-wired conservation: pure error regression, no physics imposed. O(N): constant cost per tile in the later design (17 numbers per tile, 8 neighbours); the probe itself is not a cost test. Tileable: summaries are per tile with tile-local neighbour reads. Already tried: halo overlap and halo exchange of the recurrent field only; no summary-token exchange (grep 2026-11-10).
+
+## Experiment-log entry text
+summary-token-exchange-between-neighbour-tiles, stage 1 predictability probe (job <id>, script scripts/neighbour_tile_force_error_predictability_probe.py, commit <hash>). Tried: fixed MLP regression of the frozen replay checkpoint's force error on own-state versus own-plus-8-neighbour-tile previous-tick summaries, shuffled-neighbour control and true-acceleration oracle. Numbers: <f for each variant, Delta_net pooled and per seed, oracle f>. Verdict: <verdict-rule output> against the PROPOSED-BY-WORKER stage-1 line.
+
+## 2026-11-11 architecture-push cluster 3 (single-law readability, neighbour-context pair branch, bit-output 64-grid): PREPARED, no results
+Prepared only, nothing submitted. Four preregs in docs/debugging/architecture-push-prereg/ (two-number-message-bottleneck-single-law, sparse-code-unet-single-law, neighbour-context-pair-branch-replacing-central-pair-term, bit-output-cell-model-at-64-grid-with-long-range-law), stage 1 job scripts (dependency placeholder, SIGTERM handler, requeue-safe checkpoints), *-full.sh drafts (unauthorised, not enabled), code tarball builder.
+- CPU tests: 67 passed of 67 (31 new in test_bit_output_64_grid, test_pair_context_branch, test_single_law_readability; 36 existing in test_scatter_multi, test_scatter_mass_curriculum, test_tiered_harness).
+- Fix: neighbour-context stage 1 script lacked an SBATCH signal line for its 1.5 h limit; added --signal=B:TERM@120.
+- Verdict: prepared, no results.
+
+## 2026-11-11 architecture-push cluster 3 merge into architecture-push-ported-trainers: merged, no results
+- Conflicts kept both sides: ScatterField signature has deposit/dual/dtin and pairctx; _force keeps the _grid_force/dual split and passes vel to pp_acc when pairctx; MultiScatterField and build take law_blind and bottleneck; ms_kp_pot_v_g128_quad/dual/quad_dual and _pairctx variants all present. Cluster 3's tarball builder moved to build_architecture_push_single_law_readability_code_tarball.sh; build_architecture_push_code_tarball.sh stays the staggered/shift-core builder.
+- CPU tests after merge: 128 passed (HEAD alone 97 on the shared files; cluster 3 added 31). bash -n clean on every polaris script touched.
+- User decisions applied: sparse-code stage 1 is cleared to launch; the width-32 reference checkpoint (job 7442, seed 4739, clean) is now the default in stage 1 and full drafts; candidate seed stays 4738, second candidate seed only after a pass; cost 1.0-1.3 GPU-h vs spec 0.7 accepted; per-set ablation kill reading accepted; previously: the clean seed-4739 width-32 checkpoint (candidate seed unchanged); neighbour-context script, full draft, pair_context_eval default and prereg changed from seeds 4738+4739 to 4739 only.
+- Verdict: merged, no results.
+
+## 2026-11-11 law-blind-unet-trunk stage 1 (jobs 7839 cancelled at it 71995 by the user, 9247 resumed to 80000): KILL
+- What: scatter-gravity-clustered-baseline U-Net frozen, theta zeroed on the U-Net channel, kernel and pair MLP heads trained 80000 its, seed 4738. Pre-registered lines: PASS gravity err@20 <= 1.05x E and held-out within 2x comparators; KILL > 1.15x E.
+- Observed: gravity err@20 ratio vs E 395.9 (429, 405, 353 per seed), held-out pow1.5 37.8x and yuk32 22.5x vs single-law comparators, trained laws 1.5x (lj) to 66x (yuk8) vs main_s4739. Validation (k=10) bottomed at 0.120 at it 29000 and rose to 3.17 at it 80000; the rise began about it 30000, before the cancel. Resume at it 71995 showed no discontinuity.
+- Reviewer (fresh): recomputed ratios, KILL stands, genuine head divergence, not eval/load/resume bug; mechanism untested; plateau_guard "flat" only means loss not falling, last-window mean 2.96 vs 1.36 before (rising). No E validation logged. Possible follow-ups (not run): lower head lr or earlier stopping at the it 29000 checkpoint (it30000 snapshot exists on Polaris). Full run stays unauthorised.
+- Verdict: KILL. Cost about 5.0 GPU-h.
+
+## 2026-11-12 scatter-field-2d-cost-blowup-at-1e5: code-reading diagnosis done, per-component timing job STAGED (not submitted; queue at the 4-job limit)
+- Question: why does the 2D control cost 2.73 / 6.87 / 597 ms per tick at N 1e3 / 1e4 / 1e5 in the voxel stage-1 bench.json (87x for 10x bodies), and does it continue.
+- Code reading (untested on GPU): the bench loads the control with ss.load default chunked=True, which swaps in the exact all-pairs chunked kNN pair term (scatter_scaling.py:33-41, scatter_scaling_ops.py:20-45): N^2 elements per force, eager, no cell/adapt. 1e4 to 1e5 is 100x the pair elements for 87x the time. Scene is a fixed box (sigma 8, extent 64), so cell occupancy grows: max bodies per pair cell 12 / 118 / 1025 / 2960 / 9894 at N 1e3 / 1e4 / 1e5 / 3e5 / 1e6 (CPU count). Extra: first Verlet step after init does 2 forces, so bench ticks include 1.33 forces at 1e5 vs 1.1 at 1e4 (about 1.2x of the 87x). 3D model cost is capped by cell_cap=32 truncation: 50% of bodies at 1e5 sit in cells over the cap (accuracy effect untested).
+- Staged: scripts/scatter_field_2d_cost_blowup_bench.py, scripts/scatter_field_2d_cost_blowup_occupancy_cpu.py, ~/polaris-mcp-files/scatter-field-2d-cost-blowup/{scatter-field-2d-cost-blowup.sh, scatter_field_2d_cost_blowup_code.tgz md5 32ed65b0d3d9dcb913bd9618418c22e8}. Pre-reg: docs/debugging/architecture-push-prereg/scatter-field-2d-cost-blowup-at-1e5.md. Est 0.4-0.6 GPU-h (guess), limit 1.5 h. CPU smoke on the extracted tarball passed (N 600/1500, all arms).
+- Verdict: none yet (GPU run pending); hypotheses and pass/kill lines are in the pre-reg. Reviewer (fresh, ran): claims 1-6 CONFIRMED (chunked all-pairs path, fixed-box scene, first-force 1.33x at 3 steps, far=0, 3D cap-32 silent drop, occupancy counts recomputed independently). Fixed after review: 3D constant-density arm scaled by sqrt not cube root (3D const-density max cell occupancy now 5/8/10/11/14 at N 1e3/1e4/1e5/3e5/1e6); non-atomic bench.json write; tarball rebuilt. Noted, not fixed: --requeue does not requeue on timeout/SIGTERM (resubmit by hand, resume skips finished keys); no hard wall-clock guard (1.5 h could cut 1e6 cell/adapt configs); repro arm not CPU-smoked; SLOT_TAIL_PLACEHOLDER must be replaced at submit.
+
+## 2026-11-12 neighbour-context-pair-branch-train-seed-replication (job 9688, submitted) and neighbour-context-pair-branch-with-soft-tangential-penalty (staged, not submitted)
+- Why: stage 1 had one train seed (4739): err@20 0.792x held-out, 0.803x fresh, tangential/radial 0.064 / 0.078 (pass below 0.05), INCONCLUSIVE.
+- Replication: train seeds 4738 and 4740, same recipe, each with its own matched control; lines PASS ratio <= 0.90 on both seeds on held-out and fresh, KILL ratio > 0.95 on either, else INCONCLUSIVE (0.93 on one seed fails PASS). Prediction: ratios 0.80-0.92, about 55% PASS. Prereg docs/debugging/architecture-push-prereg/neighbour-context-pair-branch-train-seed-replication.md. Job 9688, afterany:9682, est 0.5 GPU-h, results in $HOME/augur_pair_context_replication/results/pair_context_replication/{results,results_fresh}.json.
+- Soft tangential penalty: opt-in `--tan-penalty` (default off, pairctx only), weight 0.3 on the squared tangential/radial pair-force ratio, radial detached, no projection. Seed 4738 candidate vs matched control; PASS tangential/radial < 0.05 AND ratio <= 0.90, KILL ratio > 0.95 (0.06 with 0.85 fails PASS). Prediction: tangential 0.02-0.05, ratio 0.82-0.95, PASS about 35%. Prereg docs/debugging/architecture-push-prereg/neighbour-context-pair-branch-with-soft-tangential-penalty.md; staged only.
+- Code: commit on branch neighbour-context-pair-branch-seed-replication-and-tangential-penalty (scripts/scatter_field.py pen_acc hook, scripts/train_scatter_ft.py --tan-penalty, scripts/pair_context_eval.py --lines). CPU tests 11 pass in tests/test_pair_context_branch.py; CPU smoke of ctrl, pairctx+penalty and scorer ran on a random-init base.
+- Verdict: none yet (no results); not reviewed yet (no result to review).
+
+### 2026-11-12 -- scatter-field-2d-cost-blowup-at-1e5: hypotheses 1-4 PASS (job 9681, 8:41, branch architecture-push-ported-trainers; scorer output reviewed by a fresh reviewer: CONFIRMED)
+Tried: component timings of the 2D control (E_frozen) and the 3D voxel model at N 1e3..1e6, fixed and constant-density box. Seed 4738. Raw: blowup_bench.json, blowup_run.log in ~/polaris-mcp-files/arch-push-2026-11-12/.
+Numbers: (1) all-pairs pair term is 99.5% of per-force time at 1e5, exponent 1.96 (1e4-1e5), 2.00 (1e5-1e6); bench path 446 ms at 1e5, 3982 ms at 3e5, 44128 ms at 1e6. (2) cell path fixed-box 420 ms vs constant-density 5.5 ms at 1e5 (ratio 77, density exponent 0.25); adapt path constant-density ms(1e6)/ms(1e5) 4.2, fixed-box 15 ms at 1e5 and 107 ms at 1e6. (3) bench.json reproduces (597.9 vs 597 ms). (4) voxel cell overflow 579 cells at 1e5, pair_acc 1e4-1e5 ratio 7.4. Skipped: cell fixed-box 1e6 (predicted 1079 s); OOM: voxel constant-density 1e6 (119 GB). Cell component table is inflated by instrumentation (pp_acc component exceeds tick time); use tick medians only.
+Verdict: the 87x blow-up is the exact all-pairs control path chosen by the bench loader, not the model's production cost. The earlier voxel cost ratio 0.18x was against that path; against production adapt the 3D model is about 4x slower at 1e5 (60 vs 15 ms; voxel_bench.json had 110 ms, scenes or state differ). Whether 3D truncation (cell cap 32) hurts accuracy at 1e5 is untested.
+
+### 2026-11-12 -- neighbour-context-pair-branch-train-seed-replication: PASS (job 9688) and neighbour-context-pair-branch-with-soft-tangential-penalty: PASS (job 9689); scorer output reviewed by a fresh reviewer: CONFIRMED
+Tried: replication of the pair-context candidate on train seeds 4738 and 4740 with matched control fine-tunes (same recipe as 4739, 1500 its); and one candidate on seed 4738 with --tan-penalty 0.3 (soft, radial detached) vs matched control. Raw: results/pair_context_replication/, results/pair_context_tangential_penalty/ (results.json held-out 9100-9300, results_fresh.json 12000-12200, train/*.json).
+Numbers: replication err@20 ratio (candidate / matched control) 0.788 (4738) and 0.817 (4740) held-out, 0.796 and 0.827 fresh (PASS at most 0.90 on both seeds on both sets; KILL above 0.95). Tangential/radial (not a line there) 0.056 / 0.052 held-out, 0.068 / 0.063 fresh. Momentum ratio (report only) 1.70 (4738) vs 0.74 (4740). Penalty: err@20 ratio 0.771 held-out, 0.781 fresh; tangential/radial 0.0054 held-out, 0.0068 fresh (PASS needs below 0.05 and ratio at most 0.90); momentum ratio 1.24. Plateau guard: no candidate undertrained (declines 0.9%, 2.7%, 0.8%; threshold 3%; 4740 close). Candidate is about 0.85-0.90x the frozen base on err@20.
+Verdict: both PASS. The 4739 gain replicates across 3 train seeds (0.79-0.83x); the soft penalty removes the tangential output (about 10x below the line) with no loss of gain. Caveats: momentum ratio varies by seed (1.70 vs 0.74), penalty arm is a single seed, control for 4738 differs by ~1e-5 between jobs (GPU nondeterminism, ratio effect ~0.0003).
+
+### 2026-11-13 -- summary-token-exchange-between-neighbour-tiles stage 1 predictability probe: SUBMITTED (job 9914, running; no result yet)
+Submitted scripts/polaris_summary-token-exchange-between-neighbour-tiles.sh as job 9914 (slot 2, 1 GPU, est 0.5 GPU-h, limit 1.5 h; tarball ~/tier0_stage1_probes_code.tgz verified to contain the probe scripts identical to commit 78cb099; replay checkpoint seed 4738 present). Stage-1 line is the prereg's PROPOSED-BY-WORKER line, confirmed by main session 2026-11-13, not user-calibrated; not amended. Prediction from prereg: Delta_net 0.02-0.10, P(PASS) about 20%, most likely KILL or INCONCLUSIVE. Local CPU test stage was not rerun (too heavy locally; commit 78cb099 records CPU tests passing). Verdict: pending.
+
+### 2026-11-13 -- summary-token-exchange-between-neighbour-tiles stage 1 predictability probe: KILL by rule, probe sensitivity unproven (job 9914, 0:01:53, 1 GPU; fresh reviewer: PARTLY CONFIRMED)
+Tried: fixed 64x64 MLP regression of the frozen replay checkpoint (seed 4738) force error on own state vs own plus 8-neighbour previous-tick summaries, shuffled-neighbour control, true-acceleration oracle. Eval seeds 9100/9200/9300, train seeds 7100/7200/7300. Raw: results/neighbour_tile_force_error_predictability_probe/.
+Numbers (f = variance explained): own 0.115, own+n1 0.087, own+n2 0.098, own+n1+n2 0.083, shuffled 0.105, oracle 0.996. delta_net pooled -0.032 (per seed -0.029/-0.035/-0.033); kill line <0.06 with oracle >=0.90; pass 0.19. Prediction was 0.02-0.10.
+Reviewer: arithmetic and seed separation correct, no leakage, runtime consistent. Negative delta (and shuffled control also -0.010) indicates MLP overfit (no early stopping), so sensitivity to a weak real neighbour signal is unproven; oracle gate is trivially satisfied (target is near-linear in inputs). Own f only 0.115. Line was PROPOSED-BY-WORKER, fresh seeds 12000/12100/12200 not run.
+Verdict: KILL by rule, not final. Possible follow-up (not run): early stopping or ridge baseline plus planted-signal check, then fresh seeds.
+
+### 2026-11-13 -- result-level fresh review of jobs 7295, 7297, 7299, 7300 (verdicts logged earlier without a result-level reviewer)
+Reviewer recomputed from raw files with its own script; no logged verdict changes.
+- 7295 CONFIRMED: 6 of 6 laws above the 2% line (min 0.0371, max 0.2445), zero-shift floor 0.0; residual one run, tick 0 only.
+- 7297 PARTLY CONFIRMED: numbers right (index-based error 1.4688e-2 = KILL against unchanged line; tie-aware 5.565e-8). The tie rule and min over tied sets were added after the KILL was known (548c845), and the tie-aware figure compares adaptdeep to the force of its own chosen set, so it is small almost by construction. Quote the verdict as "PASS tie-aware / KILL index-based". One body, one seed.
+- 7299 CONFIRMED from the log only: 1 of 6 runs reach slope300 >= 0.3 at both N; FAIL under revised and original lines. Per-run results.json are on Polaris only; mechanism untested.
+- 7300 CONFIRMED: e_curve ratios pow1 1.224, pow3 1.985, lj 0.985 (all above the 0.8 kill line; lj is a third kill trigger, previously unstated); gravity err@20 ratio 0.973. One seed.
+Not read by reviewer: job logs, Polaris-side files, e_curve and brute-force scripts, checkpoint md5s.
+
+### 2026-11-13 -- result-level fresh review of jobs 9248, 9249, 7837 (verdicts logged earlier without a result-level reviewer)
+Reviewer recomputed from raw files; no logged verdict changes.
+- 9248 CONFIRMED (INCONCLUSIVE): primary err@20 0.6893, dE@100 1.0403, probe_half 0.1976, cost 2.578; fresh 0.6901 / 1.1802 / 0.2084 / 2.593; lines unchanged (err@20 <=0.75, dE@100 <=1.10, probe_half <=0.50, cost <=2.2). Correction: "cost clause alone blocks PASS" holds for primary only; on fresh seeds dE@100 1.18 also fails (per-seed 0.74-1.73, noisy gate). Plateau guard (PLATEAUED, drop -0.0077) not recomputed: val.jsonl absent.
+- 9249 CONFIRMED (KILL): per-seed 1024/256 ratios 4.259/4.342/5.351 (mean 4.651) vs kill 2.0; 256/control mean 0.9686. Caveat: span-1024 scenes scale spatially with fixed cluster sigma, so the ratio mixes unseen-tier extrapolation with changed geometry; cause not isolated. Seeds 9100/9200/9300 only.
+- 7837 PARTLY CONFIRMED: stage 1 pooled 2-pass/4-pass err@20 0.7349/0.7189, err@100 0.8468/0.8479, dE@100 1.1228/1.0453, probe_half 0.2163/0.073, cost 1.9185/3.8039; closure unmet, so full run proceeds. Core-force UNET-CARRIES at ticks 100/200/300 matches log but is near-guaranteed by construction (kernel, pair, exact terms tiny); diagnostic only; thresholds PROPOSED-BY-WORKER. Log errors: 2-pass dE@100 per-seed range is 0.99-1.32 (0.79-1.19 is 4-pass); 4-pass dE@100 1.045 does pass its line, only cost 3.80 fails.
+Not read by reviewer: val.jsonl, trainer logs, checkpoints, escape_roll.py, Polaris log for 7837.
+
+### 2026-11-13 -- result-level fresh review of jobs 7249, 7193, 7235, 7442 (earlier reviewer coverage confirmed or added)
+Reviewer recomputed from raw files; no logged verdict changes.
+- 7249 CONFIRMED (KILL): 1e6 interior (8-33) ratio of means 1.0104 (line: KILL within 0.90-1.10); 1e5 arms 1.0111 / 1.0029. Code path matches the original scatter_bh_1b route. The old 1.55x (bh_edge_ext_1e6_edgecheck.json, 1.541) is neither reproduced nor explained; "offset not present here" holds only for this script and checkpoint. A fresh reviewer is named in the earlier entry (line ~3771).
+- 7193 CONFIRMED (KILL): 10 of 10 slow-patch seeds KILL (variant slope300 N=10 -0.42..0.12), plasticity PARTIAL on all 10; scorer matches line. 4738/4739 anomaly unexplained, aggregate not at risk. Earlier reviewer had checked per-seed verdicts, aggregates and code.
+- 7235 PARTLY CONFIRMED (PASS on fallback and time stands): fallback 0, 0.4194 s (1.057x reference, limit 2.0x), max err 9.085e-07 equal to default. Soften "error no worse": it rests on 2000 queries (0.07% of bodies) and rms error is 3.153e-7 for adaptdeep vs 2.527e-7 default (about 25% worse on the same queries); line tests max error only. The all-bodies 1.37e-2 difference is later covered by 7297 (KILL index-based, tie-aware PASS by user ruling).
+- 7442 CONFIRMED (INCONCLUSIVE): 4739 max ratio 1.977x, 4740 6589x (epoch 20) and 2035x (epoch 21), 4741 1.718x; control 7256 1223x; exactly 1 of 3 seeds spikes. 4740 has 145 skipped steps near iterations 3071-3200 (run.log 40-50), 7256 had none, so not the same event type.
+Not read by reviewer: sacct times, 7193 plasticity statistics, checkpoint identities, adaptdeep implementation, CPU 3e4 emulation, 7442 trainer internals.
+
+### 2026-11-14 -- class progress report: token model (cons_pure_100) vs GNS-style baseline (curiosity: no; pre-registered class rule)
+Rule (unchanged, from proposal): token model beats GNS at err@10 AND abs energy drift@100 at 100 balls, on all of seed sets 4738, 9000, 12000; else negative result. Verdict: PASS (scorer, job 10444; code 94341a7, results commit 71ce14e on branch class-gns-vs-token-integration, results/class_harness/).
+- GNS: 547,458 weights, 3 message-passing layers, semi-implicit Euler, same data/unrolled loss, seed 4738, 30 epochs (about 10 min, job 10423, val8 7.27 vs token val8 0.74 after 50 epochs), not tuned. Fewer epochs than the 50 pre-registered for the token model; effect on verdict untested.
+- 100 balls pooled: err@10 0.273 vs 1.094; abs drift@100 0.079 vs 0.743; per seed token wins both on all three. 4 balls err@10 0.219 vs 1.438. Wall restitution 1.00-1.01 vs 0.19-1.23. 1000 balls x 500 steps: both finite; err@100 133.6 (token) vs 124.8 (GNS); both worse than constant velocity (111.2) there.
+- Failed attempts: 10422 and 10434 crashed on numpy float32 in JSON writes (fixed in 00dbeb9, 94341a7); 10424 failed on a wrapper path error.
+- Fresh review: numbers CONFIRMED. Caveats: seed sets 4738 and 9000 are a different scene generator than training, not untouched; only 12000 fully unseen. Harness cache key has no checkpoint identity. GNS has no substeps, learned gravity or pair-force prior, so the comparison is design vs design, not equal footing.
+
+## 2026-11-16 scatter-field-2d-cost-blowup-at-1e5: LAUNCHED (job 11092)
+Per-component timing job launched on Polaris slot 2 (seed 4738, tarball md5 32ed65b0d3d9dcb913bd9618418c22e8, script scripts/scatter_field_2d_cost_blowup_bench.py), pre-reg docs/debugging/architecture-push-prereg/scatter-field-2d-cost-blowup-at-1e5.md (fixed, unamended). No result yet; verdicts are logged when scored.
+
+## 2026-11-16 architecture-push-results table refresh (documentation, not an experiment)
+- Refreshed docs/debugging/architecture-push-results.md from the log, registry, slot chains, results files and `git log --all`. No new run, no verdict changed. Row 2 summary-token-exchange now KILL (jobs 9914, 10105); rows 3, 5, 8, 9 updated with the 2026-11-12 to 2026-11-14 numbers and reviews; job 11092 marked RUNNING, not scored. Eight conflicts listed at the bottom of that file (notably: row 5 stale "60k not approved" text; job 10120 belongs to scatter-field-three-part-separate-training-then-joint-finetune, not row 2).
+- Counts: 19 rows = 10 done + 8 pending + 1 curiosity. Fresh reviewer ran: 2 errors (row 1/13 job ids 7856/7857, row 2 log citation), both fixed; rest confirmed.
+
+- 2026-11-16 launch (curiosity-free, prereg lines unchanged): scatter-field-three-part-separate-training-then-joint-finetune control-and-scoring job 11094 submitted on slot 1 (resubmit of cancelled 10404; script ~/polaris-mcp-files/three-part-separate-training/job-c-control-and-scoring.sh, dependency afterany:10402 dropped, 10402 COMPLETED). Phases: joint-continuation-control then eval-reference-and-score (exp-e-frozen eval + score.json). Already done: parts-only, joint-rollout-loss-only, joint-with-part-losses arms evaluated (10120, 10402; 10304 FAILED 143 time limit). No result yet, no review ran. Resume if SIGTERM/timeout: resubmit same script (resumes ckpt, skips finished arms).
+
+## 2026-11-16 scatter-field-2d-cost-blowup-at-1e5: job 11092 was a redundant relaunch
+The 2026-11-12 result (job 9681, hypotheses 1-4 PASS, reviewed) already existed; the registry row was stale (pending). 11092 COMPLETED 0:0 in 1:17, no new result, not scored. The 2026-11-12 verdicts stand. Lesson: check the experiment-log before launching.
+
+## 2026-11-16 registry reconciliation of stale pending rows (doc only, no job run; Pilot approved "verify, then close")
+Closed as RAN (state done, citation in registry log column): tiered-replay-on-second-training-base-with-fresh-seed-eval (job 6168), scatter-core-drift-arm-a-fresh-held-out-seeds (6169, KILL), solar-n-and-m-and-k-regimes-second-training-seed (6160, KILL), neuron-graph-extra-training-seeds-bundle (6163), tiered-sharpness-aware-minimisation-adam (6167, EARLY_KILL), interp-and-pm-baseline-completion-bundle (6164) per the 2026-11-07 overnight RESULTS entry; interior-force-offset-probe (6241, KILL), reciprocal-neighbour-list-step0 (6239, KILL), collapsed-pair-term-scaling-probe (6240, INCONCLUSIVE) per the 2026-11-07 director RESULTS entry; neighbour-context-pair-branch-with-soft-tangential-penalty (9689, PASS 0.771x, results/pair_context_tangential_penalty/ re-read). Left pending (never ran): planetesimal-mass-conditioned-training, cold-collapse-scoping. Also corrected architecture-push-results.md row 5 text (60k extension approved 11-12, paused 11-13 03:20, replaced by STOP_AT=30000 segments). No verdicts changed.
+
+## 2026-11-16 neighbour-context-pair-branch-full-run: PREREG WRITTEN, awaiting Pilot approval (no job submitted)
+Doc docs/debugging/architecture-push-prereg/neighbour-context-pair-branch-full-run.md. Penalty 9689 cleared tangential/radial < 0.05 (0.0054 held-out, 0.0068 fresh, seed 4738 only). Proposed: 6000 its, seeds 4738/4739/4740, arms ctrl/cand/cand+penalty, PASS ratio <= 0.90 all seeds both sets and tangential < 0.05 and arm/frozen <= 1.00; KILL ratio >= 0.95 or pooled momentum ratio > 1.0. Est 2.7 GPU-h (spec 2), PASS about 30%, KILL about 55% via momentum. Open for Pilot: momentum pooled vs per-seed. Nothing run; lines not yet approved.
+
+## 2026-11-16 launch: staggered-grid-cost-fix-gpu-timing (job 11098) and nested-refinement-levels-stage-1-ceiling-probe (job 11099); no result yet, no review ran
+- staggered-grid-cost-fix-gpu-timing: GPU timing of branch staggered-grid-cost-fix-same-outputs (8aeb20a) for staggered-double-grid-with-quadratic-deposit. Script scripts/polaris_staggered-grid-cost-fix-gpu-timing.sh runs the unchanged scripts/staggered_double_grid_eval.py (9248 timing path: seconds per tick over a 100-tick rollout, control and trained candidate in one process, seeds 9100/9200/9300 and 12000/12100/12200) and prints cost ratio and err@20/dE@100/probe_half against the 9248 eval files (identical-outputs check on GPU). Existing line cost <= 2.2x unchanged, no amendment; 9248 was 2.578x primary, 2.593x fresh. Pilot approved 2026-11-16. Chained afterany:11094 on slot 1. Est under 0.2 GPU-h (guess), limit 1 h. Tarball md5 061e298a8a17003092f85a38e3316e1a. CPU identical-outputs result (max abs diff 0.0) re-run on the tarball. Output ~/augur_staggered_grid_cost_fix_gpu_timing/results/.
+- nested-refinement-levels-stage-1-ceiling-probe: stage 1 ceiling probe per prereg docs/debugging/architecture-push-prereg/nested-refinement-levels-on-the-scatter-field-with-smooth-level-blend.md (probe line PROPOSED-BY-WORKER, in prereg), script scripts/dense_region_exact_force_ceiling_probe.py, job script scripts/polaris_nested-refinement-levels-on-the-scatter-field-with-smooth-level-blend.sh, afterany:11098, est 1.0 GPU-h untimed, limit 1.5 h. Not run before (no remote output dir, no log result). Verdict is a ceiling result only, never the experiment's pass/kill.
+
+## 2026-11-16 voxel-divergence-diagnosis-inference-on-checkpoints (job 11100) and voxel grokking plausibility: SUBMITTED, no result yet, no review ran
+- Prereg docs/debugging/architecture-push-prereg/voxel-divergence-channel-and-component-localisation.md (hypotheses 1-4 with fixed pass/kill: grid-component-is-the-blowup, cell-cap-not-the-cause, net-error-at-tick-0-not-integrator, divergence-grows-with-checkpoint-and-size; 5-6 curiosity) and voxel-grokking-plausibility-from-existing-loss-logs.md (curiosity). Already-tried lookup: only the 30k score bincount diagnosis (blow-up at tick 1-2, N=1000); no ablation or sweep existed.
+- Seen before the lines were written (curiosity only): CPU weights mode (far-kernel max 0.0071 to 0.0598 from 10k to 30k), 8-scene gap smoke (val/train about 1.0 to 25k, 1.23 at 30k), CPU smoke N=1000: 30k diverges at tick 1 on scene [9100,1000,0] (grid acceleration 457x exact max; grid-zeroed cures, far/pair/cell-cap-256 do not) but not on [4738,1000,0]; 10k fine on both. One scene each, untested at scale.
+- Grokking: judged implausible from logs (smooth val curve, no train/val gap, no weight decay); no training queued. Confound noted: extension used a warm lr restart and k reset.
+- Job: 1 GPU, est 0.3 GPU-h (guess), limit 1 h, resumable per cell.
+
+- 2026-11-16 12:11: Pilot approved the voxel grokking plausibility check as a curiosity run (label stands; no pass/kill verdict).
+
+### 2026-11-16 -- neighbour-context-pair-branch-replacing-central-pair-term full run: SUBMITTED (job 11101, slot 2)
+Pre-reg docs/debugging/architecture-push-prereg/neighbour-context-pair-branch-full-run.md, approved by the Pilot with pooled momentum. Seeds 4738/4739/4740 x (control, candidate, candidate with --tan-penalty 0.3), 6000 its, 1500 scenes, held-out 9100-9300 and fresh 12000-12200, verdict from scripts/pair_context_eval.py --lines full-run then --combine (verdict.json). Script scripts/polaris_neighbour-context-pair-branch-replacing-central-pair-term-full.sh, tarball augur-neighbour-context-pair-branch-full-run-code.tgz (806 files). Local CPU dry run (20 its, 3 arms, scoring, combine) ran clean. Est 2.7 GPU-h, limit 4 h. No result yet; no review yet. Resume: resubmit the same script (cells and per-arm eval caches skip finished work). Already-tried check: no 6000-it run existed.
+
+### 2026-11-16 -- voxel-divergence-diagnosis-inference-on-checkpoints (job 11100): FAILED, fix staged, no result, no review ran
+- Weights mode finished (far-kernel max ratio vs 10k: 1.6, 3.1, 5.2, 8.4 at 15k-30k; pair about 1.0-1.1). Gap mode crashed after 38 s: t.val_err on 96 train scenes in one batch raised "bincount only supports 1-d non-negative integral inputs" in sparse_voxel_scatter_field.structure (reproduced on CPU at 10k; per-scene evaluation succeeds, 0 failures). Fix: scene_err falls back to per-scene evaluation and records train_failed_scenes/val_failed_scenes in gap.json. Pass/kill lines unchanged.
+- Rerun not submitted: QOSMaxSubmitJobPerUserLimit. Staged with --dependency=afterany:11101.
+
+## 2026-11-16 fresh-reviewer result entries: jobs 11094, 11101, 11098, 11099 (all COMPLETED exit 0; raw files read, headline numbers recomputed)
+
+- scatter-field-three-part-separate-training-then-joint-finetune, job 11094 (joint-continuation-control 30000 its + scoring, 2 h 45 min). Log ~/augur-scatter-field-three-part-separate-training/three-part-separate-training.log lines 18830-18842, no traceback. err@20 ratio vs exp-e-frozen, held-out / fresh: joint-continuation-control 0.991 / 1.005 (extra training alone gives nothing), separate-then-joint-rollout-loss-only 1.010 / 0.999 (KILL line is >= 0.97), separate-then-joint-with-part-losses 40.1 / 35.0 (diverged, U-Net part rms 214 / 418), separate-parts-only 7.1 (no line). Part rms: pair 0.53-0.57 and U-Net part far above 0.20 in the joint arms; in separate-parts-only kernel 0.0002 and U-Net 0.021 are far below 0.20, only pair (0.532) is above. Verdict KILL (both joint arms). Caveat: the two joint arms and separate-parts-only come from earlier job 10402; 11094 added the control and the scoring only. Not independent of the earlier jobs.
+- neighbour-context-pair-branch-replacing-central-pair-term full run, job 11101 (3 train seeds x ctrl/cand/pen, 6000 its, 2 h 12 min). results.json and results_fresh.json recompute verdict.json exactly. err@20 ratio R vs control: cand 0.649-0.650 held-out, 0.653-0.662 fresh; pen 0.661 / 0.666 / 0.707 held-out, 0.675 / 0.673 / 0.716 fresh (all far under 0.90). Tangential/radial: cand 0.131-0.135 (fails 0.05), pen 0.008-0.011 (passes). Momentum ratio pooled over seeds: pen 1.231 held-out, 1.226 fresh (KILL line is above 1.0); cand 0.981 / 0.988; per-seed momentum is very noisy (pen 0.98-1.58, cand 0.56-1.52). Plateau guard: no arm undertrained. Verdict: headline arm pen = KILL via momentum (pooled rule approved by the Pilot 2026-11-16); cand INCONCLUSIVE (tangential 0.13). Record as gain with momentum cost, as the prereg says; the err@20 gain is not a short-training effect (R 0.65-0.72 at 6000 its vs 0.79-0.80 at 1500).
+- staggered-grid-cost-fix-gpu-timing, job 11098 (2 min 15 s; 6 scenes sets x 12 scenes, 100 ticks, so short run is plausible). Outputs complete: eval_primary.json, eval_fresh.json, DONE markers, no smoke flag. Same checkpoints as 9248. Candidate/control ratios, primary 9100/9200/9300 then fresh: pooled err@20 0.689 primary and 0.690 fresh; cost ratio (sec per tick) 2.37/2.55/2.53 pooled 2.479 and 2.37/2.55/2.54 pooled 2.487; dE@100 pooled 1.194 primary (fails 1.10), 1.017 fresh (per seed 1.45/1.00/0.64); probe_half 0.198 / 0.209. Cost line 2.2x still FAILS; fix cut cost only from 2.58 (9248) to 2.48. Verdict INCONCLUSIVE unchanged (cost clause blocks PASS; no KILL clause hit). Anomaly: dE@100 primary 1.194 here vs 1.04 in 9248 on the same checkpoint and scenes, so the dE@100 gate is noisy or nondeterministic across runs; not investigated.
+- nested-refinement-levels-stage-1-ceiling-probe, job 11099 (1 min 53 s; estimate of 1 GPU-h was an untimed guess; 24 scenes x 100 steps x 3 seeds x 4 arms all present in dense_region_exact_force_ceiling_probe.json). Harness check FAILED: all-exact err@20 is 0.531x base against a limit of 0.25x, so the script's verdict_rule_applied is VOID and the ceiling numbers are not a valid PASS/KILL read. For the record: dense-exact dE@100 0.989x base (per seed 1.04/0.68/1.29), err@20 1.010x; random-exact dE@100 0.865x, err@20 0.983x; all-exact dE@100 1.106x. Late dense-bin squared force error under dense-exact is 0.744x base. No verdict (VOID); the stage-1 ceiling question stays open until the exact-force harness lands near the exact trajectory.
+
+## 2026-11-16 fresh-reviewer verdict on jobs 11094, 11098, 11099, 11101, 11092 (review ran)
+- Reviewer recomputed all headline numbers from raw files; verdicts stand: 11098 INCONCLUSIVE (prereg staggered-double-grid-with-quadratic-deposit.md:9; dE@100 1.194 and cost 2.479 fail PASS), 11099 VOID (prereg nested-refinement...blend.md:13, all-exact err@20 0.531 vs 0.25), 11101 pen KILL via pooled momentum 1.231/1.226 (prereg neighbour-context-pair-branch-full-run.md:27), cand INCONCLUSIVE (tangential 0.131-0.166), 11094 KILL (prereg ...three-part...md:27).
+- Corrections applied above: 11098 ratios are pooled, not mean-of-per-seed (1.196 and 1.031 were mean-of-ratios); 11094 part-rms sentence; 11101 candidate err@20 is 0.6485-0.6504 held-out, tangential fresh 0.162-0.166.
+- Added facts: 11094 dE@100 ratio is 1.44/1.79 (continuation control) and 1.53/1.51 (rollout-loss-only), all above the 1.15 gate. 11098 vs 9248 dE@100 flips between primary and fresh sets while err@20 and probe_half match to 4 digits: unexplained, not investigated. 11092 did no new work (resumed finished keys, appended DONE); not rescored. 11098/11099/11092 Slurm logs absent from ~/polaris_mcp_jobs; evidence is the result files. Unverified: 11094 joint-arm numbers come from earlier job 10402.
+- No rollout/visual output exists for these jobs, so no visual review ran.
+
+## 2026-11-16 voxel-divergence-diagnosis-inference-on-checkpoints (job 11111, COMPLETED 0:0 in 3:32, 1 GPU, about 0.06 GPU-h; rerun of 11100 which FAILED in gap mode)
+- Results: results/voxel_divergence_diagnosis/ (weights, gap, components, sweep json, run.log, scoring.json from scripts/voxel_divergence_scoring.py). All five checkpoints present (it10000, 15000, 20000, 25000, at-30000-its); gap mode ran with 0 failed scenes, so the 11100 gap bug is gone. run.log holds three appended runs: lines 1-43 the old 11100 crash (bincount traceback), then two complete passes (lines 44 and 273, both ending DONE) that agree on bad_tick in all 660 sweep cells; why two passes appear is not explained (concurrent launch suspected, unchecked). JSON files are from one pass.
+- Hypothesis 1 grid-component-is-the-blowup (prereg line 12): INCONCLUSIVE by the letter. Cure part passes: 57 diverged N=1000 scenes at 25k/30k (25 + 32, need >= 4); grid-zeroed, grid-capped and all-capped cure 100%; far-zeroed 5.3% pooled (12% at 25k alone, 0% at 30k), pair-zeroed 1.8%, far/pair-capped 0%, cell-cap-256 0%; no KILL condition hit. Tick-0 grid max over exact max part fails: 6 of 57 diverged scenes below 10 (min 0.53), and 11 of 39 non-diverged scenes at the same checkpoints are at or above 5 (max 218). Tie-break: grid is the named cause (tick-0 ratio up to 691).
+- Hypothesis 2 cell-cap-truncation-is-not-the-cause (line 13): PASS. Cells over cap 0 in all components scenes; cell-cap-256 cures 0%.
+- Hypothesis 3 net-error-at-tick-0-not-integrator (line 14): INCONCLUSIVE, just short. Tick-0 total max over exact max >= 10 in 51 of 57 diverged scenes (89.5%, PASS needs 90%); < 3 in 6 of 57 (KILL needs 50%). Teacher-forced vs rollout tick-1 position error within 10% in 57 of 57, but that comparison is true by construction at tick 1 (both start from the exact state); at tick 2 rollout error is a median 9.4x teacher-forced.
+- Hypothesis 4 divergence-grows-with-checkpoint-and-size (line 15): PASS. N=1000 diverged fraction (72 scenes per checkpoint) 0/72 at 10k, 15k, 20k; 25/72 (35%) at 25k; 32/72 (44%) at 30k; 0 of 12 at every checkpoint for N = 50, 100, 200, 300, 500.
+- Hypothesis 5 weights drift (curiosity): far-kernel max 0.00712 (10k) to 0.0598 (30k), 8.4x; pair kernel max within 11% of 10k; total L2 29.6 to 50.5.
+- Hypothesis 6 train-val-gap (curiosity): val/train err@20 0.434 (10k), 0.221, 0.126, 0.072, 0.184 (30k). Train err@20 rises 0.339 to 2.34 (25k) while val stays 0.15-0.26; 0 failed scenes; cause of the train rise not investigated.
+- Grokking gate (voxel-grokking-plausibility-from-existing-loss-logs.md:13): needs val/train >= 3 at 20k; observed 0.126. Gate NOT met, no resume-from-20k run queued. The grokking row itself stays curiosity (no verdict).
+- Needs-user: whether to amend hypothesis 1's tick-0 ratio clause (non-diverged scenes also show grid ratios up to 218) and hypothesis 3's 90% line (51/57 = 89.5%); a value that would still fail hypothesis 3 is 80%.
+- Fresh reviewer (no hypothesis primed) ran: recomputed every number above from the raw JSONs and matched (sweep 25/72 and 32/72, cure fractions, cells over cap 0, 51/57, gap values, failed scenes 0). Its notes: the teacher-forced vs rollout tick-1 clause is true by construction (same start state); hypothesis 3's 90% line is 84% at 25k, 94% at 30k, 89.5% pooled, and the prereg does not say per checkpoint or pooled; the two passes in run.log ran concurrently (job script has --requeue and no lock, both append to run.log and write the JSONs; bad_tick identical in 660 of 660 cells, err20 within 3.6e-5 relative); 'cured' means no divergence within 20 ticks, not accurate force; the ablation cap uses the exact solution.
+
+## 2026-11-17 timestep-as-input-model-stage-1 (job 11162, submitted, result pending)
+Branch timestep-as-input-model-stage-1. Stage 1 only: truth at dt 0.05/0.075/0.1/0.2 and frozen single-law-gravity-control reference err@20 and dE@100 at each dt (seed 4738, eval seeds 9100/9200/9300, gravity 9). No verdict; the output is the denominators for the pre-registered lines (docs/debugging/architecture-push-prereg/timestep-as-input-model.md). CPU test stage passed (tests/test_scatter_timestep_input.py, 7 passed). Started 12:05, predicted end 13:05, limit 1.5 h. Full run not authorised. Result and review: pending.
+
+## 2026-11-17 nested-refinement-levels-ceiling-probe-harness-fix (job 11163 submitted 12:12, result pending; no verdict yet)
+Branch nested-refinement-levels-ceiling-probe-harness-fix, commit 41dacb1. Diagnosis of the 11099 VOID: the all-exact arm used one dt=0.1 Verlet step per tick with the exact force, but the truth (scripts/gravity_sim.py rollout_torch) uses 4 sub-steps per tick. CPU check on 4 scenes seed 9100, err@20 vs truth: float64 4 sub-steps 3.7e-13, float64 1 step 8.9e-3, float32 1 step 8.9e-3, float32 4 sub-steps 1.3e-5. So the floor was integrator discretisation (the trained model absorbs it), not float32 noise. Fix: all-exact arm now integrates with the truth's 4 sub-steps (exact force, float32); the other arms, lines and verdict rule are untouched. CPU smoke (2 scenes, seed 9100): all-exact err@20 1.4e-5 vs base 0.0387 (0.0004x, limit 0.25x).
+- Open concern for the Pilot (not changed, pre-reg arms fixed): dense-exact and random-exact still substitute an instantaneous exact force into a single dt=0.1 Verlet step, so they carry a discretisation penalty the model's own force avoids; this biases err@20 and dE against the exact arms, so the ceiling is conservative. The harness check no longer exercises that code path.
+- Rerun 11163: slot 1, nice 100, limit 1.5 h, work dir ~/augur_dense_region_exact_force_ceiling_probe_harness_fix (new dir so the requeue-skip does not hit the 11099 json). Old 11099 numbers stay VOID.
+- Fresh code reviewer (no hypothesis primed) ran on commit 41dacb1: fix matches gravity_sim.rollout_torch (substeps, eps, masks, metrics, tick indexing); lines, other arms and verdict() unchanged; no blocking issue. Caveats it raised: CPU 1-step error 8.9e-3 vs base 0.0387 (~0.23x) does not quantitatively reproduce 0.531x (different scene count/set; explanation qualitative); all-exact force rows use true vel, not comparable with other arms; the VOID gate no longer exercises the single-step path the other arms use (a single-step all-exact reference arm or a reported bias note would cover it). Result review still pending when 11163 finishes.
+
+## 2026-11-17 stage-1 chain skips (main session)
+- ball-tree-particle-attention-tier-0: stage 1 trains 60000 iterations (about 5.5-6.5 GPU-h, 12 h limit), a full-run-scale job; not submitted (Pilot 2026-11-17: no full runs while wrapping up for the paper). Script and trainer only on branch ball-tree-particle-attention-stage-1.
+- rotation-steerable-unet-weights: diagnostic already ran inside job 7837 (reviewed 2026-11-13, core-force class UNET-CARRIES at ticks 100, 200, 300; experiment-log.md:4466); rerun would duplicate it; not submitted.
+
+2026-11-17 paper-prep-evidence-table-outline-gap-list (curiosity-free documentation task, no experiment run, no GPU; branch paper-outline-and-evidence-table): wrote docs/paper/paper-claims-and-evidence-table.md (45 claim rows mapped to the four requirements, reconciled against the 19-row architecture-push table plus 2 outside-row results), paper-outline.md, paper-gap-list.md. Fresh reviewer: PARTLY CONFIRMED, all 13 recomputed headline numbers match raw files; seven EL line citations corrected; other line cites unaudited. Open conflicts flagged in the table: interior force offset 1.53-1.58 vs 1.0104, APR rows 9 and 16 lag the log, raw files for several jobs outside git.
+
+2026-11-17 paper-draft-markers-and-q4-validation (documentation, no experiment, no GPU; branch paper-outline-and-evidence-table): per Pilot decisions added a marker column (validated / single-seed / worker-proposed-line / post-hoc-amended / speed-only / unvalidated) to all 45 claim rows, set headline structure in paper-outline.md, wrote docs/paper/paper-draft.md. Q4 fresh review of 8 rows: all numbers match; bit-output upgraded to validated (narrow scope), voxel set to single-seed; summary-token stays worker-proposed-line (EL:4366 approval header looks like boilerplate, unresolved); 1e10 vs 1e9 like-for-like 10.09x (slightly superlinear, speed-only); no accuracy at 1e9/1e10. Draft review: PARTLY CONFIRMED, ~30 numbers match, 6 fixes applied (including a tenfold margin slip: seed 4739 margin about 0.001 not 0.0001, copied from EL:3575/3656). New GPU needs listed in paper-gap-list.md, none run.
+
+2026-11-17 paper-release-scope-and-shift-line-ruling (documentation, no numbers changed, no GPU): Pilot rulings: 2% shift-equivariance line is not the Pilot's (probe re-marked worker-proposed-line; single-seed); release scope is code and videos, no raw files, no checkpoints; summary-token lines shown to Pilot on request, approval pending, marker kept. Updated paper-draft.md, paper-outline.md, evidence table and gap list.
+
+2026-11-17 summary-token-exchange-stage-1-lines-approval (documentation, no numbers changed, no GPU): Pilot approved the stage-1 lines as written on 2026-11-17 12:40 (PASS Delta_net >= 0.19 pooled and >= 0.10 per seed; KILL Delta_net < 0.06 pooled with oracle f >= 0.90), after seeing them in chat. The approval is post hoc relative to jobs 9914 and 10105. The earlier "approved by user 2026-11-10" header text (line 4366) was unsupported; header annotated. Evidence-table marker changed worker-proposed-line to approved-line-2026-11-17; draft, outline and gap list updated.
+
+2026-11-17 interior-force-offset-paper-text-update (documentation, no GPU): per coordinator, paper docs now state that the 1.53-1.58 edge-check ratios are inferred to come from a reference sum over a ~63.6% with-replacement subsample (fraction inferred, not counted; branch interior-force-offset-edge-check-subsample-reference), 1.0104 is the interior ratio, the analysis scored INCONCLUSIVE on its registered line (tick-40 agreement check failed), and a direct all-bodies rerun is pending; not called resolved. Proposed text in 2d844ec said RESOLVED and was not used.
+
+2026-11-17 interior-force-offset-paper-text-counted-explanation (documentation, no GPU): paper docs updated with job 11169 facts copied verbatim from the coordinator message (636,068 of 1,000,000 counted; 1.571-1.575 vs 1/0.636068 = 1.572; interior ratio 1.0104 tick 0, 0.9596 tick 11; INCONCLUSIVE, line centred on tick 0, not amended; seed 4738 one scene). Offset explained, not a pass. No new numbers computed here, no reviewer run (numbers copied from the reviewed job).
+
+2026-11-17 paper-docs-accuracy-at-1e6-to-3e6 (documentation, no GPU): added job 11171 result (worst single-scene median 0.0889 vs line 0.15, 12/12 finite, PASS, seed 4738) to draft, evidence table (new row, single-seed), gap list and outline; numbers copied verbatim from the reviewed job, not recomputed, no new reviewer. Corrected the 224 s at 3e6 wording: it is the all-pairs fallback of the default pair term (job 7297), not a brute-force force. Barnes-Hut baseline pending.
+## 2026-11-17 scatter-force-accuracy-at-million-bodies-and-barnes-hut-baseline: PRE-REGISTRATION (gap list items 2 accuracy part and 7; seed 4738, 1 GPU, inference only, est 0.3-1 GPU-h untimed, limit 2 h)
+Already-tried check: plain same-grid PM vs learned at N = 300-1e5 exists (2026-11-03 entries, jobs 4823, 4827; plain PM beats learned at N >= 1e4); no Barnes-Hut baseline and no exact-reference accuracy at 2e6 or 3e6 exist. The 1e6 point exists only as a ratio probe (interior ratio, jobs 7249, 11169), not as per-body error. Note: the "224 s at 3e6" in the gap list is the all-pairs fallback of the default pair term (job 7297 default call 220 s), not a brute-force force; the fp64 reference here is 8192 random target bodies against all N sources.
+Item 7 (Barnes-Hut at 1e4 and 1e5): scripts/pm_baseline_force_error.py extended (opt-in --bh-thetas, --skip-below) with plain monopole Barnes-Hut (scripts/barnes_hut_2d.py; CPU check vs fp64 exact: theta 0 error 2e-14, theta 0.5 median 0.010 at N=3000). Same scenes (families plummer, two_clump, exp_disk; same rng stream as job 4823; 3 scenes at 1e4, 1 at 1e5), same metric (error per body over rms true force of its scene), all bodies, thetas 0.3/0.5/0.7/1.0 with seconds per scene. Learned and plain PM are recomputed in the same job as a reproduction check against results/pm_baseline_force_error.json.
+Pass line (item 7): learned median error <= 2x Barnes-Hut theta 0.5 median in every family at both N (learned competitive with the standard O(N log N) baseline). Kill line: learned median > 5x Barnes-Hut theta 0.5 median in any family at either N. Between: INCONCLUSIVE. A value that still fails the pass line: 3x. Prediction: KILL (learned Plummer 1e5 median 0.0875 vs Barnes-Hut about 0.01 from the CPU check). Theta 0.5 fixed before launch; other thetas and times descriptive.
+Item 2 (accuracy at 1e6 to 3e6): new scripts/scatter_force_accuracy_vs_exact_at_million_bodies.py; N = 1e6, 2e6, 3e6, families plummer, two_clump, exp_disk, uniform_disk, 2 scenes each, 8192 random targets vs fp64 all-N sum; variants learned with adaptdeep, learned default adapt (N = 1e6 only), plain PM, Barnes-Hut theta 0.5 (targets only). Pass line: learned (adaptdeep) median error <= 0.15 for every family at every N (1.7x the 1e5 Plummer 0.0875). Kill line: median > 0.5 for any family at any N or any non-finite output. Between: INCONCLUSIVE. A value that still fails the pass line: 0.20. Prediction: INCONCLUSIVE or KILL on dense Plummer (out of training density range; PM beat learned at 1e5). Subsample of targets only; no pair-term brute force claim.
+Checkpoint: inference under 2 h, each cell and each of the two outputs saved and skipped on rerun (--requeue, SIGTERM trap); no training state. Job script scripts/polaris_scatter-force-accuracy-at-million-bodies-and-barnes-hut-baseline.sh; GPU slot 2 per gpu-reservations.md.
+SUBMITTED scatter-force-accuracy-at-million-bodies-and-barnes-hut-baseline: job 11171 (gpu01, RUNNING at submit 2026-11-17 13:00), limit 2 h (hard end 15:00), predicted end 13:30 (0.3-1 GPU-h, untimed), slot 2. Inputs verified in job script (checkpoint ~/augur_nfr/kern/E_frozen.pt, overlay scripts, adaptdeep grep); CPU smoke ran end to end with random weights (real-checkpoint load untested locally; the Polaris scatter_field.py is the branch version, differs from the older ~/augur_nfr copy used by job 4823, so the recomputed learned/PM numbers are the reproduction check). Output ~/augur-accuracy-at-1e6-bodies-and-barnes-hut-baseline/work/results/{pm_baseline_with_barnes_hut_force_error.json,scatter_force_accuracy_vs_exact_at_million_bodies/result.json}, logs in the same dir and ~/polaris_mcp_jobs/slurm-11171.out.
+2026-11-17 RESULT scatter-force-accuracy-at-million-bodies-and-barnes-hut-baseline (job 11171, COMPLETED 0:0 in 2:14, seed 4738; raw results/scatter_force_accuracy_vs_exact_at_million_bodies/result.json and results/pm_baseline_with_barnes_hut_force_error_first_run_invalid_barnes_hut/result.json; lines unchanged from the PRE-REGISTRATION above):
+- Completeness: item 2 has 12 of 12 cells (4 families x 1e6/2e6/3e6), 2 scenes each, all outputs finite, run.log ends DONE; item 7 has 6 of 6 cells. 2:14 is plausible: exact reference of 8192 targets takes seconds on the GPU, each cell 2-6 s (the 30 min estimate assumed slower references).
+- Reproduction check passed: recomputed learned and plain-PM medians at 1e4 and 1e5 equal results/pm_baseline_force_error.json (medians within 5e-5, all metrics within 8e-5; Plummer 1e5 learned 0.08755 vs 0.08753, PM 0.01310 vs 0.01310), so the newer scatter_field.py on Polaris does not change the earlier comparison.
+- Item 2 verdict PASS (scripts/score_scatter_force_accuracy_at_million_bodies.py): learned (adaptdeep) median error, mean over 2 scenes, 1e6/2e6/3e6: Plummer 0.0869/0.0864/0.0867, two-clump 0.0862/0.0851/0.0848, exp disk 0.0463/0.0452/0.0451, uniform disk 0.0258/0.0242/0.0236; worst single scene 0.0889 vs pass line 0.15. The error does not grow from 1e6 to 3e6. Plain PM is 4-10x lower on every cell (Plummer 0.013, two-clump 0.0097, exp disk 0.003-0.004, uniform disk 0.006-0.010). Default adapt equals adaptdeep to 1e-4 at 1e6 (the only N it was run at; same-density reference, not exact to the tie caveat of job 7297). Prediction (INCONCLUSIVE or KILL on Plummer) was wrong: the learned error is flat at about 0.087. Caveats: 8192 random targets per scene, 2 scenes, one seed; error is on static forces from the pinned model kern/E_frozen.pt, not rollouts.
+- Item 7: NOT SCORED. The Barnes-Hut error in this job is about 1.0 everywhere (e.g. Plummer 1e5 theta 0.5: 1.057) against 0.0106 in the CPU check; cause found: bh_acc used chunk-local row indices without the chunk offset, so any call with more than 4096 targets overwrote the first rows (my CPU test used 3000 targets, one chunk, and missed it). Fixed in scripts/barnes_hut_2d.py (CPU test at 10000 targets, chunks 4096 and 100000: 0.010567 both, also a 9000-target subset 0.010562). The Barnes-Hut entries in both raw files are invalid and kept only as the labelled first run; item 2's Barnes-Hut column is likewise not used. Rerun needed (est under 5 min GPU, script scripts/polaris_scatter-force-accuracy-at-million-bodies-and-barnes-hut-baseline-chunk-fix-rerun.sh, new output names); not submitted because the Pilot rule says one GPU for the whole fleet and no job without the main session's ask.
+Independent review (fresh reviewer, 2026-11-17, raw JSON + code + commit d06472c): item 2 PASS confirmed (worst scene 0.08886, reference is fp64 over all N sources with self excluded, same target indices for all variants, line applied as written); reproduction confirmed (largest median difference 3.7e-5); Barnes-Hut chunk-offset cause confirmed and the fixed code gives 0.010567 at 10000 bodies for both chunk sizes. Item 7 remains unscored pending the rerun.
+SUBMITTED barnes-hut-chunk-fix-rerun (item 7 rerun; main-session approval 2026-11-17): job 11172, PENDING (Dependency) afterany:11170 at submit 13:15, predicted start about 14:45, predicted run about 5 min (earlier job 11171 took 2:14), hard limit 30 min, one GPU. Pre-registered lines unchanged. Outputs ~/augur-accuracy-at-1e6-bodies-and-barnes-hut-baseline/work/results/{pm_baseline_with_barnes_hut_force_error_chunk_fix.json,scatter_force_accuracy_vs_exact_at_million_bodies_chunk_fix/result.json}, logs barnes_hut_baseline_chunk_fix.log and million_bodies_chunk_fix.log there. On wake: verify DONE in both logs, score item 7 (learned median vs 2x / 5x Barnes-Hut theta 0.5 per family at 1e4 and 1e5), second reviewer, log, commit.
+2026-11-17 RESULT barnes-hut-chunk-fix-rerun (item 7, job 11172, COMPLETED 0:0 in 1:52, seed 4738; raw results/pm_baseline_with_barnes_hut_force_error_chunk_fix/result.json, results/scatter_force_accuracy_vs_exact_at_million_bodies_chunk_fix/result.json; scorer scripts/score_barnes_hut_baseline_item.py): both logs end DONE; 6 of 6 item-7 cells and 12 of 12 million-body cells complete and finite. Barnes-Hut errors now valid: theta 0.5 median 0.0108-0.0139 (was about 1.0), 1e6-3e6 0.0108-0.0140, matching the CPU check 0.0106. Million-body rerun reproduces 11171 learned and PM medians (max difference 3.8e-5).
+- Item 7 verdict KILL (registered lines, no amendment; prediction was KILL). Learned median / Barnes-Hut theta 0.5 median: Plummer 1e4 0.0820/0.0108 = 7.6x, 1e5 0.0875/0.0109 = 8.1x; two-clump 1e4 5.8x, 1e5 6.8x; exp disk 1e4 2.1x, 1e5 3.4x. Kill line (>5x in any family at either N) hit in 4 of 6 cells; pass line (<=2x) missed in 6 of 6. Plain PM (0.011-0.032) is 1.8-2.5x worse than Barnes-Hut theta 0.5 at 1e4 in all three families but beats it on exp disk 1e5 (0.0108 vs 0.0139). Barnes-Hut theta 0.3 is about 0.004-0.005. Accuracy only; Barnes-Hut is O(N log N) and about 0.03 s per 1e4-body scene in this torch implementation.
+- Item 2 PASS stands; Barnes-Hut at 1e6-3e6 (0.0108-0.0140) is about 2-7x better than learned.
+Independent review (fresh reviewer, 2026-11-23, raw JSON + code + commit b6aa704) of barnes-hut-chunk-fix-rerun item 7 (job 11172): all six ratios recomputed from result.json (7.56, 8.06, 5.84, 6.83, 2.10, 3.44 for plummer/two_clump/exp_disk at 1e4/1e5); max 8.06 over the 5x kill line, KILL follows, pass line (<=2x) also missed. All 6 cells present and finite, seed 4738, run.log ends DONE. Code checks: all bodies scored against fp64 all-N reference with self excluded, same scenes for learned/PM/BH, theta 0.5 key used, chunk-offset fix present, scorer matches. Not checked: the Polaris overlay copy of barnes_hut_2d.py. Minor: only 3 scenes at 1e4 and 1 at 1e5 per family. No amendment to the registered lines.
+Independent review (fresh no-hypothesis reviewer, 2026-11-23) of the paper-doc edits recording item 7 KILL (docs/paper/paper-gap-list.md item 7, docs/paper/paper-claims-and-evidence-table.md scatter-field row): ratios recomputed from result.json (7.562, 8.060, 5.839, 6.825, 2.098, 3.441), max 8.06, scene counts 3 at 1e4 and 1 at 1e5 per scripts/pm_baseline_force_error.py:21, no overclaim. Correction: two-clump 1e5 ratio is 6.82 (raw 6.8247), not 6.83 as in the 2026-11-23 review line above; docs use 6.82.
+2026-11-23 SUBMITTED stage 1 of learned-per-body-property-channels (job 13154, arm massfeat_curriculum, warm start single-law-gravity-control, seed 4738, 4200 its, RUNNING 16:13 PST, est 1.0 GPU-h, predicted end ~17:15, limit 2:30) and stage 1 of sampled-force-tier-0-scored-on-distributions-past-the-chaos-horizon (job 13155, afterany:13154, no training, est 0.5 GPU-h, limit 2:00), one GPU. Pre-registered lines unchanged. Learned-property-channels: PASS if planet da/a <= 0.02, de <= 0.03, dE <= 0.02 (q 10/100/1000); disk da/a <= 0.05, de <= 0.05, dE <= 0.05; in-distribution gate <= 1.15x control; KILL if da/a > 0.15 (q=1000 planet > 0.30), dE > 0.2, disk da/a > 0.25 or dE > 0.3, gate > 1.5x; fails-pass value planet da/a 0.03; worst over eval seeds 9100/9200/9300. Distribution probe: control passes (experiment closed) if density and velocity-spread bin fractions are both >= 0.80 on each of seeds 9100/9200/9300 (confirmed on fresh 12000/12100/12200); kill-fraction shown for scale 0.50; fails-pass value 0.65. Verified before launch: checkpoint E_ms_kp_pot_v_g128.pt present on Polaris (3200305 bytes), tarball uploaded, 15 CPU tests pass (test_scatter_mass_curriculum, test_scatter_distribution_ensemble), trainer saves full state every 50 its and on SIGTERM and resumes.
+2026-11-23 INVALIDATED learned-per-body-property-channels-mass-conditioned-stage-1 (job 13154) and sampled-force-tier-0-scored-on-distributions-past-the-chaos-horizon-stage-1 (job 13155): both COMPLETED in under a minute because the launchers skip when the result json exists and stale results from an earlier unlogged run sat in ~/augur_architecture_push_stage1_mass and ~/augur_architecture_push_stage1_distribution (stale: mass-channel KILL, control 0.78 vs 0.80 line). Not valid new results; no verdict recorded from them. Rerun as jobs 13166 (mass, RUNNING 16:34 PST, est 1.0 GPU-h, limit 2:30) and 13167 (distribution control, afterany:13166, est 0.5 GPU-h, limit 2:00) in fresh dirs *_2026_11_23_fresh, seed 4738, one GPU; launchers now fail with exit 3 on a result json not written by the same job id. Pre-registered lines unchanged (docs/debugging/architecture-push-prereg/). No review yet (no numeric result).
+2026-11-23 SCORED stage 1 of learned-per-body-property-channels-mass-conditioned (job 13166, fresh dir, seed 4738, 4200 its, 894 s): registered verdict INCONCLUSIVE-undertrained (plateau guard fired, plateau_falling true); raw verdict without the guard is KILL. Lines applied at tick 100, worst over eval seeds 9100/9200/9300. Planet da/a at tick 100: q10 1.03/0.90/0.96, q100 1.26/1.64/1.45, q1000 1.17/1.17/1.09 (PASS <= 0.02, KILL > 0.15, q1000 > 0.30); all planet cells also above KILL at tick 20 (0.16-1.12). Disk da/a tick 100: q10 0.40/0.68/0.57, q100 0.21/0.31/0.33, q1000 0.073/0.088/0.078 (KILL > 0.25). In-distribution gate vs single-law-gravity-control: err@10 1.58-1.59x, err@20 1.56-1.62x on all seeds (KILL > 1.5x). Skipped steps (loss >= cap 3.0 or non-finite, optimizer step skipped, iteration still counted): 342/4200 = 8.1% overall, 175/600 = 29.2% in stage 0 (q=1 group), 82/16/12/15/31/11 in later stages; about 3858 effective optimizer steps. Only the last 10 validation points are saved, so the guard's 3% drop could not be recomputed. No amendment to the registered lines. Results: results/stage1_probes_mass_channels_and_distribution_control/mass/.
+2026-11-23 SCORED stage 1 of sampled-force-tier-0-scored-on-distributions-past-the-chaos-horizon (job 13167, fresh dir, no training, 48 s script time): CONTROL-BELOW-PASS-OPEN. Worst pooled bin fraction at primary rel 1e-4 over seeds 9100/9200/9300 is 0.7765 (line 0.80, kill-scale 0.50, fails-pass 0.65); fresh seeds 12000/12100/12200 worst 0.75, same verdict. Worst self_frac 0.915 (ceiling fine). Sensitivity rels 1e-5 and 1e-3 do not change the verdict. 18 of 18 rows computed in this run. Control does not pass, experiment not closed. Prediction (40-70%, 15% pass) was too pessimistic on fractions. Results: results/stage1_probes_mass_channels_and_distribution_control/distribution/.
+Independent review (fresh no-hypothesis reviewer, 2026-11-23) of both scorings: all numbers recomputed from raw files and confirmed, freshness confirmed (job_id files 13166/13167, no STALE text, single unresumed run, 18 result lines), code lines match the prereg. Not checkable: sacct and Polaris file timestamps. Note: worst_fraction pools rels[0] (1e-4) so it depends on --rels order.
+2026-11-23 SUBMITTED learned-per-body-property-channels-mass-conditioned stage 1 at double iterations (job 13236, --stage-iters 1200 x 7 = 8400 its vs 4200 in job 13166, seed 4738, same recipe and tarball md5 7a0120f3aca6599f3d4eeb4ceaf353be, work dir ~/augur_architecture_push_stage1_mass_double_iterations_2026_11_23, RUNNING gpu01 at 18:24 PST, est ~1800 s plus eval, predicted end ~18:55, limit 0:50:00). Pilot-approved last experiment to resolve the undertrained flag. Lines and plateau guard unchanged (docs/debugging/architecture-push-prereg/learned-per-body-property-channels-double-iterations.md); if the guard fires again the verdict stays INCONCLUSIVE-undertrained with the raw verdict alongside. Full state every 50 its plus SIGTERM. Launcher reviewed by a fresh reviewer: no bugs. Remote tarball size 918838 and checkpoint size 3200305 match 13166; md5s print in the job log for comparison. No result yet.
+2026-11-23 SCORED stage 1 of learned-per-body-property-channels-mass-conditioned at double iterations (job 13236, 8400 its = 1200 x 7 stages, seed 4738, one seed, 1552 s, COMPLETED 0:0 in 26:30): registered verdict INCONCLUSIVE-undertrained (plateau guard fired again, plateau_falling true; no further extension per prereg); raw verdict without the guard is KILL on all three eval seeds. Lines applied at tick 100, worst over seeds 9100/9200/9300. Planet da/a at tick 100: q10 0.56/1.38/0.85, q100 0.38/1.14/1.09, q1000 0.77/1.06/1.11 (PASS <= 0.02, KILL > 0.15, q1000 > 0.30), vs job 13166 q10 1.03/0.90/0.96, q100 1.26/1.64/1.45, q1000 1.17/1.17/1.09; still 2.5-9x over the kill line, seed 9100 improved most. Disk da/a tick 100: q10 0.32/0.47/0.43 (KILL > 0.25, killed), q100 0.20/0.17/0.24, q1000 0.045/0.081/0.071 (neither disk q100 nor q1000 killed; 13166 q100 0.21/0.31/0.33 was killed on seeds 9200/9300). In-distribution gate vs single-law-gravity-control: err@5 1.19-1.24x, err@10 1.34-1.39x, err@20 1.42/1.42/1.54x (13166: 1.56-1.62x at err@20); only seed 9300 err@20 exceeds the 1.5x kill line, no seed within the 1.15x pass line. Skipped steps (loss >= cap 3.0 or non-finite): 737/8400 = 8.8% (13166: 342/4200 = 8.1%); per stage 185/241/124/40/50/53/43. Only the last 10 validation points are saved, so the guard's 3% drop cannot be recomputed from the result files. No amendment to the registered lines; doubling iterations did not rescue the arm (prediction: PASS <5%, guard-free KILL ~60%, guard fires again ~35%; guard fired and the raw verdict is KILL). Scored with scripts/score_stage1_mass_channels_double_iterations.py (recomputes per-seed verdicts, agrees with the trainer's json verdict). Results: results/stage1_probes_mass_channels_and_distribution_control/mass_double_iterations/. Slurm log is the home-dir file augur-...-double-iterations-13236.log (ALLDONE, job_id 13236, md5 lines match tarball 7a0120f3..., checkpoint 9b3cb8bb...).
+Independent review (fresh no-hypothesis reviewer, 2026-11-23) of the job 13236 scoring: per-seed planet/disk da/a, gate ratios, per-seed and worst verdicts with and without the guard, and 737/8400 skipped steps (per stage 185/241/124/40/50/53/43) recomputed from the raw json and run.log with its own script, all agree; scoring script and trainer match the prereg lines; job_id 13236, ALLDONE, md5 lines, single unresumed run of 8400 its confirmed. Not checkable: plateau_falling (only the last 10 validation points saved; their values are noisy, 0.12-0.42). The checkpoint holds the full val_hist but torch is not installed locally, so recomputation is untested.

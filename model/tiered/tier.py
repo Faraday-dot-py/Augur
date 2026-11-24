@@ -8,8 +8,9 @@ class TierNet(nn.Module):
     optional soft-penalised residual force, error estimate, latent summary and hidden field. Weights are shared
     by every tile of the tier; cell size h only enters through the output scaling."""
 
-    def __init__(self, cin, h, width=32, layers=6, residual=True, latent_ch=0, err=True, hidden_ch=0, out_scale=1.0, log_rho=False, learned_pool=False):
+    def __init__(self, cin, h, width=32, layers=6, residual=True, latent_ch=0, err=True, hidden_ch=0, out_scale=1.0, log_rho=False, learned_pool=False, scale_ch=0):
         super().__init__()
+        self.scale_ch = scale_ch
         self.h, self.residual, self.latent_ch, self.err, self.hidden_ch, self.out_scale, self.log_rho = h, residual, latent_ch, err, hidden_ch, out_scale, log_rho
         self.ncoef = 8 if residual else 6
         self.pool = nn.Conv2d(latent_ch + int(err), latent_ch + int(err), 2, 2) if learned_pool and latent_ch + int(err) else None
@@ -23,14 +24,14 @@ class TierNet(nn.Module):
     def summary_ch(self):
         return self.latent_ch + int(self.err)
 
-    def forward(self, x):
+    def forward(self, x, cell=None):
         if self.log_rho:
             x = torch.cat([torch.log1p(x[:, :1]), x[:, 1:]], 1)
         h = F.gelu(self.inp(x))
         for c in self.mid:
             h = h + F.gelu(c(h))
         y = self.out(h)
-        s, hh = self.out_scale, self.h
+        s, hh = self.out_scale, self.h if cell is None else cell
         scale = torch.tensor([s, s / hh, s / hh, s / hh ** 2, s / hh ** 2, s / hh ** 2, s / hh, s / hh][:self.ncoef], device=y.device, dtype=y.dtype)
         coefs = y[:, :self.ncoef] * scale[None, :, None, None]
         o = self.ncoef

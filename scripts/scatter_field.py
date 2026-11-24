@@ -9,6 +9,7 @@ import torch.nn.functional as F
 CENTER = 500.0
 H0 = 0.5
 EPS0 = 0.5
+DT0 = 0.1
 
 
 class LocalNet(nn.Module):
@@ -37,16 +38,32 @@ class UNet(nn.Module):
         self.enc = nn.ModuleList(_block(width, width) for _ in range(levels + 1))
         self.dec = nn.ModuleList(_block(2 * width, width) for _ in range(levels))
         self.out = nn.Conv2d(width, cout, 3, padding=1)
+        self.sparse_k = 0
+        self.ablate = ()
+        self.record = None
+
+    def _site(self, h, name):
+        k = self.sparse_k
+        if k and k < h.shape[1]:
+            keep = torch.zeros_like(h).scatter_(1, h.topk(k, dim=1).indices, 1.0)
+            h = h * keep
+        if self.record is not None:
+            s, n = self.record.get(name, (0.0, 0))
+            self.record[name] = (s + (h != 0).float().sum((0, 2, 3)), n + h.shape[0] * h.shape[2] * h.shape[3])
+        for site, ch in self.ablate:
+            if site == name:
+                h = torch.cat([h[:, :ch], torch.zeros_like(h[:, ch:ch + 1]), h[:, ch + 1:]], 1)
+        return h
 
     def forward(self, x):
-        h = self.enc[0](F.gelu(self.inp(x)))
+        h = self._site(self.enc[0](F.gelu(self.inp(x))), "enc0")
         skips = [h]
         for l in range(1, self.levels + 1):
-            h = self.enc[l](F.avg_pool2d(h, 2))
+            h = self._site(self.enc[l](F.avg_pool2d(h, 2)), f"enc{l}")
             skips.append(h)
         for l in reversed(range(self.levels)):
             h = F.interpolate(h, scale_factor=2, mode="nearest")
-            h = self.dec[l](torch.cat([h, skips[l]], 1))
+            h = self._site(self.dec[l](torch.cat([h, skips[l]], 1)), f"dec{l}")
         return self.out(h)
 
 
@@ -67,9 +84,15 @@ class ScatterField(nn.Module):
 
     def __init__(self, grid=64, extent=64.0, net="local", recurrent=True, hidden_ch=0, dt=0.1, width=32, layers=8,
                  levels=5, momfix=True, in_scale=1.0, potential=False, kernel=False, pp=0.0, split=False, nonet=False, verlet=False,
-                 prior=False, knn=16, eps=0.5, cu=False, epsin=False, norm="", massfeat=False):
+                 prior=False, knn=16, eps=0.5, cu=False, epsin=False, norm="", massfeat=False, deposit="cic", dual=False, dtin=False,
+                 pairctx=False):
         super().__init__()
         assert not prior or (kernel and pp and split)
+        assert deposit in ("cic", "quad")
+        assert not (dual and massfeat)
+        assert not pairctx or (pp and not prior and not cu and not epsin)
+        self.deposit, self.dual = deposit, dual
+        self.pairctx, self.pp_stats, self.pen_acc = pairctx, None, None
         self.prior, self.knn, self.eps = prior, knn, eps
         self.potential, self.kernel, self.pp, self.split, self.nonet = potential, kernel, pp, split, nonet
         self.verlet = verlet
@@ -77,10 +100,11 @@ class ScatterField(nn.Module):
         self.kpad = "zero"
         self.cu, self.epsin, self.norm = cu, epsin, norm
         self.massfeat = massfeat
+        self.dtin = dtin
         self.mass_unit = None
         assert not massfeat or norm in ("mass", "gmean")
         self.eps_cur = EPS0
-        ncol = 2 + int(cu) + int(epsin)
+        ncol = 2 + int(cu) + int(epsin) + int(dtin)
         if norm == "dens":
             self.register_buffer("d0", torch.tensor(8.0))
         self.opt = set()
@@ -93,13 +117,13 @@ class ScatterField(nn.Module):
         self.t0 = None
         self.cell_max_occ = None
         if pp:
-            self.ppmlp = nn.Sequential(nn.Linear(ncol, 64), nn.GELU(), nn.Linear(64, 64), nn.GELU(), nn.Linear(64, 1))
+            self.ppmlp = nn.Sequential(nn.Linear(ncol + 3 * int(pairctx), 64), nn.GELU(), nn.Linear(64, 64), nn.GELU(), nn.Linear(64, 1 + int(pairctx)))
             nn.init.zeros_(self.ppmlp[-1].weight)
             nn.init.zeros_(self.ppmlp[-1].bias)
         self.grid, self.extent, self.h = grid, extent, extent / grid
         self.recurrent, self.dt, self.momfix, self.in_scale = recurrent, dt, momfix, in_scale
         self.cf = (1 if potential else 2) + hidden_ch
-        cin = 3 + (self.cf if recurrent else 0) + (2 if kernel else 0) + (1 if epsin else 0) + (2 if massfeat else 0)
+        cin = 3 + (self.cf if recurrent else 0) + (2 if kernel else 0) + (1 if epsin else 0) + (2 if massfeat else 0) + (1 if dtin else 0)
         if kernel:
             self.kmlp = nn.Sequential(nn.Linear(ncol, 64), nn.GELU(), nn.Linear(64, 64), nn.GELU(), nn.Linear(64, 1))
             nn.init.zeros_(self.kmlp[-1].weight)
@@ -122,7 +146,12 @@ class ScatterField(nn.Module):
             f = [r, torch.log(r + (h if kind == "k" else 0.05))]
         if self.epsin:
             f.append(torch.full_like(r, math.log(self.eps_cur / EPS0)))
+        if self.dtin:
+            f.append(torch.full_like(r, self.dt_feat()))
         return torch.stack(f, -1)
+
+    def dt_feat(self):
+        return math.log(self.dt / self.substeps / DT0)
 
     def _nscale(self, x, mass, mask):
         if self.norm == "gmean":
@@ -152,11 +181,26 @@ class ScatterField(nn.Module):
         i0 = torch.floor(u)
         return i0.long(), u - i0
 
+    def _quad_axis(self, pos):
+        u = (pos + self.extent / 2) / self.h - 0.5
+        i0 = torch.round(u)
+        d = u - i0
+        return i0.long(), (0.5 * (0.5 - d) ** 2, 0.75 - d ** 2, 0.5 * (0.5 + d) ** 2)
+
     def _corner_iter(self, pos):
         G = self.grid
-        i0, w = self._corners(pos)
         B, N = pos.shape[:2]
         bidx = torch.arange(B, device=pos.device)[:, None].expand(B, N)
+        if self.deposit == "quad":
+            i0, wq = self._quad_axis(pos)
+            for ox in (-1, 0, 1):
+                for oy in (-1, 0, 1):
+                    ix, iy = i0[..., 0] + ox, i0[..., 1] + oy
+                    wt = wq[ox + 1][..., 0] * wq[oy + 1][..., 1]
+                    ok = ((ix >= 0) & (ix < G) & (iy >= 0) & (iy < G)).to(pos.dtype)
+                    yield bidx * G * G + iy.clamp(0, G - 1) * G + ix.clamp(0, G - 1), wt * ok
+            return
+        i0, w = self._corners(pos)
         for ox in (0, 1):
             for oy in (0, 1):
                 ix, iy = i0[..., 0] + ox, i0[..., 1] + oy
@@ -167,8 +211,18 @@ class ScatterField(nn.Module):
 
     def _corners4(self, pos):
         G = self.grid
-        i0, w = self._corners(pos)
         B, N = pos.shape[:2]
+        if self.deposit == "quad":
+            i0, wq = self._quad_axis(pos)
+            off = torch.tensor([-1, 0, 1], device=pos.device)
+            ix, iy = i0[..., 0:1, None] + off[:, None], i0[..., 1:2, None] + off[None, :]
+            ws = torch.stack(wq, -1)
+            wt = (ws[..., 0, :, None] * ws[..., 1, None, :]).reshape(B, N, 9)
+            ix, iy = ix.expand(B, N, 3, 3).reshape(B, N, 9), iy.expand(B, N, 3, 3).reshape(B, N, 9)
+            ok = ((ix >= 0) & (ix < G) & (iy >= 0) & (iy < G)).to(pos.dtype)
+            bidx = torch.arange(B, device=pos.device)[:, None, None]
+            return bidx * G * G + iy.clamp(0, G - 1) * G + ix.clamp(0, G - 1), wt * ok
+        i0, w = self._corners(pos)
         if self._off is None or self._off[0].device != pos.device:
             self._off = (torch.tensor([0, 0, 1, 1], device=pos.device), torch.tensor([0, 1, 0, 1], device=pos.device))
         ox, oy = self._off
@@ -221,7 +275,7 @@ class ScatterField(nn.Module):
     def kernel_acc(self, rho):
         G = self.grid
         if "kcache" in self.opt and not torch.is_grad_enabled():
-            key = (rho.dtype, rho.device, self.grid, self.h, self.eps_cur, tuple(p._version for p in self.kmlp.parameters()))
+            key = (rho.dtype, rho.device, self.grid, self.h, self.eps_cur, self.dt, self.substeps, tuple(p._version for p in self.kmlp.parameters()))
             if self._kf is None or self._kf[0] != key:
                 self._kf = (key, self._kernel_fft(rho))
             Kf = self._kf[1]
@@ -416,9 +470,40 @@ class ScatterField(nn.Module):
         a_act = torch.zeros(n, 2, device=dev, dtype=pos.dtype).index_copy(0, torch.cat(qs), torch.cat(accs))
         return torch.zeros(B * N, 2, device=dev, dtype=pos.dtype).index_copy(0, act, a_act).reshape(B, N, 2)
 
-    def pp_acc(self, pos, mass, mask, knn=16, qmask=None):
+    def pp_acc_ctx(self, pos, vel, mass, mask, knn=16):
+        B, N = mask.shape
+        k = min(knn, N - 1)
+        d_all = pos[:, None, :, :] - pos[:, :, None, :]
+        r_all = torch.sqrt((d_all ** 2).sum(-1) + 1e-8)
+        bad = (1 - mask)[:, None, :] + torch.eye(N, device=pos.device, dtype=pos.dtype)[None]
+        r_sel, idx = torch.topk(r_all + 1e6 * (bad > 0).to(pos.dtype), k, dim=-1, largest=False)
+        d = torch.gather(d_all, 2, idx[..., None].expand(B, N, k, 2))
+        vr = torch.gather(vel[:, None, :, :].expand(B, N, N, 2), 2, idx[..., None].expand(B, N, k, 2)) - vel[:, :, None, :]
+        mj = torch.gather((mass * mask)[:, None, :].expand(B, N, N), 2, idx)
+        ok = (r_sel < 1e5).to(pos.dtype) * mask[:, :, None]
+        r = r_sel.clamp(max=1e5)
+        perp = torch.stack([-d[..., 1], d[..., 0]], -1)
+        v_rad = (vr * d).sum(-1) / r
+        v_tan = (vr * perp).sum(-1) / r
+        dens = torch.log1p(((r < self.ppe()).to(pos.dtype) * ok).sum(-1, keepdim=True)).expand(B, N, k)
+        g = self.ppmlp(torch.cat([self._feat(r, "p"), torch.stack([v_rad, v_tan, dens], -1)], -1))
+        win = (1 - (r / self.ppe()).clamp(max=1.0) ** 2) ** 2
+        w_r, w_t = g[..., 0] * win * mj * ok, g[..., 1] * win * mj * ok
+        if self.pp_stats is not None:
+            st = self.pp_stats
+            st["rad_sq"] = st.get("rad_sq", 0.0) + float((w_r.detach().double() ** 2).sum())
+            st["tan_sq"] = st.get("tan_sq", 0.0) + float((w_t.detach().double() ** 2).sum())
+        if self.pen_acc is not None:
+            self.pen_acc.append((w_t ** 2).sum() / ((w_r.detach() ** 2).sum() + 1e-12))
+        return (w_r[..., None] * d / r[..., None] + w_t[..., None] * perp / r[..., None]).sum(2)
+
+    def pp_acc(self, pos, mass, mask, knn=16, qmask=None, vel=None):
         B, N = mask.shape
         mode = self.pp_mode(N)
+        if self.pairctx:
+            if mode != "dense" or vel is None:
+                raise NotImplementedError("pairctx supports only the dense pair path (N <= 512) and needs vel")
+            return self.pp_acc_ctx(pos, vel, mass, mask, knn)
         if mode == "adapt":
             return self.pp_acc_adapt(pos, mass, mask, knn, qmask=qmask)
         if mode == "cell":
@@ -470,7 +555,7 @@ class ScatterField(nn.Module):
         return -torch.cat([gx, gy], 1)
 
     def init_field(self, B, device, dtype=torch.float32):
-        f = torch.zeros(B, self.cf, self.grid, self.grid, device=device, dtype=dtype)
+        f = torch.zeros(B, self.cf * (2 if self.dual else 1), self.grid, self.grid, device=device, dtype=dtype)
         return (f, None) if self.verlet else f
 
     def force(self, pos, vel, mass, mask, field):
@@ -480,7 +565,7 @@ class ScatterField(nn.Module):
         return self._force(pos, vel, mass, mask, field)
 
     def _graphed(self, name, fn, *args):
-        key = (name, self.grid, self.extent, self.eps_cur) + tuple((tuple(a.shape), a.dtype) for a in args)
+        key = (name, self.grid, self.extent, self.eps_cur, self.dt, self.substeps) + tuple((tuple(a.shape), a.dtype) for a in args)
         ent = self._graphs.get(key)
         if ent is None:
             static = [a.clone() for a in args]
@@ -507,8 +592,32 @@ class ScatterField(nn.Module):
         ctx = None
         spos, smass = pos, mass
         if self.t0 is not None:
+            assert not self.dual
             field, ctx = self.t0.begin(self, pos, vel, mass, mask, field)
             spos, smass = ctx.pos, ctx.smass
+        if self.dual:
+            c = self.cf
+            a0, f0, acc = self._grid_force(pos, vel, mass, mask, field[:, :c], spos, smass, None)
+            a1, f1, _ = self._grid_force(pos, vel, mass, mask, field[:, c:], spos + self.h / 2, smass, None)
+            a_tok, field = 0.5 * (a0 + a1), torch.cat([f0, f1], 1)
+        else:
+            a_tok, field, acc = self._grid_force(pos, vel, mass, mask, field, spos, smass, ctx)
+        if self.far:
+            w = self.edge_weight(pos)[..., None]
+            a_tok = a_tok * w + self.far_acc(pos, mass, mask) * (1 - w)
+        if self.pp:
+            a_tok = a_tok + self.pp_acc(pos, mass, mask, self.knn, vel=vel if self.pairctx else None)
+        if ctx is not None:
+            a_tok = self.t0.head(self, ctx, a_tok, acc, vel, mass, mask)
+        if self.momfix:
+            mm = (mass * mask)[..., None]
+            a_tok = a_tok - (mm * a_tok).sum(1, keepdim=True) / mm.sum(1, keepdim=True).clamp_min(1e-9)
+        a_out = a_tok * mask[..., None]
+        if ctx is not None:
+            a_out, field = self.t0.finish(self, ctx, a_out, field, pos, mask)
+        return a_out, field
+
+    def _grid_force(self, pos, vel, mass, mask, field, spos, smass, ctx):
         x = self.scatter(spos, vel, smass, mask)
         if ctx is not None:
             x = self.t0.after_scatter(ctx, x)
@@ -528,6 +637,8 @@ class ScatterField(nn.Module):
             x = torch.cat([x, x.new_full((x.shape[0], 1, self.grid, self.grid), math.log(self.eps_cur / EPS0))], 1)
         if self.massfeat:
             x = torch.cat([x, xm], 1)
+        if self.dtin:
+            x = torch.cat([x, x.new_full((x.shape[0], 1, self.grid, self.grid), self.dt_feat())], 1)
         if ctx is not None and ctx.extra is not None:
             x = torch.cat([x, ctx.extra if ns is None else ctx.extra / ns], 1)
         if self.nonet:
@@ -552,20 +663,7 @@ class ScatterField(nn.Module):
         a_tok = self.gather(acc, spos)
         if ns is not None:
             a_tok = a_tok * ns.view(-1, 1, 1)
-        if self.far:
-            w = self.edge_weight(pos)[..., None]
-            a_tok = a_tok * w + self.far_acc(pos, mass, mask) * (1 - w)
-        if self.pp:
-            a_tok = a_tok + self.pp_acc(pos, mass, mask, self.knn)
-        if ctx is not None:
-            a_tok = self.t0.head(self, ctx, a_tok, acc, vel, mass, mask)
-        if self.momfix:
-            mm = (mass * mask)[..., None]
-            a_tok = a_tok - (mm * a_tok).sum(1, keepdim=True) / mm.sum(1, keepdim=True).clamp_min(1e-9)
-        a_out = a_tok * mask[..., None]
-        if ctx is not None:
-            a_out, field = self.t0.finish(self, ctx, a_out, field, pos, mask)
-        return a_out, field
+        return a_tok, field, acc
 
     def step(self, pos, vel, mass, mask, field):
         if self.substeps == 1:

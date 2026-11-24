@@ -1,6 +1,7 @@
 """Fine-tune the scatter-field Exp E checkpoint for one review fix at a time (decisions #4/#6 in docs/debugging/scatter-review-decisions-2026-10-06.md).
 
 --fix ctrl     control: E-style scenes only, same optimiser/budget (separates "more training" from the fix)
+--fix pairctx  same scenes as ctrl, with --variant ms_kp_pot_v_g128_pairctx (neighbour-context pair branch)
 --fix cu       cell-unit kernel/pair features (variant *_cu) + random cell size h in {0.25, 0.5, 1.0} (grid 256/128/64, extent 64)
 --fix largen   dense large-N clusters (N 1000-6000) mixed with E scenes
 --fix mass     log-uniform masses 0.1-10 (per-body spectrum, equal-mass scale, one dominant body; 30% unit-mass)
@@ -12,6 +13,8 @@ Variants with new opt-in inputs (cu, eps, mnorm, dnorm) warm-start from E via sc
 import argparse
 import json
 import os
+import signal
+import sys
 import time
 
 import numpy as np
@@ -44,7 +47,7 @@ def build_groups(args, dev, log):
     s, n = args.steps, args.scenes
     t0 = time.time()
     g = []
-    if args.fix == "ctrl":
+    if args.fix in ("ctrl", "pairctx"):
         g.append(group("base", fd.base(n, s, args.seed, dev), dev, 1.0, args.batch, 99))
     elif args.fix == "cu":
         first = group("base_G256", fd.base(n, s, args.seed, dev), dev, 0.3, args.batch, 99, set_h(256))
@@ -70,16 +73,49 @@ def build_groups(args, dev, log):
     return g
 
 
-def train(model, groups, args, ckpt_path, log):
+STOP = {"flag": False}
+
+
+def on_term(signum, frame):
+    STOP["flag"] = True
+
+
+def val_loss(model, vdata, dev, k):
+    P, V, M, mask = vdata
+    with torch.no_grad():
+        pos, vel, m = P[:, 0], V[:, 0], M
+        field = model.init_field(P.shape[0], dev)
+        lp = lv = 0.0
+        w = mask[:, :, None]
+        denom = mask.sum() * 2 * k
+        for s in range(k):
+            pos, vel, m, field, _ = sf._step_m(model, pos, vel, m, mask, field)
+            lp = lp + (((pos - P[:, s + 1]) ** 2) * w).sum() / denom
+            lv = lv + (((vel - V[:, s + 1]) ** 2) * w).sum() / denom
+    return float(lp + 0.1 * lv)
+
+
+def train(model, groups, args, ckpt_path, log, vdata=None):
     opt = torch.optim.Adam(model.parameters(), lr=args.lr)
-    start = 0
+    start, vals = 0, []
+    g = torch.Generator(device="cpu").manual_seed(args.seed)
     if os.path.exists(ckpt_path):
+        if args.iters and not args.resume:
+            raise SystemExit(f"{ckpt_path} exists; pass --resume to continue or remove it")
         st = torch.load(ckpt_path, map_location=args.device, weights_only=False)
         model.load_state_dict(st["model"])
         opt.load_state_dict(st["opt"])
         start = st["it"]
+        vals = st.get("val", [])
+        if "rng" in st:
+            g.set_state(st["rng"])
+        else:
+            g.manual_seed(args.seed + start)
         log(f"resumed from it {start}")
-    g = torch.Generator(device="cpu").manual_seed(args.seed + start)
+    val_every = max(1, args.iters // 40) if args.iters else 0
+
+    def save(it_):
+        torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it_, "rng": g.get_state(), "val": vals}, ckpt_path)
     wts = torch.tensor([x["weight"] for x in groups])
     skipped = 0
     t_start = time.time()
@@ -87,9 +123,14 @@ def train(model, groups, args, ckpt_path, log):
     last = {}
     while True:
         it += 1
-        frac = (time.time() - t_start) / args.time_budget
-        if frac >= 1.0:
-            break
+        if args.iters:
+            if it >= args.iters:
+                break
+            frac = it / args.iters
+        else:
+            frac = (time.time() - t_start) / args.time_budget
+            if frac >= 1.0:
+                break
         gi = int(torch.multinomial(wts, 1, generator=g))
         grp = groups[gi]
         if grp["setup"]:
@@ -110,11 +151,16 @@ def train(model, groups, args, ckpt_path, log):
         lp = lv = 0.0
         w = mk[:, :, None]
         denom = mk.sum() * 2 * k
+        if args.tan_penalty:
+            model.pen_acc = []
         for s in range(k):
             pos, vel, m, field, _ = sf._step_m(model, pos, vel, m, mk, field)
             lp = lp + (((pos - Pw[:, s + 1]) ** 2) * w).sum() / denom
             lv = lv + (((vel - Vw[:, s + 1]) ** 2) * w).sum() / denom
         loss = lp + 0.1 * lv
+        if args.tan_penalty:
+            loss = loss + args.tan_penalty * torch.stack(model.pen_acc).mean()
+            model.pen_acc = None
         opt.zero_grad()
         loss.backward()
         gn = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -125,20 +171,30 @@ def train(model, groups, args, ckpt_path, log):
             skipped += 1
             log(f"it {it} {grp['name']} loss {loss.item():.3g} non-finite or above cap, step skipped ({skipped} total)")
         last.setdefault(grp["name"], []).append(loss.item())
+        if vdata is not None and val_every and it % val_every == 0:
+            vals.append((it, val_loss(model, vdata, args.device, args.val_k)))
+            log(f"it {it} validation {vals[-1][1]:.6f}")
+        if STOP["flag"]:
+            if all(torch.isfinite(p).all() for p in model.parameters()):
+                save(it + 1)
+            log(f"SIGTERM at it {it}, checkpoint saved")
+            sys.exit(143)
         if it % args.log_every == 0:
             msg = " ".join(f"{k_}:{np.mean(v[-20:]):.5f}" for k_, v in last.items())
             log(f"it {it} k {k} loss {loss.item():.6f} [{msg}] t {time.time() - t_start:.0f}s")
             if all(torch.isfinite(p).all() for p in model.parameters()):
-                torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it + 1}, ckpt_path)
+                save(it + 1)
     if all(torch.isfinite(p).all() for p in model.parameters()):
-        torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "it": it}, ckpt_path)
+        save(it)
+    else:
+        raise SystemExit("non-finite parameters at end of training, final checkpoint NOT written")
     log(f"trained {it} iters in {time.time() - t_start:.0f}s")
-    return it, time.time() - t_start
+    return it, time.time() - t_start, vals
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--fix", required=True, choices=["ctrl", "cu", "largen", "mass", "massnorm", "masswide", "eps", "dense"])
+    ap.add_argument("--fix", required=True, choices=["ctrl", "pairctx", "cu", "largen", "mass", "massnorm", "masswide", "eps", "dense"])
     ap.add_argument("--variant", default=VAR)
     ap.add_argument("--init-ckpt", required=True)
     ap.add_argument("--name", required=True)
@@ -153,6 +209,12 @@ def main():
     ap.add_argument("--time-budget", type=float, default=2400.0)
     ap.add_argument("--log-every", type=int, default=50)
     ap.add_argument("--seed", type=int, default=4738)
+    ap.add_argument("--iters", type=int, default=0, help="fixed iteration count (replaces --time-budget when set)")
+    ap.add_argument("--tan-penalty", type=float, default=0.0, help="weight on the squared tangential-to-radial pair-force ratio (pairctx only; 0 = off)")
+    ap.add_argument("--resume", action="store_true")
+    ap.add_argument("--val-scenes", type=int, default=32)
+    ap.add_argument("--val-seed", type=int, default=9000)
+    ap.add_argument("--val-k", type=int, default=20)
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--out-dir", default="results/scatter_s46")
     ap.add_argument("--ckpt-dir", default="checkpoints/scatter_s46")
@@ -168,10 +230,16 @@ def main():
     model = tsf.build(tsf.EXPS["E"], args.variant, 0.1).to(dev)
     sf.load_compat(model, torch.load(args.init_ckpt, map_location=dev, weights_only=False)["model"])
     log(f"=== {args.name} fix {args.fix} variant {args.variant} params {sum(p.numel() for p in model.parameters())} init {args.init_ckpt}")
+    assert (args.fix == "pairctx") == args.variant.endswith("_pairctx"), "fix pairctx needs a *_pairctx variant and vice versa"
+    assert not args.tan_penalty or args.fix == "pairctx", "--tan-penalty needs --fix pairctx"
+    signal.signal(signal.SIGTERM, on_term)
     groups = build_groups(args, dev, log)
+    vdata = None
+    if args.iters:
+        vdata = tuple(t.float() for t in sf.to_tensors(fd.base(args.val_scenes, args.steps, args.val_seed, dev), dev))
     ckpt = f"{args.ckpt_dir}/{args.name}.pt"
-    n_it, secs = train(model, groups, args, ckpt, log)
-    json.dump({"name": args.name, "fix": args.fix, "variant": args.variant, "iters": n_it, "seconds": secs, "args": vars(args)},
+    n_it, secs, vals = train(model, groups, args, ckpt, log, vdata)
+    json.dump({"name": args.name, "fix": args.fix, "variant": args.variant, "iters": n_it, "seconds": secs, "validation": vals, "args": vars(args)},
               open(f"{args.out_dir}/{args.name}_train.json", "w"), indent=1)
 
 

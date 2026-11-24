@@ -170,3 +170,11 @@ Removed files (kind in parentheses):
 - rootcause-pairfull/scripts/train_scatter_field.py (modified)
 - solar-scale-orbit-stability-retrain/videos/scatter_solar_orbit_ft2_baseline_seed4738_grid.png (untracked)
 - solar-scale-orbit-stability-retrain/videos/scatter_solar_orbit_stability_control_seed4738_grid.png (untracked)
+
+## Removal 2026-11-09
+
+Removed 76 SAFE-TO-REMOVE worktrees (73 pushed + 3 tag-only) and deleted 107 local branches (the 34 without a worktree plus 73 branches of removed pushed worktrees); 0 skipped. The proposal said 109 branches; the 2 extra belonged to the NEEDS-DECISION rows worktree-agent-abd021892286ed5f9 and hetero-tiered-integration, which were not touched. The 3 tag-only worktrees' branches were kept. Worktrees 93 -> 17 (main + 16 NEEDS-DECISION); local branches 135 -> 28 (25 kept + master + those 2). `git rev-list --all --count` 1344 before and after.
+
+Every item was re-verified immediately before removal (HEAD reachable from a live origin ref or archive tag, dirty files covered by keep-files or the 11-08 backup, ignored files in the manifest, no recent mtimes, no active registry row). `--force` was used only on worktrees whose dirty files were verified covered.
+
+Recovery: ref manifest Augur-backups/pre-removal-refs-2026-11-09.txt (refname + sha, plus worktree list); per-item log with shas Augur-backups/removal-log-2026-11-09.txt.

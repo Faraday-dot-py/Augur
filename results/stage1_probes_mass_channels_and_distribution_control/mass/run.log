@@ -1,0 +1,458 @@
+init eval {"9100": {"planet": {"10": {"20": {"da_over_a": 0.9364846164766482, "de": 0.8050840077608041, "pos_err": 3.443760662962456, "dE_model": 0.7094435293137256, "dE_truth": 4.090702927993983e-07, "dE_model_max": 4.805157351593783, "finite": true}, "50": {"da_over_a": 1.221383316731019, "de": 2.02134436479024, "pos_err": 17.36728980371486, "dE_model": 3.004670786074098, "dE_truth": 1.3354806471901466e-06, "dE_model_max": 42.10296105342898, "finite": true}, "100": {"da_over_a": 1.2783813602887686, "de": 4.135115832269591, "pos_err": 24.99135521938523, "dE_model": 4.600765503002048, "dE_truth": 2.627418602288013e-06, "dE_model_max": 64.8644481110175, "finite": true}}, "100": {"20": {"da_over_a": 1.0834310130819795, "de": 1.0112179972975963, "pos_err": 5.253985453074506, "dE_model": 2.8343702501896155, "dE_truth": 3.657964476631817e-07, "dE_model_max": 93.85513436936736, "finite": true}, "50": {"da_over_a": 1.0412679762510078, "de": 3.7502018219196844, "pos_err": 27.093406288342806, "dE_model": 8.759361712849538, "dE_truth": 1.977426078772977e-06, "dE_model_max": 207.33736948884535, "finite": true}, "100": {"da_over_a": 1.0141557944601733, "de": 19.968780727312776, "pos_err": 74.57515401565152, "dE_model": 44.64576950696785, "dE_truth": 2.0913964238617292e-06, "dE_model_max": 918.8235143103157, "finite": true}}, "1000": {"20": {"da_over_a": 1.0148550614657266, "de": 20.96003791310388, "pos_err": 16.23066193591917, "dE_model": 62.98801095253158, "dE_truth": 2.336113030673829e-07, "dE_model_max": 399.5026052316304, "finite": true}, "50": {"da_over_a": 1.0027588546742718, "de": 104.79573225837451, "pos_err": 92.58096790369959, "dE_model": 364.86880099544425, "dE_truth": 1.3447033614541323e-06, "dE_model_max": 2613.6650451494365, "finite": true}, "100": {"da_over_a": 1.0011719638197265, "de": 5507.72994271389, "pos_err": 383.8942660562043, "dE_model": 855.3655893536045, "dE_truth": 1.4746926161141372e-06, "dE_model_max": 9093.373928462062, "finite": true}}}, "disk": {"10": {"20": {"da_over_a": 1.0222658120367414, "de": 39.97649335416658, "pos_err": 16.871568465079655, "dE_model": 29.75391510541796, "dE_truth": 3.183567270720603e-05, "dE_model_max": 444.96653598034203, "finite": true}, "50": {"da_over_a": 1.0013196917442353, "de": 595.5190808142197, "pos_err": 163.97280271645755, "dE_model": 304.3710859740961, "dE_truth": 2.2552722560033528e-05, "dE_model_max": 1212.097723423969, "finite": true}, "100": {"da_over_a": 1.0006542500294042, "de": 1115.6038213311288, "pos_err": 621.2026562554059, "dE_model": 673.9246584587761, "dE_truth": 0.0002238599237286964, "dE_model_max": 1212.180404442108, "finite": true}}, "100": {"20": {"da_over_a": 1.0028564163047464, "de": 252.91050078804705, "pos_err": 67.24846932008973, "dE_model": 224.81660484269196, "dE_truth": 2.2354012144475135e-06, "dE_model_max": 1242.072316637403, "finite": true}, "50": {"da_over_a": 1.0005124487318022, "de": 1907.5203372221708, "pos_err": 539.828300039716, "dE_model": 1402.4465030447434, "dE_truth": 4.927292097694448e-06, "dE_model_max": 2143.047632827328, "finite": true}, "100": {"da_over_a": 1.0003814069696817, "de": 2380.227786645759, "pos_err": 1508.8816860740317, "dE_model": 1769.5671731822174, "dE_truth": 3.949601449708326e-06, "dE_model_max": 3838.957505251031, "finite": true}}, "1000": {"20": {"da_over_a": 1.0045450323959086, "de": 176.58644173767453, "pos_err": 64.71130467747778, "dE_model": 195.82200933387026, "dE_truth": 7.787715691659424e-07, "dE_model_max": 1713.7227917571615, "finite": true}, "50": {"da_over_a": 1.000569645620417, "de": 3483.6042498119223, "pos_err": 426.4771182478444, "dE_model": 1577.4699588434096, "dE_truth": 1.2854854556285727e-06, "dE_model_max": 8866.354331159533, "finite": true}, "100": {"da_over_a": 1.0001613560429439, "de": 14524.252575881415, "pos_err": 1944.7170313618774, "dE_model": 5230.7319993123965, "dE_truth": 1.3953206185894062e-06, "dE_model_max": 12953.019101500124, "finite": true}}}, "base": {"5": 0.0042194160632789135, "10": 0.011015371419489384, "20": 0.034017689526081085, "50": 0.3523920476436615}}, "9200": {"planet": {"10": {"20": {"da_over_a": 0.8353325863240084, "de": 0.8588418938668927, "pos_err": 5.895324112406163, "dE_model": 0.9492746276485047, "dE_truth": 1.3800276693515762e-05, "dE_model_max": 6.727601623011744, "finite": true}, "50": {"da_over_a": 1.383935536501371, "de": 2.881411213964115, "pos_err": 15.09967678920318, "dE_model": 2.5235535975556633, "dE_truth": 2.0382259833964954e-06, "dE_model_max": 8.563171694142202, "finite": true}, "100": {"da_over_a": 1.3646164562316263, "de": 2.406512849839383, "pos_err": 16.693954649758034, "dE_model": 2.396117979540719, "dE_truth": 3.1684011081559093e-06, "dE_model_max": 27.553534619204118, "finite": true}}, "100": {"20": {"da_over_a": 1.0596183209236987, "de": 1.4889930588817801, "pos_err": 8.290103614130063, "dE_model": 2.653944483388656, "dE_truth": 4.642950061603021e-07, "dE_model_max": 23.709514416453352, "finite": true}, "50": {"da_over_a": 1.1284133893899526, "de": 4.955281001664642, "pos_err": 33.866519686062574, "dE_model": 6.082027229756255, "dE_truth": 6.804343309960602e-06, "dE_model_max": 158.7898471403497, "finite": true}, "100": {"da_over_a": 1.013555173471416, "de": 77.39608311347179, "pos_err": 139.3019137967944, "dE_model": 76.83001015044061, "dE_truth": 9.339311549877571e-07, "dE_model_max": 1190.4642328925004, "finite": true}}, "1000": {"20": {"da_over_a": 1.026187252146909, "de": 30.4834174993553, "pos_err": 15.892438771995131, "dE_model": 42.38121670989143, "dE_truth": 1.9482099075570375e-06, "dE_model_max": 434.0700750011095, "finite": true}, "50": {"da_over_a": 1.0049542199885018, "de": 203.0805492450066, "pos_err": 102.13048709265345, "dE_model": 227.5734551089303, "dE_truth": 9.325186014265587e-06, "dE_model_max": 1186.6632074127538, "finite": true}, "100": {"da_over_a": 1.0013994537476205, "de": 7635.213744860987, "pos_err": 417.0606111527242, "dE_model": 720.8515245233466, "dE_truth": 9.817065920364024e-06, "dE_model_max": 3163.9986429260475, "finite": true}}}, "disk": {"10": {"20": {"da_over_a": 1.0160618031621758, "de": 39.13860121220762, "pos_err": 25.63120581921024, "dE_model": 36.121937337074414, "dE_truth": 5.947792807241969e-06, "dE_model_max": 753.587218166873, "finite": true}, "50": {"da_over_a": 1.0007749086049738, "de": 1059.6032872301125, "pos_err": 257.7357514981425, "dE_model": 625.6931002941129, "dE_truth": 1.6235822427722227e-05, "dE_model_max": 908.2660545827031, "finite": true}, "100": {"da_over_a": 1.0005935291995347, "de": 1219.8741879405761, "pos_err": 799.0405063135247, "dE_model": 723.9316504649003, "dE_truth": 0.00016538603524434326, "dE_model_max": 1008.9277933830558, "finite": true}}, "100": {"20": {"da_over_a": 1.0151116832023277, "de": 39.06047175597823, "pos_err": 20.65045603361217, "dE_model": 47.70568112630131, "dE_truth": 1.2071508725691758e-06, "dE_model_max": 1458.290343394766, "finite": true}, "50": {"da_over_a": 1.0007357399096097, "de": 1024.076988376391, "pos_err": 207.1326359146276, "dE_model": 945.5452537065811, "dE_truth": 2.879883972825923e-06, "dE_model_max": 2091.061719683342, "finite": true}, "100": {"da_over_a": 1.0003651855326992, "de": 2251.361126078591, "pos_err": 920.5473991178098, "dE_model": 1817.5322424518736, "dE_truth": 6.968605409929364e-06, "dE_model_max": 3124.905326946309, "finite": true}}, "1000": {"20": {"da_over_a": 1.0099876998356483, "de": 58.214488775820605, "pos_err": 27.25870987453523, "dE_model": 84.65867025043488, "dE_truth": 1.0928941565835336e-06, "dE_model_max": 1605.2914481164414, "finite": true}, "50": {"da_over_a": 1.0014340296419697, "de": 539.6680737446658, "pos_err": 163.57782153781403, "dE_model": 584.4986270155155, "dE_truth": 8.322440855677386e-07, "dE_model_max": 10390.947744654752, "finite": true}, "100": {"da_over_a": 1.000301924642119, "de": 5978.004799747954, "pos_err": 734.0564356079983, "dE_model": 2515.834137106839, "dE_truth": 1.242007922220747e-06, "dE_model_max": 20925.980893568747, "finite": true}}}, "base": {"5": 0.004410924855619669, "10": 0.011194087564945221, "20": 0.034926336258649826, "50": 0.3958003520965576}}, "9300": {"planet": {"10": {"20": {"da_over_a": 1.3172721521818005, "de": 0.9058555069308682, "pos_err": 4.529949925617555, "dE_model": 1.5713344330870271, "dE_truth": 2.5228358964000425e-07, "dE_model_max": 5.500377826724146, "finite": true}, "50": {"da_over_a": 1.3860408823902826, "de": 1.3333050194984537, "pos_err": 16.582186408375826, "dE_model": 1.9778012677274837, "dE_truth": 1.071583670544869e-06, "dE_model_max": 9.973058378837791, "finite": true}, "100": {"da_over_a": 1.2483819262049498, "de": 2.317257042218708, "pos_err": 23.137591261989954, "dE_model": 3.628111060942487, "dE_truth": 1.6868980224933104e-06, "dE_model_max": 19.499710837676094, "finite": true}}, "100": {"20": {"da_over_a": 1.1609586273590935, "de": 3.3601790320876863, "pos_err": 8.416040257067781, "dE_model": 4.37797871329496, "dE_truth": 3.014013798765481e-06, "dE_model_max": 27.16889058258348, "finite": true}, "50": {"da_over_a": 1.1186707342900948, "de": 9.51951804403696, "pos_err": 40.12823101350244, "dE_model": 7.246399957959264, "dE_truth": 9.060451596664433e-06, "dE_model_max": 108.15294934769774, "finite": true}, "100": {"da_over_a": 1.0279575302935857, "de": 63.67611067922384, "pos_err": 127.61484724413936, "dE_model": 37.57842479886847, "dE_truth": 1.1855226366434766e-06, "dE_model_max": 532.0839569530674, "finite": true}}, "1000": {"20": {"da_over_a": 1.0359782937728084, "de": 20.483927527190282, "pos_err": 21.58986525787255, "dE_model": 33.66255117629614, "dE_truth": 6.717948377604215e-07, "dE_model_max": 361.2681145338079, "finite": true}, "50": {"da_over_a": 1.0030779364480475, "de": 757.0965454689972, "pos_err": 144.772191241631, "dE_model": 328.21109824881256, "dE_truth": 7.827046489676891e-06, "dE_model_max": 2370.150930440049, "finite": true}, "100": {"da_over_a": 1.0011588834127454, "de": 5621.753513861759, "pos_err": 597.4406242719401, "dE_model": 869.5982130830571, "dE_truth": 1.2832996036148782e-06, "dE_model_max": 8586.292253091844, "finite": true}}}, "disk": {"10": {"20": {"da_over_a": 1.0039962915234204, "de": 167.91359956970555, "pos_err": 40.03089342417876, "dE_model": 98.88895590420542, "dE_truth": 1.1181940690260494e-05, "dE_model_max": 814.3887666876361, "finite": true}, "50": {"da_over_a": 1.000700631866931, "de": 994.7038933684801, "pos_err": 361.2621548778835, "dE_model": 688.7830016971068, "dE_truth": 5.7317170832741786e-05, "dE_model_max": 947.5465644867237, "finite": true}, "100": {"da_over_a": 1.000548658437884, "de": 1113.7040846738319, "pos_err": 982.3236240058844, "dE_model": 709.1208329568938, "dE_truth": 0.0024608346485189554, "dE_model_max": 1230.8478154250804, "finite": true}}, "100": {"20": {"da_over_a": 1.020806083182749, "de": 31.14537727607762, "pos_err": 25.48586726116537, "dE_model": 34.31577703795683, "dE_truth": 1.142210332949956e-06, "dE_model_max": 1560.9505397841272, "finite": true}, "50": {"da_over_a": 1.0005824024048389, "de": 1399.718624510388, "pos_err": 260.14066158566715, "dE_model": 1256.501506347202, "dE_truth": 4.361552584637486e-06, "dE_model_max": 2201.4614570965246, "finite": true}, "100": {"da_over_a": 1.0004470193048816, "de": 2418.4769252001697, "pos_err": 1091.6492196797694, "dE_model": 1565.4596245753573, "dE_truth": 6.3011677232351895e-06, "dE_model_max": 2355.266429599073, "finite": true}}, "1000": {"20": {"da_over_a": 1.00561429970597, "de": 106.72424229588711, "pos_err": 45.44962525298749, "dE_model": 148.7090590331359, "dE_truth": 7.243677304535482e-07, "dE_model_max": 1544.9361079739454, "finite": true}, "50": {"da_over_a": 1.0003706253774327, "de": 2322.4385942852505, "pos_err": 375.6606526034815, "dE_model": 2061.803661175414, "dE_truth": 2.6656737254321855e-06, "dE_model_max": 7594.618068903577, "finite": true}, "100": {"da_over_a": 1.0002393079666572, "de": 10668.237823609172, "pos_err": 1546.9378108823287, "dE_model": 3303.1350631094883, "dE_truth": 2.3689509016322603e-06, "dE_model_max": 16929.394232071103, "finite": true}}}, "base": {"5": 0.0035228938795626163, "10": 0.009457428008317947, "20": 0.02873009815812111, "50": 0.24911390244960785}}}
+stage 6 group q1000: scenes 32 N 182 weight 0.45
+stage 6 group q1-300: scenes 32 N 175 weight 0.25
+stage 6 group unit_base: scenes 32 N 297 weight 0.3
+stage 0 group q1: scenes 300 N 202 weight 0.7
+stage 0 group unit_base: scenes 300 N 300 weight 0.3
+it 0 q1 loss 39.1 non-finite or above cap, step skipped (1 total)
+it 1 q1 loss 18.6 non-finite or above cap, step skipped (2 total)
+it 3 q1 loss 11.8 non-finite or above cap, step skipped (3 total)
+it 6 q1 loss 39.9 non-finite or above cap, step skipped (4 total)
+it 7 q1 loss 20.5 non-finite or above cap, step skipped (5 total)
+it 8 q1 loss 5.26 non-finite or above cap, step skipped (6 total)
+it 10 q1 loss 14.1 non-finite or above cap, step skipped (7 total)
+it 11 q1 loss 81.8 non-finite or above cap, step skipped (8 total)
+it 12 q1 loss 10.5 non-finite or above cap, step skipped (9 total)
+it 13 q1 loss 51.3 non-finite or above cap, step skipped (10 total)
+it 14 q1 loss 35.9 non-finite or above cap, step skipped (11 total)
+it 16 q1 loss 29.9 non-finite or above cap, step skipped (12 total)
+it 18 q1 loss 51.5 non-finite or above cap, step skipped (13 total)
+it 20 q1 loss 53.5 non-finite or above cap, step skipped (14 total)
+it 21 q1 loss 4.44 non-finite or above cap, step skipped (15 total)
+it 22 q1 loss 4.86 non-finite or above cap, step skipped (16 total)
+it 23 q1 loss 25.1 non-finite or above cap, step skipped (17 total)
+it 24 q1 loss 19.5 non-finite or above cap, step skipped (18 total)
+it 25 q1 loss 28.9 non-finite or above cap, step skipped (19 total)
+it 26 q1 loss 65.6 non-finite or above cap, step skipped (20 total)
+it 27 q1 loss 23.3 non-finite or above cap, step skipped (21 total)
+it 28 q1 loss 14.3 non-finite or above cap, step skipped (22 total)
+it 29 q1 loss 41.8 non-finite or above cap, step skipped (23 total)
+it 30 q1 loss 3.36 non-finite or above cap, step skipped (24 total)
+it 32 q1 loss 6.75 non-finite or above cap, step skipped (25 total)
+it 33 q1 loss 14.9 non-finite or above cap, step skipped (26 total)
+it 34 q1 loss 35.3 non-finite or above cap, step skipped (27 total)
+it 37 q1 loss 73.4 non-finite or above cap, step skipped (28 total)
+it 38 q1 loss 22 non-finite or above cap, step skipped (29 total)
+it 39 q1 loss 37.4 non-finite or above cap, step skipped (30 total)
+it 41 q1 loss 4.09 non-finite or above cap, step skipped (31 total)
+it 42 q1 loss 18.4 non-finite or above cap, step skipped (32 total)
+it 44 q1 loss 43.1 non-finite or above cap, step skipped (33 total)
+it 45 q1 loss 3.91 non-finite or above cap, step skipped (34 total)
+it 46 q1 loss 16.4 non-finite or above cap, step skipped (35 total)
+it 48 q1 loss 41.7 non-finite or above cap, step skipped (36 total)
+it 49 q1 loss 12.6 non-finite or above cap, step skipped (37 total)
+it 50 stage 0 k 4 [q1:25.46119 unit_base:0.00086] t 13s
+it 51 q1 loss 5.99 non-finite or above cap, step skipped (38 total)
+it 52 q1 loss 54.2 non-finite or above cap, step skipped (39 total)
+it 53 q1 loss 121 non-finite or above cap, step skipped (40 total)
+it 59 q1 loss 8 non-finite or above cap, step skipped (41 total)
+it 64 q1 loss 10.1 non-finite or above cap, step skipped (42 total)
+it 66 q1 loss 6.82 non-finite or above cap, step skipped (43 total)
+it 67 q1 loss 3.05 non-finite or above cap, step skipped (44 total)
+it 69 q1 loss 9.69 non-finite or above cap, step skipped (45 total)
+it 72 q1 loss 6.54 non-finite or above cap, step skipped (46 total)
+it 74 q1 loss 7.32 non-finite or above cap, step skipped (47 total)
+it 77 q1 loss 5.75 non-finite or above cap, step skipped (48 total)
+it 85 q1 loss 3.51 non-finite or above cap, step skipped (49 total)
+it 93 q1 loss 3.21 non-finite or above cap, step skipped (50 total)
+it 94 q1 loss 3.53 non-finite or above cap, step skipped (51 total)
+it 100 stage 0 k 4 [q1:2.40957 unit_base:0.00074] t 17s
+it 109 q1 loss 3.01 non-finite or above cap, step skipped (52 total)
+it 131 q1 loss 12.4 non-finite or above cap, step skipped (53 total)
+it 145 q1 loss 9.41 non-finite or above cap, step skipped (54 total)
+it 148 q1 loss 9.07 non-finite or above cap, step skipped (55 total)
+it 150 stage 0 k 5 [q1:2.83719 unit_base:0.00073] t 21s
+it 151 q1 loss 5.62 non-finite or above cap, step skipped (56 total)
+it 152 q1 loss 3.34 non-finite or above cap, step skipped (57 total)
+it 155 q1 loss 22.5 non-finite or above cap, step skipped (58 total)
+it 165 q1 loss 15.6 non-finite or above cap, step skipped (59 total)
+it 171 q1 loss 21.5 non-finite or above cap, step skipped (60 total)
+it 174 q1 loss 18 non-finite or above cap, step skipped (61 total)
+it 175 q1 loss 19.7 non-finite or above cap, step skipped (62 total)
+it 182 q1 loss 10.8 non-finite or above cap, step skipped (63 total)
+it 183 q1 loss 4.74 non-finite or above cap, step skipped (64 total)
+it 185 q1 loss 3.23 non-finite or above cap, step skipped (65 total)
+it 186 q1 loss 3.71 non-finite or above cap, step skipped (66 total)
+it 196 q1 loss 3.15 non-finite or above cap, step skipped (67 total)
+it 200 stage 0 k 5 [q1:5.24133 unit_base:0.00079] t 25s
+it 202 q1 loss 4.88 non-finite or above cap, step skipped (68 total)
+it 203 q1 loss 20.5 non-finite or above cap, step skipped (69 total)
+it 205 q1 loss 3.05 non-finite or above cap, step skipped (70 total)
+it 207 q1 loss 8.39 non-finite or above cap, step skipped (71 total)
+it 208 q1 loss 5.24 non-finite or above cap, step skipped (72 total)
+it 209 q1 loss 12.2 non-finite or above cap, step skipped (73 total)
+it 218 q1 loss 6.93 non-finite or above cap, step skipped (74 total)
+it 220 q1 loss 14.6 non-finite or above cap, step skipped (75 total)
+it 222 q1 loss 13.1 non-finite or above cap, step skipped (76 total)
+it 228 q1 loss 3.36 non-finite or above cap, step skipped (77 total)
+it 231 q1 loss 3.01 non-finite or above cap, step skipped (78 total)
+it 233 q1 loss 13.9 non-finite or above cap, step skipped (79 total)
+it 235 q1 loss 22.4 non-finite or above cap, step skipped (80 total)
+it 238 q1 loss 3.17 non-finite or above cap, step skipped (81 total)
+it 240 q1 loss 13.9 non-finite or above cap, step skipped (82 total)
+it 244 q1 loss 20.8 non-finite or above cap, step skipped (83 total)
+it 250 stage 0 k 5 [q1:6.53711 unit_base:0.00094] t 29s
+it 257 q1 loss 15.2 non-finite or above cap, step skipped (84 total)
+it 260 q1 loss 14.4 non-finite or above cap, step skipped (85 total)
+it 261 q1 loss 25.3 non-finite or above cap, step skipped (86 total)
+it 263 q1 loss 9.05 non-finite or above cap, step skipped (87 total)
+it 266 q1 loss 4.4 non-finite or above cap, step skipped (88 total)
+it 267 q1 loss 3.42 non-finite or above cap, step skipped (89 total)
+it 277 q1 loss 12.6 non-finite or above cap, step skipped (90 total)
+it 279 q1 loss 46 non-finite or above cap, step skipped (91 total)
+it 287 q1 loss 9.62 non-finite or above cap, step skipped (92 total)
+it 290 q1 loss 4.5 non-finite or above cap, step skipped (93 total)
+it 292 q1 loss 3.03 non-finite or above cap, step skipped (94 total)
+it 294 q1 loss 5.33 non-finite or above cap, step skipped (95 total)
+it 295 q1 loss 4.16 non-finite or above cap, step skipped (96 total)
+it 298 q1 loss 3.28 non-finite or above cap, step skipped (97 total)
+it 300 stage 0 k 5 [q1:5.25390 unit_base:0.00088] t 34s
+it 303 q1 loss 6.44 non-finite or above cap, step skipped (98 total)
+it 305 q1 loss 3.36 non-finite or above cap, step skipped (99 total)
+it 306 q1 loss 4.9 non-finite or above cap, step skipped (100 total)
+it 309 q1 loss 5.99 non-finite or above cap, step skipped (101 total)
+it 317 q1 loss 7.6 non-finite or above cap, step skipped (102 total)
+it 319 q1 loss 16.6 non-finite or above cap, step skipped (103 total)
+it 320 q1 loss 3.15 non-finite or above cap, step skipped (104 total)
+it 322 q1 loss 3.54 non-finite or above cap, step skipped (105 total)
+it 324 q1 loss 9.79 non-finite or above cap, step skipped (106 total)
+it 326 q1 loss 3.35 non-finite or above cap, step skipped (107 total)
+it 336 q1 loss 3.9 non-finite or above cap, step skipped (108 total)
+it 341 q1 loss 10.4 non-finite or above cap, step skipped (109 total)
+it 347 q1 loss 19.7 non-finite or above cap, step skipped (110 total)
+it 350 stage 0 k 5 [q1:3.29401 unit_base:0.00109] t 38s
+it 361 q1 loss 4.1 non-finite or above cap, step skipped (111 total)
+it 362 q1 loss 32 non-finite or above cap, step skipped (112 total)
+it 363 q1 loss 19.8 non-finite or above cap, step skipped (113 total)
+it 366 q1 loss 7.49 non-finite or above cap, step skipped (114 total)
+it 367 q1 loss 5.58 non-finite or above cap, step skipped (115 total)
+it 368 q1 loss 8.83 non-finite or above cap, step skipped (116 total)
+it 375 q1 loss 66.9 non-finite or above cap, step skipped (117 total)
+it 378 q1 loss 19.2 non-finite or above cap, step skipped (118 total)
+it 392 q1 loss 13.4 non-finite or above cap, step skipped (119 total)
+it 394 q1 loss 42.7 non-finite or above cap, step skipped (120 total)
+it 400 stage 0 k 6 [q1:8.45739 unit_base:0.00161] t 42s
+it 401 q1 loss 16.9 non-finite or above cap, step skipped (121 total)
+it 403 q1 loss 4.69 non-finite or above cap, step skipped (122 total)
+it 404 q1 loss 4.31 non-finite or above cap, step skipped (123 total)
+it 405 q1 loss 5.08 non-finite or above cap, step skipped (124 total)
+it 407 q1 loss 10.2 non-finite or above cap, step skipped (125 total)
+it 415 q1 loss 12.8 non-finite or above cap, step skipped (126 total)
+it 416 q1 loss 3.84 non-finite or above cap, step skipped (127 total)
+it 418 q1 loss 35.4 non-finite or above cap, step skipped (128 total)
+it 422 q1 loss 4.56 non-finite or above cap, step skipped (129 total)
+it 424 q1 loss 8.16 non-finite or above cap, step skipped (130 total)
+it 428 q1 loss 31.3 non-finite or above cap, step skipped (131 total)
+it 440 q1 loss 3.47 non-finite or above cap, step skipped (132 total)
+it 442 q1 loss 4.08 non-finite or above cap, step skipped (133 total)
+it 448 q1 loss 10 non-finite or above cap, step skipped (134 total)
+it 450 stage 0 k 6 [q1:6.05360 unit_base:0.00128] t 47s
+it 450 q1 loss 3.81 non-finite or above cap, step skipped (135 total)
+it 452 q1 loss 6.82 non-finite or above cap, step skipped (136 total)
+it 456 q1 loss 10.2 non-finite or above cap, step skipped (137 total)
+it 466 q1 loss 13.8 non-finite or above cap, step skipped (138 total)
+it 467 q1 loss 5.87 non-finite or above cap, step skipped (139 total)
+it 472 q1 loss 9.54 non-finite or above cap, step skipped (140 total)
+it 474 q1 loss 3.05 non-finite or above cap, step skipped (141 total)
+it 475 q1 loss 18.3 non-finite or above cap, step skipped (142 total)
+it 488 q1 loss 9.79 non-finite or above cap, step skipped (143 total)
+it 493 q1 loss 12.6 non-finite or above cap, step skipped (144 total)
+it 499 q1 loss 4.27 non-finite or above cap, step skipped (145 total)
+it 500 stage 0 k 6 [q1:3.86658 unit_base:0.00122] t 52s
+it 505 q1 loss 8.85 non-finite or above cap, step skipped (146 total)
+it 507 q1 loss 13.7 non-finite or above cap, step skipped (147 total)
+it 510 q1 loss 5.32 non-finite or above cap, step skipped (148 total)
+it 511 q1 loss 8.34 non-finite or above cap, step skipped (149 total)
+it 516 q1 loss 9.61 non-finite or above cap, step skipped (150 total)
+it 522 q1 loss 9 non-finite or above cap, step skipped (151 total)
+it 524 q1 loss 7.72 non-finite or above cap, step skipped (152 total)
+it 528 q1 loss 23.9 non-finite or above cap, step skipped (153 total)
+it 530 q1 loss 6.97 non-finite or above cap, step skipped (154 total)
+it 531 q1 loss 5.13 non-finite or above cap, step skipped (155 total)
+it 532 q1 loss 41.6 non-finite or above cap, step skipped (156 total)
+it 534 q1 loss 26.3 non-finite or above cap, step skipped (157 total)
+it 537 q1 loss 26.4 non-finite or above cap, step skipped (158 total)
+it 543 q1 loss 6.55 non-finite or above cap, step skipped (159 total)
+it 550 stage 0 k 6 [q1:8.60277 unit_base:0.00113] t 56s
+it 550 q1 loss 34.2 non-finite or above cap, step skipped (160 total)
+it 557 q1 loss 4.29 non-finite or above cap, step skipped (161 total)
+it 558 q1 loss 4.46 non-finite or above cap, step skipped (162 total)
+it 560 q1 loss 3.8 non-finite or above cap, step skipped (163 total)
+it 565 q1 loss 5.58 non-finite or above cap, step skipped (164 total)
+it 567 q1 loss 3.27 non-finite or above cap, step skipped (165 total)
+it 572 q1 loss 78 non-finite or above cap, step skipped (166 total)
+it 573 q1 loss 6.08 non-finite or above cap, step skipped (167 total)
+it 575 q1 loss 56.4 non-finite or above cap, step skipped (168 total)
+it 578 q1 loss 5.02 non-finite or above cap, step skipped (169 total)
+it 585 q1 loss 4.56 non-finite or above cap, step skipped (170 total)
+it 587 q1 loss 33.4 non-finite or above cap, step skipped (171 total)
+it 594 q1 loss 3.54 non-finite or above cap, step skipped (172 total)
+it 595 q1 loss 7.52 non-finite or above cap, step skipped (173 total)
+it 596 q1 loss 15.6 non-finite or above cap, step skipped (174 total)
+it 598 q1 loss 16.9 non-finite or above cap, step skipped (175 total)
+it 600 stage 0 k 6 [q1:12.17202 unit_base:0.00118] t 61s
+stage 0 eval {"planet": {"10": {"20": {"da_over_a": 1.3612532878768793, "de": 1.6709182329318844, "pos_err": 6.767254268157878, "dE_model": 3.4588527198499532, "dE_truth": 4.090702927993983e-07, "dE_model_max": 12.009167129623451, "finite": true}, "50": {"da_over_a": 1.2266353987322525, "de": 1.7318598353348684, "pos_err": 16.844165268095047, "dE_model": 3.3726852869969237, "dE_truth": 1.3354806471901466e-06, "dE_model_max": 25.024054180634618, "finite": true}, "100": {"da_over_a": 1.4859277563297184, "de": 1.6757775121652023, "pos_err": 21.8041427241451, "dE_model": 3.8937963955562576, "dE_truth": 2.627418602288013e-06, "dE_model_max": 12.193852742467595, "finite": true}}, "100": {"20": {"da_over_a": 1.167525507838615, "de": 6.315813824203898, "pos_err": 11.304370429358325, "dE_model": 6.0532322222185595, "dE_truth": 3.657964476631817e-07, "dE_model_max": 53.95412202068792, "finite": true}, "50": {"da_over_a": 1.0284074661170801, "de": 27.80038931030068, "pos_err": 49.087283150315315, "dE_model": 40.87597905342071, "dE_truth": 1.977426078772977e-06, "dE_model_max": 302.3701825319713, "finite": true}, "100": {"da_over_a": 1.006583350077749, "de": 183.08815763933376, "pos_err": 184.57951529771944, "dE_model": 178.74528527366948, "dE_truth": 2.0913964238617292e-06, "dE_model_max": 1002.718955441237, "finite": true}}, "1000": {"20": {"da_over_a": 1.1738482430232693, "de": 4.488398391759091, "pos_err": 7.919057970037979, "dE_model": 6.849844493194402, "dE_truth": 2.336113030673829e-07, "dE_model_max": 323.0601861916574, "finite": true}, "50": {"da_over_a": 1.0325673061690206, "de": 15.626295789381519, "pos_err": 35.00756967263987, "dE_model": 31.964032958206367, "dE_truth": 1.3447033614541323e-06, "dE_model_max": 350.0796720715839, "finite": true}, "100": {"da_over_a": 1.0103987814331548, "de": 153.91298536105026, "pos_err": 166.7011387059619, "dE_model": 101.7398837354983, "dE_truth": 1.4746926161141372e-06, "dE_model_max": 478.42510190160243, "finite": true}}}, "disk": {"10": {"20": {"da_over_a": 1.2205888573070647, "de": 0.6301916088665926, "pos_err": 1.6143634118363952, "dE_model": 0.16020007177675627, "dE_truth": 3.183567270720603e-05, "dE_model_max": 5.13160953127865, "finite": true}, "50": {"da_over_a": 1.1246734415134474, "de": 0.7018518868294754, "pos_err": 5.162003121024691, "dE_model": 0.36586096103936405, "dE_truth": 2.2552722560033528e-05, "dE_model_max": 5.87744747626278, "finite": true}, "100": {"da_over_a": 1.1609031893147237, "de": 2.6344626968839235, "pos_err": 20.757420781387587, "dE_model": 1.044189287757089, "dE_truth": 0.0002238599237286964, "dE_model_max": 7.288225064994112, "finite": true}}, "100": {"20": {"da_over_a": 0.3988950011889367, "de": 0.5132484049209184, "pos_err": 2.1707686768796073, "dE_model": 0.08985386867460066, "dE_truth": 2.2354012144475135e-06, "dE_model_max": 0.8236553311813103, "finite": true}, "50": {"da_over_a": 0.8816564086283267, "de": 0.7741738225524695, "pos_err": 10.464213045756996, "dE_model": 0.5195990423343357, "dE_truth": 4.927292097694448e-06, "dE_model_max": 4.989900735779804, "finite": true}, "100": {"da_over_a": 1.154737371137514, "de": 1.0288757449015384, "pos_err": 31.746232782339966, "dE_model": 1.9942142426161493, "dE_truth": 3.949601449708326e-06, "dE_model_max": 8.454330687068797, "finite": true}}, "1000": {"20": {"da_over_a": 0.2495629811853955, "de": 0.2813601263077183, "pos_err": 0.8536232027680095, "dE_model": 0.03708845238771902, "dE_truth": 7.787715691659424e-07, "dE_model_max": 0.8663830738724477, "finite": true}, "50": {"da_over_a": 1.1936586789680925, "de": 0.916817723196752, "pos_err": 6.344220165621625, "dE_model": 0.6824636554868488, "dE_truth": 1.2854854556285727e-06, "dE_model_max": 4.436736289076585, "finite": true}, "100": {"da_over_a": 1.24446517886471, "de": 1.4187755964382958, "pos_err": 31.33118966453247, "dE_model": 2.8890644606980347, "dE_truth": 1.3953206185894062e-06, "dE_model_max": 12.217697109368903, "finite": true}}}, "base": {"5": 0.009858322329819202, "10": 0.0326605886220932, "20": 0.1161811575293541, "50": 0.8960524201393127}}
+stage 1 group q3: scenes 300 N 202 weight 0.45
+stage 1 group q1-1: scenes 300 N 200 weight 0.25
+stage 1 group unit_base: scenes 300 N 300 weight 0.3
+it 627 q1-1 loss 34.6 non-finite or above cap, step skipped (176 total)
+it 636 q1-1 loss 6.63 non-finite or above cap, step skipped (177 total)
+it 642 q1-1 loss 3.86 non-finite or above cap, step skipped (178 total)
+it 643 q1-1 loss 5.31 non-finite or above cap, step skipped (179 total)
+it 650 stage 1 k 6 [q1:12.17202 unit_base:0.00122 q1-1:7.14066 q3:0.26469] t 85s
+it 658 q1-1 loss 16.3 non-finite or above cap, step skipped (180 total)
+it 662 q1-1 loss 5.75 non-finite or above cap, step skipped (181 total)
+it 672 q1-1 loss 21.2 non-finite or above cap, step skipped (182 total)
+it 674 q1-1 loss 27.9 non-finite or above cap, step skipped (183 total)
+it 675 q1-1 loss 4.96 non-finite or above cap, step skipped (184 total)
+it 676 q1-1 loss 4.57 non-finite or above cap, step skipped (185 total)
+it 685 q3 loss 3.25 non-finite or above cap, step skipped (186 total)
+it 699 q1-1 loss 3.3 non-finite or above cap, step skipped (187 total)
+it 700 stage 1 k 7 [q1:12.17202 unit_base:0.00191 q1-1:7.64706 q3:0.55499] t 91s
+it 711 q1-1 loss 5.64 non-finite or above cap, step skipped (188 total)
+it 713 q1-1 loss 3.37 non-finite or above cap, step skipped (189 total)
+it 717 q1-1 loss 6.07 non-finite or above cap, step skipped (190 total)
+it 732 q1-1 loss 4.19 non-finite or above cap, step skipped (191 total)
+it 743 q1-1 loss 9.62 non-finite or above cap, step skipped (192 total)
+it 744 q1-1 loss 28.3 non-finite or above cap, step skipped (193 total)
+it 746 q1-1 loss 3.67 non-finite or above cap, step skipped (194 total)
+it 750 stage 1 k 7 [q1:12.17202 unit_base:0.00300 q1-1:4.24712 q3:0.39241] t 96s
+it 756 q1-1 loss 3.57 non-finite or above cap, step skipped (195 total)
+it 759 q1-1 loss 54.7 non-finite or above cap, step skipped (196 total)
+it 770 q1-1 loss 24.5 non-finite or above cap, step skipped (197 total)
+it 778 q1-1 loss 14 non-finite or above cap, step skipped (198 total)
+it 785 q1-1 loss 9.08 non-finite or above cap, step skipped (199 total)
+it 795 q1-1 loss 21.6 non-finite or above cap, step skipped (200 total)
+it 799 q1-1 loss 8.2 non-finite or above cap, step skipped (201 total)
+it 800 stage 1 k 7 [q1:12.17202 unit_base:0.00206 q1-1:9.97414 q3:0.37339] t 102s
+it 800 q1-1 loss 4.25 non-finite or above cap, step skipped (202 total)
+it 804 q1-1 loss 10.2 non-finite or above cap, step skipped (203 total)
+it 810 q1-1 loss 4.67 non-finite or above cap, step skipped (204 total)
+it 812 q1-1 loss 4.73 non-finite or above cap, step skipped (205 total)
+it 817 q1-1 loss 5.56 non-finite or above cap, step skipped (206 total)
+it 824 q1-1 loss 4 non-finite or above cap, step skipped (207 total)
+it 835 q1-1 loss 7.07 non-finite or above cap, step skipped (208 total)
+it 839 q1-1 loss 5.61 non-finite or above cap, step skipped (209 total)
+it 850 stage 1 k 7 [q1:12.17202 unit_base:0.00206 q1-1:5.68605 q3:0.19768] t 107s
+it 855 q1-1 loss 3.12 non-finite or above cap, step skipped (210 total)
+it 866 q1-1 loss 5.86 non-finite or above cap, step skipped (211 total)
+it 872 q1-1 loss 6.35 non-finite or above cap, step skipped (212 total)
+it 873 q1-1 loss 6.97 non-finite or above cap, step skipped (213 total)
+it 877 q1-1 loss 38.4 non-finite or above cap, step skipped (214 total)
+it 893 q1-1 loss 4.49 non-finite or above cap, step skipped (215 total)
+it 899 q1-1 loss 5.03 non-finite or above cap, step skipped (216 total)
+it 900 stage 1 k 7 [q1:12.17202 unit_base:0.00240 q1-1:4.96847 q3:0.30084] t 112s
+it 903 q1-1 loss 6.02 non-finite or above cap, step skipped (217 total)
+it 929 q1-1 loss 4.84 non-finite or above cap, step skipped (218 total)
+it 931 q1-1 loss 3.53 non-finite or above cap, step skipped (219 total)
+it 932 q1-1 loss 3.57 non-finite or above cap, step skipped (220 total)
+it 933 q1-1 loss 28.5 non-finite or above cap, step skipped (221 total)
+it 941 q1-1 loss 5.49 non-finite or above cap, step skipped (222 total)
+it 942 q1-1 loss 3.62 non-finite or above cap, step skipped (223 total)
+it 946 q1-1 loss 17.9 non-finite or above cap, step skipped (224 total)
+it 950 stage 1 k 8 [q1:12.17202 unit_base:0.00307 q1-1:5.07346 q3:0.34633] t 118s
+it 957 q1-1 loss 6.53 non-finite or above cap, step skipped (225 total)
+it 970 q1-1 loss 9.34 non-finite or above cap, step skipped (226 total)
+it 974 q1-1 loss 4.68 non-finite or above cap, step skipped (227 total)
+it 979 q1-1 loss 4.62 non-finite or above cap, step skipped (228 total)
+it 982 q1-1 loss 3.28 non-finite or above cap, step skipped (229 total)
+it 993 q1-1 loss 4.93 non-finite or above cap, step skipped (230 total)
+it 995 q1-1 loss 14.9 non-finite or above cap, step skipped (231 total)
+it 996 q1-1 loss 4.38 non-finite or above cap, step skipped (232 total)
+it 1000 stage 1 k 8 [q1:12.17202 unit_base:0.00386 q1-1:4.86705 q3:0.38356] t 124s
+it 1003 q1-1 loss 54.2 non-finite or above cap, step skipped (233 total)
+it 1017 q1-1 loss 4.9 non-finite or above cap, step skipped (234 total)
+it 1050 stage 1 k 8 [q1:12.17202 unit_base:0.00352 q1-1:5.61113 q3:0.33551] t 130s
+it 1074 q1-1 loss 7.18 non-finite or above cap, step skipped (235 total)
+it 1076 q1-1 loss 3.88 non-finite or above cap, step skipped (236 total)
+it 1081 q1-1 loss 3.39 non-finite or above cap, step skipped (237 total)
+it 1083 q1-1 loss 5.64 non-finite or above cap, step skipped (238 total)
+it 1092 q1-1 loss 8.38 non-finite or above cap, step skipped (239 total)
+it 1097 q1-1 loss 15.1 non-finite or above cap, step skipped (240 total)
+it 1100 stage 1 k 8 [q1:12.17202 unit_base:0.00331 q1-1:3.32026 q3:0.32271] t 136s
+it 1103 q1-1 loss 15.4 non-finite or above cap, step skipped (241 total)
+it 1104 q1-1 loss 6.57 non-finite or above cap, step skipped (242 total)
+it 1107 q1-1 loss 4.37 non-finite or above cap, step skipped (243 total)
+it 1108 q1-1 loss 4.1 non-finite or above cap, step skipped (244 total)
+it 1115 q1-1 loss 4.16 non-finite or above cap, step skipped (245 total)
+it 1117 q1-1 loss 3.29 non-finite or above cap, step skipped (246 total)
+it 1134 q1-1 loss 4.99 non-finite or above cap, step skipped (247 total)
+it 1136 q1-1 loss 12.1 non-finite or above cap, step skipped (248 total)
+it 1142 q1-1 loss 3.93 non-finite or above cap, step skipped (249 total)
+it 1143 q1-1 loss 9.8 non-finite or above cap, step skipped (250 total)
+it 1150 stage 1 k 8 [q1:12.17202 unit_base:0.00333 q1-1:5.20302 q3:0.34828] t 142s
+it 1155 q1-1 loss 6.61 non-finite or above cap, step skipped (251 total)
+it 1168 q1-1 loss 4.3 non-finite or above cap, step skipped (252 total)
+it 1181 q1-1 loss 30.5 non-finite or above cap, step skipped (253 total)
+it 1187 q1-1 loss 26.6 non-finite or above cap, step skipped (254 total)
+it 1189 q1-1 loss 4.93 non-finite or above cap, step skipped (255 total)
+it 1193 q1-1 loss 5.48 non-finite or above cap, step skipped (256 total)
+it 1196 q1-1 loss 5.35 non-finite or above cap, step skipped (257 total)
+it 1200 stage 1 k 9 [q1:12.17202 unit_base:0.00371 q1-1:6.65533 q3:0.25473] t 148s
+stage 1 eval {"planet": {"10": {"20": {"da_over_a": 1.4677506057502234, "de": 1.1318926417932014, "pos_err": 5.426270336203533, "dE_model": 1.9725535188540846, "dE_truth": 4.090702927993983e-07, "dE_model_max": 7.3163318745805, "finite": true}, "50": {"da_over_a": 1.2028705950537961, "de": 6.1601722236461915, "pos_err": 26.321051412035086, "dE_model": 5.942352905354848, "dE_truth": 1.3354806471901466e-06, "dE_model_max": 13.518287434303645, "finite": true}, "100": {"da_over_a": 1.2366671082979463, "de": 1.7755144878429836, "pos_err": 30.515904685738448, "dE_model": 2.194658478859157, "dE_truth": 2.627418602288013e-06, "dE_model_max": 30.2638720419829, "finite": true}}, "100": {"20": {"da_over_a": 1.1436242434593544, "de": 3.282355677173441, "pos_err": 10.678919323046362, "dE_model": 5.674127480836618, "dE_truth": 3.657964476631817e-07, "dE_model_max": 22.265701766931517, "finite": true}, "50": {"da_over_a": 1.0469465987703277, "de": 25.913670368368464, "pos_err": 41.273052406270104, "dE_model": 15.235154961019301, "dE_truth": 1.977426078772977e-06, "dE_model_max": 136.4123777623457, "finite": true}, "100": {"da_over_a": 1.007743645142625, "de": 128.12884066969474, "pos_err": 179.88507287623798, "dE_model": 132.594119523397, "dE_truth": 2.0913964238617292e-06, "dE_model_max": 483.1597221012646, "finite": true}}, "1000": {"20": {"da_over_a": 1.153148970036305, "de": 3.1807636926632012, "pos_err": 3.788094550746015, "dE_model": 3.6931144574234, "dE_truth": 2.336113030673829e-07, "dE_model_max": 94.78796694468319, "finite": true}, "50": {"da_over_a": 1.0699662120606312, "de": 5.744676116343004, "pos_err": 23.498425959076794, "dE_model": 15.528790571758613, "dE_truth": 1.3447033614541323e-06, "dE_model_max": 209.00679799344942, "finite": true}, "100": {"da_over_a": 1.017987631475815, "de": 37.31360547417153, "pos_err": 107.0354124075836, "dE_model": 57.479061821014554, "dE_truth": 1.4746926161141372e-06, "dE_model_max": 282.6986787267497, "finite": true}}}, "disk": {"10": {"20": {"da_over_a": 0.21877714692293881, "de": 0.14878441536590753, "pos_err": 0.55603325150617, "dE_model": 0.08791261620255364, "dE_truth": 3.183567270720603e-05, "dE_model_max": 0.17727925966961855, "finite": true}, "50": {"da_over_a": 0.3535346807986923, "de": 0.3215885152115743, "pos_err": 2.2036652325790116, "dE_model": 0.09397826486020269, "dE_truth": 2.2552722560033528e-05, "dE_model_max": 12.76829856489803, "finite": true}, "100": {"da_over_a": 0.6411609869665578, "de": 0.3940760454896127, "pos_err": 6.703115956605247, "dE_model": 0.28205387998430076, "dE_truth": 0.0002238599237286964, "dE_model_max": 12.163815556769341, "finite": true}}, "100": {"20": {"da_over_a": 0.377786157480444, "de": 0.4506581622052785, "pos_err": 1.4891427599877347, "dE_model": 0.041021357263608525, "dE_truth": 2.2354012144475135e-06, "dE_model_max": 0.7182022408496326, "finite": true}, "50": {"da_over_a": 1.0128294682217074, "de": 0.7243717138929557, "pos_err": 5.953178595959365, "dE_model": 0.3316897663707652, "dE_truth": 4.927292097694448e-06, "dE_model_max": 2.7094884451177084, "finite": true}, "100": {"da_over_a": 1.1949786213951974, "de": 1.1981285487317637, "pos_err": 24.376430504736575, "dE_model": 1.2079291987361973, "dE_truth": 3.949601449708326e-06, "dE_model_max": 6.172217852175655, "finite": true}}, "1000": {"20": {"da_over_a": 0.33424667580320055, "de": 0.37992533856433175, "pos_err": 1.0700154154028092, "dE_model": 0.05973507899082567, "dE_truth": 7.787715691659424e-07, "dE_model_max": 1.4085406379740446, "finite": true}, "50": {"da_over_a": 1.1975481563577035, "de": 0.8761627585369074, "pos_err": 9.949413096362564, "dE_model": 0.4549969836243682, "dE_truth": 1.2854854556285727e-06, "dE_model_max": 5.840819443509478, "finite": true}, "100": {"da_over_a": 1.230409195056398, "de": 1.0351602124877226, "pos_err": 25.93545290696138, "dE_model": 1.8462397461536708, "dE_truth": 1.3953206185894062e-06, "dE_model_max": 14.446125714097585, "finite": true}}}, "base": {"5": 0.014868812635540962, "10": 0.04501604661345482, "20": 0.12646183371543884, "50": 0.8304059505462646}}
+stage 2 group q10: scenes 300 N 202 weight 0.45
+stage 2 group q1-3: scenes 300 N 202 weight 0.25
+stage 2 group unit_base: scenes 300 N 300 weight 0.3
+it 1250 stage 2 k 9 [q1:12.17202 unit_base:0.00386 q1-1:6.65533 q3:0.25473 q1-3:1.10068 q10:0.30745] t 174s
+it 1300 stage 2 k 9 [q1:12.17202 unit_base:0.00383 q1-1:6.65533 q3:0.25473 q1-3:1.11496 q10:0.16502] t 181s
+it 1337 q1-3 loss 3.41 non-finite or above cap, step skipped (258 total)
+it 1350 stage 2 k 9 [q1:12.17202 unit_base:0.00358 q1-1:6.65533 q3:0.25473 q1-3:0.98215 q10:0.17392] t 187s
+it 1400 stage 2 k 9 [q1:12.17202 unit_base:0.00325 q1-1:6.65533 q3:0.25473 q1-3:1.23994 q10:0.18817] t 194s
+it 1450 stage 2 k 10 [q1:12.17202 unit_base:0.00461 q1-1:6.65533 q3:0.25473 q1-3:1.50523 q10:0.09962] t 200s
+it 1500 stage 2 k 10 [q1:12.17202 unit_base:0.00393 q1-1:6.65533 q3:0.25473 q1-3:1.45132 q10:0.16025] t 208s
+it 1534 q1-3 loss 4.97 non-finite or above cap, step skipped (259 total)
+it 1550 stage 2 k 10 [q1:12.17202 unit_base:0.00400 q1-1:6.65533 q3:0.25473 q1-3:1.38204 q10:0.14753] t 215s
+it 1554 q1-3 loss 4.19 non-finite or above cap, step skipped (260 total)
+it 1557 q1-3 loss 6.98 non-finite or above cap, step skipped (261 total)
+it 1558 q1-3 loss 4.76 non-finite or above cap, step skipped (262 total)
+it 1565 q1-3 loss 6.73 non-finite or above cap, step skipped (263 total)
+it 1590 q1-3 loss 3.92 non-finite or above cap, step skipped (264 total)
+it 1600 stage 2 k 10 [q1:12.17202 unit_base:0.00370 q1-1:6.65533 q3:0.25473 q1-3:2.36724 q10:0.11086] t 222s
+it 1615 q1-3 loss 4.18 non-finite or above cap, step skipped (265 total)
+it 1624 q1-3 loss 7.22 non-finite or above cap, step skipped (266 total)
+it 1648 q1-3 loss 3.07 non-finite or above cap, step skipped (267 total)
+it 1650 stage 2 k 10 [q1:12.17202 unit_base:0.00399 q1-1:6.65533 q3:0.25473 q1-3:2.25671 q10:0.18853] t 229s
+it 1692 q1-3 loss 5.05 non-finite or above cap, step skipped (268 total)
+it 1694 q1-3 loss 4.13 non-finite or above cap, step skipped (269 total)
+it 1700 stage 2 k 10 [q1:12.17202 unit_base:0.00322 q1-1:6.65533 q3:0.25473 q1-3:2.13690 q10:0.17458] t 236s
+it 1708 q1-3 loss 5.26 non-finite or above cap, step skipped (270 total)
+it 1721 q1-3 loss 6.37 non-finite or above cap, step skipped (271 total)
+it 1750 stage 2 k 11 [q1:12.17202 unit_base:0.00387 q1-1:6.65533 q3:0.25473 q1-3:2.19631 q10:0.14060] t 244s
+it 1773 q1-3 loss 4.66 non-finite or above cap, step skipped (272 total)
+it 1784 q1-3 loss 7.28 non-finite or above cap, step skipped (273 total)
+it 1800 stage 2 k 11 [q1:12.17202 unit_base:0.00380 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655] t 252s
+stage 2 eval {"planet": {"10": {"20": {"da_over_a": 0.9577991544900477, "de": 0.6653949983403813, "pos_err": 1.854472690264777, "dE_model": 0.547594364520728, "dE_truth": 4.090702927993983e-07, "dE_model_max": 2.346199335478975, "finite": true}, "50": {"da_over_a": 1.432407674120286, "de": 1.2204550902366864, "pos_err": 10.846357338545923, "dE_model": 1.5583262149189316, "dE_truth": 1.3354806471901466e-06, "dE_model_max": 14.469591668064227, "finite": true}, "100": {"da_over_a": 1.590787512606532, "de": 1.332604864720081, "pos_err": 21.905347167465113, "dE_model": 1.4935765513778518, "dE_truth": 2.627418602288013e-06, "dE_model_max": 10.072829605509074, "finite": true}}, "100": {"20": {"da_over_a": 1.162621557083765, "de": 1.6058635957684908, "pos_err": 6.718271210273349, "dE_model": 3.489107857615825, "dE_truth": 3.657964476631817e-07, "dE_model_max": 17.202211567295276, "finite": true}, "50": {"da_over_a": 1.0844993690401796, "de": 5.505312410262299, "pos_err": 29.071752179688136, "dE_model": 9.459908343777364, "dE_truth": 1.977426078772977e-06, "dE_model_max": 24.435786735929067, "finite": true}, "100": {"da_over_a": 1.017587311578093, "de": 30.797712614869223, "pos_err": 105.58262449714003, "dE_model": 52.30498392745346, "dE_truth": 2.0913964238617292e-06, "dE_model_max": 180.1577841127215, "finite": true}}, "1000": {"20": {"da_over_a": 1.173965269177676, "de": 1.682547306787783, "pos_err": 5.177513603723062, "dE_model": 3.8969122929113054, "dE_truth": 2.336113030673829e-07, "dE_model_max": 23.50043086021878, "finite": true}, "50": {"da_over_a": 1.0605846186365167, "de": 5.783902380174701, "pos_err": 31.230420185715573, "dE_model": 17.705013205235318, "dE_truth": 1.3447033614541323e-06, "dE_model_max": 230.41264773738004, "finite": true}, "100": {"da_over_a": 1.0445936353440128, "de": 54.49681275149254, "pos_err": 130.39085856119073, "dE_model": 23.560439407934588, "dE_truth": 1.4746926161141372e-06, "dE_model_max": 395.83353505950447, "finite": true}}}, "disk": {"10": {"20": {"da_over_a": 0.13621089159650313, "de": 0.11064719270001858, "pos_err": 0.17467334255741962, "dE_model": 0.061724987050775254, "dE_truth": 3.183567270720603e-05, "dE_model_max": 0.11142596425716624, "finite": true}, "50": {"da_over_a": 0.3731048163845426, "de": 0.2909628890175877, "pos_err": 1.8909545591104595, "dE_model": 0.13874064970223948, "dE_truth": 2.2552722560033528e-05, "dE_model_max": 1.1695305207119728, "finite": true}, "100": {"da_over_a": 0.5786656081200993, "de": 0.3192943510878474, "pos_err": 8.551864537138101, "dE_model": 0.3091736405189365, "dE_truth": 0.0002238599237286964, "dE_model_max": 10.389264898387903, "finite": true}}, "100": {"20": {"da_over_a": 0.17712040515262378, "de": 0.1654294732626995, "pos_err": 0.4861182218534542, "dE_model": 0.025901795794685524, "dE_truth": 2.2354012144475135e-06, "dE_model_max": 0.37189474308241477, "finite": true}, "50": {"da_over_a": 0.3643616410490764, "de": 0.21424186640191284, "pos_err": 3.8157387660849524, "dE_model": 0.04862770742305403, "dE_truth": 4.927292097694448e-06, "dE_model_max": 3.07110015824335, "finite": true}, "100": {"da_over_a": 0.6652076573709045, "de": 0.5312883015019517, "pos_err": 13.064436210686559, "dE_model": 0.20359290290958232, "dE_truth": 3.949601449708326e-06, "dE_model_max": 5.427284125610196, "finite": true}}, "1000": {"20": {"da_over_a": 0.1630507919932976, "de": 0.11875026344351299, "pos_err": 0.5143747023251826, "dE_model": 0.008251908922714414, "dE_truth": 7.787715691659424e-07, "dE_model_max": 0.4416792584702313, "finite": true}, "50": {"da_over_a": 0.32525250912964865, "de": 0.3696289709563097, "pos_err": 4.708484942522332, "dE_model": 0.07506790424667359, "dE_truth": 1.2854854556285727e-06, "dE_model_max": 1.3645407724085519, "finite": true}, "100": {"da_over_a": 0.8221286556553589, "de": 0.6946755055654212, "pos_err": 17.030588835100975, "dE_model": 0.35492585974491386, "dE_truth": 1.3953206185894062e-06, "dE_model_max": 6.205084642297897, "finite": true}}}, "base": {"5": 0.011884015053510666, "10": 0.03543931245803833, "20": 0.09802530705928802, "50": 0.6596863865852356}}
+stage 3 group q30: scenes 300 N 202 weight 0.45
+stage 3 group q1-10: scenes 300 N 201 weight 0.25
+stage 3 group unit_base: scenes 300 N 300 weight 0.3
+it 1811 q1-10 loss 3.45 non-finite or above cap, step skipped (274 total)
+it 1850 stage 3 k 11 [q1:12.17202 unit_base:0.00369 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.12138 q1-10:0.84952] t 279s
+it 1889 q1-10 loss 3.79 non-finite or above cap, step skipped (275 total)
+it 1894 q1-10 loss 5.05 non-finite or above cap, step skipped (276 total)
+it 1900 stage 3 k 11 [q1:12.17202 unit_base:0.00435 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.32843 q1-10:1.15651] t 287s
+it 1901 q1-10 loss 4.68 non-finite or above cap, step skipped (277 total)
+it 1950 stage 3 k 11 [q1:12.17202 unit_base:0.00346 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.11359 q1-10:1.29918] t 294s
+it 2000 stage 3 k 12 [q1:12.17202 unit_base:0.00376 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.07667 q1-10:0.92267] t 303s
+it 2036 q1-10 loss 9.55 non-finite or above cap, step skipped (278 total)
+it 2050 stage 3 k 12 [q1:12.17202 unit_base:0.00559 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.13003 q1-10:1.56533] t 311s
+it 2100 stage 3 k 12 [q1:12.17202 unit_base:0.00521 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04776 q1-10:1.31554] t 319s
+it 2150 stage 3 k 12 [q1:12.17202 unit_base:0.00490 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.06071 q1-10:0.86020] t 327s
+it 2160 q1-10 loss 4.48 non-finite or above cap, step skipped (279 total)
+it 2164 q1-10 loss 5.3 non-finite or above cap, step skipped (280 total)
+it 2182 q1-10 loss 5.03 non-finite or above cap, step skipped (281 total)
+it 2200 stage 3 k 12 [q1:12.17202 unit_base:0.00557 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.06812 q1-10:1.40011] t 336s
+it 2241 q1-10 loss 4.88 non-finite or above cap, step skipped (282 total)
+it 2250 stage 3 k 13 [q1:12.17202 unit_base:0.00531 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.05037 q1-10:1.33203] t 344s
+it 2267 q1-10 loss 4.7 non-finite or above cap, step skipped (283 total)
+it 2300 stage 3 k 13 [q1:12.17202 unit_base:0.00563 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.05352 q1-10:0.99101] t 353s
+it 2333 q1-10 loss 1.72 non-finite or above cap, step skipped (284 total)
+it 2350 stage 3 k 13 [q1:12.17202 unit_base:0.00599 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.05423 q1-10:1.03843] t 362s
+it 2355 q1-10 loss 3.26 non-finite or above cap, step skipped (285 total)
+it 2400 stage 3 k 13 [q1:12.17202 unit_base:0.00533 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345] t 372s
+stage 3 eval {"planet": {"10": {"20": {"da_over_a": 0.3680371508590564, "de": 0.24650571313817443, "pos_err": 1.1178002788670565, "dE_model": 0.29287635989977967, "dE_truth": 4.090702927993983e-07, "dE_model_max": 1.8951357206673878, "finite": true}, "50": {"da_over_a": 0.3583249124060869, "de": 0.6801668511161802, "pos_err": 5.135734550288582, "dE_model": 0.5275201924998016, "dE_truth": 1.3354806471901466e-06, "dE_model_max": 13.059898743139513, "finite": true}, "100": {"da_over_a": 1.2628581139983912, "de": 0.8093042216038835, "pos_err": 17.265957661585468, "dE_model": 0.8102916849774695, "dE_truth": 2.627418602288013e-06, "dE_model_max": 4.032799711125459, "finite": true}}, "100": {"20": {"da_over_a": 1.123625326732944, "de": 0.7150999978203647, "pos_err": 3.0826126494659567, "dE_model": 0.7867364593752308, "dE_truth": 3.657964476631817e-07, "dE_model_max": 9.441723161714819, "finite": true}, "50": {"da_over_a": 1.41850310027688, "de": 1.3102943609782867, "pos_err": 20.898477133839208, "dE_model": 1.947480075517117, "dE_truth": 1.977426078772977e-06, "dE_model_max": 7.480491551886999, "finite": true}, "100": {"da_over_a": 1.1766603628711483, "de": 1.190568876877904, "pos_err": 26.239125463055007, "dE_model": 1.425113008917847, "dE_truth": 2.0913964238617292e-06, "dE_model_max": 24.449123118501138, "finite": true}}, "1000": {"20": {"da_over_a": 1.1276911317435125, "de": 1.570932245275777, "pos_err": 5.813172708723152, "dE_model": 3.05796451414758, "dE_truth": 2.336113030673829e-07, "dE_model_max": 25.86214997055766, "finite": true}, "50": {"da_over_a": 1.0436676864476957, "de": 4.458915854728536, "pos_err": 28.641409515979262, "dE_model": 13.422693482579653, "dE_truth": 1.3447033614541323e-06, "dE_model_max": 156.6607817409253, "finite": true}, "100": {"da_over_a": 1.0257111483579724, "de": 70.78283320168818, "pos_err": 118.11897171603945, "dE_model": 31.2999224828514, "dE_truth": 1.4746926161141372e-06, "dE_model_max": 237.47963069724167, "finite": true}}}, "disk": {"10": {"20": {"da_over_a": 0.059346944915756164, "de": 0.0404974668207318, "pos_err": 0.11831632102211619, "dE_model": 0.04800331464797957, "dE_truth": 3.183567270720603e-05, "dE_model_max": 0.15112468416643865, "finite": true}, "50": {"da_over_a": 0.2619602099984655, "de": 0.1345985394239148, "pos_err": 0.6860810942659519, "dE_model": 0.12060816171243822, "dE_truth": 2.2552722560033528e-05, "dE_model_max": 0.31248894843417274, "finite": true}, "100": {"da_over_a": 0.5523675774294328, "de": 0.23802381745697104, "pos_err": 3.8920984044938987, "dE_model": 0.3969757656033617, "dE_truth": 0.0002238599237286964, "dE_model_max": 12.665854005420174, "finite": true}}, "100": {"20": {"da_over_a": 0.16192812572861465, "de": 0.11704256254815665, "pos_err": 0.49551641828277637, "dE_model": 0.014155653118911232, "dE_truth": 2.2354012144475135e-06, "dE_model_max": 0.13436188286715056, "finite": true}, "50": {"da_over_a": 0.2838930225329696, "de": 0.2222878257307367, "pos_err": 3.222444496834071, "dE_model": 0.026566900471887152, "dE_truth": 4.927292097694448e-06, "dE_model_max": 0.44078299906364815, "finite": true}, "100": {"da_over_a": 0.43907937460470214, "de": 0.28144557159673, "pos_err": 10.215599831193686, "dE_model": 0.050209007268384113, "dE_truth": 3.949601449708326e-06, "dE_model_max": 0.38535173497106723, "finite": true}}, "1000": {"20": {"da_over_a": 0.12790430856555454, "de": 0.10563129328334106, "pos_err": 0.4254307452161873, "dE_model": 0.0073619864531854935, "dE_truth": 7.787715691659424e-07, "dE_model_max": 0.08325474173142043, "finite": true}, "50": {"da_over_a": 0.25987919476072596, "de": 0.2737058904933311, "pos_err": 3.832207451942082, "dE_model": 0.05459925916587596, "dE_truth": 1.2854854556285727e-06, "dE_model_max": 0.6085651242593242, "finite": true}, "100": {"da_over_a": 0.4415230904506034, "de": 0.4150313071434681, "pos_err": 12.709466254546944, "dE_model": 0.1444698662629917, "dE_truth": 1.3953206185894062e-06, "dE_model_max": 5.275143539701734, "finite": true}}}, "base": {"5": 0.00880538858473301, "10": 0.02642601914703846, "20": 0.07731296867132187, "50": 0.5924983620643616}}
+stage 4 group q100: scenes 300 N 201 weight 0.45
+stage 4 group q1-30: scenes 300 N 202 weight 0.25
+stage 4 group unit_base: scenes 300 N 300 weight 0.3
+it 2450 stage 4 k 13 [q1:12.17202 unit_base:0.00465 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.17805 q1-30:0.87077] t 400s
+it 2471 q1-30 loss 3.24 non-finite or above cap, step skipped (286 total)
+it 2485 q1-30 loss 3.06 non-finite or above cap, step skipped (287 total)
+it 2500 stage 4 k 14 [q1:12.17202 unit_base:0.00717 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.13801 q1-30:1.02523] t 409s
+it 2502 q1-30 loss 6.6 non-finite or above cap, step skipped (288 total)
+it 2550 stage 4 k 14 [q1:12.17202 unit_base:0.00954 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.25535 q1-30:1.35811] t 419s
+it 2600 stage 4 k 14 [q1:12.17202 unit_base:0.00517 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.09422 q1-30:1.05518] t 429s
+it 2633 q1-30 loss 3.59 non-finite or above cap, step skipped (289 total)
+it 2650 stage 4 k 14 [q1:12.17202 unit_base:0.00648 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.16741 q1-30:1.00663] t 438s
+it 2665 q1-30 loss 3.53 non-finite or above cap, step skipped (290 total)
+it 2700 stage 4 k 14 [q1:12.17202 unit_base:0.00870 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.06771 q1-30:1.24848] t 448s
+it 2750 stage 4 k 14 [q1:12.17202 unit_base:0.00720 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.03602 q1-30:1.18196] t 458s
+it 2780 q1-30 loss 4.18 non-finite or above cap, step skipped (291 total)
+it 2788 q1-30 loss 3.43 non-finite or above cap, step skipped (292 total)
+it 2800 stage 4 k 15 [q1:12.17202 unit_base:0.00643 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.07051 q1-30:1.08687] t 468s
+it 2823 q1-30 loss 3.23 non-finite or above cap, step skipped (293 total)
+it 2850 stage 4 k 15 [q1:12.17202 unit_base:0.00646 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.02610 q1-30:1.30219] t 478s
+it 2855 q1-30 loss 3.54 non-finite or above cap, step skipped (294 total)
+it 2866 q1-30 loss 3.82 non-finite or above cap, step skipped (295 total)
+it 2870 q1-30 loss 5.12 non-finite or above cap, step skipped (296 total)
+it 2900 stage 4 k 15 [q1:12.17202 unit_base:0.00635 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01792 q1-30:1.38042] t 488s
+it 2906 q1-30 loss 3.71 non-finite or above cap, step skipped (297 total)
+it 2925 q1-30 loss 3.87 non-finite or above cap, step skipped (298 total)
+it 2933 q1-30 loss 3.85 non-finite or above cap, step skipped (299 total)
+it 2944 q1-30 loss 3.11 non-finite or above cap, step skipped (300 total)
+it 2950 stage 4 k 15 [q1:12.17202 unit_base:0.00685 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01250 q1-30:1.25040] t 498s
+it 3000 stage 4 k 15 [q1:12.17202 unit_base:0.00585 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415] t 508s
+stage 4 eval {"planet": {"10": {"20": {"da_over_a": 0.4880365775087112, "de": 0.4552908246108201, "pos_err": 2.499846730165581, "dE_model": 0.4803724309870475, "dE_truth": 4.090702927993983e-07, "dE_model_max": 1.438672147111034, "finite": true}, "50": {"da_over_a": 1.4112786566873532, "de": 0.8704296914716323, "pos_err": 11.309147886814287, "dE_model": 0.9554408884318553, "dE_truth": 1.3354806471901466e-06, "dE_model_max": 3.9181250758539896, "finite": true}, "100": {"da_over_a": 1.322062746326527, "de": 0.8426063114097349, "pos_err": 20.03613952324003, "dE_model": 0.979220039397131, "dE_truth": 2.627418602288013e-06, "dE_model_max": 4.924117086093559, "finite": true}}, "100": {"20": {"da_over_a": 0.24039013469730025, "de": 0.2794806451525213, "pos_err": 0.827579460843944, "dE_model": 0.2826083369145025, "dE_truth": 3.657964476631817e-07, "dE_model_max": 0.9009199730828553, "finite": true}, "50": {"da_over_a": 0.32968129311577987, "de": 0.4478055857594887, "pos_err": 5.145811255029476, "dE_model": 0.47762401179451697, "dE_truth": 1.977426078772977e-06, "dE_model_max": 26.534422397559982, "finite": true}, "100": {"da_over_a": 0.828908911515877, "de": 0.5477271346913724, "pos_err": 13.096828121967828, "dE_model": 0.9983385213393481, "dE_truth": 2.0913964238617292e-06, "dE_model_max": 46.068988948077305, "finite": true}}, "1000": {"20": {"da_over_a": 1.2938564142634261, "de": 1.036692563470994, "pos_err": 4.079586814992331, "dE_model": 1.3516225804523256, "dE_truth": 2.336113030673829e-07, "dE_model_max": 13.59586127895453, "finite": true}, "50": {"da_over_a": 1.0759985958998275, "de": 3.6269693623805135, "pos_err": 24.55674427701145, "dE_model": 5.617754723246907, "dE_truth": 1.3447033614541323e-06, "dE_model_max": 64.29794213985676, "finite": true}, "100": {"da_over_a": 1.0291531658650221, "de": 34.30151325583976, "pos_err": 105.98003639355403, "dE_model": 24.256804497277443, "dE_truth": 1.4746926161141372e-06, "dE_model_max": 183.8940222476349, "finite": true}}}, "disk": {"10": {"20": {"da_over_a": 0.08152569432217663, "de": 0.05293270694191021, "pos_err": 0.15426652909755328, "dE_model": 0.10669026304803457, "dE_truth": 3.183567270720603e-05, "dE_model_max": 0.43537670511296367, "finite": true}, "50": {"da_over_a": 0.35838891868025735, "de": 0.18256452894462738, "pos_err": 0.7502928771034477, "dE_model": 0.2345560869609564, "dE_truth": 2.2552722560033528e-05, "dE_model_max": 1.5067766099473439, "finite": true}, "100": {"da_over_a": 0.35983743177670313, "de": 0.17600789204110168, "pos_err": 3.4832075689393, "dE_model": 0.49429406247330676, "dE_truth": 0.0002238599237286964, "dE_model_max": 6.984021747475877, "finite": true}}, "100": {"20": {"da_over_a": 0.04963582081288166, "de": 0.03493240588599399, "pos_err": 0.1560896855688882, "dE_model": 0.012337521623627687, "dE_truth": 2.2354012144475135e-06, "dE_model_max": 0.06947027563608832, "finite": true}, "50": {"da_over_a": 0.11687299911539167, "de": 0.07247809629216664, "pos_err": 0.9312975080772087, "dE_model": 0.03081737235228899, "dE_truth": 4.927292097694448e-06, "dE_model_max": 0.4326375685665237, "finite": true}, "100": {"da_over_a": 0.20093691005088532, "de": 0.12212277711386979, "pos_err": 3.5893791869206018, "dE_model": 0.053404199788383566, "dE_truth": 3.949601449708326e-06, "dE_model_max": 0.6227060716540725, "finite": true}}, "1000": {"20": {"da_over_a": 0.08419454057594218, "de": 0.05802695859709577, "pos_err": 0.2849757865664478, "dE_model": 0.006997048212313959, "dE_truth": 7.787715691659424e-07, "dE_model_max": 0.045586364401682025, "finite": true}, "50": {"da_over_a": 0.1949456173039496, "de": 0.14424026227876305, "pos_err": 1.8929537024202123, "dE_model": 0.025797294628493953, "dE_truth": 1.2854854556285727e-06, "dE_model_max": 0.13623629327551895, "finite": true}, "100": {"da_over_a": 0.40422597734231125, "de": 0.24672591200614724, "pos_err": 9.274852253914112, "dE_model": 0.06367778174425037, "dE_truth": 1.3953206185894062e-06, "dE_model_max": 0.29466927635271467, "finite": true}}}, "base": {"5": 0.008360786363482475, "10": 0.02508315071463585, "20": 0.07425546646118164, "50": 0.575666069984436}}
+stage 5 group q300: scenes 300 N 202 weight 0.45
+stage 5 group q1-100: scenes 300 N 202 weight 0.25
+stage 5 group unit_base: scenes 300 N 300 weight 0.3
+it 3050 stage 5 k 16 [q1:12.17202 unit_base:0.00589 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.13804 q1-100:1.52878] t 538s
+it 3058 q1-100 loss 2.84 non-finite or above cap, step skipped (301 total)
+it 3061 q1-100 loss 4.33 non-finite or above cap, step skipped (302 total)
+it 3066 q1-100 loss 3.12 non-finite or above cap, step skipped (303 total)
+it 3070 q1-100 loss 2.4 non-finite or above cap, step skipped (304 total)
+it 3095 q1-100 loss 1.34 non-finite or above cap, step skipped (305 total)
+it 3100 stage 5 k 16 [q1:12.17202 unit_base:0.00794 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.34955 q1-100:1.58138] t 549s
+it 3118 q1-100 loss 0.827 non-finite or above cap, step skipped (306 total)
+it 3126 q1-100 loss 3.69 non-finite or above cap, step skipped (307 total)
+it 3137 q1-100 loss 3.5 non-finite or above cap, step skipped (308 total)
+it 3145 q1-100 loss 1.33 non-finite or above cap, step skipped (309 total)
+it 3150 stage 5 k 16 [q1:12.17202 unit_base:0.00886 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.13934 q1-100:1.72441] t 560s
+it 3157 q1-100 loss 2.94 non-finite or above cap, step skipped (310 total)
+it 3182 q1-100 loss 2.04 non-finite or above cap, step skipped (311 total)
+it 3200 stage 5 k 16 [q1:12.17202 unit_base:0.01020 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.55474 q1-100:1.55966] t 570s
+it 3208 q1-100 loss 4.89 non-finite or above cap, step skipped (312 total)
+it 3216 q1-100 loss 4.05 non-finite or above cap, step skipped (313 total)
+it 3250 stage 5 k 16 [q1:12.17202 unit_base:0.00798 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.15246 q1-100:1.82149] t 581s
+it 3262 q1-100 loss 4.27 non-finite or above cap, step skipped (314 total)
+it 3283 q1-100 loss 3.65 non-finite or above cap, step skipped (315 total)
+it 3290 q1-100 loss 3.62 non-finite or above cap, step skipped (316 total)
+it 3300 stage 5 k 17 [q1:12.17202 unit_base:0.00827 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.14825 q1-100:2.06050] t 593s
+it 3305 q1-100 loss 3.08 non-finite or above cap, step skipped (317 total)
+it 3349 q1-100 loss 4.07 non-finite or above cap, step skipped (318 total)
+it 3350 stage 5 k 17 [q1:12.17202 unit_base:0.01321 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.05206 q1-100:2.06786] t 604s
+it 3372 q1-100 loss 2.54 non-finite or above cap, step skipped (319 total)
+it 3381 q1-100 loss 4.04 non-finite or above cap, step skipped (320 total)
+it 3385 q1-100 loss 4.01 non-finite or above cap, step skipped (321 total)
+it 3399 q1-100 loss 3 non-finite or above cap, step skipped (322 total)
+it 3400 stage 5 k 17 [q1:12.17202 unit_base:0.01019 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.06068 q1-100:1.89554] t 615s
+it 3416 q1-100 loss 3.09 non-finite or above cap, step skipped (323 total)
+it 3419 q1-100 loss 0.792 non-finite or above cap, step skipped (324 total)
+it 3449 q1-100 loss 4.16 non-finite or above cap, step skipped (325 total)
+it 3450 stage 5 k 17 [q1:12.17202 unit_base:0.01139 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.03721 q1-100:1.75629] t 627s
+it 3500 stage 5 k 17 [q1:12.17202 unit_base:0.00976 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.04831 q1-100:1.37347] t 638s
+it 3520 q1-100 loss 3.29 non-finite or above cap, step skipped (326 total)
+it 3524 q1-100 loss 2.82 non-finite or above cap, step skipped (327 total)
+it 3526 q1-100 loss 0.319 non-finite or above cap, step skipped (328 total)
+it 3528 q1-100 loss 8.23 non-finite or above cap, step skipped (329 total)
+it 3548 q1-100 loss 4.44 non-finite or above cap, step skipped (330 total)
+it 3550 stage 5 k 18 [q1:12.17202 unit_base:0.00712 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.02696 q1-100:1.75650] t 650s
+it 3575 q1-100 loss 5.45 non-finite or above cap, step skipped (331 total)
+it 3600 stage 5 k 18 [q1:12.17202 unit_base:0.00948 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.02189 q1-100:2.11149] t 662s
+stage 5 eval {"planet": {"10": {"20": {"da_over_a": 1.5607366033708736, "de": 1.109096326765299, "pos_err": 4.38740194423673, "dE_model": 1.599476940453112, "dE_truth": 4.090702927993983e-07, "dE_model_max": 91.42294524634332, "finite": true}, "50": {"da_over_a": 1.211511185880961, "de": 2.7953879064749643, "pos_err": 13.758812102535195, "dE_model": 2.8322215652511993, "dE_truth": 1.3354806471901466e-06, "dE_model_max": 140.19740720025666, "finite": true}, "100": {"da_over_a": 1.1499143833045429, "de": 9.589663517298614, "pos_err": 21.996018523534406, "dE_model": 6.8331041898434055, "dE_truth": 2.627418602288013e-06, "dE_model_max": 312.77805543493776, "finite": true}}, "100": {"20": {"da_over_a": 0.34850222911605755, "de": 0.6886647568508906, "pos_err": 2.00190856752419, "dE_model": 0.4263533350415491, "dE_truth": 3.657964476631817e-07, "dE_model_max": 4.379301576552689, "finite": true}, "50": {"da_over_a": 0.6844038925938974, "de": 0.8215343057064842, "pos_err": 8.42993912495295, "dE_model": 1.4702192128007843, "dE_truth": 1.977426078772977e-06, "dE_model_max": 42.7770838039565, "finite": true}, "100": {"da_over_a": 1.1590623781800726, "de": 1.3497968512786782, "pos_err": 24.412925782929335, "dE_model": 2.1193216990292187, "dE_truth": 2.0913964238617292e-06, "dE_model_max": 60.432728989980305, "finite": true}}, "1000": {"20": {"da_over_a": 0.4331491808393566, "de": 0.6540687454697554, "pos_err": 2.0918332150493733, "dE_model": 0.6284020017228693, "dE_truth": 2.336113030673829e-07, "dE_model_max": 5.120759978389272, "finite": true}, "50": {"da_over_a": 1.0619910913638877, "de": 1.1124377097201044, "pos_err": 12.198130511703186, "dE_model": 2.663078353831846, "dE_truth": 1.3447033614541323e-06, "dE_model_max": 68.01214210229291, "finite": true}, "100": {"da_over_a": 1.0528785418995743, "de": 5.342173645724816, "pos_err": 47.335809946997784, "dE_model": 7.073796135086541, "dE_truth": 1.4746926161141372e-06, "dE_model_max": 126.88206631443418, "finite": true}}}, "disk": {"10": {"20": {"da_over_a": 0.10345352341244926, "de": 0.06311674296152398, "pos_err": 0.14948883217234207, "dE_model": 0.07454035282511029, "dE_truth": 3.183567270720603e-05, "dE_model_max": 0.19588019067940812, "finite": true}, "50": {"da_over_a": 0.2924990603010046, "de": 0.16868946945750085, "pos_err": 1.0738410101402085, "dE_model": 0.18006118286360134, "dE_truth": 2.2552722560033528e-05, "dE_model_max": 9.892728050024974, "finite": true}, "100": {"da_over_a": 0.5960169280799692, "de": 0.19871293576107524, "pos_err": 4.780161548524793, "dE_model": 0.32959883174242666, "dE_truth": 0.0002238599237286964, "dE_model_max": 7.533064197899357, "finite": true}}, "100": {"20": {"da_over_a": 0.04620109817272457, "de": 0.03459212160258317, "pos_err": 0.18529662050351633, "dE_model": 0.005276749550902729, "dE_truth": 2.2354012144475135e-06, "dE_model_max": 0.04728528904900512, "finite": true}, "50": {"da_over_a": 0.0891969068779121, "de": 0.0562740682728041, "pos_err": 0.8223085687007371, "dE_model": 0.011673120074933239, "dE_truth": 4.927292097694448e-06, "dE_model_max": 0.04728584193929062, "finite": true}, "100": {"da_over_a": 0.18964032656070387, "de": 0.11625895392951004, "pos_err": 4.383801224534102, "dE_model": 0.0216713745370068, "dE_truth": 3.949601449708326e-06, "dE_model_max": 0.16687920150772106, "finite": true}}, "1000": {"20": {"da_over_a": 0.050597304506572155, "de": 0.030699136206471266, "pos_err": 0.1848569720337851, "dE_model": 0.004776085983171929, "dE_truth": 7.787715691659424e-07, "dE_model_max": 0.012385897312555173, "finite": true}, "50": {"da_over_a": 0.1399207199915133, "de": 0.11565156814970762, "pos_err": 1.4235086870234805, "dE_model": 0.02458033948557965, "dE_truth": 1.2854854556285727e-06, "dE_model_max": 0.12523431728875778, "finite": true}, "100": {"da_over_a": 0.2577228860367502, "de": 0.2929748024169459, "pos_err": 8.222507206644543, "dE_model": 0.05669596068407719, "dE_truth": 1.3953206185894062e-06, "dE_model_max": 0.3664757622354123, "finite": true}}}, "base": {"5": 0.00787914264947176, "10": 0.0239071287214756, "20": 0.07046887278556824, "50": 0.5728598833084106}}
+stage 6 group q1000: scenes 300 N 202 weight 0.45
+stage 6 group q1-300: scenes 300 N 200 weight 0.25
+stage 6 group unit_base: scenes 300 N 300 weight 0.3
+it 3650 stage 6 k 18 [q1:12.17202 unit_base:0.01224 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.02189 q1-100:2.11149 q1000:0.31949 q1-300:0.57353] t 693s
+it 3685 q1-300 loss 6.4 non-finite or above cap, step skipped (332 total)
+it 3700 stage 6 k 18 [q1:12.17202 unit_base:0.01241 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.02189 q1-100:2.11149 q1000:0.26433 q1-300:1.08333] t 705s
+it 3750 stage 6 k 18 [q1:12.17202 unit_base:0.00923 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.02189 q1-100:2.11149 q1000:0.24733 q1-300:0.98573] t 717s
+it 3800 stage 6 k 18 [q1:12.17202 unit_base:0.00937 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.02189 q1-100:2.11149 q1000:0.24983 q1-300:0.83819] t 729s
+it 3816 q1-300 loss 3.46 non-finite or above cap, step skipped (333 total)
+it 3832 q1-300 loss 4.65 non-finite or above cap, step skipped (334 total)
+it 3840 q1-300 loss 8.09 non-finite or above cap, step skipped (335 total)
+it 3850 stage 6 k 19 [q1:12.17202 unit_base:0.00977 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.02189 q1-100:2.11149 q1000:0.21212 q1-300:1.52699] t 741s
+it 3853 q1-300 loss 3.66 non-finite or above cap, step skipped (336 total)
+it 3900 stage 6 k 19 [q1:12.17202 unit_base:0.01517 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.02189 q1-100:2.11149 q1000:0.13119 q1-300:1.85046] t 754s
+it 3901 q1-300 loss 4.41 non-finite or above cap, step skipped (337 total)
+it 3950 stage 6 k 19 [q1:12.17202 unit_base:0.01620 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.02189 q1-100:2.11149 q1000:0.09264 q1-300:1.11094] t 766s
+it 3956 q1-300 loss 4.71 non-finite or above cap, step skipped (338 total)
+it 3974 q1-300 loss 3.39 non-finite or above cap, step skipped (339 total)
+it 4000 stage 6 k 19 [q1:12.17202 unit_base:0.01516 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.02189 q1-100:2.11149 q1000:0.22297 q1-300:1.22695] t 779s
+it 4050 stage 6 k 19 [q1:12.17202 unit_base:0.01372 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.02189 q1-100:2.11149 q1000:0.06040 q1-300:1.17792] t 792s
+it 4073 q1-300 loss 3.11 non-finite or above cap, step skipped (340 total)
+it 4100 stage 6 k 20 [q1:12.17202 unit_base:0.01251 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.02189 q1-100:2.11149 q1000:0.05706 q1-300:1.08096] t 805s
+it 4113 q1-300 loss 7.86 non-finite or above cap, step skipped (341 total)
+it 4147 q1-300 loss 3.8 non-finite or above cap, step skipped (342 total)
+it 4150 stage 6 k 20 [q1:12.17202 unit_base:0.01132 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.02189 q1-100:2.11149 q1000:0.02000 q1-300:1.71645] t 818s
+it 4200 stage 6 k 20 [q1:12.17202 unit_base:0.01311 q1-1:6.65533 q3:0.25473 q1-3:1.89422 q10:0.17655 q30:0.04277 q1-10:1.07345 q100:0.01629 q1-30:1.09415 q300:0.02189 q1-100:2.11149 q1000:0.03835 q1-300:1.27621] t 832s
+stage 6 eval {"planet": {"10": {"20": {"da_over_a": 0.26224966324963206, "de": 0.4128339777192979, "pos_err": 2.1733330424244883, "dE_model": 0.34182889378635795, "dE_truth": 4.090702927993983e-07, "dE_model_max": 0.9783204244298639, "finite": true}, "50": {"da_over_a": 0.4808790274347044, "de": 0.7799170201417558, "pos_err": 6.783463912644425, "dE_model": 0.518930799503731, "dE_truth": 1.3354806471901466e-06, "dE_model_max": 12.656517717155943, "finite": true}, "100": {"da_over_a": 1.031966281496452, "de": 0.6776129321200844, "pos_err": 11.61972381411886, "dE_model": 0.6205920999346051, "dE_truth": 2.627418602288013e-06, "dE_model_max": 4.742296728214207, "finite": true}}, "100": {"20": {"da_over_a": 0.33959792221329116, "de": 0.6058251358024958, "pos_err": 1.8444176773322203, "dE_model": 0.33710992352667646, "dE_truth": 3.657964476631817e-07, "dE_model_max": 3.8089569255445554, "finite": true}, "50": {"da_over_a": 1.238807865456426, "de": 0.7599110065769313, "pos_err": 8.20848957164988, "dE_model": 0.7830572199145187, "dE_truth": 1.977426078772977e-06, "dE_model_max": 7.293425019256701, "finite": true}, "100": {"da_over_a": 1.2573707363132436, "de": 0.9866592458844603, "pos_err": 23.188281783437873, "dE_model": 1.4116584619490515, "dE_truth": 2.0913964238617292e-06, "dE_model_max": 58.7584939425775, "finite": true}}, "1000": {"20": {"da_over_a": 0.27859664987599525, "de": 0.30598711038371673, "pos_err": 0.932875964772294, "dE_model": 0.29775973291659047, "dE_truth": 2.336113030673829e-07, "dE_model_max": 2.2196045098176476, "finite": true}, "50": {"da_over_a": 0.8779663188952436, "de": 0.7534076338896921, "pos_err": 6.253231598668476, "dE_model": 0.6964103249625562, "dE_truth": 1.3447033614541323e-06, "dE_model_max": 4.2404426526831696, "finite": true}, "100": {"da_over_a": 1.1714922104915995, "de": 1.0258172424703789, "pos_err": 22.615444450963807, "dE_model": 1.8093792074805446, "dE_truth": 1.4746926161141372e-06, "dE_model_max": 13.5175394401774, "finite": true}}}, "disk": {"10": {"20": {"da_over_a": 0.09235579207036909, "de": 0.053306584068408394, "pos_err": 0.13340931123412225, "dE_model": 0.07276747178936649, "dE_truth": 3.183567270720603e-05, "dE_model_max": 0.30331207298912316, "finite": true}, "50": {"da_over_a": 0.3608129514406983, "de": 0.14740882444390363, "pos_err": 0.7287609540326221, "dE_model": 0.0949922044312004, "dE_truth": 2.2552722560033528e-05, "dE_model_max": 0.8239116472418225, "finite": true}, "100": {"da_over_a": 0.3936340486569309, "de": 0.17073625283046112, "pos_err": 3.830287391364967, "dE_model": 0.27335651709562014, "dE_truth": 0.0002238599237286964, "dE_model_max": 1.0060291345067451, "finite": true}}, "100": {"20": {"da_over_a": 0.050346362829772055, "de": 0.040003577440725815, "pos_err": 0.2529114561730783, "dE_model": 0.01068328578727189, "dE_truth": 2.2354012144475135e-06, "dE_model_max": 0.04101423666728377, "finite": true}, "50": {"da_over_a": 0.11645302891852233, "de": 0.07669187002405818, "pos_err": 1.0047935505026868, "dE_model": 0.02793178995449833, "dE_truth": 4.927292097694448e-06, "dE_model_max": 0.5534683763062587, "finite": true}, "100": {"da_over_a": 0.21429826209784733, "de": 0.14046986849517415, "pos_err": 4.756139781855191, "dE_model": 0.08205196539599274, "dE_truth": 3.949601449708326e-06, "dE_model_max": 0.3110220868209472, "finite": true}}, "1000": {"20": {"da_over_a": 0.024756670535827856, "de": 0.0203382344763758, "pos_err": 0.09235973582627158, "dE_model": 0.0022472866316005985, "dE_truth": 7.787715691659424e-07, "dE_model_max": 0.017725324088305145, "finite": true}, "50": {"da_over_a": 0.04839902068950208, "de": 0.03612941213682336, "pos_err": 0.5719545922304586, "dE_model": 0.0078000252916508705, "dE_truth": 1.2854854556285727e-06, "dE_model_max": 0.03678403825603208, "finite": true}, "100": {"da_over_a": 0.07322671924425418, "de": 0.05555995405274734, "pos_err": 2.967648172184247, "dE_model": 0.021829423342082842, "dE_truth": 1.3953206185894062e-06, "dE_model_max": 0.09027947169566548, "finite": true}}}, "base": {"5": 0.006013378966599703, "10": 0.017408451065421104, "20": 0.052932120859622955, "50": 0.47706592082977295}}
+FINAL INCONCLUSIVE-undertrained ['planet q10: da/a 1.03 dE 0.621 finite True', 'planet q100: da/a 1.26 dE 1.41 finite True', 'planet q1000: da/a 1.17 dE 1.81 finite True', 'disk q10: da/a 0.4 dE 0.27 finite True', 'base err@10 ratio 1.58', 'base err@20 ratio 1.56', 'disk q100: da/a 0.214 de 0.139 dE 0.082', 'disk q1000: da/a 0.0733 de 0.0555 dE 0.0218', 'base err@5 ratio 1.43', 'planet q10: da/a 0.902 dE 1.12 finite True', 'planet q100: da/a 1.64 dE 2.22 finite True', 'planet q1000: da/a 1.17 dE 1.42 finite True', 'disk q10: da/a 0.684 dE 0.683 finite True', 'disk q100: da/a 0.314 dE 0.0935 finite True', 'base err@10 ratio 1.59', 'base err@20 ratio 1.62', 'disk q1000: da/a 0.0878 de 0.0587 dE 0.0131', 'base err@5 ratio 1.45', 'planet q10: da/a 0.963 dE 0.852 finite True', 'planet q100: da/a 1.45 dE 1.9 finite True', 'planet q1000: da/a 1.09 dE 4.08 finite True', 'disk q10: da/a 0.573 dE 0.329 finite True', 'disk q100: da/a 0.326 dE 0.0817 finite True', 'base err@10 ratio 1.58', 'base err@20 ratio 1.61', 'disk q1000: da/a 0.0775 de 0.0884 dE 0.0181', 'base err@5 ratio 1.40']

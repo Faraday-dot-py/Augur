@@ -1,0 +1,10 @@
+7a0120f3aca6599f3d4eeb4ceaf353be  /home/adamwebb/architecture_push_stage1_code.tgz
+29b92e77d2e73d9bd445c73472aa4727  scripts/scatter_field.py
+7881197abd19461c9b39001a6107442a  scripts/train_scatter_mass_curriculum.py
+9b3cb8bb1de47eb6ebf5f708d98e94b7  /home/adamwebb/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt
+name, memory.total [MiB]
+NVIDIA H200 NVL, 143771 MiB
+ "verdict": "INCONCLUSIVE-undertrained",
+ "plateau_falling": true,
+TOTAL_SECONDS 894
+ALLDONE

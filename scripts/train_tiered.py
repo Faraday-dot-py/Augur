@@ -29,6 +29,8 @@ MEAN_REMOVE = [True]
 ENERGY = [False]
 BLIND_T0 = [False]
 VBLIND_UP = [False]
+SHARED = [False]
+SPAN = [128.0]
 
 
 def true_acc(pos, mass, mask, eps=EPS):
@@ -47,6 +49,7 @@ def far_acc(pos, mass, mask, r0, eps=EPS):
 
 def make_scenes(num, steps, seed, dev):
     rng = np.random.default_rng(seed)
+    f = SPAN[0] / 128.0
     P = torch.zeros(num, steps + 1, NMAX, 2, dtype=torch.float64)
     V = torch.zeros_like(P)
     M, mask = torch.zeros(num, NMAX, dtype=torch.float64), torch.zeros(num, NMAX, dtype=torch.float64)
@@ -54,14 +57,14 @@ def make_scenes(num, steps, seed, dev):
     for s in range(num):
         cen, nc = [], int(rng.integers(2, 5))
         while len(cen) < nc:
-            c = rng.uniform(-36, 36, 2)
-            if all(np.linalg.norm(c - o) >= 24 for o in cen):
+            c = rng.uniform(-36 * f, 36 * f, 2)
+            if all(np.linalg.norm(c - o) >= 24 * f for o in cen):
                 cen.append(c)
         pos, vel, lb = [], [], []
         for i, c in enumerate(cen):
             n = int(rng.integers(40, 111))
             sg = rng.uniform(3.0, 6.0)
-            pos.append(np.clip(rng.normal(0.0, sg, (n, 2)) + c, -60, 60))
+            pos.append(np.clip(rng.normal(0.0, sg, (n, 2)) + c, -60 * f, 60 * f))
             vel.append(rng.normal(0.0, rng.uniform(0.1, 0.6) * np.sqrt(n / (4 * sg)), (n, 2)) + rng.normal(0.0, 0.4, 2))
             lb.append(np.full(n, i))
         pos, vel, lb = np.concatenate(pos), np.concatenate(vel), np.concatenate(lb)
@@ -102,6 +105,10 @@ def force_series(t0, d, bs=16):
 def make_nets(K, args, dev):
     if ENERGY[0]:
         return nn.ModuleList(TierNetE(H0 * 2 ** k, args.width, args.layers, args.out_scale, args.moments) for k in range(1, K + 1)).to(dev)
+    if SHARED[0]:
+        assert not (args.err or args.latent or args.learned_pool), "shared weights need identical input channels at every tier"
+        net = TierNet(nfeat(True, False, args.order3) + 1, H0, args.width, args.layers, residual=args.residual, out_scale=args.out_scale, log_rho=True, err=False, scale_ch=1)
+        return nn.ModuleList([net] * K).to(dev)
     nets, child = [], 0
     for k in range(1, K + 1):
         net = TierNet(nfeat(True, False, args.order3) + child, H0 * 2 ** k, args.width, args.layers, residual=args.residual, latent_ch=args.latent,
@@ -170,12 +177,21 @@ def train_s(args, dev, log):
     rel0 = ((AT - A0) ** 2 * d["mask"][:, None, :, None]).sum() / (AT ** 2 * d["mask"][:, None, :, None]).sum()
     log(f"train tier-0 rel force err (sq) {float(rel0):.4f}")
     nets = make_nets(args.tiers, args, dev)
+    assert args.joint or not SHARED[0], "a shared network cannot be trained one tier at a time"
+    vd = None
+    if args.val_every > 0:
+        assert args.target == "far", "validation loss is defined for the far target only"
+        vd = make_scenes(args.val_scenes, args.steps, args.seed + 5000, dev)
+        vm, vmk = vd["M"].float(), vd["mask"].float()
+        vtg = torch.stack([far_acc(vd["P"][:, t].float(), vm, vmk, args.far_radius) for t in range(vd["P"].shape[1])], 1)
+    vhist = []
     stage, it, ck = 0, 0, os.path.join(args.ckpt_dir, f"tiered_S{args.tag}.pt")
     opt = None
     if args.resume and os.path.exists(ck):
         st = torch.load(ck, map_location=dev, weights_only=False)
         nets.load_state_dict(st["nets"])
         stage, it = st["stage"], st["it"]
+        vhist = st.get("val", [])
         log(f"resumed stage {stage} it {it}")
     S, T = d["P"].shape[:2]
     nstage = 1 if args.joint else args.tiers
@@ -214,8 +230,16 @@ def train_s(args, dev, log):
             it += 1
             if it % args.log_every == 0:
                 log(f"S stage {stage + 1} it {it} loss {loss.item():.4f} t {time.time() - t_start:.0f}s")
+            if vd is not None and it % args.val_every == 0:
+                with torch.no_grad():
+                    vl = 0.0
+                    for t in range(0, vd["P"].shape[1], 10):
+                        a, _ = field.upper_force(vd["P"][:, t].float(), vd["V"][:, t].float(), vm, vmk, field.init_state(vm.shape[0], dev))
+                        vl += float((((a - vtg[:, t]) * vmk[..., None]) ** 2).sum() / (vtg[:, t] ** 2).sum().clamp_min(1e-9))
+                vhist.append({"it": it, "val_loss": vl})
+                log(f"val it {it} loss {vl:.6f}")
             if it % args.ckpt_every == 0 or STOP or it == args.iters:
-                save(ck, nets=nets.state_dict(), opt=opt.state_dict(), stage=stage + (it == args.iters), it=0 if it == args.iters else it, args=vars(args))
+                save(ck, nets=nets.state_dict(), opt=opt.state_dict(), stage=stage + (it == args.iters), it=0 if it == args.iters else it, args=vars(args), val=vhist)
             if STOP:
                 log("SIGTERM: checkpoint saved, exiting")
                 return
@@ -467,15 +491,23 @@ def run_far(args, dev, log):
         d = make_scenes(args.eval_scenes, args.eval_steps, sd, dev)
         m, mk = d["M"].float(), d["mask"].float()
         nets = make_nets(args.tiers, args, dev)
-        nets.load_state_dict(torch.load(os.path.join(args.ckpt_dir, f"tiered_S{args.tag}.pt"), map_location=dev, weights_only=False)["nets"])
+        sdict = torch.load(os.path.join(args.ckpt_dir, f"tiered_S{args.tag}.pt"), map_location=dev, weights_only=False)["nets"]
+        if SHARED[0]:
+            sdict = {k[2:]: v for k, v in sdict.items() if k.startswith("0.")}
+            nets[0].load_state_dict(sdict)
+        else:
+            nets.load_state_dict(sdict)
         field = make_field(ZeroTier0(), nets)
         num = den = ncl = 0.0
+        eb = args.eval_batch or m.shape[0]
         for t in range(0, d["P"].shape[1], 10):
-            p, v = d["P"][:, t].float(), d["V"][:, t].float()
-            tg = far_acc(p, m, mk, args.far_radius)
-            a, _ = field.upper_force(p, v, m, mk, field.init_state(p.shape[0], dev))
-            num += float(((a - tg) ** 2 * mk[..., None]).sum())
-            den += float((tg ** 2 * mk[..., None]).sum())
+            for c0 in range(0, m.shape[0], eb):
+                sl = slice(c0, c0 + eb)
+                p, v = d["P"][sl, t].float(), d["V"][sl, t].float()
+                tg = far_acc(p, m[sl], mk[sl], args.far_radius)
+                a, _ = field.upper_force(p, v, m[sl], mk[sl], field.init_state(p.shape[0], dev))
+                num += float(((a - tg) ** 2 * mk[sl][..., None]).sum())
+                den += float((tg ** 2 * mk[sl][..., None]).sum())
         res[str(sd)] = {"far_rel": (num / den) ** 0.5}
         log(f"seed {sd} far_rel {res[str(sd)]['far_rel']:.4f}")
     json.dump(res, open(args.out, "w"), indent=1)
@@ -540,6 +572,11 @@ def main():
     ap.add_argument("--energy-tiers", action="store_true")
     ap.add_argument("--blind-t0", action="store_true")
     ap.add_argument("--vblind-up", action="store_true")
+    ap.add_argument("--shared-scale", action="store_true", help="one set of upper-tier weights at every tier, with log2 of the tier cell width as an input channel (needs --joint)")
+    ap.add_argument("--span", type=float, default=128.0, help="box side in units: scene layout scales with it and n0 = span / h0")
+    ap.add_argument("--val-every", type=int, default=0, help="if > 0, log the far-target validation loss on held-out scenes every this many iterations (plateau guard)")
+    ap.add_argument("--val-scenes", type=int, default=8)
+    ap.add_argument("--eval-batch", type=int, default=0, help="far mode: scenes per forward pass (0 = all at once)")
     ap.add_argument("--moments", action="store_true")
     ap.add_argument("--joint", action="store_true")
     ap.add_argument("--small-scenes", type=int, default=400)
@@ -575,6 +612,10 @@ def main():
     ENERGY[0] = args.energy_tiers
     BLIND_T0[0] = args.blind_t0
     VBLIND_UP[0] = args.vblind_up
+    SHARED[0] = args.shared_scale
+    SPAN[0] = args.span
+    global N0
+    N0 = int(args.span / H0)
     os.makedirs(args.ckpt_dir, exist_ok=True)
     signal.signal(signal.SIGTERM, on_term)
     torch.manual_seed(args.seed)
