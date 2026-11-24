@@ -1,8 +1,10 @@
 # Augur
 
+> **Status: archived, read-only.** This project is no longer under active development. Architectural limits were identified; see the closing report (in preparation): [docs/paper/closing-report.md](docs/paper/closing-report.md).
+
 **Learning particle simulators that scale, tile, and stay honest about what they get wrong.**
 
-Augur is a research project by Adam Webb (GitHub: Faraday-dot-py) on neural surrogate simulators: models that learn the rules of a particle system from examples, then run it fast enough for real-time and very large scenes. The first commit is dated 2026-09-21; the repository has 705 commits as of 2026-11-09.
+Augur is a research project by Adam Webb (GitHub: Faraday-dot-py) on neural surrogate simulators: models that learn the rules of a particle system from examples, then run it fast enough for real-time and very large scenes. The first commit is dated 2026-09-21; as of 2026-11-23 master has 848 commits and the archive-prep branch, which carries 111 commits of later work not yet merged into master, has 819.
 
 [Augur live demos](https://faraday-dot-py.github.io/Augur/) run in the browser.
 
