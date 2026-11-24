@@ -33,7 +33,7 @@ ax = fig.add_axes([0.0, 0.0, 1.0, 0.9])
 ax.axis("off")
 im = ax.imshow(np.zeros((1024, 1024, 3), dtype=np.uint8), origin="lower")
 ax.text(0.5, 0.02, f"full box ({2 * box:g} units wide)", color="white", transform=ax.transAxes, ha="center", fontsize=22)
-title = fig.text(0.5, 0.95, "", color="white", ha="center", va="center", fontsize=26)
+title = fig.text(0.5, 0.95, "", color="white", ha="center", va="center", fontsize=24, linespacing=1.4)
 w, h = fig.canvas.get_width_height()
 proc = subprocess.Popen(["ffmpeg", "-loglevel", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgba", "-s", f"{w}x{h}", "-r", str(args.fps), "-i", "-",
                          "-pix_fmt", "yuv420p", "-crf", "16", args.out], stdin=subprocess.PIPE)
@@ -45,7 +45,7 @@ for i in range(total):
     if a:
         f = (1 - a / k) * f + (a / k) * arr[t + 1].astype(np.float64)
     im.set_data((cmap(norm(np.maximum(f, 0.5)))[..., :3] * 255).astype(np.uint8))
-    title.set_text(f"{args.title}   |   {n:,} bodies   |   simulated time {i / k * args.dt:.1f}")
+    title.set_text(f"{args.title}\n{n:,} bodies   |   simulated time {i / k * args.dt:.1f}")
     fig.canvas.draw()
     proc.stdin.write(np.asarray(fig.canvas.buffer_rgba()).tobytes())
 proc.stdin.close()
