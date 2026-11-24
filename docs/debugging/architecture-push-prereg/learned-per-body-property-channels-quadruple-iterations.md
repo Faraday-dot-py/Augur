@@ -4,6 +4,8 @@ Written 2026-11-24 before the run. User decision 2026-11-24: train the stage-1 m
 
 Parent pre-registrations: learned-per-body-property-channels.md and learned-per-body-property-channels-double-iterations.md. Lines and plateau guard are identical to job 13236 and are NOT amended; quoted verbatim:
 
+Extension note: learned-per-body-property-channels.md allows one extension at double length (job 13236). This run is a second extension, at 8x the original 4200 iterations; it exceeds that allowance and was approved by the user on 2026-11-24.
+
 ## Lines (unchanged)
 - Star + one planet, q in {10,100,1000}: PASS if da/a <= 0.02, de <= 0.03, dE <= 0.02, finite. KILL if da/a > 0.15 (planet q=1000: > 0.30) or dE > 0.2 or non-finite.
 - Star + disk (30-200 bodies + planet), same q: PASS if da/a <= 0.05, de <= 0.05, dE <= 0.05. KILL if da/a > 0.25 or dE > 0.3.
