@@ -1,0 +1,396 @@
+{
+ "summary": {
+  "pre_registered": {
+   "worst_fraction": 0.776536312849162,
+   "worst_self_fraction": 0.914804469273743,
+   "verdict": "CONTROL-BELOW-PASS-OPEN"
+  },
+  "fresh": {
+   "worst_fraction": 0.75,
+   "worst_self_fraction": 0.9124273255813954,
+   "verdict": "CONTROL-BELOW-PASS-OPEN"
+  }
+ },
+ "rows": [
+  {
+   "density": {
+    "frac": 0.8563218390804598,
+    "scored_bins": 174,
+    "inside_bins": 149,
+    "self_frac": 0.9285201149425287
+   },
+   "speed": {
+    "frac": 0.8333333333333334,
+    "scored_bins": 174,
+    "inside_bins": 145,
+    "self_frac": 0.9184626436781609
+   },
+   "seed": 9100,
+   "rel": 0.0001,
+   "scenes": 16,
+   "members": 16,
+   "steps": 300,
+   "err5": 0.0044473007816701994,
+   "err20": 0.035722092794219895
+  },
+  {
+   "density": {
+    "frac": 0.7485380116959064,
+    "scored_bins": 171,
+    "inside_bins": 128,
+    "self_frac": 0.9203216374269005
+   },
+   "speed": {
+    "frac": 0.783625730994152,
+    "scored_bins": 171,
+    "inside_bins": 134,
+    "self_frac": 0.9166666666666666
+   },
+   "seed": 9100,
+   "rel": 1e-05,
+   "scenes": 16,
+   "members": 16,
+   "steps": 300,
+   "err5": 0.004447287656143823,
+   "err20": 0.03571571889422133
+  },
+  {
+   "density": {
+    "frac": 0.9195402298850575,
+    "scored_bins": 174,
+    "inside_bins": 160,
+    "self_frac": 0.9317528735632183
+   },
+   "speed": {
+    "frac": 0.8103448275862069,
+    "scored_bins": 174,
+    "inside_bins": 141,
+    "self_frac": 0.9123563218390804
+   },
+   "seed": 9100,
+   "rel": 0.001,
+   "scenes": 16,
+   "members": 16,
+   "steps": 300,
+   "err5": 0.004447547352024652,
+   "err20": 0.03573348392651374
+  },
+  {
+   "density": {
+    "frac": 0.8682634730538922,
+    "scored_bins": 167,
+    "inside_bins": 145,
+    "self_frac": 0.9285179640718563
+   },
+   "speed": {
+    "frac": 0.8143712574850299,
+    "scored_bins": 167,
+    "inside_bins": 136,
+    "self_frac": 0.9172904191616766
+   },
+   "seed": 9200,
+   "rel": 0.0001,
+   "scenes": 16,
+   "members": 16,
+   "steps": 300,
+   "err5": 0.004579036839682247,
+   "err20": 0.03567464022612019
+  },
+  {
+   "density": {
+    "frac": 0.8128654970760234,
+    "scored_bins": 171,
+    "inside_bins": 139,
+    "self_frac": 0.9331140350877193
+   },
+   "speed": {
+    "frac": 0.7894736842105263,
+    "scored_bins": 171,
+    "inside_bins": 135,
+    "self_frac": 0.9141081871345029
+   },
+   "seed": 9200,
+   "rel": 1e-05,
+   "scenes": 16,
+   "members": 16,
+   "steps": 300,
+   "err5": 0.0045791564348506685,
+   "err20": 0.035679648220872905
+  },
+  {
+   "density": {
+    "frac": 0.9186046511627907,
+    "scored_bins": 172,
+    "inside_bins": 158,
+    "self_frac": 0.9316860465116279
+   },
+   "speed": {
+    "frac": 0.8488372093023255,
+    "scored_bins": 172,
+    "inside_bins": 146,
+    "self_frac": 0.903343023255814
+   },
+   "seed": 9200,
+   "rel": 0.001,
+   "scenes": 16,
+   "members": 16,
+   "steps": 300,
+   "err5": 0.0045789865738874135,
+   "err20": 0.035670852192754385
+  },
+  {
+   "density": {
+    "frac": 0.8324022346368715,
+    "scored_bins": 179,
+    "inside_bins": 149,
+    "self_frac": 0.9305167597765364
+   },
+   "speed": {
+    "frac": 0.776536312849162,
+    "scored_bins": 179,
+    "inside_bins": 139,
+    "self_frac": 0.914804469273743
+   },
+   "seed": 9300,
+   "rel": 0.0001,
+   "scenes": 16,
+   "members": 16,
+   "steps": 300,
+   "err5": 0.005273341990265957,
+   "err20": 0.04843721694202152
+  },
+  {
+   "density": {
+    "frac": 0.75,
+    "scored_bins": 176,
+    "inside_bins": 132,
+    "self_frac": 0.9243607954545454
+   },
+   "speed": {
+    "frac": 0.7784090909090909,
+    "scored_bins": 176,
+    "inside_bins": 137,
+    "self_frac": 0.921875
+   },
+   "seed": 9300,
+   "rel": 1e-05,
+   "scenes": 16,
+   "members": 16,
+   "steps": 300,
+   "err5": 0.005273111020771999,
+   "err20": 0.04842555295393446
+  },
+  {
+   "density": {
+    "frac": 0.847457627118644,
+    "scored_bins": 177,
+    "inside_bins": 150,
+    "self_frac": 0.9230225988700564
+   },
+   "speed": {
+    "frac": 0.768361581920904,
+    "scored_bins": 177,
+    "inside_bins": 136,
+    "self_frac": 0.913135593220339
+   },
+   "seed": 9300,
+   "rel": 0.001,
+   "scenes": 16,
+   "members": 16,
+   "steps": 300,
+   "err5": 0.00527329863256366,
+   "err20": 0.04846139898142421
+  },
+  {
+   "density": {
+    "frac": 0.8729281767955801,
+    "scored_bins": 181,
+    "inside_bins": 158,
+    "self_frac": 0.9299033149171271
+   },
+   "speed": {
+    "frac": 0.8342541436464088,
+    "scored_bins": 181,
+    "inside_bins": 151,
+    "self_frac": 0.9205801104972375
+   },
+   "seed": 12000,
+   "rel": 0.0001,
+   "scenes": 16,
+   "members": 16,
+   "steps": 300,
+   "err5": 0.004768179357309216,
+   "err20": 0.04065972681057038
+  },
+  {
+   "density": {
+    "frac": 0.8314606741573034,
+    "scored_bins": 178,
+    "inside_bins": 148,
+    "self_frac": 0.9308286516853933
+   },
+   "speed": {
+    "frac": 0.7303370786516854,
+    "scored_bins": 178,
+    "inside_bins": 130,
+    "self_frac": 0.9160814606741573
+   },
+   "seed": 12000,
+   "rel": 1e-05,
+   "scenes": 16,
+   "members": 16,
+   "steps": 300,
+   "err5": 0.004768179842604266,
+   "err20": 0.0406514401789979
+  },
+  {
+   "density": {
+    "frac": 0.9222222222222223,
+    "scored_bins": 180,
+    "inside_bins": 166,
+    "self_frac": 0.9336805555555555
+   },
+   "speed": {
+    "frac": 0.8333333333333334,
+    "scored_bins": 180,
+    "inside_bins": 150,
+    "self_frac": 0.9118055555555555
+   },
+   "seed": 12000,
+   "rel": 0.001,
+   "scenes": 16,
+   "members": 16,
+   "steps": 300,
+   "err5": 0.004767879150759175,
+   "err20": 0.040656032269378285
+  },
+  {
+   "density": {
+    "frac": 0.813953488372093,
+    "scored_bins": 172,
+    "inside_bins": 140,
+    "self_frac": 0.9258720930232558
+   },
+   "speed": {
+    "frac": 0.75,
+    "scored_bins": 172,
+    "inside_bins": 129,
+    "self_frac": 0.9124273255813954
+   },
+   "seed": 12100,
+   "rel": 0.0001,
+   "scenes": 16,
+   "members": 16,
+   "steps": 300,
+   "err5": 0.004909085327600321,
+   "err20": 0.03730445665512106
+  },
+  {
+   "density": {
+    "frac": 0.7485380116959064,
+    "scored_bins": 171,
+    "inside_bins": 128,
+    "self_frac": 0.9331140350877193
+   },
+   "speed": {
+    "frac": 0.8128654970760234,
+    "scored_bins": 171,
+    "inside_bins": 139,
+    "self_frac": 0.9126461988304093
+   },
+   "seed": 12100,
+   "rel": 1e-05,
+   "scenes": 16,
+   "members": 16,
+   "steps": 300,
+   "err5": 0.0049089716448109805,
+   "err20": 0.03728825451243829
+  },
+  {
+   "density": {
+    "frac": 0.9117647058823529,
+    "scored_bins": 170,
+    "inside_bins": 155,
+    "self_frac": 0.93125
+   },
+   "speed": {
+    "frac": 0.8764705882352941,
+    "scored_bins": 170,
+    "inside_bins": 149,
+    "self_frac": 0.9051470588235294
+   },
+   "seed": 12100,
+   "rel": 0.001,
+   "scenes": 16,
+   "members": 16,
+   "steps": 300,
+   "err5": 0.004908894247429232,
+   "err20": 0.037280239102039245
+  },
+  {
+   "density": {
+    "frac": 0.8108108108108109,
+    "scored_bins": 185,
+    "inside_bins": 150,
+    "self_frac": 0.9337837837837838
+   },
+   "speed": {
+    "frac": 0.772972972972973,
+    "scored_bins": 185,
+    "inside_bins": 143,
+    "self_frac": 0.9158783783783784
+   },
+   "seed": 12200,
+   "rel": 0.0001,
+   "scenes": 16,
+   "members": 16,
+   "steps": 300,
+   "err5": 0.004991296287787522,
+   "err20": 0.040515702426310155
+  },
+  {
+   "density": {
+    "frac": 0.8118279569892473,
+    "scored_bins": 186,
+    "inside_bins": 151,
+    "self_frac": 0.9304435483870968
+   },
+   "speed": {
+    "frac": 0.7258064516129032,
+    "scored_bins": 186,
+    "inside_bins": 135,
+    "self_frac": 0.9220430107526881
+   },
+   "seed": 12200,
+   "rel": 1e-05,
+   "scenes": 16,
+   "members": 16,
+   "steps": 300,
+   "err5": 0.004991475892226663,
+   "err20": 0.04052413573278503
+  },
+  {
+   "density": {
+    "frac": 0.8817204301075269,
+    "scored_bins": 186,
+    "inside_bins": 164,
+    "self_frac": 0.928763440860215
+   },
+   "speed": {
+    "frac": 0.7688172043010753,
+    "scored_bins": 186,
+    "inside_bins": 143,
+    "self_frac": 0.9112903225806451
+   },
+   "seed": 12200,
+   "rel": 0.001,
+   "scenes": 16,
+   "members": 16,
+   "steps": 300,
+   "err5": 0.00499109088705735,
+   "err20": 0.04052529670760596
+  }
+ ],
+ "ckpt": "/home/adamwebb/augur/checkpoints/scatter_bh/E_ms_kp_pot_v_g128.pt",
+ "torch": "2.14.0+cu130"
+}
