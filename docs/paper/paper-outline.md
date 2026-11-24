@@ -27,7 +27,7 @@ Main headlines:
 Secondary:
 - token-model-size-generalization-to-fifty-thousand-balls (trained at 200 balls or fewer)
 - visited-state-label-replay-cuts-drift (4.25 to 1.99 and 4.78 to 1.88; truth-state control similar, cause not settled)
-- learned-vs-plain-particle-mesh-force-at-n1000 (learned wins 1.8-4.6x median/p90 at N=1000, loses at 1e4 and above)
+- learned-vs-plain-particle-mesh-force-at-n1000 (learned wins 1.8-4.6x median/p90 at N=1000, loses in 5 of 6 cells at 1e4 and above; exponential disk at 1e4 is the exception, amendment 2026-11-23, results/pm_baseline_with_barnes_hut_force_error_chunk_fix/result.json)
 
 Supporting methodology: chaos-floor-err20-is-model-dominated, chaos-floor-cold-collapse-err100-at-ceiling, reference-simulator-validated-against-ias15 (as registered INCONCLUSIVE, amended PASS), pre-registered-kill-lines-and-fresh-reviewer-method, token-model-beats-gns-style-baseline (design versus design).
 
@@ -35,7 +35,7 @@ Every claim row carries a marker (validated, single-seed, worker-proposed-line, 
 
 ## Negative-results section
 
-tiled-closed-loop-tier-zero-energy-drift-fails; upper-tier-hierarchy-adds-nothing-end-to-end; mixed-six-law-retrain-fails-gravity; unit-mass-only-and-planetesimal-disk-proxy-kill; gaussian-ladder-far-kernel-replacing-fft; one-network-for-all-tiers-with-scale-input; law-blind-unet-trunk; summary-token-exchange-between-neighbour-tiles (lines approved 2026-11-17, after the runs); three-part-separate-then-joint-training-kill; muon-optimizer-has-no-effect-on-drift; token-model-fails-gravity-at-100-to-1000-bodies; grid-next-frame-models-negative; learned-vs-plain-particle-mesh-force-at-n1000 (loses at N of 1e4 and above); the mixed-result rows (neighbour-context-pair-branch, staggered-double-grid-with-quadratic-deposit, bit-output-cell-model-at-64-grid).
+tiled-closed-loop-tier-zero-energy-drift-fails; upper-tier-hierarchy-adds-nothing-end-to-end; mixed-six-law-retrain-fails-gravity; unit-mass-only-and-planetesimal-disk-proxy-kill; gaussian-ladder-far-kernel-replacing-fft; one-network-for-all-tiers-with-scale-input; law-blind-unet-trunk; summary-token-exchange-between-neighbour-tiles (lines approved 2026-11-17, after the runs); three-part-separate-then-joint-training-kill; muon-optimizer-has-no-effect-on-drift; token-model-fails-gravity-at-100-to-1000-bodies; grid-next-frame-models-negative; learned-vs-plain-particle-mesh-force-at-n1000 (loses in 5 of 6 cells at N of 1e4 and above; amended 2026-11-23); the mixed-result rows (neighbour-context-pair-branch, staggered-double-grid-with-quadratic-deposit, bit-output-cell-model-at-64-grid).
 
 ## Honest limitations (must appear)
 
@@ -45,7 +45,7 @@ tiled-closed-loop-tier-zero-energy-drift-fails; upper-tier-hierarchy-adds-nothin
 - Interpretability is partial: force-law recovery level 1 INCONCLUSIVE_PARTIAL, level 2 KILL; no passing readability design.
 - Most rows are one training seed; tier 0 is the exception (4 seeds).
 - Tiled energy drift fails its line on every seed even after the replay fine-tune.
-- Plain particle mesh beats the learned model at N of 1e4 and above.
+- Plain particle mesh beats the learned model in 5 of 6 cells at N of 1e4 and above (exponential disk at 1e4 is the exception; amendment 2026-11-23, results/pm_baseline_with_barnes_hut_force_error_chunk_fix/result.json).
 - Pair-term neighbour search passes only under a tie-aware rule written after the KILL.
 - 3D voxel version has no passing checkpoint.
 - Interior force offset: the 1.53-1.58 edge-check ratios are explained as a reference-sum defect (636,068 of 1,000,000 bodies counted); interior ratio 1.0104 at tick 0 and 0.9596 at tick 11; registered verdict INCONCLUSIVE; single scene, seed 4738.
