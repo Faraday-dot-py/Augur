@@ -1,0 +1,1001 @@
+path	kind	size_or_entries	action	reason
+__pycache__	dir	4	EXCLUDED-NON-PROJECT	system, tool or shell file
+augur-edge-3788	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+bounce-token-model-v37-2900.log	file	8271	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-network-utilization-statistics-7269.log	file	8970	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-timestep-as-input-model-stage-1-11162.log	file	305	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+loss_terms_code.tgz	file	1122192	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-gpu-burn-check-per-gpu-6127_6.log	file	446061	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-s46-anom-3400.log	file	7466	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_tiered_sharpness_aware_minimisation_adam	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-three-dimensional-sparse-voxel-scatter-field-extension-9623.log	file	608	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+lt-main-3612.log	file	50990	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-edge-lr4-3820.log	file	2468	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+softcap-eval-3575.log	file	4169	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+fallback-d-3045.log	file	5057	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-moon-cause-arm-4776.log	file	17915	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+tln-structured-spike-neuron-11181.log	file	6522	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+le_code.tar	file	1955840	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-loss-term-arms-4057.log	file	3197	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-sampled-force-distribution-control-stage-1-13167.log	file	595	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-scatter-bh-timing-1000000-3430.log	file	799	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+second_seed_code.tgz	file	1076589	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-webtiled-vec-3833.log	file	304	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-d3-cellgraph-3364.log	file	755	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0c4-4018.log	file	8469	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-tiered-tests-3932.log	file	4216	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tiered-drift-mechanism-diagnoses-4085.log	file	831	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-interp-curiosity-large-pool-outliers-tie-aware-yukawa-4841.log	file	11395	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+polaris_exact-all-pairs-force-at-1e7-bodies-two-gpu-shards.sh	file	7998	NOT-TOUCHED	stress-test material, name only
+lt_code.tar	file	1945600	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur-gpu-burn-check-per-gpu-6127_1.log	file	447177	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-solar-truthchk-3505.log	file	2174	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-edge-eval1-3791.log	file	29490	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-interior-force-offset-corrected-quantity-7249.log	file	77	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+class_harness_code.tgz	file	1108905	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+neuron_plasticity_code.tgz	file	10079	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-three-dimensional-sparse-voxel-scatter-field-7802.log	file	608	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-regce-3638.log	file	51724	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-nfr-stab-3892.log	file	3404	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-nfr-rend-3909.log	file	571	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+slj_ph	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-bit-output-encoding-fixes-7192.log	file	8278	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tier0-visited-state-label-replay-4089.log	file	797	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpu-burn-check-per-gpu-6119_3.log	file	53672	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-scatter-field-three-part-separate-training	dir	11	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-width-32-loss-spike-instrumented-rerun-7777.log	file	353	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-opt	file	9	DOWNLOAD-FIRST	Polaris-only, not downloaded
+d1-bounded-field.log	file	16474	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-bhwave-truth-3900.log	file	14494	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-stage2-flownet-v9-2833.log	file	8492	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+nfr_code.tgz	file	567210	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-edge-trainA-3788.log	file	13553	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-stage1-2809.log	file	9152	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-galaxy-1b-3858.log	file	2169	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_probe	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-solar-nkm-regimes-4918.log	file	1885	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-edge-3807	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+bounce-token-model-v42-2905.log	file	8271	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-gravity-central-3d-3150.log	file	1469	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+ftde_code2.tgz	file	459633	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur-scatter-bh-timing-100000000-3429.log	file	553	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+nfr_stab_test.sh	file	458	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-sljdiag2-scratch-3921.log	file	7583	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-token-model-v16-2862.log	file	8987	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-stage2-flownet-v9-2834.log	file	11157	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-solar-stability-train-4714.log	file	10794	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0v_run.sh	file	981	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+fkg_grav.sh	file	1155	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+testaudit_code.tgz	file	539908	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-moon-cause-arm-4778.log	file	19262	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_neighbour_tile_force_error_predictability_probe	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur_architecture_push_stage1_mass_2026_11_23_fresh	dir	10	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+int_code.tgz	file	465500	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+t0f-4008.log	file	10704	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-edge-3791	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+t0h3	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-scatter-tile2-3782.log	file	22134	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-token-model-v2-2842.log	file	9670	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+fewshot_job.sh	file	743	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-scatter-field-three-part-separate-training-10120.log	file	618	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-bench-scaling-2913.log	file	465	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_exp89-4019.log	file	12287	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-pilot-2811.log	file	8367	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpu-burn-filler-6147.log	file	395730	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpu-burn-filler-6281.log	file	4905281	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-nvlink-peer-bandwidth-and-allreduce-stress-on-granted-gpus-11246.log	file	36536	NOT-TOUCHED	stress-test material, name only
+augur-replay-mechanism-arm-no-replay-matched-compute-7172.log	file	117	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpuconc-3619.log	file	517	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0c2-4006.log	file	335515	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-far-r0-3796.log	file	38031	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpu-burn-check-per-gpu-6103_3.log	file	28946	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0t_code.tgz	file	807110	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+el_hf_smoke.sh	file	1046	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+polaris_tier0_corrector.sh	file	1862	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+fallback-c2-3042.log	file	3619	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-far-r1reg-3801.log	file	19022	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+merge_gradient_tolerance_fix_code.tgz	file	1342443	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-token-model-v24-2884.log	file	10473	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+softcap_code.tgz	file	509604	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-stage2-h12-fixed-200ep-2821.log	file	15985	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+moon_arms_code.tgz	file	769789	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-far-final1-3815.log	file	13775	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tiered-muon-conv-flattened-5031.log	file	1978	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tiered-tier0-fourth-training-seed-6166.log	file	515	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+scatter_field_2d_cost_blowup_code.tgz	file	1070784	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-exact-all-pairs-force-at-1e7-bodies-two-instances-on-gpu-pairs-11245.log	file	1136	NOT-TOUCHED	stress-test material, name only
+augur-architecture-push-single-law-readability-code.tgz	file	843206	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-moon-cause-prep-4775.log	file	1458	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+seamvideo-3784.log	file	27	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+.bash_history	file	5501	EXCLUDED-NON-PROJECT	system, tool or shell file
+bounce-bench-scaling-2914.log	file	2493	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+ef-cons3-3648.log	file	430	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-edge-eval2-3792.log	file	42603	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-galaxy-3856	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-el-hfsmoke-4738	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-ftde	dir	10	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+far-tests-3819.log	file	682	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-d3rn	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-slj-h1-3990.log	file	117	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-mixed-law-pow1-amp-cap-scoring-eval-7415.log	file	4613	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-nfr-evalcmp-3908.log	file	690	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-interp-curiosity-layer-stats-neighbour-layers-4833.log	file	6611	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0r2-4020.log	file	371906	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+softcap-sweep-3558.log	file	29295	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-far-cons-3806.log	file	3243	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpu-burn-check-per-gpu-6095_0.log	file	76657	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+polaris_slj_hv2.sh	file	7277	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-edge	dir	10	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+audit_side_tiled_closed_loop_code.tgz	file	799555	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_staggered_grid_cost_fix_gpu_timing	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-solar10m-run1-3740.log	file	49234	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_joint	dir	15	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-neighbour-context-pair-branch-9277.log	file	6564	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-replay-mechanism-breakdowns-base-vs-replay-7170.log	file	1096	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+.config	dir	7	EXCLUDED-NON-PROJECT	system, tool or shell file
+tier0_extB.sh	file	1243	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-opt	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-pairfull-3603.log	file	7063	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-token-model-v25-2885.log	file	10433	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-contact-eval-symlog-densershape-widemass-3178.log	file	1846	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-neuron-graph-seed-reproduction-11-07-configuration-7299.log	file	32511	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-pair-term-adaptdeep-bruteforce-at-3e6-7297.log	file	79	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-esc-smoke-3832.log	file	1912	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+.esmtp_queue	dir	3	EXCLUDED-NON-PROJECT	system, tool or shell file
+augur-gns-style-message-passing-baseline-3-layers-code.tgz	file	787430	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+pilot5_an.txt	file	7947	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-d3b-3536.log	file	163463	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+h_E_baseline.json	file	15973	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-pairfull-3604.log	file	13942	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-far-r1-3797.log	file	8522	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-loss-term-ref-free-force-4058.log	file	1477	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-scatter-contact-3372.log	file	359608	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpu-burn-filler-6149.log	file	390857	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce	file	5	DOWNLOAD-FIRST	Polaris-only, not downloaded
+augur-ftde-fix1-3559.log	file	11569	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+el-hfsmoke-3865.log	file	642	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tiered-SR-3938.log	file	4559	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-neighbour-context-pair-branch-full-11101.log	file	71546	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-galaxy-3864	dir	4	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-three-dimensional-sparse-voxel-scatter-field	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+voxel-divergence-diagnosis	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+fkg_train_theta.sh	file	484	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_nf_smoke	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-slj-3916.log	file	29266	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0c	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-esc-B-3841.log	file	56577	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-orbit-bh-100k-250snaps-rel-3122.log	file	3803	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-showcase-kpadext	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+polaris_scatter_lj_h1.sh	file	2909	DOWNLOAD-FIRST	same name locally but size differs
+augur-sampled-force-distribution-control-stage-1-13155.log	file	512	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0n	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-contact-c-diag-3496.log	file	6626	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tiling-eval2-3768.log	file	2527	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+polaris_galaxy_tile_rs.sh	file	996	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-galaxy-3869	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-neuron-plasticity-smoke-4091.log	file	3280	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-stage2-flownet-v5-2826.log	file	8523	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-solar-more-moons-check-4756.log	file	2598	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-three-dimensional-sparse-voxel-scatter-field-7853.log	file	608	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+regce_code2.tgz	file	15830	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-stage2-flownet-2822.log	file	10965	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-class-evaluation-harness	dir	10	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+tiled_closed_loop_code.tgz	file	1054881	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+lw-main-3622.log	file	88691	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0d	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+edge_code10.tgz	file	556090	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-lj-scale-smoke-3094.log	file	573	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-collapsed-pair-term-fallback-chase-7185.log	file	170	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-solar-stability	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur_summary_token_exchange_probe_with_early_stopping_and_planted_signal	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+r1_code.tgz	file	423211	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-torch-native-probe-4911.log	file	2852	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_hier_matched60k_ckpt	dir	4	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-edge-trainC-3795.log	file	6962	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+py312hdr_conda	dir	78	EXCLUDED-NON-PROJECT	system, tool or shell file
+augur-tiered-muon-conv-flattened-4977.log	file	79	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+ef_cons3.sh	file	914	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-armA-1-3866.log	file	26622	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+le_b2_results.tar	file	4177920	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+.Xauthority	file	111	EXCLUDED-NON-PROJECT	system, tool or shell file
+tln-probe-recovery-11178.log	file	1931	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_code.tgz	file	391139	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+lt_scatter_losstest.py	file	6817	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur-voxel-divergence-diagnosis-inference-on-checkpoints-11110.log	file	1099	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_energy_audit	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-tier0-truth-state-replay-control-4104.log	file	733	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-scatter-bh-1b-3434.log	file	4304	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+nfr_common.sh	file	233	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+solar_nkm_code.tgz	file	679960	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-scatter-field-2d-cost-blowup-9681.log	file	3046	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpu-burn-filler-6151.log	file	563644	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+solar_more_moons_code.tgz	file	809723	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-solar-nkm-regimes	dir	11	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+p1e8_main_results.tgz	file	6779612978	DOWNLOAD-FIRST	Polaris-only, 6.78 GB, over 200 MB limit; not downloaded
+augur-el-hf-4738	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+bounce-stage2-2815.log	file	10148	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-pcie-bus-host-device-and-cross-group-peer-stress-on-granted-gpus	dir	4	NOT-TOUCHED	stress-test material, name only
+augur-galaxy-3851	dir	4	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-tiered-sharpness-aware-minimisation-adam-6161.log	file	1611	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-contact-gen-eval-v1-3134.log	file	1039	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiled_closed_loop	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+fb_results.tgz	file	943149	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur-two-body-upload	dir	8	DOWNLOAD-FIRST	dir contents not enumerated (no du/md5/mtime via tools); local same-name dir exists, contents unverified
+nfr_render_code.tgz	file	514528	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-scatter-ood2-3324.log	file	2867	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+softcap-test-3553.log	file	1457	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-single-law-upload	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-edge-lr1-3810.log	file	1660	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-scatter-bh-1b-3433.log	file	5651	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-scatter-bh-1b-lens-3441.log	file	1131	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+solar_moon_diagnosis_code.tgz	file	642640	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+scatter_band_probe	dir	4	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+gns_style.pt	file	6655525	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur-edge-3800	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+t0r-4003.log	file	2729	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-solar-stability-train-4705.log	file	234	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_cl	dir	11	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-bh-clumpy-1b-3502.log	file	10409	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+polaris_galaxy_tile_gate.sh	file	797	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-scatter-tile2-3777.log	file	11775	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+polaris_tier0_tiled_energy_similarity.sh	file	2723	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-tiered-smoke-3937.log	file	3274	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tier0_tiled_pebin_4738	dir	13	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-galaxy-small-3862.log	file	161012	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-edge-lr3-3812.log	file	3937	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+sacct_helpformat.txt	file	2400	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur_tiered_c2_blind_overlay.tar	file	102400	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-contact-gen-v2-3135.log	file	1842	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_tile2	dir	11	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-law-blind-unet-trunk-7839.log	file	429	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-summary-token-exchange-probe-with-early-stopping-and-planted-signal-10105.log	file	8234	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-lw	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+bounce-token-model-v36-2899.log	file	8271	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpu-burn-check-per-gpu-6111_1.log	file	31796	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+le_main.sh	file	2338	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+gpuaudit-sacct-3616.log	file	5	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+.cache	dir	8	EXCLUDED-NON-PROJECT	system, tool or shell file
+augur_tiered_c2_t0blind_seed4739	dir	4	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+ondemand	dir	3	EXCLUDED-NON-PROJECT	system, tool or shell file
+augur-solar-stability-train-4702.log	file	3682	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-testaudit	dir	20	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-fkg-ctx-3839.log	file	117	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+tln-repeatability-11175.log	file	490	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+sr_files	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-class-harness-with-gns-baseline-10434.log	file	3694	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+.npm	dir	3	EXCLUDED-NON-PROJECT	system, tool or shell file
+augur-law-recovery-probe-4824.log	file	3672	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-architecture-push-stage-one-code.tgz	file	798412	KEEP-IN-USE	job 13236 work dir, init checkpoint or code tarball
+augur-edgefree	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+le_summary.txt	file	15024	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+testaudit_floors.json	file	189264	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-solar10m-pilot3-3735.log	file	13694	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-solar10m-pilot2-3734.log	file	12984	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-scatter-field-three-part-exact-swap-drift-attribution-9819.log	file	5294	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0m_code.tgz	file	922590	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-d3-cellgraph-3375.log	file	2360	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-token-model-v18-2875.log	file	12600	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_hier_diagnosis-4047.log	file	759	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+polaris_tier0_tiled_pair_potential_by_separation.sh	file	2909	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-far-aug2-3813.log	file	18030	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+ftde_c2_summary.txt	file	5808	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-recabl	dir	20	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+edge_code4.tgz	file	548902	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-contact-gen-symlog-3138.log	file	1815	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_slj_scratch	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur_cross_group_pairwise_nccl	dir	4	NOT-TOUCHED	stress-test material, name only
+augur-edge-job6-3808.log	file	1449	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-orbit-bh-100k-first20-8substeps-3132.log	file	4069	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0s_code.tgz	file	916105	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_architecture_push_stage1_mass	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+t0r2	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-scatter-contact-3380.log	file	4839	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+tiled_pebin_code.tgz	file	691811	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-collapsed-pair-term-scaling-probe-6237.log	file	1018	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+el_code.tar	file	2058240	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-gaussian-ladder-far-kernel-replacing-fft-7838.log	file	864	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-square-wall-noclip-3446.log	file	1470	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_drift_diagnoses	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+polaris_sae_interp.sh	file	722	DOWNLOAD-FIRST	same name locally but size differs
+bounce-orbit-bh-100k-collapse-slowmo-3126.log	file	2991	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+staggered_grid_cost_fix_code.tgz	file	846687	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+lf-main-3624.log	file	68159	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-d3	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+t0n_run.sh	file	1146	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce_scaling_opt	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-scatter-tile2-3779.log	file	52850	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+Untitled.ipynb	file	11101	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur-solar-translation-eval-4746.log	file	34681	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_tier0_no_velocity_no_recurrent_seed4739_ckpt	dir	4	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-hetero-d-3931.log	file	17	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_probe_deep	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-r1-step1-3748.log	file	255	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpu-burn-check-per-gpu-6087_2.log	file	225	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-substep-router-3613.log	file	44326	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+edge_code3.tgz	file	548420	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+proposed1e8_code.tgz	file	560245	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-tier0-tiled-energy-sim-4739-4066.log	file	117	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+lf_rep.tar	file	122880	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+polaris_scatter_solar_translation_arms.sh	file	3190	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_tier0_visited_state_replay_4739	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-scatter-d3-3352.log	file	10252	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+neuron_variants_code.tgz	file	13212	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-orbit-bh-100k-500frames-3146.log	file	36767	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0d3-4017.log	file	4445	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-accuracy-at-1e6-bodies-and-barnes-hut-baseline	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-gpu-burn-filler-6148.log	file	393773	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-scatter-field-three-part-exact-swap-drift-attribution-9722.log	file	1295	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+fallback_chain.out	file	243	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur_tiling	dir	10	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+corrector_code.tgz	file	3601021	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-gpu-burn-filler-6223.log	file	1678251	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-slj-3917.log	file	22535	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_slj_ft	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-class-evaluation-harness-10422.log	file	3788	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+t0d_code.tgz	file	922390	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_replay_mechanism	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+bounce-orbit-bh-3d-3151.log	file	35752	DOWNLOAD-FIRST	same name locally but size differs
+far-tests-3818.log	file	1550	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-pcie-bus-host-device-and-cross-group-peer-stress-on-granted-gpus-11252.log	file	15863	NOT-TOUCHED	stress-test material, name only
+showcase_code.tgz	file	533086	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+energy_audit_code.tgz	file	936174	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+sx_stage1_results.tar	file	7813120	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+bounce-scenes-ft-3325.log	file	241770	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+nfr_cmp_a.sh	file	658	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-gpuaudit-3617.log	file	8128	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-bench-smoke-2916.log	file	1040	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+neuron_windowed_attention_code.tgz	file	17477	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-gpu-burn-check-per-gpu-6095_1.log	file	76445	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-one-network-for-all-tiers-with-scale-input	dir	13	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-slj-h1-eval-3955.log	file	12485	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-solar-translation-train-4745.log	file	10887	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0g2_run.sh	file	583	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-esc-smoke-3834.log	file	4077	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-ftde-diag-3551.log	file	7834	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+muon_conv_code.tgz	file	1204565	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-voxel-divergence-diagnosis-inference-on-checkpoints-11100.log	file	2314	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+polaris_slj_hv.sh	file	6519	DOWNLOAD-FIRST	same name locally but size differs
+augur-integ2	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-edge-hyb-3805.log	file	1856	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_hier_no_velocity_no_recurrent_seed4738_eval_joint.json	file	900	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur-hteval-test-3942.log	file	99	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-edge-smoke-3787.log	file	6233	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+el-hfsmoke-3863.log	file	697	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-gravity-flyby-100k-100steps-3111.log	file	653	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tiered	dir	10	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+bounce-lj-scale-smoke2-3097.log	file	420	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-replay-mechanism-arms-and-force-error-breakdown-7169.log	file	429	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_shift_core_diag	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-gns-style-message-passing-baseline-3-layers-10423.log	file	1698	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-solar-generalized-check-4735.log	file	2392	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_audit_side_tiled_tests	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur_architecture_push_stage1_distribution_2026_11_23_fresh	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur_escape	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+tiered_overnight_code.tgz	file	712907	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+el-ladder-3752.log	file	86034	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-edge-eval4-3802.log	file	31380	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-exact-all-pairs-force-at-1e7-bodies-two-instances-on-gpu-pairs-11243.log	file	979	NOT-TOUCHED	stress-test material, name only
+augur-nfr-evalcmp2-3910.log	file	696	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-scatter-tile2-3783.log	file	25925	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce_scaling	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+three_dimensional_sparse_voxel_scatter_field_code.tgz	file	793356	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-gpu-burn-filler-6146.log	file	393743	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+solar_translation_code.tgz	file	614200	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+t0c2	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+fallback-b2-3036.log	file	2939	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-bh_1e9_edge_free_panels-4056.log	file	3187	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_JL40-4021.log	file	5625	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpu-burn-check-per-gpu-6103_2.log	file	28687	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-neighbour-context-pair-branch-train-seed-replication-code.tgz	file	848446	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_tiered_c2_ensmoke-3998.log	file	1995	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+polaris_tiered_muon_conv_flattened.sh	file	3214	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-tiered-muon-swap-static-optimizer-4975.log	file	803	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-contact-c40-3497.log	file	400242	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0v-4033.log	file	931	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+el-hf-4738-3884.log	file	44359	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+tln	dir	8	DOWNLOAD-FIRST	dir contents not enumerated (no du/md5/mtime via tools); local same-name dir exists, contents unverified
+augur-galaxy-3855	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+t0h-3997.log	file	16539	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_architecture_push_stage1_distribution	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-assim	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+ftde_code3.tgz	file	459921	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-token-model-v16-2863.log	file	16254	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-scatter-ood-3317.log	file	24678	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+polaris_moon_failure_cause_arm.sh	file	2541	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-slj-h1-4040.log	file	34254	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-gpu-burn-filler-6173.log	file	13680734	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-solar-stability-train-4715.log	file	10522	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tiered-replay-second-base-fresh-seed-eval-6162.log	file	1617	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpuaudit	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-moon-cause-arm-4779.log	file	41121	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-nfr-stab-3894.log	file	9683	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+lrw_results.tar	file	9349120	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+.inductor-cache-d3	dir	434	EXCLUDED-NON-PROJECT	system, tool or shell file
+augur-tier0-visited-state-label-replay-4101.log	file	432	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+.lesshst	file	20	EXCLUDED-NON-PROJECT	system, tool or shell file
+augur-edge-3798	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-edge-scan-3800.log	file	5492	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-cons	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+ftde_c1_eval.txt	file	3872	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+lw-rep-3626.log	file	8542	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-showcase-kpadext-4068.log	file	36931	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tiered-farE-3953.log	file	766	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+galaxy_tile2.tgz	file	657205	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-gpu-burn-check-per-gpu-6119_2.log	file	53237	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tier0-visited-state-label-replay-4088.log	file	1681	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+slj_hv_code.tgz	file	933398	DOWNLOAD-FIRST	same name locally but size differs
+lw_rep.tar	file	10240	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+rc_files	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+d6_results	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-class-harness-with-gns-baseline-10424.log	file	123	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+scaling_submitter2.out	file	255	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur-bh-clumpy-chk-3499.log	file	3489	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-contact-c-smoke-3491.log	file	5722	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-galaxy-smoke-3851.log	file	525	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-stage1-2808.log	file	11836	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+armA_fresh_code.tgz	file	656895	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+mesh-momentum2-2976.log	file	6727	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-solar-stability-train-4712.log	file	6587	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-token-model-v26-2887.log	file	10986	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-edge-3792	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+neuron_slow_patch_code.tgz	file	17368	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+rollout_submit.log	file	10170	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-far-final2-3817.log	file	4726	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tiered-drift-mechanism-diagnoses-4084.log	file	1430	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_architecture_push_stage1_mass_double_iterations_2026_11_23	dir	6	KEEP-IN-USE	job 13236 work dir, init checkpoint or code tarball
+augur-tiered-tests-3933.log	file	383	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+le-main-3627.log	file	81563	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-token-model-v32-2895.log	file	8271	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-stage1-occloss-2813.log	file	8138	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-scenes	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-three-dimensional-sparse-voxel-scatter-field-extension-segment-10098.log	file	609	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpu-burn-check-per-gpu-6127_0.log	file	447409	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tier0_tiled_energy_similarity_4738	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+node.tar.xz	file	31117676	EXCLUDED-NON-PROJECT	system, tool or shell file
+augur-mixed-law-upload	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur_tiered_c2_tier0_no_velocity_no_recurrent_seed4738_ckpt	dir	4	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+bounce-token-model-v1-2840.log	file	9670	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tiered-J-3976.log	file	3662	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-probe-compile-3376.log	file	8468	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpu-burn-check-per-gpu-6127_7.log	file	448130	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-dm	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-solar-truthchk-3503.log	file	2165	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-token-model-v38-2901.log	file	8271	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0t	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-neighbour-context-pair-branch-with-soft-tangential-penalty-9689.log	file	7431	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-moon-cause-arm-4777.log	file	18184	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_JL-4010.log	file	21786	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+.triton-cache-d3	dir	1119	EXCLUDED-NON-PROJECT	system, tool or shell file
+polaris_moon_failure_cause_prep.sh	file	1736	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+el-hf-4739-3885.log	file	41184	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-force-accuracy-million-bodies-and-barnes-hut-11171.log	file	79	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+far-setup-3794.log	file	504	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-bhwave-pilot-3896.log	file	5935	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-interp-curiosity-dose-response-replication-activation-patching-4843.log	file	13378	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tier0-tiled-closed-loop-tests-gradient-tolerance-fix-on-merge-7450.log	file	8149	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-edge-diag-3793.log	file	1793	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+fkg_train_ctx.sh	file	618	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-stage1-2810.log	file	7751	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+scatter_energy_log	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-scatter-tile2-3778.log	file	36687	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-nf-armB-3890.log	file	9973	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_pair_context	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-hteval-src	dir	14	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+le_results.tar	file	10475520	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur-gpu-burn-filler-6207.log	file	2973880	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpu-burn-check-per-gpu-6087_3.log	file	225	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-assim-3643.log	file	8043	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-token-model-v28-2890.log	file	9552	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+edge_code2.tgz	file	546650	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-tier0-tiled-energy-sim-4739-4067.log	file	196	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0s	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-scatter-cl-smoke-3498.log	file	29799	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+lt_results.tar	file	133120	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur-bfrozen-cmp-3590.log	file	27518	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+nfr_cmp_b.sh	file	660	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-token-model-v17-2873.log	file	16201	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tier0-tiled-closed-loop-4060.log	file	675	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-three-dimensional-sparse-voxel-scatter-field-score-15000	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-law-recovery-followup-1024-placements-4830.log	file	1249	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-sae-curiosity-mixed-s4738-slow-l0-control-4826.log	file	2910	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+lj_h1_poly_code.tgz	file	505582	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_tiered_c2_e12smoke-4044.log	file	4071	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+eg_scripts	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+gpuaudit_util.tar	file	61440	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+t0g	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-mixed-law-retrain-without-amplitude-10-pow1-scenes-7294.log	file	404	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+showcase_kpadext_code.tgz	file	1301450	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+edge_code5.tgz	file	550588	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-edge-3810	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-galaxy-3860	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+sx-stage1-3629.log	file	35021	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-tier0	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+t0r2_code.tgz	file	811009	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-fkg-ctx-3836.log	file	117	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-hteval-test-3966.log	file	1307	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-token-model-v23-2882.log	file	10389	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-scatter-regress-3296.log	file	1709	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0m	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-sljdiag-ft-3918.log	file	12954	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-neighbour-context-pair-branch-full-run-code.tgz	file	910504	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-gpu-burn-check-per-gpu-6111_0.log	file	31775	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_hier_diagnosis-4048.log	file	5079	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0d2-4035.log	file	31103	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-nfr-stab-3882.log	file	4179	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-p1e8-small-3822.log	file	46782	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-interior-force-offset-probe-6241.log	file	77	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+polaris_replay-mechanism-arms-and-force-error-breakdown.sh	file	6343	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+t0r_code.tgz	file	680145	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-solar-stability-train-4703.log	file	234	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+escape_code6.tgz	file	642473	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+polaris_tier0_ext.sh	file	1184	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_tiered_c2_hier_no_velocity_no_recurrent_seed4739_eval_joint.json	file	901	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+t0c_code.tgz	file	661296	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-galaxy-tile-gate-3869.log	file	44592	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-ood	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+qos-check2-20261120.txt	file	606	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-edge-3795	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-armA-N-3878.log	file	3704	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+d3rn_code.tgz	file	492547	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-scatter-contact-3359.log	file	1972	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-contact-c-3494.log	file	16367	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-three-dimensional-sparse-voxel-scatter-field-extension-segment-10109.log	file	609	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-galaxy-3852	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+escape_code1.tgz	file	589967	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-showcase-solar_system_orbit_ft2-4053.log	file	876	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-regce2	dir	16	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-esc-E-3847.log	file	41997	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-scatter-tile2-3776.log	file	9654	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+.triton	dir	3	EXCLUDED-NON-PROJECT	system, tool or shell file
+augur-rc	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+bounce-token-model-v29-2891.log	file	8271	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-far-aug3-3814.log	file	12835	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-width32-loss-spike-seed-validation-7442.log	file	269	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-galaxy-tile-3873	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur_armA_fresh	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-mixed-law-pow1-amp-cap-baseline-scatter-field	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-fkg-ctx-3843.log	file	655	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-solar-nkm-second-seed	dir	11	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-sparse-code-unet-single-law-9618.log	file	504	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+slj-ph-3991.log	file	614	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-galaxy-3858	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+tier0_stage1_probes_code.tgz	file	857466	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+galaxy_dbg.sh	file	619	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+scatter_scaling_s46.py	file	20236	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce_rect	dir	16	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-edge-harn7-3809.log	file	24124	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+le_b2_summary.txt	file	38	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-galaxy-small-3856.log	file	67381	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+qos-limits-20261120.txt	file	859	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_close_pair_localise	dir	13	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-network-utilization-statistics-7242.log	file	5057	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-nfr-evalmain-3907.log	file	1718	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-armA-G-3868.log	file	16048	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tiered-sharpness-aware-minimisation-adam-6167.log	file	138	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-neuron-windowed-attention-4914.log	file	2035	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0d2	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-two-body-finetune	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-solar-momentum-step-oracle-4744.log	file	1796	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+.apptainer	dir	3	EXCLUDED-NON-PROJECT	system, tool or shell file
+augur-tier0-truth-state-replay-control-4102.log	file	444	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-scatter-bh-1b-3432.log	file	4893	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-neuron-seed-reproduction-11-07-configuration	dir	10	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-interior-force-offset-edge-check-all-bodies-11169.log	file	77	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-token-dataset-h44-2886.log	file	8680	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+nvlink-peer-bandwidth-and-allreduce-stress-on-granted-gpus-code.tgz	file	10196	NOT-TOUCHED	stress-test material, name only
+slurm_acct_cfg.txt	file	247	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+polaris_tier0_tiled_energy_similarity_v2.sh	file	2752	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-lt	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur_loss_terms	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-showcase-bh100k-kpadext-4081.log	file	645	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-edge-3809	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+solar_more_moons_code2.tgz	file	810410	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-scatter-field-three-part-separate-training-10304.log	file	553	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-showcase	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-gpu-burn-filler-6150.log	file	387571	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-neighbour-tile-force-error-predictability-probe-9914.log	file	1849	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+truthval	dir	17	DOWNLOAD-FIRST	dir contents not enumerated (no du/md5/mtime via tools); local same-name dir exists, contents unverified
+augur-regce2-3645.log	file	51363	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-hteval-arms-3960.log	file	2844	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-far-video-3816.log	file	296	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-hteval-smoke-3939.log	file	6001	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0g-4025.log	file	14269	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-bit-output-64-grid-long-range-9616.log	file	2138	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-single-law-readability	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-mixed-law-pow1-amp-cap	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+t0g_run.sh	file	868	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-token-model-v21-2880.log	file	10267	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_merge_gradient_fix_tests	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+summary-token-exchange-probe-with-early-stopping-and-planted-signal-code.tgz	file	849513	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-trainloss-3605.log	file	1082	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-interp-curiosity-activation-patching-native-reference-4850.log	file	9729	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+ef_cons3.tar	file	4177920	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-tiling-test-3766.log	file	731	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+sacct_bounce_parsed.txt	file	0	DOWNLOAD-FIRST	Polaris-only, not downloaded (zero-byte or placeholder)
+augur-bit-output-64-grid-long-range-full-9682.log	file	3923	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-lj-v3-scale-3096.log	file	19715	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_replay_mechanism.lock	file	0	DOWNLOAD-FIRST	Polaris-only, not downloaded (zero-byte or placeholder)
+augur-merge-audit-into-master-gpu-and-checkpoint-tests-7441.log	file	14580	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-rootcause-3601.log	file	9668	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-ood	file	9	DOWNLOAD-FIRST	Polaris-only, not downloaded
+tln-probe-recovery-11179.log	file	667	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+merge_audit_into_master_code.tgz	file	1517615	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-scatter-field-three-part-exact-swap-drift-attribution	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur_tiered_c2_tier0_matched_60k.pt	file	3224883	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+t0d-4013.log	file	2999	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_tiered_c2_exp4-3985.log	file	10812	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-voxel-divergence-diagnosis-inference-on-checkpoints-11111.log	file	997	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+nf_code.tgz	file	648399	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-fkg-theta-3835.log	file	117	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+.jupyter	dir	5	EXCLUDED-NON-PROJECT	system, tool or shell file
+lj_h1_code.tgz	file	779722	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-stage2-flownet-v5-2827.log	file	11106	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+slj_hv2_code.tgz	file	1038502	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-edge-scan-3799.log	file	117	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+.ssh	dir	7	EXCLUDED-NON-PROJECT	system, tool or shell file
+hfsmoke_run1.log	file	764	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-testaudit-regen-3595.log	file	11380	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_hier_no_velocity_no_recurrent_seed4738_diagnosis.json	file	24357	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+edge_code11.tgz	file	556129	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-regce	dir	16	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+bounce-lj-scale-smoke-3095.log	file	575	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+polaris_exact-all-pairs-force-at-1e7-bodies-two-instances-on-gpu-pairs.sh	file	3535	NOT-TOUCHED	stress-test material, name only
+d2_code.tgz	file	552125	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+lt_train_scatter_field.py	file	21663	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur-scatter-field-three-part-separate-training-11094.log	file	520	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_e12_overlay.tar	file	92160	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur-hetero-mid-3930.log	file	185	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-nfr-cmp-3902.log	file	50	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_tier0_no_velocity_no_recurrent_seed4739-4051.log	file	48211	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+node-v24.14.1-linux-x64	dir	9	EXCLUDED-NON-PROJECT	system, tool or shell file
+neuron_seed_robust_code.tgz	file	735650	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-sljdiag2-ft-3920.log	file	7575	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+edge_code6.tgz	file	551685	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-r1	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-reciprocal-neighbour-list-step0-6239.log	file	77	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-learned-per-body-property-channels-mass-conditioned-stage-1-double-iterations-13236.log	file	0	KEEP-IN-USE	job 13236 work dir, init checkpoint or code tarball
+augur-class-harness-with-gns-baseline-10444.log	file	3435	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-d2b-chain-3577.log	file	262896	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_staggered_double_grid	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-solar-nkm-regimes-cputest	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+bounce-stage2-200ep-2817.log	file	15842	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+sacct_raw.txt	file	40804	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-galaxy-tile-gate-3864.log	file	2311	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-scatter-contact-3382.log	file	6761	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+nfr_render_job.sh	file	699	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_exact_all_pairs_1e7	dir	6	NOT-TOUCHED	stress-test material, name only
+slj_ph_code.tgz	file	779722	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-hetero-smoke-3924.log	file	144	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-token-model-v19-2878.log	file	10195	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+gpu01_node.txt	file	726	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-solar-stability-train-4709.log	file	88393	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-hteval-test-3962.log	file	100	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_s1_extfield_eval_joint.json	file	896	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur-scatter-bh-100k-3427.log	file	651	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+visited_replay_code.tgz	file	1075086	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+t0d_run.sh	file	693	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-d3-followup-3398.log	file	6589	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-interp-curiosity-sae-probes-ablation-4828.log	file	16842	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpu-burn-check-per-gpu-6087_0.log	file	225	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-substep-router-3611.log	file	5395	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_hier_no_velocity_no_recurrent_seed4738_eval_sequential.json	file	3492	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur-edge-lr2-3811.log	file	707	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+seamvideo8-3785.log	file	28	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tier0-tiled-closed-loop-tests-rerun-on-audit-side-code-7449.log	file	8099	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-replay-mechanism-arm-truth-state-replay-second-base-7175.log	file	117	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+edge_code1.tgz	file	542028	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-token-model-v28-2893.log	file	8523	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_t0blind_seed4738	dir	4	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-esc-D-3845.log	file	142219	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-interp-and-pm-baseline-completion-bundle-6164.log	file	17739	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tiered-tier0-third-training-seed-6165.log	file	514	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+fallback-b1-3027.log	file	2772	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-scatter-field-three-part-exact-swap-drift-attribution-code.tgz	file	986705	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+escape_code2.tgz	file	640312	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_merge_tests	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-galaxy-scan-a-3859.log	file	29522	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-pm-baseline-force-error-4823.log	file	1506	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-scatter-tile2-3775.log	file	10098	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0n-4036.log	file	18823	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+lf-rep-3628.log	file	65755	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-tier0-tiled-energy-sim-4738-4065.log	file	126	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-solar-generalized	dir	10	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+far-ls-3790.log	file	7238	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+voxel_extension_segment.sh	file	4483	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-scenes-zs-3319.log	file	8258	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-ftde-eval1-3570.log	file	5772	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-contact	dir	8	DOWNLOAD-FIRST	dir contents not enumerated (no du/md5/mtime via tools); local same-name dir exists, contents unverified
+augur_pp8_up	dir	10	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+assim_code.tgz	file	514591	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-galaxy-tile-1b-3873.log	file	26203	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+solar_stability_code.tgz	file	700537	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+t0c-4001.log	file	8550	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-collapsed-pair-term-scaling-probe-6240.log	file	79	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+gpuaudit	dir	4	DOWNLOAD-FIRST	dir contents not enumerated (no du/md5/mtime via tools); local same-name dir exists, contents unverified
+augur-gpu-burn-check-per-gpu-6111_3.log	file	32249	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-fewshot-3663.log	file	23572	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-solar-more-moons-eval-4766.log	file	27846	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-yukawa-lambda-protocol-4832.log	file	2048	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+edge_code8.tgz	file	553008	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+slj-ph-3995.log	file	31099	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+edge_ck	dir	30	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur_int	dir	12	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+Desktop	dir	2	EXCLUDED-NON-PROJECT	system, tool or shell file
+augur_dense_region_exact_force_ceiling_probe	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+bfrozen_code.tgz	file	2493061	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+escape_code5.tgz	file	642130	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-learned-per-body-property-channels-mass-conditioned-stage-1-11166.log	file	360	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+le_b2.sh	file	1788	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+score_neuron_seed_reproduction.py	file	1485	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_corrector	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-armA-2-3867.log	file	37464	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+tln-repeatability-11177.log	file	6953	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0g2	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-solar-more-moons-train-4765.log	file	11208	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_tier0_no_velocity_no_recurrent_seed4738-4050.log	file	48216	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-d2	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+t0c4_code.tgz	file	809492	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-scatter-field-three-part-separate-training-code.tgz	file	921852	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-edge-t1-3786.log	file	5490	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-fkg-grav-3850.log	file	17447	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-d3-evalbase-3535.log	file	1261	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+fewshot_code.tgz	file	467543	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-solar-translation-probe-4737.log	file	831	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-galaxy-3862	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+scaling_submitter.out	file	86519	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur-neuron-graph-seed-robust-verdicts-7193.log	file	87445	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+cl_code.tgz	file	569713	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_tiered_c2_hier_matched60k_eval_sequential.json	file	3491	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur_tiered_replay_second_base_fresh_seed_eval	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+neuron_extra_training_seeds_code.tgz	file	724148	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+gpu_tools_login.txt	file	0	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-neuron-block-readout-4906.log	file	1948	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+lt-smoke-3608.log	file	4075	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+polaris_galaxy_tile_1b.sh	file	1118	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-tier0-close-pair-localise-4079.log	file	750	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bin	dir	9	EXCLUDED-NON-PROJECT	system, tool or shell file
+tln-arms-train-eval-11174.log	file	18801	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-neuron-loss-variants-4098.log	file	6952	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tiling-eval-3767.log	file	8515	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-three-dimensional-sparse-voxel-scatter-field-extension-segment-10401.log	file	632	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-slj-h1-P-3926.log	file	25543	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-hteval-test-3959.log	file	601	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpu-burn-filler-6185.log	file	4579010	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpu-burn-filler-6243.log	file	8263613	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-bfrozen	dir	17	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-gns-style-message-passing-baseline-3-layers	dir	10	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-law-zoo-data-readiness-stage-1-11165.log	file	608	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-fkg-theta-3838.log	file	117	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-galaxy-dbg-3857.log	file	1180	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-solar-more-moons-train-4757.log	file	407	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-contact-eval-symlog-densershape-3145.log	file	1264	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+lf_results.tar	file	122880	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+bounce-stage2-flownet-v4-2825.log	file	10965	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+.bash_profile	file	141	EXCLUDED-NON-PROJECT	system, tool or shell file
+augur-scatter-bh-1b-lens-3443.log	file	5952	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+lw_results.tar	file	51896320	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur-sae-random-pool-dose-response-7183.log	file	11863	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-dE-smoke-3826.log	file	1683	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-token-model-v34-2897.log	file	8271	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-scatter-field-three-part-exact-swap-drift-attribution-9730.log	file	2244	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-fkg-eval-3849.log	file	8183	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_e12_diag_overlay.tar	file	102400	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur-headline-seed-error-bars-and-chaos-floor-widening-11170.log	file	5125	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0s_run.sh	file	1140	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-lj-v2-3093.log	file	16855	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+galaxy_icchk.sh	file	497	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+t0c3-4014.log	file	8457	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-orbit-bh-100k-100steps-3112.log	file	3088	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_d5h	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-el-hf-4739	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-edge-3820	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+lj_code.tgz	file	458332	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-replay-mechanism-arm-late-ticks-only-7177.log	file	80	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+hfsmoke_run2.log	file	9221	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-contact-c-dbg-3492.log	file	503	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tiered-lev-3979.log	file	104637	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-esc-G-3848.log	file	43116	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-collapsed-pair-term-fallback-chase-7187.log	file	80	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-dE-smoke-3828.log	file	4925	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-token-model-v35-2898.log	file	8271	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_dense_region_exact_force_ceiling_probe_harness_fix	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-bhtime	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-solar-generalized-smoke	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+merge_scorer_check_tolerance_fix_code.tgz	file	1342197	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-contact-gen-v1-3133.log	file	1735	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tiling-test-3765.log	file	1684	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+scatterpc	dir	8	DOWNLOAD-FIRST	dir contents not enumerated (no du/md5/mtime via tools); local same-name dir exists, contents unverified
+augur-nvlink-peer-bandwidth-and-allreduce-stress-on-granted-gpus	dir	4	NOT-TOUCHED	stress-test material, name only
+augur-headline-seed-error-bars	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+far_gen_code.tgz	file	78005	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_pair_context_tangential_penalty	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+bounce-contact-gen-symlog-capped-3142.log	file	1822	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-gravity-relativistic-3119.log	file	2640	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_hier_no_velocity_no_recurrent_seed4739_diagnosis.json	file	24328	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+polaris_tier0_close_pair_localise.sh	file	916	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-token-model-v13-2857.log	file	16240	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-neuron-extra-training-seeds	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-pp8-protocol-3408.log	file	1434	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+scripts	dir	3	DOWNLOAD-FIRST	dir contents not enumerated (no du/md5/mtime via tools); local same-name dir exists, contents unverified
+augur-solar-more-moons-check-4753.log	file	1391	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+replay_mechanism_code.tgz	file	725935	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-integ	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+t0s-4023.log	file	9595	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_tiered_muon_swap	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-neighbour-context-pair-branch-train-seed-replication-9688.log	file	14140	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-solar-moon-arms	dir	10	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-solar-moon-diagnosis	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-hetero-full-3925.log	file	1635	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpu-burn-check-per-gpu-6095_2.log	file	76675	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-edge-eval5-3807.log	file	5190	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_architecture_push_stage1_lawzoo	dir	10	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-solar-generalized-check-4738.log	file	1586	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-esc-smoke-3837.log	file	13048	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+d6_code.tgz	file	446523	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+fallback_submit_loop.sh	file	116	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+softcap-test-3549.log	file	5602	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-scatter-cl-3501.log	file	48643	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-scenes-ft2-3328.log	file	745322	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+sacct_audit_X.txt	file	47766	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-galaxy-1b-3861.log	file	42913	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+le-b-3631.log	file	20862	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-edge-trainB-3789.log	file	6775	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_hier_diagnosis_ablation-4049.log	file	4858	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-scatter-cl-reset-3504.log	file	21836	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-hteval-test-3941.log	file	2341	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-dE-seeds-3830.log	file	9010	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_train_tiered.py	file	26061	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+polaris_mixed-law-pow1-amp-cap-scoring-eval.sh	file	2251	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-token-model-v41-2904.log	file	8271	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-galaxy-3857	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+staggered_double_grid_code.tgz	file	803482	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-solar10m-pilot5-3738.log	file	10061	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0x-4031.log	file	12424	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-scatter-field-three-part-exact-swap-drift-attribution-9721.log	file	25	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_pair_context_replication	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-one-network-for-all-tiers-with-scale-input-9249.log	file	938	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-interp-curiosity-lowdead-second-checkpoint-sae-seed-4834.log	file	8462	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-solar-translation-arms-4780.log	file	69878	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-galaxy-tile-3876	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+t0c3_code.tgz	file	809197	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-square-wall-probe2-3445.log	file	40514	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0g2-4029.log	file	2884	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-fix	dir	8	DOWNLOAD-FIRST	dir contents not enumerated (no du/md5/mtime via tools); local same-name dir exists, contents unverified
+augur-solar-nkm-second-training-seed-6160.log	file	1474	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-scatter-bh-timing-10000000-3428.log	file	542	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-hteval	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-tail-check-4894.log	file	822	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0t-4007.log	file	45	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+.vnc	dir	3	EXCLUDED-NON-PROJECT	system, tool or shell file
+augur-scatter-tile2-3780.log	file	5424	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+el_hf_wrapper.sh	file	2263	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+tiled_energy_similarity_code.tgz	file	1379232	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-bench-big-2917.log	file	21980	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+recabl_stage	dir	8	DOWNLOAD-FIRST	dir contents not enumerated (no du/md5/mtime via tools); local same-name dir exists, contents unverified
+augur-gpu-burn-filler-6145.log	file	391114	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-learned-per-body-property-channels-mass-conditioned-stage-1-13166.log	file	463	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-hteval-test-3948.log	file	99	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-solar-generalized-train-4740.log	file	12580	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-edge-eval3-3798.log	file	55749	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0v	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-nfr-resume-3875.log	file	4415	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+neuron_diag_code.tgz	file	11350	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+solar_nkm_second_seed_code.tgz	file	727583	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+softcap_E_old.pt	file	158807	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+bounce-lj-model-3091.log	file	5589	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-three-dimensional-sparse-voxel-scatter-field-score-slice-10421.log	file	915	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_hier_no_velocity_no_recurrent_seed4738_ckpt	dir	4	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-gpu-burn-check-per-gpu-6103_1.log	file	28711	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+far-cons-sum-3804.log	file	3494	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+tiling_snaps.tgz	file	397824	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_tier0_truth_state_replay_control_4738	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-tier0-second-training-seed-4818.log	file	487	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-ftde-c1-3579.log	file	9596	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-replay-mechanism-arm-one-round-of-replay-7174.log	file	117	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-cross-group-pairwise-nccl-two-group-scripts-11247.log	file	22290	NOT-TOUCHED	stress-test material, name only
+ftde_code.tgz	file	458997	DOWNLOAD-FIRST	same name locally but size differs
+bounce-orbit-bh-100k-collapse-substep-test-3129.log	file	17628	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-far-aug1-3803.log	file	40030	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-solar-generalized-check-4736.log	file	1586	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-network-utilization-statistics-7191.log	file	0	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-three-dimensional-sparse-voxel-scatter-field-extension-9904.log	file	608	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-nfr-smoke-3872.log	file	509	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0h3-4004.log	file	12549	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-slj-ft-3912.log	file	28984	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-interp-curiosity-dec3-channel-norm-both-checkpoints-4835.log	file	6368	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+sacct_bounce_full.txt	file	49257	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-dense-region-exact-force-ceiling-probe-11099.log	file	1384	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0h	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur_nfr	dir	24	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur_tiered_c2_ENM-4002.log	file	38936	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-token-model-v17-2868.log	file	10995	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-softcap-old	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-scatter-field-2d-cost-blowup	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+bounce-windowed-hist3-2835.log	file	11777	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-three-dimensional-sparse-voxel-scatter-field-score-30000	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-gpu-burn-check-per-gpu-6119_1.log	file	52993	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+galaxy_tile1.tgz	file	655566	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-orbit-bh-100k-collapse-coarse-3125.log	file	5858	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-learned-per-body-property-channels-mass-conditioned-stage-1-13154.log	file	358	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-edge-3789	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-gpu-burn-filler-6177.log	file	13508714	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-solar10m	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-galaxy-smoke-3852.log	file	5318	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur	dir	98	KEEP-IN-USE	job 13236 work dir, init checkpoint or code tarball
+augur-neuron	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-solar-more-moons	dir	10	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-solar-stability-train-4711.log	file	2443	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-nfr-train-3899.log	file	725	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+ef_code.tar	file	2027520	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-slj-h1-4043.log	file	18489	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-errgrowth-3509.log	file	5945	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-lrw	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+a3nb	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+polaris_network-utilization-statistics.sh	file	1109	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-scatter-core-drift-arm-a-fresh-held-out-seeds-6169.log	file	15332	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-smoke	dir	5	DOWNLOAD-FIRST	dir contents not enumerated (no du/md5/mtime via tools); local same-name dir exists, contents unverified
+.python_history	file	94	EXCLUDED-NON-PROJECT	system, tool or shell file
+t0h_code.tgz	file	660524	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-stage2-flownet-v2-2823.log	file	10965	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+neuron_block_readout_code.tgz	file	17033	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_nf	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-tier0-tiled-closed-loop-tests-scorer-check-tolerance-fix-on-merge-7451.log	file	8082	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-esc-A-3840.log	file	63506	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+t0g_code.tgz	file	917798	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+softcap_job4.sh	file	809	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-tier0-tests-3934.log	file	1496	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-sljdiag-scratch-3919.log	file	12961	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_hier_diagnosis_input_ablation.json	file	94231	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+exact_all_pairs_code.tgz	file	26546	NOT-TOUCHED	stress-test material, name only
+le-main-3623.log	file	1560	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-scatter-bh-select-3277.log	file	4553	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpu-burn-check-per-gpu-6127_4.log	file	450075	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tails-3607.log	file	2672	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+solar_orbit_error_diagnosis.sh	file	1106	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+augur-ef	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-tiered-muon-conv-flattened-5073.log	file	155	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-nf-smoke-3871.log	file	3940	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-loss-term-arms-4052.log	file	3199	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce-gravity-tiling-3086.log	file	3142	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-el	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-fewshot	dir	11	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-solar-moon-diagnosis-4773.log	file	31132	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-le	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-substep-router2-3621.log	file	35625	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+scatter_field_old.py	file	50494	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-bhwave-pilot-3895.log	file	2030	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-energy-metric-audit-4064.log	file	1979	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+bounce_windowed	dir	10	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+solar_translation_arms_code.tgz	file	792690	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+sf_orig.py	file	50494	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur_pp8	dir	8	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-gaussian-ladder-far-kernel-replacing-fft	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-slj-h1-PR-3927.log	file	59543	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+E_ms_kp_pot_v_g128.pt	file	3200305	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-token-model-v20-2879.log	file	10195	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+el-smoke-3750.log	file	2326	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+t0d-4034.log	file	13872	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+d5_run.sh	file	1624	DOWNLOADED	Polaris-only; copied to archive-polaris-only-2026-11-23 with md5
+headline_seed_error_bars_code.tgz	file	1094748	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+le-b2-3636.log	file	30529	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-law-blind-unet-trunk-9247.log	file	2404	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-gpu-burn-check-per-gpu-6127_3.log	file	452841	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_tiered_c2_EN-3999.log	file	11729	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-d3b	dir	7	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-regce3-3747.log	file	54613	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tiered-replay-second-base-fresh-seed-eval-6168.log	file	1664	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-tier0-tiled-pair-potential-by-separation-4080.log	file	153	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+galaxy_smoke.sh	file	929	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+augur-solar-select-3500.log	file	6348	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-square-wall-probe-3444.log	file	1983676	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-bfrozen-noise.log	file	1914	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur-replay-mechanism-arm-late-ticks-only-7171.log	file	117	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+augur_pair_context_full	dir	9	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+solar_generalized_code.tgz	file	603830	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+t0c4	dir	6	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+t0d3	dir	5	DOWNLOAD-FIRST	dir contents not enumerated; no same-name local dir found
+augur-staggered-grid-cost-fix-gpu-timing-11098.log	file	2002	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
+d3b_code.tgz	file	501752	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+t0m_run.sh	file	1073	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+voxel_score_slice.sh	file	2952	DELETE-CANDIDATE	same name and byte size found locally (md5 not comparable: no Polaris-side md5 tool)
+bounce-lj-sim-3090.log	file	1265	DOWNLOAD-FIRST	Polaris-only job log, no local copy by name; small, not downloaded (outside result/checkpoint scope)
