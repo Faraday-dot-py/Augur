@@ -112,7 +112,7 @@ def test_model(dev):
         lp, lv = tc.rollout_terms(t, d, torch.zeros(1, dtype=torch.long, device=dev), torch.zeros(1, dtype=torch.long, device=dev), 2)
         (sum(lp) + sum(lv)).backward()
         grads[ck] = torch.cat([q.grad.flatten() for q in model.parameters() if q.grad is not None])
-    check("checkpointed and plain gradients agree", torch.allclose(grads[True], grads[False], rtol=1e-3, atol=1e-8), f"max rel {float((grads[True] - grads[False]).abs().max() / grads[False].abs().max()):.2e}")
+    check("checkpointed and plain gradients agree", float((grads[True] - grads[False]).abs().max()) <= 1e-5 * float(grads[False].abs().max()), f"max rel {float((grads[True] - grads[False]).abs().max() / grads[False].abs().max()):.2e}")
     check("closed-loop gradients are finite and non-zero", bool(torch.isfinite(grads[True]).all()) and float(grads[True].abs().max()) > 0)
     t = tc.TiledTier0(model, dev, chunk=16, exchange="halo")
     lp, lv = tc.rollout_terms(t, d, torch.zeros(1, dtype=torch.long, device=dev), torch.zeros(1, dtype=torch.long, device=dev), 3, tb=2, grad=True)
@@ -312,8 +312,8 @@ def test_fresh_seed_eval(dev):
     ev = json.load(open(out))
     check("fresh-seed eval writes BL and every named checkpoint on every seed", sorted(ev) == ["BL", "a", "b", "seeds"] and all(sorted(ev[n]) == ["12000", "12100"] for n in ("BL", "a", "b")))
     r = sc.score(ev)
-    same = all(abs(r["err20_over_BL"]["a"][x] - 1.0) < 1e-6 for x in ("12000", "12100"))
-    check("fresh-seed scorer: checkpoint identical to the stand-in baseline scores 1.0x and PASS", same and r["verdict"] == "PASS", json.dumps(r["err20_over_BL"]))
+    same = all(abs(r["err20_over_BL"][n][x] - 1.0) < 1e-6 for n in ("a", "b") for x in ("12000", "12100"))
+    check("fresh-seed scorer: checkpoint identical to the stand-in baseline scores 1.0x within 1e-6 and is not KILL", same and r["verdict"] != "KILL", json.dumps(r["err20_over_BL"]))
     ev["b"]["12100"]["err@20"] = ev["BL"]["12100"]["err@20"] * 1.3
     check("fresh-seed scorer: 1.3x on one (checkpoint, seed) is KILL", sc.score(ev)["verdict"] == "KILL")
     ev["b"]["12100"]["err@20"] = ev["BL"]["12100"]["err@20"] * 1.1

@@ -293,6 +293,22 @@ class ContactScatterField(sf.ScatterField):
             a = a + self.wall_acc_kernel(pos)
         return a * mask[..., None]
 
+    def contact_gate(self, pos, mask):
+        """(B,N) in [0,1]: 1 in contact, 0 beyond `pw` of any wall or neighbour gap (same window as the learned contact terms)."""
+        B, N = mask.shape
+        rad = self._rad(B, N, pos)
+        gap = torch.full((B, N), 1e3, device=pos.device, dtype=pos.dtype)
+        if self.geom is not None and self.obstacle == "sdf":
+            gap = torch.minimum(gap, self._gather_geom(self.geom, pos)[..., 0] - rad)
+        if N > 1:
+            ds, r, nb = knn_dense(pos, mask, 1)
+            rf = rad.reshape(-1)
+            pg = (r[:, 0].clamp(max=1e5) - (rf + rf[nb[:, 0]])).reshape(B, N)
+            gap = torch.minimum(gap, pg)
+        return _win(gap, self.pw) * mask
+
     def _force(self, pos, vel, mass, mask, field):
+        if self.t0 is not None and self.t0.cfg.head and self.t0.cfg.headgate:
+            self.t0.gate = self.contact_gate(pos, mask)
         a, field = super()._force(pos, vel, mass, mask, field)
         return a * self.gscale + self.local_acc(pos, vel, mask), field

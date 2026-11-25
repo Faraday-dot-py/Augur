@@ -30,3 +30,6 @@ jupyterhub-sandbox/
 .superpowers/
 *.tgz
 *.tar.gz
+.remember/
+scripts/.remember/
+.mcp.json

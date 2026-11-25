@@ -38,6 +38,8 @@ Your row in `docs/debugging/priority-registry.md` gives your rating (1 backgroun
 
 ## Polaris waits (token cost)
 
+FAST-FINISH CHECK: On any job completion, compare elapsed time to the registry estimate. If it finished in under about 10% of the estimate, treat it as a suspected silent skip: before scoring, confirm the job id stamped in the result json matches the job and the results were written to a fresh directory (jobs 13154 and 13155, 2026-11-23). Rule: user, 2026-11-24.
+
 Agents do not idle-wait on Polaris jobs (waits over about 270 s expire the subagent prompt cache and force a full context re-write). After submitting a job, record job id, expected runtime, log path and exact resume steps in the supervisor-log or your report, then stop. The main session watches with a Monitor until-loop on sacct and resumes you (SendMessage) or starts a fresh agent. Check sacct once shortly after submit for fast failures.
 
 PRE-SUBMIT INPUT CHECK: Before any sbatch, run the script's CPU or dry stage and confirm every file the job script's input check needs is in the tarball (`tar -tzf`). A job that dies in its first minute costs a full queue wait (jobs 7162 and 7191, 2026-11-08). If a job fails, rerun the full check on any rewritten resubmit script before submitting again. Rule: user, 2026-11-09.
