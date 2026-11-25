@@ -23,7 +23,7 @@ I did not get far enough to answer most of these. The project is archived; what 
 - **Learning the rules.** The scatter field (Augur's main model, defined under "What exists today") learned gravity and advanced 1 billion and 10 billion bodies on one GPU at close to linear cost per step. Those runs show speed and memory only. Against exact forces its error was worse than a plain particle-mesh (PM, a classical grid method) baseline on the same grid in all 24 scenes at 1 to 3 million bodies, and up to 8.06 times worse than the classical Barnes-Hut tree method (a registered kill). Models trained on several force laws at once failed (a KILL), as did unequal-mass systems in a proxy test.
 - **One space for two scales.** Not tested directly: no experiment put two physical scales into one learned latent space. The nearest work, stacking coarse-grid gravity tiers, was killed on accuracy.
 - **Molecular scale.** A dedicated pair-force network tracked temperature and ordering in Lennard-Jones fluids (a standard molecular force) in one seed, but it is all-pairs and not linear cost. The scatter field on the same task was killed. Planets and molecules in one model was never attempted.
-- **Recovering the laws.** A force-law probe recovered the inverse-square exponent as 1.96 against 2, but passed at the curve level for only 5 of 16 cells and at the formula level for 2 of 16. SAE studies gave weak law alignment.
+- **Recovering the laws.** A force-law probe recovered the inverse-square exponent as 1.96 against 2, but passed at the curve level for only 5 of 16 cells and at the formula level for 2 of 16. The SAE studies were curiosity runs with no verdict.
 - **Discovering unknown laws, quantum dynamics.** Never attempted. Every recovery test used laws whose truth was known.
 
 Most results are one training seed. Each is marked with how well it was validated in the closing report.
@@ -79,10 +79,10 @@ Every design choice is judged against four requirements, and the project reports
 
 | Requirement | What it means | Status |
 | --- | --- | --- |
-| Generalization | One approach should work for any particle system, including ones with different rules (gravity, contact, molecular forces). | Shown on a handful of systems, not yet on arbitrary ones. |
+| Generalization | One approach should work for any particle system, including ones with different rules (gravity, contact, molecular forces). | Holds for the trained gravity-like rule; failed for mixed laws and unequal masses. |
 | Tileable | A model trained on a small region should simulate a much larger one by cutting it into tiles. | Working for gravity, with a known seam and accuracy cost. |
 | O(N) cost | Time grows linearly with the number of bodies N, never quadratically. | Measured, see below. |
-| Interpretability | The learned rules should be recoverable from the model. | Partly probed, not achieved: a force-law probe recovered some laws and not others (see "Newest work"). |
+| Interpretability | The learned rules should be recoverable from the model. | Partly probed, not achieved: a force-law probe recovered 5 of 16 cells at the curve level and 2 of 16 at the formula level (see "What I found"). |
 
 ## What exists today
 
@@ -142,14 +142,13 @@ Per-body-mass support targets a star-plus-planetesimal-disk system, the kind of 
 ## Recent work, as of 2026-11-24
 
 - **Architecture push.** Of 19 pre-registered experiments, 11 finished: 1 PASS, 4 KILL, 3 INCONCLUSIVE and 3 INCONCLUSIVE-undertrained. One more has a control result with no verdict, and 6 plus one curiosity experiment have no result (`docs/paper/closing-report.md`, section 1).
-- **Closing report.** Written as the project's final form, with results marked by how well each is validated. Section 7 offers candidate explanations of why the architecture hit its limits, written as untested hypotheses with up to two proposed experiments each.
+- **Closing report.** Written as the project's final form, with each result marked by how well it is validated. Its architectural-diagnosis section was still being added at time of writing.
 - **Accuracy against classical methods.** Scatter-field median force error on a Plummer scene stayed at 0.082 to 0.087 from 1e4 to 3e6 bodies and passed its registered line (one seed), but it is worse than plain PM and than Barnes-Hut (see "What I found").
-- **10 billion bodies.** A full-box density render of the 10 billion body collapse was added alongside the three-zoom video above; it is speed and stability only.
 - **Archive.** The repository is being archived as read-only, with the complete history kept in a private copy.
 
 ## How the research is run
 
-Work is done by a supervised team of AI agents. A supervisor agent delegates, records every decision in a running log (`docs/theory/supervisor-log.md`), and does not do experiment work itself. Each agent works in its own branch, writes pass and kill criteria before running, and logs results to a shared experiment log (`docs/debugging/experiment-log.md`, 231 sections). When an agent hits a limit or loses its compute connection, it is resumed from saved state. After every run that produces rollouts, a fresh reviewer with no hypothesis primed describes the rendered frames, because summary statistics alone have repeatedly hidden visible artifacts. Experiment names must be descriptive, enforced by a check script (`scripts/check_experiment_names.py`).
+Work is done by a supervised team of AI agents. A supervisor agent delegates, records every decision in a running log (`docs/theory/supervisor-log.md`), and does not do experiment work itself. Each agent works in its own branch, writes pass and kill criteria before running, and logs results to a shared experiment log (`docs/debugging/experiment-log.md`, 231 headed sections). When an agent hits a limit or loses its compute connection, it is resumed from saved state. After every run that produces rollouts, a fresh reviewer with no hypothesis primed describes the rendered frames, because summary statistics alone have repeatedly hidden visible artifacts. Experiment names must be descriptive, enforced by a check script (`scripts/check_experiment_names.py`).
 
 Many results are negative, and that is part of the method. Pre-registered kill lines mean a failed arm is recorded as a result, not tuned away. A selection of what did not work and what it taught:
 
@@ -157,7 +156,7 @@ Many results are negative, and that is part of the method. Pre-registered kill l
 - **Joint fine-tuning of all tiers** cut some errors and added nothing over sequential training on two later runs. (supervisor-log.md:110, 122)
 - **A molecular-dynamics scatter field** drifted in energy because of velocity and history inputs: zeroing them, with no other change, cut the drift. On gravity the same input removal halved the energy drift but the end-to-end retrain with it was a KILL (see the table). (supervisor-log.md:62, 87)
 - **A six-law mixed-interaction model** was retrained with the amplitude of power-1 scenes capped, which made it far worse. (experiment-log.md:3863-3865)
-- **A planetesimal-disk proxy** with the existing unit-mass model was killed, which is why per-body-mass support is being built rather than assumed. (supervisor-log.md:116)
+- **A planetesimal-disk proxy** with the existing unit-mass model was killed, which is why per-body-mass support was built rather than assumed. (supervisor-log.md:116)
 - **A loss-function analysis** showed the error is not driven by a few outlier particles, so the tail-focused loss idea was dropped for the tiered arms; the local energy-bias terms proposed instead were then killed too. (supervisor-log.md:117, 124)
 
 Results are logged with the numbers that decide them, so a reader can see which claims are strong (linear cost, tier-0 gravity, the energy diagnosis) and which are one seed or untested.
