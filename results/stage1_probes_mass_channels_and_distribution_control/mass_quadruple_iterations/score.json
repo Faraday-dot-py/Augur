@@ -1,0 +1,115 @@
+{
+ "per_seed": {
+  "9100": {
+   "verdict": "KILL",
+   "kill_cells": [
+    "planet q10",
+    "planet q100",
+    "planet q1000",
+    "gate err@10"
+   ],
+   "miss_cells": [
+    "disk q10",
+    "disk q100",
+    "gate err@5",
+    "gate err@20"
+   ],
+   "planet_da_over_a_tick100": {
+    "10": 1.3137715870046662,
+    "100": 1.163230528470498,
+    "1000": 0.3974642742707241
+   },
+   "disk_da_over_a_tick100": {
+    "10": 0.1909208018273497,
+    "100": 0.06251588639444863,
+    "1000": 0.012925447390606271
+   },
+   "gate_ratio": {
+    "5": 1.4202439718591298,
+    "10": 1.5346161549693944,
+    "20": 1.4555934027769792
+   }
+  },
+  "9200": {
+   "verdict": "KILL",
+   "kill_cells": [
+    "planet q10",
+    "planet q100",
+    "planet q1000",
+    "disk q10",
+    "gate err@10",
+    "gate err@20"
+   ],
+   "miss_cells": [
+    "gate err@5"
+   ],
+   "planet_da_over_a_tick100": {
+    "10": 2.1004318152110617,
+    "100": 1.0875273613638092,
+    "1000": 0.38725481336768053
+   },
+   "disk_da_over_a_tick100": {
+    "10": 0.3416383723625404,
+    "100": 0.028770281014179826,
+    "1000": 0.009312711494251953
+   },
+   "gate_ratio": {
+    "5": 1.4354688136224136,
+    "10": 1.5619729295633678,
+    "20": 1.5155356669281708
+   }
+  },
+  "9300": {
+   "verdict": "KILL",
+   "kill_cells": [
+    "planet q10",
+    "planet q100",
+    "planet q1000",
+    "disk q10",
+    "gate err@10",
+    "gate err@20"
+   ],
+   "miss_cells": [
+    "disk q100",
+    "gate err@5"
+   ],
+   "planet_da_over_a_tick100": {
+    "10": 1.6390972887058026,
+    "100": 0.69313588859683,
+    "1000": 0.2999407189850204
+   },
+   "disk_da_over_a_tick100": {
+    "10": 0.36715648129671397,
+    "100": 0.05465020570230953,
+    "1000": 0.01526422391463252
+   },
+   "gate_ratio": {
+    "5": 1.4213132717722043,
+    "10": 1.5820433982279412,
+    "20": 1.5785500880819603
+   }
+  }
+ },
+ "raw_verdict_no_guard": "KILL",
+ "plateau_falling_in_json": true,
+ "json_verdict": "INCONCLUSIVE-undertrained",
+ "registered_verdict": "INCONCLUSIVE-undertrained",
+ "skipped_steps": {
+  "total": 5180,
+  "of": 33600,
+  "fraction": 0.15416666666666667,
+  "by_stage": [
+   2258,
+   1674,
+   465,
+   192,
+   246,
+   260,
+   84
+  ]
+ },
+ "checks": {
+  "by_stage_sum_equals_total": true
+ },
+ "val_hist_tail_points": 10
+}
