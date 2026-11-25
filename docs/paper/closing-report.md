@@ -4,7 +4,7 @@ Draft of 2026-11-23. Sole author. Archive document; no venue. Compute was provid
 
 ## How to read this report
 
-The project is being archived because the author believes serious architectural issues prevent it from reaching its goals. This report states what was tried and what the evidence shows. It does not give the diagnosis of why; that section is left for the author (section 7).
+The project is being archived because the author believes serious architectural issues prevent it from reaching its goals. This report states what was tried and what the evidence shows. Section 7 offers candidate explanations of why, as untested hypotheses with proposed experiments; the report's results sections do not depend on them.
 
 Sourcing. Every number comes from a saved result file or from docs/paper/paper-claims-and-evidence-table.md (called "the table" below; its rows are named in square brackets, and file and line citations live there). Where a number was recomputed from a raw file for this report, the file is named. Raw files are not released; this report cites result tables. Paths below are for the author's checking.
 
@@ -189,16 +189,71 @@ Other open items.
 
 Counts reconcile in section 9. Row numbers are those of docs/debugging/architecture-push-results.md.
 
-## 7. Architectural diagnosis (author to write)
+## 7. Architectural diagnosis
 
-Placeholder. This section is for the author's own diagnosis. Nothing below is a conclusion; each prompt points at a pattern in the results above that a diagnosis would need to explain.
+Each item below repeats the prompt, then gives a candidate answer and up to two experiments that would test it. The candidate answers and experiments were drafted by Claude (an AI assistant) from the results above and the experiment log, reviewed by a fresh-context reviewer, and accepted by the author on 2026-11-24 for inclusion as written. They are untested hypotheses: none of the experiments has been run, and no verdict is claimed.
 
 1. Accuracy against classical methods. On the Plummer scene the learned scatter field's median force error is 0.082 at 1e4 bodies, 0.0875 at 1e5 and 0.0869 at 1e6 (job 11171 scene mean), while plain PM on the same grid is 0.0199 at 1e4 and 0.0131 at 1e5 and Barnes-Hut at theta 0.5 is about 0.011. Learned error is 2.6x to 15.7x higher than plain PM in all 24 million-body scenes. What does the learned error not depend on, and what does it depend on?
+
+Note for item 1: the 1.53 to 1.58 edge-check offset is resolved: job 11169 (commit 4220135) reran it over all bodies, interior ratio 1.0104 at tick 0 and 0.9596 at tick 11; the offset was a reference defect (summed 636,068 of 1e6 bodies) (closing-report.md:157, experiment-log.md:4700-4702).
+
+Candidate answer: the learned error does not depend on body count because the model is a fixed learned operator on a fixed grid; it depends on how well the learned kernel and U-Net reproduce the smooth force field per cell, and the learned kernel is accurate only inside the range and density it was trained on. Support: far-kernel check, learned kernel force ratio 1.00 at r 20, 0.21 at r 64, sign flip by r 80 (experiment-log.md:3534); plain PM beat the learned model at N=1e4 and 1e5 with the learned model out of its training density range (experiment-log.md, plain-PM entry near line 3589). Would contradict: a component swap showing the U-Net, not the kernel, carries the error.
+
+Experiments:
+
+1. Component-swap force probe, no training, frozen scatter-field checkpoint, Plummer scene at 1e5 bodies, seed 4738: score four arms against exact force (full model; learned kernel with analytic PM everything else; U-Net with analytic kernel; plain PM). Supports if the learned-kernel-only arm is within 1.3x of the full model's error and the U-Net-only arm is not; kills if the reverse; otherwise INCONCLUSIVE. A value that would still fail: kernel-only arm at 2x the full model's error. (Needs the model code to allow swapping; unverified.)
+
+2. Error-by-separation breakdown, no training, same scene: split the force error by pair separation (under 8 cells, 8 to 64, over 64). Supports if over 50% of squared error comes from separations beyond 64 cells; kills if under 20%; 20 to 50% INCONCLUSIVE.
+
 2. Energy drift. Tiled energy drift fails its line on all four training seeds (2.43 to 5.77x BL). Replay fine-tuning reaches 1.88 to 1.99x but a truth-state replay control reaches 2.10, and Muon changed nothing (4.33 / 4.72 / 3.84 against 4.10 / 4.75 / 3.89). Which interventions moved drift and which did not, and what does that say about where the drift comes from?
+
+Candidate answer: the learned force is a free vector field gathered at each body, not the gradient of a potential, so it has a non-conservative part with a systematic sign that integrates into drift; replay and Muon do not touch that. Support: Muon changed nothing and the truth-state replay control matched replay fine-tuning; the earlier mesh momentum growth had a structural cause (nearest-cell deposit with bilinear gather, experiment-log.md:3039) that was fixed only by changing the structure. Would contradict: a force field with negligible curl still drifting.
+
+Experiments:
+
+1. Curl measurement, no training: on the frozen model's grid force field over 32 held-out scenes, compute the closed-loop line integral of force per cell and report the curl part as a fraction of total field energy. Supports if over 10%; kills if under 1%; 1 to 10% INCONCLUSIVE.
+
+2. Soft curl-penalty retrain against a matched control (soft prior, allowed by the no-hard-coded-conservative-forces rule), seed 4738, one GPU: dE@100 over BL. Pass if at most 0.7x the control; kill if above 0.9x. Check the log first; no soft curl penalty is recorded (grep of experiment-log.md finds no curl entry).
+
 3. Many variants, small gains. The pair branch (0.65x err@20), the staggered grid (0.69x) and the bit-output cells (force-error ratio 0.933, rollout ratio 0.910) each improved on a control, but with a momentum, compute or scope cost, and none moved a failing requirement to passing. Is there a pattern across those trade-offs, or are they unrelated?
+
+Candidate answer: the three gains are the same trade seen three times: each buys accuracy by adding freedom the physics does not constrain, and so gives up a built-in invariant or doubles cost (pair branch: momentum penalty 1.23 against 1.0 kill line; staggered grid: cost 2.48 to 2.58x against 2.2x line; bit-output cells: narrow scope). Support: claims table rows pair branch, staggered double grid, bit-output cell. Would contradict: a variant that gained accuracy with no lost invariant and no cost increase.
+
+Experiments:
+
+1. Documentation check, no GPU: tabulate each variant's gain and each cost on common axes from the saved result files (job 11101, 11098, bit-output files). Supports if at least 2 of 3 lose an invariant or double cost relative to their control; kills if 2 of 3 gain at no cost.
+
+(A second experiment is not warranted: a new training run would test one variant, not the pattern.)
+
 4. Generalization across laws. A retrain without one scene type gave gravity err@20 of 33.08 against 0.106 for the main checkpoint (different-seed control, about 6% of training steps skipped), a law-blind trunk diverged (395.9x), and the shift probe found force changes above 2% under a half-cell shift on all six laws. What do these three results have in common, and what do they not explain?
+
+Candidate answer: the trunk learns grid-phase-specific, law-specific patterns instead of a rule: the model's output changes by over 2% under a half-cell shift on all six laws, a version without law information diverges, and removing one scene type breaks gravity. Common cause: it fits the training distribution on a fixed grid phase and has no mechanism that carries to new conditions. Not explained: why the mixed-law retrain failed so badly when about 6% of its steps were skipped (a confound), and why a different scene type mattered for gravity.
+
+Experiments:
+
+1. Sub-cell shift augmentation retrain, single-law gravity, against a matched control, seed 4738: median force change under a half-cell shift and err@20. Pass if shift change is at most 1% and err@20 at most 1.15x control; kill if shift change stays over 2% or err@20 exceeds 1.5x control; otherwise INCONCLUSIVE. Check first: translation-augmentation branches exist (solar-scale-translation-augmentation-retrain); those are world translations, not sub-cell, and I have not confirmed they differ.
+
+2. Mixed-law retrain rerun with the skipped steps eliminated, one seed: gravity err@20. Supports a data-diversity reading if at most 2x the main checkpoint (0.106); kills it if above 5x; 2x to 5x INCONCLUSIVE. This run removes the skipped-step confound, so it can be read cleanly.
+
 5. Interpretability. The recovered inverse-square exponent was 1.96 against 2, but the Yukawa range was 14.6 against 32 and the bottleneck variants did not become readable (pair-fit R2 0.347). Which laws were recovered and which were not, and does the difference suggest anything?
+
+Candidate answer: inverse-square is a scale-free power law and survives the grid; laws with their own length scale share the grid's length scale and the model does not represent them: yuk8 and yuk32 both fit the same range 5.28 (experiment-log.md near 3589). So the recovered length scale looks set by the architecture, not the law. Source caveat: the 5.28 is from job 4824 (two-body probe on mixed-law checkpoints, experiment-log.md:3595); the report's Yukawa numbers (10.6 against 8, 14.6 against 32) are from job 7190 and do not show identical ranges, so the claim is supported by 4824 only.
+
+Experiments:
+
+1. No training: refit with the job 7190 probe the same checkpoints, with the range in grid-cell units, and compare to the job 4824 fits. Supports if recovered ranges agree within 10% across Yukawa-8 and Yukawa-32; kills if each tracks its truth within 20%; otherwise INCONCLUSIVE.
+
+2. Short Yukawa-32-only retrain at a second grid cell size, one seed, then the same probe. Supports if recovered range scales with cell size within 20% while truth stays fixed; kills if it stays within 20% of truth; otherwise INCONCLUSIVE. This is a two-point comparison, not a sweep.
+
 6. Scale and the choice of requirement. Linear cost was shown to 1e10 bodies, accuracy only to 3e6, and the classical Barnes-Hut method is more accurate at every size tested (1e4 to 3e6). Which of the four requirements, as written, could the architecture have satisfied, and which could it not?
+
+Candidate answer: only linear cost was met. The four requirements pull against each other: generalization and tileability need an unbounded-range, law-agnostic operator, but tiling holds only for finite-range forces (contact strips match global at float noise; 22x error past the cutoff) and the learned operator is less accurate than methods that are already near-linear (Barnes-Hut N log N). So at the sizes tested the architecture had no accuracy niche; its one distinguishing result is cost at 1e9 to 1e10.
+
+Experiments:
+
+1. Equal-time Barnes-Hut comparison at 1e6 only, one GPU: job 11172 already ran theta 0.3, 0.5, 0.7 and 1.0 with seconds per scene at 1e4 and 1e5 (experiment-log.md:4707-4708), and theta 0.5 error to 3e6 is logged (closing-report.md:140). The new part is matching time per tick to the learned model at 1e6. Supports if Barnes-Hut at matched time is still more accurate; kills if the learned model wins; within 10% INCONCLUSIVE.
+
+(The no-GPU frontier plot is folded into this: read the 1e4 and 1e5 points from the saved 11172 result, no new run.)
 
 ## 8. Limitations of this report
 
