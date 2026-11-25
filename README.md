@@ -142,7 +142,7 @@ Per-body-mass support targets a star-plus-planetesimal-disk system, the kind of 
 ## Recent work, as of 2026-11-24
 
 - **Architecture push.** Of 19 pre-registered experiments, 11 finished: 1 PASS, 4 KILL, 3 INCONCLUSIVE and 3 INCONCLUSIVE-undertrained. One more has a control result with no verdict, and 6 plus one curiosity experiment have no result (`docs/paper/closing-report.md`, section 1).
-- **Closing report.** Written as the project's final form, with each result marked by how well it is validated. Its architectural-diagnosis section was still being added at time of writing.
+- **Closing report.** Written as the project's final form, with each result marked by how well it is validated. Section 7 offers candidate explanations of why the architecture hit its limits, written as untested hypotheses with up to two proposed experiments each.
 - **Accuracy against classical methods.** Scatter-field median force error on a Plummer scene stayed at 0.082 to 0.087 from 1e4 to 3e6 bodies and passed its registered line (one seed), but it is worse than plain PM and than Barnes-Hut (see "What I found").
 - **Archive.** The repository is being archived as read-only, with the complete history kept in a private copy.
 
