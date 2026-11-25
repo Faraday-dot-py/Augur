@@ -1,19 +1,43 @@
 # Augur
 
-> **Status: archived, read-only.** This project is no longer under active development. Architectural limits were identified; see the closing report (in preparation): [docs/paper/closing-report.md](docs/paper/closing-report.md).
+> **Status: archived, read-only.** This project is no longer under active development. Architectural limits were identified; see the closing report: [docs/paper/closing-report.md](docs/paper/closing-report.md).
 
 **Learning particle simulators that scale, tile, and stay honest about what they get wrong.**
 
-Augur is a research project by Adam Webb (GitHub: Faraday-dot-py) on neural surrogate simulators: models that learn the rules of a particle system from examples, then run it fast enough for real-time and very large scenes. The first commit is dated 2026-09-21; as of 2026-11-23 master has 848 commits and the archive-prep branch, which carries 111 commits of later work not yet merged into master, has 819.
+Augur is a set of neural surrogate simulators: models that learn the rules of a particle system from examples, then run it fast enough for real-time and very large scenes. It is a research project by Adam Webb (GitHub: Faraday-dot-py). The first commit is dated 2026-09-21; as of 2026-11-24 master has 995 commits.
+
+I started working on Augur because of a line of thinking I couldn't get out of my head: if we consider machine learning models to be "universal function approximators" (i.e., a program that can approximately represent an arbitrary function), can we use a model to approximate a set of diverse rules that govern a closed-loop system like physics? World models and learned simulators already do this quite well ([graph-network simulators](https://arxiv.org/abs/2002.09405), [DreamerV3](https://arxiv.org/abs/2301.04104)), though over long rollouts errors compound until tiny numerical differences decorrelate any trajectory, so staying accurate in a closed loop is the hard part.
+
+In another vein, with different embedding models, we can take two different data sources (like text and images) and embed them in the same latent space, letting us more easily define problems that span two different abstract data modalities.
+
+Why not then use this to project two different levels of physics into the same space, say astronomical scale and molecular scale, and use that combined representation with the universal function approximator to simulate the formation of planets while also considering the molecular dynamics at play, all with one model?
+
+What's more: we can take apart LLMs with tools like sparse autoencoders (SAEs, networks that split a model's internal activations into separate features) and find the underlying circuits that govern their behavior. Increase the part of an LLM that thinks about the Golden Gate Bridge, and suddenly your LLM loves the Golden Gate Bridge more than anything else in the world ([Templeton et al., Scaling Monosemanticity, 2024](https://transformer-circuits.pub/2024/scaling-monosemanticity/)). What would prevent us from doing this then with the laws of physics? Can we recover the laws of physics from a model like this, and can we figure out a compressed representation of how laws of different scales interact with each other (especially in a computationally feasible way, which here meant cost that grows linearly with the number of bodies)?
+
+This may be stretching things, but what if we can recover these laws without knowing them in the first place? Can we discover new laws of physics, or easier ways of representing them? Can we even train our model on quantum states and recover new quantum dynamics laws we didn't know before? Can we project this quantum model into the same space as our general physics model?
+
+I did not get far enough to answer most of these. The project is archived; what I did find, including where it failed, is below and in the [closing report](docs/paper/closing-report.md).
+
+## What I found
+
+- **Learning the rules.** The scatter field (Augur's main model, defined under "What exists today") learned gravity and advanced 1 billion and 10 billion bodies on one GPU at close to linear cost per step. Those runs show speed and memory only. Against exact forces its error was worse than a plain particle-mesh (PM, a classical grid method) baseline on the same grid in all 24 scenes at 1 to 3 million bodies, and up to 8.06 times worse than the classical Barnes-Hut tree method (a registered kill). Models trained on several force laws at once failed (a KILL), as did unequal-mass systems in a proxy test.
+- **One space for two scales.** Not tested directly: no experiment put two physical scales into one learned latent space. The nearest work, stacking coarse-grid gravity tiers, was killed on accuracy.
+- **Molecular scale.** A dedicated pair-force network tracked temperature and ordering in Lennard-Jones fluids (a standard molecular force) in one seed, but it is all-pairs and not linear cost. The scatter field on the same task was killed. Planets and molecules in one model was never attempted.
+- **Recovering the laws.** A force-law probe recovered the inverse-square exponent as 1.96 against 2, but passed at the curve level for only 5 of 16 cells and at the formula level for 2 of 16. SAE studies gave weak law alignment.
+- **Discovering unknown laws, quantum dynamics.** Never attempted. Every recovery test used laws whose truth was known.
+
+Most results are one training seed. Each is marked with how well it was validated in the closing report.
 
 [Augur live demos](https://faraday-dot-py.github.io/Augur/) run in the browser.
 
 ## Contents
 
+- [What I found](#what-i-found)
 - [Showcase](#showcase)
 - [The four requirements](#the-four-requirements)
 - [What exists today](#what-exists-today)
 - [Newest work: the tiered architecture](#newest-work-the-tiered-architecture)
+- [Recent work, as of 2026-11-24](#recent-work-as-of-2026-11-24)
 - [How the research is run](#how-the-research-is-run)
 - [Who this is for](#who-this-is-for)
 
@@ -101,12 +125,12 @@ In the table, err@20 is the mean position error per body after 20 ticks, dE@100 
 | Local energy-bias loss terms | KILL on both seeds, no gain over control | supervisor-log.md:124 |
 | Tiled closed-loop tier 0 with halo exchange | err@20 0.75 to 0.82x baseline (passes), dE@100 3.9 to 4.8x baseline (fails) | supervisor-log.md:127 |
 | Visited-state label replay fine-tune | dE@100 cut from 4.25x to 1.99x baseline (seed 4738) and 4.78x to 1.88x (seed 4739); a truth-state control gave a similar cut, so the cause is not settled | experiment-log.md:3659 |
-| Per-body-mass support (planet-and-disk systems) | design, curriculum and trainer written and unit-tested; not trained | supervisor-log.md:26 |
+| Per-body-mass support (planet-and-disk systems) | trained twice, one seed each: INCONCLUSIVE-undertrained both times (raw KILL); a 4x-length retrain was running at time of writing | closing report, section 1 |
 | Interpretability (recovering the rules) | partial, see below | supervisor-log.md:167-171 |
 
 Two diagnoses made the hierarchy gap specific. First, a mid-density bias that looked architectural turned out to be mostly undertraining: the matched-budget tier 0 closed it (bias from -1.46 and -1.78 to -0.118 and -0.052; supervisor-log.md:99, 111). Second, teacher-forced analysis located the remaining hierarchy error in the dense regions of the tier-0 model (its energy-work error there is 2.1x the baseline's), not in the upper tiers (supervisor-log.md:113). The targeted retrain that followed did not fix it, and the remaining gap is a visited-state effect: force error is 1.5 to 1.6x baseline at the model's own free-rollout states but only 6 to 12 percent above it when states come from the exact run (experiment-log.md:3369; supervisor-log.md:122).
 
-Per-body-mass support targets a star-plus-planetesimal-disk system, the kind of mixed-mass scene robotics and astrophysics both care about. The current models only handle unit-mass bodies. A direct N-body reference for the real disk design is validated (relative energy drift 2.4e-5 over 100 simulated years), a 500-frame comparison video was rendered and reviewed, and the mass-conditioned model has pre-registered pass and kill lines (supervisor-log.md:116, 119). It has not been trained.
+Per-body-mass support targets a star-plus-planetesimal-disk system, the kind of mixed-mass scene robotics and astrophysics both care about. The models that passed their gravity lines handle only unit-mass bodies. A direct N-body reference for the real disk design is validated (relative energy drift 2.4e-5 over 100 simulated years), a 500-frame comparison video was rendered and reviewed, and the mass-conditioned model has pre-registered pass and kill lines (supervisor-log.md:116, 119). It was then trained as the stage-1 mass-conditioned property channels: INCONCLUSIVE-undertrained at the original length and again at double length (raw KILL on all three evaluation seeds, plateau guard fired), one seed each (`docs/paper/closing-report.md`, section 1).
 
 ### Recent probes, as of 2026-11-09
 
@@ -115,9 +139,17 @@ Per-body-mass support targets a star-plus-planetesimal-disk system, the kind of 
 - **Shift-consistency probe.** PASS: median force change under a half-cell shift exceeded 2 percent on all six laws, so a shift-consistency loss is justified by the pre-registered line (experiment-log.md:3833-3836).
 - **Neighbor selection at 3 million bodies.** The adaptive pair-term neighbor search disagreed with a brute-force reference on one body: KILL by the line as first written, PASS under a tie-aware rescoring written after the KILL was known. The disagreement is a tie at the 16th and 17th neighbor, so the output is tie-sensitive (experiment-log.md:3841-3846, 3887-3891). One body, one seed.
 
+## Recent work, as of 2026-11-24
+
+- **Architecture push.** Of 19 pre-registered experiments, 11 finished: 1 PASS, 4 KILL, 3 INCONCLUSIVE and 3 INCONCLUSIVE-undertrained. One more has a control result with no verdict, and 6 plus one curiosity experiment have no result (`docs/paper/closing-report.md`, section 1).
+- **Closing report.** Written as the project's final form, with results marked by how well each is validated. Section 7 offers candidate explanations of why the architecture hit its limits, written as untested hypotheses with up to two proposed experiments each.
+- **Accuracy against classical methods.** Scatter-field median force error on a Plummer scene stayed at 0.082 to 0.087 from 1e4 to 3e6 bodies and passed its registered line (one seed), but it is worse than plain PM and than Barnes-Hut (see "What I found").
+- **10 billion bodies.** A full-box density render of the 10 billion body collapse was added alongside the three-zoom video above; it is speed and stability only.
+- **Archive.** The repository is being archived as read-only, with the complete history kept in a private copy.
+
 ## How the research is run
 
-Work is done by a supervised team of AI agents. A supervisor agent delegates, records every decision in a running log (`docs/theory/supervisor-log.md`), and does not do experiment work itself. Each agent works in its own branch, writes pass and kill criteria before running, and logs results to a shared experiment log (`docs/debugging/experiment-log.md`, 97 sectioned entries). When an agent hits a limit or loses its compute connection, it is resumed from saved state. After every run that produces rollouts, a fresh reviewer with no hypothesis primed describes the rendered frames, because summary statistics alone have repeatedly hidden visible artifacts. Experiment names must be descriptive, enforced by a check script (`scripts/check_experiment_names.py`).
+Work is done by a supervised team of AI agents. A supervisor agent delegates, records every decision in a running log (`docs/theory/supervisor-log.md`), and does not do experiment work itself. Each agent works in its own branch, writes pass and kill criteria before running, and logs results to a shared experiment log (`docs/debugging/experiment-log.md`, 231 sections). When an agent hits a limit or loses its compute connection, it is resumed from saved state. After every run that produces rollouts, a fresh reviewer with no hypothesis primed describes the rendered frames, because summary statistics alone have repeatedly hidden visible artifacts. Experiment names must be descriptive, enforced by a check script (`scripts/check_experiment_names.py`).
 
 Many results are negative, and that is part of the method. Pre-registered kill lines mean a failed arm is recorded as a result, not tuned away. A selection of what did not work and what it taught:
 
